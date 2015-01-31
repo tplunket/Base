@@ -7,7 +7,12 @@
 	objects = {
 
 /* Begin PBXFileReference section */
+		681365451A7C99DF0015410A /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		681365461A7C99DF0015410A /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		6870F83C1A7C4B15004A0404 /* libSeratoDB.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSeratoDB.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		68AC484E1A7C99A400AB7A1C /* Serato Library Specification v2.0.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "Serato Library Specification v2.0.pdf"; sourceTree = "<group>"; };
+		68AC484F1A7C99A400AB7A1C /* Serato External Metadata Specification v1.0.docx */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Serato External Metadata Specification v1.0.docx"; sourceTree = "<group>"; };
+		68AC48501A7C99A400AB7A1C /* markerV2spec.xlsx */ = {isa = PBXFileReference; lastKnownFileType = file; path = markerV2spec.xlsx; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -21,9 +26,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		681365441A7C99D60015410A /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				681365451A7C99DF0015410A /* README.md */,
+				681365461A7C99DF0015410A /* LICENSE */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		6870F8331A7C4B15004A0404 = {
 			isa = PBXGroup;
 			children = (
+				681365441A7C99D60015410A /* Supporting Files */,
+				68AC48511A7C99A400AB7A1C /* Documentation */,
 				6870F83D1A7C4B15004A0404 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -34,6 +50,16 @@
 				6870F83C1A7C4B15004A0404 /* libSeratoDB.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		68AC48511A7C99A400AB7A1C /* Documentation */ = {
+			isa = PBXGroup;
+			children = (
+				68AC484E1A7C99A400AB7A1C /* Serato Library Specification v2.0.pdf */,
+				68AC484F1A7C99A400AB7A1C /* Serato External Metadata Specification v1.0.docx */,
+				68AC48501A7C99A400AB7A1C /* markerV2spec.xlsx */,
+			);
+			path = Documentation;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

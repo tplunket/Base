@@ -54,6 +54,24 @@ const std::string* p_convertUTF16ToStdString(const char16_t* characters, uint nu
     return stdString;
 }
 
+const uint32_t p_bigEndianUInt32ValueAt(const void *ptr)
+{
+    const char *charsPtr = (const char*)ptr;
+
+    return ((charsPtr[0] << 24) & 0xff000000) |
+           ((charsPtr[1] << 16) & 0xff0000) |
+           ((charsPtr[2] << 8) & 0xff00) |
+            (charsPtr[3] & 0xff);
+}
+
+const uint16_t p_bigEndianUInt16ValueAt(const void *ptr)
+{
+    const char *charsPtr = (const char*)ptr;
+
+    return ((charsPtr[0] << 8) & 0xff00) |
+            (charsPtr[1] & 0xff);
+}
+
 #pragma mark Instance Methods
 
 size_t SeratoDatabaseTagParser::p_sizeOfDataInBytes(void) const
@@ -64,10 +82,7 @@ size_t SeratoDatabaseTagParser::p_sizeOfDataInBytes(void) const
 
     SeratoDatabaseTagStruct* tagStructPtr = (SeratoDatabaseTagStruct*)this->p_currentTagAddress;
 
-    unsigned long dataLength = tagStructPtr->length[0] << 24 |
-    tagStructPtr->length[1] << 16 |
-    tagStructPtr->length[2] << 8 |
-    tagStructPtr->length[3];
+    unsigned long dataLength = p_bigEndianUInt32ValueAt(tagStructPtr->length);
     return dataLength;
 }
 
@@ -125,10 +140,8 @@ uint32_t SeratoDatabaseTagParser::identifier(void) const
 
     SeratoDatabaseTagStruct* tagStructPtr = (SeratoDatabaseTagStruct*)this->p_currentTagAddress;
 
-    return tagStructPtr->identifier[0] << 24 |
-    tagStructPtr->identifier[1] << 16 |
-    tagStructPtr->identifier[2] << 8 |
-    tagStructPtr->identifier[3];
+    uint32_t dataLength = p_bigEndianUInt32ValueAt(tagStructPtr->identifier);
+    return dataLength;
 }
 
 const std::string* SeratoDatabaseTagParser::dataAsString(void) const

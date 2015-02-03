@@ -34,7 +34,7 @@ using namespace NxA;
 
 #pragma mark Utility Methods
 
-const char16_t* convertEndiannessOfUTF16Characters(const char16_t* characters, uint numberOfCharacters)
+const char16_t* p_convertEndiannessOfUTF16Characters(const char16_t* characters, uint numberOfCharacters)
 {
     uint numberOfBytes = numberOfCharacters * 2;
     char* newCharacters = (char*)malloc(numberOfBytes);
@@ -47,10 +47,10 @@ const char16_t* convertEndiannessOfUTF16Characters(const char16_t* characters, u
     return (char16_t*)newCharacters;
 }
 
-const std::string* convertUTF16ToStdString(const char16_t* characters, uint numberOfCharacters)
+const std::string* p_convertUTF16ToStdString(const char16_t* characters, uint numberOfCharacters)
 {
     std::wstring_convert<std::codecvt_utf8_utf16<char16_t>,char16_t> convert;
-    std::string *stdString = new std::string(convert.to_bytes(characters, characters + numberOfCharacters));
+    std::string* stdString = new std::string(convert.to_bytes(characters, characters + numberOfCharacters));
     return stdString;
 }
 
@@ -140,10 +140,10 @@ const std::string* SeratoDatabaseTagParser::dataAsString(void) const
     const char16_t* textToRead = (const char16_t*)tagStructPtr->data;
 
 #ifdef __LITTLE_ENDIAN__
-    textToRead = convertEndiannessOfUTF16Characters(textToRead, numberOfCharacters);
+    textToRead = p_convertEndiannessOfUTF16Characters(textToRead, numberOfCharacters);
 #endif
 
-    const std::string *dataAsAString = convertUTF16ToStdString(textToRead, numberOfCharacters);
+    const std::string *dataAsAString = p_convertUTF16ToStdString(textToRead, numberOfCharacters);
 
 #ifdef __LITTLE_ENDIAN__
     free((void*)textToRead);

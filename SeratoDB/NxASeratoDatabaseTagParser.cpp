@@ -105,8 +105,11 @@ void SeratoDatabaseTagParser::goToDataAsTag(void)
         return;
     }
 
+    SeratoDatabaseTagStruct* tagStructPtr = (SeratoDatabaseTagStruct*)this->p_currentTagAddress;
     unsigned long dataLength = this->p_sizeOfDataInBytes();
-    this->p_currentTagAddress = (const unsigned char*)this->p_currentTagAddress + dataLength;
+
+    this->p_currentTagAddress = (const unsigned char*)tagStructPtr->data;
+    this->p_endOfTagsAddress = (const unsigned char*)this->p_currentTagAddress + dataLength;
 }
 
 void SeratoDatabaseTagParser::goToEnd(void)

@@ -167,3 +167,55 @@ const std::string* SeratoDatabaseTagParser::dataAsString(void) const
 
     return dataAsAString;
 }
+
+bool SeratoDatabaseTagParser::dataAsBoolean(void) const
+{
+    if (this->hasParsedAllTags()) {
+        return false;
+    }
+
+    SeratoDatabaseTagStruct* tagStructPtr = (SeratoDatabaseTagStruct*)this->p_currentTagAddress;
+
+    const char* dataAsChar = (const char*)tagStructPtr->data;
+    return *dataAsChar != 0;
+}
+
+uint16_t SeratoDatabaseTagParser::dataAsUInt16(void) const
+{
+    if (this->hasParsedAllTags()) {
+        return 0;
+    }
+
+    SeratoDatabaseTagStruct* tagStructPtr = (SeratoDatabaseTagStruct*)this->p_currentTagAddress;
+
+    uint16_t value = p_bigEndianUInt16ValueAt(tagStructPtr->data);
+    return value;
+}
+
+uint32_t SeratoDatabaseTagParser::dataAsUInt32(void) const
+{
+    if (this->hasParsedAllTags()) {
+        return 0;
+    }
+
+    SeratoDatabaseTagStruct* tagStructPtr = (SeratoDatabaseTagStruct*)this->p_currentTagAddress;
+
+    uint32_t value = p_bigEndianUInt32ValueAt(tagStructPtr->data);
+    return value;
+}
+
+const std::string* SeratoDatabaseTagParser::dataAsPath(void) const
+{
+    return this->dataAsString();
+}
+
+const void* SeratoDatabaseTagParser::dataAsBlob(void) const
+{
+    if (this->hasParsedAllTags()) {
+        return NULL;
+    }
+
+    SeratoDatabaseTagStruct* tagStructPtr = (SeratoDatabaseTagStruct*)this->p_currentTagAddress;
+    
+    return tagStructPtr->data;
+}

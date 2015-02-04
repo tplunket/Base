@@ -97,7 +97,7 @@ SeratoDatabaseTag::SeratoDatabaseTag(const void* tagAddress)
 {
     this->p_identifier = p_identifierForTagAt(tagAddress);
     this->p_dataSizeInBytes = p_dataSizeInBytesForTagAt(tagAddress);
-    const void *dataAddress = p_dataForTagAt(tagAddress);
+    const void* dataAddress = p_dataForTagAt(tagAddress);
 
     this->p_data = new SeratoDatabaseTagData((unsigned char*)dataAddress,
                                              (unsigned char*)dataAddress + this->p_dataSizeInBytes);
@@ -130,6 +130,7 @@ SeratoDatabaseTag::~SeratoDatabaseTag()
     }
 
     delete children;
+
     delete this->p_data;
 }
 

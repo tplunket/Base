@@ -68,15 +68,10 @@ namespace NxA {
         uint32_t identifier(void) const;
 
         bool dataAsBoolean(void) const;
-
         uint16_t dataAsUInt16(void) const;
-
         uint32_t dataAsUInt32(void) const;
-
         const std::string* dataAsString(void) const;
-
         const std::string* dataAsPath(void) const;
-
         const void* data(void) const;
 
         size_t dataSizeInBytes(void) const;

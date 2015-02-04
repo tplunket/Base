@@ -124,6 +124,8 @@ SeratoDatabaseTag::SeratoDatabaseTag(const void* tagAddress)
 SeratoDatabaseTag::~SeratoDatabaseTag()
 {
     SeratoIdentifierToTagMap* children = this->p_childrenTagsByIdentifier;
+    this->p_childrenTagsByIdentifier = NULL;
+
     for(SeratoIdentifierToTagMap::iterator it = children->begin(); it != children->end(); ++it) {
         SeratoDatabaseTag* subTag = it->second;
         delete subTag;
@@ -132,6 +134,7 @@ SeratoDatabaseTag::~SeratoDatabaseTag()
     delete children;
 
     delete this->p_data;
+    this->p_data = NULL;
 }
 
 #pragma mark Class Methods

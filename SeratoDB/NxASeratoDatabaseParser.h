@@ -17,7 +17,7 @@
 #ifndef __SeratoDB__NxASeratoDatabaseParser__
 #define __SeratoDB__NxASeratoDatabaseParser__
 
-#include "SeratoDB/NxASeratoDatabaseTag.h"
+#include <SeratoDB/NxASeratoDatabaseTag.h>
 #include <SeratoDB/NxASeratoDatabaseTrack.h>
 
 #include <stdio.h>

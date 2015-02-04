@@ -167,6 +167,10 @@ void SeratoDatabaseTag::deleteTagsIn(SeratoDatabaseTagVector* tags)
 
 SeratoDatabaseTag* SeratoDatabaseTag::subTagWithIdentifier(uint32_t identifier) const
 {
+    if (!this->p_childrenTagsByIdentifier) {
+        return NULL;
+    }
+    
     SeratoIdentifierToTagMap::iterator it = this->p_childrenTagsByIdentifier->find(identifier);
     if (it == this->p_childrenTagsByIdentifier->end()) {
         return NULL;

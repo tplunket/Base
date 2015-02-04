@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		6870F85B1A7C5205004A0404 /* NxASeratoDB.h in Headers */ = {isa = PBXBuildFile; fileRef = 6870F8591A7C5205004A0404 /* NxASeratoDB.h */; };
+		6899ACE61A81DF8400662AFE /* NxASeratoDatabaseTrack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6899ACE41A81DF8400662AFE /* NxASeratoDatabaseTrack.cpp */; };
+		6899ACE71A81DF8400662AFE /* NxASeratoDatabaseTrack.h in Headers */ = {isa = PBXBuildFile; fileRef = 6899ACE51A81DF8400662AFE /* NxASeratoDatabaseTrack.h */; };
 		68B3DCB21A8151F400415F3D /* NxASeratoDatabaseTag.h in Headers */ = {isa = PBXBuildFile; fileRef = 68B3DCB01A8151F400415F3D /* NxASeratoDatabaseTag.h */; };
 		68B3DCB31A8151F400415F3D /* NxASeratoDatabaseTag.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68B3DCB11A8151F400415F3D /* NxASeratoDatabaseTag.cpp */; };
 		68C886191A80301300095C82 /* NxASeratoDatabaseV2Tags.h in Headers */ = {isa = PBXBuildFile; fileRef = 68C886181A80301300095C82 /* NxASeratoDatabaseV2Tags.h */; };
@@ -20,6 +22,8 @@
 		681365461A7C99DF0015410A /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		6870F83C1A7C4B15004A0404 /* libSeratoDB.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSeratoDB.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		6870F8591A7C5205004A0404 /* NxASeratoDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NxASeratoDB.h; path = SeratoDB/NxASeratoDB.h; sourceTree = "<group>"; };
+		6899ACE41A81DF8400662AFE /* NxASeratoDatabaseTrack.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NxASeratoDatabaseTrack.cpp; path = SeratoDB/NxASeratoDatabaseTrack.cpp; sourceTree = "<group>"; };
+		6899ACE51A81DF8400662AFE /* NxASeratoDatabaseTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NxASeratoDatabaseTrack.h; path = SeratoDB/NxASeratoDatabaseTrack.h; sourceTree = "<group>"; };
 		68AC484E1A7C99A400AB7A1C /* Serato Library Specification v2.0.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "Serato Library Specification v2.0.pdf"; sourceTree = "<group>"; };
 		68AC484F1A7C99A400AB7A1C /* Serato External Metadata Specification v1.0.docx */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Serato External Metadata Specification v1.0.docx"; sourceTree = "<group>"; };
 		68AC48501A7C99A400AB7A1C /* markerV2spec.xlsx */ = {isa = PBXFileReference; lastKnownFileType = file; path = markerV2spec.xlsx; sourceTree = "<group>"; };
@@ -58,6 +62,8 @@
 				6870F8591A7C5205004A0404 /* NxASeratoDB.h */,
 				68C8861A1A803B1400095C82 /* NxASeratoDatabaseParser.h */,
 				68C8861B1A803B1400095C82 /* NxASeratoDatabaseParser.cpp */,
+				6899ACE51A81DF8400662AFE /* NxASeratoDatabaseTrack.h */,
+				6899ACE41A81DF8400662AFE /* NxASeratoDatabaseTrack.cpp */,
 				68C886181A80301300095C82 /* NxASeratoDatabaseV2Tags.h */,
 				68B3DCB01A8151F400415F3D /* NxASeratoDatabaseTag.h */,
 				68B3DCB11A8151F400415F3D /* NxASeratoDatabaseTag.cpp */,
@@ -92,6 +98,7 @@
 			files = (
 				68C886191A80301300095C82 /* NxASeratoDatabaseV2Tags.h in Headers */,
 				68C8861C1A803B1400095C82 /* NxASeratoDatabaseParser.h in Headers */,
+				6899ACE71A81DF8400662AFE /* NxASeratoDatabaseTrack.h in Headers */,
 				6870F85B1A7C5205004A0404 /* NxASeratoDB.h in Headers */,
 				68B3DCB21A8151F400415F3D /* NxASeratoDatabaseTag.h in Headers */,
 			);
@@ -154,6 +161,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				68C8861D1A803B1400095C82 /* NxASeratoDatabaseParser.cpp in Sources */,
+				6899ACE61A81DF8400662AFE /* NxASeratoDatabaseTrack.cpp in Sources */,
 				68B3DCB31A8151F400415F3D /* NxASeratoDatabaseTag.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

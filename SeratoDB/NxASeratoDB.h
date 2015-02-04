@@ -19,5 +19,6 @@
 
 // -- These are our standard includes for the library.
 #include <SeratoDB/NxASeratoDatabaseParser.h>
+#include <SeratoDB/NxASeratoDatabaseTrack.h>
 
 #endif /* defined(__SeratoDB__NxASeratoDB__) */

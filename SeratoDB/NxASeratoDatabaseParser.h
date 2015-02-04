@@ -18,6 +18,7 @@
 #define __SeratoDB__NxASeratoDatabaseParser__
 
 #include "SeratoDB/NxASeratoDatabaseTag.h"
+#include <SeratoDB/NxASeratoDatabaseTrack.h>
 
 #include <stdio.h>
 #include <string>
@@ -28,7 +29,18 @@ namespace NxA {
     class SeratoDatabaseParser
     {
     private:
-        SeratoDatabaseTagVector* p_tags;
+        #pragma mark Private Instance Variables
+        SeratoDatabaseTag* p_versionTag;
+        SeratoDatabaseTrackVector* p_tracks;
+        SeratoDatabaseTagVector* p_otherTags;
+
+        #pragma mark Private Instance Methods
+        void p_initTagStorage(void);
+        void p_deleteTagStorage(void);
+
+        void p_storeVersionTag(SeratoDatabaseTag* tag);
+        void p_storeTrackTag(SeratoDatabaseTag* tag);
+        void p_storeOtherTag(SeratoDatabaseTag* tag);
 
     public:
         #pragma mark Constructors
@@ -39,6 +51,8 @@ namespace NxA {
 
         #pragma mark Instance Methods
         const std::string* versionAsString(void) const;
+
+        const SeratoDatabaseTrackVector* tracks(void);
     };
 }
 

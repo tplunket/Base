@@ -19,14 +19,33 @@
 
 using namespace NxA;
 
-const std::string* SeratoDatabaseParser::versionAsString(void) const
-{
-    SeratoDatabaseTagParser tag(this->p_firstTag);
-    tag.goToTagWithIdentifier(NxASeratoDatabaseVersionTag);
+#pragma mark Constructors
 
-    if (tag.hasParsedAllTags()) {
-        return NULL;
+SeratoDatabaseParser::SeratoDatabaseParser(const void* startOfFile, unsigned long lengthInBytes)
+{
+    SeratoDatabaseTagVector* tags = SeratoDatabaseTag::parseTagsIn(startOfFile, lengthInBytes);
+    this->p_tags = tags;
+}
+
+#pragma mark Destructor
+
+SeratoDatabaseParser::~SeratoDatabaseParser()
+{
+    for(SeratoDatabaseTagVector::iterator it = this->p_tags->begin(); it != this->p_tags->end(); ++it) {
+        delete *it;
     }
 
-    return tag.dataAsString();
+    delete this->p_tags;
+}
+
+#pragma mark Instance Methods
+
+const std::string* SeratoDatabaseParser::versionAsString(void) const
+{
+    SeratoDatabaseTag* firstTag = (*this->p_tags)[0];
+    if (firstTag->identifier() == NxASeratoDatabaseVersionTag) {
+        return firstTag->dataAsString();
+    }
+
+    return NULL;
 }

@@ -17,7 +17,7 @@
 #ifndef __SeratoDB__NxASeratoDatabaseParser__
 #define __SeratoDB__NxASeratoDatabaseParser__
 
-#include "SeratoDB/NxASeratoDatabaseTagParser.h"
+#include "SeratoDB/NxASeratoDatabaseTag.h"
 
 #include <stdio.h>
 #include <string>
@@ -28,12 +28,14 @@ namespace NxA {
     class SeratoDatabaseParser
     {
     private:
-        SeratoDatabaseTagParser p_firstTag;
+        SeratoDatabaseTagVector* p_tags;
 
     public:
         #pragma mark Constructors
-        SeratoDatabaseParser(const void *startOfFile, unsigned long length) :
-                             p_firstTag(startOfFile, length) { };
+        SeratoDatabaseParser(const void* startOfFile, unsigned long lengthInBytes);
+
+        #pragma mark Destructor
+        ~SeratoDatabaseParser();
 
         #pragma mark Instance Methods
         const std::string* versionAsString(void) const;

@@ -19,7 +19,7 @@
 
 #pragma mark Constants
 
-// -- Known Tag identifiers.
+// -- Known database tag identifiers.
 #define NxASeratoDatabaseVersionTag                             'vrsn'
 #define NxASeratoDatabaseTrackObjectTag                         'otrk'
 #define NxASeratoDatabaseAudioFilePathTag                       'pfil'

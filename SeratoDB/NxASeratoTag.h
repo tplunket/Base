@@ -1,5 +1,5 @@
 //
-//  NxASeratoDatabaseTag.h
+//  NxASeratoTag.h
 //  SeratoDB
 //
 //  Created by Didier Malenfant on 2/3/15.
@@ -14,8 +14,8 @@
 //  or email licensing@serato.com.
 //
 
-#ifndef __SeratoDB__NxASeratoDatabaseTag__
-#define __SeratoDB__NxASeratoDatabaseTag__
+#ifndef __SeratoDB__NxASeratoTag__
+#define __SeratoDB__NxASeratoTag__
 
 #include <string>
 #include <map>
@@ -23,15 +23,15 @@
 
 namespace NxA {
     #pragma mark Forward declarations
-    class SeratoDatabaseTag;
+    class SeratoTag;
 
     #pragma mark Containers
-    typedef std::map<uint32_t, SeratoDatabaseTag*> SeratoIdentifierToTagMap;
-    typedef std::vector<SeratoDatabaseTag*> SeratoDatabaseTagVector;
-    typedef std::vector<unsigned char> SeratoDatabaseTagData;
+    typedef std::map<uint32_t, SeratoTag*> SeratoIdentifierToTagMap;
+    typedef std::vector<SeratoTag*> SeratoTagVector;
+    typedef std::vector<unsigned char> SeratoTagData;
 
     #pragma mark Class Declaration
-    class SeratoDatabaseTag
+    class SeratoTag
     {
     private:
         #pragma mark Private Instance Variables
@@ -39,31 +39,31 @@ namespace NxA {
 
         size_t p_dataSizeInBytes;
 
-        SeratoDatabaseTagData* p_data;
+        SeratoTagData* p_data;
 
-        const SeratoDatabaseTag* p_parentTag;
+        const SeratoTag* p_parentTag;
 
         SeratoIdentifierToTagMap* p_childrenTagsByIdentifier;
 
     public:
         #pragma mark Constructors
-        SeratoDatabaseTag(const void* tagAddress);
+        SeratoTag(const void* tagAddress);
 
         #pragma mark Destructor
-        virtual ~SeratoDatabaseTag();
+        virtual ~SeratoTag();
         
-        SeratoDatabaseTag(const void* tagAddress, SeratoDatabaseTag* parentTag) :
-            SeratoDatabaseTag(tagAddress) {
+        SeratoTag(const void* tagAddress, SeratoTag* parentTag) :
+            SeratoTag(tagAddress) {
                 this->p_parentTag = parentTag;
             };
 
         #pragma mark Class Methods
-        static SeratoDatabaseTagVector* parseTagsIn(const void* firstTagAddress, size_t sizeFromFirstTagInBytes);
+        static SeratoTagVector* parseTagsIn(const void* firstTagAddress, size_t sizeFromFirstTagInBytes);
 
-        static void deleteTagsIn(SeratoDatabaseTagVector* tags);
+        static void deleteTagsIn(SeratoTagVector* tags);
 
         #pragma mark Instance Methods
-        SeratoDatabaseTag* subTagWithIdentifier(uint32_t identifier) const;
+        SeratoTag* subTagWithIdentifier(uint32_t identifier) const;
 
         uint32_t identifier(void) const;
 
@@ -78,4 +78,4 @@ namespace NxA {
     };
 }
 
-#endif /* defined(__SeratoDB__NxASeratoDatabaseTag__) */
+#endif /* defined(__SeratoDB__NxASeratoTag__) */

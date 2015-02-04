@@ -21,9 +21,9 @@ using namespace NxA;
 
 #pragma mark Utility Functions
 
-void p_deleteTagVectorAndItsContent(SeratoDatabaseTagVector* tags)
+void p_deleteTagVectorAndItsContent(SeratoTagVector* tags)
 {
-    for(SeratoDatabaseTagVector::iterator it = tags->begin(); it != tags->end(); ++it) {
+    for(SeratoTagVector::iterator it = tags->begin(); it != tags->end(); ++it) {
         delete *it;
     }
 
@@ -45,9 +45,9 @@ SeratoDatabaseParser::SeratoDatabaseParser(const void* startOfFile, unsigned lon
 {
     this->p_initTagStorage();
 
-    SeratoDatabaseTagVector* tags = SeratoDatabaseTag::parseTagsIn(startOfFile, lengthInBytes);
-    for(SeratoDatabaseTagVector::iterator it = tags->begin(); it != tags->end(); ++it) {
-        SeratoDatabaseTag* tag = *it;
+    SeratoTagVector* tags = SeratoTag::parseTagsIn(startOfFile, lengthInBytes);
+    for(SeratoTagVector::iterator it = tags->begin(); it != tags->end(); ++it) {
+        SeratoTag* tag = *it;
 
         switch (tag->identifier()) {
             case NxASeratoDatabaseVersionTag: {
@@ -81,7 +81,7 @@ void SeratoDatabaseParser::p_initTagStorage(void)
 {
     this->p_versionTag = NULL;
     this->p_tracks = new SeratoDatabaseTrackVector;
-    this->p_otherTags = new SeratoDatabaseTagVector;
+    this->p_otherTags = new SeratoTagVector;
 }
 
 void SeratoDatabaseParser::p_deleteTagStorage(void)
@@ -96,7 +96,7 @@ void SeratoDatabaseParser::p_deleteTagStorage(void)
     this->p_otherTags = NULL;
 }
 
-void SeratoDatabaseParser::p_storeVersionTag(SeratoDatabaseTag* tag)
+void SeratoDatabaseParser::p_storeVersionTag(SeratoTag* tag)
 {
     if (this->p_versionTag) {
         return;
@@ -105,13 +105,13 @@ void SeratoDatabaseParser::p_storeVersionTag(SeratoDatabaseTag* tag)
     this->p_versionTag = tag;
 }
 
-void SeratoDatabaseParser::p_storeTrackTag(SeratoDatabaseTag* tag)
+void SeratoDatabaseParser::p_storeTrackTag(SeratoTag* tag)
 {
     SeratoDatabaseTrack* newTrack = new SeratoDatabaseTrack(tag);
     this->p_tracks->push_back(newTrack);
 }
 
-void SeratoDatabaseParser::p_storeOtherTag(SeratoDatabaseTag* tag)
+void SeratoDatabaseParser::p_storeOtherTag(SeratoTag* tag)
 {
     this->p_otherTags->push_back(tag);
 }

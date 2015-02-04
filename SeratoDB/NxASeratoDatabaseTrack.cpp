@@ -34,7 +34,7 @@ SeratoDatabaseTrack::~SeratoDatabaseTrack()
 const std::string* SeratoDatabaseTrack::p_stringForSubTagIdentifierOrEmptyIfNotFound(uint32_t identifier) const
 {
     if (this->p_trackTag) {
-        SeratoDatabaseTag* tag = this->p_trackTag->subTagWithIdentifier(identifier);
+        SeratoTag* tag = this->p_trackTag->subTagWithIdentifier(identifier);
         if (tag) {
             return tag->dataAsString();
         }
@@ -46,7 +46,7 @@ const std::string* SeratoDatabaseTrack::p_stringForSubTagIdentifierOrEmptyIfNotF
 const std::string* SeratoDatabaseTrack::p_pathForSubTagIdentifierOrEmptyIfNotFound(uint32_t identifier) const
 {
     if (this->p_trackTag) {
-        SeratoDatabaseTag* tag = this->p_trackTag->subTagWithIdentifier(identifier);
+        SeratoTag* tag = this->p_trackTag->subTagWithIdentifier(identifier);
         if (tag) {
             return tag->dataAsPath();
         }
@@ -58,7 +58,7 @@ const std::string* SeratoDatabaseTrack::p_pathForSubTagIdentifierOrEmptyIfNotFou
 uint32_t SeratoDatabaseTrack::p_uint32ForSubTagIdentifierOrZeroIfNotFound(uint32_t identifier) const
 {
     if (this->p_trackTag) {
-        SeratoDatabaseTag* tag = this->p_trackTag->subTagWithIdentifier(identifier);
+        SeratoTag* tag = this->p_trackTag->subTagWithIdentifier(identifier);
         if (tag) {
             return tag->dataAsUInt32();
         }

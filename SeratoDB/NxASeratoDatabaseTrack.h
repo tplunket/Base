@@ -17,7 +17,7 @@
 #ifndef __SeratoDB__NxASeratoDatabaseTrack__
 #define __SeratoDB__NxASeratoDatabaseTrack__
 
-#include <SeratoDB/NxASeratoDatabaseTag.h>
+#include <SeratoDB/NxASeratoTag.h>
 
 #include <string>
 #include <vector>
@@ -34,7 +34,7 @@ namespace NxA {
     {
     private:
         #pragma mark Private Instance Variable
-        SeratoDatabaseTag* p_trackTag;
+        SeratoTag* p_trackTag;
 
         #pragma mark Private Instance Methods
         const std::string* p_stringForSubTagIdentifierOrEmptyIfNotFound(uint32_t identifier) const;
@@ -44,7 +44,7 @@ namespace NxA {
 
     public:
         #pragma mark Constructors
-        SeratoDatabaseTrack(SeratoDatabaseTag* trackTag) : p_trackTag(trackTag) { };
+        SeratoDatabaseTrack(SeratoTag* trackTag) : p_trackTag(trackTag) { };
 
         #pragma mark Destructor
         ~SeratoDatabaseTrack();

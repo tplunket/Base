@@ -1,5 +1,5 @@
 //
-//  NxASeratoDatabaseTag.cpp
+//  NxASeratoTag.cpp
 //  SeratoDB
 //
 //  Created by Didier Malenfant on 2/3/15.
@@ -14,7 +14,7 @@
 //  or email licensing@serato.com.
 //
 
-#include "SeratoDB/NxASeratoDatabaseTag.h"
+#include "SeratoDB/NxASeratoTag.h"
 
 #include <stdlib.h>
 #include <codecvt>
@@ -28,7 +28,7 @@ typedef struct {
     unsigned char identifier[4];
     unsigned char length[4];
     unsigned char data[0];
-} SeratoDatabaseTagStruct;
+} SeratoTagStruct;
 
 #pragma mark Utility Functions
 
@@ -71,21 +71,21 @@ namespace NxA {
 
     uint32_t p_identifierForTagAt(const void* tagAddress)
     {
-        const SeratoDatabaseTagStruct* tagStructPtr = (const SeratoDatabaseTagStruct*)tagAddress;
+        const SeratoTagStruct* tagStructPtr = (const SeratoTagStruct*)tagAddress;
         uint32_t identifier = p_bigEndianUInt32ValueAt(tagStructPtr->identifier);
         return identifier;
     }
 
     const void* p_dataForTagAt(const void* tagAddress)
     {
-        const SeratoDatabaseTagStruct* tagStructPtr = (const SeratoDatabaseTagStruct*)tagAddress;
+        const SeratoTagStruct* tagStructPtr = (const SeratoTagStruct*)tagAddress;
         const void* data = tagStructPtr->data;
         return data;
     }
 
     const size_t p_dataSizeInBytesForTagAt(const void* tagAddress)
     {
-        SeratoDatabaseTagStruct* tagStructPtr = (SeratoDatabaseTagStruct*)tagAddress;
+        SeratoTagStruct* tagStructPtr = (SeratoTagStruct*)tagAddress;
         unsigned long dataSizeInBytes = p_bigEndianUInt32ValueAt(tagStructPtr->length);
         return dataSizeInBytes;
     }
@@ -93,23 +93,23 @@ namespace NxA {
 
 #pragma mark Constructors
 
-SeratoDatabaseTag::SeratoDatabaseTag(const void* tagAddress)
+SeratoTag::SeratoTag(const void* tagAddress)
 {
     this->p_identifier = p_identifierForTagAt(tagAddress);
     this->p_dataSizeInBytes = p_dataSizeInBytesForTagAt(tagAddress);
     const void* dataAddress = p_dataForTagAt(tagAddress);
 
-    this->p_data = new SeratoDatabaseTagData((unsigned char*)dataAddress,
+    this->p_data = new SeratoTagData((unsigned char*)dataAddress,
                                              (unsigned char*)dataAddress + this->p_dataSizeInBytes);
 
     this->p_childrenTagsByIdentifier = new SeratoIdentifierToTagMap;
     this->p_parentTag = NULL;
 
     if ((char)(this->p_identifier >> 24) == 'o') {
-        SeratoDatabaseTagVector* subTags = SeratoDatabaseTag::parseTagsIn(dataAddress, this->p_dataSizeInBytes);
+        SeratoTagVector* subTags = SeratoTag::parseTagsIn(dataAddress, this->p_dataSizeInBytes);
 
-        for(SeratoDatabaseTagVector::iterator it = subTags->begin(); it != subTags->end(); ++it) {
-            SeratoDatabaseTag* subTag = *it;
+        for(SeratoTagVector::iterator it = subTags->begin(); it != subTags->end(); ++it) {
+            SeratoTag* subTag = *it;
             (*this->p_childrenTagsByIdentifier)[subTag->p_identifier] = subTag;
 
             subTag->p_parentTag = this;
@@ -121,13 +121,13 @@ SeratoDatabaseTag::SeratoDatabaseTag(const void* tagAddress)
 
 #pragma mark Destructor
 
-SeratoDatabaseTag::~SeratoDatabaseTag()
+SeratoTag::~SeratoTag()
 {
     SeratoIdentifierToTagMap* children = this->p_childrenTagsByIdentifier;
     this->p_childrenTagsByIdentifier = NULL;
 
     for(SeratoIdentifierToTagMap::iterator it = children->begin(); it != children->end(); ++it) {
-        SeratoDatabaseTag* subTag = it->second;
+        SeratoTag* subTag = it->second;
         delete subTag;
     }
 
@@ -139,33 +139,33 @@ SeratoDatabaseTag::~SeratoDatabaseTag()
 
 #pragma mark Class Methods
 
-SeratoDatabaseTagVector* SeratoDatabaseTag::parseTagsIn(const void* firstTagAddress, size_t sizeFromFirstTagInBytes)
+SeratoTagVector* SeratoTag::parseTagsIn(const void* firstTagAddress, size_t sizeFromFirstTagInBytes)
 {
     const void* tagAddress = firstTagAddress;
     const void* endOfTagsAddress = (unsigned char*)firstTagAddress + sizeFromFirstTagInBytes;
 
-    SeratoDatabaseTagVector* newTags = new SeratoDatabaseTagVector;
+    SeratoTagVector* newTags = new SeratoTagVector;
 
     while (tagAddress < endOfTagsAddress) {
-        SeratoDatabaseTag* newTag = new SeratoDatabaseTag(tagAddress);
+        SeratoTag* newTag = new SeratoTag(tagAddress);
         newTags->push_back(newTag);
 
-        tagAddress = (const unsigned char*)tagAddress + newTag->p_dataSizeInBytes + sizeof(SeratoDatabaseTagStruct);
+        tagAddress = (const unsigned char*)tagAddress + newTag->p_dataSizeInBytes + sizeof(SeratoTagStruct);
     }
 
     return newTags;
 }
 
-void SeratoDatabaseTag::deleteTagsIn(SeratoDatabaseTagVector* tags)
+void SeratoTag::deleteTagsIn(SeratoTagVector* tags)
 {
-    for(SeratoDatabaseTagVector::iterator it = tags->begin(); it != tags->end(); ++it) {
+    for(SeratoTagVector::iterator it = tags->begin(); it != tags->end(); ++it) {
         delete *it;
     }
 }
 
 #pragma mark Instance Methods
 
-SeratoDatabaseTag* SeratoDatabaseTag::subTagWithIdentifier(uint32_t identifier) const
+SeratoTag* SeratoTag::subTagWithIdentifier(uint32_t identifier) const
 {
     if (!this->p_childrenTagsByIdentifier) {
         return NULL;
@@ -179,12 +179,12 @@ SeratoDatabaseTag* SeratoDatabaseTag::subTagWithIdentifier(uint32_t identifier) 
     return it->second;
 }
 
-uint32_t SeratoDatabaseTag::identifier(void) const
+uint32_t SeratoTag::identifier(void) const
 {
     return this->p_identifier;
 }
 
-const std::string* SeratoDatabaseTag::dataAsString(void) const
+const std::string* SeratoTag::dataAsString(void) const
 {
     int numberOfCharacters = (int)this->p_dataSizeInBytes / 2;
     const char16_t* textToRead = (const char16_t*)this->data();
@@ -202,35 +202,35 @@ const std::string* SeratoDatabaseTag::dataAsString(void) const
     return dataAsAString;
 }
 
-bool SeratoDatabaseTag::dataAsBoolean(void) const
+bool SeratoTag::dataAsBoolean(void) const
 {
     const char* dataAsChar = (const char*)this->data();
     return *dataAsChar != 0;
 }
 
-uint16_t SeratoDatabaseTag::dataAsUInt16(void) const
+uint16_t SeratoTag::dataAsUInt16(void) const
 {
     uint16_t value = p_bigEndianUInt16ValueAt(this->data());
     return value;
 }
 
-uint32_t SeratoDatabaseTag::dataAsUInt32(void) const
+uint32_t SeratoTag::dataAsUInt32(void) const
 {
     uint32_t value = p_bigEndianUInt32ValueAt(this->data());
     return value;
 }
 
-const std::string* SeratoDatabaseTag::dataAsPath(void) const
+const std::string* SeratoTag::dataAsPath(void) const
 {
     return this->dataAsString();
 }
 
-const void* SeratoDatabaseTag::data(void) const
+const void* SeratoTag::data(void) const
 {
     return this->p_data->data();
 }
 
-size_t SeratoDatabaseTag::dataSizeInBytes(void) const
+size_t SeratoTag::dataSizeInBytes(void) const
 {
     return this->p_dataSizeInBytes;
 }

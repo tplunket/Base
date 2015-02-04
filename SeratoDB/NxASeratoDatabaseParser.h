@@ -23,9 +23,8 @@
 #include <stdio.h>
 #include <string>
 
-#pragma mark Class Declaration
-
 namespace NxA {
+    #pragma mark Class Declaration
     class SeratoDatabaseParser
     {
     private:

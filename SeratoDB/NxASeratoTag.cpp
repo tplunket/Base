@@ -15,10 +15,7 @@
 //
 
 #include "SeratoDB/NxASeratoTag.h"
-
-#include <stdlib.h>
-#include <codecvt>
-#include <locale>
+#include "SeratoDB/NxASeratoDBUtility.h"
 
 using namespace NxA;
 
@@ -33,60 +30,24 @@ typedef struct {
 #pragma mark Utility Functions
 
 namespace NxA {
-    const char16_t* p_convertEndiannessOfUTF16Characters(const char16_t* characters, int numberOfCharacters)
-    {
-        int numberOfBytes = numberOfCharacters * 2;
-        char* newCharacters = (char*)malloc(numberOfBytes);
-
-        for (int i = 0; i < numberOfBytes; i += 2) {
-            newCharacters[i] = ((char*)characters)[i+1];
-            newCharacters[i+1] = ((char*)characters)[i];
-        }
-
-        return (char16_t*)newCharacters;
-    }
-
-    const std::string* p_convertUTF16ToStdString(const char16_t* characters, int numberOfCharacters)
-    {
-        std::wstring_convert<std::codecvt_utf8_utf16<char16_t>,char16_t> convert;
-        std::string* stdString = new std::string(convert.to_bytes(characters, characters + numberOfCharacters));
-        return stdString;
-    }
-
-    const uint32_t p_bigEndianUInt32ValueAt(const void* ptr)
-    {
-        const char* charsPtr = (const char*)ptr;
-        return ((charsPtr[0] << 24) & 0xff000000) |
-        ((charsPtr[1] << 16) & 0xff0000) |
-        ((charsPtr[2] << 8) & 0xff00) |
-        (charsPtr[3] & 0xff);
-    }
-
-    const uint16_t p_bigEndianUInt16ValueAt(const void* ptr)
-    {
-        const char* charsPtr = (const char*)ptr;
-        return ((charsPtr[0] << 8) & 0xff00) |
-        (charsPtr[1] & 0xff);
-    }
-
-    uint32_t p_identifierForTagAt(const void* tagAddress)
+    static uint32_t p_identifierForTagAt(const void* tagAddress)
     {
         const SeratoTagStruct* tagStructPtr = (const SeratoTagStruct*)tagAddress;
-        uint32_t identifier = p_bigEndianUInt32ValueAt(tagStructPtr->identifier);
+        uint32_t identifier = bigEndianUInt32ValueAt(tagStructPtr->identifier);
         return identifier;
     }
 
-    const void* p_dataForTagAt(const void* tagAddress)
+    static const void* p_dataForTagAt(const void* tagAddress)
     {
         const SeratoTagStruct* tagStructPtr = (const SeratoTagStruct*)tagAddress;
         const void* data = tagStructPtr->data;
         return data;
     }
 
-    const size_t p_dataSizeInBytesForTagAt(const void* tagAddress)
+    static const size_t p_dataSizeInBytesForTagAt(const void* tagAddress)
     {
         SeratoTagStruct* tagStructPtr = (SeratoTagStruct*)tagAddress;
-        unsigned long dataSizeInBytes = p_bigEndianUInt32ValueAt(tagStructPtr->length);
+        unsigned long dataSizeInBytes = bigEndianUInt32ValueAt(tagStructPtr->length);
         return dataSizeInBytes;
     }
 }
@@ -188,16 +149,7 @@ const std::string* SeratoTag::dataAsString(void) const
 {
     int numberOfCharacters = (int)this->p_dataSizeInBytes / 2;
     const char16_t* textToRead = (const char16_t*)this->data();
-
-#ifdef __LITTLE_ENDIAN__
-    textToRead = p_convertEndiannessOfUTF16Characters(textToRead, numberOfCharacters);
-#endif
-
-    const std::string* dataAsAString = p_convertUTF16ToStdString(textToRead, numberOfCharacters);
-
-#ifdef __LITTLE_ENDIAN__
-    free((void*)textToRead);
-#endif
+    const std::string* dataAsAString = convertUTF16ToStdString(textToRead, numberOfCharacters);
 
     return dataAsAString;
 }
@@ -210,13 +162,13 @@ bool SeratoTag::dataAsBoolean(void) const
 
 uint16_t SeratoTag::dataAsUInt16(void) const
 {
-    uint16_t value = p_bigEndianUInt16ValueAt(this->data());
+    uint16_t value = bigEndianUInt16ValueAt(this->data());
     return value;
 }
 
 uint32_t SeratoTag::dataAsUInt32(void) const
 {
-    uint32_t value = p_bigEndianUInt32ValueAt(this->data());
+    uint32_t value = bigEndianUInt32ValueAt(this->data());
     return value;
 }
 

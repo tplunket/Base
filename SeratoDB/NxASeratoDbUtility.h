@@ -13,13 +13,17 @@
 #include <vector>
 
 namespace NxA {
+    #pragma mark Containers
+    typedef std::auto_ptr<const std::string> StringAutoPtr;
+    typedef std::vector<StringAutoPtr> StringVector;
+    typedef std::auto_ptr<StringVector> StringVectorAutoPtr;
+
     #pragma mark Utility Functions
     const std::string* convertUTF16ToStdString(const char16_t* characters, int numberOfCharacters);
 
-    const std::vector<const std::string>* splitStringIntoOneStringForEachLine(const std::string* text);
+    StringVector* splitStringIntoOneStringForEachLine(const std::string* text);
 
     uint32_t bigEndianUInt32ValueAt(const void* ptr);
-    
     uint16_t bigEndianUInt16ValueAt(const void* ptr);
 }
 

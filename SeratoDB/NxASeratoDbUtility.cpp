@@ -49,18 +49,19 @@ namespace NxA {
         return stdString;
     }
 
-    const std::vector<const std::string>* splitStringIntoOneStringForEachLine(const std::string* text)
+    StringVector* splitStringIntoOneStringForEachLine(const std::string* text)
     {
-        std::vector<const std::string>* results = new std::vector<const std::string>;
+        StringVector* results = new StringVector;
         if (text == NULL) {
             return results;
         }
 
-        std::stringstream ss(*text);
+        std::stringstream stream(*text);
         std::string line;
 
-        while(std::getline(ss,line,'\n')) {
-            results->push_back(line);
+        while(std::getline(stream, line, '\n')) {
+            const std::string* result = new std::string(line);
+            results->push_back(StringAutoPtr(result));
         }
 
         return results;

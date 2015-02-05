@@ -17,8 +17,6 @@
 #include "SeratoDB/NxASeratoDatabaseTrack.h"
 #include "SeratoDB/NxASeratoDatabaseV2Tags.h"
 
-#include <stdlib.h>
-
 using namespace NxA;
 
 #pragma mark Destructor

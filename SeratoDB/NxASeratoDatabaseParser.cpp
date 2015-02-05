@@ -21,7 +21,7 @@ using namespace NxA;
 
 #pragma mark Utility Functions
 
-void p_deleteTagVectorAndItsContent(SeratoTagVector* tags)
+static void p_deleteTagVectorAndItsContent(SeratoTagVector* tags)
 {
     for(SeratoTagVector::iterator it = tags->begin(); it != tags->end(); ++it) {
         delete *it;
@@ -30,7 +30,7 @@ void p_deleteTagVectorAndItsContent(SeratoTagVector* tags)
     delete tags;
 }
 
-void p_deleteTrackVectorAndItsContent(SeratoDatabaseTrackVector* tags)
+static void p_deleteTrackVectorAndItsContent(SeratoDatabaseTrackVector* tags)
 {
     for(SeratoDatabaseTrackVector::iterator it = tags->begin(); it != tags->end(); ++it) {
         delete *it;

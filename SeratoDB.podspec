@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
                    For further information, please refer to the modified MIT license provided with this library, or email licensing@serato.com.
                    DESC
 
-  s.homepage     = "http://github.com/NextAudioLabs/SeratoDB"
+  s.homepage     = "http://github.com/NextAudioLabs"
 
   s.license      = "Modified MIT"
 

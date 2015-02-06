@@ -33,7 +33,7 @@ namespace NxA {
         return (char16_t*)newCharacters;
     }
 
-    const std::string* convertUTF16ToStdString(const char16_t* characters, int numberOfCharacters)
+    StringAutoPtr convertUTF16ToStdString(const char16_t* characters, int numberOfCharacters)
     {
         #ifdef __LITTLE_ENDIAN__
         characters = p_convertEndiannessOfUTF16Characters(characters, numberOfCharacters);
@@ -46,25 +46,23 @@ namespace NxA {
         free((void*)characters);
         #endif
 
-        return stdString;
+        return StringAutoPtr(stdString);
     }
 
-    StringVector* splitStringIntoOneStringForEachLine(const std::string* text)
+    StringVectorAutoPtr splitStringIntoOneStringForEachLine(const std::string* text)
     {
         StringVector* results = new StringVector;
-        if (text == NULL) {
-            return results;
+        if (text != NULL) {
+            std::stringstream stream(*text);
+            std::string line;
+
+            while(std::getline(stream, line, '\n')) {
+                const std::string* result = new std::string(line);
+                results->push_back(StringAutoPtr(result));
+            }
         }
 
-        std::stringstream stream(*text);
-        std::string line;
-
-        while(std::getline(stream, line, '\n')) {
-            const std::string* result = new std::string(line);
-            results->push_back(StringAutoPtr(result));
-        }
-
-        return results;
+        return StringVectorAutoPtr(results);
     }
 
     uint32_t bigEndianUInt32ValueAt(const void* ptr)

@@ -27,46 +27,46 @@ namespace NxA {
     class SeratoDatabaseTrack;
 
     #pragma mark Containers
-    typedef std::vector<SeratoDatabaseTrack*> SeratoDatabaseTrackVector;
+    typedef std::auto_ptr<const SeratoDatabaseTrack> SeratoDatabaseTrackAutoPtr;
+    typedef std::vector<SeratoDatabaseTrackAutoPtr> SeratoDatabaseTrackVector;
 
     #pragma mark Class Declaration
     class SeratoDatabaseTrack
     {
     private:
         #pragma mark Private Instance Variable
-        SeratoTag* p_trackTag;
+        SeratoTagAutoPtr p_trackTag;
 
         #pragma mark Private Instance Methods
-        const std::string* p_stringForSubTagIdentifierOrEmptyIfNotFound(uint32_t identifier) const;
-        const std::string* p_pathForSubTagIdentifierOrEmptyIfNotFound(uint32_t identifier) const;
+        bool p_containsAValidTag(void) const;
+        StringAutoPtr p_stringForSubTagIdentifierOrEmptyIfNotFound(uint32_t identifier) const;
+        StringAutoPtr p_pathForSubTagIdentifierOrEmptyIfNotFound(uint32_t identifier) const;
         uint32_t p_uint32ForSubTagIdentifierOrZeroIfNotFound(uint32_t identifier) const;
         uint32_t p_uint32ForStringSubTagIdentifierOrZeroIfNotFound(uint32_t identifier) const;
 
     public:
         #pragma mark Constructors
-        SeratoDatabaseTrack(SeratoTag* trackTag) : p_trackTag(trackTag) { };
-
-        #pragma mark Destructor
-        ~SeratoDatabaseTrack();
+        SeratoDatabaseTrack(const SeratoTag* trackTag) :
+                            p_trackTag(SeratoTagAutoPtr(trackTag)) { };
 
         #pragma mark Instance Methods
-        const std::string* title(void) const;
-        const std::string* artist(void) const;
-        const std::string* filePath(void) const;
-        const std::string* album(void) const;
-        const std::string* genre(void) const;
-        const std::string* comments(void) const;
-        const std::string* grouping(void) const;
-        const std::string* remix(void) const;
-        const std::string* recordLabel(void) const;
-        const std::string* composer(void) const;
-        const std::string* key(void) const;
-        const std::string* trackLength(void) const;
+        StringAutoPtr title(void) const;
+        StringAutoPtr artist(void) const;
+        StringAutoPtr filePath(void) const;
+        StringAutoPtr album(void) const;
+        StringAutoPtr genre(void) const;
+        StringAutoPtr comments(void) const;
+        StringAutoPtr grouping(void) const;
+        StringAutoPtr remix(void) const;
+        StringAutoPtr recordLabel(void) const;
+        StringAutoPtr composer(void) const;
+        StringAutoPtr key(void) const;
+        StringAutoPtr  trackLength(void) const;
         size_t trackSizeInBytes(void) const;
-        const std::string* trackBitRate(void) const;
-        const std::string* trackSampleRate(void) const;
-        const std::string* trackBpm(void) const;
-        const std::string* trackYear(void) const;
+        StringAutoPtr trackBitRate(void) const;
+        StringAutoPtr trackSampleRate(void) const;
+        StringAutoPtr trackBpm(void) const;
+        StringAutoPtr trackYear(void) const;
         uint32_t trackNumber(void) const;
         uint32_t trackDiscNumber(void) const;
         uint32_t trackDateModifiedInSecondsSinceJanuary1st1970(void) const;

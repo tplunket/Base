@@ -54,53 +54,32 @@ namespace NxA {
 
 #pragma mark Constructors
 
-SeratoTag::SeratoTag(const void* tagAddress)
+SeratoTag::SeratoTag(const void* tagAddress) :
+                     p_data((unsigned char*)p_dataForTagAt(tagAddress),
+                            (unsigned char*)p_dataForTagAt(tagAddress) + p_dataSizeInBytesForTagAt(tagAddress))
 {
     this->p_identifier = p_identifierForTagAt(tagAddress);
     this->p_dataSizeInBytes = p_dataSizeInBytesForTagAt(tagAddress);
+
     const void* dataAddress = p_dataForTagAt(tagAddress);
 
-    this->p_data = new SeratoTagData((unsigned char*)dataAddress,
-                                             (unsigned char*)dataAddress + this->p_dataSizeInBytes);
-
-    this->p_childrenTagsByIdentifier = new SeratoIdentifierToTagMap;
     this->p_parentTag = NULL;
 
     if ((char)(this->p_identifier >> 24) == 'o') {
-        SeratoTagVector* subTags = SeratoTag::parseTagsIn(dataAddress, this->p_dataSizeInBytes);
+        this->p_subTags = SeratoTag::parseTagsInForParentTag(dataAddress, this->p_dataSizeInBytes, this);
 
-        for(SeratoTagVector::iterator it = subTags->begin(); it != subTags->end(); ++it) {
-            SeratoTag* subTag = *it;
-            (*this->p_childrenTagsByIdentifier)[subTag->p_identifier] = subTag;
-
-            subTag->p_parentTag = this;
+        for(SeratoTagVector::iterator it = this->p_subTags->begin(); it != this->p_subTags->end(); ++it) {
+            const SeratoTag* subTag = it->get();
+            this->p_childrenTagsByIdentifier[subTag->p_identifier] = subTag;
         }
-
-        delete subTags;
     }
-}
-
-#pragma mark Destructor
-
-SeratoTag::~SeratoTag()
-{
-    SeratoIdentifierToTagMap* children = this->p_childrenTagsByIdentifier;
-    this->p_childrenTagsByIdentifier = NULL;
-
-    for(SeratoIdentifierToTagMap::iterator it = children->begin(); it != children->end(); ++it) {
-        SeratoTag* subTag = it->second;
-        delete subTag;
-    }
-
-    delete children;
-
-    delete this->p_data;
-    this->p_data = NULL;
 }
 
 #pragma mark Class Methods
 
-SeratoTagVector* SeratoTag::parseTagsIn(const void* firstTagAddress, size_t sizeFromFirstTagInBytes)
+SeratoTagVectorAutoPtr SeratoTag::parseTagsInForParentTag(const void* firstTagAddress,
+                                                          size_t sizeFromFirstTagInBytes,
+                                                          const SeratoTag* parentTag)
 {
     const void* tagAddress = firstTagAddress;
     const void* endOfTagsAddress = (unsigned char*)firstTagAddress + sizeFromFirstTagInBytes;
@@ -108,32 +87,26 @@ SeratoTagVector* SeratoTag::parseTagsIn(const void* firstTagAddress, size_t size
     SeratoTagVector* newTags = new SeratoTagVector;
 
     while (tagAddress < endOfTagsAddress) {
-        SeratoTag* newTag = new SeratoTag(tagAddress);
-        newTags->push_back(newTag);
+        SeratoTag* newTag = parentTag ? new SeratoTag(tagAddress, parentTag) : new SeratoTag(tagAddress);
+        newTags->push_back(SeratoTagAutoPtr(newTag));
 
         tagAddress = (const unsigned char*)tagAddress + newTag->p_dataSizeInBytes + sizeof(SeratoTagStruct);
     }
 
-    return newTags;
+    return SeratoTagVectorAutoPtr(newTags);
 }
 
-void SeratoTag::deleteTagsIn(SeratoTagVector* tags)
+SeratoTagVectorAutoPtr SeratoTag::parseTagsIn(const void* firstTagAddress, size_t sizeFromFirstTagInBytes)
 {
-    for(SeratoTagVector::iterator it = tags->begin(); it != tags->end(); ++it) {
-        delete *it;
-    }
+    return SeratoTag::parseTagsInForParentTag(firstTagAddress, sizeFromFirstTagInBytes, NULL);
 }
 
 #pragma mark Instance Methods
 
-SeratoTag* SeratoTag::subTagWithIdentifier(uint32_t identifier) const
+const SeratoTag* SeratoTag::subTagWithIdentifierOrNilIfDoesNotExist(uint32_t identifier) const
 {
-    if (!this->p_childrenTagsByIdentifier) {
-        return NULL;
-    }
-    
-    SeratoIdentifierToTagMap::iterator it = this->p_childrenTagsByIdentifier->find(identifier);
-    if (it == this->p_childrenTagsByIdentifier->end()) {
+    SeratoIdentifierToTagMap::const_iterator it = this->p_childrenTagsByIdentifier.find(identifier);
+    if (it == this->p_childrenTagsByIdentifier.end()) {
         return NULL;
     }
 
@@ -145,13 +118,12 @@ uint32_t SeratoTag::identifier(void) const
     return this->p_identifier;
 }
 
-const std::string* SeratoTag::dataAsString(void) const
+StringAutoPtr SeratoTag::dataAsString(void) const
 {
     int numberOfCharacters = (int)this->p_dataSizeInBytes / 2;
     const char16_t* textToRead = (const char16_t*)this->data();
-    const std::string* dataAsAString = convertUTF16ToStdString(textToRead, numberOfCharacters);
 
-    return dataAsAString;
+    return convertUTF16ToStdString(textToRead, numberOfCharacters);
 }
 
 bool SeratoTag::dataAsBoolean(void) const
@@ -172,14 +144,14 @@ uint32_t SeratoTag::dataAsUInt32(void) const
     return value;
 }
 
-const std::string* SeratoTag::dataAsPath(void) const
+StringAutoPtr SeratoTag::dataAsPath(void) const
 {
     return this->dataAsString();
 }
 
 const void* SeratoTag::data(void) const
 {
-    return this->p_data->data();
+    return this->p_data.data();
 }
 
 size_t SeratoTag::dataSizeInBytes(void) const

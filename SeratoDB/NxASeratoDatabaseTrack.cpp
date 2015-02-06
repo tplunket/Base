@@ -19,45 +19,42 @@
 
 using namespace NxA;
 
-#pragma mark Destructor
-
-SeratoDatabaseTrack::~SeratoDatabaseTrack()
-{
-    delete this->p_trackTag;
-    this->p_trackTag = NULL;
-}
-
 #pragma mark Instance Methods
 
-const std::string* SeratoDatabaseTrack::p_stringForSubTagIdentifierOrEmptyIfNotFound(uint32_t identifier) const
+bool SeratoDatabaseTrack::p_containsAValidTag(void) const
 {
-    if (this->p_trackTag) {
-        SeratoTag* tag = this->p_trackTag->subTagWithIdentifier(identifier);
-        if (tag) {
+    return this->p_trackTag.get() != NULL;
+}
+
+StringAutoPtr SeratoDatabaseTrack::p_stringForSubTagIdentifierOrEmptyIfNotFound(uint32_t identifier) const
+{
+    if (this->p_containsAValidTag()) {
+        const SeratoTag* tag = this->p_trackTag->subTagWithIdentifierOrNilIfDoesNotExist(identifier);
+        if (tag != NULL) {
             return tag->dataAsString();
         }
     }
 
-    return new std::string("");
+    return StringAutoPtr(new std::string(""));
 }
 
-const std::string* SeratoDatabaseTrack::p_pathForSubTagIdentifierOrEmptyIfNotFound(uint32_t identifier) const
+StringAutoPtr SeratoDatabaseTrack::p_pathForSubTagIdentifierOrEmptyIfNotFound(uint32_t identifier) const
 {
-    if (this->p_trackTag) {
-        SeratoTag* tag = this->p_trackTag->subTagWithIdentifier(identifier);
-        if (tag) {
+    if (this->p_containsAValidTag()) {
+        const SeratoTag* tag = this->p_trackTag->subTagWithIdentifierOrNilIfDoesNotExist(identifier);
+        if (tag != NULL) {
             return tag->dataAsPath();
         }
     }
 
-    return new std::string("");
+    return StringAutoPtr(new std::string(""));
 }
 
 uint32_t SeratoDatabaseTrack::p_uint32ForSubTagIdentifierOrZeroIfNotFound(uint32_t identifier) const
 {
-    if (this->p_trackTag) {
-        SeratoTag* tag = this->p_trackTag->subTagWithIdentifier(identifier);
-        if (tag) {
+    if (this->p_containsAValidTag()) {
+        const SeratoTag* tag = this->p_trackTag->subTagWithIdentifierOrNilIfDoesNotExist(identifier);
+        if (tag != NULL) {
             return tag->dataAsUInt32();
         }
     }
@@ -65,62 +62,62 @@ uint32_t SeratoDatabaseTrack::p_uint32ForSubTagIdentifierOrZeroIfNotFound(uint32
     return 0;
 }
 
-const std::string* SeratoDatabaseTrack::title(void) const
+StringAutoPtr SeratoDatabaseTrack::title(void) const
 {
     return this->p_stringForSubTagIdentifierOrEmptyIfNotFound(NxASeratoDatabaseTrackTitleTag);
 }
 
-const std::string* SeratoDatabaseTrack::artist(void) const
+StringAutoPtr SeratoDatabaseTrack::artist(void) const
 {
     return this->p_stringForSubTagIdentifierOrEmptyIfNotFound(NxASeratoDatabaseTrackArtistTag);
 }
 
-const std::string* SeratoDatabaseTrack::filePath(void) const
+StringAutoPtr SeratoDatabaseTrack::filePath(void) const
 {
     return this->p_pathForSubTagIdentifierOrEmptyIfNotFound(NxASeratoDatabaseAudioFilePathTag);
 }
 
-const std::string* SeratoDatabaseTrack::album(void) const
+StringAutoPtr SeratoDatabaseTrack::album(void) const
 {
     return this->p_stringForSubTagIdentifierOrEmptyIfNotFound(NxASeratoDatabaseTrackAlbumTag);
 }
 
-const std::string* SeratoDatabaseTrack::genre(void) const
+StringAutoPtr SeratoDatabaseTrack::genre(void) const
 {
     return this->p_stringForSubTagIdentifierOrEmptyIfNotFound(NxASeratoDatabaseTrackGenreTag);
 }
 
-const std::string* SeratoDatabaseTrack::comments(void) const
+StringAutoPtr SeratoDatabaseTrack::comments(void) const
 {
     return this->p_stringForSubTagIdentifierOrEmptyIfNotFound(NxASeratoDatabaseTrackCommentsTag);
 }
 
-const std::string* SeratoDatabaseTrack::grouping(void) const
+StringAutoPtr SeratoDatabaseTrack::grouping(void) const
 {
     return this->p_stringForSubTagIdentifierOrEmptyIfNotFound(NxASeratoDatabaseTrackGroupingTag);
 }
 
-const std::string* SeratoDatabaseTrack::remix(void) const
+StringAutoPtr SeratoDatabaseTrack::remix(void) const
 {
     return this->p_stringForSubTagIdentifierOrEmptyIfNotFound(NxASeratoDatabaseTrackRemixTag);
 }
 
-const std::string* SeratoDatabaseTrack::recordLabel(void) const
+StringAutoPtr SeratoDatabaseTrack::recordLabel(void) const
 {
     return this->p_stringForSubTagIdentifierOrEmptyIfNotFound(NxASeratoDatabaseTrackLabelTag);
 }
 
-const std::string* SeratoDatabaseTrack::composer(void) const
+StringAutoPtr SeratoDatabaseTrack::composer(void) const
 {
     return this->p_stringForSubTagIdentifierOrEmptyIfNotFound(NxASeratoDatabaseTrackComposerTag);
 }
 
-const std::string* SeratoDatabaseTrack::key(void) const
+StringAutoPtr SeratoDatabaseTrack::key(void) const
 {
     return this->p_stringForSubTagIdentifierOrEmptyIfNotFound(NxASeratoDatabaseTrackKeyTag);
 }
 
-const std::string* SeratoDatabaseTrack::trackLength(void) const
+StringAutoPtr SeratoDatabaseTrack::trackLength(void) const
 {
     return this->p_stringForSubTagIdentifierOrEmptyIfNotFound(NxASeratoDatabaseTrackLengthTag);
 }
@@ -130,22 +127,22 @@ size_t SeratoDatabaseTrack::trackSizeInBytes(void) const
     return this->p_uint32ForSubTagIdentifierOrZeroIfNotFound(NxASeratoDatabaseTrackSizeTag);
 }
 
-const std::string* SeratoDatabaseTrack::trackBitRate(void) const
+StringAutoPtr SeratoDatabaseTrack::trackBitRate(void) const
 {
     return this->p_stringForSubTagIdentifierOrEmptyIfNotFound(NxASeratoDatabaseTrackBitrateTag);
 }
 
-const std::string* SeratoDatabaseTrack::trackSampleRate(void) const
+StringAutoPtr SeratoDatabaseTrack::trackSampleRate(void) const
 {
     return this->p_stringForSubTagIdentifierOrEmptyIfNotFound(NxASeratoDatabaseTrackSampleRateTag);
 }
 
-const std::string* SeratoDatabaseTrack::trackBpm(void) const
+StringAutoPtr SeratoDatabaseTrack::trackBpm(void) const
 {
     return this->p_stringForSubTagIdentifierOrEmptyIfNotFound(NxASeratoDatabaseTrackBpmTag);
 }
 
-const std::string* SeratoDatabaseTrack::trackYear(void) const
+StringAutoPtr SeratoDatabaseTrack::trackYear(void) const
 {
     return this->p_stringForSubTagIdentifierOrEmptyIfNotFound(NxASeratoDatabaseTrackYearTag);
 }

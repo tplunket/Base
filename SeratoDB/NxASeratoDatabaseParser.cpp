@@ -19,35 +19,13 @@
 
 using namespace NxA;
 
-#pragma mark Utility Functions
-
-static void p_deleteTagVectorAndItsContent(SeratoTagVector* tags)
-{
-    for(SeratoTagVector::iterator it = tags->begin(); it != tags->end(); ++it) {
-        delete *it;
-    }
-
-    delete tags;
-}
-
-static void p_deleteTrackVectorAndItsContent(SeratoDatabaseTrackVector* tags)
-{
-    for(SeratoDatabaseTrackVector::iterator it = tags->begin(); it != tags->end(); ++it) {
-        delete *it;
-    }
-
-    delete tags;
-}
-
 #pragma mark Constructors
 
 SeratoDatabaseParser::SeratoDatabaseParser(const void* startOfFile, unsigned long lengthInBytes)
 {
-    this->p_initTagStorage();
-
-    SeratoTagVector* tags = SeratoTag::parseTagsIn(startOfFile, lengthInBytes);
+    SeratoTagVectorAutoPtr tags = SeratoTag::parseTagsIn(startOfFile, lengthInBytes);
     for(SeratoTagVector::iterator it = tags->begin(); it != tags->end(); ++it) {
-        SeratoTag* tag = *it;
+        const SeratoTag* tag = it->release();
 
         switch (tag->identifier()) {
             case NxASeratoDatabaseVersionTag: {
@@ -64,68 +42,40 @@ SeratoDatabaseParser::SeratoDatabaseParser(const void* startOfFile, unsigned lon
             }
         }
     }
-
-    delete tags;
-}
-
-#pragma mark Destructor
-
-SeratoDatabaseParser::~SeratoDatabaseParser()
-{
-    this->p_deleteTagStorage();
 }
 
 #pragma mark Instance Methods
 
-void SeratoDatabaseParser::p_initTagStorage(void)
+void SeratoDatabaseParser::p_storeVersionTag(const SeratoTag* tag)
 {
-    this->p_versionTag = NULL;
-    this->p_tracks = new SeratoDatabaseTrackVector;
-    this->p_otherTags = new SeratoTagVector;
-}
-
-void SeratoDatabaseParser::p_deleteTagStorage(void)
-{
-    delete this->p_versionTag;
-    this->p_versionTag = NULL;
-
-    p_deleteTrackVectorAndItsContent(this->p_tracks);
-    this->p_tracks = NULL;
-
-    p_deleteTagVectorAndItsContent(this->p_otherTags);
-    this->p_otherTags = NULL;
-}
-
-void SeratoDatabaseParser::p_storeVersionTag(SeratoTag* tag)
-{
-    if (this->p_versionTag) {
+    if (this->p_versionTag.get()) {
         return;
     }
 
-    this->p_versionTag = tag;
+    this->p_versionTag = SeratoTagAutoPtr(tag);
 }
 
-void SeratoDatabaseParser::p_storeTrackTag(SeratoTag* tag)
+void SeratoDatabaseParser::p_storeTrackTag(const SeratoTag* tag)
 {
     SeratoDatabaseTrack* newTrack = new SeratoDatabaseTrack(tag);
-    this->p_tracks->push_back(newTrack);
+    this->p_tracks.push_back(SeratoDatabaseTrackAutoPtr(newTrack));
 }
 
-void SeratoDatabaseParser::p_storeOtherTag(SeratoTag* tag)
+void SeratoDatabaseParser::p_storeOtherTag(const SeratoTag* tag)
 {
-    this->p_otherTags->push_back(tag);
+    this->p_otherTags.push_back(SeratoTagAutoPtr(tag));
 }
 
-const std::string* SeratoDatabaseParser::versionAsString(void) const
+StringAutoPtr SeratoDatabaseParser::versionAsString(void) const
 {
-    if (this->p_versionTag) {
+    if (this->p_versionTag.get()) {
         return this->p_versionTag->dataAsString();
     }
 
-    return NULL;
+    return StringAutoPtr();
 }
 
-const SeratoDatabaseTrackVector* SeratoDatabaseParser::tracks(void)
+const SeratoDatabaseTrackVector& SeratoDatabaseParser::tracks(void)
 {
     return this->p_tracks;
 }

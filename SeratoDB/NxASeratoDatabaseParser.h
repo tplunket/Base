@@ -28,29 +28,23 @@ namespace NxA {
     {
     private:
         #pragma mark Private Instance Variables
-        SeratoTag* p_versionTag;
-        SeratoDatabaseTrackVector* p_tracks;
-        SeratoTagVector* p_otherTags;
+        SeratoTagAutoPtr p_versionTag;
+        SeratoDatabaseTrackVector p_tracks;
+        SeratoTagVector p_otherTags;
 
         #pragma mark Private Instance Methods
-        void p_initTagStorage(void);
-        void p_deleteTagStorage(void);
-
-        void p_storeVersionTag(SeratoTag* tag);
-        void p_storeTrackTag(SeratoTag* tag);
-        void p_storeOtherTag(SeratoTag* tag);
+        void p_storeVersionTag(const SeratoTag* tag);
+        void p_storeTrackTag(const SeratoTag* tag);
+        void p_storeOtherTag(const SeratoTag* tag);
 
     public:
         #pragma mark Constructors
         SeratoDatabaseParser(const void* startOfFile, unsigned long lengthInBytes);
 
-        #pragma mark Destructor
-        ~SeratoDatabaseParser();
-
         #pragma mark Instance Methods
-        const std::string* versionAsString(void) const;
+        StringAutoPtr versionAsString(void) const;
 
-        const SeratoDatabaseTrackVector* tracks(void);
+        const SeratoDatabaseTrackVector& tracks(void);
     };
 }
 

@@ -35,9 +35,9 @@ SeratoCrateOrderParser::SeratoCrateOrderParser(const void* startOfFile, unsigned
 {
     int numberOfCharacters = (int)lengthInBytes / 2;
     const char16_t* textToRead = (const char16_t*)startOfFile;
-    const std::string* textAString = convertUTF16ToStdString(textToRead, numberOfCharacters);
+    StringAutoPtr textAString = convertUTF16ToStdString(textToRead, numberOfCharacters);
 
-    StringVectorAutoPtr lines(splitStringIntoOneStringForEachLine(textAString));
+    StringVectorAutoPtr lines(splitStringIntoOneStringForEachLine(textAString.get()));
     for(StringVector::iterator it = lines->begin(); it != lines->end(); ++it) {
         const std::string* crateName = p_crateNameIfValidCrateOrEmptyStringIfNot(it->get());
         if (*crateName == "") {

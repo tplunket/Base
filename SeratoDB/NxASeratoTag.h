@@ -17,6 +17,8 @@
 #ifndef __SeratoDB__NxASeratoTag__
 #define __SeratoDB__NxASeratoTag__
 
+#include <SeratoDB/NxASeratoDbUtility.h>
+
 #include <string>
 #include <map>
 #include <vector>
@@ -26,8 +28,10 @@ namespace NxA {
     class SeratoTag;
 
     #pragma mark Containers
-    typedef std::map<uint32_t, SeratoTag*> SeratoIdentifierToTagMap;
-    typedef std::vector<SeratoTag*> SeratoTagVector;
+    typedef std::auto_ptr<const SeratoTag> SeratoTagAutoPtr;
+    typedef std::map<const uint32_t, const SeratoTag*> SeratoIdentifierToTagMap;
+    typedef std::vector<SeratoTagAutoPtr> SeratoTagVector;
+    typedef std::auto_ptr<SeratoTagVector> SeratoTagVectorAutoPtr;
     typedef std::vector<unsigned char> SeratoTagData;
 
     #pragma mark Class Declaration
@@ -39,39 +43,39 @@ namespace NxA {
 
         size_t p_dataSizeInBytes;
 
-        SeratoTagData* p_data;
+        SeratoTagData p_data;
 
         const SeratoTag* p_parentTag;
 
-        SeratoIdentifierToTagMap* p_childrenTagsByIdentifier;
+        SeratoTagVectorAutoPtr p_subTags;
+
+        SeratoIdentifierToTagMap p_childrenTagsByIdentifier;
 
     public:
         #pragma mark Constructors
         SeratoTag(const void* tagAddress);
 
-        #pragma mark Destructor
-        virtual ~SeratoTag();
-        
-        SeratoTag(const void* tagAddress, SeratoTag* parentTag) :
-            SeratoTag(tagAddress) {
-                this->p_parentTag = parentTag;
-            };
+        SeratoTag(const void* tagAddress, const SeratoTag* parentTag) :
+                  SeratoTag(tagAddress) {
+                      this->p_parentTag = parentTag;
+                  };
 
         #pragma mark Class Methods
-        static SeratoTagVector* parseTagsIn(const void* firstTagAddress, size_t sizeFromFirstTagInBytes);
-
-        static void deleteTagsIn(SeratoTagVector* tags);
+        static SeratoTagVectorAutoPtr parseTagsIn(const void* firstTagAddress, size_t sizeFromFirstTagInBytes);
+        static SeratoTagVectorAutoPtr parseTagsInForParentTag(const void* firstTagAddress,
+                                                              size_t sizeFromFirstTagInBytes,
+                                                              const SeratoTag* parentTag);
 
         #pragma mark Instance Methods
-        SeratoTag* subTagWithIdentifier(uint32_t identifier) const;
+        const SeratoTag* subTagWithIdentifierOrNilIfDoesNotExist(uint32_t identifier) const;
 
         uint32_t identifier(void) const;
 
         bool dataAsBoolean(void) const;
         uint16_t dataAsUInt16(void) const;
         uint32_t dataAsUInt32(void) const;
-        const std::string* dataAsString(void) const;
-        const std::string* dataAsPath(void) const;
+        StringAutoPtr dataAsString(void) const;
+        StringAutoPtr dataAsPath(void) const;
         const void* data(void) const;
 
         size_t dataSizeInBytes(void) const;

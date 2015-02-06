@@ -21,5 +21,6 @@
 #include <SeratoDB/NxASeratoDatabaseParser.h>
 #include <SeratoDB/NxASeratoDatabaseTrack.h>
 #include <SeratoDB/NxASeratoCrateOrderParser.h>
+#include <SeratoDB/NxASeratoCrateParser.h>
 
 #endif /* defined(__SeratoDB__NxASeratoDB__) */

@@ -24,7 +24,7 @@ Pod::Spec.new do |s|
   
   s.requires_arc = false
 
-  s.source       = { :git => "git@github.com:NextAudioLabs/SeratoDB.git", :tag => "v#{s.version}" }
+  s.source       = { :git => "https://github.com/NextAudioLabs/SeratoDB.git", :tag => "v#{s.version}" }
 
   s.source_files = "SeratoDB/*.{h,cpp}"
 

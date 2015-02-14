@@ -14,7 +14,7 @@
 //  or email licensing@serato.com.
 //
 
-#include "NxASeratoDbUtility.h"
+#include "SeratoDB/NxASeratoDbUtility.h"
 
 #include <stdlib.h>
 #include <string>

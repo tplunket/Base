@@ -1,5 +1,5 @@
 //
-//  NxASeratoCrateParser.cpp
+//  NxASeratoCrateFile.cpp
 //  SeratoDB
 //
 //  Created by Didier Malenfant on 2/4/15.
@@ -14,14 +14,14 @@
 //  or email licensing@serato.com.
 //
 
-#include "SeratoDB/NxASeratoCrateParser.h"
+#include "SeratoDB/NxASeratoCrateFile.h"
 #include "SeratoDB/NxASeratoCrateV1Tags.h"
 
 using namespace NxA;
 
 #pragma mark Constructors
 
-SeratoCrateParser::SeratoCrateParser(const void* startOfFile, unsigned long lengthInBytes)
+SeratoCrateFile::SeratoCrateFile(const void* startOfFile, unsigned long lengthInBytes)
 {
     SeratoTagVectorAutoPtr tags(SeratoTag::parseTagsIn(startOfFile, lengthInBytes));
     for(SeratoTagVector::iterator it = tags->begin(); it != tags->end(); ++it) {
@@ -46,7 +46,7 @@ SeratoCrateParser::SeratoCrateParser(const void* startOfFile, unsigned long leng
 
 #pragma mark Instance Methods
 
-void SeratoCrateParser::p_storeVersionTag(const SeratoTag* tag)
+void SeratoCrateFile::p_storeVersionTag(const SeratoTag* tag)
 {
     if (this->p_versionTag.get()) {
         return;
@@ -55,18 +55,18 @@ void SeratoCrateParser::p_storeVersionTag(const SeratoTag* tag)
     this->p_versionTag = SeratoTagAutoPtr(tag);
 }
 
-void SeratoCrateParser::p_storeTrackTag(const SeratoTag* tag)
+void SeratoCrateFile::p_storeTrackTag(const SeratoTag* tag)
 {
     SeratoCrateTrack* newTrack = new SeratoCrateTrack(tag);
     this->p_tracks.push_back(SeratoCrateTrackAutoPtr(newTrack));
 }
 
-void SeratoCrateParser::p_storeOtherTag(const SeratoTag* tag)
+void SeratoCrateFile::p_storeOtherTag(const SeratoTag* tag)
 {
     this->p_otherTags.push_back(SeratoTagAutoPtr(tag));
 }
 
-StringAutoPtr SeratoCrateParser::versionAsString(void) const
+StringAutoPtr SeratoCrateFile::versionAsString(void) const
 {
     if (this->p_versionTag.get()) {
         return this->p_versionTag->dataAsString();
@@ -75,7 +75,7 @@ StringAutoPtr SeratoCrateParser::versionAsString(void) const
     return StringAutoPtr();
 }
 
-const SeratoCrateTrackVector& SeratoCrateParser::tracks(void)
+const SeratoCrateTrackVector& SeratoCrateFile::tracks(void)
 {
     return this->p_tracks;
 }

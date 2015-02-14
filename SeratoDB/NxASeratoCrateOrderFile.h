@@ -1,5 +1,5 @@
 //
-//  NxASeratoCrateOrderParser.h
+//  NxASeratoCrateOrderFile.h
 //  SeratoDB
 //
 //  Created by Didier Malenfant on 2/4/15.
@@ -14,16 +14,14 @@
 //  or email licensing@serato.com.
 //
 
-#ifndef __SeratoDB__NxASeratoCrateOrderParser__
-#define __SeratoDB__NxASeratoCrateOrderParser__
+#ifndef __SeratoDB__NxASeratoCrateOrderFile__
+#define __SeratoDB__NxASeratoCrateOrderFile__
 
 #include "SeratoDB/NxASeratoDBUtility.h"
 
-#include <string>
-
 namespace NxA {
     #pragma mark Class Declaration
-    class SeratoCrateOrderParser
+    class SeratoCrateOrderFile
     {
     private:
         #pragma mark Private Instance Variables
@@ -31,11 +29,11 @@ namespace NxA {
 
     public:
         #pragma mark Constructors
-        SeratoCrateOrderParser(const void* startOfFile, unsigned long lengthInBytes);
+        SeratoCrateOrderFile(const void* startOfFile, unsigned long lengthInBytes);
 
         #pragma mark Instance Methods
         const StringVector& crateNamesInOrder(void);
     };
 }
 
-#endif /* defined(__SeratoDB__NxASeratoCrateOrderParser__) */
+#endif /* defined(__SeratoDB__NxASeratoCrateOrderFile__) */

@@ -1,5 +1,5 @@
 //
-//  NxASeratoDatabaseParser.cpp
+//  NxASeratoDatabaseFile.cpp
 //  SeratoDB
 //
 //  Created by Didier Malenfant on 1/30/15.
@@ -14,14 +14,14 @@
 //  or email licensing@serato.com.
 //
 
-#include "SeratoDB/NxASeratoDatabaseParser.h"
+#include "SeratoDB/NxASeratoDatabaseFile.h"
 #include "SeratoDB/NxASeratoDatabaseV2Tags.h"
 
 using namespace NxA;
 
 #pragma mark Constructors
 
-SeratoDatabaseParser::SeratoDatabaseParser(const void* startOfFile, unsigned long lengthInBytes)
+SeratoDatabaseFile::SeratoDatabaseFile(const void* startOfFile, unsigned long lengthInBytes)
 {
     SeratoTagVectorAutoPtr tags = SeratoTag::parseTagsIn(startOfFile, lengthInBytes);
     for(SeratoTagVector::iterator it = tags->begin(); it != tags->end(); ++it) {
@@ -46,7 +46,7 @@ SeratoDatabaseParser::SeratoDatabaseParser(const void* startOfFile, unsigned lon
 
 #pragma mark Instance Methods
 
-void SeratoDatabaseParser::p_storeVersionTag(const SeratoTag* tag)
+void SeratoDatabaseFile::p_storeVersionTag(const SeratoTag* tag)
 {
     if (this->p_versionTag.get()) {
         return;
@@ -55,18 +55,18 @@ void SeratoDatabaseParser::p_storeVersionTag(const SeratoTag* tag)
     this->p_versionTag = SeratoTagAutoPtr(tag);
 }
 
-void SeratoDatabaseParser::p_storeTrackTag(const SeratoTag* tag)
+void SeratoDatabaseFile::p_storeTrackTag(const SeratoTag* tag)
 {
     SeratoDatabaseTrack* newTrack = new SeratoDatabaseTrack(tag);
     this->p_tracks.push_back(SeratoDatabaseTrackAutoPtr(newTrack));
 }
 
-void SeratoDatabaseParser::p_storeOtherTag(const SeratoTag* tag)
+void SeratoDatabaseFile::p_storeOtherTag(const SeratoTag* tag)
 {
     this->p_otherTags.push_back(SeratoTagAutoPtr(tag));
 }
 
-StringAutoPtr SeratoDatabaseParser::versionAsString(void) const
+StringAutoPtr SeratoDatabaseFile::versionAsString(void) const
 {
     if (this->p_versionTag.get()) {
         return this->p_versionTag->dataAsString();
@@ -75,7 +75,7 @@ StringAutoPtr SeratoDatabaseParser::versionAsString(void) const
     return StringAutoPtr();
 }
 
-const SeratoDatabaseTrackVector& SeratoDatabaseParser::tracks(void)
+const SeratoDatabaseTrackVector& SeratoDatabaseFile::tracks(void)
 {
     return this->p_tracks;
 }

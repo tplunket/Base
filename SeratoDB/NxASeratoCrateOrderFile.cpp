@@ -1,5 +1,5 @@
 //
-//  NxASeratoCrateOrderParser.cpp
+//  NxASeratoCrateOrderFile.cpp
 //  SeratoDB
 //
 //  Created by Didier Malenfant on 2/4/15.
@@ -14,7 +14,9 @@
 //  or email licensing@serato.com.
 //
 
-#include "SeratoDB/NxASeratoCrateOrderParser.h"
+#include "SeratoDB/NxASeratoCrateOrderFile.h"
+
+#include <string>
 
 using namespace NxA;
 
@@ -31,7 +33,7 @@ static std::string* p_crateNameIfValidCrateOrEmptyStringIfNot(const std::string*
 
 #pragma mark Constructors
 
-SeratoCrateOrderParser::SeratoCrateOrderParser(const void* startOfFile, unsigned long lengthInBytes)
+SeratoCrateOrderFile::SeratoCrateOrderFile(const void* startOfFile, unsigned long lengthInBytes)
 {
     int numberOfCharacters = (int)lengthInBytes / 2;
     const char16_t* textToRead = (const char16_t*)startOfFile;
@@ -50,7 +52,7 @@ SeratoCrateOrderParser::SeratoCrateOrderParser(const void* startOfFile, unsigned
 
 #pragma mark Instance Methods
 
-const StringVector& SeratoCrateOrderParser::crateNamesInOrder(void)
+const StringVector& SeratoCrateOrderFile::crateNamesInOrder(void)
 {
     return this->p_crateNames;
 }

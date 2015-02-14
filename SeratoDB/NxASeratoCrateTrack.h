@@ -20,7 +20,6 @@
 #include <SeratoDB/NxASeratoTag.h>
 #include <SeratoDB/NxASeratoDbUtility.h>
 
-#include <string>
 #include <vector>
 
 namespace NxA {

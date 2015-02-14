@@ -19,7 +19,6 @@
 
 #include <SeratoDB/NxASeratoTag.h>
 
-#include <string>
 #include <vector>
 
 namespace NxA {

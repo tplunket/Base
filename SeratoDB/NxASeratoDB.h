@@ -18,7 +18,6 @@
 #define __SeratoDB__NxASeratoDB__
 
 // -- These are our standard includes for the library.
-#include <SeratoDB/NxASeratoDatabaseTrack.h>
 #include <SeratoDB/NxASeratoDatabaseFile.h>
 #include <SeratoDB/NxASeratoCrateOrderFile.h>
 #include <SeratoDB/NxASeratoCrateFile.h>

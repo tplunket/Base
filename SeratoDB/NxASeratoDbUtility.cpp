@@ -77,15 +77,16 @@ namespace NxA {
     {
         const char* charsPtr = (const char*)ptr;
         return ((charsPtr[0] << 24) & 0xff000000) |
-        ((charsPtr[1] << 16) & 0xff0000) |
-        ((charsPtr[2] << 8) & 0xff00) |
-        (charsPtr[3] & 0xff);
+               ((charsPtr[1] << 16) & 0xff0000) |
+               ((charsPtr[2] << 8) & 0xff00) |
+                (charsPtr[3] & 0xff);
     }
 
     uint16_t bigEndianUInt16ValueAt(const void* ptr)
     {
         const char* charsPtr = (const char*)ptr;
         return ((charsPtr[0] << 8) & 0xff00) |
-        (charsPtr[1] & 0xff);
+                (charsPtr[1] & 0xff);
     }
 }
+

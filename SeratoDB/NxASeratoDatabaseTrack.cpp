@@ -72,9 +72,9 @@ StringAutoPtr SeratoDatabaseTrack::artist(void) const
     return this->p_stringForSubTagIdentifierOrEmptyIfNotFound(NxASeratoDatabaseTrackArtistTag);
 }
 
-StringAutoPtr SeratoDatabaseTrack::filePath(void) const
+StringAutoPtr SeratoDatabaseTrack::trackFilePath(void) const
 {
-    return this->p_pathForSubTagIdentifierOrEmptyIfNotFound(NxASeratoDatabaseAudioFilePathTag);
+    return this->p_pathForSubTagIdentifierOrEmptyIfNotFound(NxASeratoDatabaseTrackFilePathTag);
 }
 
 StringAutoPtr SeratoDatabaseTrack::album(void) const

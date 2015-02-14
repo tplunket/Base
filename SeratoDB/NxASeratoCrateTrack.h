@@ -49,7 +49,7 @@ namespace NxA {
                          p_trackTag(SeratoTagAutoPtr(trackTag)) { };
 
         #pragma mark Instance Methods
-        StringAutoPtr filePath(void) const;
+        StringAutoPtr trackFilePath(void) const;
     };
 }
 

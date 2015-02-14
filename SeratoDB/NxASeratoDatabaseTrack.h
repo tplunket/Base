@@ -52,7 +52,7 @@ namespace NxA {
         #pragma mark Instance Methods
         StringAutoPtr title(void) const;
         StringAutoPtr artist(void) const;
-        StringAutoPtr filePath(void) const;
+        StringAutoPtr trackFilePath(void) const;
         StringAutoPtr album(void) const;
         StringAutoPtr genre(void) const;
         StringAutoPtr comments(void) const;

@@ -26,7 +26,7 @@ bool SeratoCrateTrack::p_containsAValidTag(void) const
     return this->p_trackTag.get() != NULL;
 }
 
-StringAutoPtr SeratoCrateTrack::filePath(void) const
+StringAutoPtr SeratoCrateTrack::trackFilePath(void) const
 {
     if (this->p_containsAValidTag()) {
         const SeratoTag* tag = this->p_trackTag->subTagWithIdentifierOrNilIfDoesNotExist(NxASeratoCrateTrackPathTag);

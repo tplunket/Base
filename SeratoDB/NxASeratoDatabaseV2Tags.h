@@ -22,7 +22,7 @@
 // -- Known database tag identifiers.
 #define NxASeratoDatabaseVersionTag                             'vrsn'
 #define NxASeratoDatabaseTrackObjectTag                         'otrk'
-#define NxASeratoDatabaseAudioFilePathTag                       'pfil'
+#define NxASeratoDatabaseTrackFilePathTag                       'pfil'
 #define NxASeratoDatabaseDirectoryPathTag                       'pdir'
 #define NxASeratoDatabaseVideoFilePathTag                       'pvid'
 #define NxASeratoDatabaseFileTypeTag                            'ttyp'

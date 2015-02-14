@@ -56,20 +56,20 @@ namespace NxA {
         StringAutoPtr genre(void) const;
         StringAutoPtr comments(void) const;
         StringAutoPtr grouping(void) const;
-        StringAutoPtr remix(void) const;
+        StringAutoPtr remixer(void) const;
         StringAutoPtr recordLabel(void) const;
         StringAutoPtr composer(void) const;
         StringAutoPtr key(void) const;
-        StringAutoPtr  trackLength(void) const;
-        size_t trackSizeInBytes(void) const;
-        StringAutoPtr trackBitRate(void) const;
-        StringAutoPtr trackSampleRate(void) const;
-        StringAutoPtr trackBpm(void) const;
-        StringAutoPtr trackYear(void) const;
+        StringAutoPtr  length(void) const;
+        size_t sizeInBytes(void) const;
+        StringAutoPtr bitRate(void) const;
+        StringAutoPtr sampleRate(void) const;
+        StringAutoPtr bpm(void) const;
+        StringAutoPtr year(void) const;
         uint32_t trackNumber(void) const;
-        uint32_t trackDiscNumber(void) const;
-        uint32_t trackDateModifiedInSecondsSinceJanuary1st1970(void) const;
-        uint32_t trackDateAddedInSecondsSinceJanuary1st1970(void) const;
+        uint32_t discNumber(void) const;
+        uint32_t dateModifiedInSecondsSinceJanuary1st1970(void) const;
+        uint32_t dateAddedInSecondsSinceJanuary1st1970(void) const;
     };
 }
 

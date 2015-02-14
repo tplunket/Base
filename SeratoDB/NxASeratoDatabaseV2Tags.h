@@ -37,7 +37,7 @@
 #define NxASeratoDatabaseTrackBpmTag                            'tbpm'
 #define NxASeratoDatabaseTrackCommentsTag                       'tcom'
 #define NxASeratoDatabaseTrackGroupingTag                       'tgrp'
-#define NxASeratoDatabaseTrackRemixTag                          'trmx'
+#define NxASeratoDatabaseTrackRemixerTag                        'trmx'
 #define NxASeratoDatabaseTrackLabelTag                          'tlbl'
 #define NxASeratoDatabaseTrackComposerTag                       'tcmp'
 #define NxASeratoDatabaseTrackYearTag                           'ttyr'

@@ -97,9 +97,9 @@ StringAutoPtr SeratoDatabaseTrack::grouping(void) const
     return this->p_stringForSubTagIdentifierOrEmptyIfNotFound(NxASeratoDatabaseTrackGroupingTag);
 }
 
-StringAutoPtr SeratoDatabaseTrack::remix(void) const
+StringAutoPtr SeratoDatabaseTrack::remixer(void) const
 {
-    return this->p_stringForSubTagIdentifierOrEmptyIfNotFound(NxASeratoDatabaseTrackRemixTag);
+    return this->p_stringForSubTagIdentifierOrEmptyIfNotFound(NxASeratoDatabaseTrackRemixerTag);
 }
 
 StringAutoPtr SeratoDatabaseTrack::recordLabel(void) const
@@ -117,32 +117,32 @@ StringAutoPtr SeratoDatabaseTrack::key(void) const
     return this->p_stringForSubTagIdentifierOrEmptyIfNotFound(NxASeratoDatabaseTrackKeyTag);
 }
 
-StringAutoPtr SeratoDatabaseTrack::trackLength(void) const
+StringAutoPtr SeratoDatabaseTrack::length(void) const
 {
     return this->p_stringForSubTagIdentifierOrEmptyIfNotFound(NxASeratoDatabaseTrackLengthTag);
 }
 
-size_t SeratoDatabaseTrack::trackSizeInBytes(void) const
+size_t SeratoDatabaseTrack::sizeInBytes(void) const
 {
     return this->p_uint32ForSubTagIdentifierOrZeroIfNotFound(NxASeratoDatabaseTrackSizeTag);
 }
 
-StringAutoPtr SeratoDatabaseTrack::trackBitRate(void) const
+StringAutoPtr SeratoDatabaseTrack::bitRate(void) const
 {
     return this->p_stringForSubTagIdentifierOrEmptyIfNotFound(NxASeratoDatabaseTrackBitrateTag);
 }
 
-StringAutoPtr SeratoDatabaseTrack::trackSampleRate(void) const
+StringAutoPtr SeratoDatabaseTrack::sampleRate(void) const
 {
     return this->p_stringForSubTagIdentifierOrEmptyIfNotFound(NxASeratoDatabaseTrackSampleRateTag);
 }
 
-StringAutoPtr SeratoDatabaseTrack::trackBpm(void) const
+StringAutoPtr SeratoDatabaseTrack::bpm(void) const
 {
     return this->p_stringForSubTagIdentifierOrEmptyIfNotFound(NxASeratoDatabaseTrackBpmTag);
 }
 
-StringAutoPtr SeratoDatabaseTrack::trackYear(void) const
+StringAutoPtr SeratoDatabaseTrack::year(void) const
 {
     return this->p_stringForSubTagIdentifierOrEmptyIfNotFound(NxASeratoDatabaseTrackYearTag);
 }
@@ -152,17 +152,17 @@ uint32_t SeratoDatabaseTrack::trackNumber(void) const
     return this->p_uint32ForSubTagIdentifierOrZeroIfNotFound(NxASeratoDatabaseTrackNumberTag);
 }
 
-uint32_t SeratoDatabaseTrack::trackDiscNumber(void) const
+uint32_t SeratoDatabaseTrack::discNumber(void) const
 {
     return this->p_uint32ForSubTagIdentifierOrZeroIfNotFound(NxASeratoDatabaseTrackDiscNumberTag);
 }
 
-uint32_t SeratoDatabaseTrack::trackDateModifiedInSecondsSinceJanuary1st1970(void) const
+uint32_t SeratoDatabaseTrack::dateModifiedInSecondsSinceJanuary1st1970(void) const
 {
     return this->p_uint32ForSubTagIdentifierOrZeroIfNotFound(NxASeratoDatabaseTrackDateModifiedTag);
 }
 
-uint32_t SeratoDatabaseTrack::trackDateAddedInSecondsSinceJanuary1st1970(void) const
+uint32_t SeratoDatabaseTrack::dateAddedInSecondsSinceJanuary1st1970(void) const
 {
     return this->p_uint32ForSubTagIdentifierOrZeroIfNotFound(NxASeratoDatabaseTrackDateAddedTag);
 }

@@ -1,8 +1,8 @@
 //
-//  NxASeratoDB.h
+//  NxASeratoTrackFileFactory.h
 //  SeratoDB
 //
-//  Created by Didier Malenfant on 1/30/15.
+//  Created by Didier Malenfant on 2/12/15.
 //  Copyright (c) 2015 Next Audio Labs, LLC. All rights reserved.
 //
 //  This file contains confidential and proprietary information of Serato
@@ -14,13 +14,21 @@
 //  or email licensing@serato.com.
 //
 
-#ifndef __SeratoDB__NxASeratoDB__
-#define __SeratoDB__NxASeratoDB__
+#ifndef __SeratoDB__NxASeratoTrackFileFactory__
+#define __SeratoDB__NxASeratoTrackFileFactory__
 
-// -- These are our standard includes for the library.
-#include <SeratoDB/NxASeratoDatabaseFile.h>
-#include <SeratoDB/NxASeratoCrateOrderFile.h>
-#include <SeratoDB/NxASeratoCrateFile.h>
-#include <SeratoDB/NxASeratoTrackFileFactory.h>
+#include <SeratoDB/NxASeratoTrackFile.h>
 
-#endif /* defined(__SeratoDB__NxASeratoDB__) */
+#include <string>
+
+namespace NxA {
+    #pragma mark Class Declaration
+    class SeratoTrackFileFactory
+    {
+    public:
+        #pragma mark Class Methods
+        static SeratoTrackFileAutoPtr trackFileForPath(const char* trackFilePath);
+    };
+}
+
+#endif /* defined(__SeratoDB__NxASeratoTrackFileFactory__) */

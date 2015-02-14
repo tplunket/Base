@@ -1,8 +1,8 @@
 //
-//  NxASeratoDB.h
+//  NxASeratoMPEGTrackFile.h
 //  SeratoDB
 //
-//  Created by Didier Malenfant on 1/30/15.
+//  Created by Didier Malenfant on 2/6/15.
 //  Copyright (c) 2015 Next Audio Labs, LLC. All rights reserved.
 //
 //  This file contains confidential and proprietary information of Serato
@@ -14,13 +14,21 @@
 //  or email licensing@serato.com.
 //
 
-#ifndef __SeratoDB__NxASeratoDB__
-#define __SeratoDB__NxASeratoDB__
+#ifndef __SeratoDB__NxASeratoMPEGTrackFile__
+#define __SeratoDB__NxASeratoMPEGTrackFile__
 
-// -- These are our standard includes for the library.
-#include <SeratoDB/NxASeratoDatabaseFile.h>
-#include <SeratoDB/NxASeratoCrateOrderFile.h>
-#include <SeratoDB/NxASeratoCrateFile.h>
-#include <SeratoDB/NxASeratoTrackFileFactory.h>
+#include <SeratoDB/NxASeratoID3TrackFile.h>
 
-#endif /* defined(__SeratoDB__NxASeratoDB__) */
+#include <taglib/mpegfile.h>
+
+namespace NxA {
+    #pragma mark Class Declaration
+    class SeratoMPEGTrackFile : public SeratoID3TrackFile
+    {
+    public:
+        #pragma mark Constructors
+        SeratoMPEGTrackFile(const char* trackFilePath);
+    };
+}
+
+#endif /* defined(__SeratoDB__NxASeratoMPEGTrackFile__) */

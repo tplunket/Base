@@ -1,8 +1,8 @@
 //
-//  NxASeratoDB.h
+//  NxASeratoBase64.h
 //  SeratoDB
 //
-//  Created by Didier Malenfant on 1/30/15.
+//  Created by Didier Malenfant on 2/11/15.
 //  Copyright (c) 2015 Next Audio Labs, LLC. All rights reserved.
 //
 //  This file contains confidential and proprietary information of Serato
@@ -14,13 +14,19 @@
 //  or email licensing@serato.com.
 //
 
-#ifndef __SeratoDB__NxASeratoDB__
-#define __SeratoDB__NxASeratoDB__
+#ifndef __SeratoDB__NxASeratoBase64__
+#define __SeratoDB__NxASeratoBase64__
 
-// -- These are our standard includes for the library.
-#include <SeratoDB/NxASeratoDatabaseFile.h>
-#include <SeratoDB/NxASeratoCrateOrderFile.h>
-#include <SeratoDB/NxASeratoCrateFile.h>
-#include <SeratoDB/NxASeratoTrackFileFactory.h>
+#include <SeratoDB/NxASeratoDbUtility.h>
 
-#endif /* defined(__SeratoDB__NxASeratoDB__) */
+namespace NxA {
+    #pragma mark Class Declaration
+    class SeratoBase64
+    {
+    public:
+        #pragma mark Class Methods
+        static NxA::UnsignedCharVectorAutoPtr decodeBlock(const char* code_in, size_t length_in);
+    };
+}
+
+#endif /* defined(__SeratoDB__NxASeratoBase64__) */

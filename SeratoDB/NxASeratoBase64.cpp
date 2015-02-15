@@ -54,10 +54,14 @@ static const char* base64_decode_loop(const char* codechar, const char* code_in_
     return codechar;
 }
 
-static UnsignedCharVectorAutoPtr vectorAutoPtrFromUnsignedCharsBetween(const char* start, const char* end)
+static const char* base64_encoding = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+static inline char base64_encode_value(char value_in)
 {
-    UnsignedCharVector* out = new UnsignedCharVector(start, end);
-    return UnsignedCharVectorAutoPtr(out);
+    if (value_in > 63) {
+        return '=';
+    }
+    return base64_encoding[(int)value_in];
 }
 
 #pragma mark Class Methods
@@ -82,14 +86,16 @@ UnsignedCharVectorAutoPtr SeratoBase64::decodeBlock(const char* code_in, size_t 
     while (plainchar < plaintext_out_end) {
         codechar = base64_decode_loop(codechar, code_in_end, fragment);
         if (!codechar) {
-            return vectorAutoPtrFromUnsignedCharsBetween(plaintext_out, plainchar);
+            UnsignedCharVector* out = new UnsignedCharVector(plaintext_out, plainchar);
+            return UnsignedCharVectorAutoPtr(out);
         }
 
         *plainchar = (fragment & 0x03f) << 2;
 
         codechar = base64_decode_loop(codechar, code_in_end, fragment);
         if (!codechar) {
-            return vectorAutoPtrFromUnsignedCharsBetween(plaintext_out, plainchar);
+            UnsignedCharVector* out = new UnsignedCharVector(plaintext_out, plainchar);
+            return UnsignedCharVectorAutoPtr(out);
         }
 
         *plainchar++ |= (fragment & 0x030) >> 4;
@@ -101,7 +107,8 @@ UnsignedCharVectorAutoPtr SeratoBase64::decodeBlock(const char* code_in, size_t 
 
         codechar = base64_decode_loop(codechar, code_in_end, fragment);
         if (!codechar) {
-            return vectorAutoPtrFromUnsignedCharsBetween(plaintext_out, plainchar);
+            UnsignedCharVector* out = new UnsignedCharVector(plaintext_out, plainchar);
+            return UnsignedCharVectorAutoPtr(out);
         }
 
         *plainchar++ |= (fragment & 0x03c) >> 2;
@@ -113,11 +120,92 @@ UnsignedCharVectorAutoPtr SeratoBase64::decodeBlock(const char* code_in, size_t 
 
         codechar = base64_decode_loop(codechar, code_in_end, fragment);
         if (!codechar) {
-            return vectorAutoPtrFromUnsignedCharsBetween(plaintext_out, plainchar);
+            UnsignedCharVector* out = new UnsignedCharVector(plaintext_out, plainchar);
+            return UnsignedCharVectorAutoPtr(out);
         }
 
         *plainchar++ |= (fragment & 0x03f);
     }
 
+    // -- Control should not reach here.
+    return UnsignedCharVectorAutoPtr(NULL);
+}
+
+UnsignedCharVectorAutoPtr SeratoBase64::encodeBlock(const char* plaintext_in, int length_in)
+{
+    const char* plainchar = plaintext_in;
+    const char* const plaintextend = plaintext_in + length_in;
+    char* code_out = (char*)malloc(length_in * 2);
+    char* code_out_end = code_out + (length_in * 2);
+    char* codechar = code_out;
+    char result = 0;
+    char fragment;
+
+    while (1) {
+        if (plainchar == plaintextend) {
+            *codechar++ = '\n';
+            UnsignedCharVector* out = new UnsignedCharVector(code_out, codechar);
+            free(code_out);
+            return UnsignedCharVectorAutoPtr(out);
+        }
+
+        fragment = *plainchar++;
+        result = (fragment & 0x0fc) >> 2;
+        *codechar++ = base64_encode_value(result);
+        result = (fragment & 0x003) << 4;
+        if (codechar >= code_out_end) {
+            break;
+        }
+
+        if (plainchar == plaintextend) {
+            if ((codechar + 4) >= code_out_end) {
+                break;
+            }
+
+            *codechar++ = base64_encode_value(result);
+            *codechar++ = '=';
+            *codechar++ = '=';
+            *codechar++ = '\n';
+            UnsignedCharVector* out = new UnsignedCharVector(code_out, codechar);
+            free(code_out);
+            return UnsignedCharVectorAutoPtr(out);
+        }
+
+        fragment = *plainchar++;
+        result |= (fragment & 0x0f0) >> 4;
+        *codechar++ = base64_encode_value(result);
+        result = (fragment & 0x00f) << 2;
+        if (codechar >= code_out_end) {
+            break;
+        }
+
+        if (plainchar == plaintextend) {
+            if ((codechar + 3) >= code_out_end) {
+                break;
+            }
+
+            *codechar++ = base64_encode_value(result);
+            *codechar++ = '=';
+            *codechar++ = '\n';
+            UnsignedCharVector* out = new UnsignedCharVector(code_out, codechar);
+            free(code_out);
+            return UnsignedCharVectorAutoPtr(out);
+        }
+
+        fragment = *plainchar++;
+        result |= (fragment & 0x0c0) >> 6;
+        *codechar++ = base64_encode_value(result);
+        result  = (fragment & 0x03f) >> 0;
+        if (codechar >= code_out_end) {
+            break;
+        }
+
+        *codechar++ = base64_encode_value(result);
+        if (codechar >= code_out_end) {
+            break;
+        }
+    }
+
+    // -- Control should not reach here.
     return UnsignedCharVectorAutoPtr(NULL);
 }

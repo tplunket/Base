@@ -26,6 +26,7 @@ namespace NxA {
     public:
         #pragma mark Class Methods
         static NxA::UnsignedCharVectorAutoPtr decodeBlock(const char* code_in, size_t length_in);
+        static NxA::UnsignedCharVectorAutoPtr encodeBlock(const char* plaintext_in, int length_in);
     };
 }
 

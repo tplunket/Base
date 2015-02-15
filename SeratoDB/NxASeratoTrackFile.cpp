@@ -61,9 +61,9 @@ void SeratoTrackFile::p_readMarkersV2FromBase64Data(const char* markerV2Data, si
         return;
     }
 
-    // -- FIXME: The data sometime contains an extra byte at the end, could be a bug in the decode
-    // -- method but since marker data is always more than one byte long, we substract one
-    // -- here to make sure we don't go over the end.
+    // -- FIXME: The data written by Serato sometimes contains an extra byte at the end.
+    // -- This might be a bug in the decode method but since marker data is always more
+    // -- than one byte long, we substract one here to make sure we don't go over the end.
     const char* markerDataEnd = (const char*)markerStruct + decodedData->size() - 1;
     const char* tagStart = (const char*)markerStruct->data;
 

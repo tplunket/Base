@@ -17,11 +17,14 @@
 #include "SeratoDB/NxASeratoDbUtility.h"
 
 #include <stdlib.h>
+#include <sys/stat.h>
 #include <string>
 #include <sstream>
 #include <vector>
 #include <codecvt>
 #include <locale>
+#include <iostream>
+#include <fstream>
 
 using namespace NxA;
 using namespace std;
@@ -87,5 +90,87 @@ namespace NxA {
         return ((charsPtr[0] << 8) & 0xff00) |
                 (charsPtr[1] & 0xff);
     }
-}
 
+    StringAutoPtr p_appendToPath(const char* path, const char* pathToAppend)
+    {
+        string* result = new string(path);
+
+        #if defined(__APPLE__) && defined(__MACH__)
+        // -- OSX or iPhone
+        *result += "/";
+        #else
+        // -- Otherwise assume it's Windows.
+        *result += "\";
+        #endif
+
+        *result += pathToAppend;
+
+        return StringAutoPtr(result);
+    }
+
+    bool p_fileExists(const char* filePath)
+    {
+        struct stat buf;
+        return (stat(filePath, &buf) != -1);
+    }
+
+    size_t p_sizeOfFileAt(const char* filePath)
+    {
+        struct stat buf;
+        if (stat(filePath, &buf) == -1) {
+            return 0;
+        }
+
+        return buf.st_size;
+    }
+
+    StringAutoPtr seratoFolderPathForFolder(const char* folderPath)
+    {
+        return p_appendToPath(folderPath, "_Serato_");
+    }
+
+    StringAutoPtr databaseFilePathForSeratoFolder(const char* seratoFolderPath)
+    {
+        return p_appendToPath(seratoFolderPath, "database V2");
+    }
+
+    StringAutoPtr crateOrderFilePathForSeratoFolder(const char* seratoFolderPath)
+    {
+        return p_appendToPath(seratoFolderPath, "neworder.pref");
+    }
+
+    StringAutoPtr crateFilePathForCrateNameInSeratoFolder(const char* crateName, const char* seratoFolderPath)
+    {
+        StringAutoPtr cratesFolderPath = p_appendToPath(seratoFolderPath, "Subcrates");
+        StringAutoPtr crateFilePartialPath = p_appendToPath(cratesFolderPath->c_str(), crateName);
+        return StringAutoPtr(new string(*crateFilePartialPath + ".crate"));
+    }
+
+    bool containsAValidSeratoFolder(const char* folderPath)
+    {
+        StringAutoPtr seratoFolderPath = seratoFolderPathForFolder(folderPath);
+        StringAutoPtr databaseFilePath = databaseFilePathForSeratoFolder(seratoFolderPath->c_str());
+        StringAutoPtr crateOrderFilePath = crateOrderFilePathForSeratoFolder(seratoFolderPath->c_str());
+        return p_fileExists(databaseFilePath->c_str()) && p_fileExists(crateOrderFilePath->c_str());
+    }
+
+    CharVectorAutoPtr readFileAt(const char* filePath)
+    {
+        size_t fileSize = p_sizeOfFileAt(filePath);
+        if (fileSize) {
+            char* fileData = (char*)malloc(fileSize);
+            if (fileData) {
+                fstream file(filePath, ios::in | ios::binary);
+                file.read(fileData, fileSize);
+                file.close();
+
+                CharVector* result = new CharVector(fileData, fileData + fileSize);
+                free(fileData);
+
+                return CharVectorAutoPtr(result);
+            }
+        }
+
+        return CharVectorAutoPtr(NULL);
+    }
+}

@@ -35,6 +35,15 @@ namespace NxA {
 
     uint32_t bigEndianUInt32ValueAt(const void* ptr);
     uint16_t bigEndianUInt16ValueAt(const void* ptr);
+
+    bool containsAValidSeratoFolder(const char* folderPath);
+
+    StringAutoPtr seratoFolderPathForFolder(const char* folderPath);
+    StringAutoPtr databaseFilePathForSeratoFolder(const char* seratoFolderPath);
+    StringAutoPtr crateOrderFilePathForSeratoFolder(const char* seratoFolderPath);
+    StringAutoPtr crateFilePathForCrateNameInSeratoFolder(const char* crateName, const char* seratoFolderPath);
+
+    CharVectorAutoPtr readFileAt(const char* filePath);
 }
 
 #endif /* defined(__SeratoDB__NxASeratoDbUtility__) */

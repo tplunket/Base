@@ -54,7 +54,7 @@ void SeratoTrackFile::p_readMarkersV2FromBase64Data(const char* markerV2Data, si
         return;
     }
 
-    UnsignedCharVectorAutoPtr decodedData = SeratoBase64::decodeBlock(markerV2Data, sizeInBytes);
+    CharVectorAutoPtr decodedData = SeratoBase64::decodeBlock(markerV2Data, sizeInBytes);
 
     const SeratoMarkerV2Struct* markerStruct = (const SeratoMarkerV2Struct*)(decodedData->data());
     if ((markerStruct->majorVersion != 1) || (markerStruct->minorVersion != 1)) {

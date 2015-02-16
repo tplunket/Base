@@ -25,8 +25,8 @@ namespace NxA {
     typedef std::auto_ptr<const std::string> StringAutoPtr;
     typedef std::vector<StringAutoPtr> StringVector;
     typedef std::auto_ptr<StringVector> StringVectorAutoPtr;
-    typedef std::vector<unsigned char> UnsignedCharVector;
-    typedef std::auto_ptr<UnsignedCharVector> UnsignedCharVectorAutoPtr;
+    typedef std::vector<char> CharVector;
+    typedef std::auto_ptr<CharVector> CharVectorAutoPtr;
 
     #pragma mark Utility Functions
     StringAutoPtr convertUTF16ToStdString(const char16_t* characters, int numberOfCharacters);

@@ -64,7 +64,7 @@ void SeratoFLACTrackFile::p_readMarkersV2(void)
         return;
     }
 
-    UnsignedCharVectorAutoPtr decodedData = SeratoBase64::decodeBlock((const char*)markersEncodedData.data(String::UTF8).data(),
+    CharVectorAutoPtr decodedData = SeratoBase64::decodeBlock((const char*)markersEncodedData.data(String::UTF8).data(),
                                                                       encodedDataSize);
 
     const SeratoFLACMarkerHeaderStruct* headerStruct = (const SeratoFLACMarkerHeaderStruct*)decodedData->data();

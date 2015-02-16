@@ -48,8 +48,8 @@ namespace NxA {
         characters = p_convertEndiannessOfUTF16Characters(characters, numberOfCharacters);
         #endif
 
-        std::wstring_convert<std::codecvt_utf8_utf16<char16_t>,char16_t> convert;
-        std::string* stdString = new std::string(convert.to_bytes(characters, characters + numberOfCharacters));
+        wstring_convert<codecvt_utf8_utf16<char16_t>,char16_t> convert;
+        string* stdString = new string(convert.to_bytes(characters, characters + numberOfCharacters));
 
         #ifdef __LITTLE_ENDIAN__
         free((void*)characters);

@@ -24,6 +24,7 @@
 #include <locale>
 
 using namespace NxA;
+using namespace std;
 
 #pragma mark Utility Functions
 
@@ -57,17 +58,15 @@ namespace NxA {
         return StringAutoPtr(stdString);
     }
 
-    StringVectorAutoPtr splitStringIntoOneStringForEachLine(const std::string* text)
+    StringVectorAutoPtr splitStringIntoOneStringForEachLine(const string& text)
     {
         StringVector* results = new StringVector;
-        if (text != NULL) {
-            std::stringstream stream(*text);
-            std::string line;
+        stringstream stream(text);
+        string line;
 
-            while(std::getline(stream, line, '\n')) {
-                const std::string* result = new std::string(line);
-                results->push_back(StringAutoPtr(result));
-            }
+        while(getline(stream, line, '\n')) {
+            const string* result = new string(line);
+            results->push_back(StringAutoPtr(result));
         }
 
         return StringVectorAutoPtr(results);

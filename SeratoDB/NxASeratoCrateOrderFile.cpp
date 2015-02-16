@@ -39,7 +39,7 @@ SeratoCrateOrderFile::SeratoCrateOrderFile(const void* startOfFile, unsigned lon
     const char16_t* textToRead = (const char16_t*)startOfFile;
     StringAutoPtr textAString = convertUTF16ToStdString(textToRead, numberOfCharacters);
 
-    StringVectorAutoPtr lines(splitStringIntoOneStringForEachLine(textAString.get()));
+    StringVectorAutoPtr lines(splitStringIntoOneStringForEachLine(*textAString));
     for(StringVector::iterator it = lines->begin(); it != lines->end(); ++it) {
         const std::string* crateName = p_crateNameIfValidCrateOrEmptyStringIfNot(it->get());
         if (*crateName == "") {

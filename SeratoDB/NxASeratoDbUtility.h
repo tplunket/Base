@@ -31,7 +31,7 @@ namespace NxA {
     #pragma mark Utility Functions
     StringAutoPtr convertUTF16ToStdString(const char16_t* characters, int numberOfCharacters);
 
-    StringVectorAutoPtr splitStringIntoOneStringForEachLine(const std::string* text);
+    StringVectorAutoPtr splitStringIntoOneStringForEachLine(const std::string& text);
 
     uint32_t bigEndianUInt32ValueAt(const void* ptr);
     uint16_t bigEndianUInt16ValueAt(const void* ptr);

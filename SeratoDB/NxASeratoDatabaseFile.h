@@ -19,6 +19,7 @@
 
 #include <SeratoDB/NxASeratoTag.h>
 #include <SeratoDB/NxASeratoDatabaseTrack.h>
+#include <SeratoDB/NxASeratoDBUtility.h>
 
 namespace NxA {
     #pragma mark Class Declaration

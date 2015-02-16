@@ -17,7 +17,7 @@
 #ifndef __SeratoDB__NxASeratoCrateOrderFile__
 #define __SeratoDB__NxASeratoCrateOrderFile__
 
-#include "SeratoDB/NxASeratoDBUtility.h"
+#include <SeratoDB/NxASeratoDBUtility.h>
 
 namespace NxA {
     #pragma mark Class Declaration

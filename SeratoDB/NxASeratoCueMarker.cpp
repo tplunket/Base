@@ -16,8 +16,8 @@
 
 #include "SeratoDB/NxASeratoCueMarker.h"
 
-using namespace std;
 using namespace NxA;
+using namespace std;
 
 #pragma mark Structures
 
@@ -55,7 +55,7 @@ uint16_t SeratoCueMarker::index(void)
     return this->p_index;
 }
 
-const std::string& SeratoCueMarker::label(void)
+const string& SeratoCueMarker::label(void)
 {
     return *this->p_label;
 }

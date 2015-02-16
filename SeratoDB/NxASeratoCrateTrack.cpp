@@ -18,6 +18,7 @@
 #include "SeratoDB/NxASeratoCrateV1Tags.h"
 
 using namespace NxA;
+using namespace std;
 
 #pragma mark Instance Methods
 
@@ -35,5 +36,5 @@ StringAutoPtr SeratoCrateTrack::trackFilePath(void) const
         }
     }
 
-    return StringAutoPtr(new std::string(""));
+    return StringAutoPtr(new string(""));
 }

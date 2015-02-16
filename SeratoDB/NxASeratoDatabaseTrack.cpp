@@ -18,6 +18,7 @@
 #include "SeratoDB/NxASeratoDatabaseV2Tags.h"
 
 using namespace NxA;
+using namespace std;
 
 #pragma mark Instance Methods
 
@@ -35,7 +36,7 @@ StringAutoPtr SeratoDatabaseTrack::p_stringForSubTagIdentifierOrEmptyIfNotFound(
         }
     }
 
-    return StringAutoPtr(new std::string(""));
+    return StringAutoPtr(new string(""));
 }
 
 StringAutoPtr SeratoDatabaseTrack::p_pathForSubTagIdentifierOrEmptyIfNotFound(uint32_t identifier) const
@@ -47,7 +48,7 @@ StringAutoPtr SeratoDatabaseTrack::p_pathForSubTagIdentifierOrEmptyIfNotFound(ui
         }
     }
 
-    return StringAutoPtr(new std::string(""));
+    return StringAutoPtr(new string(""));
 }
 
 uint32_t SeratoDatabaseTrack::p_uint32ForSubTagIdentifierOrZeroIfNotFound(uint32_t identifier) const

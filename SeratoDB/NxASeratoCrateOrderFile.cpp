@@ -19,16 +19,17 @@
 #include <string>
 
 using namespace NxA;
+using namespace std;
 
 #pragma mark Utility Functions
 
-static std::string* p_crateNameIfValidCrateOrEmptyStringIfNot(const std::string* name)
+static string* p_crateNameIfValidCrateOrEmptyStringIfNot(const string* name)
 {
     if (name->find("[crate]") != 0) {
-        return new std::string;
+        return new string;
     }
 
-    return new std::string(name->substr(7, name->length()));
+    return new string(name->substr(7, name->length()));
 }
 
 #pragma mark Constructors
@@ -47,7 +48,7 @@ SeratoCrateOrderFile::SeratoCrateOrderFile(const char* seratoFolderPath)
 
     StringVectorAutoPtr lines(splitStringIntoOneStringForEachLine(*textAString));
     for(StringVector::iterator it = lines->begin(); it != lines->end(); ++it) {
-        const std::string* crateName = p_crateNameIfValidCrateOrEmptyStringIfNot(it->get());
+        const string* crateName = p_crateNameIfValidCrateOrEmptyStringIfNot(it->get());
         if (*crateName == "") {
             continue;
         }

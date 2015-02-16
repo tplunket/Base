@@ -18,8 +18,8 @@
 
 #include <string>
 
-using namespace std;
 using namespace NxA;
+using namespace std;
 
 #pragma mark Structures
 
@@ -65,7 +65,7 @@ uint16_t SeratoLoopMarker::index(void)
     return this->p_index;
 }
 
-const std::string& SeratoLoopMarker::label(void)
+const string& SeratoLoopMarker::label(void)
 {
     return *this->p_label;
 }

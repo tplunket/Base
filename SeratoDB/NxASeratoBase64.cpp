@@ -138,21 +138,21 @@ CharVectorAutoPtr SeratoBase64::encodeBlock(const char* plaintext_in, int length
     char* code_out = (char*)malloc(length_in * 2);
     char* code_out_end = code_out + (length_in * 2);
     char* codechar = code_out;
-    char result = 0;
+    char charToOutput = 0;
     char fragment;
+    CharVector* result = NULL;
 
     while (1) {
         if (plainchar == plaintextend) {
             *codechar++ = '\n';
-            CharVector* out = new CharVector(code_out, codechar);
-            free(code_out);
-            return CharVectorAutoPtr(out);
+            result = new CharVector(code_out, codechar);
+            break;
         }
 
         fragment = *plainchar++;
-        result = (fragment & 0x0fc) >> 2;
-        *codechar++ = base64_encode_value(result);
-        result = (fragment & 0x003) << 4;
+        charToOutput = (fragment & 0x0fc) >> 2;
+        *codechar++ = base64_encode_value(charToOutput);
+        charToOutput = (fragment & 0x003) << 4;
         if (codechar >= code_out_end) {
             break;
         }
@@ -162,19 +162,19 @@ CharVectorAutoPtr SeratoBase64::encodeBlock(const char* plaintext_in, int length
                 break;
             }
 
-            *codechar++ = base64_encode_value(result);
+            *codechar++ = base64_encode_value(charToOutput);
             *codechar++ = '=';
             *codechar++ = '=';
             *codechar++ = '\n';
-            CharVector* out = new CharVector(code_out, codechar);
-            free(code_out);
-            return CharVectorAutoPtr(out);
+
+            result = new CharVector(code_out, codechar);
+            break;
         }
 
         fragment = *plainchar++;
-        result |= (fragment & 0x0f0) >> 4;
-        *codechar++ = base64_encode_value(result);
-        result = (fragment & 0x00f) << 2;
+        charToOutput |= (fragment & 0x0f0) >> 4;
+        *codechar++ = base64_encode_value(charToOutput);
+        charToOutput = (fragment & 0x00f) << 2;
         if (codechar >= code_out_end) {
             break;
         }
@@ -184,28 +184,29 @@ CharVectorAutoPtr SeratoBase64::encodeBlock(const char* plaintext_in, int length
                 break;
             }
 
-            *codechar++ = base64_encode_value(result);
+            *codechar++ = base64_encode_value(charToOutput);
             *codechar++ = '=';
             *codechar++ = '\n';
-            CharVector* out = new CharVector(code_out, codechar);
-            free(code_out);
-            return CharVectorAutoPtr(out);
+
+            result = new CharVector(code_out, codechar);
+            break;
         }
 
         fragment = *plainchar++;
-        result |= (fragment & 0x0c0) >> 6;
-        *codechar++ = base64_encode_value(result);
-        result  = (fragment & 0x03f) >> 0;
+        charToOutput |= (fragment & 0x0c0) >> 6;
+        *codechar++ = base64_encode_value(charToOutput);
+        charToOutput  = (fragment & 0x03f) >> 0;
         if (codechar >= code_out_end) {
             break;
         }
 
-        *codechar++ = base64_encode_value(result);
+        *codechar++ = base64_encode_value(charToOutput);
         if (codechar >= code_out_end) {
             break;
         }
     }
 
-    // -- Control should not reach here.
-    return CharVectorAutoPtr(NULL);
+    free(code_out);
+
+    return CharVectorAutoPtr(result);
 }

@@ -29,7 +29,7 @@ namespace NxA {
 
     public:
         #pragma mark Constructors
-        SeratoCrateOrderFile(const void* startOfFile, unsigned long lengthInBytes);
+        SeratoCrateOrderFile(const char* seratoFolderPath);
 
         #pragma mark Instance Methods
         const StringVector& crateNamesInOrder(void);

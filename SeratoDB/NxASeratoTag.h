@@ -38,6 +38,18 @@ namespace NxA {
     class SeratoTag
     {
     private:
+        #pragma mark Private Constructors
+        SeratoTag(const void* tagAddress);
+        SeratoTag(const void* tagAddress, const SeratoTag* parentTag) :
+        SeratoTag(tagAddress) {
+            this->p_parentTag = parentTag;
+        };
+
+        #pragma mark Private Class Methods
+        static SeratoTagVectorAutoPtr p_parseTagsInForParentTag(const void* firstTagAddress,
+                                                                size_t sizeFromFirstTagInBytes,
+                                                                const SeratoTag* parentTag);
+
         #pragma mark Private Instance Variables
         uint32_t p_identifier;
 
@@ -52,19 +64,8 @@ namespace NxA {
         SeratoIdentifierToTagMap p_childrenTagsByIdentifier;
 
     public:
-        #pragma mark Constructors
-        SeratoTag(const void* tagAddress);
-
-        SeratoTag(const void* tagAddress, const SeratoTag* parentTag) :
-                  SeratoTag(tagAddress) {
-                      this->p_parentTag = parentTag;
-                  };
-
         #pragma mark Class Methods
-        static SeratoTagVectorAutoPtr parseTagsIn(const void* firstTagAddress, size_t sizeFromFirstTagInBytes);
-        static SeratoTagVectorAutoPtr parseTagsInForParentTag(const void* firstTagAddress,
-                                                              size_t sizeFromFirstTagInBytes,
-                                                              const SeratoTag* parentTag);
+        static SeratoTagVectorAutoPtr parseTagsIn(const CharVectorAutoPtr& seratoTagData);
 
         #pragma mark Instance Methods
         const SeratoTag* subTagWithIdentifierOrNilIfDoesNotExist(uint32_t identifier) const;

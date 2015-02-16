@@ -38,7 +38,7 @@ namespace NxA {
 
     public:
         #pragma mark Constructors
-        SeratoDatabaseFile(const void* startOfFile, unsigned long lengthInBytes);
+        SeratoDatabaseFile(const char* seratoFolderPath);
 
         #pragma mark Instance Methods
         StringAutoPtr versionAsString(void) const;

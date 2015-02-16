@@ -21,9 +21,15 @@ using namespace NxA;
 
 #pragma mark Constructors
 
-SeratoCrateFile::SeratoCrateFile(const void* startOfFile, unsigned long lengthInBytes)
+SeratoCrateFile::SeratoCrateFile(const char* crateName, const char* seratoFolderPath)
 {
-    SeratoTagVectorAutoPtr tags(SeratoTag::parseTagsIn(startOfFile, lengthInBytes));
+    StringAutoPtr crateFilePath = crateFilePathForCrateNameInSeratoFolder(crateName, seratoFolderPath);
+    CharVectorAutoPtr crateFileData = readFileAt(crateFilePath->c_str());
+    if (!crateFileData->size()) {
+        return;
+    }
+
+    SeratoTagVectorAutoPtr tags(SeratoTag::parseTagsIn(crateFileData));
     for(SeratoTagVector::iterator it = tags->begin(); it != tags->end(); ++it) {
         const SeratoTag* tag = it->release();
 

@@ -18,12 +18,16 @@
 #include "SeratoDB/NxASeratoDatabaseV2Tags.h"
 
 using namespace NxA;
+using namespace std;
 
 #pragma mark Constructors
 
-SeratoDatabaseFile::SeratoDatabaseFile(const void* startOfFile, unsigned long lengthInBytes)
+SeratoDatabaseFile::SeratoDatabaseFile(const char* seratoFolderPath)
 {
-    SeratoTagVectorAutoPtr tags = SeratoTag::parseTagsIn(startOfFile, lengthInBytes);
+    StringAutoPtr databaseFilePath = databaseFilePathForSeratoFolder(seratoFolderPath);
+    CharVectorAutoPtr databaseFile = readFileAt(databaseFilePath->c_str());
+
+    SeratoTagVectorAutoPtr tags = SeratoTag::parseTagsIn(databaseFile);
     for(SeratoTagVector::iterator it = tags->begin(); it != tags->end(); ++it) {
         const SeratoTag* tag = it->release();
 

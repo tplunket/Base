@@ -65,7 +65,7 @@ SeratoTag::SeratoTag(const void* tagAddress) :
     this->p_parentTag = NULL;
 
     if ((char)(this->p_identifier >> 24) == 'o') {
-        this->p_subTags = SeratoTag::parseTagsInForParentTag(dataAddress, this->p_dataSizeInBytes, this);
+        this->p_subTags = SeratoTag::p_parseTagsInForParentTag(dataAddress, this->p_dataSizeInBytes, this);
 
         for(SeratoTagVector::iterator it = this->p_subTags->begin(); it != this->p_subTags->end(); ++it) {
             const SeratoTag* subTag = it->get();
@@ -76,9 +76,9 @@ SeratoTag::SeratoTag(const void* tagAddress) :
 
 #pragma mark Class Methods
 
-SeratoTagVectorAutoPtr SeratoTag::parseTagsInForParentTag(const void* firstTagAddress,
-                                                          size_t sizeFromFirstTagInBytes,
-                                                          const SeratoTag* parentTag)
+SeratoTagVectorAutoPtr SeratoTag::p_parseTagsInForParentTag(const void* firstTagAddress,
+                                                            size_t sizeFromFirstTagInBytes,
+                                                            const SeratoTag* parentTag)
 {
     const void* tagAddress = firstTagAddress;
     const void* endOfTagsAddress = (unsigned char*)firstTagAddress + sizeFromFirstTagInBytes;
@@ -95,9 +95,9 @@ SeratoTagVectorAutoPtr SeratoTag::parseTagsInForParentTag(const void* firstTagAd
     return SeratoTagVectorAutoPtr(newTags);
 }
 
-SeratoTagVectorAutoPtr SeratoTag::parseTagsIn(const void* firstTagAddress, size_t sizeFromFirstTagInBytes)
+SeratoTagVectorAutoPtr SeratoTag::parseTagsIn(const CharVectorAutoPtr& seratoTagData)
 {
-    return SeratoTag::parseTagsInForParentTag(firstTagAddress, sizeFromFirstTagInBytes, NULL);
+    return SeratoTag::p_parseTagsInForParentTag(seratoTagData->data(), seratoTagData->size(), NULL);
 }
 
 #pragma mark Instance Methods

@@ -33,8 +33,14 @@ static std::string* p_crateNameIfValidCrateOrEmptyStringIfNot(const std::string*
 
 #pragma mark Constructors
 
-SeratoCrateOrderFile::SeratoCrateOrderFile(const void* startOfFile, unsigned long lengthInBytes)
+SeratoCrateOrderFile::SeratoCrateOrderFile(const char* seratoFolderPath)
 {
+    StringAutoPtr crateOrderFilePath = crateOrderFilePathForSeratoFolder(seratoFolderPath);
+    CharVectorAutoPtr crateOrderFile = readFileAt(crateOrderFilePath->c_str());
+
+    const void* startOfFile = crateOrderFile->data();
+    size_t lengthInBytes = crateOrderFile->size();
+
     int numberOfCharacters = (int)lengthInBytes / 2;
     const char16_t* textToRead = (const char16_t*)startOfFile;
     StringAutoPtr textAString = convertUTF16ToStdString(textToRead, numberOfCharacters);

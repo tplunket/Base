@@ -54,6 +54,7 @@ namespace NxA {
         #pragma mark Protected Constructors
         SeratoTrackFile() : p_cueMarkers(new SeratoCueMarkerVector),
                             p_loopMarkers(new SeratoLoopMarkerVector) { };
+        
     public:
         #pragma mark Instance Methods
         virtual StringAutoPtr title(void) const;

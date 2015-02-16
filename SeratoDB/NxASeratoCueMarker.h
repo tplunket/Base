@@ -52,5 +52,4 @@ namespace NxA {
     };
 }
 
-
 #endif /* defined(__SeratoDB__NxASeratoCueMarker__) */

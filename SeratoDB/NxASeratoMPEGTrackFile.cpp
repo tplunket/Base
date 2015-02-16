@@ -27,13 +27,14 @@ using namespace TagLib;
 SeratoMPEGTrackFile::SeratoMPEGTrackFile(const char* trackFilePath) : SeratoID3TrackFile()
 {
     MPEG::File* file = new MPEG::File(trackFilePath);
-    this->p_file = auto_ptr<TagLib::File>((TagLib::File*)file);
-    if (!file) {
+    if (!file->isValid()) {
+        this->p_file = auto_ptr<TagLib::File>(NULL);
         this->p_parsedFileTag = NULL;
         this->p_audioProperties = NULL;
         return;
     }
 
+    this->p_file = auto_ptr<TagLib::File>((TagLib::File*)file);
     this->p_parsedFileTag = (TagLib::Tag*)file->ID3v2Tag();
     this->p_audioProperties = file->audioProperties();
     this->p_properties = file->properties();

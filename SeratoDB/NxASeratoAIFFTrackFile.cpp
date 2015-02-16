@@ -27,13 +27,14 @@ using namespace TagLib;
 SeratoAIFFTrackFile::SeratoAIFFTrackFile(const char* trackFilePath) : SeratoID3TrackFile()
 {
     RIFF::AIFF::File* file = new RIFF::AIFF::File(trackFilePath);
-    this->p_file = auto_ptr<TagLib::File>((TagLib::File*)file);
-    if (!file) {
+    if (!file->isValid()) {
+        this->p_file = auto_ptr<TagLib::File>(NULL);
         this->p_parsedFileTag = NULL;
         this->p_audioProperties = NULL;
         return;
     }
 
+    this->p_file = auto_ptr<TagLib::File>((TagLib::File*)file);
     this->p_parsedFileTag = file->tag();
     this->p_audioProperties = file->audioProperties();
     this->p_properties = file->properties();

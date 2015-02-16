@@ -39,13 +39,14 @@ typedef struct {
 SeratoFLACTrackFile::SeratoFLACTrackFile(const char* trackFilePath) : SeratoTrackFile()
 {
     FLAC::File* file = new FLAC::File(trackFilePath);
-    this->p_file = auto_ptr<TagLib::File>((TagLib::File*)file);
-    if (!file) {
+    if (!file->isValid()) {
+        this->p_file = auto_ptr<TagLib::File>(NULL);
         this->p_parsedFileTag = NULL;
         this->p_audioProperties = NULL;
         return;
     }
 
+    this->p_file = auto_ptr<TagLib::File>((TagLib::File*)file);
     this->p_parsedFileTag = file->tag();
     this->p_audioProperties = file->audioProperties();
     this->p_properties = file->properties();

@@ -17,7 +17,6 @@
 #include <taglib/generalencapsulatedobjectframe.h>
 
 #include "SeratoDB/NxASeratoID3TrackFile.h"
-#include "SeratoDB/NxASeratoDbUtility.h"
 #include "SeratoDB/NxASeratoBase64.h"
 
 #include <taglib/id3v2tag.h>

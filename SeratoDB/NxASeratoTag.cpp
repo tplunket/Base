@@ -15,7 +15,6 @@
 //
 
 #include "SeratoDB/NxASeratoTag.h"
-#include "SeratoDB/NxASeratoDBUtility.h"
 
 using namespace NxA;
 

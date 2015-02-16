@@ -18,7 +18,6 @@
 #include <taglib/generalencapsulatedobjectframe.h>
 
 #include "SeratoDB/NxASeratoTrackFile.h"
-#include "SeratoDB/NxASeratoDbUtility.h"
 #include "SeratoDB/NxASeratoBase64.h"
 
 using namespace std;

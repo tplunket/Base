@@ -108,12 +108,6 @@ namespace NxA {
         return StringAutoPtr(result);
     }
 
-    bool p_fileExists(const char* filePath)
-    {
-        struct stat buf;
-        return (stat(filePath, &buf) != -1);
-    }
-
     size_t p_sizeOfFileAt(const char* filePath)
     {
         struct stat buf;
@@ -151,7 +145,13 @@ namespace NxA {
         StringAutoPtr seratoFolderPath = seratoFolderPathForFolder(folderPath);
         StringAutoPtr databaseFilePath = databaseFilePathForSeratoFolder(seratoFolderPath->c_str());
         StringAutoPtr crateOrderFilePath = crateOrderFilePathForSeratoFolder(seratoFolderPath->c_str());
-        return p_fileExists(databaseFilePath->c_str()) && p_fileExists(crateOrderFilePath->c_str());
+        return fileExistsAt(databaseFilePath->c_str()) && fileExistsAt(crateOrderFilePath->c_str());
+    }
+
+    bool fileExistsAt(const char* filePath)
+    {
+        struct stat buf;
+        return (stat(filePath, &buf) != -1);
     }
 
     CharVectorAutoPtr readFileAt(const char* filePath)

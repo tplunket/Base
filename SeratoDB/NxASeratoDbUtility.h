@@ -43,6 +43,7 @@ namespace NxA {
     StringAutoPtr crateOrderFilePathForSeratoFolder(const char* seratoFolderPath);
     StringAutoPtr crateFilePathForCrateNameInSeratoFolder(const char* crateName, const char* seratoFolderPath);
 
+    bool fileExistsAt(const char* filePath);
     CharVectorAutoPtr readFileAt(const char* filePath);
 }
 

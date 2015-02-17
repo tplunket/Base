@@ -46,6 +46,8 @@ SeratoDatabase::SeratoDatabase(const char* seratoFolderPath)
             }
         }
     }
+
+    this->p_crateOrderFile = SeratoCrateOrderFileAutoPtr(new SeratoCrateOrderFile(seratoFolderPath));
 }
 
 #pragma mark Instance Methods
@@ -77,6 +79,11 @@ StringAutoPtr SeratoDatabase::versionAsString(void) const
     }
 
     return StringAutoPtr();
+}
+
+const SeratoCrateVector& SeratoDatabase::crates(void) const
+{
+    return this->p_crateOrderFile->crates();
 }
 
 const SeratoTrackVector& SeratoDatabase::tracks(void) const

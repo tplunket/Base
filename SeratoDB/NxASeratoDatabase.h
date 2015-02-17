@@ -19,6 +19,8 @@
 
 #include <SeratoDB/NxASeratoTag.h>
 #include <SeratoDB/NxASeratoTrack.h>
+#include <SeratoDB/NxASeratoCrate.h>
+#include <SeratoDB/NxASeratoCrateOrderFile.h>
 #include <SeratoDB/NxASeratoDBUtility.h>
 
 namespace NxA {
@@ -30,6 +32,8 @@ namespace NxA {
         SeratoTagAutoPtr p_versionTag;
         SeratoTrackVector p_tracks;
         SeratoTagVector p_otherTags;
+
+        SeratoCrateOrderFileAutoPtr p_crateOrderFile;
 
         #pragma mark Private Instance Methods
         void p_storeVersionTag(const SeratoTag* tag);
@@ -43,6 +47,7 @@ namespace NxA {
         #pragma mark Instance Methods
         StringAutoPtr versionAsString(void) const;
 
+        const SeratoCrateVector& crates(void) const;
         const SeratoTrackVector& tracks(void) const;
     };
 }

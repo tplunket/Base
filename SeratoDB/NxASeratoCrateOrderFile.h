@@ -21,6 +21,12 @@
 #include <SeratoDB/NxASeratoCrate.h>
 
 namespace NxA {
+    #pragma mark Forward declarations
+    class SeratoCrateOrderFile;
+
+    #pragma mark Containers
+    typedef std::auto_ptr<const SeratoCrateOrderFile> SeratoCrateOrderFileAutoPtr;
+
     #pragma mark Class Declaration
     class SeratoCrateOrderFile
     {

@@ -20,12 +20,12 @@
 #pragma mark Constants
 
 // -- Known database tag identifiers.
-#define NxASeratoDatabaseVersionTag                             'vrsn'
+#define NxASeratoDatabaseVersionTag                     'vrsn'
 #define NxASeratoTrackObjectTag                         'otrk'
 #define NxASeratoTrackFilePathTag                       'pfil'
-#define NxASeratoDatabaseDirectoryPathTag                       'pdir'
-#define NxASeratoDatabaseVideoFilePathTag                       'pvid'
-#define NxASeratoDatabaseFileTypeTag                            'ttyp'
+#define NxASeratoDatabaseDirectoryPathTag               'pdir'
+#define NxASeratoDatabaseVideoFilePathTag               'pvid'
+#define NxASeratoDatabaseFileTypeTag                    'ttyp'
 #define NxASeratoTrackTitleTag                          'tsng'
 #define NxASeratoTrackArtistTag                         'tart'
 #define NxASeratoTrackAlbumTag                          'talb'

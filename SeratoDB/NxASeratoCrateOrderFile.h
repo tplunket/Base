@@ -33,7 +33,7 @@ namespace NxA {
         SeratoCrateOrderFile(const char* seratoFolderPath);
 
         #pragma mark Instance Methods
-        const SeratoCrateVector& crates(void);
+        const SeratoCrateVector& crates(void) const;
     };
 }
 

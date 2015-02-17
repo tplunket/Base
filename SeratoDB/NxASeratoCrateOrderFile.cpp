@@ -110,7 +110,7 @@ SeratoCrateOrderFile::SeratoCrateOrderFile(const char* seratoFolderPath)
 
 #pragma mark Instance Methods
 
-const SeratoCrateVector& SeratoCrateOrderFile::crates(void)
+const SeratoCrateVector& SeratoCrateOrderFile::crates(void) const
 {
     return *this->p_crates;
 }

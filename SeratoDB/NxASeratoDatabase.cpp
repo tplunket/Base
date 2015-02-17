@@ -20,6 +20,28 @@
 using namespace NxA;
 using namespace std;
 
+#define PRINT_DEBUG_INFO        0
+
+#pragma Utility Functions
+
+#if PRINT_DEBUG_INFO
+static void p_debugListCrates(const SeratoCrateVector& crates, std::string spacing)
+{
+    for(SeratoCrateVector::const_iterator it = crates.begin(); it != crates.end(); ++it) {
+        const SeratoCrate* crate = it->get();
+        const string& crateName = crate->crateName();
+        printf("%sCrate '%s'\n", spacing.c_str(), crateName.c_str());
+
+        const SeratoTrackEntryVector& crateTracks = crate->tracks();
+        for(SeratoTrackEntryVector::const_iterator cit = crateTracks.begin(); cit != crateTracks.end(); ++cit) {
+            printf("%s   Track '%s'\n", spacing.c_str(), cit->get()->trackFilePath()->c_str());
+        }
+
+        p_debugListCrates(crate->crates(), (spacing + "   "));
+    }
+}
+#endif
+
 #pragma mark Constructors
 
 SeratoDatabase::SeratoDatabase(const char* seratoFolderPath)
@@ -48,6 +70,10 @@ SeratoDatabase::SeratoDatabase(const char* seratoFolderPath)
     }
 
     this->p_crateOrderFile = SeratoCrateOrderFileAutoPtr(new SeratoCrateOrderFile(seratoFolderPath));
+
+#if PRINT_DEBUG_INFO
+    p_debugListCrates(this->crates(), "");
+#endif
 }
 
 #pragma mark Instance Methods

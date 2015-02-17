@@ -19,7 +19,7 @@
 
 // -- These are our standard includes for the library.
 #include <SeratoDB/NxASeratoDbUtility.h>
-#include <SeratoDB/NxASeratoDatabaseFile.h>
+#include <SeratoDB/NxASeratoDatabase.h>
 #include <SeratoDB/NxASeratoCrateOrderFile.h>
 #include <SeratoDB/NxASeratoCrate.h>
 #include <SeratoDB/NxASeratoTrackFileFactory.h>

@@ -1,5 +1,5 @@
 //
-//  NxASeratoDatabaseFile.cpp
+//  NxASeratoDatabase.cpp
 //  SeratoDB
 //
 //  Created by Didier Malenfant on 1/30/15.
@@ -14,7 +14,7 @@
 //  or email licensing@serato.com.
 //
 
-#include "SeratoDB/NxASeratoDatabaseFile.h"
+#include "SeratoDB/NxASeratoDatabase.h"
 #include "SeratoDB/NxASeratoDatabaseV2Tags.h"
 
 using namespace NxA;
@@ -22,7 +22,7 @@ using namespace std;
 
 #pragma mark Constructors
 
-SeratoDatabaseFile::SeratoDatabaseFile(const char* seratoFolderPath)
+SeratoDatabase::SeratoDatabase(const char* seratoFolderPath)
 {
     StringAutoPtr databaseFilePath = databaseFilePathForSeratoFolder(seratoFolderPath);
     CharVectorAutoPtr databaseFile = readFileAt(databaseFilePath->c_str());
@@ -50,7 +50,7 @@ SeratoDatabaseFile::SeratoDatabaseFile(const char* seratoFolderPath)
 
 #pragma mark Instance Methods
 
-void SeratoDatabaseFile::p_storeVersionTag(const SeratoTag* tag)
+void SeratoDatabase::p_storeVersionTag(const SeratoTag* tag)
 {
     if (this->p_versionTag.get()) {
         return;
@@ -59,18 +59,18 @@ void SeratoDatabaseFile::p_storeVersionTag(const SeratoTag* tag)
     this->p_versionTag = SeratoTagAutoPtr(tag);
 }
 
-void SeratoDatabaseFile::p_storeTrackTag(const SeratoTag* tag)
+void SeratoDatabase::p_storeTrackTag(const SeratoTag* tag)
 {
     SeratoTrack* newTrack = new SeratoTrack(tag);
     this->p_tracks.push_back(SeratoTrackAutoPtr(newTrack));
 }
 
-void SeratoDatabaseFile::p_storeOtherTag(const SeratoTag* tag)
+void SeratoDatabase::p_storeOtherTag(const SeratoTag* tag)
 {
     this->p_otherTags.push_back(SeratoTagAutoPtr(tag));
 }
 
-StringAutoPtr SeratoDatabaseFile::versionAsString(void) const
+StringAutoPtr SeratoDatabase::versionAsString(void) const
 {
     if (this->p_versionTag.get()) {
         return this->p_versionTag->dataAsString();
@@ -79,7 +79,7 @@ StringAutoPtr SeratoDatabaseFile::versionAsString(void) const
     return StringAutoPtr();
 }
 
-const SeratoTrackVector& SeratoDatabaseFile::tracks(void)
+const SeratoTrackVector& SeratoDatabase::tracks(void)
 {
     return this->p_tracks;
 }

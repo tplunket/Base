@@ -1,5 +1,5 @@
 //
-//  NxASeratoDatabaseFile.h
+//  NxASeratoDatabase.h
 //  SeratoDB
 //
 //  Created by Didier Malenfant on 1/30/15.
@@ -14,8 +14,8 @@
 //  or email licensing@serato.com.
 //
 
-#ifndef __SeratoDB__NxASeratoDatabaseFile__
-#define __SeratoDB__NxASeratoDatabaseFile__
+#ifndef __SeratoDB__NxASeratoDatabase__
+#define __SeratoDB__NxASeratoDatabase__
 
 #include <SeratoDB/NxASeratoTag.h>
 #include <SeratoDB/NxASeratoTrack.h>
@@ -23,7 +23,7 @@
 
 namespace NxA {
     #pragma mark Class Declaration
-    class SeratoDatabaseFile
+    class SeratoDatabase
     {
     private:
         #pragma mark Private Instance Variables
@@ -38,7 +38,7 @@ namespace NxA {
 
     public:
         #pragma mark Constructors
-        SeratoDatabaseFile(const char* seratoFolderPath);
+        SeratoDatabase(const char* seratoFolderPath);
 
         #pragma mark Instance Methods
         StringAutoPtr versionAsString(void) const;
@@ -47,4 +47,4 @@ namespace NxA {
     };
 }
 
-#endif /* defined(__SeratoDB__NxASeratoDatabaseFile__) */
+#endif /* defined(__SeratoDB__NxASeratoDatabase__) */

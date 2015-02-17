@@ -36,7 +36,7 @@ SeratoDatabaseFile::SeratoDatabaseFile(const char* seratoFolderPath)
                 this->p_storeVersionTag(tag);
                 break;
             }
-            case NxASeratoDatabaseTrackObjectTag: {
+            case NxASeratoTrackObjectTag: {
                 this->p_storeTrackTag(tag);
                 break;
             }
@@ -61,8 +61,8 @@ void SeratoDatabaseFile::p_storeVersionTag(const SeratoTag* tag)
 
 void SeratoDatabaseFile::p_storeTrackTag(const SeratoTag* tag)
 {
-    SeratoDatabaseTrack* newTrack = new SeratoDatabaseTrack(tag);
-    this->p_tracks.push_back(SeratoDatabaseTrackAutoPtr(newTrack));
+    SeratoTrack* newTrack = new SeratoTrack(tag);
+    this->p_tracks.push_back(SeratoTrackAutoPtr(newTrack));
 }
 
 void SeratoDatabaseFile::p_storeOtherTag(const SeratoTag* tag)
@@ -79,7 +79,7 @@ StringAutoPtr SeratoDatabaseFile::versionAsString(void) const
     return StringAutoPtr();
 }
 
-const SeratoDatabaseTrackVector& SeratoDatabaseFile::tracks(void)
+const SeratoTrackVector& SeratoDatabaseFile::tracks(void)
 {
     return this->p_tracks;
 }

@@ -1,5 +1,5 @@
 //
-//  NxASeratoCrateFile.h
+//  NxASeratoCrate.h
 //  SeratoDB
 //
 //  Created by Didier Malenfant on 2/4/15.
@@ -14,21 +14,34 @@
 //  or email licensing@serato.com.
 //
 
-#ifndef __SeratoDB__NxASeratoCrateFile__
-#define __SeratoDB__NxASeratoCrateFile__
+#ifndef __SeratoDB__NxASeratoCrate__
+#define __SeratoDB__NxASeratoCrate__
 
 #include <SeratoDB/NxASeratoTag.h>
-#include <SeratoDB/NxASeratoCrateTrack.h>
+#include <SeratoDB/NxASeratoTrackEntry.h>
 #include <SeratoDB/NxASeratoDbUtility.h>
 
 namespace NxA {
+    #pragma mark Forward declarations
+    class SeratoCrate;
+
+    #pragma mark Containers
+    typedef std::auto_ptr<const SeratoCrate> SeratoCrateAutoPtr;
+    typedef std::vector<SeratoCrateAutoPtr> SeratoCrateVector;
+    typedef std::auto_ptr<SeratoCrateVector> SeratoCrateVectorAutoPtr;
+
     #pragma mark Class Declaration
-    class SeratoCrateFile
+    class SeratoCrate
     {
     private:
         #pragma mark Private Instance Variables
+        StringAutoPtr p_crateName;
+        StringAutoPtr p_fullyQualifiedCrateName;
+
+        SeratoCrateVector p_childrenCrates;
+
         SeratoTagAutoPtr p_versionTag;
-        SeratoCrateTrackVector p_tracks;
+        SeratoTrackEntryVector p_tracks;
         SeratoTagVector p_otherTags;
 
         #pragma mark Private Instance Methods
@@ -38,13 +51,21 @@ namespace NxA {
 
     public:
         #pragma mark Constructors
-        SeratoCrateFile(const char* crateName, const char* seratoFolderPath);
+        SeratoCrate(const char* fullyQualifiedCrateName, const char* seratoFolderPath);
+
+        #pragma mark Class Methods
+        static bool isAValidCrateName(const char* fullyQualifiedCrateName, const char* seratoFolderPath);
 
         #pragma mark Instance Methods
         StringAutoPtr versionAsString(void) const;
 
-        const SeratoCrateTrackVector& tracks(void);
+        const std::string& crateName(void) const;
+
+        const SeratoTrackEntryVector& tracks(void) const;
+        const SeratoCrateVector& crates(void) const;
+
+        void addChildCrate(SeratoCrateAutoPtr crate);
     };
 }
 
-#endif /* defined(__SeratoDB__NxASeratoCrateFile__) */
+#endif /* defined(__SeratoDB__NxASeratoCrate__) */

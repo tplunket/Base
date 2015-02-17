@@ -21,8 +21,8 @@
 
 // -- Known crate tag identifiers.
 #define NxASeratoCrateVersionTag                           'vrsn'
-#define NxASeratoCrateTrackTag                             'otrk'
-#define NxASeratoCrateTrackPathTag                         'ptrk'
+#define NxASeratoTrackEntryTag                             'otrk'
+#define NxASeratoTrackEntryPathTag                         'ptrk'
 #define NxASeratoCrateRemoveTrackActionTag                 'ortk'
 #define NxASeratoCrateColumnSortingTag                     'osrt'
 #define NxASeratoCrateColumnNameTag                        'tvcn'

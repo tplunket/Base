@@ -18,7 +18,7 @@
 #define __SeratoDB__NxASeratoDatabaseFile__
 
 #include <SeratoDB/NxASeratoTag.h>
-#include <SeratoDB/NxASeratoDatabaseTrack.h>
+#include <SeratoDB/NxASeratoTrack.h>
 #include <SeratoDB/NxASeratoDBUtility.h>
 
 namespace NxA {
@@ -28,7 +28,7 @@ namespace NxA {
     private:
         #pragma mark Private Instance Variables
         SeratoTagAutoPtr p_versionTag;
-        SeratoDatabaseTrackVector p_tracks;
+        SeratoTrackVector p_tracks;
         SeratoTagVector p_otherTags;
 
         #pragma mark Private Instance Methods
@@ -43,7 +43,7 @@ namespace NxA {
         #pragma mark Instance Methods
         StringAutoPtr versionAsString(void) const;
 
-        const SeratoDatabaseTrackVector& tracks(void);
+        const SeratoTrackVector& tracks(void);
     };
 }
 

@@ -1,5 +1,5 @@
 //
-//  NxASeratoCrateTrack.h
+//  NxASeratoTrackEntry.h
 //  SeratoDB
 //
 //  Created by Didier Malenfant on 2/5/15.
@@ -14,8 +14,8 @@
 //  or email licensing@serato.com.
 //
 
-#ifndef __SeratoDB__NxASeratoCrateTrack__
-#define __SeratoDB__NxASeratoCrateTrack__
+#ifndef __SeratoDB__NxASeratoTrackEntry__
+#define __SeratoDB__NxASeratoTrackEntry__
 
 #include <SeratoDB/NxASeratoTag.h>
 #include <SeratoDB/NxASeratoDbUtility.h>
@@ -24,14 +24,14 @@
 
 namespace NxA {
     #pragma mark Forward declarations
-    class SeratoCrateTrack;
+    class SeratoTrackEntry;
 
     #pragma mark Containers
-    typedef std::auto_ptr<const SeratoCrateTrack> SeratoCrateTrackAutoPtr;
-    typedef std::vector<SeratoCrateTrackAutoPtr> SeratoCrateTrackVector;
+    typedef std::auto_ptr<const SeratoTrackEntry> SeratoTrackEntryAutoPtr;
+    typedef std::vector<SeratoTrackEntryAutoPtr> SeratoTrackEntryVector;
 
     #pragma mark Class Declaration
-    class SeratoCrateTrack
+    class SeratoTrackEntry
     {
     private:
         #pragma mark Private Instance Variable
@@ -44,7 +44,7 @@ namespace NxA {
 
     public:
         #pragma mark Constructors
-        SeratoCrateTrack(const SeratoTag* trackTag) :
+        SeratoTrackEntry(const SeratoTag* trackTag) :
                          p_trackTag(SeratoTagAutoPtr(trackTag)) { };
 
         #pragma mark Instance Methods
@@ -52,4 +52,4 @@ namespace NxA {
     };
 }
 
-#endif /* defined(__SeratoDB__NxASeratoCrateTrack__) */
+#endif /* defined(__SeratoDB__NxASeratoTrackEntry__) */

@@ -1,5 +1,5 @@
 //
-//  NxASeratoCrateTrack.cpp
+//  NxASeratoTrackEntry.cpp
 //  SeratoDB
 //
 //  Created by Didier Malenfant on 2/5/15.
@@ -14,7 +14,7 @@
 //  or email licensing@serato.com.
 //
 
-#include "SeratoDB/NxASeratoCrateTrack.h"
+#include "SeratoDB/NxASeratoTrackEntry.h"
 #include "SeratoDB/NxASeratoCrateV1Tags.h"
 
 using namespace NxA;
@@ -22,15 +22,15 @@ using namespace std;
 
 #pragma mark Instance Methods
 
-bool SeratoCrateTrack::p_containsAValidTag(void) const
+bool SeratoTrackEntry::p_containsAValidTag(void) const
 {
     return this->p_trackTag.get() != NULL;
 }
 
-StringAutoPtr SeratoCrateTrack::trackFilePath(void) const
+StringAutoPtr SeratoTrackEntry::trackFilePath(void) const
 {
     if (this->p_containsAValidTag()) {
-        const SeratoTag* tag = this->p_trackTag->subTagWithIdentifierOrNilIfDoesNotExist(NxASeratoCrateTrackPathTag);
+        const SeratoTag* tag = this->p_trackTag->subTagWithIdentifierOrNilIfDoesNotExist(NxASeratoTrackEntryPathTag);
         if (tag != NULL) {
             return tag->dataAsPath();
         }

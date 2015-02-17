@@ -43,7 +43,7 @@ namespace NxA {
         #pragma mark Instance Methods
         StringAutoPtr versionAsString(void) const;
 
-        const SeratoTrackVector& tracks(void);
+        const SeratoTrackVector& tracks(void) const;
     };
 }
 

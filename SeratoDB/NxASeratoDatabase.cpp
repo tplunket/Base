@@ -79,7 +79,7 @@ StringAutoPtr SeratoDatabase::versionAsString(void) const
     return StringAutoPtr();
 }
 
-const SeratoTrackVector& SeratoDatabase::tracks(void)
+const SeratoTrackVector& SeratoDatabase::tracks(void) const
 {
     return this->p_tracks;
 }

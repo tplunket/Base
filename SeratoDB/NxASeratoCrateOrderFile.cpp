@@ -23,13 +23,67 @@ using namespace std;
 
 #pragma mark Utility Functions
 
-static string* p_crateNameIfValidCrateOrEmptyStringIfNot(const string* name)
+static bool p_stringHasPrefix(const string& stringToTest, const string& prefix)
 {
-    if (name->find("[crate]") != 0) {
-        return new string;
+    return stringToTest.find(prefix) == 0;
+}
+
+static StringAutoPtr p_crateNameIfValidCrateOrNullIfNot(const string& name)
+{
+    string* result = NULL;
+
+    if (p_stringHasPrefix(name, "[crate]")) {
+        result = new string(name.substr(7, name.length() - 7));
     }
 
-    return new string(name->substr(7, name->length()));
+    return StringAutoPtr(result);
+}
+
+static SeratoCrateVectorAutoPtr p_childrenCratesOfCrateNamedUsingNameList(const string& name,
+                                                                          StringVector::iterator& it,
+                                                                          const StringVector::iterator& end,
+                                                                          const char* seratoFolderPath)
+{
+    SeratoCrateVector* cratesFound = new SeratoCrateVector;
+
+    while (it != end) {
+        const StringAutoPtr fullCrateName = p_crateNameIfValidCrateOrNullIfNot(*(it->get()));
+        if (!fullCrateName.get()) {
+            ++it;
+            continue;
+        }
+
+        if (name.length() && !p_stringHasPrefix(*fullCrateName, name)) {
+            break;
+        }
+
+        if (!SeratoCrate::isAValidCrateName(fullCrateName->c_str(), seratoFolderPath)) {
+            ++it;
+            continue;
+        }
+
+        const string* childCrateName = new string(fullCrateName->substr(name.length(),
+                                                                        fullCrateName->length() - name.length()));
+        printf("Crate '%s' child of crate '%s'\n", childCrateName->c_str(), name.c_str());
+        
+        SeratoCrate* newCrate = new SeratoCrate(fullCrateName->c_str(), seratoFolderPath);
+        cratesFound->push_back(SeratoCrateAutoPtr(newCrate));
+
+        ++it;
+
+        string crateNameWithSeperator = *fullCrateName;
+        crateNameWithSeperator += "%%";
+
+        SeratoCrateVectorAutoPtr childCrates = p_childrenCratesOfCrateNamedUsingNameList(crateNameWithSeperator,
+                                                                                         it,
+                                                                                         end,
+                                                                                         seratoFolderPath);
+        for (SeratoCrateVector::iterator childrenIt = childCrates->begin(); childrenIt != childCrates->end(); ++childrenIt) {
+            newCrate->addChildCrate(*childrenIt);
+        }
+    }
+
+    return SeratoCrateVectorAutoPtr(cratesFound);
 }
 
 #pragma mark Constructors
@@ -38,28 +92,25 @@ SeratoCrateOrderFile::SeratoCrateOrderFile(const char* seratoFolderPath)
 {
     StringAutoPtr crateOrderFilePath = crateOrderFilePathForSeratoFolder(seratoFolderPath);
     CharVectorAutoPtr crateOrderFile = readFileAt(crateOrderFilePath->c_str());
+    if (!crateOrderFile->size()) {
+        return;
+    }
+    
+    const char16_t* textToRead = (const char16_t*)crateOrderFile->data();
+    int numberOfCharacters = (int)crateOrderFile->size() / 2;
 
-    const void* startOfFile = crateOrderFile->data();
-    size_t lengthInBytes = crateOrderFile->size();
-
-    int numberOfCharacters = (int)lengthInBytes / 2;
-    const char16_t* textToRead = (const char16_t*)startOfFile;
     StringAutoPtr textAString = convertUTF16ToStdString(textToRead, numberOfCharacters);
 
     StringVectorAutoPtr lines(splitStringIntoOneStringForEachLine(*textAString));
-    for(StringVector::iterator it = lines->begin(); it != lines->end(); ++it) {
-        const string* crateName = p_crateNameIfValidCrateOrEmptyStringIfNot(it->get());
-        if (*crateName == "") {
-            continue;
-        }
 
-        this->p_crateNames.push_back(StringAutoPtr(crateName));
-    }
+    StringVector::iterator it = lines->begin();
+
+    this->p_crates = p_childrenCratesOfCrateNamedUsingNameList("", it, lines->end(), seratoFolderPath);
 }
 
 #pragma mark Instance Methods
 
-const StringVector& SeratoCrateOrderFile::crateNamesInOrder(void)
+const SeratoCrateVector& SeratoCrateOrderFile::crates(void)
 {
-    return this->p_crateNames;
+    return *this->p_crates;
 }

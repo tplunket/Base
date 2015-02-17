@@ -18,6 +18,7 @@
 #define __SeratoDB__NxASeratoCrateOrderFile__
 
 #include <SeratoDB/NxASeratoDBUtility.h>
+#include <SeratoDB/NxASeratoCrate.h>
 
 namespace NxA {
     #pragma mark Class Declaration
@@ -25,14 +26,14 @@ namespace NxA {
     {
     private:
         #pragma mark Private Instance Variables
-        StringVector p_crateNames;
+        SeratoCrateVectorAutoPtr p_crates;
 
     public:
         #pragma mark Constructors
         SeratoCrateOrderFile(const char* seratoFolderPath);
 
         #pragma mark Instance Methods
-        const StringVector& crateNamesInOrder(void);
+        const SeratoCrateVector& crates(void);
     };
 }
 

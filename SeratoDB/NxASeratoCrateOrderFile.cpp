@@ -62,10 +62,6 @@ static SeratoCrateVectorAutoPtr p_childrenCratesOfCrateNamedUsingNameList(const 
             continue;
         }
 
-        const string* childCrateName = new string(fullCrateName->substr(name.length(),
-                                                                        fullCrateName->length() - name.length()));
-        printf("Crate '%s' child of crate '%s'\n", childCrateName->c_str(), name.c_str());
-        
         SeratoCrate* newCrate = new SeratoCrate(fullCrateName->c_str(), seratoFolderPath);
         cratesFound->push_back(SeratoCrateAutoPtr(newCrate));
 

@@ -58,7 +58,6 @@ SeratoTrackFileAutoPtr SeratoTrackFileFactory::trackFileForPath(const char* trac
     else if (p_hasSuffix(trackFilePath, ".wav")) {
         file = new SeratoWAVTrackFile(trackFilePath);
     }
-    // -- TODO: Add support for WMA on windows.
 
     return SeratoTrackFileAutoPtr(file);
 }

@@ -18,6 +18,7 @@
 #define __SeratoDB__NxASeratoTrack__
 
 #include <SeratoDB/NxASeratoTag.h>
+#include <SeratoDB/NxASeratoTrackFile.h>
 
 #include <vector>
 
@@ -35,6 +36,7 @@ namespace NxA {
     private:
         #pragma mark Private Instance Variable
         SeratoTagAutoPtr p_trackTag;
+        SeratoTrackFileAutoPtr p_trackFile;
 
         #pragma mark Private Instance Methods
         bool p_containsAValidTag(void) const;
@@ -43,15 +45,15 @@ namespace NxA {
         uint32_t p_uint32ForSubTagIdentifierOrZeroIfNotFound(uint32_t identifier) const;
         uint32_t p_uint32ForStringSubTagIdentifierOrZeroIfNotFound(uint32_t identifier) const;
 
+        StringAutoPtr p_trackFilePath(void) const;
+
     public:
         #pragma mark Constructors
-        SeratoTrack(const SeratoTag* trackTag) :
-                            p_trackTag(SeratoTagAutoPtr(trackTag)) { };
+        SeratoTrack(const SeratoTag* trackTag);
 
         #pragma mark Instance Methods
         StringAutoPtr title(void) const;
         StringAutoPtr artist(void) const;
-        StringAutoPtr trackFilePath(void) const;
         StringAutoPtr album(void) const;
         StringAutoPtr genre(void) const;
         StringAutoPtr comments(void) const;

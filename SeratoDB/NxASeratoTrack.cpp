@@ -16,9 +16,20 @@
 
 #include "SeratoDB/NxASeratoTrack.h"
 #include "SeratoDB/NxASeratoDatabaseV2Tags.h"
+#include "SeratoDB/NxASeratoTrackFileFactory.h"
 
 using namespace NxA;
 using namespace std;
+
+#pragma mark Constructors
+
+SeratoTrack::SeratoTrack(const SeratoTag* trackTag) : p_trackTag(SeratoTagAutoPtr(trackTag))
+{
+    string trackFilePath("/");
+    trackFilePath += *(this->p_trackFilePath());
+    
+    this->p_trackFile = SeratoTrackFileFactory::trackFileForPath(trackFilePath.c_str());
+}
 
 #pragma mark Instance Methods
 
@@ -63,6 +74,11 @@ uint32_t SeratoTrack::p_uint32ForSubTagIdentifierOrZeroIfNotFound(uint32_t ident
     return 0;
 }
 
+StringAutoPtr SeratoTrack::p_trackFilePath(void) const
+{
+    return this->p_pathForSubTagIdentifierOrEmptyIfNotFound(NxASeratoTrackFilePathTag);
+}
+
 StringAutoPtr SeratoTrack::title(void) const
 {
     return this->p_stringForSubTagIdentifierOrEmptyIfNotFound(NxASeratoTrackTitleTag);
@@ -71,11 +87,6 @@ StringAutoPtr SeratoTrack::title(void) const
 StringAutoPtr SeratoTrack::artist(void) const
 {
     return this->p_stringForSubTagIdentifierOrEmptyIfNotFound(NxASeratoTrackArtistTag);
-}
-
-StringAutoPtr SeratoTrack::trackFilePath(void) const
-{
-    return this->p_pathForSubTagIdentifierOrEmptyIfNotFound(NxASeratoTrackFilePathTag);
 }
 
 StringAutoPtr SeratoTrack::album(void) const

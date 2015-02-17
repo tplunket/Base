@@ -171,6 +171,6 @@ namespace NxA {
             }
         }
 
-        return CharVectorAutoPtr(NULL);
+        return CharVectorAutoPtr(new CharVector);
     }
 }

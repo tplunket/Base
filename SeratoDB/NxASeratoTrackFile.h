@@ -32,6 +32,7 @@ namespace NxA {
 
     #pragma mark Containers
     typedef std::auto_ptr<const SeratoTrackFile> SeratoTrackFileAutoPtr;
+    typedef std::auto_ptr<TagLib::File> TaglibFileAutoPtr;
 
     #pragma mark Class Declaration
     class SeratoTrackFile
@@ -43,7 +44,7 @@ namespace NxA {
 
     protected:
         #pragma mark Protected Instance Variables
-        std::auto_ptr<TagLib::File> p_file;
+        TaglibFileAutoPtr p_file;
         TagLib::Tag* p_parsedFileTag;
         TagLib::PropertyMap p_properties;
         TagLib::AudioProperties* p_audioProperties;

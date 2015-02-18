@@ -38,14 +38,14 @@ SeratoMP4TrackFile::SeratoMP4TrackFile(const char* trackFilePath) : SeratoTrackF
 {
     MP4::File* file = new MP4::File(trackFilePath);
     if (!file->isValid()) {
-        this->p_file = auto_ptr<TagLib::File>(NULL);
+        this->p_file = TaglibFileAutoPtr(NULL);
         this->p_itemListMap = NULL;
         this->p_audioProperties = NULL;
         this->p_parsedFileTag = NULL;
         return;
     }
 
-    this->p_file = auto_ptr<TagLib::File>(file);
+    this->p_file = TaglibFileAutoPtr(file);
     MP4::Tag* tag = file->tag();
     this->p_parsedFileTag = tag;
     this->p_itemListMap = &(tag->itemListMap());

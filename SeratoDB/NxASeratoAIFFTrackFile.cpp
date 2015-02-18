@@ -26,7 +26,7 @@ using namespace TagLib;
 
 SeratoAIFFTrackFile::SeratoAIFFTrackFile(const char* trackFilePath) : SeratoID3TrackFile()
 {
-    RIFF::AIFF::File* file = new RIFF::AIFF::File(trackFilePath);
+    const RIFF::AIFF::File* file = new RIFF::AIFF::File(trackFilePath);
     if (!file->isValid()) {
         this->p_file = TaglibFileAutoPtr(NULL);
         this->p_parsedFileTag = NULL;
@@ -47,7 +47,7 @@ SeratoAIFFTrackFile::SeratoAIFFTrackFile(const char* trackFilePath) : SeratoID3T
 uint32_t SeratoAIFFTrackFile::lengthInMilliseconds(void) const
 {
     if (this->p_audioProperties) {
-        RIFF::AIFF::Properties* audioProperties = (RIFF::AIFF::Properties*)this->p_audioProperties;
+        const RIFF::AIFF::Properties* audioProperties = (const RIFF::AIFF::Properties*)this->p_audioProperties;
 
         uint32_t numberOfFrames = audioProperties->sampleFrames();
         uint32_t sampleRate = audioProperties->sampleRate();

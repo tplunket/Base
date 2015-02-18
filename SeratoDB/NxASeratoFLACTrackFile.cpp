@@ -38,7 +38,7 @@ typedef struct {
 
 SeratoFLACTrackFile::SeratoFLACTrackFile(const char* trackFilePath) : SeratoTrackFile()
 {
-    FLAC::File* file = new FLAC::File(trackFilePath);
+    const FLAC::File* file = new FLAC::File(trackFilePath);
     if (!file->isValid()) {
         this->p_file = TaglibFileAutoPtr(NULL);
         this->p_parsedFileTag = NULL;
@@ -103,7 +103,7 @@ StringAutoPtr SeratoFLACTrackFile::grouping(void) const
 uint32_t SeratoFLACTrackFile::lengthInMilliseconds(void) const
 {
     if (this->p_audioProperties) {
-        const FLAC::Properties* audioProperties = (FLAC::Properties*)this->p_audioProperties;
+        const FLAC::Properties* audioProperties = (const FLAC::Properties*)this->p_audioProperties;
 
         uint32_t numberOfFrames = audioProperties->sampleFrames();
         uint32_t sampleRate = audioProperties->sampleRate();

@@ -26,7 +26,7 @@ namespace NxA {
     {
     protected:
         #pragma mark Protected Constructors
-        SeratoID3TrackFile() : SeratoTrackFile() { };
+        SeratoID3TrackFile(const char* trackFilePath) : SeratoTrackFile(trackFilePath) { };
 
         #pragma mark Protected Instance Methods
         void p_readMarkersV2(void);

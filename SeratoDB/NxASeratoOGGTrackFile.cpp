@@ -24,7 +24,7 @@ using namespace TagLib;
 
 #pragma mark Constructors
 
-SeratoOGGTrackFile::SeratoOGGTrackFile(const char* trackFilePath) : SeratoID3TrackFile()
+SeratoOGGTrackFile::SeratoOGGTrackFile(const char* trackFilePath) : SeratoID3TrackFile(trackFilePath)
 {
     Vorbis::File* file = new Vorbis::File(trackFilePath);
     if (!file->isValid()) {

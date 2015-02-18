@@ -179,6 +179,11 @@ StringAutoPtr SeratoTrackFile::bpm(void) const
     return StringAutoPtr(result);
 }
 
+size_t SeratoTrackFile::sizeInBytes(void) const
+{
+    return sizeOfFileAt(this->p_trackFilePath->c_str());
+}
+
 uint32_t SeratoTrackFile::lengthInMilliseconds(void) const
 {
     if (this->p_audioProperties) {

@@ -24,7 +24,7 @@ using namespace TagLib;
 
 #pragma mark Constructors
 
-SeratoAIFFTrackFile::SeratoAIFFTrackFile(const char* trackFilePath) : SeratoID3TrackFile()
+SeratoAIFFTrackFile::SeratoAIFFTrackFile(const char* trackFilePath) : SeratoID3TrackFile(trackFilePath)
 {
     const RIFF::AIFF::File* file = new RIFF::AIFF::File(trackFilePath);
     if (!file->isValid()) {

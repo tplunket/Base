@@ -24,7 +24,7 @@ using namespace TagLib;
 
 #pragma mark Constructors
 
-SeratoMPEGTrackFile::SeratoMPEGTrackFile(const char* trackFilePath) : SeratoID3TrackFile()
+SeratoMPEGTrackFile::SeratoMPEGTrackFile(const char* trackFilePath) : SeratoID3TrackFile(trackFilePath)
 {
     MPEG::File* file = new MPEG::File(trackFilePath);
     if (!file->isValid()) {

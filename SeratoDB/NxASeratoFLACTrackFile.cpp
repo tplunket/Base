@@ -36,7 +36,7 @@ typedef struct {
 
 #pragma mark Constructors
 
-SeratoFLACTrackFile::SeratoFLACTrackFile(const char* trackFilePath) : SeratoTrackFile()
+SeratoFLACTrackFile::SeratoFLACTrackFile(const char* trackFilePath) : SeratoTrackFile(trackFilePath)
 {
     const FLAC::File* file = new FLAC::File(trackFilePath);
     if (!file->isValid()) {

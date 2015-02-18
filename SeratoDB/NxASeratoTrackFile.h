@@ -44,6 +44,7 @@ namespace NxA {
 
     protected:
         #pragma mark Protected Instance Variables
+        StringAutoPtr p_trackFilePath;
         TaglibFileAutoPtr p_file;
         TagLib::Tag* p_parsedFileTag;
         TagLib::PropertyMap p_properties;
@@ -53,8 +54,9 @@ namespace NxA {
         void p_readMarkersV2FromBase64Data(const char* markerV2Data, size_t sizeInBytes);
 
         #pragma mark Protected Constructors
-        SeratoTrackFile() : p_cueMarkers(new SeratoCueMarkerVector),
-                            p_loopMarkers(new SeratoLoopMarkerVector) { };
+        SeratoTrackFile(const char* trackFilePath) : p_trackFilePath(StringAutoPtr(new std::string(trackFilePath))),
+                                                     p_cueMarkers(new SeratoCueMarkerVector),
+                                                     p_loopMarkers(new SeratoLoopMarkerVector) { };
         
     public:
         #pragma mark Instance Methods
@@ -69,6 +71,7 @@ namespace NxA {
         virtual StringAutoPtr grouping(void) const = 0;
         virtual StringAutoPtr bpm(void) const;
 
+        virtual size_t sizeInBytes(void) const;
         virtual uint32_t lengthInMilliseconds(void) const;
         virtual uint32_t bitRateInKiloBitsPerSecond(void) const;
         virtual uint32_t sampleRateInSamplesPerSecond(void) const;

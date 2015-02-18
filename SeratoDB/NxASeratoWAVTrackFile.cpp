@@ -24,7 +24,7 @@ using namespace TagLib;
 
 #pragma mark Constructors
 
-SeratoWAVTrackFile::SeratoWAVTrackFile(const char* trackFilePath) : SeratoID3TrackFile()
+SeratoWAVTrackFile::SeratoWAVTrackFile(const char* trackFilePath) : SeratoID3TrackFile(trackFilePath)
 {
     RIFF::WAV::File* file = new RIFF::WAV::File(trackFilePath);
     if (!file->isValid()) {

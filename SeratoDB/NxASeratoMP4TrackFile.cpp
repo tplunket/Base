@@ -34,7 +34,7 @@ typedef struct {
 
 #pragma mark Constructors
 
-SeratoMP4TrackFile::SeratoMP4TrackFile(const char* trackFilePath) : SeratoTrackFile()
+SeratoMP4TrackFile::SeratoMP4TrackFile(const char* trackFilePath) : SeratoTrackFile(trackFilePath)
 {
     MP4::File* file = new MP4::File(trackFilePath);
     if (!file->isValid()) {

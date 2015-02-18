@@ -54,72 +54,73 @@ static void p_debugPrintDate(time_t value, const char* name)
     printf("%s %s", name, stringVersion);
 }
 
-static void p_debugPrintComparaison(const SeratoTrack& track, const SeratoTrackFile& trackFile)
+static void p_debugPrintComparaison(const SeratoTrack* track, const SeratoTrackFile* trackFile)
 {
     printf("----------------------------------------\n");
-    p_debugPrintUint((uint32_t)track.sizeInBytes(), "size");
-    p_debugPrintDate(track.dateModifiedInSecondsSinceJanuary1st1970(), "datemodified");
-    p_debugPrintDate(track.dateAddedInSecondsSinceJanuary1st1970(), "dateadded");
+    p_debugPrintUint((uint32_t)track->sizeInBytes(), "size");
+    p_debugPrintUint((uint32_t)trackFile->sizeInBytes(), "size");
+    p_debugPrintDate(track->dateModifiedInSecondsSinceJanuary1st1970(), "datemodified");
+    p_debugPrintDate(track->dateAddedInSecondsSinceJanuary1st1970(), "dateadded");
 
-    p_debugPrint(track.title(), "title");
-    p_debugPrint(trackFile.title(), "title");
-    p_debugPrint(track.artist(), "artist");
-    p_debugPrint(trackFile.artist(), "artist");
-    p_debugPrint(track.album(), "album");
-    p_debugPrint(trackFile.album(), "album");
-    p_debugPrint(track.comments(), "comments");
-    p_debugPrint(trackFile.comments(), "comments");
-    p_debugPrint(track.genre(), "genre");
-    p_debugPrint(trackFile.genre(), "genre");
-    p_debugPrint(track.grouping(), "grouping");
-    p_debugPrint(trackFile.grouping(), "grouping");
-    p_debugPrint(track.recordLabel(), "recordlabel");
-    if (trackFile.hasRecordLabel()) {
-        p_debugPrint(trackFile.recordLabel(), "recordLabel");
+    p_debugPrint(track->title(), "title");
+    p_debugPrint(trackFile->title(), "title");
+    p_debugPrint(track->artist(), "artist");
+    p_debugPrint(trackFile->artist(), "artist");
+    p_debugPrint(track->album(), "album");
+    p_debugPrint(trackFile->album(), "album");
+    p_debugPrint(track->comments(), "comments");
+    p_debugPrint(trackFile->comments(), "comments");
+    p_debugPrint(track->genre(), "genre");
+    p_debugPrint(trackFile->genre(), "genre");
+    p_debugPrint(track->grouping(), "grouping");
+    p_debugPrint(trackFile->grouping(), "grouping");
+    p_debugPrint(track->recordLabel(), "recordlabel");
+    if (trackFile->hasRecordLabel()) {
+        p_debugPrint(trackFile->recordLabel(), "recordLabel");
     }
     else {
         printf("No record label.\n");
     }
-    p_debugPrint(track.remixer(), "remixer");
-    if (trackFile.hasRecordLabel()) {
-        p_debugPrint(trackFile.remixer(), "remixer");
+    p_debugPrint(track->remixer(), "remixer");
+    if (trackFile->hasRecordLabel()) {
+        p_debugPrint(trackFile->remixer(), "remixer");
     }
     else {
         printf("No remixer.\n");
     }
-    p_debugPrint(track.composer(), "composer");
-    p_debugPrint(trackFile.composer(), "composer");
-    p_debugPrint(track.key(), "key");
-    if (trackFile.hasKey()) {
-        p_debugPrint(trackFile.key(), "key");
+    p_debugPrint(track->composer(), "composer");
+    p_debugPrint(trackFile->composer(), "composer");
+    p_debugPrint(track->key(), "key");
+    if (trackFile->hasKey()) {
+        p_debugPrint(trackFile->key(), "key");
     }
     else {
         printf("No key.\n");
     }
-    p_debugPrint(track.year(), "year");
-    if (trackFile.hasYearReleased()) {
-        p_debugPrint(trackFile.yearReleased(), "year");
+    p_debugPrint(track->year(), "year");
+    if (trackFile->hasYearReleased()) {
+        p_debugPrint(trackFile->yearReleased(), "year");
     }
-    else if (trackFile.hasDateReleased()) {
-        p_debugPrint(trackFile.dateReleased(), "yeard");
+    else if (trackFile->hasDateReleased()) {
+        p_debugPrint(trackFile->dateReleased(), "yeard");
     }
     else {
         printf("No date or year released.\n");
     }
-    p_debugPrint(track.length(), "length");
-    p_debugPrintTimeFromMilliseconds(trackFile.lengthInMilliseconds(), "length");
-    p_debugPrint(track.bitRate(), "bitrate");
-    p_debugPrintUint(trackFile.bitRateInKiloBitsPerSecond(), "bitrate");
-    p_debugPrint(track.sampleRate(), "samplerate");
-    p_debugPrintUint(trackFile.sampleRateInSamplesPerSecond(), "samplerate");
-    p_debugPrint(track.bpm(), "bpm");
-    p_debugPrint(trackFile.bpm(), "bpm");
-    p_debugPrintUint(track.trackNumber(), "tracknumber");
-    p_debugPrintUint(trackFile.trackNumber(), "tracknumber");
+    p_debugPrint(track->length(), "length");
+    p_debugPrintTimeFromMilliseconds(trackFile->lengthInMilliseconds(), "length");
+    p_debugPrint(track->bitRate(), "bitrate");
+    p_debugPrintUint(trackFile->bitRateInKiloBitsPerSecond(), "bitrate");
+    p_debugPrint(track->sampleRate(), "samplerate");
+    p_debugPrintUint(trackFile->sampleRateInSamplesPerSecond(), "samplerate");
+    p_debugPrint(track->bpm(), "bpm");
+    p_debugPrint(trackFile->bpm(), "bpm");
+    p_debugPrintUint(track->trackNumber(), "tracknumber");
+    p_debugPrintUint(trackFile->trackNumber(), "tracknumber");
 
-    p_debugPrintUint(track.discNumber(), "discnumber");
+    p_debugPrintUint(track->discNumber(), "discnumber");
 
-    printf("Found %ld cue markers and %ld loop markers.\n", trackFile.cueMarkers().size(), trackFile.loopMarkers().size());
+    printf("Found %ld cue markers and %ld loop markers.\n", trackFile->cueMarkers().size(), trackFile->loopMarkers().size());
 }
 #endif
 
@@ -133,7 +134,7 @@ SeratoTrack::SeratoTrack(const SeratoTag* trackTag) : p_trackTag(SeratoTagAutoPt
     this->p_trackFile = SeratoTrackFileFactory::trackFileForPath(trackFilePath.c_str());
 
 #if PRINT_DEBUG_INFO
-    p_debugPrintComparaison(*this, *(this->p_trackFile));
+    p_debugPrintComparaison(this, this->p_trackFile.get());
 #endif
 }
 

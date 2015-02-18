@@ -58,3 +58,14 @@ uint32_t SeratoAIFFTrackFile::lengthInMilliseconds(void) const
 
     return 0;
 }
+
+uint32_t SeratoAIFFTrackFile::bitDepthInBitsOrZeroIfNotApplicable(void) const
+{
+    if (this->p_audioProperties) {
+        const RIFF::AIFF::Properties* audioProperties = (const RIFF::AIFF::Properties*)this->p_audioProperties;
+
+        return audioProperties->sampleWidth();
+    }
+    
+    return 0;
+}

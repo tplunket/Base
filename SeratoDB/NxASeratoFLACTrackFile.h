@@ -36,6 +36,7 @@ namespace NxA {
         virtual StringAutoPtr grouping(void) const;
 
         virtual uint32_t lengthInMilliseconds(void) const;
+        uint32_t bitDepthInBitsOrZeroIfNotApplicable(void) const;
 
         virtual bool hasRecordLabel(void) const;
         virtual StringAutoPtr recordLabel(void) const;

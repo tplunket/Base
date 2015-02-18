@@ -29,6 +29,7 @@ namespace NxA {
 
         #pragma mark Instance Variables
         virtual uint32_t lengthInMilliseconds(void) const;
+        uint32_t bitDepthInBitsOrZeroIfNotApplicable(void) const;
     };
 }
 

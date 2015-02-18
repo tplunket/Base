@@ -58,3 +58,14 @@ uint32_t SeratoWAVTrackFile::lengthInMilliseconds(void) const
     
     return 0;
 }
+
+uint32_t SeratoWAVTrackFile::bitDepthInBitsOrZeroIfNotApplicable(void) const
+{
+    if (this->p_audioProperties) {
+        const RIFF::WAV::Properties* audioProperties = (RIFF::WAV::Properties*)this->p_audioProperties;
+
+        return audioProperties->sampleWidth();
+    }
+
+    return 0;
+}

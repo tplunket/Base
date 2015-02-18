@@ -115,6 +115,17 @@ uint32_t SeratoFLACTrackFile::lengthInMilliseconds(void) const
     return 0;
 }
 
+uint32_t SeratoFLACTrackFile::bitDepthInBitsOrZeroIfNotApplicable(void) const
+{
+    if (this->p_audioProperties) {
+        const FLAC::Properties* audioProperties = (const FLAC::Properties*)this->p_audioProperties;
+
+        return audioProperties->sampleWidth();
+    }
+
+    return 0;
+}
+
 bool SeratoFLACTrackFile::hasRecordLabel(void) const
 {
     return false;

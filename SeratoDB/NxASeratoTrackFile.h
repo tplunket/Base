@@ -74,6 +74,7 @@ namespace NxA {
         virtual size_t sizeInBytes(void) const;
         virtual uint32_t lengthInMilliseconds(void) const;
         virtual uint32_t bitRateInKiloBitsPerSecond(void) const;
+        virtual uint32_t bitDepthInBitsOrZeroIfNotApplicable(void) const;
         virtual uint32_t sampleRateInSamplesPerSecond(void) const;
         virtual uint32_t trackNumber(void) const;
 

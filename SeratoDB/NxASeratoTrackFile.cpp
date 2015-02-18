@@ -202,6 +202,11 @@ uint32_t SeratoTrackFile::bitRateInKiloBitsPerSecond(void) const
     return 0;
 }
 
+uint32_t SeratoTrackFile::bitDepthInBitsOrZeroIfNotApplicable(void) const
+{
+    return 0;
+}
+
 uint32_t SeratoTrackFile::sampleRateInSamplesPerSecond(void) const
 {
     if (this->p_audioProperties) {

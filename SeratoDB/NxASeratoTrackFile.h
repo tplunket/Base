@@ -78,6 +78,8 @@ namespace NxA {
         virtual uint32_t sampleRateInSamplesPerSecond(void) const;
         virtual uint32_t trackNumber(void) const;
 
+        // -- TODO: Look into adding discNumber and numberOfAlbumTracks if they are available.
+
         virtual bool hasRecordLabel(void) const = 0;
         virtual StringAutoPtr recordLabel(void) const = 0;
         virtual bool hasRemixer(void) const = 0;

@@ -31,7 +31,7 @@ namespace NxA {
     class SeratoTrackFile;
 
     #pragma mark Containers
-    typedef std::auto_ptr<const SeratoTrackFile> SeratoTrackFileAutoPtr;
+    typedef std::auto_ptr<SeratoTrackFile> SeratoTrackFileAutoPtr;
     typedef std::auto_ptr<TagLib::File> TaglibFileAutoPtr;
 
     #pragma mark Class Declaration

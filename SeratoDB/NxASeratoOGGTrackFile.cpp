@@ -134,3 +134,9 @@ StringAutoPtr SeratoOGGTrackFile::yearReleased(void) const
 
     return StringAutoPtr(result);
 }
+
+CharVectorAutoPtr SeratoOGGTrackFile::artwork(void) const
+{
+    // -- TODO: To be implemented.
+    return CharVectorAutoPtr(NULL);
+}

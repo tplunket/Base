@@ -172,3 +172,9 @@ StringAutoPtr SeratoFLACTrackFile::yearReleased(void) const
 {
     return StringAutoPtr(NULL);
 }
+
+CharVectorAutoPtr SeratoFLACTrackFile::artwork(void) const
+{
+    // -- TODO: To be implemented.
+    return CharVectorAutoPtr(NULL);
+}

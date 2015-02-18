@@ -20,6 +20,7 @@
 #include "SeratoDB/NxASeratoBase64.h"
 
 #include <taglib/id3v2tag.h>
+#include <taglib/attachedpictureframe.h>
 
 using namespace std;
 using namespace NxA;
@@ -175,4 +176,39 @@ bool SeratoID3TrackFile::hasYearReleased(void) const
 StringAutoPtr SeratoID3TrackFile::yearReleased(void) const
 {
     return StringAutoPtr(NULL);
+}
+
+CharVectorAutoPtr SeratoID3TrackFile::artwork(void) const
+{
+    CharVector* result = NULL;
+
+    ID3v2::Tag* tag = (ID3v2::Tag*)this->p_parsedFileTag;
+    if(tag) {
+        ID3v2::FrameListMap frameListMap = tag->frameListMap();
+        ID3v2::FrameList frameList = frameListMap["APIC"];
+
+        for(ID3v2::FrameList::ConstIterator it = frameList.begin(); it != frameList.end(); ++it) {
+            ID3v2::AttachedPictureFrame* pic = dynamic_cast<ID3v2::AttachedPictureFrame*>(*it);
+
+            if (pic->type() == ID3v2::AttachedPictureFrame::FrontCover) {
+                char* data = pic->picture().data();
+                result = new CharVector(data, data + pic->picture().size());
+                break;
+            }
+        }
+
+        if (!result) {
+            for(ID3v2::FrameList::ConstIterator it = frameList.begin(); it != frameList.end(); ++it) {
+                ID3v2::AttachedPictureFrame* pic = dynamic_cast<ID3v2::AttachedPictureFrame*>(*it);
+
+                if (pic->type() == ID3v2::AttachedPictureFrame::Other) {
+                    char* data = pic->picture().data();
+                    result = new CharVector(data, data + pic->picture().size());
+                    break;
+                }
+            }
+        }
+    }
+
+    return CharVectorAutoPtr(result);
 }

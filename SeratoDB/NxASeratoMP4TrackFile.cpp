@@ -17,6 +17,8 @@
 #include "SeratoDB/NxASeratoMP4TrackFile.h"
 #include "SeratoDB/NxASeratoBase64.h"
 
+#include <taglib/mp4tag.h>
+
 using namespace std;
 using namespace NxA;
 using namespace TagLib;
@@ -165,4 +167,21 @@ StringAutoPtr SeratoMP4TrackFile::yearReleased(void) const
     }
 
     return StringAutoPtr(result);
+}
+
+CharVectorAutoPtr SeratoMP4TrackFile::artwork(void) const
+{
+    CharVector* result = NULL;
+
+    MP4::Item item = (*this->p_itemListMap)["covr"];
+    if (item.isValid()) {
+        MP4::CoverArtList coverArtList = item.toCoverArtList();
+        MP4::CoverArt coverArt = coverArtList.front();
+        if (coverArt.data().size()) {
+            char* data = coverArt.data().data();
+            result = new CharVector(data, data + coverArt.data().size());
+        }
+    }
+
+    return CharVectorAutoPtr(result);
 }

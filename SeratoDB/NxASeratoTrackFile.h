@@ -87,6 +87,8 @@ namespace NxA {
         virtual bool hasYearReleased(void) const = 0;
         virtual StringAutoPtr yearReleased(void) const = 0;
 
+        virtual CharVectorAutoPtr artwork(void) const = 0;
+        
         const SeratoCueMarkerVector& cueMarkers(void) const;
         const SeratoLoopMarkerVector& loopMarkers(void) const;
     };

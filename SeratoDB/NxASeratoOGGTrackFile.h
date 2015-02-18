@@ -44,6 +44,8 @@ namespace NxA {
         virtual StringAutoPtr dateReleased(void) const;
         virtual bool hasYearReleased(void) const;
         virtual StringAutoPtr yearReleased(void) const;
+
+        virtual CharVectorAutoPtr artwork(void) const;
     };
 }
 

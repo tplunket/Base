@@ -108,16 +108,6 @@ namespace NxA {
         return StringAutoPtr(result);
     }
 
-    size_t p_sizeOfFileAt(const char* filePath)
-    {
-        struct stat buf;
-        if (stat(filePath, &buf) == -1) {
-            return 0;
-        }
-
-        return buf.st_size;
-    }
-
     StringAutoPtr seratoFolderPathForFolder(const char* folderPath)
     {
         return p_appendToPath(folderPath, "_Serato_");
@@ -154,9 +144,19 @@ namespace NxA {
         return (stat(filePath, &buf) != -1);
     }
 
+    size_t sizeOfFileAt(const char* filePath)
+    {
+        struct stat buf;
+        if (stat(filePath, &buf) == -1) {
+            return 0;
+        }
+
+        return buf.st_size;
+    }
+    
     CharVectorAutoPtr readFileAt(const char* filePath)
     {
-        size_t fileSize = p_sizeOfFileAt(filePath);
+        size_t fileSize = sizeOfFileAt(filePath);
         if (fileSize) {
             char* fileData = (char*)malloc(fileSize);
             if (fileData) {

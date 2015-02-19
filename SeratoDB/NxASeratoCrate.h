@@ -51,7 +51,8 @@ namespace NxA {
 
     public:
         #pragma mark Constructors
-        SeratoCrate(const char* fullyQualifiedCrateName, const char* seratoFolderPath);
+        SeratoCrate(const char* fullyQualifiedCrateName);
+        SeratoCrate(const char* fullyQualifiedCrateName, const char* readItFromSeratoFolderPath);
 
         #pragma mark Class Methods
         static bool isAValidCrateName(const char* fullyQualifiedCrateName, const char* seratoFolderPath);

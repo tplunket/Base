@@ -22,7 +22,7 @@ using namespace std;
 
 #pragma mark Constructors
 
-SeratoCrate::SeratoCrate(const char* fullyQualifiedCrateName, const char* seratoFolderPath)
+SeratoCrate::SeratoCrate(const char* fullyQualifiedCrateName)
 {
     this->p_fullyQualifiedCrateName = StringAutoPtr(new string(fullyQualifiedCrateName));
 
@@ -34,8 +34,11 @@ SeratoCrate::SeratoCrate(const char* fullyQualifiedCrateName, const char* serato
     else {
         this->p_crateName = StringAutoPtr(new string(fullyQualifiedCrateName));
     }
+}
 
-    StringAutoPtr crateFilePath = crateFilePathForCrateNameInSeratoFolder(fullyQualifiedCrateName, seratoFolderPath);
+SeratoCrate::SeratoCrate(const char* fullyQualifiedCrateName, const char* readItFromSeratoFolderPath) : SeratoCrate(fullyQualifiedCrateName)
+{
+    StringAutoPtr crateFilePath = crateFilePathForCrateNameInSeratoFolder(fullyQualifiedCrateName, readItFromSeratoFolderPath);
     CharVectorAutoPtr crateFileData = readFileAt(crateFilePath->c_str());
 
     SeratoTagVectorAutoPtr tags(SeratoTag::parseTagsIn(crateFileData));

@@ -25,8 +25,10 @@ using namespace std;
 #pragma Utility Functions
 
 #if PRINT_DEBUG_INFO
-static void p_debugListCrates(const SeratoCrateVector& crates, std::string spacing)
+static void p_debugListCrate(const SeratoCrate* crate, std::string spacing)
 {
+    const SeratoCrateVector& crates = crate->crates();
+
     for(SeratoCrateVector::const_iterator it = crates.begin(); it != crates.end(); ++it) {
         const SeratoCrate* crate = it->get();
         const string& crateName = crate->crateName();
@@ -37,7 +39,7 @@ static void p_debugListCrates(const SeratoCrateVector& crates, std::string spaci
             printf("%s   Track '%s'\n", spacing.c_str(), cit->get()->trackFilePath()->c_str());
         }
 
-        p_debugListCrates(crate->crates(), (spacing + "   "));
+        p_debugListCrate(crate, (spacing + "   "));
     }
 }
 #endif
@@ -72,7 +74,7 @@ SeratoDatabase::SeratoDatabase(const char* seratoFolderPath)
     this->p_crateOrderFile = SeratoCrateOrderFileAutoPtr(new SeratoCrateOrderFile(seratoFolderPath));
 
 #if PRINT_DEBUG_INFO
-    p_debugListCrates(this->crates(), "");
+    p_debugListCrate(this->rootCrate(), "");
 #endif
 }
 
@@ -107,9 +109,9 @@ StringAutoPtr SeratoDatabase::versionAsString(void) const
     return StringAutoPtr();
 }
 
-const SeratoCrateVector& SeratoDatabase::crates(void) const
+const SeratoCrate* SeratoDatabase::rootCrate(void) const
 {
-    return this->p_crateOrderFile->crates();
+    return this->p_crateOrderFile->rootCrate();
 }
 
 const SeratoTrackVector& SeratoDatabase::tracks(void) const

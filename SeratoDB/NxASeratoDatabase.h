@@ -47,7 +47,7 @@ namespace NxA {
         #pragma mark Instance Methods
         StringAutoPtr versionAsString(void) const;
 
-        const SeratoCrateVector& crates(void) const;
+        const SeratoCrate* rootCrate(void) const;
         const SeratoTrackVector& tracks(void) const;
     };
 }

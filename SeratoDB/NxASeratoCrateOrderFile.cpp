@@ -91,22 +91,25 @@ SeratoCrateOrderFile::SeratoCrateOrderFile(const char* seratoFolderPath)
     if (!crateOrderFile->size()) {
         return;
     }
-    
+
+    this->p_rootCrate = SeratoCrateAutoPtr(new SeratoCrate(""));
+
     const char16_t* textToRead = (const char16_t*)crateOrderFile->data();
     int numberOfCharacters = (int)crateOrderFile->size() / 2;
-
     StringAutoPtr textAString = convertUTF16ToStdString(textToRead, numberOfCharacters);
 
     StringVectorAutoPtr lines(splitStringIntoOneStringForEachLine(*textAString));
-
     StringVector::iterator it = lines->begin();
 
-    this->p_crates = p_childrenCratesOfCrateNamedUsingNameList("", it, lines->end(), seratoFolderPath);
+    SeratoCrateVectorAutoPtr crates = p_childrenCratesOfCrateNamedUsingNameList("", it, lines->end(), seratoFolderPath);
+    for (SeratoCrateVector::iterator it = crates->begin(); it != crates->end(); ++it) {
+        this->p_rootCrate->addChildCrate(*it);
+    }
 }
 
 #pragma mark Instance Methods
 
-const SeratoCrateVector& SeratoCrateOrderFile::crates(void) const
+const SeratoCrate* SeratoCrateOrderFile::rootCrate(void) const
 {
-    return *this->p_crates;
+    return this->p_rootCrate.get();
 }

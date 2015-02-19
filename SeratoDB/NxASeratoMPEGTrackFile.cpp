@@ -18,9 +18,9 @@
 
 #include <taglib/mpegproperties.h>
 
-using namespace std;
 using namespace NxA;
 using namespace TagLib;
+using namespace std;
 
 #pragma mark Constructors
 

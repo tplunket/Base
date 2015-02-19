@@ -19,9 +19,9 @@
 
 #include <taglib/mp4tag.h>
 
-using namespace std;
 using namespace NxA;
 using namespace TagLib;
+using namespace std;
 
 #pragma mark Structures
 

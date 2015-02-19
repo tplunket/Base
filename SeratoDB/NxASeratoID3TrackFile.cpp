@@ -22,9 +22,9 @@
 #include <taglib/id3v2tag.h>
 #include <taglib/attachedpictureframe.h>
 
-using namespace std;
 using namespace NxA;
 using namespace TagLib;
+using namespace std;
 
 #pragma mark Structures
 

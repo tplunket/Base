@@ -22,8 +22,8 @@
 #include "SeratoDB/NxASeratoOGGTrackFile.h"
 #include "SeratoDB/NxASeratoFLACTrackFile.h"
 
-using namespace std;
 using namespace NxA;
+using namespace std;
 
 #pragma mark Utility Functions
 

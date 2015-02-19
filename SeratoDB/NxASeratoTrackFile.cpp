@@ -20,9 +20,9 @@
 #include "SeratoDB/NxASeratoTrackFile.h"
 #include "SeratoDB/NxASeratoBase64.h"
 
-using namespace std;
 using namespace NxA;
 using namespace TagLib;
+using namespace std;
 
 #pragma mark Structures
 

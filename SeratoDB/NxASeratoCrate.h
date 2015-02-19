@@ -26,7 +26,7 @@ namespace NxA {
     class SeratoCrate;
 
     #pragma mark Containers
-    typedef std::auto_ptr<const SeratoCrate> SeratoCrateAutoPtr;
+    typedef std::auto_ptr<SeratoCrate> SeratoCrateAutoPtr;
     typedef std::vector<SeratoCrateAutoPtr> SeratoCrateVector;
     typedef std::auto_ptr<SeratoCrateVector> SeratoCrateVectorAutoPtr;
 

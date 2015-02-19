@@ -47,6 +47,9 @@ namespace NxA {
 
         StringAutoPtr p_trackFilePath(void) const;
 
+        void p_loadTrackFile(void);
+        void p_unloadTrackFile(void);
+
     public:
         #pragma mark Constructors
         SeratoTrack(const SeratoTag* trackTag);

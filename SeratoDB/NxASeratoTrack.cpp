@@ -128,13 +128,10 @@ static void p_debugPrintComparaison(const SeratoTrack* track, const SeratoTrackF
 
 SeratoTrack::SeratoTrack(const SeratoTag* trackTag) : p_trackTag(SeratoTagAutoPtr(trackTag))
 {
-    string trackFilePath("/");
-    trackFilePath += *(this->p_trackFilePath());
-
-    this->p_trackFile = SeratoTrackFileFactory::trackFileForPath(trackFilePath.c_str());
-
 #if PRINT_DEBUG_INFO
+    this->p_loadTrackFile();
     p_debugPrintComparaison(this, this->p_trackFile.get());
+    this->p_unloadTrackFile();
 #endif
 }
 
@@ -184,6 +181,19 @@ uint32_t SeratoTrack::p_uint32ForSubTagIdentifierOrZeroIfNotFound(uint32_t ident
 StringAutoPtr SeratoTrack::p_trackFilePath(void) const
 {
     return this->p_pathForSubTagIdentifierOrEmptyIfNotFound(NxASeratoTrackFilePathTag);
+}
+
+void SeratoTrack::p_loadTrackFile(void)
+{
+    string trackFilePath("/");
+    trackFilePath += *(this->p_trackFilePath());
+
+    this->p_trackFile = SeratoTrackFileFactory::trackFileForPath(trackFilePath.c_str());
+}
+
+void SeratoTrack::p_unloadTrackFile(void)
+{
+    this->p_trackFile = SeratoTrackFileAutoPtr(NULL);
 }
 
 StringAutoPtr SeratoTrack::title(void) const

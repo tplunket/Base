@@ -29,7 +29,6 @@ namespace NxA {
     {
     private:
         #pragma mark Private Instance Variables
-        SeratoTagAutoPtr p_versionTag;
         SeratoTrackVector p_tracks;
         SeratoTagVector p_otherTags;
 
@@ -44,9 +43,10 @@ namespace NxA {
         #pragma mark Constructors
         SeratoDatabase(const char* seratoFolderPath);
 
-        #pragma mark Instance Methods
-        StringAutoPtr versionAsString(void) const;
+        #pragma mark Class Methods
+        static StringAutoPtr versionAsStringForDatabaseIn(const char* seratoFolderPath);
 
+        #pragma mark Instance Methods
         const SeratoCrate* rootCrate(void) const;
         const SeratoTrackVector& tracks(void) const;
     };

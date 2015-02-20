@@ -29,6 +29,7 @@ namespace NxA {
     {
     private:
         #pragma mark Private Instance Variables
+        StringAutoPtr p_databaseFilePath;
         SeratoTrackVector p_tracks;
         SeratoTagVector p_otherTags;
 
@@ -47,6 +48,8 @@ namespace NxA {
         static StringAutoPtr versionAsStringForDatabaseIn(const char* seratoFolderPath);
 
         #pragma mark Instance Methods
+        time_t databaseModificationDateInSecondsSince1970(void) const;
+
         const SeratoCrate* rootCrate(void) const;
         const SeratoTrackVector& tracks(void) const;
     };

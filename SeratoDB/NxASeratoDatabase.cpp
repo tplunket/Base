@@ -48,8 +48,8 @@ static void p_debugListCrate(const SeratoCrate* crate, std::string spacing)
 
 SeratoDatabase::SeratoDatabase(const char* seratoFolderPath)
 {
-    StringAutoPtr databaseFilePath = databaseFilePathForSeratoFolder(seratoFolderPath);
-    CharVectorAutoPtr databaseFile = readFileAt(databaseFilePath->c_str());
+    this->p_databaseFilePath = databaseFilePathForSeratoFolder(seratoFolderPath);
+    CharVectorAutoPtr databaseFile = readFileAt(this->p_databaseFilePath->c_str());
 
     SeratoTagVectorAutoPtr tags = SeratoTag::parseTagsIn(databaseFile);
     for(SeratoTagVector::iterator it = tags->begin(); it != tags->end(); ++it) {
@@ -104,6 +104,11 @@ void SeratoDatabase::p_storeTrackTag(const SeratoTag* tag)
 void SeratoDatabase::p_storeOtherTag(const SeratoTag* tag)
 {
     this->p_otherTags.push_back(SeratoTagAutoPtr(tag));
+}
+
+time_t SeratoDatabase::databaseModificationDateInSecondsSince1970(void) const
+{
+    return modificationDateInSecondsSince1970ForFile(this->p_databaseFilePath->c_str());
 }
 
 const SeratoCrate* SeratoDatabase::rootCrate(void) const

@@ -29,6 +29,26 @@
 using namespace NxA;
 using namespace std;
 
+#pragma mark Platform Defines
+
+#ifndef _Windows
+    #if defined(_WIN32) || defined(WIN32) || defined(__Win32__) || defined(__WIN32__) || defined(_WINDOWS)
+        #define NXASeratoCompiledOnWindows
+    #endif
+#else
+    #if defined(__Win32__) || defined (_WIN32)
+        #define NXASeratoCompiledOnWindows
+    #endif
+#endif
+
+#ifndef NXASeratoCompiledOnWindows
+    #if defined(__APPLE__) && defined(__MACH__)
+        #define NXASeratoCompiledOnOSX
+    #else
+        #error Unsupported platform.
+    #endif
+#endif
+
 #pragma mark Utility Functions
 
 namespace NxA {
@@ -91,42 +111,25 @@ namespace NxA {
                 (charsPtr[1] & 0xff);
     }
 
-    StringAutoPtr p_appendToPath(const char* path, const char* pathToAppend)
-    {
-        string* result = new string(path);
-
-        #if defined(__APPLE__) && defined(__MACH__)
-        // -- OSX or iPhone
-        *result += "/";
-        #else
-        // -- Otherwise assume it's Windows.
-        *result += "\";
-        #endif
-
-        *result += pathToAppend;
-
-        return StringAutoPtr(result);
-    }
-
     StringAutoPtr seratoFolderPathForFolder(const char* folderPath)
     {
-        return p_appendToPath(folderPath, "_Serato_");
+        return joinPaths(folderPath, "_Serato_");
     }
 
     StringAutoPtr databaseFilePathForSeratoFolder(const char* seratoFolderPath)
     {
-        return p_appendToPath(seratoFolderPath, "database V2");
+        return joinPaths(seratoFolderPath, "database V2");
     }
 
     StringAutoPtr crateOrderFilePathForSeratoFolder(const char* seratoFolderPath)
     {
-        return p_appendToPath(seratoFolderPath, "neworder.pref");
+        return joinPaths(seratoFolderPath, "neworder.pref");
     }
 
     StringAutoPtr crateFilePathForCrateNameInSeratoFolder(const char* crateName, const char* seratoFolderPath)
     {
-        StringAutoPtr cratesFolderPath = p_appendToPath(seratoFolderPath, "Subcrates");
-        StringAutoPtr crateFilePartialPath = p_appendToPath(cratesFolderPath->c_str(), crateName);
+        StringAutoPtr cratesFolderPath = joinPaths(seratoFolderPath, "Subcrates");
+        StringAutoPtr crateFilePartialPath = joinPaths(cratesFolderPath->c_str(), crateName);
         return StringAutoPtr(new string(*crateFilePartialPath + ".crate"));
     }
 
@@ -136,6 +139,21 @@ namespace NxA {
         StringAutoPtr databaseFilePath = databaseFilePathForSeratoFolder(seratoFolderPath->c_str());
         StringAutoPtr crateOrderFilePath = crateOrderFilePathForSeratoFolder(seratoFolderPath->c_str());
         return fileExistsAt(databaseFilePath->c_str()) && fileExistsAt(crateOrderFilePath->c_str());
+    }
+
+    StringAutoPtr joinPaths(const char* firstPath, const char* secondPath)
+    {
+        string* result = new string(firstPath);
+
+        #ifdef NXASeratoCompiledOnOSX
+        *result += "/";
+        #else
+        *result += "\";
+        #endif
+
+        *result += secondPath;
+
+        return StringAutoPtr(result);
     }
 
     bool fileExistsAt(const char* filePath)

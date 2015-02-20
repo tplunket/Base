@@ -172,6 +172,16 @@ namespace NxA {
         return buf.st_size;
     }
     
+    time_t modificationDateInSecondsSince1970ForFile(const char* filePath)
+    {
+        struct stat buf;
+        if (stat(filePath, &buf) == -1) {
+            return 0;
+        }
+
+        return buf.st_mtimespec.tv_sec;
+    }
+    
     CharVectorAutoPtr readFileAt(const char* filePath)
     {
         size_t fileSize = sizeOfFileAt(filePath);

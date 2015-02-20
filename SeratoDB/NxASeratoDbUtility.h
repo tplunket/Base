@@ -46,6 +46,7 @@ namespace NxA {
     StringAutoPtr joinPaths(const char* firstPath, const char* secondPath);
     bool fileExistsAt(const char* filePath);
     size_t sizeOfFileAt(const char* filePath);
+    time_t modificationDateInSecondsSince1970ForFile(const char* filePath);
     CharVectorAutoPtr readFileAt(const char* filePath);
 }
 

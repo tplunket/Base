@@ -67,7 +67,8 @@ SeratoDatabase::SeratoDatabase(const char* seratoFolderPath)
         }
     }
 
-    this->p_crateOrderFile = SeratoCrateOrderFileAutoPtr(new SeratoCrateOrderFile(seratoFolderPath));
+    // -- TODO: This will eventually select the root folder based on where the database is.
+    this->p_crateOrderFile = SeratoCrateOrderFileAutoPtr(new SeratoCrateOrderFile(seratoFolderPath, ""));
 
 #if PRINT_DEBUG_INFO
     p_debugListCrate(this->rootCrate(), "");
@@ -97,7 +98,8 @@ StringAutoPtr SeratoDatabase::versionAsStringForDatabaseIn(const char* seratoFol
 
 void SeratoDatabase::p_storeTrackTag(const SeratoTag* tag)
 {
-    SeratoTrack* newTrack = new SeratoTrack(tag);
+    // -- TODO: This will eventually select the root folder based on where the database is.
+    SeratoTrack* newTrack = new SeratoTrack(tag, "");
     this->p_tracks.push_back(SeratoTrackAutoPtr(newTrack));
 }
 

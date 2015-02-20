@@ -36,7 +36,7 @@ namespace NxA {
 
     public:
         #pragma mark Constructors
-        SeratoCrateOrderFile(const char* seratoFolderPath);
+        SeratoCrateOrderFile(const char* seratoFolderPath, const char* rootFolderPath);
 
         #pragma mark Instance Methods
         const SeratoCrate* rootCrate(void) const;

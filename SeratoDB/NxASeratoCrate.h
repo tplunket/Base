@@ -36,12 +36,13 @@ namespace NxA {
     private:
         #pragma mark Private Instance Variables
         StringAutoPtr p_crateName;
-        StringAutoPtr p_fullyQualifiedCrateName;
+        StringAutoPtr p_crateFullPathName;
+        StringAutoPtr p_rootVolumePath;
 
         SeratoCrateVector p_childrenCrates;
 
         SeratoTagAutoPtr p_versionTag;
-        SeratoTrackEntryVector p_tracks;
+        SeratoTrackEntryVector p_trackEntries;
         SeratoTagVector p_otherTags;
 
         #pragma mark Private Instance Methods
@@ -51,18 +52,21 @@ namespace NxA {
 
     public:
         #pragma mark Constructors
-        SeratoCrate(const char* fullyQualifiedCrateName);
-        SeratoCrate(const char* fullyQualifiedCrateName, const char* readItFromSeratoFolderPath);
+        SeratoCrate(const char* crateFullPathName);
+        SeratoCrate(const char* crateFullPathName,
+                    const char* readItFromSeratoFolderPath,
+                    const char* locatedOnVolumePath);
 
         #pragma mark Class Methods
-        static bool isAValidCrateName(const char* fullyQualifiedCrateName, const char* seratoFolderPath);
+        static bool isAValidCrateName(const char* crateFullPathName, const char* seratoFolderPath);
 
         #pragma mark Instance Methods
         StringAutoPtr versionAsString(void) const;
 
         const std::string& crateName(void) const;
+        const std::string& crateFullPathName(void) const;
 
-        const SeratoTrackEntryVector& tracks(void) const;
+        const SeratoTrackEntryVector& trackEntries(void) const;
         const SeratoCrateVector& crates(void) const;
 
         void addChildCrate(SeratoCrateAutoPtr crate);

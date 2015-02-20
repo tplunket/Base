@@ -22,23 +22,26 @@ using namespace std;
 
 #pragma mark Constructors
 
-SeratoCrate::SeratoCrate(const char* fullyQualifiedCrateName)
+SeratoCrate::SeratoCrate(const char* crateFullPathName)
 {
-    this->p_fullyQualifiedCrateName = StringAutoPtr(new string(fullyQualifiedCrateName));
+    this->p_crateFullPathName = StringAutoPtr(new string(crateFullPathName));
 
-    string crateName(fullyQualifiedCrateName);
+    string crateName(crateFullPathName);
     size_t lastSeperator = crateName.rfind("%%");
     if (lastSeperator != string::npos) {
         this->p_crateName = StringAutoPtr(new string(crateName.substr(lastSeperator + 2)));
     }
     else {
-        this->p_crateName = StringAutoPtr(new string(fullyQualifiedCrateName));
+        this->p_crateName = StringAutoPtr(new string(crateFullPathName));
     }
 }
 
-SeratoCrate::SeratoCrate(const char* fullyQualifiedCrateName, const char* readItFromSeratoFolderPath) : SeratoCrate(fullyQualifiedCrateName)
+SeratoCrate::SeratoCrate(const char* crateFullPathName, const char* readItFromSeratoFolderPath,
+                         const char* locatedOnVolumePath) : SeratoCrate(crateFullPathName)
 {
-    StringAutoPtr crateFilePath = crateFilePathForCrateNameInSeratoFolder(fullyQualifiedCrateName, readItFromSeratoFolderPath);
+    this->p_rootVolumePath = StringAutoPtr(new string(locatedOnVolumePath));
+
+    StringAutoPtr crateFilePath = crateFilePathForCrateNameInSeratoFolder(crateFullPathName, readItFromSeratoFolderPath);
     CharVectorAutoPtr crateFileData = readFileAt(crateFilePath->c_str());
 
     SeratoTagVectorAutoPtr tags(SeratoTag::parseTagsIn(crateFileData));
@@ -64,9 +67,9 @@ SeratoCrate::SeratoCrate(const char* fullyQualifiedCrateName, const char* readIt
 
 #pragma mark Class Methods
 
-bool SeratoCrate::isAValidCrateName(const char* fullyQualifiedCrateName, const char* seratoFolderPath)
+bool SeratoCrate::isAValidCrateName(const char* crateFullPathName, const char* seratoFolderPath)
 {
-    StringAutoPtr crateFilePath = crateFilePathForCrateNameInSeratoFolder(fullyQualifiedCrateName, seratoFolderPath);
+    StringAutoPtr crateFilePath = crateFilePathForCrateNameInSeratoFolder(crateFullPathName, seratoFolderPath);
     return fileExistsAt(crateFilePath->c_str());
 }
 
@@ -83,8 +86,8 @@ void SeratoCrate::p_storeVersionTag(const SeratoTag* tag)
 
 void SeratoCrate::p_storeTrackTag(const SeratoTag* tag)
 {
-    SeratoTrackEntry* newTrack = new SeratoTrackEntry(tag);
-    this->p_tracks.push_back(SeratoTrackEntryAutoPtr(newTrack));
+    SeratoTrackEntry* newTrack = new SeratoTrackEntry(tag, this->p_rootVolumePath->c_str());
+    this->p_trackEntries.push_back(SeratoTrackEntryAutoPtr(newTrack));
 }
 
 void SeratoCrate::p_storeOtherTag(const SeratoTag* tag)
@@ -106,9 +109,14 @@ const std::string& SeratoCrate::crateName(void) const
     return *(this->p_crateName);
 }
 
-const SeratoTrackEntryVector& SeratoCrate::tracks(void) const
+const std::string& SeratoCrate::crateFullPathName(void) const
 {
-    return this->p_tracks;
+    return *(this->p_crateFullPathName);
+}
+
+const SeratoTrackEntryVector& SeratoCrate::trackEntries(void) const
+{
+    return this->p_trackEntries;
 }
 
 const SeratoCrateVector& SeratoCrate::crates(void) const

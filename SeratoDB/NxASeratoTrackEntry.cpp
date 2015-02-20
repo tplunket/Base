@@ -32,7 +32,9 @@ StringAutoPtr SeratoTrackEntry::trackFilePath(void) const
     if (this->p_containsAValidTag()) {
         const SeratoTag* tag = this->p_trackTag->subTagWithIdentifierOrNilIfDoesNotExist(NxASeratoTrackEntryPathTag);
         if (tag != NULL) {
-            return tag->dataAsPath();
+            StringAutoPtr pathFromRootFolder = tag->dataAsPath();
+            StringAutoPtr trackFilePath = joinPaths(this->p_rootVolumePath->c_str(), pathFromRootFolder->c_str());
+            return trackFilePath;
         }
     }
 

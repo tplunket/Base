@@ -126,7 +126,9 @@ static void p_debugPrintComparaison(const SeratoTrack* track, const SeratoTrackF
 
 #pragma mark Constructors
 
-SeratoTrack::SeratoTrack(const SeratoTag* trackTag) : p_trackTag(SeratoTagAutoPtr(trackTag))
+SeratoTrack::SeratoTrack(const SeratoTag* trackTag, const char* rootDirectoryPath) :
+                         p_trackTag(SeratoTagAutoPtr(trackTag)),
+                         p_rootFolder(StringAutoPtr(new string(rootDirectoryPath)))
 {
 #if PRINT_DEBUG_INFO
     this->p_loadTrackFile();
@@ -178,22 +180,21 @@ uint32_t SeratoTrack::p_uint32ForSubTagIdentifierOrZeroIfNotFound(uint32_t ident
     return 0;
 }
 
-StringAutoPtr SeratoTrack::p_trackFilePath(void) const
-{
-    return this->p_pathForSubTagIdentifierOrEmptyIfNotFound(NxASeratoTrackFilePathTag);
-}
-
 void SeratoTrack::p_loadTrackFile(void)
 {
-    string trackFilePath("/");
-    trackFilePath += *(this->p_trackFilePath());
-
-    this->p_trackFile = SeratoTrackFileFactory::trackFileForPath(trackFilePath.c_str());
+    this->p_trackFile = SeratoTrackFileFactory::trackFileForPath(this->trackFilePath()->c_str());
 }
 
 void SeratoTrack::p_unloadTrackFile(void)
 {
     this->p_trackFile = SeratoTrackFileAutoPtr(NULL);
+}
+
+StringAutoPtr SeratoTrack::trackFilePath(void) const
+{
+    StringAutoPtr pathFromRootFolder = this->p_pathForSubTagIdentifierOrEmptyIfNotFound(NxASeratoTrackFilePathTag);
+    StringAutoPtr trackFilePath = joinPaths(this->p_rootFolder->c_str(), pathFromRootFolder->c_str());
+    return trackFilePath;
 }
 
 StringAutoPtr SeratoTrack::title(void) const

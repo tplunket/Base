@@ -37,6 +37,7 @@ namespace NxA {
         #pragma mark Private Instance Variable
         SeratoTagAutoPtr p_trackTag;
         SeratoTrackFileAutoPtr p_trackFile;
+        StringAutoPtr p_rootFolder;
 
         #pragma mark Private Instance Methods
         bool p_containsAValidTag(void) const;
@@ -45,16 +46,15 @@ namespace NxA {
         uint32_t p_uint32ForSubTagIdentifierOrZeroIfNotFound(uint32_t identifier) const;
         uint32_t p_uint32ForStringSubTagIdentifierOrZeroIfNotFound(uint32_t identifier) const;
 
-        StringAutoPtr p_trackFilePath(void) const;
-
         void p_loadTrackFile(void);
         void p_unloadTrackFile(void);
 
     public:
         #pragma mark Constructors
-        SeratoTrack(const SeratoTag* trackTag);
+        SeratoTrack(const SeratoTag* trackTag, const char* rootDirectoryPath);
 
         #pragma mark Instance Methods
+        StringAutoPtr trackFilePath(void) const;
         StringAutoPtr title(void) const;
         StringAutoPtr artist(void) const;
         StringAutoPtr album(void) const;

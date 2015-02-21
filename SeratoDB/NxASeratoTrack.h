@@ -39,6 +39,9 @@ namespace NxA {
         SeratoTrackFileAutoPtr p_trackFile;
         StringAutoPtr p_rootFolder;
 
+        SeratoCueMarkerVectorAutoPtr p_cueMarkers;
+        SeratoLoopMarkerVectorAutoPtr p_loopMarkers;
+
         #pragma mark Private Instance Methods
         bool p_containsAValidTag(void) const;
         StringAutoPtr p_stringForSubTagIdentifierOrEmptyIfNotFound(uint32_t identifier) const;
@@ -48,6 +51,7 @@ namespace NxA {
 
         void p_loadTrackFile(void);
         void p_unloadTrackFile(void);
+        void p_readMarkersIfNotAlreadyRead(void);
 
     public:
         #pragma mark Constructors
@@ -75,6 +79,9 @@ namespace NxA {
         uint32_t discNumber(void) const;
         uint32_t dateModifiedInSecondsSinceJanuary1st1970(void) const;
         uint32_t dateAddedInSecondsSinceJanuary1st1970(void) const;
+
+        const SeratoCueMarkerVector& cueMarkers(void);
+        const SeratoLoopMarkerVector& loopMarkers(void);
     };
 }
 

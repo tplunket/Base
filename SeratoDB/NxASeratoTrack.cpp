@@ -190,6 +190,16 @@ void SeratoTrack::p_unloadTrackFile(void)
     this->p_trackFile = SeratoTrackFileAutoPtr(NULL);
 }
 
+void SeratoTrack::p_readMarkersIfNotAlreadyRead(void)
+{
+    if (!this->p_cueMarkers.get() || !this->p_loopMarkers.get()) {
+        this->p_loadTrackFile();
+        this->p_cueMarkers = SeratoCueMarkerVectorAutoPtr(new SeratoCueMarkerVector(this->p_trackFile->cueMarkers()));
+        this->p_loopMarkers = SeratoLoopMarkerVectorAutoPtr(new SeratoLoopMarkerVector(this->p_trackFile->loopMarkers()));
+        this->p_unloadTrackFile();
+    }
+}
+
 StringAutoPtr SeratoTrack::trackFilePath(void) const
 {
     StringAutoPtr pathFromRootFolder = this->p_pathForSubTagIdentifierOrEmptyIfNotFound(NxASeratoTrackFilePathTag);
@@ -295,4 +305,18 @@ uint32_t SeratoTrack::dateModifiedInSecondsSinceJanuary1st1970(void) const
 uint32_t SeratoTrack::dateAddedInSecondsSinceJanuary1st1970(void) const
 {
     return this->p_uint32ForSubTagIdentifierOrZeroIfNotFound(NxASeratoTrackDateAddedTag);
+}
+
+const SeratoCueMarkerVector& SeratoTrack::cueMarkers(void)
+{
+    this->p_readMarkersIfNotAlreadyRead();
+
+    return *(this->p_cueMarkers);
+}
+
+const SeratoLoopMarkerVector& SeratoTrack::loopMarkers(void)
+{
+    this->p_readMarkersIfNotAlreadyRead();
+
+    return *(this->p_loopMarkers);
 }

@@ -45,17 +45,17 @@ SeratoCueMarker::SeratoCueMarker(const char* id3TagStart)
 
 #pragma mark Instance Methods
 
-uint32_t SeratoCueMarker::positionInMilliseconds(void)
+uint32_t SeratoCueMarker::positionInMilliseconds(void) const
 {
     return this->p_positionInMilliSeconds;
 }
 
-uint16_t SeratoCueMarker::index(void)
+uint16_t SeratoCueMarker::index(void) const
 {
     return this->p_index;
 }
 
-const string& SeratoCueMarker::label(void)
+const string& SeratoCueMarker::label(void) const
 {
     return *this->p_label;
 }

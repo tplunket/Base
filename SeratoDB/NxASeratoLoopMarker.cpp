@@ -50,22 +50,22 @@ SeratoLoopMarker::SeratoLoopMarker(const char* id3TagStart)
 
 #pragma mark Instance Methods
 
-uint32_t SeratoLoopMarker::startPositionInMilliseconds(void)
+uint32_t SeratoLoopMarker::startPositionInMilliseconds(void) const
 {
     return this->p_startPositionInMilliSeconds;
 }
 
-uint32_t SeratoLoopMarker::endPositionInMilliseconds(void)
+uint32_t SeratoLoopMarker::endPositionInMilliseconds(void) const
 {
     return this->p_endPositionInMilliSeconds;
 }
 
-uint16_t SeratoLoopMarker::index(void)
+uint16_t SeratoLoopMarker::index(void) const
 {
     return this->p_index;
 }
 
-const string& SeratoLoopMarker::label(void)
+const string& SeratoLoopMarker::label(void) const
 {
     return *this->p_label;
 }

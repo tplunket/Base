@@ -46,9 +46,9 @@ namespace NxA {
         SeratoCueMarker(const char* id3TagStart);
 
         #pragma mark Instance Methods
-        uint32_t positionInMilliseconds(void);
-        uint16_t index(void);
-        const std::string& label(void);
+        uint32_t positionInMilliseconds(void) const;
+        uint16_t index(void) const;
+        const std::string& label(void) const;
     };
 }
 

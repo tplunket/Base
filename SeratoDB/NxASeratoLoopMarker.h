@@ -47,10 +47,10 @@ namespace NxA {
         SeratoLoopMarker(const char* id3TagStart);
 
         #pragma mark Instance Methods
-        uint32_t startPositionInMilliseconds(void);
-        uint32_t endPositionInMilliseconds(void);
-        uint16_t index(void);
-        const std::string& label(void);
+        uint32_t startPositionInMilliseconds(void) const;
+        uint32_t endPositionInMilliseconds(void) const;
+        uint16_t index(void) const;
+        const std::string& label(void) const;
     };
 }
 

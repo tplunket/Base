@@ -34,7 +34,7 @@ namespace NxA {
     class SeratoTrack
     {
     private:
-        #pragma mark Private Instance Variable
+        #pragma mark Private Instance Variables
         SeratoTagAutoPtr p_trackTag;
         SeratoTrackFileAutoPtr p_trackFile;
         StringAutoPtr p_rootFolder;

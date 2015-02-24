@@ -77,6 +77,9 @@ namespace NxA {
 
         void addChildTrack(SeratoTrackEntryAutoPtr trackEntry);
         void addChildCrate(SeratoCrateAutoPtr crate);
+
+        SeratoTrackEntryVectorAutoPtr removeAndReturnTrackEntries(void);
+        SeratoCrateVectorAutoPtr removeAndReturnChildrenCrates(void);
     };
 }
 

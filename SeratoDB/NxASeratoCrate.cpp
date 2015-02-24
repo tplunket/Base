@@ -157,3 +157,29 @@ void SeratoCrate::addChildCrate(SeratoCrateAutoPtr crate)
     this->p_wasModified = true;
     this->p_childrenCrates->push_back(SeratoCrateAutoPtr(crate));
 }
+
+SeratoTrackEntryVectorAutoPtr SeratoCrate::removeAndReturnTrackEntries(void)
+{
+    SeratoTrackEntryVectorAutoPtr trackEntries = this->p_trackEntries;
+    this->p_trackEntries = SeratoTrackEntryVectorAutoPtr(new SeratoTrackEntryVector);
+
+    this->p_wasModified = true;
+
+    return trackEntries;
+}
+
+SeratoCrateVectorAutoPtr SeratoCrate::removeAndReturnChildrenCrates(void)
+{
+    SeratoCrateVectorAutoPtr childrenCrates = this->p_childrenCrates;
+    this->p_childrenCrates = SeratoCrateVectorAutoPtr(new SeratoCrateVector);
+
+    this->p_wasModified = true;
+
+    for (SeratoCrateVector::iterator it = childrenCrates->begin(); it != childrenCrates->end(); ++it) {
+        SeratoCrate* crate = it->get();
+
+        crate->p_parentCrate = NULL;
+    }
+
+    return childrenCrates;
+}

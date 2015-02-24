@@ -170,3 +170,8 @@ const void* SeratoTag::data(void) const
 {
     return p_dataForTagAt(this->p_memoryRepresentation->data());
 }
+
+void* SeratoTag::mutableData(void)
+{
+    return p_dataForTagAt(this->p_memoryRepresentation->data());
+}

@@ -79,7 +79,7 @@ namespace NxA {
         StringAutoPtr dataAsString(void) const;
         StringAutoPtr dataAsPath(void) const;
         const void* data(void) const;
-
+        const void* mutableData(void) const;
     };
 }
 

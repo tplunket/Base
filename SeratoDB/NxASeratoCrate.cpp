@@ -24,6 +24,9 @@ using namespace std;
 
 SeratoCrate::SeratoCrate(const char* crateFullPathName)
 {
+    this->p_trackEntries = SeratoTrackEntryVectorAutoPtr(new SeratoTrackEntryVector);
+    this->p_childrenCrates = SeratoCrateVectorAutoPtr(new SeratoCrateVector);
+
     this->p_crateFullPathName = StringAutoPtr(new string(crateFullPathName));
 
     string crateName(crateFullPathName);
@@ -87,7 +90,7 @@ void SeratoCrate::p_storeVersionTag(const SeratoTag* tag)
 void SeratoCrate::p_storeTrackTag(const SeratoTag* tag)
 {
     SeratoTrackEntry* newTrack = new SeratoTrackEntry(tag, this->p_rootVolumePath->c_str());
-    this->p_trackEntries.push_back(SeratoTrackEntryAutoPtr(newTrack));
+    this->addChildTrack(SeratoTrackEntryAutoPtr(newTrack));
 }
 
 void SeratoCrate::p_storeOtherTag(const SeratoTag* tag)
@@ -116,15 +119,20 @@ const std::string& SeratoCrate::crateFullPathName(void) const
 
 const SeratoTrackEntryVector& SeratoCrate::trackEntries(void) const
 {
-    return this->p_trackEntries;
+    return *(this->p_trackEntries.get());
 }
 
 const SeratoCrateVector& SeratoCrate::crates(void) const
 {
-    return this->p_childrenCrates;
+    return *(this->p_childrenCrates.get());
+}
+
+void SeratoCrate::addChildTrack(SeratoTrackEntryAutoPtr trackEntry)
+{
+    this->p_trackEntries->push_back(SeratoTrackEntryAutoPtr(trackEntry));
 }
 
 void SeratoCrate::addChildCrate(SeratoCrateAutoPtr crate)
 {
-    this->p_childrenCrates.push_back(SeratoCrateAutoPtr(crate));
+    this->p_childrenCrates->push_back(SeratoCrateAutoPtr(crate));
 }

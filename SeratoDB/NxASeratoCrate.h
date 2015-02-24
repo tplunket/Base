@@ -39,10 +39,10 @@ namespace NxA {
         StringAutoPtr p_crateFullPathName;
         StringAutoPtr p_rootVolumePath;
 
-        SeratoCrateVector p_childrenCrates;
+        SeratoCrateVectorAutoPtr p_childrenCrates;
+        SeratoTrackEntryVectorAutoPtr p_trackEntries;
 
         SeratoTagAutoPtr p_versionTag;
-        SeratoTrackEntryVector p_trackEntries;
         SeratoTagVector p_otherTags;
 
         #pragma mark Private Instance Methods
@@ -69,6 +69,7 @@ namespace NxA {
         const SeratoTrackEntryVector& trackEntries(void) const;
         const SeratoCrateVector& crates(void) const;
 
+        void addChildTrack(SeratoTrackEntryAutoPtr trackEntry);
         void addChildCrate(SeratoCrateAutoPtr crate);
     };
 }

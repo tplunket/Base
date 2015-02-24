@@ -79,6 +79,8 @@ static SeratoCrateVectorAutoPtr p_childrenCratesOfCrateNamedUsingNameList(const 
         for (SeratoCrateVector::iterator childrenIt = childCrates->begin(); childrenIt != childCrates->end(); ++childrenIt) {
             newCrate->addChildCrate(*childrenIt);
         }
+
+        newCrate->setAsNotModified();
     }
 
     return SeratoCrateVectorAutoPtr(cratesFound);
@@ -107,6 +109,8 @@ SeratoCrateOrderFile::SeratoCrateOrderFile(const char* seratoFolderPath, const c
     for (SeratoCrateVector::iterator it = crates->begin(); it != crates->end(); ++it) {
         this->p_rootCrate->addChildCrate(*it);
     }
+
+    this->p_rootCrate->setAsNotModified();
 }
 
 #pragma mark Instance Methods

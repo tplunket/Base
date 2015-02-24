@@ -39,6 +39,8 @@ namespace NxA {
         StringAutoPtr p_crateFullPathName;
         StringAutoPtr p_rootVolumePath;
 
+        bool p_wasModified;
+
         SeratoCrate* p_parentCrate;
         SeratoCrateVectorAutoPtr p_childrenCrates;
         SeratoTrackEntryVectorAutoPtr p_trackEntries;
@@ -69,6 +71,9 @@ namespace NxA {
 
         const SeratoTrackEntryVector& trackEntries(void) const;
         const SeratoCrateVector& crates(void) const;
+
+        void setAsNotModified(void);
+        void setAsModified(void);
 
         void addChildTrack(SeratoTrackEntryAutoPtr trackEntry);
         void addChildCrate(SeratoCrateAutoPtr crate);

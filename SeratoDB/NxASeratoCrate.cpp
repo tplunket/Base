@@ -25,6 +25,7 @@ using namespace std;
 SeratoCrate::SeratoCrate(const char* crateFullPathName)
 {
     this->p_parentCrate = NULL;
+    this->p_wasModified = false;
 
     this->p_trackEntries = SeratoTrackEntryVectorAutoPtr(new SeratoTrackEntryVector);
     this->p_childrenCrates = SeratoCrateVectorAutoPtr(new SeratoCrateVector);
@@ -129,8 +130,23 @@ const SeratoCrateVector& SeratoCrate::crates(void) const
     return *(this->p_childrenCrates.get());
 }
 
+void SeratoCrate::setAsNotModified()
+{
+    this->p_wasModified = false;
+}
+
+void SeratoCrate::setAsModified()
+{
+    this->p_wasModified = true;
+
+    if (this->p_parentCrate) {
+        this->p_parentCrate->setAsModified();
+    }
+}
+
 void SeratoCrate::addChildTrack(SeratoTrackEntryAutoPtr trackEntry)
 {
+    this->p_wasModified = true;
     this->p_trackEntries->push_back(SeratoTrackEntryAutoPtr(trackEntry));
 }
 
@@ -138,5 +154,6 @@ void SeratoCrate::addChildCrate(SeratoCrateAutoPtr crate)
 {
     crate->p_parentCrate = this;
 
+    this->p_wasModified = true;
     this->p_childrenCrates->push_back(SeratoCrateAutoPtr(crate));
 }

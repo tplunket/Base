@@ -135,28 +135,6 @@ StringAutoPtr SeratoMP4TrackFile::remixer(void) const
     return StringAutoPtr(NULL);
 }
 
-bool SeratoMP4TrackFile::hasDateReleased(void) const
-{
-    return true;
-}
-
-StringAutoPtr SeratoMP4TrackFile::dateReleased(void) const
-{
-    string* result = NULL;
-
-    String text = this->p_properties["purd"].toString();
-    if (text != String::null) {
-        result = new string(text.to8Bit());
-    }
-
-    return StringAutoPtr(result);
-}
-
-bool SeratoMP4TrackFile::hasYearReleased(void) const
-{
-    return true;
-}
-
 StringAutoPtr SeratoMP4TrackFile::yearReleased(void) const
 {
     string* result = NULL;

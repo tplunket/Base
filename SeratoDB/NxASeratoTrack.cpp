@@ -98,15 +98,7 @@ static void p_debugPrintComparaison(const SeratoTrack* track, const SeratoTrackF
         printf("No key.\n");
     }
     p_debugPrint(track->year(), "year");
-    if (trackFile->hasYearReleased()) {
-        p_debugPrint(trackFile->yearReleased(), "year");
-    }
-    else if (trackFile->hasDateReleased()) {
-        p_debugPrint(trackFile->dateReleased(), "yeard");
-    }
-    else {
-        printf("No date or year released.\n");
-    }
+    p_debugPrint(trackFile->yearReleased(), "year");
     p_debugPrint(track->length(), "length");
     p_debugPrintTimeFromMilliseconds(trackFile->lengthInMilliseconds(), "length");
     p_debugPrint(track->bitRate(), "bitrate");

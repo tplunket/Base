@@ -108,21 +108,6 @@ StringAutoPtr SeratoOGGTrackFile::remixer(void) const
     return StringAutoPtr(result);
 }
 
-bool SeratoOGGTrackFile::hasDateReleased(void) const
-{
-    return false;
-}
-
-StringAutoPtr SeratoOGGTrackFile::dateReleased(void) const
-{
-    return StringAutoPtr(NULL);
-}
-
-bool SeratoOGGTrackFile::hasYearReleased(void) const
-{
-    return true;
-}
-
 StringAutoPtr SeratoOGGTrackFile::yearReleased(void) const
 {
     string* result = NULL;

@@ -41,9 +41,6 @@ namespace NxA {
         virtual StringAutoPtr recordLabel(void) const;
         virtual bool hasRemixer(void) const;
         virtual StringAutoPtr remixer(void) const;
-        virtual bool hasDateReleased(void) const;
-        virtual StringAutoPtr dateReleased(void) const;
-        virtual bool hasYearReleased(void) const;
         virtual StringAutoPtr yearReleased(void) const;
 
         virtual CharVectorAutoPtr artwork(void) const;

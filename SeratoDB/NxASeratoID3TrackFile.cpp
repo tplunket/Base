@@ -151,12 +151,7 @@ StringAutoPtr SeratoID3TrackFile::remixer(void) const
     return StringAutoPtr(result);
 }
 
-bool SeratoID3TrackFile::hasDateReleased(void) const
-{
-    return true;
-}
-
-StringAutoPtr SeratoID3TrackFile::dateReleased(void) const
+StringAutoPtr SeratoID3TrackFile::yearReleased(void) const
 {
     string* result = NULL;
 
@@ -166,16 +161,6 @@ StringAutoPtr SeratoID3TrackFile::dateReleased(void) const
     }
 
     return StringAutoPtr(result);
-}
-
-bool SeratoID3TrackFile::hasYearReleased(void) const
-{
-    return false;
-}
-
-StringAutoPtr SeratoID3TrackFile::yearReleased(void) const
-{
-    return StringAutoPtr(NULL);
 }
 
 CharVectorAutoPtr SeratoID3TrackFile::artwork(void) const
@@ -203,7 +188,8 @@ CharVectorAutoPtr SeratoID3TrackFile::artwork(void) const
 
                 if (pic->type() == ID3v2::AttachedPictureFrame::Other) {
                     char* data = pic->picture().data();
-                    result = new CharVector(data, data + pic->picture().size());
+                    size_t size = pic->picture().size();
+                    result = new CharVector(data, data + size);
                     break;
                 }
             }

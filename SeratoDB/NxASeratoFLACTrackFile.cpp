@@ -146,12 +146,7 @@ StringAutoPtr SeratoFLACTrackFile::remixer(void) const
     return StringAutoPtr(NULL);
 }
 
-bool SeratoFLACTrackFile::hasDateReleased(void) const
-{
-    return true;
-}
-
-StringAutoPtr SeratoFLACTrackFile::dateReleased(void) const
+StringAutoPtr SeratoFLACTrackFile::yearReleased(void) const
 {
     string* result = NULL;
 
@@ -161,16 +156,6 @@ StringAutoPtr SeratoFLACTrackFile::dateReleased(void) const
     }
 
     return StringAutoPtr(result);
-}
-
-bool SeratoFLACTrackFile::hasYearReleased(void) const
-{
-    return false;
-}
-
-StringAutoPtr SeratoFLACTrackFile::yearReleased(void) const
-{
-    return StringAutoPtr(NULL);
 }
 
 CharVectorAutoPtr SeratoFLACTrackFile::artwork(void) const

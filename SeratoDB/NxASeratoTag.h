@@ -71,6 +71,7 @@ namespace NxA {
         const SeratoTag* subTagWithIdentifierOrNilIfDoesNotExist(uint32_t identifier) const;
 
         uint32_t identifier(void) const;
+        size_t dataSizeInBytes(void) const;
 
         bool dataAsBoolean(void) const;
         uint16_t dataAsUInt16(void) const;
@@ -79,7 +80,6 @@ namespace NxA {
         StringAutoPtr dataAsPath(void) const;
         const void* data(void) const;
 
-        size_t dataSizeInBytes(void) const;
     };
 }
 

@@ -112,6 +112,11 @@ const SeratoTag* SeratoTag::subTagWithIdentifierOrNilIfDoesNotExist(uint32_t ide
     return it->second;
 }
 
+size_t SeratoTag::dataSizeInBytes(void) const
+{
+    return this->p_dataSizeInBytes;
+}
+
 uint32_t SeratoTag::identifier(void) const
 {
     return this->p_identifier;
@@ -151,9 +156,4 @@ StringAutoPtr SeratoTag::dataAsPath(void) const
 const void* SeratoTag::data(void) const
 {
     return this->p_data.data();
-}
-
-size_t SeratoTag::dataSizeInBytes(void) const
-{
-    return this->p_dataSizeInBytes;
 }

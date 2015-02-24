@@ -32,7 +32,6 @@ namespace NxA {
     typedef std::map<const uint32_t, const SeratoTag*> SeratoIdentifierToTagMap;
     typedef std::vector<SeratoTagAutoPtr> SeratoTagVector;
     typedef std::auto_ptr<SeratoTagVector> SeratoTagVectorAutoPtr;
-    typedef std::vector<unsigned char> SeratoTagData;
 
     #pragma mark Class Declaration
     class SeratoTag
@@ -51,10 +50,9 @@ namespace NxA {
 
         #pragma mark Private Instance Variables
         uint32_t p_identifier;
-
         size_t p_dataSizeInBytes;
 
-        SeratoTagData p_data;
+        CharVectorAutoPtr p_memoryRepresentation;
 
         const SeratoTag* p_parentTag;
 

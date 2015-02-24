@@ -53,18 +53,18 @@ namespace NxA {
 
 #pragma mark Constructors
 
-SeratoTag::SeratoTag(const void* tagAddress) :
-                     p_data((unsigned char*)p_dataForTagAt(tagAddress),
-                            (unsigned char*)p_dataForTagAt(tagAddress) + p_dataSizeInBytesForTagAt(tagAddress))
+SeratoTag::SeratoTag(const void* tagAddress)
 {
     this->p_identifier = p_identifierForTagAt(tagAddress);
-    this->p_dataSizeInBytes = this->p_data.size();
-
-    const void* dataAddress = p_dataForTagAt(tagAddress);
+    this->p_dataSizeInBytes = p_dataSizeInBytesForTagAt(tagAddress);
+    this->p_memoryRepresentation = CharVectorAutoPtr(new CharVector((char*)tagAddress,
+                                                                    (char*)tagAddress + this->p_dataSizeInBytes + sizeof(SeratoTagStruct)));
 
     this->p_parentTag = NULL;
 
     if ((char)(this->p_identifier >> 24) == 'o') {
+        const void* dataAddress = p_dataForTagAt(tagAddress);
+        
         this->p_subTags = SeratoTag::p_parseTagsInForParentTag(dataAddress, this->p_dataSizeInBytes, this);
 
         for(SeratoTagVector::iterator it = this->p_subTags->begin(); it != this->p_subTags->end(); ++it) {
@@ -155,5 +155,5 @@ StringAutoPtr SeratoTag::dataAsPath(void) const
 
 const void* SeratoTag::data(void) const
 {
-    return this->p_data.data();
+    return p_dataForTagAt(this->p_memoryRepresentation->data());
 }

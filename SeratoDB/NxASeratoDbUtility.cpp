@@ -111,6 +111,22 @@ namespace NxA {
                 (charsPtr[1] & 0xff);
     }
 
+    void writeBigEndianUInt32ValueAt(uint32_t value, void* ptr)
+    {
+        char* charsPtr = (char*)ptr;
+        charsPtr[0] = (value >> 24) & 0xff;
+        charsPtr[1] = (value >> 16) & 0xff;
+        charsPtr[2] = (value >> 8) & 0xff;
+        charsPtr[3] = value & 0xff;
+    }
+
+    void writeBigEndianUInt16ValueAt(uint16_t value, void* ptr)
+    {
+        char* charsPtr = (char*)ptr;
+        charsPtr[0] = (value >> 8) & 0xff;
+        charsPtr[1] = value & 0xff;
+    }
+    
     StringAutoPtr seratoFolderPathForFolder(const char* folderPath)
     {
         return joinPaths(folderPath, "_Serato_");

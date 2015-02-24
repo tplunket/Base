@@ -35,6 +35,8 @@ namespace NxA {
 
     uint32_t bigEndianUInt32ValueAt(const void* ptr);
     uint16_t bigEndianUInt16ValueAt(const void* ptr);
+    void writeBigEndianUInt32ValueAt(uint32_t value, void* ptr);
+    void writeBigEndianUInt16ValueAt(uint16_t value, void* ptr);
 
     bool containsAValidSeratoFolder(const char* folderPath);
 

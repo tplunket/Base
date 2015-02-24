@@ -39,6 +39,7 @@ namespace NxA {
         StringAutoPtr p_crateFullPathName;
         StringAutoPtr p_rootVolumePath;
 
+        SeratoCrate* p_parentCrate;
         SeratoCrateVectorAutoPtr p_childrenCrates;
         SeratoTrackEntryVectorAutoPtr p_trackEntries;
 

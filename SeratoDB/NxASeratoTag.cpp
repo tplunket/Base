@@ -74,6 +74,19 @@ SeratoTag::SeratoTag(const void* tagAddress)
     }
 }
 
+SeratoTag::SeratoTag(uint32_t identifier, size_t dataSizeInBytes)
+{
+    this->p_parentTag = NULL;
+
+    this->p_identifier = identifier;
+    this->p_dataSizeInBytes = dataSizeInBytes;
+    this->p_memoryRepresentation = CharVectorAutoPtr(new CharVector(this->p_dataSizeInBytes + sizeof(SeratoTagStruct), 0));
+
+    SeratoTagStruct* tagStructPtr = (SeratoTagStruct*)p_memoryRepresentation->data();
+    writeBigEndianUInt32ValueAt(identifier, tagStructPtr->identifier);
+    writeBigEndianUInt32ValueAt((uint32_t)dataSizeInBytes, tagStructPtr->length);
+}
+
 #pragma mark Class Methods
 
 SeratoTagVectorAutoPtr SeratoTag::p_parseTagsInForParentTag(const void* firstTagAddress,

@@ -61,6 +61,9 @@ namespace NxA {
         SeratoIdentifierToTagMap p_childrenTagsByIdentifier;
 
     public:
+        #pragma mark Constructors
+        SeratoTag(uint32_t identifier, size_t dataSizeInBytes);
+
         #pragma mark Class Methods
         static SeratoTagVectorAutoPtr parseTagsIn(const CharVectorAutoPtr& seratoTagData);
 

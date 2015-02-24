@@ -27,8 +27,9 @@ namespace NxA {
     class SeratoTrackEntry;
 
     #pragma mark Containers
-    typedef std::auto_ptr<const SeratoTrackEntry> SeratoTrackEntryAutoPtr;
+    typedef std::auto_ptr<SeratoTrackEntry> SeratoTrackEntryAutoPtr;
     typedef std::vector<SeratoTrackEntryAutoPtr> SeratoTrackEntryVector;
+    typedef std::auto_ptr<SeratoTrackEntryVector> SeratoTrackEntryVectorAutoPtr;
 
     #pragma mark Class Declaration
     class SeratoTrackEntry

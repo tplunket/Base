@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "SeratoDB"
-  s.version      = "0.5"
+  s.version      = "0.6"
   s.summary      = "A reader/writer for Serato track collections."
 
   s.description  = <<-DESC

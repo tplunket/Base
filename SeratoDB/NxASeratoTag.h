@@ -40,8 +40,7 @@ namespace NxA {
     private:
         #pragma mark Private Constructors
         SeratoTag(const void* tagAddress);
-        SeratoTag(const void* tagAddress, const SeratoTag* parentTag) :
-        SeratoTag(tagAddress) {
+        SeratoTag(const void* tagAddress, const SeratoTag* parentTag) : SeratoTag(tagAddress) {
             this->p_parentTag = parentTag;
         };
 

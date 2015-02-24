@@ -58,7 +58,7 @@ SeratoTag::SeratoTag(const void* tagAddress) :
                             (unsigned char*)p_dataForTagAt(tagAddress) + p_dataSizeInBytesForTagAt(tagAddress))
 {
     this->p_identifier = p_identifierForTagAt(tagAddress);
-    this->p_dataSizeInBytes = p_dataSizeInBytesForTagAt(tagAddress);
+    this->p_dataSizeInBytes = this->p_data.size();
 
     const void* dataAddress = p_dataForTagAt(tagAddress);
 

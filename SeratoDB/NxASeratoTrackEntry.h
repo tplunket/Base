@@ -51,6 +51,8 @@ namespace NxA {
 
         #pragma mark Instance Methods
         StringAutoPtr trackFilePath(void) const;
+
+        const SeratoTag& tagForEntry(void) const;
     };
 }
 

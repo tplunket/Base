@@ -20,6 +20,19 @@
 using namespace NxA;
 using namespace std;
 
+#pragma mark Constructors
+
+SeratoTrackEntry::SeratoTrackEntry(const char* trackPath, const char* locatedOnVolumePath) :
+                                   p_rootVolumePath(new std::string(locatedOnVolumePath))
+{
+    ConstSeratoTagVectorAutoPtr tags(new ConstSeratoTagVector);
+
+    StringAutoPtr entryPath = removePrefixFromPath(locatedOnVolumePath, trackPath);
+    tags->push_back(SeratoTagAutoPtr(new SeratoTag(NxASeratoTrackEntryPathTag, entryPath->c_str())));
+
+    this->p_trackTag = SeratoTagAutoPtr(new SeratoTag(NxASeratoTrackEntryTag, tags));
+}
+
 #pragma mark Instance Methods
 
 bool SeratoTrackEntry::p_containsAValidTag(void) const
@@ -39,4 +52,9 @@ StringAutoPtr SeratoTrackEntry::trackFilePath(void) const
     }
 
     return StringAutoPtr(new string(""));
+}
+
+const SeratoTag& SeratoTrackEntry::tagForEntry(void) const
+{
+    return *(this->p_trackTag.get());
 }

@@ -47,6 +47,7 @@ namespace NxA {
         SeratoTrackEntry(const SeratoTag* trackTag, const char* locatedOnVolumePath) :
                          p_trackTag(ConstSeratoTagAutoPtr(trackTag)),
                          p_rootVolumePath(new std::string(locatedOnVolumePath)) { };
+        SeratoTrackEntry(const char* trackPath, const char* locatedOnVolumePath);
 
         #pragma mark Instance Methods
         StringAutoPtr trackFilePath(void) const;

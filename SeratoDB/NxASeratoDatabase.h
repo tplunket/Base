@@ -31,7 +31,7 @@ namespace NxA {
         #pragma mark Private Instance Variables
         StringAutoPtr p_databaseFilePath;
         SeratoTrackVector p_tracks;
-        SeratoTagVector p_otherTags;
+        ConstSeratoTagVector p_otherTags;
 
         SeratoCrateOrderFileAutoPtr p_crateOrderFile;
 

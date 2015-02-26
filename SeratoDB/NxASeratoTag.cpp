@@ -43,7 +43,7 @@ namespace NxA {
         return data;
     }
 
-    static const size_t p_dataSizeInBytesForTagAt(const void* tagAddress)
+    static size_t p_dataSizeInBytesForTagAt(const void* tagAddress)
     {
         SeratoTagStruct* tagStructPtr = (SeratoTagStruct*)tagAddress;
         unsigned long dataSizeInBytes = bigEndianUInt32ValueAt(tagStructPtr->length);
@@ -67,7 +67,7 @@ SeratoTag::SeratoTag(const void* tagAddress)
         
         this->p_subTags = SeratoTag::p_parseTagsInForParentTag(dataAddress, this->p_dataSizeInBytes, this);
 
-        for(SeratoTagVector::iterator it = this->p_subTags->begin(); it != this->p_subTags->end(); ++it) {
+        for(ConstSeratoTagVector::iterator it = this->p_subTags->begin(); it != this->p_subTags->end(); ++it) {
             const SeratoTag* subTag = it->get();
             this->p_childrenTagsByIdentifier[subTag->p_identifier] = subTag;
         }
@@ -89,26 +89,26 @@ SeratoTag::SeratoTag(uint32_t identifier, size_t dataSizeInBytes)
 
 #pragma mark Class Methods
 
-SeratoTagVectorAutoPtr SeratoTag::p_parseTagsInForParentTag(const void* firstTagAddress,
-                                                            size_t sizeFromFirstTagInBytes,
-                                                            const SeratoTag* parentTag)
+ConstSeratoTagVectorAutoPtr SeratoTag::p_parseTagsInForParentTag(const void* firstTagAddress,
+                                                                 size_t sizeFromFirstTagInBytes,
+                                                                 const SeratoTag* parentTag)
 {
     const void* tagAddress = firstTagAddress;
     const void* endOfTagsAddress = (unsigned char*)firstTagAddress + sizeFromFirstTagInBytes;
 
-    SeratoTagVector* newTags = new SeratoTagVector;
+    ConstSeratoTagVector* newTags = new ConstSeratoTagVector;
 
     while (tagAddress < endOfTagsAddress) {
         SeratoTag* newTag = parentTag ? new SeratoTag(tagAddress, parentTag) : new SeratoTag(tagAddress);
-        newTags->push_back(SeratoTagAutoPtr(newTag));
+        newTags->push_back(ConstSeratoTagAutoPtr(newTag));
 
         tagAddress = (const unsigned char*)tagAddress + newTag->p_dataSizeInBytes + sizeof(SeratoTagStruct);
     }
 
-    return SeratoTagVectorAutoPtr(newTags);
+    return ConstSeratoTagVectorAutoPtr(newTags);
 }
 
-SeratoTagVectorAutoPtr SeratoTag::parseTagsIn(const CharVectorAutoPtr& seratoTagData)
+ConstSeratoTagVectorAutoPtr SeratoTag::parseTagsIn(const CharVectorAutoPtr& seratoTagData)
 {
     return SeratoTag::p_parseTagsInForParentTag(seratoTagData->data(), seratoTagData->size(), NULL);
 }

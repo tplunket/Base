@@ -119,7 +119,7 @@ static void p_debugPrintComparaison(const SeratoTrack* track, const SeratoTrackF
 #pragma mark Constructors
 
 SeratoTrack::SeratoTrack(const SeratoTag* trackTag, const char* rootDirectoryPath) :
-                         p_trackTag(SeratoTagAutoPtr(trackTag)),
+                         p_trackTag(ConstSeratoTagAutoPtr(trackTag)),
                          p_rootFolder(StringAutoPtr(new string(rootDirectoryPath)))
 {
 #if PRINT_DEBUG_INFO

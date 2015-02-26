@@ -36,7 +36,7 @@ namespace NxA {
     {
     private:
         #pragma mark Private Instance Variable
-        SeratoTagAutoPtr p_trackTag;
+        ConstSeratoTagAutoPtr p_trackTag;
         StringAutoPtr p_rootVolumePath;
 
         #pragma mark Private Instance Methods
@@ -45,7 +45,7 @@ namespace NxA {
     public:
         #pragma mark Constructors
         SeratoTrackEntry(const SeratoTag* trackTag, const char* locatedOnVolumePath) :
-                         p_trackTag(SeratoTagAutoPtr(trackTag)),
+                         p_trackTag(ConstSeratoTagAutoPtr(trackTag)),
                          p_rootVolumePath(new std::string(locatedOnVolumePath)) { };
 
         #pragma mark Instance Methods

@@ -51,8 +51,8 @@ SeratoDatabase::SeratoDatabase(const char* seratoFolderPath)
     this->p_databaseFilePath = databaseFilePathForSeratoFolder(seratoFolderPath);
     CharVectorAutoPtr databaseFile = readFileAt(this->p_databaseFilePath->c_str());
 
-    SeratoTagVectorAutoPtr tags = SeratoTag::parseTagsIn(databaseFile);
-    for(SeratoTagVector::iterator it = tags->begin(); it != tags->end(); ++it) {
+    ConstSeratoTagVectorAutoPtr tags = SeratoTag::parseTagsIn(databaseFile);
+    for(ConstSeratoTagVector::iterator it = tags->begin(); it != tags->end(); ++it) {
         const SeratoTag* tag = it->release();
 
         switch (tag->identifier()) {
@@ -82,8 +82,8 @@ StringAutoPtr SeratoDatabase::versionAsStringForDatabaseIn(const char* seratoFol
     StringAutoPtr databaseFilePath = databaseFilePathForSeratoFolder(seratoFolderPath);
     CharVectorAutoPtr databaseFile = readFileAt(databaseFilePath->c_str());
 
-    SeratoTagVectorAutoPtr tags = SeratoTag::parseTagsIn(databaseFile);
-    for(SeratoTagVector::iterator it = tags->begin(); it != tags->end(); ++it) {
+    ConstSeratoTagVectorAutoPtr tags = SeratoTag::parseTagsIn(databaseFile);
+    for(ConstSeratoTagVector::iterator it = tags->begin(); it != tags->end(); ++it) {
         const SeratoTag* tag = it->release();
 
         if (tag->identifier() == NxASeratoDatabaseVersionTag) {
@@ -105,7 +105,7 @@ void SeratoDatabase::p_storeTrackTag(const SeratoTag* tag)
 
 void SeratoDatabase::p_storeOtherTag(const SeratoTag* tag)
 {
-    this->p_otherTags.push_back(SeratoTagAutoPtr(tag));
+    this->p_otherTags.push_back(ConstSeratoTagAutoPtr(tag));
 }
 
 time_t SeratoDatabase::databaseModificationDateInSecondsSince1970(void) const

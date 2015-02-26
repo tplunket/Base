@@ -28,10 +28,11 @@ namespace NxA {
     class SeratoTag;
 
     #pragma mark Containers
-    typedef std::auto_ptr<const SeratoTag> SeratoTagAutoPtr;
+    typedef std::auto_ptr<const SeratoTag> ConstSeratoTagAutoPtr;
+    typedef std::auto_ptr<SeratoTag> SeratoTagAutoPtr;
     typedef std::map<const uint32_t, const SeratoTag*> SeratoIdentifierToTagMap;
-    typedef std::vector<SeratoTagAutoPtr> SeratoTagVector;
-    typedef std::auto_ptr<SeratoTagVector> SeratoTagVectorAutoPtr;
+    typedef std::vector<ConstSeratoTagAutoPtr> ConstSeratoTagVector;
+    typedef std::auto_ptr<ConstSeratoTagVector> ConstSeratoTagVectorAutoPtr;
 
     #pragma mark Class Declaration
     class SeratoTag
@@ -44,9 +45,9 @@ namespace NxA {
         };
 
         #pragma mark Private Class Methods
-        static SeratoTagVectorAutoPtr p_parseTagsInForParentTag(const void* firstTagAddress,
-                                                                size_t sizeFromFirstTagInBytes,
-                                                                const SeratoTag* parentTag);
+        static ConstSeratoTagVectorAutoPtr p_parseTagsInForParentTag(const void* firstTagAddress,
+                                                                     size_t sizeFromFirstTagInBytes,
+                                                                     const SeratoTag* parentTag);
 
         #pragma mark Private Instance Variables
         uint32_t p_identifier;
@@ -56,7 +57,7 @@ namespace NxA {
 
         const SeratoTag* p_parentTag;
 
-        SeratoTagVectorAutoPtr p_subTags;
+        ConstSeratoTagVectorAutoPtr p_subTags;
 
         SeratoIdentifierToTagMap p_childrenTagsByIdentifier;
 
@@ -65,7 +66,7 @@ namespace NxA {
         SeratoTag(uint32_t identifier, size_t dataSizeInBytes);
 
         #pragma mark Class Methods
-        static SeratoTagVectorAutoPtr parseTagsIn(const CharVectorAutoPtr& seratoTagData);
+        static ConstSeratoTagVectorAutoPtr parseTagsIn(const CharVectorAutoPtr& seratoTagData);
 
         #pragma mark Instance Methods
         const SeratoTag* subTagWithIdentifierOrNilIfDoesNotExist(uint32_t identifier) const;

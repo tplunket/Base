@@ -45,8 +45,8 @@ namespace NxA {
         SeratoCrateVectorAutoPtr p_childrenCrates;
         SeratoTrackEntryVectorAutoPtr p_trackEntries;
 
-        SeratoTagAutoPtr p_versionTag;
-        SeratoTagVector p_otherTags;
+        ConstSeratoTagAutoPtr p_versionTag;
+        ConstSeratoTagVector p_otherTags;
 
         #pragma mark Private Instance Methods
         void p_storeVersionTag(const SeratoTag* tag);

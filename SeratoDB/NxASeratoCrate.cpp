@@ -87,7 +87,7 @@ void SeratoCrate::p_storeVersionTag(const SeratoTag* tag)
         return;
     }
 
-    this->p_versionTag = SeratoTagAutoPtr(tag);
+    this->p_versionTag = ConstSeratoTagAutoPtr(tag);
 }
 
 void SeratoCrate::p_storeTrackTag(const SeratoTag* tag)
@@ -98,7 +98,7 @@ void SeratoCrate::p_storeTrackTag(const SeratoTag* tag)
 
 void SeratoCrate::p_storeOtherTag(const SeratoTag* tag)
 {
-    this->p_otherTags.push_back(SeratoTagAutoPtr(tag));
+    this->p_otherTags.push_back(ConstSeratoTagAutoPtr(tag));
 }
 
 StringAutoPtr SeratoCrate::versionAsString(void) const

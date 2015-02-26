@@ -64,6 +64,8 @@ static SeratoCrateVectorAutoPtr p_childrenCratesOfCrateNamedUsingNameList(const 
         }
 
         SeratoCrate* newCrate = new SeratoCrate(fullCrateName->c_str(), seratoFolderPath, rootFolderPath);
+        newCrate->loadFromFile();
+
         cratesFound->push_back(SeratoCrateAutoPtr(newCrate));
 
         ++it;
@@ -96,7 +98,7 @@ SeratoCrateOrderFile::SeratoCrateOrderFile(const char* seratoFolderPath, const c
         return;
     }
 
-    this->p_rootCrate = SeratoCrateAutoPtr(new SeratoCrate(""));
+    this->p_rootCrate = SeratoCrateAutoPtr(new SeratoCrate("", "", ""));
 
     const char16_t* textToRead = (const char16_t*)crateOrderFile->data();
     int numberOfCharacters = (int)crateOrderFile->size() / 2;

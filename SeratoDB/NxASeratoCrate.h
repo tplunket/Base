@@ -36,8 +36,9 @@ namespace NxA {
     private:
         #pragma mark Private Instance Variables
         StringAutoPtr p_crateName;
-        StringAutoPtr p_crateFullPathName;
+        StringAutoPtr p_crateFullName;
         StringAutoPtr p_rootVolumePath;
+        StringAutoPtr p_crateFilePath;
 
         bool p_wasModified;
 
@@ -55,27 +56,28 @@ namespace NxA {
 
     public:
         #pragma mark Constructors
-        SeratoCrate(const char* crateFullPathName);
-        SeratoCrate(const char* crateFullPathName,
-                    const char* readItFromSeratoFolderPath,
+        SeratoCrate(const char* crateFullName,
+                    const char* inSeratoFolderPath,
                     const char* locatedOnVolumePath);
 
         #pragma mark Class Methods
-        static bool isAValidCrateName(const char* crateFullPathName, const char* seratoFolderPath);
+        static bool isAValidCrateName(const char* crateFullName, const char* seratoFolderPath);
 
         #pragma mark Instance Methods
         StringAutoPtr versionAsString(void) const;
 
         const std::string& crateName(void) const;
-        const std::string& crateFullPathName(void) const;
+        const std::string& crateFullName(void) const;
 
         const SeratoTrackEntryVector& trackEntries(void) const;
         const SeratoCrateVector& crates(void) const;
 
+        void loadFromFile(void);
         void setAsNotModified(void);
         void setAsModified(void);
+        void saveIfModified(void) const;
 
-        void addChildTrack(SeratoTrackEntryAutoPtr trackEntry);
+        void addTrackEntry(SeratoTrackEntryAutoPtr trackEntry);
         void addChildCrate(SeratoCrateAutoPtr crate);
 
         SeratoTrackEntryVectorAutoPtr removeAndReturnTrackEntries(void);

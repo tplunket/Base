@@ -17,6 +17,7 @@
 #include "SeratoDB/NxASeratoTag.h"
 
 using namespace NxA;
+using namespace std;
 
 #pragma mark Structures
 
@@ -74,17 +75,43 @@ SeratoTag::SeratoTag(const void* tagAddress)
     }
 }
 
-SeratoTag::SeratoTag(uint32_t identifier, size_t dataSizeInBytes)
+SeratoTag::SeratoTag(uint32_t identifier, const char* content)
 {
     this->p_parentTag = NULL;
 
     this->p_identifier = identifier;
-    this->p_dataSizeInBytes = dataSizeInBytes;
+    this->p_dataSizeInBytes = strlen(content) * 2;
     this->p_memoryRepresentation = CharVectorAutoPtr(new CharVector(this->p_dataSizeInBytes + sizeof(SeratoTagStruct), 0));
 
     SeratoTagStruct* tagStructPtr = (SeratoTagStruct*)p_memoryRepresentation->data();
     writeBigEndianUInt32ValueAt(identifier, tagStructPtr->identifier);
-    writeBigEndianUInt32ValueAt((uint32_t)dataSizeInBytes, tagStructPtr->length);
+    writeBigEndianUInt32ValueAt((uint32_t)this->p_dataSizeInBytes, tagStructPtr->length);
+    writeStringAsUTF16At(content, tagStructPtr->data);
+}
+
+SeratoTag::SeratoTag(uint32_t identifier, ConstSeratoTagVectorAutoPtr content)
+{
+    this->p_parentTag = NULL;
+
+    this->p_identifier = identifier;
+    this->p_dataSizeInBytes = 0;
+    this->p_memoryRepresentation = CharVectorAutoPtr(new CharVector(this->p_dataSizeInBytes + sizeof(SeratoTagStruct), 0));
+
+    for(ConstSeratoTagVector::iterator it = content->begin(); it != content->end(); ++it) {
+        const SeratoTag* tag = it->get();
+
+        this->p_childrenTagsByIdentifier[tag->p_identifier] = tag;
+
+        tag->addTo(*(this->p_memoryRepresentation.get()));
+
+        this->p_dataSizeInBytes += tag->p_dataSizeInBytes + sizeof(SeratoTagStruct);
+    }
+
+    this->p_subTags = content;
+
+    SeratoTagStruct* tagStructPtr = (SeratoTagStruct*)p_memoryRepresentation->data();
+    writeBigEndianUInt32ValueAt(identifier, tagStructPtr->identifier);
+    writeBigEndianUInt32ValueAt((uint32_t)this->p_dataSizeInBytes, tagStructPtr->length);
 }
 
 #pragma mark Class Methods
@@ -171,7 +198,8 @@ const void* SeratoTag::data(void) const
     return p_dataForTagAt(this->p_memoryRepresentation->data());
 }
 
-void* SeratoTag::mutableData(void)
+void SeratoTag::addTo(CharVector& destination) const
 {
-    return p_dataForTagAt(this->p_memoryRepresentation->data());
+    destination.insert(destination.end(), this->p_memoryRepresentation->begin(), this->p_memoryRepresentation->end());
 }
+

@@ -63,7 +63,8 @@ namespace NxA {
 
     public:
         #pragma mark Constructors
-        SeratoTag(uint32_t identifier, size_t dataSizeInBytes);
+        SeratoTag(uint32_t identifier, const char* content);
+        SeratoTag(uint32_t identifier, ConstSeratoTagVectorAutoPtr content);
 
         #pragma mark Class Methods
         static ConstSeratoTagVectorAutoPtr parseTagsIn(const CharVectorAutoPtr& seratoTagData);
@@ -80,7 +81,8 @@ namespace NxA {
         StringAutoPtr dataAsString(void) const;
         StringAutoPtr dataAsPath(void) const;
         const void* data(void) const;
-        const void* mutableData(void) const;
+
+        void addTo(CharVector& destination) const;
     };
 }
 

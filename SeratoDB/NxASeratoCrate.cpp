@@ -22,60 +22,32 @@ using namespace std;
 
 #pragma mark Constructors
 
-SeratoCrate::SeratoCrate(const char* crateFullPathName)
+SeratoCrate::SeratoCrate(const char* crateFullName,
+                         const char* inSeratoFolderPath,
+                         const char* locatedOnVolumePath) :
+        p_crateFullName(StringAutoPtr(new string(crateFullName))),
+        p_rootVolumePath(StringAutoPtr(new string(locatedOnVolumePath))),
+        p_crateFilePath(crateFilePathForCrateNameInSeratoFolder(crateFullName, inSeratoFolderPath)),
+        p_parentCrate(NULL),
+        p_wasModified(false),
+        p_trackEntries(SeratoTrackEntryVectorAutoPtr(new SeratoTrackEntryVector)),
+        p_childrenCrates(SeratoCrateVectorAutoPtr(new SeratoCrateVector))
 {
-    this->p_parentCrate = NULL;
-    this->p_wasModified = false;
-
-    this->p_trackEntries = SeratoTrackEntryVectorAutoPtr(new SeratoTrackEntryVector);
-    this->p_childrenCrates = SeratoCrateVectorAutoPtr(new SeratoCrateVector);
-
-    this->p_crateFullPathName = StringAutoPtr(new string(crateFullPathName));
-
-    string crateName(crateFullPathName);
+    string crateName(crateFullName);
     size_t lastSeperator = crateName.rfind("%%");
     if (lastSeperator != string::npos) {
         this->p_crateName = StringAutoPtr(new string(crateName.substr(lastSeperator + 2)));
     }
     else {
-        this->p_crateName = StringAutoPtr(new string(crateFullPathName));
-    }
-}
-
-SeratoCrate::SeratoCrate(const char* crateFullPathName, const char* readItFromSeratoFolderPath,
-                         const char* locatedOnVolumePath) : SeratoCrate(crateFullPathName)
-{
-    this->p_rootVolumePath = StringAutoPtr(new string(locatedOnVolumePath));
-
-    StringAutoPtr crateFilePath = crateFilePathForCrateNameInSeratoFolder(crateFullPathName, readItFromSeratoFolderPath);
-    CharVectorAutoPtr crateFileData = readFileAt(crateFilePath->c_str());
-
-    SeratoTagVectorAutoPtr tags(SeratoTag::parseTagsIn(crateFileData));
-    for(SeratoTagVector::iterator it = tags->begin(); it != tags->end(); ++it) {
-        const SeratoTag* tag = it->release();
-
-        switch (tag->identifier()) {
-            case NxASeratoCrateVersionTag: {
-                this->p_storeVersionTag(tag);
-                break;
-            }
-            case NxASeratoTrackEntryTag: {
-                this->p_storeTrackTag(tag);
-                break;
-            }
-            default: {
-                this->p_storeOtherTag(tag);
-                break;
-            }
-        }
+        this->p_crateName = StringAutoPtr(new string(crateFullName));
     }
 }
 
 #pragma mark Class Methods
 
-bool SeratoCrate::isAValidCrateName(const char* crateFullPathName, const char* seratoFolderPath)
+bool SeratoCrate::isAValidCrateName(const char* crateFullName, const char* seratoFolderPath)
 {
-    StringAutoPtr crateFilePath = crateFilePathForCrateNameInSeratoFolder(crateFullPathName, seratoFolderPath);
+    StringAutoPtr crateFilePath = crateFilePathForCrateNameInSeratoFolder(crateFullName, seratoFolderPath);
     return fileExistsAt(crateFilePath->c_str());
 }
 
@@ -93,7 +65,7 @@ void SeratoCrate::p_storeVersionTag(const SeratoTag* tag)
 void SeratoCrate::p_storeTrackTag(const SeratoTag* tag)
 {
     SeratoTrackEntry* newTrack = new SeratoTrackEntry(tag, this->p_rootVolumePath->c_str());
-    this->addChildTrack(SeratoTrackEntryAutoPtr(newTrack));
+    this->addTrackEntry(SeratoTrackEntryAutoPtr(newTrack));
 }
 
 void SeratoCrate::p_storeOtherTag(const SeratoTag* tag)
@@ -115,9 +87,9 @@ const std::string& SeratoCrate::crateName(void) const
     return *(this->p_crateName);
 }
 
-const std::string& SeratoCrate::crateFullPathName(void) const
+const std::string& SeratoCrate::crateFullName(void) const
 {
-    return *(this->p_crateFullPathName);
+    return *(this->p_crateFullName);
 }
 
 const SeratoTrackEntryVector& SeratoCrate::trackEntries(void) const
@@ -128,6 +100,31 @@ const SeratoTrackEntryVector& SeratoCrate::trackEntries(void) const
 const SeratoCrateVector& SeratoCrate::crates(void) const
 {
     return *(this->p_childrenCrates.get());
+}
+
+void SeratoCrate::loadFromFile(void)
+{
+    CharVectorAutoPtr crateFileData = readFileAt(this->p_crateFilePath->c_str());
+
+    ConstSeratoTagVectorAutoPtr tags(SeratoTag::parseTagsIn(crateFileData));
+    for(ConstSeratoTagVector::iterator it = tags->begin(); it != tags->end(); ++it) {
+        const SeratoTag* tag = it->release();
+
+        switch (tag->identifier()) {
+            case NxASeratoCrateVersionTag: {
+                this->p_storeVersionTag(tag);
+                break;
+            }
+            case NxASeratoTrackEntryTag: {
+                this->p_storeTrackTag(tag);
+                break;
+            }
+            default: {
+                this->p_storeOtherTag(tag);
+                break;
+            }
+        }
+    }
 }
 
 void SeratoCrate::setAsNotModified()
@@ -144,7 +141,36 @@ void SeratoCrate::setAsModified()
     }
 }
 
-void SeratoCrate::addChildTrack(SeratoTrackEntryAutoPtr trackEntry)
+void SeratoCrate::saveIfModified(void) const
+{
+    if (!this->p_wasModified) {
+        return;
+    }
+
+    if (this->p_rootVolumePath.get()) {
+        CharVectorAutoPtr outputData = CharVectorAutoPtr(new CharVector);
+
+        SeratoTagAutoPtr versionTag(new SeratoTag(NxASeratoCrateVersionTag, "1.0/Serato ScratchLive Crate"));
+        versionTag->addTo(*outputData);
+
+        for (SeratoTrackEntryVector::const_iterator it = this->p_trackEntries->begin(); it != this->p_trackEntries->end(); ++it) {
+            it->get()->tagForEntry().addTo(*(outputData.get()));
+        }
+
+        for (ConstSeratoTagVector::const_iterator it = this->p_otherTags.begin(); it != this->p_otherTags.end(); ++it) {
+            it->get()->addTo(*outputData);
+        }
+
+        writeToFile(this->p_crateFilePath->c_str(), *outputData);
+    }
+
+    for (SeratoCrateVector::iterator it = this->p_childrenCrates->begin(); it != this->p_childrenCrates->end(); ++it) {
+        const SeratoCrate* crate = it->get();
+        crate->saveIfModified();
+    }
+}
+
+void SeratoCrate::addTrackEntry(SeratoTrackEntryAutoPtr trackEntry)
 {
     this->p_wasModified = true;
     this->p_trackEntries->push_back(SeratoTrackEntryAutoPtr(trackEntry));

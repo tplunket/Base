@@ -52,9 +52,9 @@ using namespace std;
 #pragma mark Utility Functions
 
 namespace NxA {
-    const char16_t* p_convertEndiannessOfUTF16Characters(const char16_t* characters, int numberOfCharacters)
+    const char16_t* p_convertEndiannessOfUTF16Characters(const char16_t* characters, size_t numberOfCharacters)
     {
-        int numberOfBytes = numberOfCharacters * 2;
+        size_t numberOfBytes = numberOfCharacters * 2;
         char* newCharacters = (char*)malloc(numberOfBytes);
 
         for (int i = 0; i < numberOfBytes; i += 2) {

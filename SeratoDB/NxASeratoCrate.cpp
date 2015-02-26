@@ -92,6 +92,21 @@ const std::string& SeratoCrate::crateFullName(void) const
     return *(this->p_crateFullName);
 }
 
+void SeratoCrate::addFullCrateNameWithPrefixAndRecurseToChildren(std::string& destination, const char* prefix) const
+{
+    const string& fullName = *(this->p_crateFullName.get());
+    if (fullName.length()) {
+        destination += prefix;
+        destination += fullName;
+        destination += '\n';
+    }
+
+    for (SeratoCrateVector::iterator it = this->p_childrenCrates->begin(); it != this->p_childrenCrates->end(); ++it) {
+        const SeratoCrate* crate = it->get();
+        crate->addFullCrateNameWithPrefixAndRecurseToChildren(destination, prefix);
+    }
+}
+
 const SeratoTrackEntryVector& SeratoCrate::trackEntries(void) const
 {
     return *(this->p_trackEntries.get());

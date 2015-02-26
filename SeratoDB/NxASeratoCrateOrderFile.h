@@ -32,7 +32,18 @@ namespace NxA {
     {
     private:
         #pragma mark Private Instance Variables
+        StringAutoPtr p_crateOrderFilePath;
+
         SeratoCrateAutoPtr p_rootCrate;
+
+        StringVectorAutoPtr p_unknownCrates;
+
+        #pragma mark Private Instance Methods
+        SeratoCrateVectorAutoPtr p_childrenCratesOfCrateNamedUsingNameList(const std::string& name,
+                                                                           StringVector::iterator& it,
+                                                                           const StringVector::iterator& end,
+                                                                           const char* seratoFolderPath,
+                                                                           const char* rootFolderPath);
 
     public:
         #pragma mark Constructors
@@ -40,6 +51,8 @@ namespace NxA {
 
         #pragma mark Instance Methods
         const SeratoCrate* rootCrate(void) const;
+
+        const void saveFile(void) const;
     };
 }
 

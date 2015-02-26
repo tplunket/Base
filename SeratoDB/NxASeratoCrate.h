@@ -68,6 +68,7 @@ namespace NxA {
 
         const std::string& crateName(void) const;
         const std::string& crateFullName(void) const;
+        void addFullCrateNameWithPrefixAndRecurseToChildren(std::string& destination, const char* prefix) const;
 
         const SeratoTrackEntryVector& trackEntries(void) const;
         const SeratoCrateVector& crates(void) const;

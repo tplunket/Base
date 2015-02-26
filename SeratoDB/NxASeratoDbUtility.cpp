@@ -234,4 +234,11 @@ namespace NxA {
 
         return CharVectorAutoPtr(new CharVector);
     }
+
+    void writeToFile(const char* filePath, const CharVector& content)
+    {
+        fstream file(filePath, ios::out | ios::binary);
+        file.write(content.data(), content.size());
+        file.close();
+    }
 }

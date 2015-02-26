@@ -30,6 +30,7 @@ namespace NxA {
 
     #pragma mark Utility Functions
     StringAutoPtr convertUTF16ToStdString(const char16_t* characters, int numberOfCharacters);
+    void writeStringAsUTF16At(const char* characters, void* destination);
 
     StringVectorAutoPtr splitStringIntoOneStringForEachLine(const std::string& text);
 

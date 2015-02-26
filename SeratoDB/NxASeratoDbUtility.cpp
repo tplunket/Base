@@ -81,6 +81,23 @@ namespace NxA {
         return StringAutoPtr(stdString);
     }
 
+    void writeStringAsUTF16At(const char* characters, void* destination)
+    {
+        wstring_convert<codecvt_utf8_utf16<char16_t>,char16_t> convert;
+        std::u16string u16 = convert.from_bytes(characters);
+
+        const char16_t* result = u16.c_str();
+        #ifdef __LITTLE_ENDIAN__
+        result = p_convertEndiannessOfUTF16Characters(result, u16.length());
+        #endif
+
+        memcpy(destination, result, u16.length() * 2);
+
+        #ifdef __LITTLE_ENDIAN__
+        free((void*)result);
+        #endif
+    }
+
     StringVectorAutoPtr splitStringIntoOneStringForEachLine(const string& text)
     {
         StringVector* results = new StringVector;

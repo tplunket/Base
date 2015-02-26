@@ -50,6 +50,7 @@ namespace NxA {
     bool fileExistsAt(const char* filePath);
     size_t sizeOfFileAt(const char* filePath);
     time_t modificationDateInSecondsSince1970ForFile(const char* filePath);
+
     CharVectorAutoPtr readFileAt(const char* filePath);
     void writeToFile(const char* filePath, const CharVector& content);
 }

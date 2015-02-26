@@ -189,6 +189,20 @@ namespace NxA {
         return StringAutoPtr(result);
     }
 
+    StringAutoPtr removePrefixFromPath(const char* prefixPath, const char* fullPath)
+    {
+        size_t lengthToCrop = strlen(prefixPath);
+        #ifdef NXASeratoCompiledOnOSX
+        // -- This is for the '/' path seperator
+        lengthToCrop += 1;
+        #endif
+
+        string path(fullPath);
+        path = path.substr(lengthToCrop);
+
+        return StringAutoPtr(new string(path));
+    }
+
     bool fileExistsAt(const char* filePath)
     {
         struct stat buf;

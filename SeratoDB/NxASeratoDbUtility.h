@@ -47,6 +47,8 @@ namespace NxA {
     StringAutoPtr crateFilePathForCrateNameInSeratoFolder(const char* crateName, const char* seratoFolderPath);
 
     StringAutoPtr joinPaths(const char* firstPath, const char* secondPath);
+    StringAutoPtr removePrefixFromPath(const char* prefixPath, const char* fullPath);
+
     bool fileExistsAt(const char* filePath);
     size_t sizeOfFileAt(const char* filePath);
     time_t modificationDateInSecondsSince1970ForFile(const char* filePath);

@@ -40,7 +40,8 @@ namespace NxA {
         StringAutoPtr p_rootVolumePath;
         StringAutoPtr p_crateFilePath;
 
-        bool p_wasModified;
+        bool p_tracksWereModified;
+        bool p_cratesWereModified;
 
         SeratoCrate* p_parentCrate;
         SeratoCrateVectorAutoPtr p_childrenCrates;
@@ -53,6 +54,8 @@ namespace NxA {
         void p_storeVersionTag(const SeratoTag* tag);
         void p_storeTrackTag(const SeratoTag* tag);
         void p_storeOtherTag(const SeratoTag* tag);
+
+        void p_markCratesAsModified();
 
     public:
         #pragma mark Constructors
@@ -73,10 +76,11 @@ namespace NxA {
         const SeratoTrackEntryVector& trackEntries(void) const;
         const SeratoCrateVector& crates(void) const;
 
+        void resetModificationFlags();
+
         void loadFromFile(void);
-        void setAsNotModified(void);
-        void setAsModified(void);
-        void saveIfModified(void) const;
+        void saveIfModifiedAndRecurseToChildren(void) const;
+        bool childrenCratesWereModified(void) const;
 
         void addTrackEntry(SeratoTrackEntryAutoPtr trackEntry);
         void addChildCrate(SeratoCrateAutoPtr crate);

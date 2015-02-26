@@ -52,7 +52,7 @@ namespace NxA {
         #pragma mark Instance Methods
         const SeratoCrate* rootCrate(void) const;
 
-        const void saveFile(void) const;
+        void saveIfModified(void) const;
     };
 }
 

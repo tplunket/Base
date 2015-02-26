@@ -63,7 +63,7 @@ SeratoCrateOrderFile::SeratoCrateOrderFile(const char* seratoFolderPath, const c
         this->p_rootCrate->addChildCrate(*it);
     }
 
-    this->p_rootCrate->setAsNotModified();
+    this->p_rootCrate->resetModificationFlags();
 }
 
 #pragma mark Instance Methods
@@ -112,7 +112,7 @@ SeratoCrateVectorAutoPtr SeratoCrateOrderFile::p_childrenCratesOfCrateNamedUsing
             newCrate->addChildCrate(*childrenIt);
         }
 
-        newCrate->setAsNotModified();
+        newCrate->resetModificationFlags();
     }
     
     return SeratoCrateVectorAutoPtr(cratesFound);
@@ -123,8 +123,14 @@ const SeratoCrate* SeratoCrateOrderFile::rootCrate(void) const
     return this->p_rootCrate.get();
 }
 
-const void SeratoCrateOrderFile::saveFile(void) const
+void SeratoCrateOrderFile::saveIfModified(void) const
 {
+    this->p_rootCrate->saveIfModifiedAndRecurseToChildren();
+
+    if (!this->p_rootCrate->childrenCratesWereModified()) {
+        return;
+    }
+
     string result;
     result += "[begin record]\n";
     this->p_rootCrate->addFullCrateNameWithPrefixAndRecurseToChildren(result, "[crate]");

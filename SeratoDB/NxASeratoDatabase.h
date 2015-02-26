@@ -52,6 +52,8 @@ namespace NxA {
 
         const SeratoCrate* rootCrate(void) const;
         const SeratoTrackVector& tracks(void) const;
+
+        void saveIfModified(void) const;
     };
 }
 

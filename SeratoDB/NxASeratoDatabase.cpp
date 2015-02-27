@@ -53,7 +53,7 @@ SeratoDatabase::SeratoDatabase(const char* seratoFolderPath)
 
     ConstSeratoTagVectorAutoPtr tags = SeratoTag::parseTagsIn(databaseFile);
     for(ConstSeratoTagVector::iterator it = tags->begin(); it != tags->end(); ++it) {
-        const SeratoTag* tag = it->release();
+        ConstSeratoTagAutoPtr tag = *it;
 
         switch (tag->identifier()) {
             case NxASeratoTrackObjectTag: {
@@ -96,14 +96,14 @@ StringAutoPtr SeratoDatabase::versionAsStringForDatabaseIn(const char* seratoFol
 
 #pragma mark Instance Methods
 
-void SeratoDatabase::p_storeTrackTag(const SeratoTag* tag)
+void SeratoDatabase::p_storeTrackTag(ConstSeratoTagAutoPtr tag)
 {
     // -- TODO: This will eventually select the root folder based on where the database is.
     SeratoTrack* newTrack = new SeratoTrack(tag, "");
     this->p_tracks.push_back(SeratoTrackAutoPtr(newTrack));
 }
 
-void SeratoDatabase::p_storeOtherTag(const SeratoTag* tag)
+void SeratoDatabase::p_storeOtherTag(ConstSeratoTagAutoPtr tag)
 {
     this->p_otherTags.push_back(ConstSeratoTagAutoPtr(tag));
 }

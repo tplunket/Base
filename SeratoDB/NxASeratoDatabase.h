@@ -36,9 +36,9 @@ namespace NxA {
         SeratoCrateOrderFileAutoPtr p_crateOrderFile;
 
         #pragma mark Private Instance Methods
-        void p_storeVersionTag(const SeratoTag* tag);
-        void p_storeTrackTag(const SeratoTag* tag);
-        void p_storeOtherTag(const SeratoTag* tag);
+        void p_storeVersionTag(ConstSeratoTagAutoPtr tag);
+        void p_storeTrackTag(ConstSeratoTagAutoPtr tag);
+        void p_storeOtherTag(ConstSeratoTagAutoPtr tag);
 
     public:
         #pragma mark Constructors

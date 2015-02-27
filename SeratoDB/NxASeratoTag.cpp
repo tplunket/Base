@@ -70,7 +70,7 @@ SeratoTag::SeratoTag(const void* tagAddress)
 
         for(ConstSeratoTagVector::iterator it = this->p_subTags->begin(); it != this->p_subTags->end(); ++it) {
             const SeratoTag* subTag = it->get();
-            this->p_childrenTagsByIdentifier[subTag->p_identifier] = subTag;
+            this->p_subTagForIdentifier[subTag->p_identifier] = subTag;
         }
     }
 }
@@ -100,7 +100,7 @@ SeratoTag::SeratoTag(uint32_t identifier, ConstSeratoTagVectorAutoPtr content)
     for(ConstSeratoTagVector::iterator it = content->begin(); it != content->end(); ++it) {
         const SeratoTag* tag = it->get();
 
-        this->p_childrenTagsByIdentifier[tag->p_identifier] = tag;
+        this->p_subTagForIdentifier[tag->p_identifier] = tag;
 
         tag->addTo(*(this->p_memoryRepresentation.get()));
 
@@ -144,8 +144,8 @@ ConstSeratoTagVectorAutoPtr SeratoTag::parseTagsIn(const CharVectorAutoPtr& sera
 
 const SeratoTag* SeratoTag::subTagWithIdentifierOrNilIfDoesNotExist(uint32_t identifier) const
 {
-    SeratoIdentifierToTagMap::const_iterator it = this->p_childrenTagsByIdentifier.find(identifier);
-    if (it == this->p_childrenTagsByIdentifier.end()) {
+    SeratoIdentifierToTagMap::const_iterator it = this->p_subTagForIdentifier.find(identifier);
+    if (it == this->p_subTagForIdentifier.end()) {
         return NULL;
     }
 

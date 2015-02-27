@@ -136,7 +136,7 @@ bool SeratoTrack::p_containsAValidTag(void) const
     return this->p_trackTag.get() != NULL;
 }
 
-StringAutoPtr SeratoTrack::p_stringForSubTagIdentifierOrEmptyIfNotFound(uint32_t identifier) const
+StringAutoPtr SeratoTrack::p_stringForSubTagWithIdentifierOrEmptyIfNotFound(uint32_t identifier) const
 {
     if (this->p_containsAValidTag()) {
         const SeratoTag* tag = this->p_trackTag->subTagWithIdentifierOrNilIfDoesNotExist(identifier);
@@ -148,7 +148,7 @@ StringAutoPtr SeratoTrack::p_stringForSubTagIdentifierOrEmptyIfNotFound(uint32_t
     return StringAutoPtr(new string(""));
 }
 
-StringAutoPtr SeratoTrack::p_pathForSubTagIdentifierOrEmptyIfNotFound(uint32_t identifier) const
+StringAutoPtr SeratoTrack::p_pathForSubTagWithIdentifierOrEmptyIfNotFound(uint32_t identifier) const
 {
     if (this->p_containsAValidTag()) {
         const SeratoTag* tag = this->p_trackTag->subTagWithIdentifierOrNilIfDoesNotExist(identifier);
@@ -160,7 +160,7 @@ StringAutoPtr SeratoTrack::p_pathForSubTagIdentifierOrEmptyIfNotFound(uint32_t i
     return StringAutoPtr(new string(""));
 }
 
-uint32_t SeratoTrack::p_uint32ForSubTagIdentifierOrZeroIfNotFound(uint32_t identifier) const
+uint32_t SeratoTrack::p_uint32ForSubTagWithIdentifierOrZeroIfNotFound(uint32_t identifier) const
 {
     if (this->p_containsAValidTag()) {
         const SeratoTag* tag = this->p_trackTag->subTagWithIdentifierOrNilIfDoesNotExist(identifier);
@@ -194,109 +194,109 @@ void SeratoTrack::p_readMarkersIfNotAlreadyRead(void)
 
 StringAutoPtr SeratoTrack::trackFilePath(void) const
 {
-    StringAutoPtr pathFromRootFolder = this->p_pathForSubTagIdentifierOrEmptyIfNotFound(NxASeratoTrackFilePathTag);
+    StringAutoPtr pathFromRootFolder = this->p_pathForSubTagWithIdentifierOrEmptyIfNotFound(NxASeratoTrackFilePathTag);
     StringAutoPtr trackFilePath = joinPaths(this->p_rootFolder->c_str(), pathFromRootFolder->c_str());
     return trackFilePath;
 }
 
 StringAutoPtr SeratoTrack::title(void) const
 {
-    return this->p_stringForSubTagIdentifierOrEmptyIfNotFound(NxASeratoTrackTitleTag);
+    return this->p_stringForSubTagWithIdentifierOrEmptyIfNotFound(NxASeratoTrackTitleTag);
 }
 
 StringAutoPtr SeratoTrack::artist(void) const
 {
-    return this->p_stringForSubTagIdentifierOrEmptyIfNotFound(NxASeratoTrackArtistTag);
+    return this->p_stringForSubTagWithIdentifierOrEmptyIfNotFound(NxASeratoTrackArtistTag);
 }
 
 StringAutoPtr SeratoTrack::album(void) const
 {
-    return this->p_stringForSubTagIdentifierOrEmptyIfNotFound(NxASeratoTrackAlbumTag);
+    return this->p_stringForSubTagWithIdentifierOrEmptyIfNotFound(NxASeratoTrackAlbumTag);
 }
 
 StringAutoPtr SeratoTrack::genre(void) const
 {
-    return this->p_stringForSubTagIdentifierOrEmptyIfNotFound(NxASeratoTrackGenreTag);
+    return this->p_stringForSubTagWithIdentifierOrEmptyIfNotFound(NxASeratoTrackGenreTag);
 }
 
 StringAutoPtr SeratoTrack::comments(void) const
 {
-    return this->p_stringForSubTagIdentifierOrEmptyIfNotFound(NxASeratoTrackCommentsTag);
+    return this->p_stringForSubTagWithIdentifierOrEmptyIfNotFound(NxASeratoTrackCommentsTag);
 }
 
 StringAutoPtr SeratoTrack::grouping(void) const
 {
-    return this->p_stringForSubTagIdentifierOrEmptyIfNotFound(NxASeratoTrackGroupingTag);
+    return this->p_stringForSubTagWithIdentifierOrEmptyIfNotFound(NxASeratoTrackGroupingTag);
 }
 
 StringAutoPtr SeratoTrack::remixer(void) const
 {
-    return this->p_stringForSubTagIdentifierOrEmptyIfNotFound(NxASeratoTrackRemixerTag);
+    return this->p_stringForSubTagWithIdentifierOrEmptyIfNotFound(NxASeratoTrackRemixerTag);
 }
 
 StringAutoPtr SeratoTrack::recordLabel(void) const
 {
-    return this->p_stringForSubTagIdentifierOrEmptyIfNotFound(NxASeratoTrackLabelTag);
+    return this->p_stringForSubTagWithIdentifierOrEmptyIfNotFound(NxASeratoTrackLabelTag);
 }
 
 StringAutoPtr SeratoTrack::composer(void) const
 {
-    return this->p_stringForSubTagIdentifierOrEmptyIfNotFound(NxASeratoTrackComposerTag);
+    return this->p_stringForSubTagWithIdentifierOrEmptyIfNotFound(NxASeratoTrackComposerTag);
 }
 
 StringAutoPtr SeratoTrack::key(void) const
 {
-    return this->p_stringForSubTagIdentifierOrEmptyIfNotFound(NxASeratoTrackKeyTag);
+    return this->p_stringForSubTagWithIdentifierOrEmptyIfNotFound(NxASeratoTrackKeyTag);
 }
 
 StringAutoPtr SeratoTrack::length(void) const
 {
-    return this->p_stringForSubTagIdentifierOrEmptyIfNotFound(NxASeratoTrackLengthTag);
+    return this->p_stringForSubTagWithIdentifierOrEmptyIfNotFound(NxASeratoTrackLengthTag);
 }
 
 size_t SeratoTrack::sizeInBytes(void) const
 {
-    return this->p_uint32ForSubTagIdentifierOrZeroIfNotFound(NxASeratoTrackSizeTag);
+    return this->p_uint32ForSubTagWithIdentifierOrZeroIfNotFound(NxASeratoTrackSizeTag);
 }
 
 StringAutoPtr SeratoTrack::bitRate(void) const
 {
-    return this->p_stringForSubTagIdentifierOrEmptyIfNotFound(NxASeratoTrackBitrateTag);
+    return this->p_stringForSubTagWithIdentifierOrEmptyIfNotFound(NxASeratoTrackBitrateTag);
 }
 
 StringAutoPtr SeratoTrack::sampleRate(void) const
 {
-    return this->p_stringForSubTagIdentifierOrEmptyIfNotFound(NxASeratoTrackSampleRateTag);
+    return this->p_stringForSubTagWithIdentifierOrEmptyIfNotFound(NxASeratoTrackSampleRateTag);
 }
 
 StringAutoPtr SeratoTrack::bpm(void) const
 {
-    return this->p_stringForSubTagIdentifierOrEmptyIfNotFound(NxASeratoTrackBpmTag);
+    return this->p_stringForSubTagWithIdentifierOrEmptyIfNotFound(NxASeratoTrackBpmTag);
 }
 
 StringAutoPtr SeratoTrack::year(void) const
 {
-    return this->p_stringForSubTagIdentifierOrEmptyIfNotFound(NxASeratoTrackYearTag);
+    return this->p_stringForSubTagWithIdentifierOrEmptyIfNotFound(NxASeratoTrackYearTag);
 }
 
 uint32_t SeratoTrack::trackNumber(void) const
 {
-    return this->p_uint32ForSubTagIdentifierOrZeroIfNotFound(NxASeratoTrackNumberTag);
+    return this->p_uint32ForSubTagWithIdentifierOrZeroIfNotFound(NxASeratoTrackNumberTag);
 }
 
 uint32_t SeratoTrack::discNumber(void) const
 {
-    return this->p_uint32ForSubTagIdentifierOrZeroIfNotFound(NxASeratoTrackDiscNumberTag);
+    return this->p_uint32ForSubTagWithIdentifierOrZeroIfNotFound(NxASeratoTrackDiscNumberTag);
 }
 
 uint32_t SeratoTrack::dateModifiedInSecondsSinceJanuary1st1970(void) const
 {
-    return this->p_uint32ForSubTagIdentifierOrZeroIfNotFound(NxASeratoTrackDateModifiedTag);
+    return this->p_uint32ForSubTagWithIdentifierOrZeroIfNotFound(NxASeratoTrackDateModifiedTag);
 }
 
 uint32_t SeratoTrack::dateAddedInSecondsSinceJanuary1st1970(void) const
 {
-    return this->p_uint32ForSubTagIdentifierOrZeroIfNotFound(NxASeratoTrackDateAddedTag);
+    return this->p_uint32ForSubTagWithIdentifierOrZeroIfNotFound(NxASeratoTrackDateAddedTag);
 }
 
 const SeratoCueMarkerVector& SeratoTrack::cueMarkers(void)

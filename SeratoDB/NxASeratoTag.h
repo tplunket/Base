@@ -59,7 +59,7 @@ namespace NxA {
 
         ConstSeratoTagVectorAutoPtr p_subTags;
 
-        SeratoIdentifierToTagMap p_childrenTagsByIdentifier;
+        SeratoIdentifierToTagMap p_subTagForIdentifier;
 
     public:
         #pragma mark Constructors

@@ -44,10 +44,10 @@ namespace NxA {
 
         #pragma mark Private Instance Methods
         bool p_containsAValidTag(void) const;
-        StringAutoPtr p_stringForSubTagIdentifierOrEmptyIfNotFound(uint32_t identifier) const;
-        StringAutoPtr p_pathForSubTagIdentifierOrEmptyIfNotFound(uint32_t identifier) const;
-        uint32_t p_uint32ForSubTagIdentifierOrZeroIfNotFound(uint32_t identifier) const;
-        uint32_t p_uint32ForStringSubTagIdentifierOrZeroIfNotFound(uint32_t identifier) const;
+        StringAutoPtr p_stringForSubTagWithIdentifierOrEmptyIfNotFound(uint32_t identifier) const;
+        StringAutoPtr p_pathForSubTagWithIdentifierOrEmptyIfNotFound(uint32_t identifier) const;
+        uint32_t p_uint32ForSubTagWithIdentifierOrZeroIfNotFound(uint32_t identifier) const;
+        uint32_t p_uint32ForStringSubTagWithIdentifierOrZeroIfNotFound(uint32_t identifier) const;
 
         void p_loadTrackFile(void);
         void p_unloadTrackFile(void);

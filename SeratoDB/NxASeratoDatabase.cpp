@@ -126,9 +126,4 @@ const SeratoTrackVector& SeratoDatabase::tracks(void) const
 void SeratoDatabase::saveIfModified(void) const
 {
     this->p_crateOrderFile->saveIfModified();
-
-    if (this->p_crateOrderFile->rootCrate()) {
-        <#statements#>
-    }
 }
-

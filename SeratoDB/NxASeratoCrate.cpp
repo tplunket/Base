@@ -79,7 +79,7 @@ void SeratoCrate::p_markCratesAsModified()
     this->p_cratesWereModified = true;
 
     if (this->p_parentCrate) {
-        this->p_parentCrate->markCratesAsModified();
+        this->p_parentCrate->p_markCratesAsModified();
     }
 }
 

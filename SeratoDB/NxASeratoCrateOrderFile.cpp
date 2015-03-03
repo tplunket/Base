@@ -28,23 +28,23 @@ static bool p_stringHasPrefix(const string& stringToTest, const string& prefix)
     return stringToTest.find(prefix) == 0;
 }
 
-static StringPtr p_crateNameIfValidCrateOrNullIfNot(const string& name)
+static ConstStringPtr p_crateNameIfValidCrateOrNullIfNot(const string& name)
 {
-    string* result = NULL;
+    ConstStringPtr result;
 
     if (p_stringHasPrefix(name, "[crate]")) {
-        result = new string(name.substr(7, name.length() - 7));
+        result = make_unique<string>(name.substr(7, name.length() - 7));
     }
 
-    return StringPtr(result);
+    return move(result);
 }
 
 #pragma mark Constructors
 
 SeratoCrateOrderFile::SeratoCrateOrderFile(const char* seratoFolderPath, const char* rootFolderPath) :
                                            p_crateOrderFilePath(crateOrderFilePathForSeratoFolder(seratoFolderPath)),
-                                           p_unknownCrates(StringVectorPtr(new StringVector)),
-                                           p_rootCrate(SeratoCratePtr(new SeratoCrate("", "", "")))
+                                           p_unknownCrates(make_unique<StringVector>()),
+                                           p_rootCrate(make_unique<SeratoCrate>("", "", ""))
 {
     CharVectorPtr crateOrderFile = readFileAt(this->p_crateOrderFilePath->c_str());
     if (!crateOrderFile->size()) {
@@ -53,14 +53,14 @@ SeratoCrateOrderFile::SeratoCrateOrderFile(const char* seratoFolderPath, const c
 
     const char16_t* textToRead = (const char16_t*)crateOrderFile->data();
     int numberOfCharacters = (int)crateOrderFile->size() / 2;
-    StringPtr textAString = convertUTF16ToStdString(textToRead, numberOfCharacters);
+    ConstStringPtr textAString = convertUTF16ToStdString(textToRead, numberOfCharacters);
 
     StringVectorPtr lines(splitStringIntoOneStringForEachLine(*textAString));
     StringVector::iterator it = lines->begin();
 
     SeratoCrateVectorPtr crates = this->p_childrenCratesOfCrateNamedUsingNameList("", it, lines->end(), seratoFolderPath, rootFolderPath);
     for (SeratoCrateVector::iterator it = crates->begin(); it != crates->end(); ++it) {
-        this->p_rootCrate->addChildCrate(*it);
+        this->p_rootCrate->addChildCrate(move(*it));
     }
 
     this->p_rootCrate->resetModificationFlags();
@@ -74,10 +74,10 @@ SeratoCrateVectorPtr SeratoCrateOrderFile::p_childrenCratesOfCrateNamedUsingName
                                                                                      const char* seratoFolderPath,
                                                                                      const char* rootFolderPath)
 {
-    SeratoCrateVector* cratesFound = new SeratoCrateVector;
+    SeratoCrateVectorPtr cratesFound = make_unique<SeratoCrateVector>();
 
     while (it != end) {
-        const StringPtr fullCrateName = p_crateNameIfValidCrateOrNullIfNot(*(it->get()));
+        const ConstStringPtr fullCrateName = p_crateNameIfValidCrateOrNullIfNot(*(it->get()));
         if (!fullCrateName.get()) {
             ++it;
             continue;
@@ -88,15 +88,15 @@ SeratoCrateVectorPtr SeratoCrateOrderFile::p_childrenCratesOfCrateNamedUsingName
         }
 
         if (!SeratoCrate::isAValidCrateName(fullCrateName->c_str(), seratoFolderPath)) {
-            this->p_unknownCrates->push_back(StringPtr(new string(*(fullCrateName.get()))));
+            this->p_unknownCrates->push_back(make_unique<string>(*(fullCrateName.get())));
             ++it;
             continue;
         }
 
-        SeratoCrate* newCrate = new SeratoCrate(fullCrateName->c_str(), seratoFolderPath, rootFolderPath);
+        SeratoCratePtr newCrate = make_unique<SeratoCrate>(fullCrateName->c_str(), seratoFolderPath, rootFolderPath);
         newCrate->loadFromFile();
 
-        cratesFound->push_back(SeratoCratePtr(newCrate));
+        cratesFound->push_back(move(newCrate));
 
         ++it;
 
@@ -109,13 +109,13 @@ SeratoCrateVectorPtr SeratoCrateOrderFile::p_childrenCratesOfCrateNamedUsingName
                                                                                          seratoFolderPath,
                                                                                          rootFolderPath);
         for (SeratoCrateVector::iterator childrenIt = childCrates->begin(); childrenIt != childCrates->end(); ++childrenIt) {
-            newCrate->addChildCrate(*childrenIt);
+            newCrate->addChildCrate(move(*childrenIt));
         }
 
         newCrate->resetModificationFlags();
     }
     
-    return SeratoCrateVectorPtr(cratesFound);
+    return move(cratesFound);
 }
 
 const SeratoCrate* SeratoCrateOrderFile::rootCrate(void) const

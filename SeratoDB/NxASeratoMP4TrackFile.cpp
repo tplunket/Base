@@ -42,7 +42,7 @@ typedef struct {
 
 SeratoMP4TrackFile::SeratoMP4TrackFile(const char* trackFilePath) : SeratoTrackFile(trackFilePath)
 {
-    MP4::File* file = new MP4::File(trackFilePath);
+    TaglibFilePtr file = make_unique<MP4::File>(trackFilePath);
     if (!file->isValid()) {
         this->p_file = TaglibFilePtr();
         this->p_itemListMap = NULL;
@@ -51,8 +51,8 @@ SeratoMP4TrackFile::SeratoMP4TrackFile(const char* trackFilePath) : SeratoTrackF
         return;
     }
 
-    this->p_file = TaglibFilePtr(file);
-    MP4::Tag* tag = file->tag();
+    this->p_file = move(file);
+    MP4::Tag* tag = (MP4::Tag*)file->tag();
     this->p_parsedFileTag = tag;
     this->p_itemListMap = &(tag->itemListMap());
     this->p_audioProperties = file->audioProperties();
@@ -147,7 +147,7 @@ string SeratoMP4TrackFile::yearReleased(void) const
 
 CharVectorPtr SeratoMP4TrackFile::artwork(void) const
 {
-    CharVector* result = NULL;
+    CharVectorPtr result;
 
     MP4::Item item = (*this->p_itemListMap)["covr"];
     if (item.isValid()) {
@@ -155,9 +155,9 @@ CharVectorPtr SeratoMP4TrackFile::artwork(void) const
         MP4::CoverArt coverArt = coverArtList.front();
         if (coverArt.data().size()) {
             char* data = coverArt.data().data();
-            result = new CharVector(data, data + coverArt.data().size());
+            result = make_unique<CharVector>(data, data + coverArt.data().size());
         }
     }
 
-    return CharVectorPtr(result);
+    return move(result);
 }

@@ -159,33 +159,29 @@ string SeratoID3TrackFile::yearReleased(void) const
 
 CharVectorPtr SeratoID3TrackFile::artwork(void) const
 {
-    CharVector* result = NULL;
+    CharVectorPtr result;
 
     ID3v2::Tag* tag = (ID3v2::Tag*)this->p_parsedFileTag;
     if(tag) {
         ID3v2::FrameListMap frameListMap = tag->frameListMap();
         ID3v2::FrameList frameList = frameListMap["APIC"];
-        char* data = NULL;
-        size_t size = 0;
 
         for(ID3v2::FrameList::ConstIterator it = frameList.begin(); it != frameList.end(); ++it) {
             ID3v2::AttachedPictureFrame* pic = dynamic_cast<ID3v2::AttachedPictureFrame*>(*it);
 
             if (pic->type() == ID3v2::AttachedPictureFrame::FrontCover) {
-                data = pic->picture().data();
-                size = pic->picture().size();
+                char* data = pic->picture().data();
+                size_t size = pic->picture().size();
+                result = make_unique<CharVector>(data, data + size);
                 break;
             }
             else if (pic->type() == ID3v2::AttachedPictureFrame::Other) {
-                data = pic->picture().data();
-                size = pic->picture().size();
+                char* data = pic->picture().data();
+                size_t size = pic->picture().size();
+                result = make_unique<CharVector>(data, data + size);
             }
-        }
-
-        if (data) {
-            result = new CharVector(data, data + size);
         }
     }
 
-    return CharVectorPtr(result);
+    return move(result);
 }

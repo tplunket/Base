@@ -28,14 +28,14 @@ namespace NxA {
     {
     private:
         #pragma mark Private Instance Variables
-        StringPtr p_value;
+        ConstStringPtr p_value;
 
     public:
         #pragma mark Constructors
         explicit SeratoPathTag(const void* tagAddress);
         explicit SeratoPathTag(const uint32_t& identifier, const char* value) :
                                SeratoTag(identifier),
-                               p_value(StringPtr(new std::string(value))) { }
+                               p_value(std::make_unique<std::string>(value)) { }
 
         #pragma mark Instance Methods
         const uint32_t& identifier(void) const;

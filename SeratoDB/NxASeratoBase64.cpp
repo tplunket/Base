@@ -80,14 +80,14 @@ CharVectorPtr SeratoBase64::decodeBlock(const char* code_in, size_t length_in)
     char* plaintext_out_end = plaintext_out + length_in;
     char* plainchar = plaintext_out;
     char fragment;
-    CharVector* result = NULL;
+    CharVectorPtr result;
 
     *plainchar = 0;
 
     while (plainchar < plaintext_out_end) {
         codechar = base64_decode_loop(codechar, code_in_end, fragment);
         if (!codechar) {
-            result = new CharVector(plaintext_out, plainchar);
+            result = make_unique<CharVector>(plaintext_out, plainchar);
             break;
         }
 
@@ -95,7 +95,7 @@ CharVectorPtr SeratoBase64::decodeBlock(const char* code_in, size_t length_in)
 
         codechar = base64_decode_loop(codechar, code_in_end, fragment);
         if (!codechar) {
-            result = new CharVector(plaintext_out, plainchar);
+            result = make_unique<CharVector>(plaintext_out, plainchar);
             break;
         }
 
@@ -108,7 +108,7 @@ CharVectorPtr SeratoBase64::decodeBlock(const char* code_in, size_t length_in)
 
         codechar = base64_decode_loop(codechar, code_in_end, fragment);
         if (!codechar) {
-            result = new CharVector(plaintext_out, plainchar);
+            result = make_unique<CharVector>(plaintext_out, plainchar);
             break;
         }
 
@@ -121,14 +121,14 @@ CharVectorPtr SeratoBase64::decodeBlock(const char* code_in, size_t length_in)
 
         codechar = base64_decode_loop(codechar, code_in_end, fragment);
         if (!codechar) {
-            result = new CharVector(plaintext_out, plainchar);
+            result = make_unique<CharVector>(plaintext_out, plainchar);
             break;
         }
 
         *plainchar++ |= (fragment & 0x03f);
     }
 
-    return CharVectorPtr(result);
+    return move(result);
 }
 
 CharVectorPtr SeratoBase64::encodeBlock(const char* plaintext_in, int length_in)
@@ -140,12 +140,12 @@ CharVectorPtr SeratoBase64::encodeBlock(const char* plaintext_in, int length_in)
     char* codechar = code_out;
     char charToOutput = 0;
     char fragment;
-    CharVector* result = NULL;
+    CharVectorPtr result;
 
     while (1) {
         if (plainchar == plaintextend) {
             *codechar++ = '\n';
-            result = new CharVector(code_out, codechar);
+            result = make_unique<CharVector>(code_out, codechar);
             break;
         }
 
@@ -167,7 +167,7 @@ CharVectorPtr SeratoBase64::encodeBlock(const char* plaintext_in, int length_in)
             *codechar++ = '=';
             *codechar++ = '\n';
 
-            result = new CharVector(code_out, codechar);
+            result = make_unique<CharVector>(code_out, codechar);
             break;
         }
 
@@ -188,7 +188,7 @@ CharVectorPtr SeratoBase64::encodeBlock(const char* plaintext_in, int length_in)
             *codechar++ = '=';
             *codechar++ = '\n';
 
-            result = new CharVector(code_out, codechar);
+            result = make_unique<CharVector>(code_out, codechar);
             break;
         }
 
@@ -208,5 +208,5 @@ CharVectorPtr SeratoBase64::encodeBlock(const char* plaintext_in, int length_in)
 
     free(code_out);
 
-    return CharVectorPtr(result);
+    return move(result);
 }

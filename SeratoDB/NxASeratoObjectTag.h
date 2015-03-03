@@ -36,7 +36,7 @@ namespace NxA {
     public:
         #pragma mark Constructors
         explicit SeratoObjectTag(const void* tagAddress);
-        explicit SeratoObjectTag(const uint32_t &identifier, SeratoTagVectorPtr& content);
+        explicit SeratoObjectTag(const uint32_t &identifier, SeratoTagVectorPtr content);
 
         #pragma mark Instance Methods
         bool hasSubTagForIdentifier(const uint32_t& identifier) const;
@@ -44,7 +44,7 @@ namespace NxA {
         const SeratoTag& subTagForIdentifier(const uint32_t& identifier) const;
         SeratoTag& subTagForIdentifier(const uint32_t& identifier);
 
-        void setSubTagForIdentifier(SeratoTag* tag, const uint32_t& identifier);
+        void addSubTag(ConstSeratoTagPtr tag);
 
         void addTo(CharVector& destination) const;
     };

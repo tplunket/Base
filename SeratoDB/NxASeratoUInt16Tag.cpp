@@ -34,7 +34,7 @@ uint16_t& SeratoUInt16Tag::value(void)
 void SeratoUInt16Tag::addTo(CharVector& destination) const
 {
     size_t memoryNeededInBytes = SeratoTag::p_memoryNeededWithDataOfSize(2);
-    CharVectorPtr memoryRepresentation = CharVectorPtr(new CharVector(memoryNeededInBytes, 0));
+    CharVectorPtr memoryRepresentation = make_unique<CharVector>(memoryNeededInBytes, 0);
 
     void* tagAddress = memoryRepresentation->data();
     SeratoTag::p_setIdentifierForTagAt(this->identifier(), tagAddress);

@@ -47,12 +47,12 @@ namespace NxA {
     protected:
         #pragma mark Protected Constructors
         explicit SeratoTrackFile(const char* trackFilePath) :
-                                 p_trackFilePath(StringPtr(new std::string(trackFilePath))),
-                                 p_cueMarkers(new SeratoCueMarkerVector),
-                                 p_loopMarkers(new SeratoLoopMarkerVector) { };
+                                 p_trackFilePath(std::make_unique<std::string>(trackFilePath)),
+                                 p_cueMarkers(std::make_unique<SeratoCueMarkerVector>()),
+                                 p_loopMarkers(std::make_unique<SeratoLoopMarkerVector>()) { };
 
         #pragma mark Protected Instance Variables
-        StringPtr p_trackFilePath;
+        ConstStringPtr p_trackFilePath;
         TaglibFilePtr p_file;
         TagLib::Tag* p_parsedFileTag;
         TagLib::PropertyMap p_properties;

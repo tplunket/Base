@@ -31,22 +31,22 @@ static const char* NxASeratoCrateFileCurrentVersion = "1.0/Serato ScratchLive Cr
 SeratoCrate::SeratoCrate(const char* crateFullName,
                          const char* inSeratoFolderPath,
                          const char* locatedOnVolumePath) :
-        p_crateFullName(StringPtr(new string(crateFullName))),
-        p_rootVolumePath(StringPtr(new string(locatedOnVolumePath))),
+        p_crateFullName(ConstStringPtr(make_unique<string>(crateFullName))),
+        p_rootVolumePath(ConstStringPtr(make_unique<string>(locatedOnVolumePath))),
         p_crateFilePath(crateFilePathForCrateNameInSeratoFolder(crateFullName, inSeratoFolderPath)),
         p_parentCrate(NULL),
         p_tracksWereModified(false),
         p_cratesWereModified(false),
-        p_trackEntries(SeratoTrackEntryVectorPtr(new SeratoTrackEntryVector)),
-        p_childrenCrates(SeratoCrateVectorPtr(new SeratoCrateVector))
+        p_trackEntries(make_unique<SeratoTrackEntryVector>()),
+        p_childrenCrates(make_unique<SeratoCrateVector>())
 {
     string crateName(crateFullName);
     size_t lastSeperator = crateName.rfind("%%");
     if (lastSeperator != string::npos) {
-        this->p_crateName = StringPtr(new string(crateName.substr(lastSeperator + 2)));
+        this->p_crateName = make_unique<string>(crateName.substr(lastSeperator + 2));
     }
     else {
-        this->p_crateName = StringPtr(new string(crateFullName));
+        this->p_crateName = make_unique<string>(crateFullName);
     }
 }
 
@@ -54,21 +54,20 @@ SeratoCrate::SeratoCrate(const char* crateFullName,
 
 bool SeratoCrate::isAValidCrateName(const char* crateFullName, const char* seratoFolderPath)
 {
-    StringPtr crateFilePath = crateFilePathForCrateNameInSeratoFolder(crateFullName, seratoFolderPath);
+    ConstStringPtr crateFilePath = crateFilePathForCrateNameInSeratoFolder(crateFullName, seratoFolderPath);
     return fileExistsAt(crateFilePath->c_str());
 }
 
 #pragma mark Instance Methods
 
-void SeratoCrate::p_storeTrackTag(SeratoTagPtr& tag)
+void SeratoCrate::p_storeTrackTag(SeratoTagPtr tag)
 {
-    SeratoTrackEntryPtr newTrackEntry(new SeratoTrackEntry(tag, this->p_rootVolumePath->c_str()));
-    this->addTrackEntry(newTrackEntry);
+    this->addTrackEntry(make_unique<SeratoTrackEntry>(move(tag), this->p_rootVolumePath->c_str()));
 }
 
-void SeratoCrate::p_storeOtherTag(SeratoTagPtr& tag)
+void SeratoCrate::p_storeOtherTag(SeratoTagPtr tag)
 {
-    this->p_otherTags.push_back(std::move(tag));
+    this->p_otherTags.push_back(move(tag));
 }
 
 void SeratoCrate::p_markCratesAsModified()
@@ -134,11 +133,11 @@ void SeratoCrate::loadFromFile(void)
                 break;
             }
             case NxASeratoTrackEntryTag: {
-                this->p_storeTrackTag(*it);
+                this->p_storeTrackTag(move(*it));
                 break;
             }
             default: {
-                this->p_storeOtherTag(*it);
+                this->p_storeOtherTag(move(*it));
                 break;
             }
         }
@@ -160,9 +159,9 @@ void SeratoCrate::saveIfModifiedAndRecurseToChildren(void) const
 {
     if (this->p_rootVolumePath.get() &&
         this->p_tracksWereModified) {
-        CharVectorPtr outputData = CharVectorPtr(new CharVector);
+        CharVectorPtr outputData = make_unique<CharVector>();
 
-        SeratoTagPtr versionTag(new SeratoTextTag(NxASeratoCrateVersionTag, NxASeratoCrateFileCurrentVersion));
+        SeratoTagPtr versionTag(make_unique<SeratoTextTag>(NxASeratoCrateVersionTag, NxASeratoCrateFileCurrentVersion));
         versionTag->addTo(*outputData);
 
         for (SeratoTrackEntryVector::const_iterator it = this->p_trackEntries->begin(); it != this->p_trackEntries->end(); ++it) {
@@ -182,25 +181,25 @@ void SeratoCrate::saveIfModifiedAndRecurseToChildren(void) const
     }
 }
 
-void SeratoCrate::addTrackEntry(SeratoTrackEntryPtr& trackEntry)
+void SeratoCrate::addTrackEntry(SeratoTrackEntryPtr trackEntry)
 {
     this->p_tracksWereModified = true;
-    this->p_trackEntries->push_back(std::move(trackEntry));
+    this->p_trackEntries->push_back(move(trackEntry));
 }
 
-void SeratoCrate::addChildCrate(SeratoCratePtr& crate)
+void SeratoCrate::addChildCrate(SeratoCratePtr crate)
 {
     crate->p_parentCrate = this;
 
     this->p_markCratesAsModified();
 
-    this->p_childrenCrates->push_back(std::move(crate));
+    this->p_childrenCrates->push_back(move(crate));
 }
 
 SeratoTrackEntryVectorPtr SeratoCrate::removeAndReturnTrackEntries(void)
 {
-    SeratoTrackEntryVectorPtr trackEntries = std::move(this->p_trackEntries);
-    this->p_trackEntries = SeratoTrackEntryVectorPtr(new SeratoTrackEntryVector);
+    SeratoTrackEntryVectorPtr trackEntries = move(this->p_trackEntries);
+    this->p_trackEntries = SeratoTrackEntryVectorPtr(make_unique<SeratoTrackEntryVector>());
 
     this->p_tracksWereModified = true;
 
@@ -209,8 +208,8 @@ SeratoTrackEntryVectorPtr SeratoCrate::removeAndReturnTrackEntries(void)
 
 SeratoCrateVectorPtr SeratoCrate::removeAndReturnChildrenCrates(void)
 {
-    SeratoCrateVectorPtr childrenCrates = std::move(this->p_childrenCrates);
-    this->p_childrenCrates = SeratoCrateVectorPtr(new SeratoCrateVector);
+    SeratoCrateVectorPtr childrenCrates = move(this->p_childrenCrates);
+    this->p_childrenCrates = SeratoCrateVectorPtr(make_unique<SeratoCrateVector>());
 
     this->p_markCratesAsModified();
 

@@ -24,14 +24,14 @@ using namespace std;
 #pragma mark Constructors
 
 SeratoTrackEntry::SeratoTrackEntry(const char* trackPath, const char* locatedOnVolumePath) :
-                                   p_rootVolumePath(new std::string(locatedOnVolumePath))
+                                   p_rootVolumePath(make_unique<string>(locatedOnVolumePath))
 {
-    StringPtr entryPath = removePrefixFromPath(locatedOnVolumePath, trackPath);
+    ConstStringPtr entryPath = removePrefixFromPath(locatedOnVolumePath, trackPath);
 
-    SeratoTagVectorPtr tags(new SeratoTagVector);
-    tags->push_back(SeratoTagPtr(new SeratoPathTag(NxASeratoTrackEntryPathTag, entryPath->c_str())));
+    SeratoTagVectorPtr tags(make_unique<SeratoTagVector>());
+    tags->push_back(make_unique<SeratoPathTag>(NxASeratoTrackEntryPathTag, entryPath->c_str()));
 
-    this->p_trackEntryTag = SeratoTagPtr(new SeratoObjectTag(NxASeratoTrackEntryTag, tags));
+    this->p_trackEntryTag = make_unique<SeratoObjectTag>(NxASeratoTrackEntryTag, move(tags));
 }
 
 #pragma mark Instance Methods
@@ -41,19 +41,19 @@ bool SeratoTrackEntry::p_containsAValidTrackEntryTag(void) const
     return this->p_trackEntryTag.get() != NULL;
 }
 
-StringPtr SeratoTrackEntry::trackFilePath(void) const
+ConstStringPtr SeratoTrackEntry::trackFilePath(void) const
 {
     if (this->p_containsAValidTrackEntryTag()) {
         const SeratoObjectTag* trackObjectTag = dynamic_cast<const SeratoObjectTag*>(this->p_trackEntryTag.get());
         if (trackObjectTag->hasSubTagForIdentifier(NxASeratoTrackEntryPathTag)) {
             const SeratoPathTag& pathTag = dynamic_cast<const SeratoPathTag&>(trackObjectTag->subTagForIdentifier(NxASeratoTrackEntryPathTag));
             const string& pathFromRootFolder = pathTag.value();
-            StringPtr trackFilePath = joinPaths(this->p_rootVolumePath->c_str(), pathFromRootFolder.c_str());
+            ConstStringPtr trackFilePath = joinPaths(this->p_rootVolumePath->c_str(), pathFromRootFolder.c_str());
             return trackFilePath;
         }
     }
 
-    return StringPtr(new string(""));
+    return make_unique<string>("");
 }
 
 const SeratoTag& SeratoTrackEntry::tagForEntry(void) const

@@ -28,13 +28,14 @@ namespace NxA {
     {
     private:
         #pragma mark Private Instance Variables
-        StringPtr p_value;
+        ConstStringPtr p_value;
 
     public:
         #pragma mark Constructors
         explicit SeratoTextTag(const void* tagAddress);
         explicit SeratoTextTag(const uint32_t& identifier, const char* value) :
-                               SeratoTag(identifier), p_value(StringPtr(new std::string(value))) { }
+                               SeratoTag(identifier),
+                               p_value(std::make_unique<std::string>(value)) { }
 
         #pragma mark Instance Methods
         const uint32_t& identifier(void) const;

@@ -30,7 +30,7 @@ static const string emptyString("");
 
 SeratoOGGTrackFile::SeratoOGGTrackFile(const char* trackFilePath) : SeratoID3TrackFile(trackFilePath)
 {
-    Vorbis::File* file = new Vorbis::File(trackFilePath);
+    TaglibFilePtr file = make_unique<Vorbis::File>(trackFilePath);
     if (!file->isValid()) {
         this->p_file = TaglibFilePtr();
         this->p_parsedFileTag = NULL;
@@ -38,7 +38,7 @@ SeratoOGGTrackFile::SeratoOGGTrackFile(const char* trackFilePath) : SeratoID3Tra
         return;
     }
 
-    this->p_file = TaglibFilePtr((TagLib::File*)file);
+    this->p_file = move(file);
     this->p_parsedFileTag = file->tag();
     this->p_audioProperties = file->audioProperties();
     this->p_properties = file->properties();

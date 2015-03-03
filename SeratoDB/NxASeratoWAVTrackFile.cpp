@@ -26,7 +26,7 @@ using namespace std;
 
 SeratoWAVTrackFile::SeratoWAVTrackFile(const char* trackFilePath) : SeratoID3TrackFile(trackFilePath)
 {
-    RIFF::WAV::File* file = new RIFF::WAV::File(trackFilePath);
+    TaglibFilePtr file = make_unique<RIFF::WAV::File>(trackFilePath);
     if (!file->isValid()) {
         this->p_file = TaglibFilePtr();
         this->p_parsedFileTag = NULL;
@@ -34,7 +34,7 @@ SeratoWAVTrackFile::SeratoWAVTrackFile(const char* trackFilePath) : SeratoID3Tra
         return;
     }
 
-    this->p_file = TaglibFilePtr((TagLib::File*)file);
+    this->p_file = move(file);
     this->p_parsedFileTag = file->tag();
     this->p_audioProperties = file->audioProperties();
     this->p_properties = file->properties();

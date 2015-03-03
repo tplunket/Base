@@ -33,41 +33,41 @@ SeratoTagPtr SeratoTagFactory::tagForBinaryRepresentationAt(const void* tagAddre
     uint32_t identifier = SeratoTag::identifierForTagAt(tagAddress);
     char typeIdentifier = (identifier >> 24) & 0xff;
 
-    SeratoTag* newTag = NULL;
+    SeratoTagPtr newTag;
 
     switch (typeIdentifier) {
         case 'b': {
-            newTag = new SeratoBooleanTag(tagAddress);
+            newTag = make_unique<SeratoBooleanTag>(tagAddress);
             break;
         }
         case 's': {
-            newTag = new SeratoUInt16Tag(tagAddress);
+            newTag = make_unique<SeratoUInt16Tag>(tagAddress);
             break;
         }
         case 'u': {
-            newTag = new SeratoUInt32Tag(tagAddress);
+            newTag = make_unique<SeratoUInt32Tag>(tagAddress);
             break;
         }
         case 'v':
         case 't': {
-            newTag = new SeratoTextTag(tagAddress);
+            newTag = make_unique<SeratoTextTag>(tagAddress);
             break;
         }
         case 'p': {
-            newTag = new SeratoPathTag(tagAddress);
+            newTag = make_unique<SeratoPathTag>(tagAddress);
             break;
         }
         case 'a': {
-            newTag = new SeratoBlobTag(tagAddress);
+            newTag = make_unique<SeratoBlobTag>(tagAddress);
             break;
         }
         case 'o': {
-            newTag = new SeratoObjectTag(tagAddress);
+            newTag = make_unique<SeratoObjectTag>(tagAddress);
             break;
         }
     }
 
-    return SeratoTagPtr(newTag);
+    return move(newTag);
 }
 
 SeratoTagVectorPtr SeratoTagFactory::parseTagsAt(const void* firstTagAddress, size_t sizeFromFirstTagInBytes)
@@ -75,12 +75,12 @@ SeratoTagVectorPtr SeratoTagFactory::parseTagsAt(const void* firstTagAddress, si
     const void* tagAddress = firstTagAddress;
     const void* endOfTagsAddress = (unsigned char*)firstTagAddress + sizeFromFirstTagInBytes;
 
-    SeratoTagVector* newTags = new SeratoTagVector;
+    SeratoTagVectorPtr newTags = make_unique<SeratoTagVector>();
 
     while (tagAddress < endOfTagsAddress) {
         newTags->push_back(SeratoTagFactory::tagForBinaryRepresentationAt(tagAddress));
         tagAddress = SeratoTag::nextTagAfterBinaryRepresentationAt(tagAddress);
     }
 
-    return SeratoTagVectorPtr(newTags);
+    return move(newTags);
 }

@@ -22,7 +22,8 @@
 
 namespace NxA {
     #pragma mark Containers
-    typedef std::unique_ptr<const std::string> StringPtr;
+    typedef std::unique_ptr<const std::string> ConstStringPtr;
+    typedef std::unique_ptr<std::string> StringPtr;
     typedef std::vector<StringPtr> StringVector;
     typedef std::unique_ptr<StringVector> StringVectorPtr;
     typedef std::vector<char> CharVector;
@@ -30,7 +31,7 @@ namespace NxA {
     typedef std::unique_ptr<const CharVector> ConstCharVectorPtr;
 
     #pragma mark Utility Functions
-    StringPtr convertUTF16ToStdString(const char16_t* characters, int numberOfCharacters);
+    ConstStringPtr convertUTF16ToStdString(const char16_t* characters, int numberOfCharacters);
     void writeStringAsUTF16At(const char* characters, void* destination);
 
     StringVectorPtr splitStringIntoOneStringForEachLine(const std::string& text);
@@ -42,13 +43,13 @@ namespace NxA {
 
     bool containsAValidSeratoFolder(const char* folderPath);
 
-    StringPtr seratoFolderPathForFolder(const char* folderPath);
-    StringPtr databaseFilePathForSeratoFolder(const char* seratoFolderPath);
-    StringPtr crateOrderFilePathForSeratoFolder(const char* seratoFolderPath);
-    StringPtr crateFilePathForCrateNameInSeratoFolder(const char* crateName, const char* seratoFolderPath);
+    ConstStringPtr seratoFolderPathForFolder(const char* folderPath);
+    ConstStringPtr databaseFilePathForSeratoFolder(const char* seratoFolderPath);
+    ConstStringPtr crateOrderFilePathForSeratoFolder(const char* seratoFolderPath);
+    ConstStringPtr crateFilePathForCrateNameInSeratoFolder(const char* crateName, const char* seratoFolderPath);
 
-    StringPtr joinPaths(const char* firstPath, const char* secondPath);
-    StringPtr removePrefixFromPath(const char* prefixPath, const char* fullPath);
+    ConstStringPtr joinPaths(const char* firstPath, const char* secondPath);
+    ConstStringPtr removePrefixFromPath(const char* prefixPath, const char* fullPath);
 
     bool fileExistsAt(const char* filePath);
     size_t sizeOfFileAt(const char* filePath);

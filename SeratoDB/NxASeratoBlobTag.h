@@ -33,7 +33,7 @@ namespace NxA {
         explicit SeratoBlobTag(const void* tagAddress);
         explicit SeratoBlobTag(uint32_t identifier, ConstCharVectorPtr value) :
                                SeratoTag(identifier),
-                               p_value(CharVectorPtr(new CharVector(*value))) { }
+                               p_value(std::make_unique<CharVector>(*value)) { }
 
         #pragma mark Instance Methods
         const CharVector& value(void) const;

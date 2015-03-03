@@ -74,12 +74,10 @@ void SeratoTrackFile::p_readMarkersV2FromBase64Data(const char* markerV2Data, si
         string tagName(tagStart);
 
         if (tagName == "CUE") {
-            SeratoCueMarker* newCueMarker = new SeratoCueMarker(tagStart);
-            this->p_cueMarkers->push_back(SeratoCueMarkerPtr(newCueMarker));
+            this->p_cueMarkers->push_back(make_unique<SeratoCueMarker>(tagStart));
         }
         else if (tagName == "LOOP") {
-            SeratoLoopMarker* newLoopMarker = new SeratoLoopMarker(tagStart);
-            this->p_loopMarkers->push_back(SeratoLoopMarkerPtr(newLoopMarker));
+            this->p_loopMarkers->push_back(make_unique<SeratoLoopMarker>(tagStart));
         }
         else {
             // -- TODO: Preserve other tags in order to write them back.

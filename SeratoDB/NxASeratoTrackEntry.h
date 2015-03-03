@@ -37,20 +37,20 @@ namespace NxA {
     private:
         #pragma mark Private Instance Variable
         SeratoTagPtr p_trackEntryTag;
-        StringPtr p_rootVolumePath;
+        ConstStringPtr p_rootVolumePath;
 
         #pragma mark Private Instance Methods
         bool p_containsAValidTrackEntryTag(void) const;
 
     public:
         #pragma mark Constructors
-        explicit SeratoTrackEntry(SeratoTagPtr& trackEntryTag, const char* locatedOnVolumePath) :
+        explicit SeratoTrackEntry(SeratoTagPtr trackEntryTag, const char* locatedOnVolumePath) :
                                   p_trackEntryTag(std::move(trackEntryTag)),
-                                  p_rootVolumePath(new std::string(locatedOnVolumePath)) { };
+                                  p_rootVolumePath(std::make_unique<std::string>(locatedOnVolumePath)) { };
         explicit SeratoTrackEntry(const char* trackPath, const char* locatedOnVolumePath);
 
         #pragma mark Instance Methods
-        StringPtr trackFilePath(void) const;
+        ConstStringPtr trackFilePath(void) const;
 
         const SeratoTag& tagForEntry(void) const;
     };

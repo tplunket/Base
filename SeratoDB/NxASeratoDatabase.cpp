@@ -59,18 +59,18 @@ SeratoDatabase::SeratoDatabase(const char* seratoFolderPath)
 
         switch (tag->identifier()) {
             case NxASeratoTrackObjectTag: {
-                this->p_storeTrackTag(tag);
+                this->p_storeTrackTag(move(tag));
                 break;
             }
             default: {
-                this->p_storeOtherTag(tag);
+                this->p_storeOtherTag(move(tag));
                 break;
             }
         }
     }
 
     // -- TODO: This will eventually select the root folder based on where the database is.
-    this->p_crateOrderFile = SeratoCrateOrderFilePtr(new SeratoCrateOrderFile(seratoFolderPath, ""));
+    this->p_crateOrderFile = make_unique<SeratoCrateOrderFile>(seratoFolderPath, "");
 
 #if PRINT_DEBUG_INFO
     p_debugListCrate(this->rootCrate(), "");
@@ -79,9 +79,9 @@ SeratoDatabase::SeratoDatabase(const char* seratoFolderPath)
 
 #pragma mark Class Methods
 
-StringPtr SeratoDatabase::versionAsStringForDatabaseIn(const char* seratoFolderPath)
+ConstStringPtr SeratoDatabase::versionAsStringForDatabaseIn(const char* seratoFolderPath)
 {
-    StringPtr databaseFilePath = databaseFilePathForSeratoFolder(seratoFolderPath);
+    ConstStringPtr databaseFilePath = databaseFilePathForSeratoFolder(seratoFolderPath);
     CharVectorPtr databaseFile = readFileAt(databaseFilePath->c_str());
 
     SeratoTagVectorPtr tags(SeratoTagFactory::parseTagsAt(databaseFile->data(), databaseFile->size()));
@@ -90,25 +90,24 @@ StringPtr SeratoDatabase::versionAsStringForDatabaseIn(const char* seratoFolderP
 
         if (tag->identifier() == NxASeratoDatabaseVersionTag) {
             const SeratoTextTag* textTag = dynamic_cast<const SeratoTextTag*>(tag);
-            return StringPtr(new string(textTag->value()));
+            return make_unique<string>(textTag->value());
         }
     }
 
-    return StringPtr(new string(""));
+    return make_unique<string>("");
 }
 
 #pragma mark Instance Methods
 
-void SeratoDatabase::p_storeTrackTag(SeratoTagPtr& tag)
+void SeratoDatabase::p_storeTrackTag(SeratoTagPtr tag)
 {
     // -- TODO: This will eventually select the root folder based on where the database is.
-    SeratoTrackPtr newTrack(new SeratoTrack(tag, ""));
-    this->p_tracks.push_back(std::move(newTrack));
+    this->p_tracks.push_back(make_unique<SeratoTrack>(move(tag), ""));
 }
 
-void SeratoDatabase::p_storeOtherTag(SeratoTagPtr& tag)
+void SeratoDatabase::p_storeOtherTag(SeratoTagPtr tag)
 {
-    this->p_otherTags.push_back(std::move(tag));
+    this->p_otherTags.push_back(move(tag));
 }
 
 time_t SeratoDatabase::databaseModificationDateInSecondsSince1970(void) const

@@ -28,7 +28,7 @@ Pod::Spec.new do |s|
 
   s.dependency 'taglib', '~> 1.9.1-4'
 
-  s.compiler_flags = '-std=c++11'
+  s.compiler_flags = '-std=c++1y'
   
   s.source_files = "SeratoDB/*.{h,cpp}"
 

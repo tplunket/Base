@@ -38,26 +38,26 @@ bool p_hasSuffix(const string& str, const string& suffix)
 SeratoTrackFilePtr SeratoTrackFileFactory::trackFileForPath(const char* trackFilePath)
 {
     string path(trackFilePath);
-    SeratoTrackFile* file = NULL;
+    SeratoTrackFilePtr file;
 
     if (p_hasSuffix(path, ".aiff") || p_hasSuffix(path, ".aif")) {
-        file = new SeratoAIFFTrackFile(trackFilePath);
+        file = make_unique<SeratoAIFFTrackFile>(trackFilePath);
     }
     else if (p_hasSuffix(trackFilePath, ".mp3")) {
-        file = new SeratoMPEGTrackFile(trackFilePath);
+        file = make_unique<SeratoMPEGTrackFile>(trackFilePath);
     }
     else if (p_hasSuffix(trackFilePath, ".m4a")) {
-        file = new SeratoMP4TrackFile(trackFilePath);
+        file = make_unique<SeratoMP4TrackFile>(trackFilePath);
     }
     else if (p_hasSuffix(trackFilePath, ".flac")) {
-        file = new SeratoFLACTrackFile(trackFilePath);
+        file = make_unique<SeratoFLACTrackFile>(trackFilePath);
     }
     else if (p_hasSuffix(trackFilePath, ".ogg")) {
-        file = new SeratoOGGTrackFile(trackFilePath);
+        file = make_unique<SeratoOGGTrackFile>(trackFilePath);
     }
     else if (p_hasSuffix(trackFilePath, ".wav")) {
-        file = new SeratoWAVTrackFile(trackFilePath);
+        file = make_unique<SeratoWAVTrackFile>(trackFilePath);
     }
 
-    return SeratoTrackFilePtr(file);
+    return move(file);
 }

@@ -26,7 +26,7 @@ SeratoBlobTag::SeratoBlobTag(const void* tagAddress) : SeratoTag(tagAddress)
     size_t dataSizeInBytes = SeratoTag::p_dataSizeInBytesForTagAt(tagAddress);
     const char* dataStart = static_cast<const char*>(SeratoTag::p_dataForTagAt(tagAddress));
 
-    this->p_value = CharVectorPtr(new CharVector(dataStart, dataStart + dataSizeInBytes));
+    this->p_value = make_unique<CharVector>(dataStart, dataStart + dataSizeInBytes);
 }
 
 #pragma mark Instance Methods
@@ -44,7 +44,7 @@ CharVector& SeratoBlobTag::value(void)
 void SeratoBlobTag::addTo(CharVector& destination) const
 {
     size_t memoryNeededInBytes = SeratoTag::p_memoryNeededWithDataOfSize(this->p_value->size());
-    CharVectorPtr memoryRepresentation = CharVectorPtr(new CharVector(memoryNeededInBytes, 0));
+    CharVectorPtr memoryRepresentation = make_unique<CharVector>(memoryNeededInBytes, 0);
 
     void* tagAddress = memoryRepresentation->data();
     SeratoTag::p_setIdentifierForTagAt(this->identifier(), tagAddress);

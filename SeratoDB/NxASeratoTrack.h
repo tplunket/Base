@@ -36,9 +36,9 @@ namespace NxA {
     {
     private:
         #pragma mark Private Instance Variables
-        ConstSeratoTagPtr p_trackTag;
+        SeratoTagPtr p_trackTag;
         SeratoTrackFilePtr p_trackFile;
-        StringPtr p_rootFolder;
+        ConstStringPtr p_rootFolder;
 
         bool p_markersRead;
         SeratoCueMarkerVector p_cueMarkers;
@@ -60,10 +60,10 @@ namespace NxA {
 
     public:
         #pragma mark Constructors
-        explicit SeratoTrack(SeratoTagPtr& trackTag, const char* rootDirectoryPath);
+        explicit SeratoTrack(SeratoTagPtr trackTag, const char* rootDirectoryPath);
 
         #pragma mark Instance Methods
-        StringPtr trackFilePath(void) const;
+        ConstStringPtr trackFilePath(void) const;
 
         const std::string& title(void) const;
         const std::string& artist(void) const;

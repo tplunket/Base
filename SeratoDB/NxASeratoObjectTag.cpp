@@ -30,15 +30,15 @@ SeratoObjectTag::SeratoObjectTag(const void* tagAddress) : SeratoTag(tagAddress)
     SeratoTagVectorPtr subTags = SeratoTagFactory::parseTagsAt(dataAddress, dataSizeInBytes);
     for(SeratoTagVector::iterator it = subTags->begin(); it != subTags->end(); ++it) {
         SeratoTagPtr& subTag = *it;
-        this->p_subTagForIdentifier[subTag->identifier()] = std::move(subTag);
+        this->p_subTagForIdentifier[subTag->identifier()] = move(subTag);
     }
 }
 
-SeratoObjectTag::SeratoObjectTag(const uint32_t& identifier, SeratoTagVectorPtr& content) : SeratoTag(identifier)
+SeratoObjectTag::SeratoObjectTag(const uint32_t& identifier, SeratoTagVectorPtr content) : SeratoTag(identifier)
 {
     for(SeratoTagVector::iterator it = content->begin(); it != content->end(); ++it) {
         SeratoTagPtr& subTag = *it;
-        this->p_subTagForIdentifier[subTag->identifier()] = std::move(subTag);
+        this->p_subTagForIdentifier[subTag->identifier()] = move(subTag);
     }
 }
 
@@ -61,9 +61,9 @@ SeratoTag& SeratoObjectTag::subTagForIdentifier(const uint32_t& identifier)
     return const_cast<SeratoTag&>(static_cast<const SeratoObjectTag&>(*this).subTagForIdentifier(identifier));
 }
 
-void SeratoObjectTag::setSubTagForIdentifier(SeratoTag* tag, const uint32_t& identifier)
+void SeratoObjectTag::addSubTag(ConstSeratoTagPtr tag)
 {
-    this->p_subTagForIdentifier[identifier] = ConstSeratoTagPtr(tag);
+    this->p_subTagForIdentifier[tag->identifier()] = move(tag);
 }
 
 void SeratoObjectTag::addTo(CharVector& destination) const

@@ -129,10 +129,10 @@ static void p_debugPrintComparaison(const SeratoTrack* track, const SeratoTrackF
 
 #pragma mark Constructors
 
-SeratoTrack::SeratoTrack(SeratoTagPtr& trackTag, const char* rootDirectoryPath) :
-                         p_markersRead(false),
-                         p_trackTag(std::move(trackTag)),
-                         p_rootFolder(StringPtr(new string(rootDirectoryPath)))
+SeratoTrack::SeratoTrack(SeratoTagPtr trackTag, const char* rootDirectoryPath) :
+                         p_wasModified(false),
+                         p_trackTag(move(trackTag)),
+                         p_rootFolder(make_unique<string>(rootDirectoryPath))
 {
 #if PRINT_DEBUG_INFO
     this->p_loadTrackFile();
@@ -220,10 +220,10 @@ void SeratoTrack::p_readMarkersIfNotAlreadyRead(void)
     }
 }
 
-StringPtr SeratoTrack::trackFilePath(void) const
+ConstStringPtr SeratoTrack::trackFilePath(void) const
 {
     const string& pathFromRootFolder = this->p_pathForSubTagForIdentifier(NxASeratoTrackFilePathTag);
-    StringPtr trackFilePath = joinPaths(this->p_rootFolder->c_str(), pathFromRootFolder.c_str());
+    ConstStringPtr trackFilePath = joinPaths(this->p_rootFolder->c_str(), pathFromRootFolder.c_str());
     return trackFilePath;
 }
 

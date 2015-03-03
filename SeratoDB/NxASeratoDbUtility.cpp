@@ -65,20 +65,20 @@ namespace NxA {
         return (char16_t*)newCharacters;
     }
 
-    StringPtr convertUTF16ToStdString(const char16_t* characters, int numberOfCharacters)
+    ConstStringPtr convertUTF16ToStdString(const char16_t* characters, int numberOfCharacters)
     {
         #ifdef __LITTLE_ENDIAN__
         characters = p_convertEndiannessOfUTF16Characters(characters, numberOfCharacters);
         #endif
 
         wstring_convert<codecvt_utf8_utf16<char16_t>,char16_t> convert;
-        string* stdString = new string(convert.to_bytes(characters, characters + numberOfCharacters));
+        ConstStringPtr stdString = make_unique<string>(convert.to_bytes(characters, characters + numberOfCharacters));
 
         #ifdef __LITTLE_ENDIAN__
         free((void*)characters);
         #endif
 
-        return StringPtr(stdString);
+        return move(stdString);
     }
 
     void writeStringAsUTF16At(const char* characters, void* destination)
@@ -100,16 +100,15 @@ namespace NxA {
 
     StringVectorPtr splitStringIntoOneStringForEachLine(const string& text)
     {
-        StringVector* results = new StringVector;
+        StringVectorPtr results = make_unique<StringVector>();
         stringstream stream(text);
         string line;
 
         while(getline(stream, line, '\n')) {
-            const string* result = new string(line);
-            results->push_back(StringPtr(result));
+            results->push_back(make_unique<string>(line));
         }
 
-        return StringVectorPtr(results);
+        return move(results);
     }
 
     uint32_t bigEndianUInt32ValueAt(const void* ptr)
@@ -144,39 +143,39 @@ namespace NxA {
         charsPtr[1] = value & 0xff;
     }
     
-    StringPtr seratoFolderPathForFolder(const char* folderPath)
+    ConstStringPtr seratoFolderPathForFolder(const char* folderPath)
     {
         return joinPaths(folderPath, "_Serato_");
     }
 
-    StringPtr databaseFilePathForSeratoFolder(const char* seratoFolderPath)
+    ConstStringPtr databaseFilePathForSeratoFolder(const char* seratoFolderPath)
     {
         return joinPaths(seratoFolderPath, "database V2");
     }
 
-    StringPtr crateOrderFilePathForSeratoFolder(const char* seratoFolderPath)
+    ConstStringPtr crateOrderFilePathForSeratoFolder(const char* seratoFolderPath)
     {
         return joinPaths(seratoFolderPath, "neworder.pref");
     }
 
-    StringPtr crateFilePathForCrateNameInSeratoFolder(const char* crateName, const char* seratoFolderPath)
+    ConstStringPtr crateFilePathForCrateNameInSeratoFolder(const char* crateName, const char* seratoFolderPath)
     {
-        StringPtr cratesFolderPath = joinPaths(seratoFolderPath, "Subcrates");
-        StringPtr crateFilePartialPath = joinPaths(cratesFolderPath->c_str(), crateName);
-        return StringPtr(new string(*crateFilePartialPath + ".crate"));
+        ConstStringPtr cratesFolderPath = joinPaths(seratoFolderPath, "Subcrates");
+        ConstStringPtr crateFilePartialPath = joinPaths(cratesFolderPath->c_str(), crateName);
+        return make_unique<string>(*crateFilePartialPath + ".crate");
     }
 
     bool containsAValidSeratoFolder(const char* folderPath)
     {
-        StringPtr seratoFolderPath = seratoFolderPathForFolder(folderPath);
-        StringPtr databaseFilePath = databaseFilePathForSeratoFolder(seratoFolderPath->c_str());
-        StringPtr crateOrderFilePath = crateOrderFilePathForSeratoFolder(seratoFolderPath->c_str());
+        ConstStringPtr seratoFolderPath = seratoFolderPathForFolder(folderPath);
+        ConstStringPtr databaseFilePath = databaseFilePathForSeratoFolder(seratoFolderPath->c_str());
+        ConstStringPtr crateOrderFilePath = crateOrderFilePathForSeratoFolder(seratoFolderPath->c_str());
         return fileExistsAt(databaseFilePath->c_str()) && fileExistsAt(crateOrderFilePath->c_str());
     }
 
-    StringPtr joinPaths(const char* firstPath, const char* secondPath)
+    ConstStringPtr joinPaths(const char* firstPath, const char* secondPath)
     {
-        string* result = new string(firstPath);
+        StringPtr result = make_unique<string>(firstPath);
 
         #ifdef NXASeratoCompiledOnOSX
         *result += "/";
@@ -186,10 +185,10 @@ namespace NxA {
 
         *result += secondPath;
 
-        return StringPtr(result);
+        return move(result);
     }
 
-    StringPtr removePrefixFromPath(const char* prefixPath, const char* fullPath)
+    ConstStringPtr removePrefixFromPath(const char* prefixPath, const char* fullPath)
     {
         size_t lengthToCrop = strlen(prefixPath);
         #ifdef NXASeratoCompiledOnOSX
@@ -200,7 +199,7 @@ namespace NxA {
         string path(fullPath);
         path = path.substr(lengthToCrop);
 
-        return StringPtr(new string(path));
+        return make_unique<string>(path);
     }
 
     bool fileExistsAt(const char* filePath)
@@ -239,14 +238,14 @@ namespace NxA {
                 file.read(fileData, fileSize);
                 file.close();
 
-                CharVector* result = new CharVector(fileData, fileData + fileSize);
+                CharVectorPtr result = make_unique<CharVector>(fileData, fileData + fileSize);
                 free(fileData);
 
-                return CharVectorPtr(result);
+                return move(result);
             }
         }
 
-        return CharVectorPtr(new CharVector);
+        return make_unique<CharVector>();
     }
 
     void writeToFile(const char* filePath, const CharVector& content)

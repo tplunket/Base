@@ -26,7 +26,7 @@ using namespace std;
 
 SeratoMPEGTrackFile::SeratoMPEGTrackFile(const char* trackFilePath) : SeratoID3TrackFile(trackFilePath)
 {
-    MPEG::File* file = new MPEG::File(trackFilePath);
+    TaglibFilePtr file = make_unique<MPEG::File>(trackFilePath);
     if (!file->isValid()) {
         this->p_file = TaglibFilePtr();
         this->p_parsedFileTag = NULL;
@@ -34,8 +34,8 @@ SeratoMPEGTrackFile::SeratoMPEGTrackFile(const char* trackFilePath) : SeratoID3T
         return;
     }
 
-    this->p_file = TaglibFilePtr((TagLib::File*)file);
-    this->p_parsedFileTag = (TagLib::Tag*)file->ID3v2Tag();
+    this->p_file = move(file);
+    this->p_parsedFileTag = (TagLib::Tag*)(((MPEG::File*)file.get())->ID3v2Tag());
     this->p_audioProperties = file->audioProperties();
     this->p_properties = file->properties();
 

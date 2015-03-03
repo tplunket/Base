@@ -26,7 +26,7 @@ using namespace std;
 
 SeratoAIFFTrackFile::SeratoAIFFTrackFile(const char* trackFilePath) : SeratoID3TrackFile(trackFilePath)
 {
-    const RIFF::AIFF::File* file = new RIFF::AIFF::File(trackFilePath);
+    TaglibFilePtr file = make_unique<RIFF::AIFF::File>(trackFilePath);
     if (!file->isValid()) {
         this->p_file = TaglibFilePtr();
         this->p_parsedFileTag = NULL;
@@ -34,7 +34,7 @@ SeratoAIFFTrackFile::SeratoAIFFTrackFile(const char* trackFilePath) : SeratoID3T
         return;
     }
 
-    this->p_file = TaglibFilePtr((TagLib::File*)file);
+    this->p_file = move(file);
     this->p_parsedFileTag = file->tag();
     this->p_audioProperties = file->audioProperties();
     this->p_properties = file->properties();

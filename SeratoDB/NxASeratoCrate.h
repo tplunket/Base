@@ -35,10 +35,10 @@ namespace NxA {
     {
     private:
         #pragma mark Private Instance Variables
-        StringPtr p_crateName;
-        StringPtr p_crateFullName;
-        StringPtr p_rootVolumePath;
-        StringPtr p_crateFilePath;
+        ConstStringPtr p_crateName;
+        ConstStringPtr p_crateFullName;
+        ConstStringPtr p_rootVolumePath;
+        ConstStringPtr p_crateFilePath;
 
         bool p_tracksWereModified;
         bool p_cratesWereModified;
@@ -50,9 +50,9 @@ namespace NxA {
         ConstSeratoTagVector p_otherTags;
 
         #pragma mark Private Instance Methods
-        void p_storeVersionTag(SeratoTagPtr& tag);
-        void p_storeTrackTag(SeratoTagPtr& tag);
-        void p_storeOtherTag(SeratoTagPtr& tag);
+        void p_storeVersionTag(SeratoTagPtr tag);
+        void p_storeTrackTag(SeratoTagPtr tag);
+        void p_storeOtherTag(SeratoTagPtr tag);
 
         void p_markCratesAsModified();
 
@@ -79,8 +79,8 @@ namespace NxA {
         void saveIfModifiedAndRecurseToChildren(void) const;
         bool childrenCratesWereModified(void) const;
 
-        void addTrackEntry(SeratoTrackEntryPtr& trackEntry);
-        void addChildCrate(SeratoCratePtr& crate);
+        void addTrackEntry(SeratoTrackEntryPtr trackEntry);
+        void addChildCrate(SeratoCratePtr crate);
 
         SeratoTrackEntryVectorPtr removeAndReturnTrackEntries(void);
         SeratoCrateVectorPtr removeAndReturnChildrenCrates(void);

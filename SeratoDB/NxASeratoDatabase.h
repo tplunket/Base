@@ -29,23 +29,23 @@ namespace NxA {
     {
     private:
         #pragma mark Private Instance Variables
-        StringPtr p_databaseFilePath;
+        ConstStringPtr p_databaseFilePath;
         SeratoTrackVector p_tracks;
         ConstSeratoTagVector p_otherTags;
 
         SeratoCrateOrderFilePtr p_crateOrderFile;
 
         #pragma mark Private Instance Methods
-        void p_storeVersionTag(SeratoTagPtr& tag);
-        void p_storeTrackTag(SeratoTagPtr& tag);
-        void p_storeOtherTag(SeratoTagPtr& tag);
+        void p_storeVersionTag(SeratoTagPtr tag);
+        void p_storeTrackTag(SeratoTagPtr tag);
+        void p_storeOtherTag(SeratoTagPtr tag);
 
     public:
         #pragma mark Constructors
         explicit SeratoDatabase(const char* seratoFolderPath);
 
         #pragma mark Class Methods
-        static StringPtr versionAsStringForDatabaseIn(const char* seratoFolderPath);
+        static ConstStringPtr versionAsStringForDatabaseIn(const char* seratoFolderPath);
 
         #pragma mark Instance Methods
         time_t databaseModificationDateInSecondsSince1970(void) const;

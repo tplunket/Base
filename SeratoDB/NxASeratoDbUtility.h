@@ -22,17 +22,18 @@
 
 namespace NxA {
     #pragma mark Containers
-    typedef std::auto_ptr<const std::string> StringAutoPtr;
-    typedef std::vector<StringAutoPtr> StringVector;
-    typedef std::auto_ptr<StringVector> StringVectorAutoPtr;
+    typedef std::unique_ptr<const std::string> StringPtr;
+    typedef std::vector<StringPtr> StringVector;
+    typedef std::unique_ptr<StringVector> StringVectorPtr;
     typedef std::vector<char> CharVector;
-    typedef std::auto_ptr<CharVector> CharVectorAutoPtr;
+    typedef std::unique_ptr<CharVector> CharVectorPtr;
+    typedef std::unique_ptr<const CharVector> ConstCharVectorPtr;
 
     #pragma mark Utility Functions
-    StringAutoPtr convertUTF16ToStdString(const char16_t* characters, int numberOfCharacters);
+    StringPtr convertUTF16ToStdString(const char16_t* characters, int numberOfCharacters);
     void writeStringAsUTF16At(const char* characters, void* destination);
 
-    StringVectorAutoPtr splitStringIntoOneStringForEachLine(const std::string& text);
+    StringVectorPtr splitStringIntoOneStringForEachLine(const std::string& text);
 
     uint32_t bigEndianUInt32ValueAt(const void* ptr);
     uint16_t bigEndianUInt16ValueAt(const void* ptr);
@@ -41,19 +42,19 @@ namespace NxA {
 
     bool containsAValidSeratoFolder(const char* folderPath);
 
-    StringAutoPtr seratoFolderPathForFolder(const char* folderPath);
-    StringAutoPtr databaseFilePathForSeratoFolder(const char* seratoFolderPath);
-    StringAutoPtr crateOrderFilePathForSeratoFolder(const char* seratoFolderPath);
-    StringAutoPtr crateFilePathForCrateNameInSeratoFolder(const char* crateName, const char* seratoFolderPath);
+    StringPtr seratoFolderPathForFolder(const char* folderPath);
+    StringPtr databaseFilePathForSeratoFolder(const char* seratoFolderPath);
+    StringPtr crateOrderFilePathForSeratoFolder(const char* seratoFolderPath);
+    StringPtr crateFilePathForCrateNameInSeratoFolder(const char* crateName, const char* seratoFolderPath);
 
-    StringAutoPtr joinPaths(const char* firstPath, const char* secondPath);
-    StringAutoPtr removePrefixFromPath(const char* prefixPath, const char* fullPath);
+    StringPtr joinPaths(const char* firstPath, const char* secondPath);
+    StringPtr removePrefixFromPath(const char* prefixPath, const char* fullPath);
 
     bool fileExistsAt(const char* filePath);
     size_t sizeOfFileAt(const char* filePath);
     time_t modificationDateInSecondsSince1970ForFile(const char* filePath);
 
-    CharVectorAutoPtr readFileAt(const char* filePath);
+    CharVectorPtr readFileAt(const char* filePath);
     void writeToFile(const char* filePath, const CharVector& content);
 }
 

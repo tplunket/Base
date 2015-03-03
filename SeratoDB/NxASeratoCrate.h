@@ -26,49 +26,46 @@ namespace NxA {
     class SeratoCrate;
 
     #pragma mark Containers
-    typedef std::auto_ptr<SeratoCrate> SeratoCrateAutoPtr;
-    typedef std::vector<SeratoCrateAutoPtr> SeratoCrateVector;
-    typedef std::auto_ptr<SeratoCrateVector> SeratoCrateVectorAutoPtr;
+    typedef std::unique_ptr<SeratoCrate> SeratoCratePtr;
+    typedef std::vector<SeratoCratePtr> SeratoCrateVector;
+    typedef std::unique_ptr<SeratoCrateVector> SeratoCrateVectorPtr;
 
     #pragma mark Class Declaration
     class SeratoCrate
     {
     private:
         #pragma mark Private Instance Variables
-        StringAutoPtr p_crateName;
-        StringAutoPtr p_crateFullName;
-        StringAutoPtr p_rootVolumePath;
-        StringAutoPtr p_crateFilePath;
+        StringPtr p_crateName;
+        StringPtr p_crateFullName;
+        StringPtr p_rootVolumePath;
+        StringPtr p_crateFilePath;
 
         bool p_tracksWereModified;
         bool p_cratesWereModified;
 
         SeratoCrate* p_parentCrate;
-        SeratoCrateVectorAutoPtr p_childrenCrates;
-        SeratoTrackEntryVectorAutoPtr p_trackEntries;
+        SeratoCrateVectorPtr p_childrenCrates;
+        SeratoTrackEntryVectorPtr p_trackEntries;
 
-        ConstSeratoTagAutoPtr p_versionTag;
         ConstSeratoTagVector p_otherTags;
 
         #pragma mark Private Instance Methods
-        void p_storeVersionTag(const SeratoTag* tag);
-        void p_storeTrackTag(const SeratoTag* tag);
-        void p_storeOtherTag(const SeratoTag* tag);
+        void p_storeVersionTag(SeratoTagPtr& tag);
+        void p_storeTrackTag(SeratoTagPtr& tag);
+        void p_storeOtherTag(SeratoTagPtr& tag);
 
         void p_markCratesAsModified();
 
     public:
         #pragma mark Constructors
-        SeratoCrate(const char* crateFullName,
-                    const char* inSeratoFolderPath,
-                    const char* locatedOnVolumePath);
+        explicit SeratoCrate(const char* crateFullName,
+                             const char* inSeratoFolderPath,
+                             const char* locatedOnVolumePath);
 
         #pragma mark Class Methods
         static bool isAValidCrateName(const char* crateFullName, const char* seratoFolderPath);
 
         #pragma mark Instance Methods
-        StringAutoPtr versionAsString(void) const;
-
         const std::string& crateName(void) const;
         const std::string& crateFullName(void) const;
         void addFullCrateNameWithPrefixAndRecurseToChildren(std::string& destination, const char* prefix) const;
@@ -82,11 +79,11 @@ namespace NxA {
         void saveIfModifiedAndRecurseToChildren(void) const;
         bool childrenCratesWereModified(void) const;
 
-        void addTrackEntry(SeratoTrackEntryAutoPtr trackEntry);
-        void addChildCrate(SeratoCrateAutoPtr crate);
+        void addTrackEntry(SeratoTrackEntryPtr& trackEntry);
+        void addChildCrate(SeratoCratePtr& crate);
 
-        SeratoTrackEntryVectorAutoPtr removeAndReturnTrackEntries(void);
-        SeratoCrateVectorAutoPtr removeAndReturnChildrenCrates(void);
+        SeratoTrackEntryVectorPtr removeAndReturnTrackEntries(void);
+        SeratoCrateVectorPtr removeAndReturnChildrenCrates(void);
     };
 }
 

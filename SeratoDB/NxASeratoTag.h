@@ -20,69 +20,54 @@
 #include <SeratoDB/NxASeratoDbUtility.h>
 
 #include <string>
-#include <map>
-#include <vector>
 
 namespace NxA {
     #pragma mark Forward declarations
     class SeratoTag;
 
     #pragma mark Containers
-    typedef std::auto_ptr<const SeratoTag> ConstSeratoTagAutoPtr;
-    typedef std::auto_ptr<SeratoTag> SeratoTagAutoPtr;
-    typedef std::map<const uint32_t, const SeratoTag*> SeratoIdentifierToTagMap;
-    typedef std::vector<ConstSeratoTagAutoPtr> ConstSeratoTagVector;
-    typedef std::auto_ptr<ConstSeratoTagVector> ConstSeratoTagVectorAutoPtr;
+    typedef std::unique_ptr<const SeratoTag> ConstSeratoTagPtr;
+    typedef std::unique_ptr<SeratoTag> SeratoTagPtr;
+    typedef std::vector<SeratoTagPtr> SeratoTagVector;
+    typedef std::vector<ConstSeratoTagPtr> ConstSeratoTagVector;
+    typedef std::unique_ptr<SeratoTagVector> SeratoTagVectorPtr;
+    typedef std::unique_ptr<ConstSeratoTagVector> ConstSeratoTagVectorPtr;
 
     #pragma mark Class Declaration
     class SeratoTag
     {
     private:
-        #pragma mark Private Constructors
-        SeratoTag(const void* tagAddress);
-        SeratoTag(const void* tagAddress, const SeratoTag* parentTag) : SeratoTag(tagAddress) {
-            this->p_parentTag = parentTag;
-        };
+        #pragma mark Private Constructors/Destructors
+        SeratoTag() { };
 
-        #pragma mark Private Class Methods
-        static ConstSeratoTagVectorAutoPtr p_parseTagsInForParentTag(const void* firstTagAddress,
-                                                                     size_t sizeFromFirstTagInBytes,
-                                                                     const SeratoTag* parentTag);
+    protected:
+        #pragma mark Protected Constructors/Destructors
+        explicit SeratoTag(const uint32_t& identifier) : p_identifier(identifier) { }
+        explicit SeratoTag(const void* tagAddress) : p_identifier(SeratoTag::identifierForTagAt(tagAddress)) { }
 
-        #pragma mark Private Instance Variables
+        #pragma mark Protected Class Methods
+        static void p_setIdentifierForTagAt(const uint32_t& identifier, const void* tagAddress);
+        static size_t p_dataSizeInBytesForTagAt(const void* tagAddress);
+        static void p_setDataSizeForTagAt(const size_t& dataSizeInBytes, const void* tagAddress);
+        static const void* p_dataForTagAt(const void* tagAddress);
+        static void* p_dataForTagAt(void* tagAddress);
+        static size_t p_memoryNeededWithDataOfSize(const size_t& dataSizeInBytes);
+
+        #pragma mark Protected Instance Variables
         uint32_t p_identifier;
-        size_t p_dataSizeInBytes;
-
-        CharVectorAutoPtr p_memoryRepresentation;
-
-        const SeratoTag* p_parentTag;
-
-        ConstSeratoTagVectorAutoPtr p_subTags;
-
-        SeratoIdentifierToTagMap p_subTagForIdentifier;
 
     public:
-        #pragma mark Constructors
-        SeratoTag(uint32_t identifier, const char* content);
-        SeratoTag(uint32_t identifier, ConstSeratoTagVectorAutoPtr content);
+        #pragma mark Public Constructors/Destructors
+        virtual ~SeratoTag() { };
 
         #pragma mark Class Methods
-        static ConstSeratoTagVectorAutoPtr parseTagsIn(const CharVectorAutoPtr& seratoTagData);
+        static uint32_t identifierForTagAt(const void* tagAddress);
+        static const void* nextTagAfterBinaryRepresentationAt(const void* tagAddress);
 
         #pragma mark Instance Methods
-        const SeratoTag* subTagWithIdentifierOrNilIfDoesNotExist(uint32_t identifier) const;
+        const uint32_t& identifier(void) const;
 
-        uint32_t identifier(void) const;
-        size_t dataSizeInBytes(void) const;
-
-        bool dataAsBoolean(void) const;
-        uint16_t dataAsUInt16(void) const;
-        uint32_t dataAsUInt32(void) const;
-        StringAutoPtr dataAsString(void) const;
-        StringAutoPtr dataAsPath(void) const;
-        const void* data(void) const;
-
-        void addTo(CharVector& destination) const;
+        virtual void addTo(CharVector& destination) const = 0;
     };
 }
 

@@ -27,7 +27,7 @@ namespace NxA {
     {
     public:
         #pragma mark Constructors
-        SeratoMPEGTrackFile(const char* trackFilePath);
+        explicit SeratoMPEGTrackFile(const char* trackFilePath);
     };
 }
 

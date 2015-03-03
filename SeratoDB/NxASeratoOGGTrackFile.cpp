@@ -22,19 +22,23 @@ using namespace NxA;
 using namespace TagLib;
 using namespace std;
 
+#pragma mark Constants
+
+static const string emptyString("");
+
 #pragma mark Constructors
 
 SeratoOGGTrackFile::SeratoOGGTrackFile(const char* trackFilePath) : SeratoID3TrackFile(trackFilePath)
 {
     Vorbis::File* file = new Vorbis::File(trackFilePath);
     if (!file->isValid()) {
-        this->p_file = TaglibFileAutoPtr(NULL);
+        this->p_file = TaglibFilePtr();
         this->p_parsedFileTag = NULL;
         this->p_audioProperties = NULL;
         return;
     }
 
-    this->p_file = TaglibFileAutoPtr((TagLib::File*)file);
+    this->p_file = TaglibFilePtr((TagLib::File*)file);
     this->p_parsedFileTag = file->tag();
     this->p_audioProperties = file->audioProperties();
     this->p_properties = file->properties();
@@ -57,21 +61,19 @@ bool SeratoOGGTrackFile::hasKey(void) const
     return false;
 }
 
-StringAutoPtr SeratoOGGTrackFile::key(void) const
+string SeratoOGGTrackFile::key(void) const
 {
-    return StringAutoPtr(NULL);
+    return emptyString;
 }
 
-StringAutoPtr SeratoOGGTrackFile::grouping(void) const
+string SeratoOGGTrackFile::grouping(void) const
 {
-    string* result = NULL;
-
     String text = this->p_properties["GROUPING"].toString();
     if (text != String::null) {
-        result = new string(text.to8Bit());
+        return text.to8Bit();
     }
 
-    return StringAutoPtr(result);
+    return emptyString;
 }
 
 bool SeratoOGGTrackFile::hasRecordLabel(void) const
@@ -79,16 +81,14 @@ bool SeratoOGGTrackFile::hasRecordLabel(void) const
     return true;
 }
 
-StringAutoPtr SeratoOGGTrackFile::recordLabel(void) const
+string SeratoOGGTrackFile::recordLabel(void) const
 {
-    string* result = NULL;
-
     String text = this->p_properties["LABEL"].toString();
     if (text != String::null) {
-        result = new string(text.to8Bit());
+        return text.to8Bit();
     }
 
-    return StringAutoPtr(result);
+    return emptyString;
 }
 
 bool SeratoOGGTrackFile::hasRemixer(void) const
@@ -96,32 +96,28 @@ bool SeratoOGGTrackFile::hasRemixer(void) const
     return true;
 }
 
-StringAutoPtr SeratoOGGTrackFile::remixer(void) const
+string SeratoOGGTrackFile::remixer(void) const
 {
-    string* result = NULL;
-
     String text = this->p_properties["REMIXER"].toString();
     if (text != String::null) {
-        result = new string(text.to8Bit());
+        return text.to8Bit();
     }
 
-    return StringAutoPtr(result);
+    return emptyString;
 }
 
-StringAutoPtr SeratoOGGTrackFile::yearReleased(void) const
+string SeratoOGGTrackFile::yearReleased(void) const
 {
-    string* result = NULL;
-
     String text = this->p_properties["YEAR"].toString();
     if (text != String::null) {
-        result = new string(text.to8Bit());
+        return text.to8Bit();
     }
 
-    return StringAutoPtr(result);
+    return emptyString;
 }
 
-CharVectorAutoPtr SeratoOGGTrackFile::artwork(void) const
+CharVectorPtr SeratoOGGTrackFile::artwork(void) const
 {
     // -- TODO: To be implemented.
-    return CharVectorAutoPtr(NULL);
+    return CharVectorPtr();
 }

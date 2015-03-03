@@ -66,10 +66,10 @@ static inline char base64_encode_value(char value_in)
 
 #pragma mark Class Methods
 
-CharVectorAutoPtr SeratoBase64::decodeBlock(const char* code_in, size_t length_in)
+CharVectorPtr SeratoBase64::decodeBlock(const char* code_in, size_t length_in)
 {
     if (!length_in) {
-        return CharVectorAutoPtr(NULL);
+        return CharVectorPtr();
     }
 
     const char* codechar = code_in;
@@ -128,10 +128,10 @@ CharVectorAutoPtr SeratoBase64::decodeBlock(const char* code_in, size_t length_i
         *plainchar++ |= (fragment & 0x03f);
     }
 
-    return CharVectorAutoPtr(result);
+    return CharVectorPtr(result);
 }
 
-CharVectorAutoPtr SeratoBase64::encodeBlock(const char* plaintext_in, int length_in)
+CharVectorPtr SeratoBase64::encodeBlock(const char* plaintext_in, int length_in)
 {
     const char* plainchar = plaintext_in;
     const char* const plaintextend = plaintext_in + length_in;
@@ -208,5 +208,5 @@ CharVectorAutoPtr SeratoBase64::encodeBlock(const char* plaintext_in, int length
 
     free(code_out);
 
-    return CharVectorAutoPtr(result);
+    return CharVectorPtr(result);
 }

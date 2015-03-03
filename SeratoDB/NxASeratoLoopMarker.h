@@ -26,9 +26,9 @@ namespace NxA {
     class SeratoLoopMarker;
 
     #pragma mark Containers
-    typedef std::auto_ptr<const SeratoLoopMarker> SeratoLoopMarkerAutoPtr;
-    typedef std::vector<SeratoLoopMarkerAutoPtr> SeratoLoopMarkerVector;
-    typedef std::auto_ptr<SeratoLoopMarkerVector> SeratoLoopMarkerVectorAutoPtr;
+    typedef std::unique_ptr<const SeratoLoopMarker> SeratoLoopMarkerPtr;
+    typedef std::vector<SeratoLoopMarkerPtr> SeratoLoopMarkerVector;
+    typedef std::unique_ptr<SeratoLoopMarkerVector> SeratoLoopMarkerVectorPtr;
 
     #pragma mark Class Declaration
     class SeratoLoopMarker
@@ -40,11 +40,11 @@ namespace NxA {
 
         uint32_t p_index;
 
-        StringAutoPtr p_label;
+        std::string p_label;
 
     public:
         #pragma mark Constructors
-        SeratoLoopMarker(const char* id3TagStart);
+        explicit SeratoLoopMarker(const char* id3TagStart);
 
         #pragma mark Instance Methods
         uint32_t startPositionInMilliseconds(void) const;

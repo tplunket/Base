@@ -17,7 +17,7 @@
 #ifndef __SeratoDB__NxASeratoTrackEntry__
 #define __SeratoDB__NxASeratoTrackEntry__
 
-#include <SeratoDB/NxASeratoTag.h>
+#include "SeratoDB/NxASeratoObjectTag.h"
 #include <SeratoDB/NxASeratoDbUtility.h>
 
 #include <vector>
@@ -27,30 +27,30 @@ namespace NxA {
     class SeratoTrackEntry;
 
     #pragma mark Containers
-    typedef std::auto_ptr<SeratoTrackEntry> SeratoTrackEntryAutoPtr;
-    typedef std::vector<SeratoTrackEntryAutoPtr> SeratoTrackEntryVector;
-    typedef std::auto_ptr<SeratoTrackEntryVector> SeratoTrackEntryVectorAutoPtr;
+    typedef std::unique_ptr<SeratoTrackEntry> SeratoTrackEntryPtr;
+    typedef std::vector<SeratoTrackEntryPtr> SeratoTrackEntryVector;
+    typedef std::unique_ptr<SeratoTrackEntryVector> SeratoTrackEntryVectorPtr;
 
     #pragma mark Class Declaration
     class SeratoTrackEntry
     {
     private:
         #pragma mark Private Instance Variable
-        ConstSeratoTagAutoPtr p_trackTag;
-        StringAutoPtr p_rootVolumePath;
+        SeratoTagPtr p_trackEntryTag;
+        StringPtr p_rootVolumePath;
 
         #pragma mark Private Instance Methods
-        bool p_containsAValidTag(void) const;
+        bool p_containsAValidTrackEntryTag(void) const;
 
     public:
         #pragma mark Constructors
-        SeratoTrackEntry(const SeratoTag* trackTag, const char* locatedOnVolumePath) :
-                         p_trackTag(ConstSeratoTagAutoPtr(trackTag)),
-                         p_rootVolumePath(new std::string(locatedOnVolumePath)) { };
-        SeratoTrackEntry(const char* trackPath, const char* locatedOnVolumePath);
+        explicit SeratoTrackEntry(SeratoTagPtr& trackEntryTag, const char* locatedOnVolumePath) :
+                                  p_trackEntryTag(std::move(trackEntryTag)),
+                                  p_rootVolumePath(new std::string(locatedOnVolumePath)) { };
+        explicit SeratoTrackEntry(const char* trackPath, const char* locatedOnVolumePath);
 
         #pragma mark Instance Methods
-        StringAutoPtr trackFilePath(void) const;
+        StringPtr trackFilePath(void) const;
 
         const SeratoTag& tagForEntry(void) const;
     };

@@ -26,9 +26,9 @@ namespace NxA {
     class SeratoCueMarker;
 
     #pragma mark Containers
-    typedef std::auto_ptr<const SeratoCueMarker> SeratoCueMarkerAutoPtr;
-    typedef std::vector<SeratoCueMarkerAutoPtr> SeratoCueMarkerVector;
-    typedef std::auto_ptr<SeratoCueMarkerVector> SeratoCueMarkerVectorAutoPtr;
+    typedef std::unique_ptr<const SeratoCueMarker> SeratoCueMarkerPtr;
+    typedef std::vector<SeratoCueMarkerPtr> SeratoCueMarkerVector;
+    typedef std::unique_ptr<SeratoCueMarkerVector> SeratoCueMarkerVectorPtr;
 
     #pragma mark Class Declaration
     class SeratoCueMarker
@@ -39,11 +39,11 @@ namespace NxA {
 
         uint32_t p_index;
 
-        StringAutoPtr p_label;
+        std::string p_label;
 
     public:
         #pragma mark Constructors
-        SeratoCueMarker(const char* id3TagStart);
+        explicit SeratoCueMarker(const char* id3TagStart);
 
         #pragma mark Instance Methods
         uint32_t positionInMilliseconds(void) const;

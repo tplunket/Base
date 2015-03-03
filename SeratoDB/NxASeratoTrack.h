@@ -20,6 +20,7 @@
 #include <SeratoDB/NxASeratoTag.h>
 #include <SeratoDB/NxASeratoTrackFile.h>
 
+#include <string>
 #include <vector>
 
 namespace NxA {
@@ -27,27 +28,31 @@ namespace NxA {
     class SeratoTrack;
 
     #pragma mark Containers
-    typedef std::auto_ptr<SeratoTrack> SeratoTrackAutoPtr;
-    typedef std::vector<SeratoTrackAutoPtr> SeratoTrackVector;
+    typedef std::unique_ptr<SeratoTrack> SeratoTrackPtr;
+    typedef std::vector<SeratoTrackPtr> SeratoTrackVector;
 
     #pragma mark Class Declaration
     class SeratoTrack
     {
     private:
         #pragma mark Private Instance Variables
-        ConstSeratoTagAutoPtr p_trackTag;
-        SeratoTrackFileAutoPtr p_trackFile;
-        StringAutoPtr p_rootFolder;
+        ConstSeratoTagPtr p_trackTag;
+        SeratoTrackFilePtr p_trackFile;
+        StringPtr p_rootFolder;
 
-        SeratoCueMarkerVectorAutoPtr p_cueMarkers;
-        SeratoLoopMarkerVectorAutoPtr p_loopMarkers;
+        bool p_markersRead;
+        SeratoCueMarkerVector p_cueMarkers;
+        SeratoLoopMarkerVector p_loopMarkers;
 
         #pragma mark Private Instance Methods
-        bool p_containsAValidTag(void) const;
-        StringAutoPtr p_stringForSubTagWithIdentifierOrEmptyIfNotFound(uint32_t identifier) const;
-        StringAutoPtr p_pathForSubTagWithIdentifierOrEmptyIfNotFound(uint32_t identifier) const;
-        uint32_t p_uint32ForSubTagWithIdentifierOrZeroIfNotFound(uint32_t identifier) const;
-        uint32_t p_uint32ForStringSubTagWithIdentifierOrZeroIfNotFound(uint32_t identifier) const;
+        inline bool p_containsAValidTrackTag(void) const;
+
+        const std::string& p_stringForSubTagForIdentifier(const uint32_t& identifier) const;
+        const std::string& p_pathForSubTagForIdentifier(const uint32_t& identifier) const;
+        const uint32_t& p_uint32ForSubTagForIdentifier(const uint32_t& identifier) const;
+
+        void p_setStringForSubTagForIdentifier(const char* value, const uint32_t& identifier);
+        void p_setUInt32ForSubTagForIdentifier(const uint32_t& value, const uint32_t& identifier);
 
         void p_loadTrackFile(void);
         void p_unloadTrackFile(void);
@@ -55,30 +60,31 @@ namespace NxA {
 
     public:
         #pragma mark Constructors
-        SeratoTrack(ConstSeratoTagAutoPtr trackTag, const char* rootDirectoryPath);
+        explicit SeratoTrack(SeratoTagPtr& trackTag, const char* rootDirectoryPath);
 
         #pragma mark Instance Methods
-        StringAutoPtr trackFilePath(void) const;
-        StringAutoPtr title(void) const;
-        StringAutoPtr artist(void) const;
-        StringAutoPtr album(void) const;
-        StringAutoPtr genre(void) const;
-        StringAutoPtr comments(void) const;
-        StringAutoPtr grouping(void) const;
-        StringAutoPtr remixer(void) const;
-        StringAutoPtr recordLabel(void) const;
-        StringAutoPtr composer(void) const;
-        StringAutoPtr key(void) const;
-        StringAutoPtr  length(void) const;
-        size_t sizeInBytes(void) const;
-        StringAutoPtr bitRate(void) const;
-        StringAutoPtr sampleRate(void) const;
-        StringAutoPtr bpm(void) const;
-        StringAutoPtr year(void) const;
-        uint32_t trackNumber(void) const;
-        uint32_t discNumber(void) const;
-        uint32_t dateModifiedInSecondsSinceJanuary1st1970(void) const;
-        uint32_t dateAddedInSecondsSinceJanuary1st1970(void) const;
+        StringPtr trackFilePath(void) const;
+
+        const std::string& title(void) const;
+        const std::string& artist(void) const;
+        const std::string& album(void) const;
+        const std::string& genre(void) const;
+        const std::string& comments(void) const;
+        const std::string& grouping(void) const;
+        const std::string& remixer(void) const;
+        const std::string& recordLabel(void) const;
+        const std::string& composer(void) const;
+        const std::string& key(void) const;
+        const std::string& length(void) const;
+        const uint32_t& sizeInBytes(void) const;
+        const std::string& bitRate(void) const;
+        const std::string& sampleRate(void) const;
+        const std::string& bpm(void) const;
+        const std::string& year(void) const;
+        const uint32_t& trackNumber(void) const;
+        const uint32_t& discNumber(void) const;
+        const uint32_t& dateModifiedInSecondsSinceJanuary1st1970(void) const;
+        const uint32_t& dateAddedInSecondsSinceJanuary1st1970(void) const;
 
         const SeratoCueMarkerVector& cueMarkers(void);
         const SeratoLoopMarkerVector& loopMarkers(void);

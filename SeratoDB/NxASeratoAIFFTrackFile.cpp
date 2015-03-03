@@ -28,13 +28,13 @@ SeratoAIFFTrackFile::SeratoAIFFTrackFile(const char* trackFilePath) : SeratoID3T
 {
     const RIFF::AIFF::File* file = new RIFF::AIFF::File(trackFilePath);
     if (!file->isValid()) {
-        this->p_file = TaglibFileAutoPtr(NULL);
+        this->p_file = TaglibFilePtr();
         this->p_parsedFileTag = NULL;
         this->p_audioProperties = NULL;
         return;
     }
 
-    this->p_file = TaglibFileAutoPtr((TagLib::File*)file);
+    this->p_file = TaglibFilePtr((TagLib::File*)file);
     this->p_parsedFileTag = file->tag();
     this->p_audioProperties = file->audioProperties();
     this->p_properties = file->properties();

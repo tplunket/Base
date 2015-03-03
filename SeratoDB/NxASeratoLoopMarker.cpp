@@ -45,7 +45,7 @@ SeratoLoopMarker::SeratoLoopMarker(const char* id3TagStart)
     this->p_startPositionInMilliSeconds = bigEndianUInt32ValueAt(tagStruct->position);
     this->p_endPositionInMilliSeconds = bigEndianUInt32ValueAt(tagStruct->loopPosition);
     this->p_index = bigEndianUInt16ValueAt(tagStruct->index);
-    this->p_label = StringAutoPtr(new string((char*)tagStruct->label));
+    this->p_label = (char*)tagStruct->label;
 }
 
 #pragma mark Instance Methods
@@ -67,5 +67,5 @@ uint16_t SeratoLoopMarker::index(void) const
 
 const string& SeratoLoopMarker::label(void) const
 {
-    return *this->p_label;
+    return this->p_label;
 }

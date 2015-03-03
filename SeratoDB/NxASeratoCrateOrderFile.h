@@ -25,29 +25,29 @@ namespace NxA {
     class SeratoCrateOrderFile;
 
     #pragma mark Containers
-    typedef std::auto_ptr<const SeratoCrateOrderFile> SeratoCrateOrderFileAutoPtr;
+    typedef std::unique_ptr<const SeratoCrateOrderFile> SeratoCrateOrderFilePtr;
 
     #pragma mark Class Declaration
     class SeratoCrateOrderFile
     {
     private:
         #pragma mark Private Instance Variables
-        StringAutoPtr p_crateOrderFilePath;
+        StringPtr p_crateOrderFilePath;
 
-        SeratoCrateAutoPtr p_rootCrate;
+        SeratoCratePtr p_rootCrate;
 
-        StringVectorAutoPtr p_unknownCrates;
+        StringVectorPtr p_unknownCrates;
 
         #pragma mark Private Instance Methods
-        SeratoCrateVectorAutoPtr p_childrenCratesOfCrateNamedUsingNameList(const std::string& name,
-                                                                           StringVector::iterator& it,
-                                                                           const StringVector::iterator& end,
-                                                                           const char* seratoFolderPath,
-                                                                           const char* rootFolderPath);
+        SeratoCrateVectorPtr p_childrenCratesOfCrateNamedUsingNameList(const std::string& name,
+                                                                       StringVector::iterator& it,
+                                                                       const StringVector::iterator& end,
+                                                                       const char* seratoFolderPath,
+                                                                       const char* rootFolderPath);
 
     public:
         #pragma mark Constructors
-        SeratoCrateOrderFile(const char* seratoFolderPath, const char* rootFolderPath);
+        explicit SeratoCrateOrderFile(const char* seratoFolderPath, const char* rootFolderPath);
 
         #pragma mark Instance Methods
         const SeratoCrate* rootCrate(void) const;

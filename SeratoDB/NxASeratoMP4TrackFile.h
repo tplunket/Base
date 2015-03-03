@@ -25,6 +25,8 @@
 #include <taglib/tpropertymap.h>
 #include <taglib/audioproperties.h>
 
+#include <string>
+
 namespace NxA {
     #pragma mark Class Declaration
     class SeratoMP4TrackFile : public SeratoTrackFile
@@ -38,20 +40,20 @@ namespace NxA {
 
     public:
         #pragma mark Constructors
-        SeratoMP4TrackFile(const char* trackFilePath);
+        explicit SeratoMP4TrackFile(const char* trackFilePath);
 
         #pragma mark Instance Methods
         virtual bool hasKey(void) const;
-        virtual StringAutoPtr key(void) const;
-        virtual StringAutoPtr grouping(void) const;
+        virtual std::string key(void) const;
+        virtual std::string grouping(void) const;
 
         virtual bool hasRecordLabel(void) const;
-        virtual StringAutoPtr recordLabel(void) const;
+        virtual std::string recordLabel(void) const;
         virtual bool hasRemixer(void) const;
-        virtual StringAutoPtr remixer(void) const;
-        virtual StringAutoPtr yearReleased(void) const;
+        virtual std::string remixer(void) const;
+        virtual std::string yearReleased(void) const;
 
-        virtual CharVectorAutoPtr artwork(void) const;
+        virtual CharVectorPtr artwork(void) const;
     };
 }
 

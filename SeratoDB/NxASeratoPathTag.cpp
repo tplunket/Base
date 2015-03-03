@@ -1,0 +1,60 @@
+//
+//  NxASeratoPathTag.cpp
+//  SeratoDB
+//
+//  Created by Didier Malenfant on 2/27/15.
+//  Copyright (c) 2015 Next Audio Labs, LLC. All rights reserved.
+//
+//  This file contains confidential and proprietary information of Serato
+//  Inc. LLP ("Serato"). No use is permitted without express written
+//  permission of Serato. If you are not a party to a Confidentiality/
+//  Non-Disclosure Agreement with Serato, please immediately delete this
+//  file as well as all copies in your possession. For further information,
+//  please refer to the modified MIT license provided with this library,
+//  or email licensing@serato.com.
+//
+
+#include "SeratoDB/NxASeratoPathTag.h"
+
+using namespace NxA;
+using namespace std;
+
+#pragma mark Constructors
+
+SeratoPathTag::SeratoPathTag(const void* tagAddress) : SeratoTag(tagAddress)
+{
+    int numberOfCharacters = (int)SeratoTag::p_dataSizeInBytesForTagAt(tagAddress) / 2;
+
+    const char16_t* textToRead = (const char16_t*)p_dataForTagAt(tagAddress);
+    this->p_value = convertUTF16ToStdString(textToRead, numberOfCharacters);
+}
+
+#pragma mark Instance Methods
+
+const uint32_t& SeratoPathTag::identifier(void) const
+{
+    return this->p_identifier;
+}
+
+const string& SeratoPathTag::value(void) const
+{
+    return *(this->p_value);
+}
+
+string& SeratoPathTag::value(void)
+{
+    return const_cast<string&>(static_cast<const SeratoPathTag&>(*this).value());
+}
+
+void SeratoPathTag::addTo(CharVector& destination) const
+{
+    size_t memoryNeededInBytes = SeratoTag::p_memoryNeededWithDataOfSize(this->p_value->length() * 2);
+    CharVectorPtr memoryRepresentation = CharVectorPtr(new CharVector(memoryNeededInBytes, 0));
+
+    void* tagAddress = memoryRepresentation->data();
+    SeratoTag::p_setIdentifierForTagAt(this->identifier(), tagAddress);
+    SeratoTag::p_setIdentifierForTagAt(this->identifier(), tagAddress);
+    writeStringAsUTF16At(this->p_value->c_str(), SeratoTag::p_dataForTagAt(tagAddress));
+
+    destination.insert(destination.end(), memoryRepresentation->begin(), memoryRepresentation->end());
+}

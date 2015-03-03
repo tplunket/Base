@@ -25,7 +25,7 @@ namespace NxA {
     {
     public:
         #pragma mark Constructors
-        SeratoAIFFTrackFile(const char* filePath);
+        explicit SeratoAIFFTrackFile(const char* filePath);
 
         #pragma mark Instance Variables
         virtual uint32_t lengthInMilliseconds(void) const;

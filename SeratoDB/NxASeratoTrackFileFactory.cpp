@@ -35,7 +35,7 @@ bool p_hasSuffix(const string& str, const string& suffix)
 
 #pragma mark Class Methods
 
-SeratoTrackFileAutoPtr SeratoTrackFileFactory::trackFileForPath(const char* trackFilePath)
+SeratoTrackFilePtr SeratoTrackFileFactory::trackFileForPath(const char* trackFilePath)
 {
     string path(trackFilePath);
     SeratoTrackFile* file = NULL;
@@ -59,5 +59,5 @@ SeratoTrackFileAutoPtr SeratoTrackFileFactory::trackFileForPath(const char* trac
         file = new SeratoWAVTrackFile(trackFilePath);
     }
 
-    return SeratoTrackFileAutoPtr(file);
+    return SeratoTrackFilePtr(file);
 }

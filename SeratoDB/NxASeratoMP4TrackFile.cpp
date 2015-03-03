@@ -23,6 +23,10 @@ using namespace NxA;
 using namespace TagLib;
 using namespace std;
 
+#pragma mark Constants
+
+static const string emptyString("");
+
 #pragma mark Structures
 
 typedef struct {
@@ -40,14 +44,14 @@ SeratoMP4TrackFile::SeratoMP4TrackFile(const char* trackFilePath) : SeratoTrackF
 {
     MP4::File* file = new MP4::File(trackFilePath);
     if (!file->isValid()) {
-        this->p_file = TaglibFileAutoPtr(NULL);
+        this->p_file = TaglibFilePtr();
         this->p_itemListMap = NULL;
         this->p_audioProperties = NULL;
         this->p_parsedFileTag = NULL;
         return;
     }
 
-    this->p_file = TaglibFileAutoPtr(file);
+    this->p_file = TaglibFilePtr(file);
     MP4::Tag* tag = file->tag();
     this->p_parsedFileTag = tag;
     this->p_itemListMap = &(tag->itemListMap());
@@ -76,7 +80,7 @@ void SeratoMP4TrackFile::p_readMarkersV2(void)
         return;
     }
 
-    CharVectorAutoPtr decodedData = SeratoBase64::decodeBlock((const char*)markersEncodedData.data(String::UTF8).data(),
+    CharVectorPtr decodedData = SeratoBase64::decodeBlock((const char*)markersEncodedData.data(String::UTF8).data(),
                                                                       encodedDataSize);
 
     const SeratoMP4MarkerHeaderStruct* headerStruct = (const SeratoMP4MarkerHeaderStruct*)decodedData->data();
@@ -88,31 +92,27 @@ bool SeratoMP4TrackFile::hasKey(void) const
     return true;
 }
 
-StringAutoPtr SeratoMP4TrackFile::key(void) const
+string SeratoMP4TrackFile::key(void) const
 {
-    string* result = NULL;
-
     MP4::Item item = (*this->p_itemListMap)["----:com.apple.iTunes:initialkey"];
     if (item.isValid()) {
         String text = item.toStringList().front();
         if (text != String::null) {
-            result = new string(text.to8Bit());
+            return text.to8Bit();
         }
     }
 
-    return StringAutoPtr(result);
+    return emptyString;
 }
 
-StringAutoPtr SeratoMP4TrackFile::grouping(void) const
+string SeratoMP4TrackFile::grouping(void) const
 {
-    string* result = NULL;
-
     String text = this->p_properties["GROUPING"].toString();
     if (text != String::null) {
-        result = new string(text.to8Bit());
+        return text.to8Bit();
     }
 
-    return StringAutoPtr(result);
+    return emptyString;
 }
 
 bool SeratoMP4TrackFile::hasRecordLabel(void) const
@@ -120,9 +120,9 @@ bool SeratoMP4TrackFile::hasRecordLabel(void) const
     return false;
 }
 
-StringAutoPtr SeratoMP4TrackFile::recordLabel(void) const
+string SeratoMP4TrackFile::recordLabel(void) const
 {
-    return StringAutoPtr(NULL);
+    return emptyString;
 }
 
 bool SeratoMP4TrackFile::hasRemixer(void) const
@@ -130,24 +130,22 @@ bool SeratoMP4TrackFile::hasRemixer(void) const
     return false;
 }
 
-StringAutoPtr SeratoMP4TrackFile::remixer(void) const
+string SeratoMP4TrackFile::remixer(void) const
 {
-    return StringAutoPtr(NULL);
+    return emptyString;
 }
 
-StringAutoPtr SeratoMP4TrackFile::yearReleased(void) const
+string SeratoMP4TrackFile::yearReleased(void) const
 {
-    string* result = NULL;
-
     String text = this->p_properties["DATE"].toString();
     if (text != String::null) {
-        result = new string(text.to8Bit());
+        return text.to8Bit();
     }
 
-    return StringAutoPtr(result);
+    return emptyString;
 }
 
-CharVectorAutoPtr SeratoMP4TrackFile::artwork(void) const
+CharVectorPtr SeratoMP4TrackFile::artwork(void) const
 {
     CharVector* result = NULL;
 
@@ -161,5 +159,5 @@ CharVectorAutoPtr SeratoMP4TrackFile::artwork(void) const
         }
     }
 
-    return CharVectorAutoPtr(result);
+    return CharVectorPtr(result);
 }

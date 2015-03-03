@@ -24,6 +24,10 @@ using namespace NxA;
 using namespace TagLib;
 using namespace std;
 
+#pragma mark Constants
+
+static const string emptyString("");
+
 #pragma mark Structures
 
 typedef struct {
@@ -53,7 +57,7 @@ void SeratoTrackFile::p_readMarkersV2FromBase64Data(const char* markerV2Data, si
         return;
     }
 
-    CharVectorAutoPtr decodedData = SeratoBase64::decodeBlock(markerV2Data, sizeInBytes);
+    CharVectorPtr decodedData = SeratoBase64::decodeBlock(markerV2Data, sizeInBytes);
 
     const SeratoMarkerV2Struct* markerStruct = (const SeratoMarkerV2Struct*)(decodedData->data());
     if ((markerStruct->majorVersion != 1) || (markerStruct->minorVersion != 1)) {
@@ -71,11 +75,11 @@ void SeratoTrackFile::p_readMarkersV2FromBase64Data(const char* markerV2Data, si
 
         if (tagName == "CUE") {
             SeratoCueMarker* newCueMarker = new SeratoCueMarker(tagStart);
-            this->p_cueMarkers->push_back(SeratoCueMarkerAutoPtr(newCueMarker));
+            this->p_cueMarkers->push_back(SeratoCueMarkerPtr(newCueMarker));
         }
         else if (tagName == "LOOP") {
             SeratoLoopMarker* newLoopMarker = new SeratoLoopMarker(tagStart);
-            this->p_loopMarkers->push_back(SeratoLoopMarkerAutoPtr(newLoopMarker));
+            this->p_loopMarkers->push_back(SeratoLoopMarkerPtr(newLoopMarker));
         }
         else {
             // -- TODO: Preserve other tags in order to write them back.
@@ -85,98 +89,84 @@ void SeratoTrackFile::p_readMarkersV2FromBase64Data(const char* markerV2Data, si
     }
 }
 
-StringAutoPtr SeratoTrackFile::title(void) const
+string SeratoTrackFile::title(void) const
 {
-    string* result = NULL;
-
     if (this->p_parsedFileTag) {
         String text = this->p_parsedFileTag->title();
         if (text != String::null) {
-            result = new string(text.to8Bit());
+            return text.to8Bit();
         }
     }
 
-    return StringAutoPtr(result);
+    return emptyString;
 }
 
-StringAutoPtr SeratoTrackFile::artist(void) const
+string SeratoTrackFile::artist(void) const
 {
-    string* result = NULL;
-
     if (this->p_parsedFileTag) {
         String text = this->p_parsedFileTag->artist();
         if (text != String::null) {
-            result = new string(text.to8Bit());
+            return text.to8Bit();
         }
     }
 
-    return StringAutoPtr(result);
+    return emptyString;
 }
 
-StringAutoPtr SeratoTrackFile::genre(void) const
+string SeratoTrackFile::genre(void) const
 {
-    string* result = NULL;
-
     if (this->p_parsedFileTag) {
         String text = this->p_parsedFileTag->genre();
         if (text != String::null) {
-            result = new string(text.to8Bit());
+            return text.to8Bit();
         }
     }
 
-    return StringAutoPtr(result);
+    return emptyString;
 }
 
-StringAutoPtr SeratoTrackFile::comments(void) const
+string SeratoTrackFile::comments(void) const
 {
-    string* result = NULL;
-
     if (this->p_parsedFileTag) {
         String text = this->p_parsedFileTag->comment();
         if (text != String::null) {
-            result = new string(text.to8Bit());
+            return text.to8Bit();
         }
     }
 
-    return StringAutoPtr(result);
+    return emptyString;
 }
 
-StringAutoPtr SeratoTrackFile::album(void) const
+string SeratoTrackFile::album(void) const
 {
-    string* result = NULL;
-
     if (this->p_parsedFileTag) {
         String text = this->p_parsedFileTag->album();
         if (text != String::null) {
-            result = new string(text.to8Bit());
+            return text.to8Bit();
         }
     }
 
-    return StringAutoPtr(result);
+    return emptyString;
 }
 
-StringAutoPtr SeratoTrackFile::composer(void) const
+string SeratoTrackFile::composer(void) const
 {
-    string* result = NULL;
-
     String text = this->p_properties["COMPOSER"].toString();
     if (text != String::null) {
-        result = new string(text.to8Bit());
+        return text.to8Bit();
     }
 
-    return StringAutoPtr(result);
+    return emptyString;
 }
 
-StringAutoPtr SeratoTrackFile::bpm(void) const
+string SeratoTrackFile::bpm(void) const
 {
-    string* result = NULL;
-
     String text = this->p_properties["BPM"].toString();
     if (text != String::null) {
-        result = new string(text.to8Bit());
+        return text.to8Bit();
     }
 
-    return StringAutoPtr(result);
+    return emptyString;
 }
 
 size_t SeratoTrackFile::sizeInBytes(void) const

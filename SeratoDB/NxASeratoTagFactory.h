@@ -1,8 +1,8 @@
 //
-//  NxASeratoTrackFileFactory.h
+//  NxASeratoTagFactory.h
 //  SeratoDB
 //
-//  Created by Didier Malenfant on 2/12/15.
+//  Created by Didier Malenfant on 2/27/15.
 //  Copyright (c) 2015 Next Audio Labs, LLC. All rights reserved.
 //
 //  This file contains confidential and proprietary information of Serato
@@ -14,21 +14,27 @@
 //  or email licensing@serato.com.
 //
 
-#ifndef __SeratoDB__NxASeratoTrackFileFactory__
-#define __SeratoDB__NxASeratoTrackFileFactory__
+#ifndef __SeratoDB__NxASeratoTagFactory__
+#define __SeratoDB__NxASeratoTagFactory__
 
-#include <SeratoDB/NxASeratoTrackFile.h>
-
-#include <string>
+#include <SeratoDB/NxASeratoTag.h>
+#include <SeratoDB/NxASeratoDbUtility.h>
 
 namespace NxA {
+
     #pragma mark Class Declaration
-    class SeratoTrackFileFactory
+    class SeratoTagFactory
     {
+    private:
+        #pragma mark Private Constructors
+        SeratoTagFactory() { }
+
     public:
         #pragma mark Class Methods
-        static SeratoTrackFilePtr trackFileForPath(const char* trackFilePath);
+        static SeratoTagPtr tagForBinaryRepresentationAt(const void* tagAddress);
+
+        static SeratoTagVectorPtr parseTagsAt(const void* firstTagAddress, size_t sizeFromFirstTagInBytes);
     };
 }
 
-#endif /* defined(__SeratoDB__NxASeratoTrackFileFactory__) */
+#endif /* defined(__SeratoDB__NxASeratoTagFactory__) */

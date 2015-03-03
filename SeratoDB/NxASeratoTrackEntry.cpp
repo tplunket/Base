@@ -15,6 +15,7 @@
 //
 
 #include "SeratoDB/NxASeratoTrackEntry.h"
+#include "SeratoDB/NxASeratoPathTag.h"
 #include "SeratoDB/NxASeratoCrateV1Tags.h"
 
 using namespace NxA;
@@ -25,36 +26,37 @@ using namespace std;
 SeratoTrackEntry::SeratoTrackEntry(const char* trackPath, const char* locatedOnVolumePath) :
                                    p_rootVolumePath(new std::string(locatedOnVolumePath))
 {
-    ConstSeratoTagVectorAutoPtr tags(new ConstSeratoTagVector);
+    StringPtr entryPath = removePrefixFromPath(locatedOnVolumePath, trackPath);
 
-    StringAutoPtr entryPath = removePrefixFromPath(locatedOnVolumePath, trackPath);
-    tags->push_back(SeratoTagAutoPtr(new SeratoTag(NxASeratoTrackEntryPathTag, entryPath->c_str())));
+    SeratoTagVectorPtr tags(new SeratoTagVector);
+    tags->push_back(SeratoTagPtr(new SeratoPathTag(NxASeratoTrackEntryPathTag, entryPath->c_str())));
 
-    this->p_trackTag = SeratoTagAutoPtr(new SeratoTag(NxASeratoTrackEntryTag, tags));
+    this->p_trackEntryTag = SeratoTagPtr(new SeratoObjectTag(NxASeratoTrackEntryTag, tags));
 }
 
 #pragma mark Instance Methods
 
-bool SeratoTrackEntry::p_containsAValidTag(void) const
+bool SeratoTrackEntry::p_containsAValidTrackEntryTag(void) const
 {
-    return this->p_trackTag.get() != NULL;
+    return this->p_trackEntryTag.get() != NULL;
 }
 
-StringAutoPtr SeratoTrackEntry::trackFilePath(void) const
+StringPtr SeratoTrackEntry::trackFilePath(void) const
 {
-    if (this->p_containsAValidTag()) {
-        const SeratoTag* tag = this->p_trackTag->subTagWithIdentifierOrNilIfDoesNotExist(NxASeratoTrackEntryPathTag);
-        if (tag != NULL) {
-            StringAutoPtr pathFromRootFolder = tag->dataAsPath();
-            StringAutoPtr trackFilePath = joinPaths(this->p_rootVolumePath->c_str(), pathFromRootFolder->c_str());
+    if (this->p_containsAValidTrackEntryTag()) {
+        const SeratoObjectTag* trackObjectTag = dynamic_cast<const SeratoObjectTag*>(this->p_trackEntryTag.get());
+        if (trackObjectTag->hasSubTagForIdentifier(NxASeratoTrackEntryPathTag)) {
+            const SeratoPathTag& pathTag = dynamic_cast<const SeratoPathTag&>(trackObjectTag->subTagForIdentifier(NxASeratoTrackEntryPathTag));
+            const string& pathFromRootFolder = pathTag.value();
+            StringPtr trackFilePath = joinPaths(this->p_rootVolumePath->c_str(), pathFromRootFolder.c_str());
             return trackFilePath;
         }
     }
 
-    return StringAutoPtr(new string(""));
+    return StringPtr(new string(""));
 }
 
 const SeratoTag& SeratoTrackEntry::tagForEntry(void) const
 {
-    return *(this->p_trackTag.get());
+    return *(this->p_trackEntryTag.get());
 }

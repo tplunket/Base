@@ -20,13 +20,15 @@
 #include <SeratoDB/NxASeratoTrackFile.h>
 #include <SeratoDB/NxASeratoDbUtility.h>
 
+#include <string>
+
 namespace NxA {
     #pragma mark Class Declaration
     class SeratoID3TrackFile : public SeratoTrackFile
     {
     protected:
         #pragma mark Protected Constructors
-        SeratoID3TrackFile(const char* trackFilePath) : SeratoTrackFile(trackFilePath) { };
+        explicit SeratoID3TrackFile(const char* trackFilePath) : SeratoTrackFile(trackFilePath) { };
 
         #pragma mark Protected Instance Methods
         void p_readMarkersV2(void);
@@ -34,16 +36,16 @@ namespace NxA {
     public:
         #pragma mark Instance Methods
         virtual bool hasKey(void) const;
-        virtual StringAutoPtr key(void) const;
-        virtual StringAutoPtr grouping(void) const;
+        virtual std::string key(void) const;
+        virtual std::string grouping(void) const;
 
         virtual bool hasRecordLabel(void) const;
-        virtual StringAutoPtr recordLabel(void) const;
+        virtual std::string recordLabel(void) const;
         virtual bool hasRemixer(void) const;
-        virtual StringAutoPtr remixer(void) const;
-        virtual StringAutoPtr yearReleased(void) const;
+        virtual std::string remixer(void) const;
+        virtual std::string yearReleased(void) const;
 
-        virtual CharVectorAutoPtr artwork(void) const;
+        virtual CharVectorPtr artwork(void) const;
     };
 }
 

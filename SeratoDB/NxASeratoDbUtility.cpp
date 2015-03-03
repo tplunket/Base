@@ -65,7 +65,7 @@ namespace NxA {
         return (char16_t*)newCharacters;
     }
 
-    StringAutoPtr convertUTF16ToStdString(const char16_t* characters, int numberOfCharacters)
+    StringPtr convertUTF16ToStdString(const char16_t* characters, int numberOfCharacters)
     {
         #ifdef __LITTLE_ENDIAN__
         characters = p_convertEndiannessOfUTF16Characters(characters, numberOfCharacters);
@@ -78,7 +78,7 @@ namespace NxA {
         free((void*)characters);
         #endif
 
-        return StringAutoPtr(stdString);
+        return StringPtr(stdString);
     }
 
     void writeStringAsUTF16At(const char* characters, void* destination)
@@ -98,7 +98,7 @@ namespace NxA {
         #endif
     }
 
-    StringVectorAutoPtr splitStringIntoOneStringForEachLine(const string& text)
+    StringVectorPtr splitStringIntoOneStringForEachLine(const string& text)
     {
         StringVector* results = new StringVector;
         stringstream stream(text);
@@ -106,10 +106,10 @@ namespace NxA {
 
         while(getline(stream, line, '\n')) {
             const string* result = new string(line);
-            results->push_back(StringAutoPtr(result));
+            results->push_back(StringPtr(result));
         }
 
-        return StringVectorAutoPtr(results);
+        return StringVectorPtr(results);
     }
 
     uint32_t bigEndianUInt32ValueAt(const void* ptr)
@@ -144,37 +144,37 @@ namespace NxA {
         charsPtr[1] = value & 0xff;
     }
     
-    StringAutoPtr seratoFolderPathForFolder(const char* folderPath)
+    StringPtr seratoFolderPathForFolder(const char* folderPath)
     {
         return joinPaths(folderPath, "_Serato_");
     }
 
-    StringAutoPtr databaseFilePathForSeratoFolder(const char* seratoFolderPath)
+    StringPtr databaseFilePathForSeratoFolder(const char* seratoFolderPath)
     {
         return joinPaths(seratoFolderPath, "database V2");
     }
 
-    StringAutoPtr crateOrderFilePathForSeratoFolder(const char* seratoFolderPath)
+    StringPtr crateOrderFilePathForSeratoFolder(const char* seratoFolderPath)
     {
         return joinPaths(seratoFolderPath, "neworder.pref");
     }
 
-    StringAutoPtr crateFilePathForCrateNameInSeratoFolder(const char* crateName, const char* seratoFolderPath)
+    StringPtr crateFilePathForCrateNameInSeratoFolder(const char* crateName, const char* seratoFolderPath)
     {
-        StringAutoPtr cratesFolderPath = joinPaths(seratoFolderPath, "Subcrates");
-        StringAutoPtr crateFilePartialPath = joinPaths(cratesFolderPath->c_str(), crateName);
-        return StringAutoPtr(new string(*crateFilePartialPath + ".crate"));
+        StringPtr cratesFolderPath = joinPaths(seratoFolderPath, "Subcrates");
+        StringPtr crateFilePartialPath = joinPaths(cratesFolderPath->c_str(), crateName);
+        return StringPtr(new string(*crateFilePartialPath + ".crate"));
     }
 
     bool containsAValidSeratoFolder(const char* folderPath)
     {
-        StringAutoPtr seratoFolderPath = seratoFolderPathForFolder(folderPath);
-        StringAutoPtr databaseFilePath = databaseFilePathForSeratoFolder(seratoFolderPath->c_str());
-        StringAutoPtr crateOrderFilePath = crateOrderFilePathForSeratoFolder(seratoFolderPath->c_str());
+        StringPtr seratoFolderPath = seratoFolderPathForFolder(folderPath);
+        StringPtr databaseFilePath = databaseFilePathForSeratoFolder(seratoFolderPath->c_str());
+        StringPtr crateOrderFilePath = crateOrderFilePathForSeratoFolder(seratoFolderPath->c_str());
         return fileExistsAt(databaseFilePath->c_str()) && fileExistsAt(crateOrderFilePath->c_str());
     }
 
-    StringAutoPtr joinPaths(const char* firstPath, const char* secondPath)
+    StringPtr joinPaths(const char* firstPath, const char* secondPath)
     {
         string* result = new string(firstPath);
 
@@ -186,10 +186,10 @@ namespace NxA {
 
         *result += secondPath;
 
-        return StringAutoPtr(result);
+        return StringPtr(result);
     }
 
-    StringAutoPtr removePrefixFromPath(const char* prefixPath, const char* fullPath)
+    StringPtr removePrefixFromPath(const char* prefixPath, const char* fullPath)
     {
         size_t lengthToCrop = strlen(prefixPath);
         #ifdef NXASeratoCompiledOnOSX
@@ -200,7 +200,7 @@ namespace NxA {
         string path(fullPath);
         path = path.substr(lengthToCrop);
 
-        return StringAutoPtr(new string(path));
+        return StringPtr(new string(path));
     }
 
     bool fileExistsAt(const char* filePath)
@@ -229,7 +229,7 @@ namespace NxA {
         return buf.st_mtimespec.tv_sec;
     }
     
-    CharVectorAutoPtr readFileAt(const char* filePath)
+    CharVectorPtr readFileAt(const char* filePath)
     {
         size_t fileSize = sizeOfFileAt(filePath);
         if (fileSize) {
@@ -242,11 +242,11 @@ namespace NxA {
                 CharVector* result = new CharVector(fileData, fileData + fileSize);
                 free(fileData);
 
-                return CharVectorAutoPtr(result);
+                return CharVectorPtr(result);
             }
         }
 
-        return CharVectorAutoPtr(new CharVector);
+        return CharVectorPtr(new CharVector);
     }
 
     void writeToFile(const char* filePath, const CharVector& content)

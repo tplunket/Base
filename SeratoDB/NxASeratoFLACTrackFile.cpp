@@ -23,6 +23,10 @@ using namespace NxA;
 using namespace TagLib;
 using namespace std;
 
+#pragma mark Constants
+
+static const string emptyString("");
+
 #pragma mark Structures
 
 typedef struct {
@@ -40,13 +44,13 @@ SeratoFLACTrackFile::SeratoFLACTrackFile(const char* trackFilePath) : SeratoTrac
 {
     const FLAC::File* file = new FLAC::File(trackFilePath);
     if (!file->isValid()) {
-        this->p_file = TaglibFileAutoPtr(NULL);
+        this->p_file = TaglibFilePtr();
         this->p_parsedFileTag = NULL;
         this->p_audioProperties = NULL;
         return;
     }
 
-    this->p_file = TaglibFileAutoPtr((TagLib::File*)file);
+    this->p_file = TaglibFilePtr((TagLib::File*)file);
     this->p_parsedFileTag = file->tag();
     this->p_audioProperties = file->audioProperties();
     this->p_properties = file->properties();
@@ -64,7 +68,7 @@ void SeratoFLACTrackFile::p_readMarkersV2(void)
         return;
     }
 
-    CharVectorAutoPtr decodedData = SeratoBase64::decodeBlock((const char*)markersEncodedData.data(String::UTF8).data(),
+    CharVectorPtr decodedData = SeratoBase64::decodeBlock((const char*)markersEncodedData.data(String::UTF8).data(),
                                                                       encodedDataSize);
 
     const SeratoFLACMarkerHeaderStruct* headerStruct = (const SeratoFLACMarkerHeaderStruct*)decodedData->data();
@@ -76,28 +80,24 @@ bool SeratoFLACTrackFile::hasKey(void) const
     return true;
 }
 
-StringAutoPtr SeratoFLACTrackFile::key(void) const
+string SeratoFLACTrackFile::key(void) const
 {
-    string* result = NULL;
-
     String text = this->p_properties["INITIALKEY"].toString();
     if (text != String::null) {
-        result = new string(text.to8Bit());
+        return text.to8Bit();
     }
 
-    return StringAutoPtr(result);
+    return emptyString;
 }
 
-StringAutoPtr SeratoFLACTrackFile::grouping(void) const
+string SeratoFLACTrackFile::grouping(void) const
 {
-    string* result = NULL;
-
     String text = this->p_properties["GROUPING"].toString();
     if (text != String::null) {
-        result = new string(text.to8Bit());
+        return text.to8Bit();
     }
 
-    return StringAutoPtr(result);
+    return emptyString;
 }
 
 uint32_t SeratoFLACTrackFile::lengthInMilliseconds(void) const
@@ -131,9 +131,9 @@ bool SeratoFLACTrackFile::hasRecordLabel(void) const
     return false;
 }
 
-StringAutoPtr SeratoFLACTrackFile::recordLabel(void) const
+string SeratoFLACTrackFile::recordLabel(void) const
 {
-    return StringAutoPtr(NULL);
+    return emptyString;
 }
 
 bool SeratoFLACTrackFile::hasRemixer(void) const
@@ -141,25 +141,23 @@ bool SeratoFLACTrackFile::hasRemixer(void) const
     return false;
 }
 
-StringAutoPtr SeratoFLACTrackFile::remixer(void) const
+string SeratoFLACTrackFile::remixer(void) const
 {
-    return StringAutoPtr(NULL);
+    return emptyString;
 }
 
-StringAutoPtr SeratoFLACTrackFile::yearReleased(void) const
+string SeratoFLACTrackFile::yearReleased(void) const
 {
-    string* result = NULL;
-
     String text = this->p_properties["DATE"].toString();
     if (text != String::null) {
-        result = new string(text.to8Bit());
+        return text.to8Bit();
     }
 
-    return StringAutoPtr(result);
+    return emptyString;
 }
 
-CharVectorAutoPtr SeratoFLACTrackFile::artwork(void) const
+CharVectorPtr SeratoFLACTrackFile::artwork(void) const
 {
     // -- TODO: To be implemented.
-    return CharVectorAutoPtr(NULL);
+    return CharVectorPtr();
 }

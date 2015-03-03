@@ -26,6 +26,10 @@ using namespace NxA;
 using namespace TagLib;
 using namespace std;
 
+#pragma mark Constants
+
+static const string emptyString("");
+
 #pragma mark Structures
 
 typedef struct {
@@ -93,28 +97,24 @@ bool SeratoID3TrackFile::hasKey(void) const
     return true;
 }
 
-StringAutoPtr SeratoID3TrackFile::key(void) const
+string SeratoID3TrackFile::key(void) const
 {
-    string* result = NULL;
-
     String text = this->p_properties["INITIALKEY"].toString();
     if (text != String::null) {
-        result = new string(text.to8Bit());
+        return text.to8Bit();
     }
 
-    return StringAutoPtr(result);
+    return emptyString;
 }
 
-StringAutoPtr SeratoID3TrackFile::grouping(void) const
+string SeratoID3TrackFile::grouping(void) const
 {
-    string* result = NULL;
-
     String text = this->p_properties["CONTENTGROUP"].toString();
     if (text != String::null) {
-        result = new string(text.to8Bit());
+        return text.to8Bit();
     }
 
-    return StringAutoPtr(result);
+    return emptyString;
 }
 
 bool SeratoID3TrackFile::hasRecordLabel(void) const
@@ -122,16 +122,14 @@ bool SeratoID3TrackFile::hasRecordLabel(void) const
     return true;
 }
 
-StringAutoPtr SeratoID3TrackFile::recordLabel(void) const
+string SeratoID3TrackFile::recordLabel(void) const
 {
-    string* result = NULL;
-
     String text = this->p_properties["LABEL"].toString();
     if (text != String::null) {
-        result = new string(text.to8Bit());
+        return text.to8Bit();
     }
 
-    return StringAutoPtr(result);
+    return emptyString;
 }
 
 bool SeratoID3TrackFile::hasRemixer(void) const
@@ -139,31 +137,27 @@ bool SeratoID3TrackFile::hasRemixer(void) const
     return true;
 }
 
-StringAutoPtr SeratoID3TrackFile::remixer(void) const
+string SeratoID3TrackFile::remixer(void) const
 {
-    string* result = NULL;
-
     String text = this->p_properties["REMIXER"].toString();
     if (text != String::null) {
-        result = new string(text.to8Bit());
+        return text.to8Bit();
     }
 
-    return StringAutoPtr(result);
+    return emptyString;
 }
 
-StringAutoPtr SeratoID3TrackFile::yearReleased(void) const
+string SeratoID3TrackFile::yearReleased(void) const
 {
-    string* result = NULL;
-
     String text = this->p_properties["DATE"].toString();
     if (text != String::null) {
-        result = new string(text.to8Bit());
+        return text.to8Bit();
     }
 
-    return StringAutoPtr(result);
+    return emptyString;
 }
 
-CharVectorAutoPtr SeratoID3TrackFile::artwork(void) const
+CharVectorPtr SeratoID3TrackFile::artwork(void) const
 {
     CharVector* result = NULL;
 
@@ -193,5 +187,5 @@ CharVectorAutoPtr SeratoID3TrackFile::artwork(void) const
         }
     }
 
-    return CharVectorAutoPtr(result);
+    return CharVectorPtr(result);
 }

@@ -16,11 +16,13 @@
 
 #include "SeratoDB/NxASeratoDatabase.h"
 #include "SeratoDB/NxASeratoDatabaseV2Tags.h"
+#include "SeratoDB/NxASeratoTagFactory.h"
+#include "SeratoDB/NxASeratoTextTag.h"
 
 using namespace NxA;
 using namespace std;
 
-#define PRINT_DEBUG_INFO        0
+#define PRINT_DEBUG_INFO        1
 
 #pragma Utility Functions
 
@@ -34,7 +36,7 @@ static void p_debugListCrate(const SeratoCrate* crate, std::string spacing)
         const string& crateName = crate->crateName();
         printf("%sCrate '%s'\n", spacing.c_str(), crateName.c_str());
 
-        const SeratoTrackEntryVector& crateTracks = crate->tracks();
+        const SeratoTrackEntryVector& crateTracks = crate->trackEntries();
         for(SeratoTrackEntryVector::const_iterator cit = crateTracks.begin(); cit != crateTracks.end(); ++cit) {
             printf("%s   Track '%s'\n", spacing.c_str(), cit->get()->trackFilePath()->c_str());
         }
@@ -49,11 +51,11 @@ static void p_debugListCrate(const SeratoCrate* crate, std::string spacing)
 SeratoDatabase::SeratoDatabase(const char* seratoFolderPath)
 {
     this->p_databaseFilePath = databaseFilePathForSeratoFolder(seratoFolderPath);
-    CharVectorAutoPtr databaseFile = readFileAt(this->p_databaseFilePath->c_str());
+    CharVectorPtr databaseFile = readFileAt(this->p_databaseFilePath->c_str());
 
-    ConstSeratoTagVectorAutoPtr tags = SeratoTag::parseTagsIn(databaseFile);
-    for(ConstSeratoTagVector::iterator it = tags->begin(); it != tags->end(); ++it) {
-        ConstSeratoTagAutoPtr tag = *it;
+    SeratoTagVectorPtr tags(SeratoTagFactory::parseTagsAt(databaseFile->data(), databaseFile->size()));
+    for(SeratoTagVector::iterator it = tags->begin(); it != tags->end(); ++it) {
+        SeratoTagPtr& tag = *it;
 
         switch (tag->identifier()) {
             case NxASeratoTrackObjectTag: {
@@ -68,7 +70,7 @@ SeratoDatabase::SeratoDatabase(const char* seratoFolderPath)
     }
 
     // -- TODO: This will eventually select the root folder based on where the database is.
-    this->p_crateOrderFile = SeratoCrateOrderFileAutoPtr(new SeratoCrateOrderFile(seratoFolderPath, ""));
+    this->p_crateOrderFile = SeratoCrateOrderFilePtr(new SeratoCrateOrderFile(seratoFolderPath, ""));
 
 #if PRINT_DEBUG_INFO
     p_debugListCrate(this->rootCrate(), "");
@@ -77,35 +79,36 @@ SeratoDatabase::SeratoDatabase(const char* seratoFolderPath)
 
 #pragma mark Class Methods
 
-StringAutoPtr SeratoDatabase::versionAsStringForDatabaseIn(const char* seratoFolderPath)
+StringPtr SeratoDatabase::versionAsStringForDatabaseIn(const char* seratoFolderPath)
 {
-    StringAutoPtr databaseFilePath = databaseFilePathForSeratoFolder(seratoFolderPath);
-    CharVectorAutoPtr databaseFile = readFileAt(databaseFilePath->c_str());
+    StringPtr databaseFilePath = databaseFilePathForSeratoFolder(seratoFolderPath);
+    CharVectorPtr databaseFile = readFileAt(databaseFilePath->c_str());
 
-    ConstSeratoTagVectorAutoPtr tags = SeratoTag::parseTagsIn(databaseFile);
-    for(ConstSeratoTagVector::iterator it = tags->begin(); it != tags->end(); ++it) {
-        const SeratoTag* tag = it->release();
+    SeratoTagVectorPtr tags(SeratoTagFactory::parseTagsAt(databaseFile->data(), databaseFile->size()));
+    for(SeratoTagVector::iterator it = tags->begin(); it != tags->end(); ++it) {
+        const SeratoTag* tag = it->get();
 
         if (tag->identifier() == NxASeratoDatabaseVersionTag) {
-            return tag->dataAsString();
+            const SeratoTextTag* textTag = dynamic_cast<const SeratoTextTag*>(tag);
+            return StringPtr(new string(textTag->value()));
         }
     }
 
-    return StringAutoPtr(new string(""));
+    return StringPtr(new string(""));
 }
 
 #pragma mark Instance Methods
 
-void SeratoDatabase::p_storeTrackTag(ConstSeratoTagAutoPtr tag)
+void SeratoDatabase::p_storeTrackTag(SeratoTagPtr& tag)
 {
     // -- TODO: This will eventually select the root folder based on where the database is.
-    SeratoTrack* newTrack = new SeratoTrack(tag, "");
-    this->p_tracks.push_back(SeratoTrackAutoPtr(newTrack));
+    SeratoTrackPtr newTrack(new SeratoTrack(tag, ""));
+    this->p_tracks.push_back(std::move(newTrack));
 }
 
-void SeratoDatabase::p_storeOtherTag(ConstSeratoTagAutoPtr tag)
+void SeratoDatabase::p_storeOtherTag(SeratoTagPtr& tag)
 {
-    this->p_otherTags.push_back(ConstSeratoTagAutoPtr(tag));
+    this->p_otherTags.push_back(std::move(tag));
 }
 
 time_t SeratoDatabase::databaseModificationDateInSecondsSince1970(void) const

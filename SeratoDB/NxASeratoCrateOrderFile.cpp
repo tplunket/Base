@@ -96,8 +96,6 @@ SeratoCrateVectorPtr SeratoCrateOrderFile::p_childrenCratesOfCrateNamedUsingName
         SeratoCratePtr newCrate = make_unique<SeratoCrate>(fullCrateName->c_str(), seratoFolderPath, rootFolderPath);
         newCrate->loadFromFile();
 
-        cratesFound->push_back(move(newCrate));
-
         ++it;
 
         string crateNameWithSeperator = *fullCrateName;
@@ -113,6 +111,8 @@ SeratoCrateVectorPtr SeratoCrateOrderFile::p_childrenCratesOfCrateNamedUsingName
         }
 
         newCrate->resetModificationFlags();
+
+        cratesFound->push_back(move(newCrate));
     }
     
     return move(cratesFound);

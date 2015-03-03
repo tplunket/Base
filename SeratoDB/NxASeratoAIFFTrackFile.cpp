@@ -34,10 +34,10 @@ SeratoAIFFTrackFile::SeratoAIFFTrackFile(const char* trackFilePath) : SeratoID3T
         return;
     }
 
-    this->p_file = move(file);
     this->p_parsedFileTag = file->tag();
     this->p_audioProperties = file->audioProperties();
     this->p_properties = file->properties();
+    this->p_file = move(file);
 
     this->p_readMarkersV2();
 }

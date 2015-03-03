@@ -51,12 +51,12 @@ SeratoMP4TrackFile::SeratoMP4TrackFile(const char* trackFilePath) : SeratoTrackF
         return;
     }
 
-    this->p_file = move(file);
     MP4::Tag* tag = (MP4::Tag*)file->tag();
     this->p_parsedFileTag = tag;
     this->p_itemListMap = &(tag->itemListMap());
     this->p_audioProperties = file->audioProperties();
     this->p_properties = file->properties();
+    this->p_file = move(file);
 
     this->p_readMarkersV2();
 }

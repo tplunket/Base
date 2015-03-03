@@ -34,10 +34,10 @@ SeratoMPEGTrackFile::SeratoMPEGTrackFile(const char* trackFilePath) : SeratoID3T
         return;
     }
 
-    this->p_file = move(file);
     this->p_parsedFileTag = (TagLib::Tag*)(((MPEG::File*)file.get())->ID3v2Tag());
     this->p_audioProperties = file->audioProperties();
     this->p_properties = file->properties();
+    this->p_file = move(file);
 
     this->p_readMarkersV2();
 }

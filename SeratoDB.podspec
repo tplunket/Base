@@ -26,7 +26,7 @@ Pod::Spec.new do |s|
 
   s.source       = { :git => "https://github.com/NextAudioLabs/SeratoDB.git", :tag => "v#{s.version}" }
 
-  s.dependency 'taglib', '~> 1.9'
+  s.dependency 'taglib', '~> 1.9.1-4'
 
   s.compiler_flags = '-std=c++11'
   

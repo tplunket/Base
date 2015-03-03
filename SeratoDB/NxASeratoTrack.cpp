@@ -134,11 +134,15 @@ SeratoTrack::SeratoTrack(SeratoTagPtr trackTag, const char* rootDirectoryPath) :
                          p_trackTag(move(trackTag)),
                          p_rootFolder(make_unique<string>(rootDirectoryPath))
 {
-#if PRINT_DEBUG_INFO
     this->p_loadTrackFile();
+
+    this->p_readMarkers();
+
+#if PRINT_DEBUG_INFO
     p_debugPrintComparaison(this, this->p_trackFile.get());
-    this->p_unloadTrackFile();
 #endif
+
+    this->p_unloadTrackFile();
 }
 
 #pragma mark Instance Methods
@@ -197,26 +201,16 @@ void SeratoTrack::p_unloadTrackFile(void)
     this->p_trackFile = SeratoTrackFilePtr();
 }
 
-void SeratoTrack::p_readMarkersIfNotAlreadyRead(void)
+void SeratoTrack::p_readMarkers(void)
 {
-    if (!p_markersRead) {
-        this->p_loadTrackFile();
+    const SeratoCueMarkerVector& cueMarkers = this->p_trackFile->cueMarkers();
+    for (SeratoCueMarkerVector::const_iterator it = cueMarkers.begin(); it != cueMarkers.end(); ++it) {
+        this->p_cueMarkers.push_back(make_unique<SeratoCueMarker>(*it->get()));
+    }
 
-        const SeratoCueMarkerVector& cueMarkers = this->p_trackFile->cueMarkers();
-        for (SeratoCueMarkerVector::const_iterator it = cueMarkers.begin(); it != cueMarkers.end(); ++it) {
-            SeratoCueMarker* newMarker = new SeratoCueMarker(*it->get());
-            this->p_cueMarkers.push_back(SeratoCueMarkerPtr(newMarker));
-        }
-
-        const SeratoLoopMarkerVector& loopMarkers = this->p_trackFile->loopMarkers();
-        for (SeratoLoopMarkerVector::const_iterator it = loopMarkers.begin(); it != loopMarkers.end(); ++it) {
-            SeratoLoopMarker* newMarker = new SeratoLoopMarker(*it->get());
-            this->p_loopMarkers.push_back(SeratoLoopMarkerPtr(newMarker));
-        }
-
-        this->p_unloadTrackFile();
-
-        p_markersRead = true;
+    const SeratoLoopMarkerVector& loopMarkers = this->p_trackFile->loopMarkers();
+    for (SeratoLoopMarkerVector::const_iterator it = loopMarkers.begin(); it != loopMarkers.end(); ++it) {
+        this->p_loopMarkers.push_back(make_unique<SeratoLoopMarker>(*it->get()));
     }
 }
 
@@ -327,16 +321,12 @@ const uint32_t& SeratoTrack::dateAddedInSecondsSinceJanuary1st1970(void) const
     return this->p_uint32ForSubTagForIdentifier(NxASeratoTrackDateAddedTag);
 }
 
-const SeratoCueMarkerVector& SeratoTrack::cueMarkers(void)
+const SeratoCueMarkerVector& SeratoTrack::cueMarkers(void) const
 {
-    this->p_readMarkersIfNotAlreadyRead();
-
     return this->p_cueMarkers;
 }
 
-const SeratoLoopMarkerVector& SeratoTrack::loopMarkers(void)
+const SeratoLoopMarkerVector& SeratoTrack::loopMarkers(void) const
 {
-    this->p_readMarkersIfNotAlreadyRead();
-
     return this->p_loopMarkers;
 }

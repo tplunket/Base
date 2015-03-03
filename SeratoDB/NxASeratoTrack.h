@@ -40,7 +40,6 @@ namespace NxA {
         SeratoTrackFilePtr p_trackFile;
         ConstStringPtr p_rootFolder;
 
-        bool p_markersRead;
         SeratoCueMarkerVector p_cueMarkers;
         SeratoLoopMarkerVector p_loopMarkers;
 
@@ -56,7 +55,7 @@ namespace NxA {
 
         void p_loadTrackFile(void);
         void p_unloadTrackFile(void);
-        void p_readMarkersIfNotAlreadyRead(void);
+        void p_readMarkers(void);
 
     public:
         #pragma mark Constructors
@@ -86,8 +85,8 @@ namespace NxA {
         const uint32_t& dateModifiedInSecondsSinceJanuary1st1970(void) const;
         const uint32_t& dateAddedInSecondsSinceJanuary1st1970(void) const;
 
-        const SeratoCueMarkerVector& cueMarkers(void);
-        const SeratoLoopMarkerVector& loopMarkers(void);
+        const SeratoCueMarkerVector& cueMarkers(void) const;
+        const SeratoLoopMarkerVector& loopMarkers(void) const;
     };
 }
 

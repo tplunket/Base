@@ -204,13 +204,13 @@ void SeratoTrack::p_unloadTrackFile(void)
 void SeratoTrack::p_readMarkers(void)
 {
     const SeratoCueMarkerVector& cueMarkers = this->p_trackFile->cueMarkers();
-    for (SeratoCueMarkerVector::const_iterator it = cueMarkers.begin(); it != cueMarkers.end(); ++it) {
-        this->p_cueMarkers.push_back(make_unique<SeratoCueMarker>(*it->get()));
+    for (auto& marker : cueMarkers) {
+        this->p_cueMarkers.push_back(make_unique<SeratoCueMarker>(*marker));
     }
 
     const SeratoLoopMarkerVector& loopMarkers = this->p_trackFile->loopMarkers();
-    for (SeratoLoopMarkerVector::const_iterator it = loopMarkers.begin(); it != loopMarkers.end(); ++it) {
-        this->p_loopMarkers.push_back(make_unique<SeratoLoopMarker>(*it->get()));
+    for (auto& marker : loopMarkers) {
+        this->p_loopMarkers.push_back(make_unique<SeratoLoopMarker>(*marker));
     }
 }
 

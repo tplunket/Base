@@ -98,8 +98,7 @@ void SeratoCrate::addFullCrateNameWithPrefixAndRecurseToChildren(std::string& de
         destination += '\n';
     }
 
-    for (SeratoCrateVector::iterator it = this->p_childrenCrates->begin(); it != this->p_childrenCrates->end(); ++it) {
-        const SeratoCrate* crate = it->get();
+    for (auto& crate : *this->p_childrenCrates) {
         crate->addFullCrateNameWithPrefixAndRecurseToChildren(destination, prefix);
     }
 }
@@ -164,19 +163,18 @@ void SeratoCrate::saveIfModifiedAndRecurseToChildren(void) const
         SeratoTagPtr versionTag(make_unique<SeratoTextTag>(NxASeratoCrateVersionTag, NxASeratoCrateFileCurrentVersion));
         versionTag->addTo(*outputData);
 
-        for (SeratoTrackEntryVector::const_iterator it = this->p_trackEntries->begin(); it != this->p_trackEntries->end(); ++it) {
-            it->get()->tagForEntry().addTo(*(outputData.get()));
+        for (auto& trackEntry : *this->p_trackEntries) {
+            trackEntry->tagForEntry().addTo(*(outputData.get()));
         }
 
-        for (ConstSeratoTagVector::const_iterator it = this->p_otherTags.begin(); it != this->p_otherTags.end(); ++it) {
-            it->get()->addTo(*outputData);
+        for (auto& tag : this->p_otherTags) {
+            tag->addTo(*outputData);
         }
 
         writeToFile(this->p_crateFilePath->c_str(), *outputData);
     }
 
-    for (SeratoCrateVector::iterator it = this->p_childrenCrates->begin(); it != this->p_childrenCrates->end(); ++it) {
-        const SeratoCrate* crate = it->get();
+    for (auto& crate : *this->p_childrenCrates) {
         crate->saveIfModifiedAndRecurseToChildren();
     }
 }
@@ -213,9 +211,7 @@ SeratoCrateVectorPtr SeratoCrate::removeAndReturnChildrenCrates(void)
 
     this->p_markCratesAsModified();
 
-    for (SeratoCrateVector::iterator it = childrenCrates->begin(); it != childrenCrates->end(); ++it) {
-        SeratoCrate* crate = it->get();
-
+    for (auto& crate : *this->p_childrenCrates) {
         crate->p_parentCrate = NULL;
     }
 

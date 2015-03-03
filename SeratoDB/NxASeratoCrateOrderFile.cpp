@@ -59,8 +59,8 @@ SeratoCrateOrderFile::SeratoCrateOrderFile(const char* seratoFolderPath, const c
     StringVector::iterator it = lines->begin();
 
     SeratoCrateVectorPtr crates = this->p_childrenCratesOfCrateNamedUsingNameList("", it, lines->end(), seratoFolderPath, rootFolderPath);
-    for (SeratoCrateVector::iterator it = crates->begin(); it != crates->end(); ++it) {
-        this->p_rootCrate->addChildCrate(move(*it));
+    for (auto& crate : *crates) {
+        this->p_rootCrate->addChildCrate(move(crate));
     }
 
     this->p_rootCrate->resetModificationFlags();
@@ -108,8 +108,8 @@ SeratoCrateVectorPtr SeratoCrateOrderFile::p_childrenCratesOfCrateNamedUsingName
                                                                                          end,
                                                                                          seratoFolderPath,
                                                                                          rootFolderPath);
-        for (SeratoCrateVector::iterator childrenIt = childCrates->begin(); childrenIt != childCrates->end(); ++childrenIt) {
-            newCrate->addChildCrate(move(*childrenIt));
+        for (auto& crate : *childCrates) {
+            newCrate->addChildCrate(move(crate));
         }
 
         newCrate->resetModificationFlags();
@@ -134,9 +134,9 @@ void SeratoCrateOrderFile::saveIfModified(void) const
     string result;
     result += "[begin record]\n";
     this->p_rootCrate->addFullCrateNameWithPrefixAndRecurseToChildren(result, "[crate]");
-    for (StringVector::iterator it = this->p_unknownCrates->begin(); it != this->p_unknownCrates->end(); ++it) {
+    for (auto& crateName : *this->p_unknownCrates) {
         result += "[crate]";
-        result += *(it->get());
+        result += *(crateName.get());
     }
     result += "[end record]\n";
 

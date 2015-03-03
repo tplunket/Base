@@ -68,7 +68,7 @@ void SeratoObjectTag::addSubTag(ConstSeratoTagPtr tag)
 
 void SeratoObjectTag::addTo(CharVector& destination) const
 {
-    for (SeratoIdentifierToTagMap::const_iterator it = this->p_subTagForIdentifier.begin(); it != this->p_subTagForIdentifier.end(); ++it) {
-        it->second->addTo(destination);
+    for (auto& identifierAndTag : this->p_subTagForIdentifier) {
+        identifierAndTag.second->addTo(destination);
     }
 }

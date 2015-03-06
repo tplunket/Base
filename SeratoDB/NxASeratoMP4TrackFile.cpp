@@ -153,9 +153,11 @@ CharVectorPtr SeratoMP4TrackFile::artwork(void) const
     if (item.isValid()) {
         MP4::CoverArtList coverArtList = item.toCoverArtList();
         MP4::CoverArt coverArt = coverArtList.front();
-        if (coverArt.data().size()) {
-            char* data = coverArt.data().data();
-            result = make_unique<CharVector>(data, data + coverArt.data().size());
+        ByteVector coverArtData(coverArt.data());
+        size_t size = coverArtData.size();
+        if (size) {
+            char* data = coverArtData.data();
+            result = make_unique<CharVector>(data, data + size);
         }
     }
 

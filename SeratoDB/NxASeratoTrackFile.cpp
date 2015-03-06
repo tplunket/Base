@@ -38,7 +38,7 @@ typedef struct {
 
 #pragma mark Utility Functions
 
-const char* p_nextTagPositionAfterTagNamed(const string tagName, const char* currentTagPosition)
+static const char* p_nextTagPositionAfterTagNamed(const string tagName, const char* currentTagPosition)
 {
     const char* parserPosition = currentTagPosition;
 

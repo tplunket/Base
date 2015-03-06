@@ -29,6 +29,7 @@ namespace NxA {
     typedef std::vector<char> CharVector;
     typedef std::unique_ptr<CharVector> CharVectorPtr;
     typedef std::unique_ptr<const CharVector> ConstCharVectorPtr;
+    typedef std::vector<CharVectorPtr> CharVectorPtrVector;
 
     #pragma mark Utility Functions
     ConstStringPtr convertUTF16ToStdString(const char16_t* characters, int numberOfCharacters);

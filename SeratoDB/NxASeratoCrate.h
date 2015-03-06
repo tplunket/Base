@@ -50,7 +50,6 @@ namespace NxA {
         ConstSeratoTagVector p_otherTags;
 
         #pragma mark Private Instance Methods
-        void p_storeVersionTag(SeratoTagPtr tag);
         void p_storeTrackTag(SeratoTagPtr tag);
         void p_storeOtherTag(SeratoTagPtr tag);
 

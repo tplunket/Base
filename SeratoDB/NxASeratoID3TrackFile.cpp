@@ -76,7 +76,7 @@ void SeratoID3TrackFile::p_readMarkersV2(void)
 
     ID3v2::FrameList geobFrames = frameListMap["GEOB"];
     for (auto& framePtr : geobFrames) {
-        const ID3v2::GeneralEncapsulatedObjectFrame* frame = (ID3v2::GeneralEncapsulatedObjectFrame*)framePtr;
+        const ID3v2::GeneralEncapsulatedObjectFrame* frame = (const ID3v2::GeneralEncapsulatedObjectFrame*)framePtr;
         if (!p_isAValidGeobFrame(frame)) {
             continue;
         }

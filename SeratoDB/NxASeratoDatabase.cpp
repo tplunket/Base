@@ -24,6 +24,10 @@ using namespace std;
 
 #define PRINT_DEBUG_INFO        0
 
+#pragma mark Constants
+
+static const char* NxASeratoDatabaseFileCurrentVersion = "2.0/Serato Scratch LIVE Database";
+
 #pragma Utility Functions
 
 #if PRINT_DEBUG_INFO
@@ -48,18 +52,25 @@ static void p_debugListCrate(const SeratoCrate* crate, std::string spacing)
 
 #pragma mark Constructors
 
-SeratoDatabase::SeratoDatabase(const char* seratoFolderPath)
+SeratoDatabase::SeratoDatabase(const char* seratoFolderPath) : p_databaseIsValid(false)
 {
     this->p_databaseFilePath = databaseFilePathForSeratoFolder(seratoFolderPath);
     CharVectorPtr databaseFile = readFileAt(this->p_databaseFilePath->c_str());
 
     SeratoTagVectorPtr tags(SeratoTagFactory::parseTagsAt(databaseFile->data(), databaseFile->size()));
-    for(SeratoTagVector::iterator it = tags->begin(); it != tags->end(); ++it) {
-        SeratoTagPtr& tag = *it;
-
+    for(auto& tag : *tags) {
         switch (tag->identifier()) {
             case NxASeratoTrackObjectTag: {
                 this->p_storeTrackTag(move(tag));
+                break;
+            }
+            case NxASeratoDatabaseVersionTag: {
+                string& versionText = (dynamic_cast<SeratoTextTag&>(*tag)).value();
+                if (versionText != NxASeratoDatabaseFileCurrentVersion) {
+                    this->p_tracks.clear();
+                    this->p_otherTags.clear();
+                    return;
+                }
                 break;
             }
             default: {
@@ -75,6 +86,8 @@ SeratoDatabase::SeratoDatabase(const char* seratoFolderPath)
 #if PRINT_DEBUG_INFO
     p_debugListCrate(this->rootCrate(), "");
 #endif
+
+    this->p_databaseIsValid = true;
 }
 
 #pragma mark Class Methods
@@ -127,5 +140,36 @@ const SeratoTrackVector& SeratoDatabase::tracks(void) const
 
 void SeratoDatabase::saveIfModified(void) const
 {
+    if (!this->p_databaseIsValid) {
+        return;
+    }
+
     this->p_crateOrderFile->saveIfModified();
+
+    bool someTracksWereModified = false;
+    for (auto& track : this->p_tracks) {
+        if (!track->wasModified()) {
+            continue;
+        }
+
+        track->saveToTrackFile();
+        someTracksWereModified = true;
+    }
+
+    if (someTracksWereModified) {
+        CharVectorPtr outputData = make_unique<CharVector>();
+
+        SeratoTagPtr versionTag(make_unique<SeratoTextTag>(NxASeratoDatabaseVersionTag, NxASeratoDatabaseFileCurrentVersion));
+        versionTag->addTo(*outputData);
+
+        for (auto& track : this->p_tracks) {
+            track->addTo(*outputData);
+        }
+
+        for (auto& tag : this->p_otherTags) {
+            tag->addTo(*outputData);
+        }
+
+        writeToFile(this->p_databaseFilePath->c_str(), *outputData);
+    }
 }

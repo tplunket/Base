@@ -24,11 +24,16 @@ using namespace std;
 typedef struct {
     unsigned char tag[4];
     unsigned char size[4];
+} SeratoCueTagHeaderStruct;
+
+typedef struct {
+    unsigned char tag[4];
+    unsigned char size[4];
     unsigned char index[2];
     unsigned char position[4];
     unsigned char color[4];
-    unsigned char loop_enabled[1];
-    unsigned char loop_locked[1];
+    unsigned char loop_enabled;
+    unsigned char loop_locked;
     unsigned char label[0];
 } SeratoCueTagStruct;
 
@@ -58,4 +63,23 @@ uint16_t SeratoCueMarker::index(void) const
 const string& SeratoCueMarker::label(void) const
 {
     return this->p_label;
+}
+
+void SeratoCueMarker::addId3TagTo(CharVector& data) const
+{
+    SeratoCueTagStruct header;
+
+    memcpy(header.tag, "CUE", 4);
+    size_t size = sizeof(SeratoCueTagStruct) + this->p_label.length() + 1 - sizeof(SeratoCueTagHeaderStruct);
+    writeBigEndianUInt32ValueAt((uint32_t)size, &header.size);
+    writeBigEndianUInt16ValueAt(this->p_index, &header.index);
+    writeBigEndianUInt32ValueAt(this->p_positionInMilliSeconds, &header.position);
+    writeBigEndianUInt32ValueAt(0, &header.color);
+    header.loop_enabled = 0;
+    header.loop_locked = 0;
+
+    CharVector headerData((char*)&header, (char*)&header.label);
+    data.insert(data.end(), headerData.begin(), headerData.end());
+
+    data.insert(data.end(), this->p_label.begin(), this->p_label.end());
 }

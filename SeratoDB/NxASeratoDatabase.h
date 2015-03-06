@@ -35,6 +35,8 @@ namespace NxA {
 
         SeratoCrateOrderFilePtr p_crateOrderFile;
 
+        bool p_databaseIsValid;
+
         #pragma mark Private Instance Methods
         void p_storeTrackTag(SeratoTagPtr tag);
         void p_storeOtherTag(SeratoTagPtr tag);

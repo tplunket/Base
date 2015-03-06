@@ -26,13 +26,18 @@ using namespace std;
 typedef struct {
     unsigned char tag[5];
     unsigned char size[4];
+} SeratoLoopTagHeaderStruct;
+
+typedef struct {
+    unsigned char tag[5];
+    unsigned char size[4];
     unsigned char index[2];
     unsigned char position[4];
     unsigned char loopPosition[4];
     unsigned char loopIterations[4];
     unsigned char color[4];
-    unsigned char loop_enabled[1];
-    unsigned char loop_locked[1];
+    unsigned char loop_enabled;
+    unsigned char loop_locked;
     unsigned char label[0];
 } SeratoLoopTagStruct;
 
@@ -68,4 +73,25 @@ uint16_t SeratoLoopMarker::index(void) const
 const string& SeratoLoopMarker::label(void) const
 {
     return this->p_label;
+}
+
+void SeratoLoopMarker::addId3TagTo(CharVector& data) const
+{
+    SeratoLoopTagStruct header;
+
+    memcpy(header.tag, "LOOP", 5);
+    size_t size = sizeof(SeratoLoopTagStruct) + this->p_label.length() + 1 - sizeof(SeratoLoopTagHeaderStruct);
+    writeBigEndianUInt32ValueAt((uint32_t)size, &header.size);
+    writeBigEndianUInt16ValueAt(this->p_index, &header.index);
+    writeBigEndianUInt32ValueAt(this->p_startPositionInMilliSeconds, &header.position);
+    writeBigEndianUInt32ValueAt(this->p_endPositionInMilliSeconds, &header.loopPosition);
+    writeBigEndianUInt32ValueAt(0, &header.loopIterations);
+    writeBigEndianUInt32ValueAt(0, &header.color);
+    header.loop_enabled = 0;
+    header.loop_locked = 0;
+
+    CharVector headerData((char*)&header, (char*)&header.label);
+    data.insert(data.end(), headerData.begin(), headerData.end());
+
+    data.insert(data.end(), this->p_label.begin(), this->p_label.end());
 }

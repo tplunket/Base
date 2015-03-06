@@ -40,8 +40,10 @@ namespace NxA {
         SeratoTrackFilePtr p_trackFile;
         ConstStringPtr p_rootFolder;
 
-        SeratoCueMarkerVector p_cueMarkers;
-        SeratoLoopMarkerVector p_loopMarkers;
+        bool p_wasModified;
+
+        SeratoCueMarkerVectorPtr p_cueMarkers;
+        SeratoLoopMarkerVectorPtr p_loopMarkers;
 
         #pragma mark Private Instance Methods
         inline bool p_containsAValidTrackTag(void) const;
@@ -51,10 +53,13 @@ namespace NxA {
         const uint32_t& p_uint32ForSubTagForIdentifier(const uint32_t& identifier) const;
 
         void p_setStringForSubTagForIdentifier(const char* value, const uint32_t& identifier);
+        void p_setPathForSubTagForIdentifier(const char* value, const uint32_t& identifier);
         void p_setUInt32ForSubTagForIdentifier(const uint32_t& value, const uint32_t& identifier);
 
         void p_loadTrackFile(void);
+        void p_saveTrackFile(void);
         void p_unloadTrackFile(void);
+
         void p_readMarkers(void);
 
     public:
@@ -87,6 +92,30 @@ namespace NxA {
 
         const SeratoCueMarkerVector& cueMarkers(void) const;
         const SeratoLoopMarkerVector& loopMarkers(void) const;
+
+        void setTitle(const char* title);
+        void setArtist(const char* artist);
+        void setAlbum(const char* album);
+        void setGenre(const char* genre);
+        void setComments(const char* comments);
+        void setGrouping(const char* grouping);
+        void setRemixer(const char* remixer);
+        void setRecordLabel(const char* recordLabel);
+        void setComposer(const char* composer);
+        void setKey(const char* key);
+        void setBpm(const char* bpm);
+        void setYear(const char* year);
+        void setTrackNumber(const uint32_t& trackNumber);
+        void setDiscNumber(const uint32_t& discNumber);
+        void setDateModifiedInSecondsSinceJanuary1st1970(const uint32_t& dateModified);
+        void setDateAddedInSecondsSinceJanuary1st1970(const uint32_t& dateAdded);
+
+        void setCueMarkers(SeratoCueMarkerVectorPtr markers);
+        void setLoopMarkers(SeratoLoopMarkerVectorPtr markers);
+
+        bool wasModified(void) const;
+        void addTo(CharVector& destination) const;
+        void saveToTrackFile(void);
     };
 }
 

@@ -49,6 +49,8 @@ namespace NxA {
         uint32_t positionInMilliseconds(void) const;
         uint16_t index(void) const;
         const std::string& label(void) const;
+
+        void addId3TagTo(CharVector& data) const;
     };
 }
 

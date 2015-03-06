@@ -75,6 +75,31 @@ void SeratoFLACTrackFile::p_readMarkersV2(void)
     this->p_readMarkersV2FromBase64Data((const char*)headerStruct->data, decodedData->size() - sizeof(SeratoFLACMarkerHeaderStruct));
 }
 
+void SeratoFLACTrackFile::p_writeMarkersV2(void)
+{
+    CharVector decodedData;
+
+    SeratoFLACMarkerHeaderStruct header;
+    memcpy(header.mimeType, "application/octet-stream", 25);
+    header.filename[0] = 0;
+    memcpy(header.description, "Serato Markers2", 16);
+    header.majorVersion = 1;
+    header.minorVersion = 1;
+
+    CharVector headerData((char*)&header, (char*)&header.data);
+    decodedData.insert(decodedData.end(), headerData.begin(), headerData.end());
+
+    CharVectorPtr base64Data(this->p_base64DataFromMarkersV2());
+    decodedData.insert(decodedData.end(), base64Data->begin(), base64Data->end());
+
+    CharVectorPtr encodedData = SeratoBase64::encodeBlock(decodedData.data(), decodedData.size());
+    encodedData->push_back('\0');
+
+    StringList newList;
+    newList.append(String(encodedData->data()));
+    this->p_properties["SERATO_MARKERS_V2"] = newList;
+}
+
 bool SeratoFLACTrackFile::hasKey(void) const
 {
     return true;
@@ -160,4 +185,34 @@ CharVectorPtr SeratoFLACTrackFile::artwork(void) const
 {
     // -- TODO: To be implemented.
     return CharVectorPtr();
+}
+
+void SeratoFLACTrackFile::setKey(const char* key)
+{
+    this->p_properties["INITIALKEY"] = String(key);
+}
+
+void SeratoFLACTrackFile::setGrouping(const char* grouping)
+{
+    this->p_properties["GROUPING"] = String(grouping);
+}
+
+void SeratoFLACTrackFile::setRecordLabel(const char* recordLabel)
+{
+    // -- This is not supported by FLAC files.
+}
+
+void SeratoFLACTrackFile::setRemixer(const char* remixer)
+{
+    // -- This is not supported by FLAC files.
+}
+
+void SeratoFLACTrackFile::setYearReleased(const char* year)
+{
+    this->p_properties["DATE"] = String(year);
+}
+
+void SeratoFLACTrackFile::setArtwork(CharVectorPtr artwork)
+{
+    // -- TODO: To be implemented.
 }

@@ -87,6 +87,33 @@ void SeratoMP4TrackFile::p_readMarkersV2(void)
     this->p_readMarkersV2FromBase64Data((const char*)headerStruct->data, decodedData->size() - sizeof(SeratoMP4MarkerHeaderStruct));
 }
 
+void SeratoMP4TrackFile::p_writeMarkersV2(void)
+{
+    CharVector decodedData;
+
+    SeratoMP4MarkerHeaderStruct header;
+    memcpy(header.mimeType, "application/octet-stream", 25);
+    header.filename[0] = 0;
+    memcpy(header.description, "Serato Markers2", 16);
+    header.majorVersion = 1;
+    header.minorVersion = 1;
+
+    CharVector headerData((char*)&header, (char*)&header.data);
+    decodedData.insert(decodedData.end(), headerData.begin(), headerData.end());
+
+    CharVectorPtr base64Data(this->p_base64DataFromMarkersV2());
+    decodedData.insert(decodedData.end(), base64Data->begin(), base64Data->end());
+
+    CharVectorPtr encodedData = SeratoBase64::encodeBlock(decodedData.data(), decodedData.size());
+    encodedData->push_back('\0');
+
+    StringList newList;
+    newList.append(String(encodedData->data()));
+
+    MP4::Item newItem(newList);
+    (*this->p_itemListMap)["----:com.serato.dj:markersv2"] = newItem;
+}
+
 bool SeratoMP4TrackFile::hasKey(void) const
 {
     return true;
@@ -162,4 +189,43 @@ CharVectorPtr SeratoMP4TrackFile::artwork(void) const
     }
 
     return move(result);
+}
+
+void SeratoMP4TrackFile::setKey(const char* key)
+{
+    StringList newList;
+    newList.append(String(key));
+    MP4::Item newItem(newList);
+    (*this->p_itemListMap)["----:com.apple.iTunes:initialkey"] = newItem;
+}
+
+void SeratoMP4TrackFile::setGrouping(const char* grouping)
+{
+    this->p_properties["GROUPING"] = String(grouping);
+}
+
+void SeratoMP4TrackFile::setRecordLabel(const char* recordLabel)
+{
+    // -- This is not supported by MP4 files.
+}
+
+void SeratoMP4TrackFile::setRemixer(const char* remixer)
+{
+    // -- This is not supported by MP4 files.
+}
+
+void SeratoMP4TrackFile::setYearReleased(const char* year)
+{
+    this->p_properties["DATE"] = String(year);
+}
+
+void SeratoMP4TrackFile::setArtwork(CharVectorPtr artwork)
+{
+    ByteVector data(artwork->data(), artwork->size());
+    MP4::CoverArt newCoverArt(MP4::CoverArt::Unknown, data);
+    MP4::CoverArtList newCoverArtList;
+    newCoverArtList.append(newCoverArt);
+
+    MP4::Item newItem(newCoverArtList);
+    (*this->p_itemListMap)["covr"] = newItem;
 }

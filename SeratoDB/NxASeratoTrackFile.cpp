@@ -49,6 +49,19 @@ const char* p_nextTagPositionAfterTagNamed(const string tagName, const char* cur
     return parserPosition;
 }
 
+static CharVectorPtr p_markerV2TagDataFrom(const char* tagStart)
+{
+    const string tagName(tagStart);
+    size_t sizeOfNameField = tagName.length() + 1;
+    const size_t sizeOfSizeField = 4;
+
+    const char* sizePosition = tagStart + sizeOfNameField;
+    size_t tagSize = bigEndianUInt32ValueAt(sizePosition) + sizeOfNameField + sizeOfSizeField;
+
+    CharVectorPtr data(make_unique<CharVector>(tagStart, tagStart + tagSize));
+    return move(data);
+}
+
 #pragma mark Instance Methods
 
 void SeratoTrackFile::p_readMarkersV2FromBase64Data(const char* markerV2Data, size_t sizeInBytes)
@@ -80,11 +93,38 @@ void SeratoTrackFile::p_readMarkersV2FromBase64Data(const char* markerV2Data, si
             this->p_loopMarkers->push_back(make_unique<SeratoLoopMarker>(tagStart));
         }
         else {
-            // -- TODO: Preserve other tags in order to write them back.
+            this->p_otherTags.push_back(p_markerV2TagDataFrom(tagStart));
         }
 
         tagStart = p_nextTagPositionAfterTagNamed(tagName, tagStart);
     }
+}
+
+CharVectorPtr SeratoTrackFile::p_base64DataFromMarkersV2(void)
+{
+    CharVector decodedData;
+
+    SeratoMarkerV2Struct markersV2Header;
+    markersV2Header.majorVersion = 1;
+    markersV2Header.minorVersion = 1;
+
+    CharVector headerData((char*)&markersV2Header, (char*)&markersV2Header.data);
+    decodedData.insert(decodedData.end(), headerData.begin(), headerData.end());
+
+    for (auto& marker : *this->p_cueMarkers) {
+        marker->addId3TagTo(decodedData);
+    }
+
+    for (auto& marker : *this->p_loopMarkers) {
+        marker->addId3TagTo(decodedData);
+    }
+
+    for (auto& tagData : this->p_otherTags) {
+        decodedData.insert(decodedData.end(), tagData->begin(), tagData->end());
+    }
+
+    CharVectorPtr encodedData = SeratoBase64::encodeBlock(decodedData.data(), decodedData.size());
+    return move(encodedData);
 }
 
 string SeratoTrackFile::title(void) const
@@ -221,4 +261,73 @@ const SeratoCueMarkerVector& SeratoTrackFile::cueMarkers(void) const
 const SeratoLoopMarkerVector& SeratoTrackFile::loopMarkers(void) const
 {
     return *(this->p_loopMarkers);
+}
+
+void SeratoTrackFile::setTitle(const char* title)
+{
+    if (this->p_parsedFileTag) {
+        this->p_parsedFileTag->setTitle(String(title));
+    }
+}
+
+void SeratoTrackFile::setArtist(const char* artist)
+{
+    if (this->p_parsedFileTag) {
+        this->p_parsedFileTag->setArtist(String(artist));
+    }
+}
+
+void SeratoTrackFile::setGenre(const char* genre)
+{
+    if (this->p_parsedFileTag) {
+        this->p_parsedFileTag->setGenre(String(genre));
+    }
+}
+
+void SeratoTrackFile::setComments(const char* comments)
+{
+    if (this->p_parsedFileTag) {
+        this->p_parsedFileTag->setComment(String(comments));
+    }
+}
+
+void SeratoTrackFile::setAlbum(const char* album)
+{
+    if (this->p_parsedFileTag) {
+        this->p_parsedFileTag->setAlbum(String(album));
+    }
+}
+
+void SeratoTrackFile::setComposer(const char* composer)
+{
+    this->p_properties["COMPOSER"] = String(composer);
+}
+
+void SeratoTrackFile::setBpm(const char* bpm)
+{
+    this->p_properties["BPM"] = String(bpm);
+}
+
+void SeratoTrackFile::setTrackNumber(const uint32_t& trackNumber)
+{
+    if (this->p_parsedFileTag) {
+        this->p_parsedFileTag->setTrack(trackNumber);
+    }
+}
+
+void SeratoTrackFile::setCueMarkers(SeratoCueMarkerVectorPtr markers)
+{
+    this->p_cueMarkers = move(markers);
+}
+
+void SeratoTrackFile::setLoopMarkers(SeratoLoopMarkerVectorPtr markers)
+{
+    this->p_loopMarkers = move(markers);
+}
+
+void SeratoTrackFile::saveChanges(void)
+{
+    this->p_writeMarkersV2();
+
+    this->p_file->save();
 }

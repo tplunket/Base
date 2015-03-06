@@ -132,7 +132,9 @@ static void p_debugPrintComparaison(const SeratoTrack* track, const SeratoTrackF
 SeratoTrack::SeratoTrack(SeratoTagPtr trackTag, const char* rootDirectoryPath) :
                          p_wasModified(false),
                          p_trackTag(move(trackTag)),
-                         p_rootFolder(make_unique<string>(rootDirectoryPath))
+                         p_rootFolder(make_unique<string>(rootDirectoryPath)),
+                         p_cueMarkers(make_unique<SeratoCueMarkerVector>()),
+                         p_loopMarkers(make_unique<SeratoLoopMarkerVector>())
 {
     this->p_loadTrackFile();
 
@@ -191,9 +193,68 @@ const uint32_t& SeratoTrack::p_uint32ForSubTagForIdentifier(const uint32_t& iden
     return zeroValue;
 }
 
+void SeratoTrack::p_setStringForSubTagForIdentifier(const char* value, const uint32_t& identifier)
+{
+    if (!this->p_containsAValidTrackTag()) {
+        return;
+    }
+
+    SeratoObjectTag* trackObjectTag = dynamic_cast<SeratoObjectTag*>(this->p_trackTag.get());
+    if (!trackObjectTag->hasSubTagForIdentifier(identifier)) {
+        trackObjectTag->addSubTag(std::make_unique<SeratoTextTag>(identifier, value));
+    }
+    else {
+        SeratoTextTag& textTag = dynamic_cast<SeratoTextTag&>(trackObjectTag->subTagForIdentifier(identifier));
+        textTag.value() = string(value);
+    }
+
+    this->p_wasModified = true;
+}
+
+void SeratoTrack::p_setPathForSubTagForIdentifier(const char* value, const uint32_t& identifier)
+{
+    if (!this->p_containsAValidTrackTag()) {
+        return;
+    }
+
+    SeratoObjectTag* trackObjectTag = dynamic_cast<SeratoObjectTag*>(this->p_trackTag.get());
+    if (!trackObjectTag->hasSubTagForIdentifier(identifier)) {
+        trackObjectTag->addSubTag(std::make_unique<SeratoPathTag>(identifier, value));
+    }
+    else {
+        SeratoPathTag& pathTag = dynamic_cast<SeratoPathTag&>(trackObjectTag->subTagForIdentifier(identifier));
+        pathTag.value() = string(value);
+    }
+
+    this->p_wasModified = true;
+}
+
+void SeratoTrack::p_setUInt32ForSubTagForIdentifier(const uint32_t& value, const uint32_t& identifier)
+{
+    if (!this->p_containsAValidTrackTag()) {
+        return;
+    }
+
+    SeratoObjectTag* trackObjectTag = dynamic_cast<SeratoObjectTag*>(this->p_trackTag.get());
+    if (!trackObjectTag->hasSubTagForIdentifier(identifier)) {
+        trackObjectTag->addSubTag(std::make_unique<SeratoUInt32Tag>(identifier, value));
+    }
+    else {
+        SeratoUInt32Tag& uint32Tag = dynamic_cast<SeratoUInt32Tag&>(trackObjectTag->subTagForIdentifier(identifier));
+        uint32Tag.value() = value;
+    }
+
+    this->p_wasModified = true;
+}
+
 void SeratoTrack::p_loadTrackFile(void)
 {
     this->p_trackFile = SeratoTrackFileFactory::trackFileForPath(this->trackFilePath()->c_str());
+}
+
+void SeratoTrack::p_saveTrackFile(void)
+{
+    this->p_trackFile->saveChanges();
 }
 
 void SeratoTrack::p_unloadTrackFile(void)
@@ -205,12 +266,12 @@ void SeratoTrack::p_readMarkers(void)
 {
     const SeratoCueMarkerVector& cueMarkers = this->p_trackFile->cueMarkers();
     for (auto& marker : cueMarkers) {
-        this->p_cueMarkers.push_back(make_unique<SeratoCueMarker>(*marker));
+        this->p_cueMarkers->push_back(make_unique<SeratoCueMarker>(*marker));
     }
 
     const SeratoLoopMarkerVector& loopMarkers = this->p_trackFile->loopMarkers();
     for (auto& marker : loopMarkers) {
-        this->p_loopMarkers.push_back(make_unique<SeratoLoopMarker>(*marker));
+        this->p_loopMarkers->push_back(make_unique<SeratoLoopMarker>(*marker));
     }
 }
 
@@ -323,10 +384,150 @@ const uint32_t& SeratoTrack::dateAddedInSecondsSinceJanuary1st1970(void) const
 
 const SeratoCueMarkerVector& SeratoTrack::cueMarkers(void) const
 {
-    return this->p_cueMarkers;
+    return *(this->p_cueMarkers);
 }
 
 const SeratoLoopMarkerVector& SeratoTrack::loopMarkers(void) const
 {
-    return this->p_loopMarkers;
+    return *(this->p_loopMarkers);
+}
+
+void SeratoTrack::setTitle(const char* title)
+{
+    this->p_setStringForSubTagForIdentifier(title, NxASeratoTrackTitleTag);
+}
+
+void SeratoTrack::setArtist(const char* artist)
+{
+    this->p_setStringForSubTagForIdentifier(artist, NxASeratoTrackArtistTag);
+}
+
+void SeratoTrack::setAlbum(const char* album)
+{
+    this->p_setStringForSubTagForIdentifier(album, NxASeratoTrackAlbumTag);
+}
+
+void SeratoTrack::setGenre(const char* genre)
+{
+    this->p_setStringForSubTagForIdentifier(genre, NxASeratoTrackGenreTag);
+}
+
+void SeratoTrack::setComments(const char* comments)
+{
+    this->p_setStringForSubTagForIdentifier(comments, NxASeratoTrackCommentsTag);
+}
+
+void SeratoTrack::setGrouping(const char* grouping)
+{
+    this->p_setStringForSubTagForIdentifier(grouping, NxASeratoTrackGroupingTag);
+}
+
+void SeratoTrack::setRemixer(const char* remixer)
+{
+    this->p_setStringForSubTagForIdentifier(remixer, NxASeratoTrackRemixerTag);
+}
+
+void SeratoTrack::setRecordLabel(const char* recordLabel)
+{
+    this->p_setStringForSubTagForIdentifier(recordLabel, NxASeratoTrackLabelTag);
+}
+
+void SeratoTrack::setComposer(const char* composer)
+{
+    this->p_setStringForSubTagForIdentifier(composer, NxASeratoTrackComposerTag);
+}
+
+void SeratoTrack::setKey(const char* key)
+{
+    this->p_setStringForSubTagForIdentifier(key, NxASeratoTrackKeyTag);
+}
+
+void SeratoTrack::setBpm(const char* bpm)
+{
+    this->p_setStringForSubTagForIdentifier(bpm, NxASeratoTrackBpmTag);
+}
+
+void SeratoTrack::setYear(const char* year)
+{
+    this->p_setStringForSubTagForIdentifier(year, NxASeratoTrackYearTag);
+}
+
+void SeratoTrack::setTrackNumber(const uint32_t& trackNumber)
+{
+    this->p_setUInt32ForSubTagForIdentifier(trackNumber, NxASeratoTrackNumberTag);
+}
+
+void SeratoTrack::setDiscNumber(const uint32_t& discNumber)
+{
+    this->p_setUInt32ForSubTagForIdentifier(discNumber, NxASeratoTrackDiscNumberTag);
+}
+
+void SeratoTrack::setDateModifiedInSecondsSinceJanuary1st1970(const uint32_t& dateModified)
+{
+    this->p_setUInt32ForSubTagForIdentifier(dateModified, NxASeratoTrackDateModifiedTag);
+}
+
+void SeratoTrack::setDateAddedInSecondsSinceJanuary1st1970(const uint32_t& dateAdded)
+{
+    this->p_setUInt32ForSubTagForIdentifier(dateAdded, NxASeratoTrackDateAddedTag);
+}
+
+void SeratoTrack::setCueMarkers(SeratoCueMarkerVectorPtr markers)
+{
+    this->p_cueMarkers = move(markers);
+    this->p_wasModified = true;
+}
+
+void SeratoTrack::setLoopMarkers(SeratoLoopMarkerVectorPtr markers)
+{
+    this->p_loopMarkers = move(markers);
+    this->p_wasModified = true;
+}
+
+bool SeratoTrack::wasModified(void) const
+{
+    return this->p_wasModified;
+}
+
+void SeratoTrack::addTo(CharVector& destination) const
+{
+    this->p_trackTag->addTo(destination);
+}
+
+void SeratoTrack::saveToTrackFile(void)
+{
+    this->p_loadTrackFile();
+
+    SeratoTrackFile& trackFile = *(this->p_trackFile);
+    trackFile.setTitle(this->title().c_str());
+    trackFile.setArtist(this->artist().c_str());
+    trackFile.setAlbum(this->album().c_str());
+    trackFile.setGenre(this->genre().c_str());
+    trackFile.setComments(this->comments().c_str());
+    trackFile.setGrouping(this->grouping().c_str());
+    trackFile.setRemixer(this->remixer().c_str());
+    trackFile.setRecordLabel(this->recordLabel().c_str());
+    trackFile.setComposer(this->composer().c_str());
+    trackFile.setKey(this->key().c_str());
+    trackFile.setBpm(this->bpm().c_str());
+    trackFile.setYearReleased(this->year().c_str());
+    trackFile.setTrackNumber(this->trackNumber());
+
+    SeratoCueMarkerVectorPtr cueMarkers = make_unique<SeratoCueMarkerVector>();
+    for (auto& marker : *(this->p_cueMarkers)) {
+        SeratoCueMarkerPtr markerCopy = make_unique<SeratoCueMarker>(*marker);
+        cueMarkers->push_back(move(markerCopy));
+    }
+    trackFile.setCueMarkers(move(cueMarkers));
+
+    SeratoLoopMarkerVectorPtr loopMarkers = make_unique<SeratoLoopMarkerVector>();
+    for (auto& marker : *(this->p_loopMarkers)) {
+        SeratoLoopMarkerPtr markerCopy = make_unique<SeratoLoopMarker>(*marker);
+        loopMarkers->push_back(move(markerCopy));
+    }
+    trackFile.setLoopMarkers(move(loopMarkers));
+
+    this->p_saveTrackFile();
+
+    this->p_unloadTrackFile();
 }

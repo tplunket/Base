@@ -37,6 +37,7 @@ namespace NxA {
 
         #pragma mark Private Instance Methods
         void p_readMarkersV2(void);
+        void p_writeMarkersV2(void);
 
     public:
         #pragma mark Constructors
@@ -54,6 +55,14 @@ namespace NxA {
         virtual std::string yearReleased(void) const;
 
         virtual CharVectorPtr artwork(void) const;
+
+        virtual void setKey(const char* key);
+        virtual void setGrouping(const char* grouping);
+        virtual void setRecordLabel(const char* recordLabel);
+        virtual void setRemixer(const char* remixer);
+        virtual void setYearReleased(const char* year);
+
+        virtual void setArtwork(CharVectorPtr artwork);
     };
 }
 

@@ -56,6 +56,18 @@ void SeratoOGGTrackFile::p_readMarkersV2(void)
     this->p_readMarkersV2FromBase64Data((char*)markersEncodedData.data(String::UTF8).data(), encodedDataSize);
 }
 
+void SeratoOGGTrackFile::p_writeMarkersV2(void)
+{
+    CharVector decodedData;
+
+    CharVectorPtr base64Data(this->p_base64DataFromMarkersV2());
+    base64Data->push_back('\0');
+
+    StringList newList;
+    newList.append(String(base64Data->data()));
+    this->p_properties["SERATO_MARKERS2"] = newList;
+}
+
 bool SeratoOGGTrackFile::hasKey(void) const
 {
     return false;
@@ -120,4 +132,34 @@ CharVectorPtr SeratoOGGTrackFile::artwork(void) const
 {
     // -- TODO: To be implemented.
     return CharVectorPtr();
+}
+
+void SeratoOGGTrackFile::setKey(const char* key)
+{
+    // -- This is not supported by OGG files.
+}
+
+void SeratoOGGTrackFile::setGrouping(const char* grouping)
+{
+    this->p_properties["GROUPING"] = String(grouping);
+}
+
+void SeratoOGGTrackFile::setRecordLabel(const char* recordLabel)
+{
+    this->p_properties["LABEL"] = String(recordLabel);
+}
+
+void SeratoOGGTrackFile::setRemixer(const char* remixer)
+{
+    this->p_properties["REMIXER"] = String(remixer);
+}
+
+void SeratoOGGTrackFile::setYearReleased(const char* year)
+{
+    this->p_properties["YEAR"] = String(year);
+}
+
+void SeratoOGGTrackFile::setArtwork(CharVectorPtr artwork)
+{
+    // -- TODO: To be implemented.
 }

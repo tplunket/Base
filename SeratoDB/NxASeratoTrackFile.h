@@ -43,6 +43,7 @@ namespace NxA {
         #pragma mark Private Instance Variables
         SeratoCueMarkerVectorPtr p_cueMarkers;
         SeratoLoopMarkerVectorPtr p_loopMarkers;
+        CharVectorPtrVector p_otherTags;
 
     protected:
         #pragma mark Protected Constructors
@@ -60,6 +61,8 @@ namespace NxA {
 
         #pragma mark Protected Instance Methods
         void p_readMarkersV2FromBase64Data(const char* markerV2Data, size_t sizeInBytes);
+        CharVectorPtr p_base64DataFromMarkersV2(void);
+        virtual void p_writeMarkersV2(void) = 0;
 
     public:
         #pragma mark Public Constructor/Destructor
@@ -96,6 +99,27 @@ namespace NxA {
         
         const SeratoCueMarkerVector& cueMarkers(void) const;
         const SeratoLoopMarkerVector& loopMarkers(void) const;
+
+        virtual void setTitle(const char* title);
+        virtual void setArtist(const char* artist);
+        virtual void setGenre(const char* genre);
+        virtual void setKey(const char* key) = 0;
+        virtual void setComments(const char* comments);
+        virtual void setAlbum(const char* album);
+        virtual void setComposer(const char* composer);
+        virtual void setGrouping(const char* grouping) = 0;
+        virtual void setBpm(const char* bpm);
+        virtual void setTrackNumber(const uint32_t& trackNumber);
+        virtual void setRecordLabel(const char* recordLabel) = 0;
+        virtual void setRemixer(const char* remixer) = 0;
+        virtual void setYearReleased(const char* year) = 0;
+
+        virtual void setArtwork(CharVectorPtr artwork) = 0;
+
+        void setCueMarkers(SeratoCueMarkerVectorPtr markers);
+        void setLoopMarkers(SeratoLoopMarkerVectorPtr markers);
+
+        void saveChanges(void);
     };
 }
 

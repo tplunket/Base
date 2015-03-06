@@ -92,6 +92,63 @@ void SeratoID3TrackFile::p_readMarkersV2(void)
     }
 }
 
+void SeratoID3TrackFile::p_writeMarkersV2(void)
+{
+    ID3v2::Tag* tag = (ID3v2::Tag*)this->p_parsedFileTag;
+    if (!tag) {
+        return;
+    }
+
+    ID3v2::FrameListMap frameListMap = tag->frameListMap();
+    if (frameListMap.contains("GEOB")) {
+        ID3v2::FrameList geobFrames = frameListMap["GEOB"];
+        ID3v2::FrameList::Iterator frameToDelete = geobFrames.end();
+
+        for (ID3v2::FrameList::Iterator it = geobFrames.begin(); it != geobFrames.end(); ++it) {
+            ID3v2::GeneralEncapsulatedObjectFrame* frame = (ID3v2::GeneralEncapsulatedObjectFrame*)*it;
+            if (!p_isAValidGeobFrame(frame)) {
+                continue;
+            }
+
+            const String description = frame->description();
+            if (description == "Serato Markers2") {
+                frameToDelete = it;
+                break;
+            }
+        }
+
+        if (frameToDelete != geobFrames.end()) {
+            geobFrames.erase(frameToDelete);
+        }
+    }
+    else {
+        frameListMap["GEOB"] = ID3v2::FrameList();
+    }
+
+    CharVector decodedData;
+
+    SeratoGeobObjectStruct header;
+    header.majorVersion = 1;
+    header.minorVersion = 1;
+    CharVector headerData((char*)&header, (char*)&header.data);
+    decodedData.insert(decodedData.end(), headerData.begin(), headerData.end());
+
+    CharVectorPtr base64Data(this->p_base64DataFromMarkersV2());
+    decodedData.insert(decodedData.end(), base64Data->begin(), base64Data->end());
+
+    CharVectorPtr encodedData = SeratoBase64::encodeBlock(decodedData.data(), decodedData.size());
+
+    ByteVector newData(encodedData->data(), encodedData->size());
+
+    ID3v2::GeneralEncapsulatedObjectFrame* newFrame = new ID3v2::GeneralEncapsulatedObjectFrame(newData);
+    newFrame->setTextEncoding(String::Latin1);
+    newFrame->setMimeType("application/octet-stream");
+    newFrame->setFileName("");
+    newFrame->setDescription("Serato Markers2");
+
+    frameListMap["GEOB"].append(newFrame);
+}
+
 bool SeratoID3TrackFile::hasKey(void) const
 {
     return true;
@@ -192,4 +249,62 @@ CharVectorPtr SeratoID3TrackFile::artwork(void) const
     }
 
     return move(result);
+}
+
+void SeratoID3TrackFile::setKey(const char* key)
+{
+    this->p_properties["INITIALKEY"] = String(key);
+}
+
+void SeratoID3TrackFile::setGrouping(const char* grouping)
+{
+    this->p_properties["CONTENTGROUP"] = String(grouping);
+}
+
+void SeratoID3TrackFile::setRecordLabel(const char* recordLabel)
+{
+    this->p_properties["RECORD"] = String(recordLabel);
+}
+
+void SeratoID3TrackFile::setRemixer(const char* remixer)
+{
+    this->p_properties["REMIXER"] = String(remixer);
+}
+
+void SeratoID3TrackFile::setYearReleased(const char* year)
+{
+    this->p_properties["DATE"] = String(year);
+}
+
+void SeratoID3TrackFile::setArtwork(CharVectorPtr artwork)
+{
+    ID3v2::Tag* tag = (ID3v2::Tag*)this->p_parsedFileTag;
+    if(tag) {
+        ID3v2::FrameListMap frameListMap = tag->frameListMap();
+        ID3v2::FrameList frameList = frameListMap["APIC"];
+
+        ID3v2::FrameList::Iterator frameToRemove = frameList.end();
+        for(ID3v2::FrameList::Iterator it = frameList.begin(); it != frameList.end(); ++it) {
+            ID3v2::AttachedPictureFrame* pic = dynamic_cast<ID3v2::AttachedPictureFrame*>(*it);
+
+            if (pic->type() == ID3v2::AttachedPictureFrame::FrontCover) {
+                frameToRemove = it;
+                break;
+            }
+            else if (pic->type() == ID3v2::AttachedPictureFrame::Other) {
+                frameToRemove = it;
+            }
+        }
+
+        frameList.erase(frameToRemove);
+
+        ByteVector data(artwork->data(), artwork->size());
+
+        ID3v2::AttachedPictureFrame* newFrame = new ID3v2::AttachedPictureFrame;
+        newFrame->setData(data);
+        newFrame->setType(ID3v2::AttachedPictureFrame::FrontCover);
+        newFrame->setDescription("");
+        newFrame->setTextEncoding(String::Latin1);
+        frameList.append(newFrame);
+    }
 }

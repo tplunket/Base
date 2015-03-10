@@ -52,7 +52,9 @@ static void p_debugListCrate(const SeratoCrate* crate, std::string spacing)
 
 #pragma mark Constructors
 
-SeratoDatabase::SeratoDatabase(const char* seratoFolderPath) : p_databaseIsValid(false)
+SeratoDatabase::SeratoDatabase(const char* seratoFolderPath) :
+    p_tracks(make_unique<SeratoTrackVector>()),
+    p_databaseIsValid(false)
 {
     this->p_databaseFilePath = databaseFilePathForSeratoFolder(seratoFolderPath);
     CharVectorPtr databaseFile = readFileAt(this->p_databaseFilePath->c_str());
@@ -67,7 +69,7 @@ SeratoDatabase::SeratoDatabase(const char* seratoFolderPath) : p_databaseIsValid
             case NxASeratoDatabaseVersionTag: {
                 string& versionText = (dynamic_cast<SeratoTextTag&>(*tag)).value();
                 if (versionText != NxASeratoDatabaseFileCurrentVersion) {
-                    this->p_tracks.clear();
+                    this->p_tracks->clear();
                     this->p_otherTags.clear();
                     return;
                 }
@@ -115,7 +117,7 @@ ConstStringPtr SeratoDatabase::versionAsStringForDatabaseIn(const char* seratoFo
 void SeratoDatabase::p_storeTrackTag(SeratoTagPtr tag)
 {
     // -- TODO: This will eventually select the root folder based on where the database is.
-    this->p_tracks.push_back(make_unique<SeratoTrack>(move(tag), ""));
+    this->p_tracks->push_back(make_unique<SeratoTrack>(move(tag), ""));
 }
 
 void SeratoDatabase::p_storeOtherTag(SeratoTagPtr tag)
@@ -135,7 +137,20 @@ const SeratoCrate* SeratoDatabase::rootCrate(void) const
 
 const SeratoTrackVector& SeratoDatabase::tracks(void) const
 {
-    return this->p_tracks;
+    return *this->p_tracks;
+}
+
+SeratoTrackVectorPtr SeratoDatabase::removeAndReturnTracks(void)
+{
+    SeratoTrackVectorPtr tracks = move(this->p_tracks);
+    this->p_tracks = SeratoTrackVectorPtr(make_unique<SeratoTrackVector>());
+
+    return tracks;
+}
+
+void SeratoDatabase::addTrack(SeratoTrackPtr track)
+{
+    this->p_tracks->push_back(move(track));
 }
 
 void SeratoDatabase::saveIfModified(void) const
@@ -147,7 +162,7 @@ void SeratoDatabase::saveIfModified(void) const
     this->p_crateOrderFile->saveIfModified();
 
     bool someTracksWereModified = false;
-    for (auto& track : this->p_tracks) {
+    for (auto& track : *this->p_tracks) {
         if (!track->wasModified()) {
             continue;
         }
@@ -162,7 +177,7 @@ void SeratoDatabase::saveIfModified(void) const
         SeratoTagPtr versionTag(make_unique<SeratoTextTag>(NxASeratoDatabaseVersionTag, NxASeratoDatabaseFileCurrentVersion));
         versionTag->addTo(*outputData);
 
-        for (auto& track : this->p_tracks) {
+        for (auto& track : *this->p_tracks) {
             track->addTo(*outputData);
         }
 

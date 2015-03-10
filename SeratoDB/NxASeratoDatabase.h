@@ -30,7 +30,7 @@ namespace NxA {
     private:
         #pragma mark Private Instance Variables
         ConstStringPtr p_databaseFilePath;
-        SeratoTrackVector p_tracks;
+        SeratoTrackVectorPtr p_tracks;
         ConstSeratoTagVector p_otherTags;
 
         SeratoCrateOrderFilePtr p_crateOrderFile;
@@ -53,6 +53,10 @@ namespace NxA {
 
         const SeratoCrate* rootCrate(void) const;
         const SeratoTrackVector& tracks(void) const;
+
+        SeratoTrackVectorPtr removeAndReturnTracks(void);
+
+        void addTrack(SeratoTrackPtr track);
 
         void saveIfModified(void) const;
     };

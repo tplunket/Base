@@ -142,6 +142,7 @@ SeratoTrack::SeratoTrack(SeratoTagPtr trackTag, const char* locatedOnVolumePath)
 
 #if PRINT_DEBUG_INFO
     p_debugPrintComparaison(this, this->p_trackFile.get());
+    p_debugPrint(this->p_stringForSubTagForIdentifier(NxASeratoTrackSizeStringTag), "stringsize");
 #endif
 
     this->p_unloadTrackFile();

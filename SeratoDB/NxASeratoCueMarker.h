@@ -44,6 +44,12 @@ namespace NxA {
     public:
         #pragma mark Constructors
         explicit SeratoCueMarker(const char* id3TagStart);
+        explicit SeratoCueMarker(const std::string& label,
+                                 uint32_t positionInMilliseconds,
+                                 uint16_t index) :
+                                    p_positionInMilliSeconds(positionInMilliseconds),
+                                    p_index(index),
+                                    p_label(label) { }
 
         #pragma mark Instance Methods
         uint32_t positionInMilliseconds(void) const;

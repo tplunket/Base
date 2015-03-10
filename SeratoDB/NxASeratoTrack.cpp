@@ -147,6 +147,35 @@ SeratoTrack::SeratoTrack(SeratoTagPtr trackTag, const char* rootDirectoryPath) :
     this->p_unloadTrackFile();
 }
 
+SeratoTrack::SeratoTrack(const char* trackFilePath, const char* locatedOnVolumePath) :
+    p_wasModified(true),
+    p_rootFolder(make_unique<string>(locatedOnVolumePath)),
+    p_cueMarkers(make_unique<SeratoCueMarkerVector>()),
+    p_loopMarkers(make_unique<SeratoLoopMarkerVector>())
+{
+    ConstStringPtr relativePath = removePrefixFromPath(locatedOnVolumePath, trackFilePath);
+    SeratoTagVectorPtr tags(make_unique<SeratoTagVector>());
+    tags->push_back(make_unique<SeratoPathTag>(NxASeratoTrackFilePathTag, relativePath->c_str()));
+
+    this->p_trackTag = make_unique<SeratoObjectTag>(NxASeratoTrackObjectTag, move(tags));
+
+    this->p_loadTrackFile();
+
+    // TODO: Output correct values:
+    // '06:20.16'
+    // bitrate '128.0kbps' '256kbps' '901kbps' '854kbps' '1411.2kbps'
+    // samplerate '44.1k'
+    // 68.1MB 17.3MB 9.6MB
+
+    this->p_setStringForSubTagForIdentifier("test", NxASeratoTrackLengthTag);
+    this->p_setStringForSubTagForIdentifier("test", NxASeratoTrackBitrateTag);
+    this->p_setStringForSubTagForIdentifier("test", NxASeratoTrackSampleRateTag);
+    this->p_setStringForSubTagForIdentifier("test", NxASeratoTrackSizeStringTag);
+    this->p_setUInt32ForSubTagForIdentifier(23, NxASeratoTrackSizeTag);
+
+    this->p_unloadTrackFile();
+}
+
 #pragma mark Instance Methods
 
 bool SeratoTrack::p_containsAValidTrackTag(void) const

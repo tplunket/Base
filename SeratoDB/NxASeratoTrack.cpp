@@ -129,10 +129,10 @@ static void p_debugPrintComparaison(const SeratoTrack* track, const SeratoTrackF
 
 #pragma mark Constructors
 
-SeratoTrack::SeratoTrack(SeratoTagPtr trackTag, const char* rootDirectoryPath) :
+SeratoTrack::SeratoTrack(SeratoTagPtr trackTag, const char* locatedOnVolumePath) :
                          p_wasModified(false),
                          p_trackTag(move(trackTag)),
-                         p_rootFolder(make_unique<string>(rootDirectoryPath)),
+                         p_rootFolder(make_unique<string>(locatedOnVolumePath)),
                          p_cueMarkers(make_unique<SeratoCueMarkerVector>()),
                          p_loopMarkers(make_unique<SeratoLoopMarkerVector>())
 {

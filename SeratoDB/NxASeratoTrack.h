@@ -65,7 +65,7 @@ namespace NxA {
 
     public:
         #pragma mark Constructors
-        explicit SeratoTrack(SeratoTagPtr trackTag, const char* rootDirectoryPath);
+        explicit SeratoTrack(SeratoTagPtr trackTag, const char* locatedOnVolumePath);
         explicit SeratoTrack(const char* trackFilePath, const char* locatedOnVolumePath);
 
         #pragma mark Instance Methods

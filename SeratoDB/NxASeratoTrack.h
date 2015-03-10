@@ -30,6 +30,7 @@ namespace NxA {
     #pragma mark Containers
     typedef std::unique_ptr<SeratoTrack> SeratoTrackPtr;
     typedef std::vector<SeratoTrackPtr> SeratoTrackVector;
+    typedef std::unique_ptr<SeratoTrackVector> SeratoTrackVectorPtr;
 
     #pragma mark Class Declaration
     class SeratoTrack

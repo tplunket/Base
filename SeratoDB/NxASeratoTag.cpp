@@ -62,7 +62,7 @@ const void* SeratoTag::p_dataForTagAt(const void* tagAddress)
 
 void* SeratoTag::p_dataForTagAt(void* tagAddress)
 {
-    return const_cast<void*>(static_cast<const void*>(tagAddress));
+    return const_cast<void*>(SeratoTag::p_dataForTagAt(const_cast<const void*>(tagAddress)));
 }
 
 uint32_t SeratoTag::identifierForTagAt(const void* tagAddress)

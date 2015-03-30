@@ -46,12 +46,13 @@ bool& SeratoBooleanTag::value(void)
 
 void SeratoBooleanTag::addTo(CharVector& destination) const
 {
-    size_t memoryNeededInBytes = SeratoTag::p_memoryNeededWithDataOfSize(1);
+    size_t dataSize = 1;
+    size_t memoryNeededInBytes = SeratoTag::p_memoryNeededWithDataOfSize(dataSize);
     CharVectorPtr memoryRepresentation = make_unique<CharVector>(memoryNeededInBytes, 0);
 
     void* tagAddress = memoryRepresentation->data();
     SeratoTag::p_setIdentifierForTagAt(this->identifier(), tagAddress);
-    SeratoTag::p_setIdentifierForTagAt(this->identifier(), tagAddress);
+    SeratoTag::p_setDataSizeForTagAt(dataSize, tagAddress);
     char* tagData = (char*)SeratoTag::p_dataForTagAt(tagAddress);
     *tagData = this->value() ? 1 : 0;
 

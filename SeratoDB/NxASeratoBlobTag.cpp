@@ -43,11 +43,13 @@ CharVector& SeratoBlobTag::value(void)
 
 void SeratoBlobTag::addTo(CharVector& destination) const
 {
+    size_t dataSize = this->p_value->size();
     size_t memoryNeededInBytes = SeratoTag::p_memoryNeededWithDataOfSize(this->p_value->size());
     CharVectorPtr memoryRepresentation = make_unique<CharVector>(memoryNeededInBytes, 0);
 
     void* tagAddress = memoryRepresentation->data();
     SeratoTag::p_setIdentifierForTagAt(this->identifier(), tagAddress);
+    SeratoTag::p_setDataSizeForTagAt(dataSize, tagAddress);
     memcpy(SeratoTag::p_dataForTagAt(tagAddress), this->p_value->data(), this->p_value->size());
 
     destination.insert(destination.end(), memoryRepresentation->begin(), memoryRepresentation->end());

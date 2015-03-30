@@ -48,12 +48,13 @@ string& SeratoPathTag::value(void)
 
 void SeratoPathTag::addTo(CharVector& destination) const
 {
-    size_t memoryNeededInBytes = SeratoTag::p_memoryNeededWithDataOfSize(this->p_value->length() * 2);
+    size_t dataSize = this->p_value->length() * 2;
+    size_t memoryNeededInBytes = SeratoTag::p_memoryNeededWithDataOfSize(dataSize);
     CharVectorPtr memoryRepresentation = make_unique<CharVector>(memoryNeededInBytes, 0);
 
     void* tagAddress = memoryRepresentation->data();
     SeratoTag::p_setIdentifierForTagAt(this->identifier(), tagAddress);
-    SeratoTag::p_setIdentifierForTagAt(this->identifier(), tagAddress);
+    SeratoTag::p_setDataSizeForTagAt(dataSize, tagAddress);
     writeStringAsUTF16At(this->p_value->c_str(), SeratoTag::p_dataForTagAt(tagAddress));
 
     destination.insert(destination.end(), memoryRepresentation->begin(), memoryRepresentation->end());

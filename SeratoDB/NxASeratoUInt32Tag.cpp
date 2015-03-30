@@ -33,12 +33,13 @@ uint32_t& SeratoUInt32Tag::value(void)
 
 void SeratoUInt32Tag::addTo(CharVector& destination) const
 {
-    size_t memoryNeededInBytes = SeratoTag::p_memoryNeededWithDataOfSize(4);
+    size_t dataSize = 4;
+    size_t memoryNeededInBytes = SeratoTag::p_memoryNeededWithDataOfSize(dataSize);
     CharVectorPtr memoryRepresentation = make_unique<CharVector>(memoryNeededInBytes, 0);
 
     void* tagAddress = memoryRepresentation->data();
     SeratoTag::p_setIdentifierForTagAt(this->identifier(), tagAddress);
-    SeratoTag::p_setIdentifierForTagAt(this->identifier(), tagAddress);
+    SeratoTag::p_setDataSizeForTagAt(dataSize, tagAddress);
     writeBigEndianUInt32ValueAt(this->p_value, SeratoTag::p_dataForTagAt(tagAddress));
 
     destination.insert(destination.end(), memoryRepresentation->begin(), memoryRepresentation->end());

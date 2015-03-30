@@ -78,7 +78,11 @@ SeratoTagVectorPtr SeratoTagFactory::parseTagsAt(const void* firstTagAddress, si
     SeratoTagVectorPtr newTags = make_unique<SeratoTagVector>();
 
     while (tagAddress < endOfTagsAddress) {
-        newTags->push_back(SeratoTagFactory::tagForBinaryRepresentationAt(tagAddress));
+        SeratoTagPtr tag(SeratoTagFactory::tagForBinaryRepresentationAt(tagAddress));
+        if (tag.get()) {
+            newTags->push_back(move(tag));
+        }
+
         tagAddress = SeratoTag::nextTagAfterBinaryRepresentationAt(tagAddress);
     }
 

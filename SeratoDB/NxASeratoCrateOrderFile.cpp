@@ -106,10 +106,10 @@ SeratoCrateVectorPtr SeratoCrateOrderFile::p_childrenCratesOfCrateNamedUsingName
         crateNameWithSeperator += "%%";
 
         SeratoCrateVectorPtr childCrates = p_childrenCratesOfCrateNamedUsingNameList(crateNameWithSeperator,
-                                                                                         it,
-                                                                                         end,
-                                                                                         seratoFolderPath,
-                                                                                         rootFolderPath);
+                                                                                     it,
+                                                                                     end,
+                                                                                     seratoFolderPath,
+                                                                                     rootFolderPath);
         for (auto& crate : *childCrates) {
             newCrate->addChildCrate(move(crate));
         }

@@ -167,8 +167,7 @@ bool SeratoCrate::childrenCratesWereModified(void) const
 
 void SeratoCrate::saveIfModifiedAndRecurseToChildren(void) const
 {
-    if (this->p_rootVolumePath.get() &&
-        this->p_tracksWereModified) {
+    if (this->p_rootVolumePath.get() && this->p_tracksWereModified) {
         CharVectorPtr outputData = make_unique<CharVector>();
 
         SeratoTagPtr versionTag(make_unique<SeratoTextTag>(NxASeratoCrateVersionTag, NxASeratoCrateFileCurrentVersion));

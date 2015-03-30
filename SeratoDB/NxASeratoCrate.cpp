@@ -121,6 +121,8 @@ void SeratoCrate::loadFromFile(void)
     for(SeratoTagVector::iterator it = tags->begin(); it != tags->end(); ++it) {
         SeratoTag* tag = it->get();
 
+    for(auto& tagPtr : *(tags)) {
+        SeratoTag* tag = tagPtr.get();
         switch (tag->identifier()) {
             case NxASeratoCrateVersionTag: {
                 const SeratoTextTag* versionTag = dynamic_cast<const SeratoTextTag*>(tag);
@@ -132,11 +134,11 @@ void SeratoCrate::loadFromFile(void)
                 break;
             }
             case NxASeratoTrackEntryTag: {
-                this->p_storeTrackTag(move(*it));
+                this->p_storeTrackTag(move(tagPtr));
                 break;
             }
             default: {
-                this->p_storeOtherTag(move(*it));
+                this->p_storeOtherTag(move(tagPtr));
                 break;
             }
         }

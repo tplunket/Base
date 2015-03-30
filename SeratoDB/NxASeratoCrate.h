@@ -42,6 +42,7 @@ namespace NxA {
 
         bool p_tracksWereModified;
         bool p_cratesWereModified;
+        bool p_crateIsValid;
 
         SeratoCrate* p_parentCrate;
         SeratoCrateVectorPtr p_childrenCrates;
@@ -65,6 +66,8 @@ namespace NxA {
         static bool isAValidCrateName(const char* crateFullName, const char* seratoFolderPath);
 
         #pragma mark Instance Methods
+        bool isAValidCrate(void) const;
+
         const std::string& crateName(void) const;
         const std::string& crateFullName(void) const;
         void addFullCrateNameWithPrefixAndRecurseToChildren(std::string& destination, const char* prefix) const;

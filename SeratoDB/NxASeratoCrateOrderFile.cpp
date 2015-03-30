@@ -98,6 +98,10 @@ SeratoCrateVectorPtr SeratoCrateOrderFile::p_childrenCratesOfCrateNamedUsingName
 
         ++it;
 
+        if (!newCrate->isAValidCrate()) {
+            continue;
+        }
+
         string crateNameWithSeperator = *fullCrateName;
         crateNameWithSeperator += "%%";
 

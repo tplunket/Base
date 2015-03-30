@@ -37,6 +37,7 @@ SeratoCrate::SeratoCrate(const char* crateFullName,
         p_parentCrate(NULL),
         p_tracksWereModified(false),
         p_cratesWereModified(false),
+        p_crateIsValid(false),
         p_trackEntries(make_unique<SeratoTrackEntryVector>()),
         p_childrenCrates(make_unique<SeratoCrateVector>())
 {
@@ -79,6 +80,11 @@ void SeratoCrate::p_markCratesAsModified()
     }
 }
 
+bool SeratoCrate::isAValidCrate(void) const
+{
+    return this->p_crateIsValid;
+}
+
 const std::string& SeratoCrate::crateName(void) const
 {
     return *(this->p_crateName);
@@ -118,6 +124,9 @@ void SeratoCrate::loadFromFile(void)
     CharVectorPtr crateFileData = readFileAt(this->p_crateFilePath->c_str());
 
     SeratoTagVectorPtr tags(SeratoTagFactory::parseTagsAt(crateFileData->data(), crateFileData->size()));
+    if (!tags->size()) {
+        return;
+    }
 
     for(auto& tagPtr : *(tags)) {
         SeratoTag* tag = tagPtr.get();
@@ -141,6 +150,8 @@ void SeratoCrate::loadFromFile(void)
             }
         }
     }
+
+    this->p_crateIsValid = true;
 }
 
 void SeratoCrate::resetModificationFlags()

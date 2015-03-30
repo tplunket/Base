@@ -174,7 +174,7 @@ void SeratoCrate::saveIfModifiedAndRecurseToChildren(void) const
         versionTag->addTo(*outputData);
 
         for (auto& trackEntry : *this->p_trackEntries) {
-            trackEntry->tagForEntry().addTo(*(outputData.get()));
+            trackEntry->tagForEntry().addTo(*outputData);
         }
 
         for (auto& tag : this->p_otherTags) {

@@ -144,6 +144,7 @@ void SeratoCrateOrderFile::saveIfModified(void) const
     }
     result += "[end record]\n";
 
-    CharVector content(result.c_str(), result.c_str() + result.length());
-    writeToFile(this->p_crateOrderFilePath->c_str(), content);
+    CharVectorPtr content = make_unique<CharVector>(result.size() * 2, 0);
+    writeStringAsUTF16At(result.c_str(), content->data());
+    writeToFile(this->p_crateOrderFilePath->c_str(), *content);
 }

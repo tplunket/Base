@@ -118,8 +118,6 @@ void SeratoCrate::loadFromFile(void)
     CharVectorPtr crateFileData = readFileAt(this->p_crateFilePath->c_str());
 
     SeratoTagVectorPtr tags(SeratoTagFactory::parseTagsAt(crateFileData->data(), crateFileData->size()));
-    for(SeratoTagVector::iterator it = tags->begin(); it != tags->end(); ++it) {
-        SeratoTag* tag = it->get();
 
     for(auto& tagPtr : *(tags)) {
         SeratoTag* tag = tagPtr.get();

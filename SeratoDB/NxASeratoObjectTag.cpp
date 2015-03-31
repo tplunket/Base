@@ -68,7 +68,17 @@ void SeratoObjectTag::addSubTag(ConstSeratoTagPtr tag)
 
 void SeratoObjectTag::addTo(CharVector& destination) const
 {
+    CharVector subTagsRepresentation;
     for (auto& identifierAndTag : this->p_subTagForIdentifier) {
-        identifierAndTag.second->addTo(destination);
+        identifierAndTag.second->addTo(subTagsRepresentation);
     }
+
+    size_t memoryNeededForHeaderInBytes = SeratoTag::p_memoryNeededWithDataOfSize(0);
+    CharVectorPtr headerRepresentation = make_unique<CharVector>(memoryNeededForHeaderInBytes, 0);
+    void* tagAddress = headerRepresentation->data();
+    SeratoTag::p_setIdentifierForTagAt(this->identifier(), tagAddress);
+    SeratoTag::p_setDataSizeForTagAt(subTagsRepresentation.size(), tagAddress);
+
+    destination.insert(destination.end(), headerRepresentation->begin(), headerRepresentation->end());
+    destination.insert(destination.end(), subTagsRepresentation.begin(), subTagsRepresentation.end());
 }

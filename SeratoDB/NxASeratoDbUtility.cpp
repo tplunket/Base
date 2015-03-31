@@ -168,9 +168,14 @@ namespace NxA {
         return joinPaths(seratoFolderPath, "neworder.pref");
     }
 
+    ConstStringPtr subcratesDirectoryPathInSeratoFolder(const char* seratoFolderPath)
+    {
+        return joinPaths(seratoFolderPath, "Subcrates");
+    }
+
     ConstStringPtr crateFilePathForCrateNameInSeratoFolder(const char* crateName, const char* seratoFolderPath)
     {
-        ConstStringPtr cratesFolderPath = joinPaths(seratoFolderPath, "Subcrates");
+        ConstStringPtr cratesFolderPath = subcratesDirectoryPathInSeratoFolder(seratoFolderPath);
         ConstStringPtr crateFilePartialPath = joinPaths(cratesFolderPath->c_str(), crateName);
         return make_unique<string>(*crateFilePartialPath + ".crate");
     }

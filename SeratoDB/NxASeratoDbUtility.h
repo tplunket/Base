@@ -49,6 +49,7 @@ namespace NxA {
     ConstStringPtr seratoFolderPathForFolder(const char* folderPath);
     ConstStringPtr databaseFilePathForSeratoFolder(const char* seratoFolderPath);
     ConstStringPtr crateOrderFilePathForSeratoFolder(const char* seratoFolderPath);
+    ConstStringPtr subcratesDirectoryPathInSeratoFolder(const char* seratoFolderPath);
     ConstStringPtr crateFilePathForCrateNameInSeratoFolder(const char* crateName, const char* seratoFolderPath);
 
     ConstStringPtr joinPaths(const char* firstPath, const char* secondPath);

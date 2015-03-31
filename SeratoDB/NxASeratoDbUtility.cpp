@@ -111,6 +111,16 @@ namespace NxA {
         return move(results);
     }
 
+    bool stringHasPrefix(const string& stringToTest, const string& prefix)
+    {
+        return stringToTest.find(prefix) == 0;
+    }
+
+    bool stringHasPostfix(const string& stringToTest, const string& postfix)
+    {
+        return stringToTest.rfind(postfix) == (stringToTest.length() - postfix.length());
+    }
+
     uint32_t bigEndianUInt32ValueAt(const void* ptr)
     {
         const char* charsPtr = (const char*)ptr;

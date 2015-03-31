@@ -36,6 +36,8 @@ namespace NxA {
     void writeStringAsUTF16At(const char* characters, void* destination);
 
     StringVectorPtr splitStringIntoOneStringForEachLine(const std::string& text);
+    bool stringHasPrefix(const std::string& stringToTest, const std::string& prefix);
+    bool stringHasPostfix(const std::string& stringToTest, const std::string& postfix);
 
     uint32_t bigEndianUInt32ValueAt(const void* ptr);
     uint16_t bigEndianUInt16ValueAt(const void* ptr);

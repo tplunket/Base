@@ -122,7 +122,6 @@ const SeratoCrateVector& SeratoCrate::crates(void) const
 void SeratoCrate::loadFromFile(void)
 {
     CharVectorPtr crateFileData = readFileAt(this->p_crateFilePath->c_str());
-
     SeratoTagVectorPtr tags(SeratoTagFactory::parseTagsAt(crateFileData->data(), crateFileData->size()));
     if (!tags->size()) {
         return;

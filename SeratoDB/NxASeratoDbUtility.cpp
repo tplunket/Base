@@ -205,13 +205,9 @@ namespace NxA {
 
     ConstStringPtr removePrefixFromPath(const char* prefixPath, const char* fullPath)
     {
-        size_t lengthToCrop = strlen(prefixPath);
-        #ifdef NXASeratoCompiledOnOSX
-        // -- This is for the '/' path seperator
-        lengthToCrop += 1;
-        #endif
-
         string path(fullPath);
+
+        size_t lengthToCrop = strlen(prefixPath);
         path = path.substr(lengthToCrop);
 
         return make_unique<string>(path);

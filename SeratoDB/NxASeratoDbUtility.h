@@ -60,6 +60,7 @@ namespace NxA {
     time_t modificationDateInSecondsSince1970ForFile(const char* filePath);
 
     CharVectorPtr readFileAt(const char* filePath);
+    void deleteFileAt(const char* filePath);
     void writeToFile(const char* filePath, const CharVector& content);
 }
 

@@ -259,6 +259,11 @@ namespace NxA {
         return make_unique<CharVector>();
     }
 
+    void deleteFileAt(const char* filePath)
+    {
+        ::remove(filePath);
+    }
+
     void writeToFile(const char* filePath, const CharVector& content)
     {
         fstream file(filePath, ios::out | ios::binary);

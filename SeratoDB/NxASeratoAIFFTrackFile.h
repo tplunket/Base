@@ -1,8 +1,4 @@
 //
-//  NxASeratoAIFFTrackFile.h
-//  SeratoDB
-//
-//  Created by Didier Malenfant on 2/12/15.
 //  Copyright (c) 2015 Next Audio Labs, LLC. All rights reserved.
 //
 //  This file contains confidential and proprietary information of Serato
@@ -13,6 +9,7 @@
 //  please refer to the modified MIT license provided with this library,
 //  or email licensing@serato.com.
 //
+
 
 #ifndef __SeratoDB__NxASeratoAIFFTrackFile__
 #define __SeratoDB__NxASeratoAIFFTrackFile__

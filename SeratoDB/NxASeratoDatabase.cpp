@@ -1,8 +1,4 @@
 //
-//  NxASeratoDatabase.cpp
-//  SeratoDB
-//
-//  Created by Didier Malenfant on 1/30/15.
 //  Copyright (c) 2015 Next Audio Labs, LLC. All rights reserved.
 //
 //  This file contains confidential and proprietary information of Serato

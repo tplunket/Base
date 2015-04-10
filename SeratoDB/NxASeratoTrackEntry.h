@@ -1,8 +1,4 @@
 //
-//  NxASeratoTrackEntry.h
-//  SeratoDB
-//
-//  Created by Didier Malenfant on 2/5/15.
 //  Copyright (c) 2015 Next Audio Labs, LLC. All rights reserved.
 //
 //  This file contains confidential and proprietary information of Serato

@@ -121,8 +121,8 @@ SeratoCrateOrderFile::SeratoCrateOrderFile(const char* seratoFolderPath, const c
                                            p_unknownCrates(make_unique<StringVector>()),
                                            p_rootCrate(make_unique<SeratoCrate>("", "", ""))
 {
-    ConstStringPtr subcratesDirectory = subcratesDirectoryPathInSeratoFolder(seratoFolderPath);
-    StringVectorPtr subCratesFound(::p_cratesInSubCratesDirectory(subcratesDirectory->c_str()));
+    ConstStringPtr subCratesDirectory = subCratesDirectoryPathInSeratoFolder(seratoFolderPath);
+    StringVectorPtr subCratesFound(::p_cratesInSubCratesDirectory(subCratesDirectory->c_str()));
     StringVectorPtr cratesInOrder(::p_readCratesNamesInCrateOrderFile(*(this->p_crateOrderFilePath)));
 
     ::p_addCratesNamesAtTheStartOfUnlessAlreadyThere(*cratesInOrder, *subCratesFound);

@@ -78,6 +78,7 @@ namespace NxA {
         void resetModificationFlags();
 
         void loadFromFile(void);
+        void deleteCrateFile(void);
         void saveIfModifiedAndRecurseToChildren(void) const;
         bool childrenCratesWereModified(void) const;
 

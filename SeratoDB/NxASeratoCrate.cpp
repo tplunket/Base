@@ -153,6 +153,11 @@ void SeratoCrate::loadFromFile(void)
     this->p_crateIsValid = true;
 }
 
+void SeratoCrate::deleteCrateFile(void)
+{
+    ::deleteFileAt(this->p_crateFilePath->c_str());
+}
+
 void SeratoCrate::resetModificationFlags()
 {
     this->p_cratesWereModified = false;

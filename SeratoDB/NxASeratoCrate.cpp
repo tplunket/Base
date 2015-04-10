@@ -33,7 +33,6 @@ SeratoCrate::SeratoCrate(const char* crateFullName,
         p_parentCrate(NULL),
         p_tracksWereModified(false),
         p_cratesWereModified(false),
-        p_crateIsValid(false),
         p_trackEntries(make_unique<SeratoTrackEntryVector>()),
         p_childrenCrates(make_unique<SeratoCrateVector>())
 {
@@ -52,6 +51,12 @@ SeratoCrate::SeratoCrate(const char* crateFullName,
 bool SeratoCrate::isAValidCrateName(const char* crateFullName, const char* seratoFolderPath)
 {
     ConstStringPtr crateFilePath = crateFilePathForCrateNameInSeratoFolder(crateFullName, seratoFolderPath);
+    return fileExistsAt(crateFilePath->c_str());
+}
+
+bool SeratoCrate::isASmartCrateName(const char* crateFullName, const char* seratoFolderPath)
+{
+    ConstStringPtr crateFilePath = crateFilePathForSmartCrateNameInSeratoFolder(crateFullName, seratoFolderPath);
     return fileExistsAt(crateFilePath->c_str());
 }
 
@@ -74,11 +79,6 @@ void SeratoCrate::p_markCratesAsModified()
     if (this->p_parentCrate) {
         this->p_parentCrate->p_markCratesAsModified();
     }
-}
-
-bool SeratoCrate::isAValidCrate(void) const
-{
-    return this->p_crateIsValid;
 }
 
 const std::string& SeratoCrate::crateName(void) const
@@ -145,8 +145,6 @@ void SeratoCrate::loadFromFile(void)
             }
         }
     }
-
-    this->p_crateIsValid = true;
 }
 
 void SeratoCrate::deleteCrateFile(void)

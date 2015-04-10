@@ -152,20 +152,19 @@ SeratoCrateVectorPtr SeratoCrateOrderFile::p_childrenCratesOfCrateNamedUsingName
             break;
         }
 
-        if (!SeratoCrate::isAValidCrateName(fullCrateName.c_str(), seratoFolderPath)) {
+        if (SeratoCrate::isASmartCrateName(fullCrateName.c_str(), seratoFolderPath)) {
             this->p_unknownCrates->push_back(make_unique<string>(fullCrateName));
             ++it;
             continue;
         }
 
         SeratoCratePtr newCrate = make_unique<SeratoCrate>(fullCrateName.c_str(), seratoFolderPath, rootFolderPath);
-        newCrate->loadFromFile();
+
+        if (SeratoCrate::isAValidCrateName(fullCrateName.c_str(), seratoFolderPath)) {
+            newCrate->loadFromFile();
+        }
 
         ++it;
-
-        if (!newCrate->isAValidCrate()) {
-            continue;
-        }
 
         string crateNameWithSeperator = fullCrateName;
         crateNameWithSeperator += "%%";

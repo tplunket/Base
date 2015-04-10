@@ -210,6 +210,7 @@ void SeratoCrateOrderFile::saveIfModified(void) const
     for (auto& crateName : *this->p_unknownCrates) {
         result += "[crate]";
         result += *(crateName.get());
+        result += "\n";
     }
     result += "[end record]\n";
 

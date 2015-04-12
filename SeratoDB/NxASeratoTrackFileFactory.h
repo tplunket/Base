@@ -10,8 +10,7 @@
 //  or email licensing@serato.com.
 //
 
-#ifndef __SeratoDB__NxASeratoTrackFileFactory__
-#define __SeratoDB__NxASeratoTrackFileFactory__
+#pragma once
 
 #include <SeratoDB/NxASeratoTrackFile.h>
 
@@ -26,5 +25,3 @@ namespace NxA {
         static SeratoTrackFilePtr trackFileForPath(const char* trackFilePath);
     };
 }
-
-#endif /* defined(__SeratoDB__NxASeratoTrackFileFactory__) */

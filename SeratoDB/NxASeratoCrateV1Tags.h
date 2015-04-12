@@ -10,8 +10,7 @@
 //  or email licensing@serato.com.
 //
 
-#ifndef __SeratoDB__NxASeratoCrateV1Tags__
-#define __SeratoDB__NxASeratoCrateV1Tags__
+#pragma once
 
 #pragma mark Constants
 
@@ -26,5 +25,3 @@
 #define NxASeratoCrateColumnVisibilityTag                  'ovct'
 #define NxASeratoCrateColumnWidthTag                       'tvcw'
 #define NxASeratoCrateRemoveColumnVisibilityActionTag      'orvc'
-
-#endif /* defined(__SeratoDB__NxASeratoCrateV1Tags__) */

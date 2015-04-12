@@ -10,8 +10,7 @@
 //  or email licensing@serato.com.
 //
 
-#ifndef __SeratoDB__NxASeratoCrateOrderFile__
-#define __SeratoDB__NxASeratoCrateOrderFile__
+#pragma once
 
 #include <SeratoDB/NxASeratoDBUtility.h>
 #include <SeratoDB/NxASeratoCrate.h>
@@ -51,5 +50,3 @@ namespace NxA {
         void saveIfModified(void) const;
     };
 }
-
-#endif /* defined(__SeratoDB__NxASeratoCrateOrderFile__) */

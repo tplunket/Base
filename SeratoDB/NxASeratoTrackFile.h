@@ -10,8 +10,7 @@
 //  or email licensing@serato.com.
 //
 
-#ifndef __SeratoDB__NxASeratoTrackFile__
-#define __SeratoDB__NxASeratoTrackFile__
+#pragma once
 
 #include <SeratoDB/NxASeratoCueMarker.h>
 #include <SeratoDB/NxASeratoLoopMarker.h>
@@ -118,5 +117,3 @@ namespace NxA {
         void saveChanges(void);
     };
 }
-
-#endif /* defined(__SeratoDB__NxASeratoTrackFile__) */

@@ -10,8 +10,7 @@
 //  or email licensing@serato.com.
 //
 
-#ifndef __SeratoDB__NxASeratoCueMarker__
-#define __SeratoDB__NxASeratoCueMarker__
+#pragma once
 
 #include <SeratoDB/NxASeratoDbUtility.h>
 
@@ -55,5 +54,3 @@ namespace NxA {
         void addId3TagTo(CharVector& data) const;
     };
 }
-
-#endif /* defined(__SeratoDB__NxASeratoCueMarker__) */

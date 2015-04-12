@@ -10,8 +10,7 @@
 //  or email licensing@serato.com.
 //
 
-#ifndef __SeratoDB__NxASeratoTagFactory__
-#define __SeratoDB__NxASeratoTagFactory__
+#pragma once
 
 #include <SeratoDB/NxASeratoTag.h>
 #include <SeratoDB/NxASeratoDbUtility.h>
@@ -32,5 +31,3 @@ namespace NxA {
         static SeratoTagVectorPtr parseTagsAt(const void* firstTagAddress, size_t sizeFromFirstTagInBytes);
     };
 }
-
-#endif /* defined(__SeratoDB__NxASeratoTagFactory__) */

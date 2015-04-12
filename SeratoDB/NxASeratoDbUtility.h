@@ -10,8 +10,7 @@
 //  or email licensing@serato.com.
 //
 
-#ifndef __SeratoDB__NxASeratoDbUtility__
-#define __SeratoDB__NxASeratoDbUtility__
+#pragma once
 
 #include <string>
 #include <vector>
@@ -61,5 +60,3 @@ namespace NxA {
     void deleteFileAt(const char* filePath);
     void writeToFile(const char* filePath, const CharVector& content);
 }
-
-#endif /* defined(__SeratoDB__NxASeratoDbUtility__) */

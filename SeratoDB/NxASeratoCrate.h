@@ -10,8 +10,7 @@
 //  or email licensing@serato.com.
 //
 
-#ifndef __SeratoDB__NxASeratoCrate__
-#define __SeratoDB__NxASeratoCrate__
+#pragma once
 
 #include <SeratoDB/NxASeratoTag.h>
 #include <SeratoDB/NxASeratoTrackEntry.h>
@@ -83,5 +82,3 @@ namespace NxA {
         SeratoCrateVectorPtr removeAndReturnChildrenCrates(void);
     };
 }
-
-#endif /* defined(__SeratoDB__NxASeratoCrate__) */

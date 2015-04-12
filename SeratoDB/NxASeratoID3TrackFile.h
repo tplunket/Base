@@ -10,8 +10,7 @@
 //  or email licensing@serato.com.
 //
 
-#ifndef __SeratoDB__NxASeratoID3TrackFile__
-#define __SeratoDB__NxASeratoID3TrackFile__
+#pragma once
 
 #include <SeratoDB/NxASeratoTrackFile.h>
 #include <SeratoDB/NxASeratoDbUtility.h>
@@ -53,5 +52,3 @@ namespace NxA {
         virtual void setArtwork(CharVectorPtr artwork);
     };
 }
-
-#endif /* defined(__SeratoDB__NxASeratoID3TrackFile__) */

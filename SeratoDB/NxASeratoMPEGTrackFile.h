@@ -10,8 +10,7 @@
 //  or email licensing@serato.com.
 //
 
-#ifndef __SeratoDB__NxASeratoMPEGTrackFile__
-#define __SeratoDB__NxASeratoMPEGTrackFile__
+#pragma once
 
 #include <SeratoDB/NxASeratoID3TrackFile.h>
 
@@ -26,5 +25,3 @@ namespace NxA {
         explicit SeratoMPEGTrackFile(const char* trackFilePath);
     };
 }
-
-#endif /* defined(__SeratoDB__NxASeratoMPEGTrackFile__) */

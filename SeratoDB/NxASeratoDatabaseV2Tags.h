@@ -10,8 +10,7 @@
 //  or email licensing@serato.com.
 //
 
-#ifndef __SeratoDB__NxASeratoDatabaseV2Tags__
-#define __SeratoDB__NxASeratoDatabaseV2Tags__
+#pragma once
 
 #pragma mark Constants
 
@@ -62,5 +61,3 @@
 #define NxASeratoTrackIsAccessControlledWhiteLabelTag   'bwll'
 #define NxASeratoTrackIsUnsuportedTag                   'buns'
 #define NxASeratoTrackBeatGridIsLockedTag               'bbgl'
-
-#endif /* defined(__SeratoDB__NxASeratoDatabaseV2Tags__) */

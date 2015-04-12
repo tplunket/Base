@@ -10,8 +10,7 @@
 //  or email licensing@serato.com.
 //
 
-#ifndef __SeratoDB__NxASeratoUInt32Tag__
-#define __SeratoDB__NxASeratoUInt32Tag__
+#pragma once
 
 #include <SeratoDB/NxASeratoTag.h>
 #include <SeratoDB/NxASeratoDbUtility.h>
@@ -40,5 +39,3 @@ namespace NxA {
         void addTo(CharVector& destination) const;
     };
 }
-
-#endif /* defined(__SeratoDB__NxASeratoUInt32Tag__) */

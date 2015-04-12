@@ -10,8 +10,7 @@
 //  or email licensing@serato.com.
 //
 
-#ifndef __SeratoDB__NxASeratoBase64__
-#define __SeratoDB__NxASeratoBase64__
+#pragma once
 
 #include <SeratoDB/NxASeratoDbUtility.h>
 
@@ -25,5 +24,3 @@ namespace NxA {
         static NxA::CharVectorPtr encodeBlock(const char* plaintext_in, int length_in);
     };
 }
-
-#endif /* defined(__SeratoDB__NxASeratoBase64__) */

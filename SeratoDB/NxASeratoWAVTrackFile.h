@@ -10,8 +10,7 @@
 //  or email licensing@serato.com.
 //
 
-#ifndef __SeratoDB__NxASeratoWAVTrackFile__
-#define __SeratoDB__NxASeratoWAVTrackFile__
+#pragma once
 
 #include <SeratoDB/NxASeratoID3TrackFile.h>
 
@@ -28,5 +27,3 @@ namespace NxA {
         uint32_t bitDepthInBitsOrZeroIfNotApplicable(void) const;
     };
 }
-
-#endif /* defined(__SeratoDB__NxASeratoWAVTrackFile__) */

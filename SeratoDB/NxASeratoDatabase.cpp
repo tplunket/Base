@@ -30,18 +30,16 @@ static const char* NxASeratoDatabaseFileCurrentVersion = "2.0/Serato Scratch LIV
 static void p_debugListCrate(const SeratoCrate* crate, std::string spacing)
 {
     const SeratoCrateVector& crates = crate->crates();
-
-    for(SeratoCrateVector::const_iterator it = crates.begin(); it != crates.end(); ++it) {
-        const SeratoCrate* crate = it->get();
+    for (const SeratoCratePtr& crate : crates) {
         const string& crateName = crate->crateName();
         printf("%sCrate '%s'\n", spacing.c_str(), crateName.c_str());
 
         const SeratoTrackEntryVector& crateTracks = crate->trackEntries();
-        for(SeratoTrackEntryVector::const_iterator cit = crateTracks.begin(); cit != crateTracks.end(); ++cit) {
-            printf("%s   Track '%s'\n", spacing.c_str(), cit->get()->trackFilePath()->c_str());
+        for (const SeratoTrackEntryPtr& trackEntry : crateTracks) {
+            printf("%s   Track '%s'\n", spacing.c_str(), trackEntry->trackFilePath()->c_str());
         }
 
-        p_debugListCrate(crate, (spacing + "   "));
+        p_debugListCrate(crate.get(), (spacing + "   "));
     }
 }
 #endif
@@ -96,11 +94,9 @@ ConstStringPtr SeratoDatabase::versionAsStringForDatabaseIn(const char* seratoFo
     CharVectorPtr databaseFile = readFileAt(databaseFilePath->c_str());
 
     SeratoTagVectorPtr tags(SeratoTagFactory::parseTagsAt(databaseFile->data(), databaseFile->size()));
-    for(SeratoTagVector::iterator it = tags->begin(); it != tags->end(); ++it) {
-        const SeratoTag* tag = it->get();
-
+    for (const SeratoTagPtr& tag : *(tags)) {
         if (tag->identifier() == NxASeratoDatabaseVersionTag) {
-            const SeratoTextTag* textTag = dynamic_cast<const SeratoTextTag*>(tag);
+            const SeratoTextTag* textTag = dynamic_cast<const SeratoTextTag*>(tag.get());
             return make_unique<string>(textTag->value());
         }
     }

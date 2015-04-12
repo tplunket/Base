@@ -24,16 +24,14 @@ SeratoObjectTag::SeratoObjectTag(const void* tagAddress) : SeratoTag(tagAddress)
     const void* dataAddress = SeratoTag::p_dataForTagAt(tagAddress);
 
     SeratoTagVectorPtr subTags = SeratoTagFactory::parseTagsAt(dataAddress, dataSizeInBytes);
-    for(SeratoTagVector::iterator it = subTags->begin(); it != subTags->end(); ++it) {
-        SeratoTagPtr& subTag = *it;
+    for (SeratoTagPtr& subTag : *(subTags)) {
         this->p_subTagForIdentifier[subTag->identifier()] = move(subTag);
     }
 }
 
 SeratoObjectTag::SeratoObjectTag(const uint32_t& identifier, SeratoTagVectorPtr content) : SeratoTag(identifier)
 {
-    for(SeratoTagVector::iterator it = content->begin(); it != content->end(); ++it) {
-        SeratoTagPtr& subTag = *it;
+    for (SeratoTagPtr& subTag : *(content)) {
         this->p_subTagForIdentifier[subTag->identifier()] = move(subTag);
     }
 }

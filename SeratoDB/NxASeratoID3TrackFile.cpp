@@ -219,12 +219,10 @@ CharVectorPtr SeratoID3TrackFile::artwork(void) const
         ID3v2::FrameListMap frameListMap = tag->frameListMap();
         ID3v2::FrameList frameList = frameListMap["APIC"];
 
-        ID3v2::AttachedPictureFrame* artworkFrame = nullptr;
+        const ID3v2::AttachedPictureFrame* artworkFrame = nullptr;
 
-        for(ID3v2::FrameList::ConstIterator it = frameList.begin(); it != frameList.end(); ++it) {
-            ID3v2::Frame* frame = *it;
-
-            ID3v2::AttachedPictureFrame* pic = dynamic_cast<ID3v2::AttachedPictureFrame*>(frame);
+        for (const ID3v2::Frame* frame : frameList) {
+            const ID3v2::AttachedPictureFrame* pic = dynamic_cast<const ID3v2::AttachedPictureFrame*>(frame);
             if (pic->type() == ID3v2::AttachedPictureFrame::FrontCover) {
                 artworkFrame = pic;
                 break;

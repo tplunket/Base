@@ -54,7 +54,7 @@ SeratoDatabase::SeratoDatabase(const char* seratoFolderPath) :
     CharVectorPtr databaseFile = readFileAt(this->p_databaseFilePath->c_str());
 
     SeratoTagVectorPtr tags(SeratoTagFactory::parseTagsAt(databaseFile->data(), databaseFile->size()));
-    for(auto& tag : *tags) {
+    for (auto& tag : *tags) {
         switch (tag->identifier()) {
             case NxASeratoTrackObjectTag: {
                 this->p_storeTrackTag(move(tag));

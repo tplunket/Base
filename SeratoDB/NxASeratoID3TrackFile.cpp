@@ -278,7 +278,7 @@ void SeratoID3TrackFile::setArtwork(CharVectorPtr artwork)
         ID3v2::FrameList frameList = frameListMap["APIC"];
 
         ID3v2::FrameList::Iterator frameToRemove = frameList.end();
-        for(ID3v2::FrameList::Iterator it = frameList.begin(); it != frameList.end(); ++it) {
+        for (ID3v2::FrameList::Iterator it = frameList.begin(); it != frameList.end(); ++it) {
             ID3v2::AttachedPictureFrame* pic = dynamic_cast<ID3v2::AttachedPictureFrame*>(*it);
 
             if (pic->type() == ID3v2::AttachedPictureFrame::FrontCover) {

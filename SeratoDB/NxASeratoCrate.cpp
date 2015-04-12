@@ -123,7 +123,7 @@ void SeratoCrate::loadFromFile(void)
         return;
     }
 
-    for(auto& tagPtr : *(tags)) {
+    for (auto& tagPtr : *(tags)) {
         SeratoTag* tag = tagPtr.get();
         switch (tag->identifier()) {
             case NxASeratoCrateVersionTag: {

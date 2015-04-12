@@ -31,7 +31,7 @@ SeratoCrate::SeratoCrate(const char* crateFullName,
         p_rootVolumePath(ConstStringPtr(make_unique<string>(locatedOnVolumePath))),
         p_crateFilePath(crateFilePathForCrateNameInSeratoFolder(crateFullName, inSeratoFolderPath)),
         p_parentCrate(NULL),
-        p_tracksWereModified(false),
+        p_tracksWereModified(true),
         p_cratesWereModified(false),
         p_trackEntries(make_unique<SeratoTrackEntryVector>()),
         p_childrenCrates(make_unique<SeratoCrateVector>())

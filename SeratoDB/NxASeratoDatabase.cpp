@@ -122,6 +122,11 @@ time_t SeratoDatabase::databaseModificationDateInSecondsSince1970(void) const
     return modificationDateInSecondsSince1970ForFile(this->p_databaseFilePath->c_str());
 }
 
+time_t SeratoDatabase::rootCrateModificationDateInSecondsSince1970(void) const
+{
+    return this->p_crateOrderFile->modificationDateInSecondsSince1970();
+}
+
 const SeratoCrate* SeratoDatabase::rootCrate(void) const
 {
     return this->p_crateOrderFile->rootCrate();

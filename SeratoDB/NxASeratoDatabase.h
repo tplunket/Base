@@ -45,6 +45,7 @@ namespace NxA {
 
         #pragma mark Instance Methods
         time_t databaseModificationDateInSecondsSince1970(void) const;
+        time_t rootCrateModificationDateInSecondsSince1970(void) const;
 
         const SeratoCrate* rootCrate(void) const;
         const SeratoTrackVector& tracks(void) const;

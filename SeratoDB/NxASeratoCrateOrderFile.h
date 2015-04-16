@@ -47,6 +47,8 @@ namespace NxA {
         #pragma mark Instance Methods
         const SeratoCrate* rootCrate(void) const;
 
+        time_t modificationDateInSecondsSince1970(void) const;
+
         void saveIfModified(void) const;
     };
 }

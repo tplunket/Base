@@ -191,6 +191,11 @@ const SeratoCrate* SeratoCrateOrderFile::rootCrate(void) const
     return this->p_rootCrate.get();
 }
 
+time_t SeratoCrateOrderFile::modificationDateInSecondsSince1970(void) const
+{
+    return modificationDateInSecondsSince1970ForFile(this->p_crateOrderFilePath->c_str());
+}
+
 void SeratoCrateOrderFile::saveIfModified(void) const
 {
     this->p_rootCrate->saveIfModifiedAndRecurseToChildren();

@@ -152,6 +152,16 @@ void SeratoCrate::deleteCrateFile(void)
     ::deleteFileAt(this->p_crateFilePath->c_str());
 }
 
+bool SeratoCrate::hasParentCrate(void) const
+{
+    return this->p_parentCrate != nullptr;
+}
+
+SeratoCrate& SeratoCrate::parentCrate(void) const
+{
+    return *(this->p_parentCrate);
+}
+
 void SeratoCrate::resetModificationFlags()
 {
     this->p_cratesWereModified = false;

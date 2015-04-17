@@ -68,6 +68,9 @@ namespace NxA {
         const SeratoTrackEntryVector& trackEntries(void) const;
         const SeratoCrateVector& crates(void) const;
 
+        bool hasParentCrate(void) const;
+        SeratoCrate& parentCrate(void) const;
+
         void resetModificationFlags();
 
         void loadFromFile(void);

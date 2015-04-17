@@ -77,7 +77,7 @@ SeratoDatabase::SeratoDatabase(const char* seratoFolderPath) :
     }
 
     // -- TODO: This will eventually select the root folder based on where the database is.
-    this->p_crateOrderFile = make_unique<SeratoCrateOrderFile>(seratoFolderPath, "");
+    this->p_crateOrderFile = make_unique<SeratoCrateOrderFile>(seratoFolderPath, "", *this);
 
 #if PRINT_DEBUG_INFO
     p_debugListCrate(this->rootCrate(), "");
@@ -145,6 +145,11 @@ SeratoTrackVectorPtr SeratoDatabase::removeAndReturnTracks(void)
     return tracks;
 }
 
+void SeratoDatabase::addCrateFileToDelete(const std::string& path)
+{
+    this->p_crateFilesToDelete.push_back(StringPtr(make_unique<string>(path)));
+}
+
 void SeratoDatabase::addTrack(SeratoTrackPtr track)
 {
     this->p_tracks->push_back(move(track));
@@ -154,6 +159,10 @@ void SeratoDatabase::saveIfModified(void) const
 {
     if (!this->p_databaseIsValid) {
         return;
+    }
+
+    for (auto& path : this->p_crateFilesToDelete) {
+        ::deleteFileAt(path->c_str());
     }
 
     this->p_crateOrderFile->saveIfModified();

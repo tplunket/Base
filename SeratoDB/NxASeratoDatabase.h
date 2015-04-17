@@ -28,6 +28,8 @@ namespace NxA {
         SeratoTrackVectorPtr p_tracks;
         ConstSeratoTagVector p_otherTags;
 
+        StringVector p_crateFilesToDelete;
+
         SeratoCrateOrderFilePtr p_crateOrderFile;
 
         bool p_databaseIsValid;
@@ -51,6 +53,8 @@ namespace NxA {
         const SeratoTrackVector& tracks(void) const;
 
         SeratoTrackVectorPtr removeAndReturnTracks(void);
+
+        void addCrateFileToDelete(const std::string& path);
 
         void addTrack(SeratoTrackPtr track);
 

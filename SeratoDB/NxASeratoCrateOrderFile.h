@@ -18,6 +18,7 @@
 namespace NxA {
     #pragma mark Forward declarations
     class SeratoCrateOrderFile;
+    class SeratoDatabase;
 
     #pragma mark Containers
     typedef std::unique_ptr<const SeratoCrateOrderFile> SeratoCrateOrderFilePtr;
@@ -38,11 +39,12 @@ namespace NxA {
                                                                        StringVector::iterator& it,
                                                                        const StringVector::iterator& end,
                                                                        const char* seratoFolderPath,
-                                                                       const char* rootFolderPath);
+                                                                       const char* rootFolderPath,
+                                                                       SeratoDatabase& database);
 
     public:
         #pragma mark Constructors
-        explicit SeratoCrateOrderFile(const char* seratoFolderPath, const char* rootFolderPath);
+        explicit SeratoCrateOrderFile(const char* seratoFolderPath, const char* rootFolderPath, SeratoDatabase& database);
 
         #pragma mark Instance Methods
         const SeratoCrate* rootCrate(void) const;

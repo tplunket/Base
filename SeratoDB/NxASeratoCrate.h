@@ -19,6 +19,7 @@
 namespace NxA {
     #pragma mark Forward declarations
     class SeratoCrate;
+    class SeratoDatabase;
 
     #pragma mark Containers
     typedef std::unique_ptr<SeratoCrate> SeratoCratePtr;
@@ -38,6 +39,8 @@ namespace NxA {
         bool p_tracksWereModified;
         bool p_cratesWereModified;
 
+        SeratoDatabase& p_parentDatabase;
+
         SeratoCrate* p_parentCrate;
         SeratoCrateVectorPtr p_childrenCrates;
         SeratoTrackEntryVectorPtr p_trackEntries;
@@ -54,7 +57,8 @@ namespace NxA {
         #pragma mark Constructors
         explicit SeratoCrate(const char* crateFullName,
                              const char* inSeratoFolderPath,
-                             const char* locatedOnVolumePath);
+                             const char* locatedOnVolumePath,
+                             SeratoDatabase& database);
 
         #pragma mark Class Methods
         static bool isAValidCrateName(const char* crateFullName, const char* seratoFolderPath);
@@ -74,7 +78,6 @@ namespace NxA {
         void resetModificationFlags();
 
         void loadFromFile(void);
-        void deleteCrateFile(void);
         void saveIfModifiedAndRecurseToChildren(void) const;
         bool childrenCratesWereModified(void) const;
 

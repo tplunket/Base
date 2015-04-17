@@ -116,10 +116,10 @@ static void p_addCratesNamesAtTheStartOfUnlessAlreadyThere(StringVector& cratesT
 
 #pragma mark Constructors
 
-SeratoCrateOrderFile::SeratoCrateOrderFile(const char* seratoFolderPath, const char* rootFolderPath) :
+SeratoCrateOrderFile::SeratoCrateOrderFile(const char* seratoFolderPath, const char* rootFolderPath, SeratoDatabase& database) :
                                            p_crateOrderFilePath(crateOrderFilePathForSeratoFolder(seratoFolderPath)),
                                            p_unknownCrates(make_unique<StringVector>()),
-                                           p_rootCrate(make_unique<SeratoCrate>("", "", ""))
+                                           p_rootCrate(make_unique<SeratoCrate>("", "", "", database))
 {
     ConstStringPtr subCratesDirectory = subCratesDirectoryPathInSeratoFolder(seratoFolderPath);
     StringVectorPtr subCratesFound(::p_cratesInSubCratesDirectory(subCratesDirectory->c_str()));
@@ -128,7 +128,7 @@ SeratoCrateOrderFile::SeratoCrateOrderFile(const char* seratoFolderPath, const c
     ::p_addCratesNamesAtTheStartOfUnlessAlreadyThere(*cratesInOrder, *subCratesFound);
 
     StringVector::iterator it = cratesInOrder->begin();
-    SeratoCrateVectorPtr crates = this->p_childrenCratesOfCrateNamedUsingNameList("", it, cratesInOrder->end(), seratoFolderPath, rootFolderPath);
+    SeratoCrateVectorPtr crates = this->p_childrenCratesOfCrateNamedUsingNameList("", it, cratesInOrder->end(), seratoFolderPath, rootFolderPath, database);
     for (auto& crateName : *crates) {
         this->p_rootCrate->addChildCrate(move(crateName));
     }
@@ -142,7 +142,8 @@ SeratoCrateVectorPtr SeratoCrateOrderFile::p_childrenCratesOfCrateNamedUsingName
                                                                                      StringVector::iterator& it,
                                                                                      const StringVector::iterator& end,
                                                                                      const char* seratoFolderPath,
-                                                                                     const char* rootFolderPath)
+                                                                                     const char* rootFolderPath,
+                                                                                     SeratoDatabase& database)
 {
     SeratoCrateVectorPtr cratesFound = make_unique<SeratoCrateVector>();
 
@@ -158,7 +159,7 @@ SeratoCrateVectorPtr SeratoCrateOrderFile::p_childrenCratesOfCrateNamedUsingName
             continue;
         }
 
-        SeratoCratePtr newCrate = make_unique<SeratoCrate>(fullCrateName.c_str(), seratoFolderPath, rootFolderPath);
+        SeratoCratePtr newCrate = make_unique<SeratoCrate>(fullCrateName.c_str(), seratoFolderPath, rootFolderPath, database);
 
         if (SeratoCrate::isAValidCrateName(fullCrateName.c_str(), seratoFolderPath)) {
             newCrate->loadFromFile();
@@ -173,7 +174,8 @@ SeratoCrateVectorPtr SeratoCrateOrderFile::p_childrenCratesOfCrateNamedUsingName
                                                                                      it,
                                                                                      end,
                                                                                      seratoFolderPath,
-                                                                                     rootFolderPath);
+                                                                                     rootFolderPath,
+                                                                                     database);
         for (auto& crate : *childCrates) {
             newCrate->addChildCrate(move(crate));
         }

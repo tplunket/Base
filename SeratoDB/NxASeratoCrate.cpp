@@ -14,6 +14,7 @@
 #include "SeratoDB/NxASeratoCrateV1Tags.h"
 #include "SeratoDB/NxASeratoTextTag.h"
 #include "SeratoDB/NxASeratoTagFactory.h"
+#include "SeratoDB/NxASeratoDatabase.h"
 
 using namespace NxA;
 using namespace std;
@@ -26,10 +27,12 @@ static const char* NxASeratoCrateFileCurrentVersion = "1.0/Serato ScratchLive Cr
 
 SeratoCrate::SeratoCrate(const char* crateFullName,
                          const char* inSeratoFolderPath,
-                         const char* locatedOnVolumePath) :
+                         const char* locatedOnVolumePath,
+                         SeratoDatabase& database) :
         p_crateFullName(ConstStringPtr(make_unique<string>(crateFullName))),
         p_rootVolumePath(ConstStringPtr(make_unique<string>(locatedOnVolumePath))),
         p_crateFilePath(crateFilePathForCrateNameInSeratoFolder(crateFullName, inSeratoFolderPath)),
+        p_parentDatabase(database),
         p_parentCrate(NULL),
         p_tracksWereModified(true),
         p_cratesWereModified(false),
@@ -147,11 +150,6 @@ void SeratoCrate::loadFromFile(void)
     }
 }
 
-void SeratoCrate::deleteCrateFile(void)
-{
-    ::deleteFileAt(this->p_crateFilePath->c_str());
-}
-
 bool SeratoCrate::hasParentCrate(void) const
 {
     return this->p_parentCrate != nullptr;
@@ -265,7 +263,7 @@ void SeratoCrate::destroy(void)
         childrenCrate->destroy();
     }
 
-    this->deleteCrateFile();
+    this->p_parentDatabase.addCrateFileToDelete(*(this->p_crateFilePath));
     
     if (this->hasParentCrate()) {
         SeratoCrate &parentCrate = this->parentCrate();

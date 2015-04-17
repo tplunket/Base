@@ -84,5 +84,7 @@ namespace NxA {
         SeratoCratePtr removeAndReturnChildrenCrate(SeratoCrate& crate);
         SeratoTrackEntryVectorPtr removeAndReturnTrackEntries(void);
         SeratoCrateVectorPtr removeAndReturnChildrenCrates(void);
+
+        void destroy(void);
     };
 }

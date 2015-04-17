@@ -557,3 +557,8 @@ void SeratoTrack::saveToTrackFile(void)
 
     this->p_unloadTrackFile();
 }
+
+void SeratoTrack::destroy(void)
+{
+    delete this;
+}

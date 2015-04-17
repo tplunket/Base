@@ -56,3 +56,8 @@ const SeratoTag& SeratoTrackEntry::tagForEntry(void) const
 {
     return *(this->p_trackEntryTag.get());
 }
+
+void SeratoTrackEntry::destroy(void)
+{
+    delete this;
+}

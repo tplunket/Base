@@ -48,5 +48,7 @@ namespace NxA {
         ConstStringPtr trackFilePath(void) const;
 
         const SeratoTag& tagForEntry(void) const;
+
+        void destroy(void);
     };
 }

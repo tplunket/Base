@@ -258,3 +258,22 @@ SeratoCrateVectorPtr SeratoCrate::removeAndReturnChildrenCrates(void)
 
     return childrenCrates;
 }
+
+void SeratoCrate::destroy(void)
+{
+    for (auto &childrenCrate : *(this->p_childrenCrates)) {
+        childrenCrate->destroy();
+    }
+
+    this->deleteCrateFile();
+    
+    if (this->hasParentCrate()) {
+        SeratoCrate &parentCrate = this->parentCrate();
+
+        SeratoCratePtr self(parentCrate.removeAndReturnChildrenCrate(*this));
+        delete self.release();
+    }
+    else {
+        delete this;
+    }
+}

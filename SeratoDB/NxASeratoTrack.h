@@ -113,5 +113,7 @@ namespace NxA {
         bool wasModified(void) const;
         void addTo(CharVector& destination) const;
         void saveToTrackFile(void);
+
+        void destroy(void);
     };
 }

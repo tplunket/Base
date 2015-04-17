@@ -212,6 +212,29 @@ void SeratoCrate::addChildCrate(SeratoCratePtr crate)
     this->p_childrenCrates->push_back(move(crate));
 }
 
+SeratoCratePtr SeratoCrate::removeAndReturnChildrenCrate(SeratoCrate& crate)
+{
+    crate.p_parentCrate = nullptr;
+
+    uint32_t indexOfChildrenCrate = 0;
+    SeratoCrateVector& childrenCrates = *(this->p_childrenCrates);
+    for (auto& childrenCrate : childrenCrates) {
+        if (childrenCrate.get() == &crate) {
+            SeratoCratePtr crateToRemove(move(childrenCrate));
+
+            this->p_markCratesAsModified();
+
+            childrenCrates.erase(childrenCrates.begin() + indexOfChildrenCrate);
+
+            return move(crateToRemove);
+        }
+
+        ++indexOfChildrenCrate;
+    }
+
+    return SeratoCratePtr(nullptr);
+}
+
 SeratoTrackEntryVectorPtr SeratoCrate::removeAndReturnTrackEntries(void)
 {
     SeratoTrackEntryVectorPtr trackEntries = move(this->p_trackEntries);

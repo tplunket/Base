@@ -34,8 +34,10 @@ namespace NxA {
     bool stringHasPrefix(const std::string& stringToTest, const std::string& prefix);
     bool stringHasPostfix(const std::string& stringToTest, const std::string& postfix);
 
+    float bigEndianFloatValueAt(const void* ptr);
     uint32_t bigEndianUInt32ValueAt(const void* ptr);
     uint16_t bigEndianUInt16ValueAt(const void* ptr);
+    void writeBigEndianFloatValueAt(float value, const void* ptr);
     void writeBigEndianUInt32ValueAt(uint32_t value, void* ptr);
     void writeBigEndianUInt16ValueAt(uint16_t value, void* ptr);
 

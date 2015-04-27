@@ -117,6 +117,16 @@ namespace NxA {
         return stringToTest.rfind(postfix) == (stringToTest.length() - postfix.length());
     }
 
+    float bigEndianFloatValueAt(const void* ptr)
+    {
+        const char* charsPtr = (const char*)ptr;
+        uint32_t bigEndianVersion = ((charsPtr[0] << 24) & 0xff000000) |
+                                     ((charsPtr[1] << 16) & 0xff0000) |
+                                     ((charsPtr[2] << 8) & 0xff00) |
+                                     (charsPtr[3] & 0xff);
+        return *(float *)&bigEndianVersion;
+    }
+
     uint32_t bigEndianUInt32ValueAt(const void* ptr)
     {
         const char* charsPtr = (const char*)ptr;
@@ -131,6 +141,16 @@ namespace NxA {
         const char* charsPtr = (const char*)ptr;
         return ((charsPtr[0] << 8) & 0xff00) |
                 (charsPtr[1] & 0xff);
+    }
+
+    void writeBigEndianFloatValueAt(float value, const void* ptr)
+    {
+        char* charsPtr = (char*)ptr;
+        const char* valuePtr = (const char*)&value;
+        charsPtr[0] = valuePtr[3];
+        charsPtr[1] = valuePtr[2];
+        charsPtr[2] = valuePtr[1];
+        charsPtr[3] = valuePtr[0];
     }
 
     void writeBigEndianUInt32ValueAt(uint32_t value, void* ptr)

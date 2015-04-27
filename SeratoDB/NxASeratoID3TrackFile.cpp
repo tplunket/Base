@@ -56,9 +56,25 @@ static bool p_isAValidGeobFrame(const ID3v2::GeneralEncapsulatedObjectFrame* fra
     return mimeType == "application/octet-stream";
 }
 
+static ID3v2::FrameList::Iterator p_frameInListWithDescription(ID3v2::FrameList& list, const char* description)
+{
+    for (ID3v2::FrameList::Iterator it = list.begin(); it != list.end(); ++it) {
+        ID3v2::GeneralEncapsulatedObjectFrame* frame = (ID3v2::GeneralEncapsulatedObjectFrame*)*it;
+        if (!p_isAValidGeobFrame(frame)) {
+            continue;
+        }
+
+        if (frame->description() == description) {
+            return it;
+        }
+    }
+
+    return list.end();
+}
+
 #pragma mark Instance Methods
 
-void SeratoID3TrackFile::p_readMarkersV2(void)
+void SeratoID3TrackFile::p_readMarkers(void)
 {
     ID3v2::Tag* tag = (ID3v2::Tag*)this->p_parsedFileTag;
     if (!tag) {
@@ -85,42 +101,20 @@ void SeratoID3TrackFile::p_readMarkersV2(void)
             SeratoGeobObjectStruct* objectData = (SeratoGeobObjectStruct*)frameObject.data();
             this->p_readMarkersV2FromBase64Data((char*)objectData->data, encodedDataSize);
         }
+        else if (description == "Serato BeatGrid") {
+            uint32_t dataSize = frame->size() - sizeof(SeratoGeobBodyHeaderStruct);
+            const ByteVector frameObject = frame->object();
+
+            SeratoGeobObjectStruct* headerStruct = (SeratoGeobObjectStruct*)frameObject.data();
+            if ((headerStruct->majorVersion == 1) && (headerStruct->minorVersion == 0)) {
+                this->p_readGridMarkersFrom((char*)headerStruct->data, dataSize);
+            }
+        }
     }
 }
 
-void SeratoID3TrackFile::p_writeMarkersV2(void)
+void SeratoID3TrackFile::p_writeMarkersV2Frame(void)
 {
-    ID3v2::Tag* tag = (ID3v2::Tag*)this->p_parsedFileTag;
-    if (!tag) {
-        return;
-    }
-
-    ID3v2::FrameListMap frameListMap = tag->frameListMap();
-    if (frameListMap.contains("GEOB")) {
-        ID3v2::FrameList geobFrames = frameListMap["GEOB"];
-        ID3v2::FrameList::Iterator frameToDelete = geobFrames.end();
-
-        for (ID3v2::FrameList::Iterator it = geobFrames.begin(); it != geobFrames.end(); ++it) {
-            ID3v2::GeneralEncapsulatedObjectFrame* frame = (ID3v2::GeneralEncapsulatedObjectFrame*)*it;
-            if (!p_isAValidGeobFrame(frame)) {
-                continue;
-            }
-
-            const String description = frame->description();
-            if (description == "Serato Markers2") {
-                frameToDelete = it;
-                break;
-            }
-        }
-
-        if (frameToDelete != geobFrames.end()) {
-            geobFrames.erase(frameToDelete);
-        }
-    }
-    else {
-        frameListMap["GEOB"] = ID3v2::FrameList();
-    }
-
     CharVector decodedData;
 
     SeratoGeobObjectStruct header;
@@ -142,7 +136,80 @@ void SeratoID3TrackFile::p_writeMarkersV2(void)
     newFrame->setFileName("");
     newFrame->setDescription("Serato Markers2");
 
-    frameListMap["GEOB"].append(newFrame);
+    ID3v2::Tag* tag = (ID3v2::Tag*)this->p_parsedFileTag;
+    if (!tag) {
+        // -- TODO: This should be asserted against.
+        return;
+    }
+
+    ID3v2::FrameListMap frameListMap = tag->frameListMap();
+    ID3v2::FrameList geobFrames = frameListMap["GEOB"];
+    geobFrames.append(newFrame);
+}
+
+void SeratoID3TrackFile::p_writeGridMarkersFrame(void)
+{
+    CharVector data;
+
+    SeratoGeobObjectStruct header;
+    header.majorVersion = 1;
+    header.minorVersion = 0;
+    CharVector headerData((char*)&header, (char*)&header.data);
+    data.insert(data.end(), headerData.begin(), headerData.end());
+
+    CharVectorPtr gridMarkerData(this->p_gridMarkerDataFromGridMarkers());
+    data.insert(data.end(), gridMarkerData->begin(), gridMarkerData->end());
+
+    ByteVector newData(data.data(), data.size());
+    ID3v2::GeneralEncapsulatedObjectFrame* newFrame = new ID3v2::GeneralEncapsulatedObjectFrame(newData);
+    newFrame->setTextEncoding(String::Latin1);
+    newFrame->setMimeType("application/octet-stream");
+    newFrame->setFileName("");
+    newFrame->setDescription("Serato BeatGrid");
+
+    ID3v2::Tag* tag = (ID3v2::Tag*)this->p_parsedFileTag;
+    if (!tag) {
+        // -- TODO: This should be asserted against.
+        return;
+    }
+
+    ID3v2::FrameListMap frameListMap = tag->frameListMap();
+    ID3v2::FrameList geobFrames = frameListMap["GEOB"];
+    geobFrames.append(newFrame);
+}
+
+void SeratoID3TrackFile::p_writeMarkers(void)
+{
+    ID3v2::Tag* tag = (ID3v2::Tag*)this->p_parsedFileTag;
+    if (!tag) {
+        return;
+    }
+
+    ID3v2::FrameListMap frameListMap = tag->frameListMap();
+    if (frameListMap.contains("GEOB")) {
+        ID3v2::FrameList geobFrames = frameListMap["GEOB"];
+
+        ID3v2::FrameList::Iterator frameToDelete = p_frameInListWithDescription(geobFrames, "Serato Markers2");
+        if (frameToDelete != geobFrames.end()) {
+            geobFrames.erase(frameToDelete);
+        }
+
+        frameToDelete = p_frameInListWithDescription(geobFrames, "Serato BeatGrid");
+        if (frameToDelete != geobFrames.end()) {
+            geobFrames.erase(frameToDelete);
+        }
+    }
+    else if (this->cueMarkers().size() || this->loopMarkers().size() || this->gridMarkers().size()) {
+        frameListMap["GEOB"] = ID3v2::FrameList();
+    }
+
+    if (this->cueMarkers().size() || this->loopMarkers().size()) {
+        this->p_writeMarkersV2Frame();
+    }
+
+    if (this->gridMarkers().size()) {
+        this->p_writeGridMarkersFrame();
+    }
 }
 
 bool SeratoID3TrackFile::hasKey(void) const

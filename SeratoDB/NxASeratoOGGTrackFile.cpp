@@ -11,6 +11,7 @@
 //
 
 #include "SeratoDB/NxASeratoOGGTrackFile.h"
+#include "SeratoDB/NxASeratoBase64.h"
 
 #include <taglib/vorbisfile.h>
 
@@ -39,29 +40,77 @@ SeratoOGGTrackFile::SeratoOGGTrackFile(const char* trackFilePath) : SeratoID3Tra
     this->p_properties = file->properties();
     this->p_file = move(file);
 
-    this->p_readMarkersV2();
+    this->p_readMarkers();
 }
 
 #pragma mark Instance Methods
 
-void SeratoOGGTrackFile::p_readMarkersV2(void)
+void SeratoOGGTrackFile::p_readMarkers(void)
 {
     const String markersEncodedData = this->p_properties["SERATO_MARKERS2"].toString();
     uint32_t encodedDataSize = markersEncodedData.size();
+    if (encodedDataSize) {
+        this->p_readMarkersV2FromBase64Data((char*)markersEncodedData.data(String::UTF8).data(), encodedDataSize);
+    }
 
-    this->p_readMarkersV2FromBase64Data((char*)markersEncodedData.data(String::UTF8).data(), encodedDataSize);
+    const String beatGridEncodedData = this->p_properties["SERATO_BEATGRID"].toString();
+    uint32_t encodedBeatGridDataSize = beatGridEncodedData.size();
+    if (encodedBeatGridDataSize) {
+        uint32_t majorVersion = beatGridEncodedData.substr(0, 8).toInt();
+        uint32_t minorVersion = beatGridEncodedData.substr(8, 8).toInt();
+        if ((majorVersion == 1) && (minorVersion == 0)) {
+            uint32_t numberOfGridMarkers = beatGridEncodedData.substr(16, 8).toInt();
+            StringList markerStrings(beatGridEncodedData.substr(25).split("("));
+            if (markerStrings.size() == numberOfGridMarkers) {
+                for (auto& markerString : markerStrings) {
+                    StringList values = markerString.split(",");
+                    double position = stod(values[0].toCString());
+                    double bpm = stod(values[1].substr(0, values[1].length() - 1).toCString());
+
+                    this->p_addGridMarker(make_unique<SeratoGridMarker>(position, bpm));
+                }
+            }
+        }
+    }
 }
 
-void SeratoOGGTrackFile::p_writeMarkersV2(void)
+void SeratoOGGTrackFile::p_writeMarkers(void)
 {
-    CharVector decodedData;
+    if (this->cueMarkers().size() || this->loopMarkers().size()) {
+        CharVector decodedData;
 
-    CharVectorPtr base64Data(this->p_base64DataFromMarkersV2());
-    base64Data->push_back('\0');
+        CharVectorPtr base64Data(this->p_base64DataFromMarkersV2());
+        base64Data->push_back('\0');
 
-    StringList newList;
-    newList.append(String(base64Data->data()));
-    this->p_properties["SERATO_MARKERS2"] = newList;
+        StringList newList;
+        newList.append(String(base64Data->data()));
+        this->p_properties["SERATO_MARKERS2"] = newList;
+    }
+    else {
+        this->p_properties.erase("SERATO_MARKERS2");
+    }
+
+    if (this->gridMarkers().size()) {
+        String propertyString;
+        char buffer[32];
+
+        propertyString.append("00000001");
+        propertyString.append("00000000");
+        ::snprintf(buffer, sizeof(buffer), "%08ld", this->gridMarkers().size());
+        propertyString.append(buffer);
+
+        for (auto& marker : this->gridMarkers()) {
+            ::snprintf(buffer, sizeof(buffer), "(%0.6f,%0.6f)", marker->positionInSeconds(), marker->bpm());
+            propertyString.append(buffer);
+        }
+
+        StringList newList;
+        newList.append(propertyString);
+        this->p_properties["SERATO_BEATGRID"] = newList;
+    }
+    else {
+        this->p_properties.erase("SERATO_BEATGRID");
+    }
 }
 
 bool SeratoOGGTrackFile::hasKey(void) const

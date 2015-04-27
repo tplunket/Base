@@ -119,7 +119,10 @@ static void p_debugPrintComparaison(const SeratoTrack* track, const SeratoTrackF
 
     p_debugPrintUint(track->discNumber(), "discnumber");
 
-    printf("Found %ld cue markers and %ld loop markers.\n", trackFile->cueMarkers().size(), trackFile->loopMarkers().size());
+    printf("Found %ld cue markers, %ld grid markers and %ld loop markers.\n",
+           trackFile->cueMarkers().size(),
+           trackFile->gridMarkers().size(),
+           trackFile->loopMarkers().size());
 }
 #endif
 
@@ -130,7 +133,8 @@ SeratoTrack::SeratoTrack(SeratoTagPtr trackTag, const char* locatedOnVolumePath)
                          p_trackTag(move(trackTag)),
                          p_rootFolder(make_unique<string>(locatedOnVolumePath)),
                          p_cueMarkers(make_unique<SeratoCueMarkerVector>()),
-                         p_loopMarkers(make_unique<SeratoLoopMarkerVector>())
+                         p_loopMarkers(make_unique<SeratoLoopMarkerVector>()),
+                         p_gridMarkers(make_unique<SeratoGridMarkerVector>())
 {
     this->p_loadTrackFile();
 
@@ -148,7 +152,8 @@ SeratoTrack::SeratoTrack(const char* trackFilePath, const char* locatedOnVolumeP
     p_wasModified(true),
     p_rootFolder(make_unique<string>(locatedOnVolumePath)),
     p_cueMarkers(make_unique<SeratoCueMarkerVector>()),
-    p_loopMarkers(make_unique<SeratoLoopMarkerVector>())
+    p_loopMarkers(make_unique<SeratoLoopMarkerVector>()),
+    p_gridMarkers(make_unique<SeratoGridMarkerVector>())
 {
     ConstStringPtr relativePath = removePrefixFromPath(locatedOnVolumePath, trackFilePath);
     SeratoTagVectorPtr tags(make_unique<SeratoTagVector>());
@@ -299,6 +304,11 @@ void SeratoTrack::p_readMarkers(void)
     for (auto& marker : loopMarkers) {
         this->p_loopMarkers->push_back(make_unique<SeratoLoopMarker>(*marker));
     }
+
+    const SeratoGridMarkerVector& gridMarkers = this->p_trackFile->gridMarkers();
+    for (auto& marker : gridMarkers) {
+        this->p_gridMarkers->push_back(make_unique<SeratoGridMarker>(*marker));
+    }
 }
 
 ConstStringPtr SeratoTrack::trackFilePath(void) const
@@ -418,6 +428,11 @@ const SeratoLoopMarkerVector& SeratoTrack::loopMarkers(void) const
     return *(this->p_loopMarkers);
 }
 
+const SeratoGridMarkerVector& SeratoTrack::gridMarkers(void) const
+{
+    return *(this->p_gridMarkers);
+}
+
 void SeratoTrack::setTitle(const char* title)
 {
     this->p_setStringForSubTagForIdentifier(title, NxASeratoTrackTitleTag);
@@ -510,6 +525,12 @@ void SeratoTrack::setLoopMarkers(SeratoLoopMarkerVectorPtr markers)
     this->p_wasModified = true;
 }
 
+void SeratoTrack::setGridMarkers(SeratoGridMarkerVectorPtr markers)
+{
+    this->p_gridMarkers = move(markers);
+    this->p_wasModified = true;
+}
+
 bool SeratoTrack::wasModified(void) const
 {
     return this->p_wasModified;
@@ -552,6 +573,13 @@ void SeratoTrack::saveToTrackFile(void)
         loopMarkers->push_back(move(markerCopy));
     }
     trackFile.setLoopMarkers(move(loopMarkers));
+
+    SeratoGridMarkerVectorPtr gridMarkers = make_unique<SeratoGridMarkerVector>();
+    for (auto& marker : *(this->p_gridMarkers)) {
+        SeratoGridMarkerPtr markerCopy = make_unique<SeratoGridMarker>(*marker);
+        gridMarkers->push_back(move(markerCopy));
+    }
+    trackFile.setGridMarkers(move(gridMarkers));
 
     this->p_saveTrackFile();
 

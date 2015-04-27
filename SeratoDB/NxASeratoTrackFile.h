@@ -14,6 +14,7 @@
 
 #include <SeratoDB/NxASeratoCueMarker.h>
 #include <SeratoDB/NxASeratoLoopMarker.h>
+#include <SeratoDB/NxASeratoGridMarker.h>
 #include <SeratoDB/NxASeratoDbUtility.h>
 
 #include <taglib/tag.h>
@@ -35,9 +36,10 @@ namespace NxA {
     class SeratoTrackFile
     {
     private:
-        #pragma mark Private Instance Variables
+        #pragma mark Protected Instance Variables
         SeratoCueMarkerVectorPtr p_cueMarkers;
         SeratoLoopMarkerVectorPtr p_loopMarkers;
+        SeratoGridMarkerVectorPtr p_gridMarkers;
         CharVectorPtrVector p_otherTags;
 
     protected:
@@ -45,7 +47,8 @@ namespace NxA {
         explicit SeratoTrackFile(const char* trackFilePath) :
                                  p_trackFilePath(std::make_unique<std::string>(trackFilePath)),
                                  p_cueMarkers(std::make_unique<SeratoCueMarkerVector>()),
-                                 p_loopMarkers(std::make_unique<SeratoLoopMarkerVector>()) { };
+                                 p_loopMarkers(std::make_unique<SeratoLoopMarkerVector>()),
+                                 p_gridMarkers(std::make_unique<SeratoGridMarkerVector>()) { };
 
         #pragma mark Protected Instance Variables
         ConstStringPtr p_trackFilePath;
@@ -56,8 +59,11 @@ namespace NxA {
 
         #pragma mark Protected Instance Methods
         void p_readMarkersV2FromBase64Data(const char* markerV2Data, size_t sizeInBytes);
+        void p_readGridMarkersFrom(const char* gridMarkerData, size_t sizeInBytes);
+        void p_addGridMarker(SeratoGridMarkerPtr gridMarker);
         CharVectorPtr p_base64DataFromMarkersV2(void);
-        virtual void p_writeMarkersV2(void) = 0;
+        CharVectorPtr p_gridMarkerDataFromGridMarkers(void);
+        virtual void p_writeMarkers(void) = 0;
 
     public:
         #pragma mark Public Constructor/Destructor
@@ -94,6 +100,7 @@ namespace NxA {
         
         const SeratoCueMarkerVector& cueMarkers(void) const;
         const SeratoLoopMarkerVector& loopMarkers(void) const;
+        const SeratoGridMarkerVector& gridMarkers(void) const;
 
         virtual void setTitle(const char* title);
         virtual void setArtist(const char* artist);
@@ -113,6 +120,7 @@ namespace NxA {
 
         void setCueMarkers(SeratoCueMarkerVectorPtr markers);
         void setLoopMarkers(SeratoLoopMarkerVectorPtr markers);
+        void setGridMarkers(SeratoGridMarkerVectorPtr markers);
 
         void saveChanges(void);
     };

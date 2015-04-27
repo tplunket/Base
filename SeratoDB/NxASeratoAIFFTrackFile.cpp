@@ -35,7 +35,7 @@ SeratoAIFFTrackFile::SeratoAIFFTrackFile(const char* trackFilePath) : SeratoID3T
     this->p_properties = file->properties();
     this->p_file = move(file);
 
-    this->p_readMarkersV2();
+    this->p_readMarkers();
 }
 
 #pragma mark Instance Variables

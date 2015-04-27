@@ -32,7 +32,7 @@ typedef struct {
     unsigned char majorVersion;
     unsigned char minorVersion;
     unsigned char data[0];
-} SeratoFLACMarkerHeaderStruct;
+} SeratoFLACMarkersHeaderStruct;
 
 #pragma mark Constructors
 
@@ -51,49 +51,90 @@ SeratoFLACTrackFile::SeratoFLACTrackFile(const char* trackFilePath) : SeratoTrac
     this->p_properties = file->properties();
     this->p_file = move(file);
 
-    this->p_readMarkersV2();
+    this->p_readMarkers();
 }
 
 #pragma mark Instance Methods
 
-void SeratoFLACTrackFile::p_readMarkersV2(void)
+void SeratoFLACTrackFile::p_readMarkers(void)
 {
     const String markersEncodedData = this->p_properties["SERATO_MARKERS_V2"].toString();
     uint32_t encodedDataSize = markersEncodedData.size();
-    if (!encodedDataSize) {
-        return;
+    if (encodedDataSize) {
+        CharVectorPtr decodedMarkersData = SeratoBase64::decodeBlock((const char*)markersEncodedData.data(String::UTF8).data(),
+                                                                     encodedDataSize);
+
+        const SeratoFLACMarkersHeaderStruct* headerStruct = (const SeratoFLACMarkersHeaderStruct*)decodedMarkersData->data();
+        this->p_readMarkersV2FromBase64Data((const char*)headerStruct->data, decodedMarkersData->size() - sizeof(SeratoFLACMarkersHeaderStruct));
     }
 
-    CharVectorPtr decodedData = SeratoBase64::decodeBlock((const char*)markersEncodedData.data(String::UTF8).data(),
-                                                                      encodedDataSize);
-
-    const SeratoFLACMarkerHeaderStruct* headerStruct = (const SeratoFLACMarkerHeaderStruct*)decodedData->data();
-    this->p_readMarkersV2FromBase64Data((const char*)headerStruct->data, decodedData->size() - sizeof(SeratoFLACMarkerHeaderStruct));
+    const String beatGridEncodedData = this->p_properties["SERATO_BEATGRID"].toString();
+    uint32_t encodedBeatGridDataSize = beatGridEncodedData.size();
+    if (encodedBeatGridDataSize) {
+        CharVectorPtr decodedGridMarkersData = SeratoBase64::decodeBlock((const char*)beatGridEncodedData.data(String::UTF8).data(),
+                                                                         encodedBeatGridDataSize);
+        const SeratoFLACMarkersHeaderStruct* headerStruct = (const SeratoFLACMarkersHeaderStruct*)decodedGridMarkersData->data();
+        if ((headerStruct->majorVersion == 1) && (headerStruct->minorVersion == 0)) {
+            this->p_readGridMarkersFrom((const char*)headerStruct->data, decodedGridMarkersData->size() - sizeof(SeratoFLACMarkersHeaderStruct));
+        }
+    }
 }
 
-void SeratoFLACTrackFile::p_writeMarkersV2(void)
+void SeratoFLACTrackFile::p_writeMarkers(void)
 {
-    CharVector decodedData;
+    if (this->cueMarkers().size() || this->loopMarkers().size()) {
+        CharVector decodedData;
 
-    SeratoFLACMarkerHeaderStruct header;
-    memcpy(header.mimeType, "application/octet-stream", 25);
-    header.filename[0] = 0;
-    memcpy(header.description, "Serato Markers2", 16);
-    header.majorVersion = 1;
-    header.minorVersion = 1;
+        SeratoFLACMarkersHeaderStruct header;
+        memcpy(header.mimeType, "application/octet-stream", 25);
+        header.filename[0] = 0;
+        memcpy(header.description, "Serato Markers2", 16);
+        header.majorVersion = 1;
+        header.minorVersion = 1;
 
-    CharVector headerData((char*)&header, (char*)&header.data);
-    decodedData.insert(decodedData.end(), headerData.begin(), headerData.end());
+        CharVector headerData((char*)&header, (char*)&header.data);
+        decodedData.insert(decodedData.end(), headerData.begin(), headerData.end());
 
-    CharVectorPtr base64Data(this->p_base64DataFromMarkersV2());
-    decodedData.insert(decodedData.end(), base64Data->begin(), base64Data->end());
+        CharVectorPtr base64Data(this->p_base64DataFromMarkersV2());
+        decodedData.insert(decodedData.end(), base64Data->begin(), base64Data->end());
 
-    CharVectorPtr encodedData = SeratoBase64::encodeBlock(decodedData.data(), decodedData.size());
-    encodedData->push_back('\0');
+        CharVectorPtr encodedData = SeratoBase64::encodeBlock(decodedData.data(), decodedData.size());
+        encodedData->push_back('\0');
 
-    StringList newList;
-    newList.append(String(encodedData->data()));
-    this->p_properties["SERATO_MARKERS_V2"] = newList;
+        StringList newList;
+        newList.append(String(encodedData->data()));
+        this->p_properties["SERATO_MARKERS_V2"] = newList;
+    }
+    else {
+        this->p_properties.erase("SERATO_MARKERS_V2");
+    }
+
+    if (this->gridMarkers().size()) {
+        CharVector decodedData;
+
+        SeratoFLACMarkersHeaderStruct header;
+        memcpy(header.mimeType, "application/octet-stream", 25);
+        header.filename[0] = 0;
+        memcpy(header.description, "Serato Beatgrid", 16);
+        header.majorVersion = 1;
+        header.minorVersion = 0;
+
+        CharVector headerData((char*)&header, (char*)&header.data);
+        decodedData.insert(decodedData.end(), headerData.begin(), headerData.end());
+
+        CharVectorPtr base64Data(this->p_gridMarkerDataFromGridMarkers());
+        decodedData.insert(decodedData.end(), base64Data->begin(), base64Data->end());
+
+        CharVectorPtr encodedData = SeratoBase64::encodeBlock(decodedData.data(), decodedData.size());
+        encodedData->push_back('\0');
+
+        StringList newList;
+        newList.append(String(encodedData->data()));
+        this->p_properties["SERATO_BEATGRID"] = newList;
+    }
+    else {
+        this->p_properties.erase("SERATO_BEATGRID");
+    }
 }
 
 bool SeratoFLACTrackFile::hasKey(void) const

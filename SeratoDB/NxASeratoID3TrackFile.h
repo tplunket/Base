@@ -26,8 +26,10 @@ namespace NxA {
         explicit SeratoID3TrackFile(const char* trackFilePath) : SeratoTrackFile(trackFilePath) { };
 
         #pragma mark Protected Instance Methods
-        void p_readMarkersV2(void);
-        void p_writeMarkersV2(void);
+        void p_readMarkers(void);
+        void p_writeMarkers(void);
+        void p_writeMarkersV2Frame(void);
+        void p_writeGridMarkersFrame(void);
 
     public:
         #pragma mark Instance Methods

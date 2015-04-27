@@ -40,6 +40,7 @@ namespace NxA {
 
         SeratoCueMarkerVectorPtr p_cueMarkers;
         SeratoLoopMarkerVectorPtr p_loopMarkers;
+        SeratoGridMarkerVectorPtr p_gridMarkers;
 
         #pragma mark Private Instance Methods
         inline bool p_containsAValidTrackTag(void) const;
@@ -89,6 +90,7 @@ namespace NxA {
 
         const SeratoCueMarkerVector& cueMarkers(void) const;
         const SeratoLoopMarkerVector& loopMarkers(void) const;
+        const SeratoGridMarkerVector& gridMarkers(void) const;
 
         void setTitle(const char* title);
         void setArtist(const char* artist);
@@ -109,6 +111,7 @@ namespace NxA {
 
         void setCueMarkers(SeratoCueMarkerVectorPtr markers);
         void setLoopMarkers(SeratoLoopMarkerVectorPtr markers);
+        void setGridMarkers(SeratoGridMarkerVectorPtr markers);
 
         bool wasModified(void) const;
         void addTo(CharVector& destination) const;

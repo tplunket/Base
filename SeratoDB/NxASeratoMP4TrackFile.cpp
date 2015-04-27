@@ -32,7 +32,7 @@ typedef struct {
     unsigned char majorVersion;
     unsigned char minorVersion;
     unsigned char data[0];
-} SeratoMP4MarkerHeaderStruct;
+} SeratoMP4MarkersHeaderStruct;
 
 #pragma mark Constructors
 
@@ -54,60 +54,108 @@ SeratoMP4TrackFile::SeratoMP4TrackFile(const char* trackFilePath) : SeratoTrackF
     this->p_properties = file->properties();
     this->p_file = move(file);
 
-    this->p_readMarkersV2();
+    this->p_readMarkers();
 }
 
 #pragma mark Instance Methods
 
-void SeratoMP4TrackFile::p_readMarkersV2(void)
+void SeratoMP4TrackFile::p_readMarkers(void)
 {
     if (!this->p_itemListMap) {
         return;
     }
 
-    MP4::Item item = (*this->p_itemListMap)["----:com.serato.dj:markersv2"];
-    if (!item.isValid()) {
-        return;
+    MP4::Item markersItem = (*this->p_itemListMap)["----:com.serato.dj:markersv2"];
+    if (markersItem.isValid()) {
+        const String encodedData = markersItem.toStringList().toString();
+        uint32_t encodedDataSize = encodedData.size();
+        if (!encodedDataSize) {
+            return;
+        }
+
+        CharVectorPtr decodedData = SeratoBase64::decodeBlock((const char*)encodedData.data(String::UTF8).data(),
+                                                              encodedDataSize);
+        const SeratoMP4MarkersHeaderStruct* headerStruct = (const SeratoMP4MarkersHeaderStruct*)decodedData->data();
+        this->p_readMarkersV2FromBase64Data((const char*)headerStruct->data, decodedData->size() - sizeof(SeratoMP4MarkersHeaderStruct));
     }
 
-    const String markersEncodedData = item.toStringList().toString();
-    uint32_t encodedDataSize = markersEncodedData.size();
-    if (!encodedDataSize) {
-        return;
+    MP4::Item beatgridItem = (*this->p_itemListMap)["----:com.serato.dj:beatgrid"];
+    if (beatgridItem.isValid()) {
+        const String encodedData = beatgridItem.toStringList().toString();
+        uint32_t encodedDataSize = encodedData.size();
+        if (!encodedDataSize) {
+            return;
+        }
+
+        CharVectorPtr decodedData = SeratoBase64::decodeBlock((const char*)encodedData.data(String::UTF8).data(),
+                                                              encodedDataSize);
+
+        const SeratoMP4MarkersHeaderStruct* headerStruct = (const SeratoMP4MarkersHeaderStruct*)decodedData->data();
+        if ((headerStruct->majorVersion == 1) && (headerStruct->minorVersion == 0)) {
+            this->p_readGridMarkersFrom((const char*)headerStruct->data, decodedData->size() - sizeof(SeratoMP4MarkersHeaderStruct));
+        }
     }
-
-    CharVectorPtr decodedData = SeratoBase64::decodeBlock((const char*)markersEncodedData.data(String::UTF8).data(),
-                                                                      encodedDataSize);
-
-    const SeratoMP4MarkerHeaderStruct* headerStruct = (const SeratoMP4MarkerHeaderStruct*)decodedData->data();
-    this->p_readMarkersV2FromBase64Data((const char*)headerStruct->data, decodedData->size() - sizeof(SeratoMP4MarkerHeaderStruct));
 }
 
-void SeratoMP4TrackFile::p_writeMarkersV2(void)
+void SeratoMP4TrackFile::p_writeMarkers(void)
 {
-    CharVector decodedData;
+    if (this->cueMarkers().size() || this->loopMarkers().size()) {
+        CharVector decodedData;
 
-    SeratoMP4MarkerHeaderStruct header;
-    memcpy(header.mimeType, "application/octet-stream", 25);
-    header.filename[0] = 0;
-    memcpy(header.description, "Serato Markers2", 16);
-    header.majorVersion = 1;
-    header.minorVersion = 1;
+        SeratoMP4MarkersHeaderStruct header;
+        memcpy(header.mimeType, "application/octet-stream", 25);
+        header.filename[0] = 0;
+        memcpy(header.description, "Serato Markers2", 16);
+        header.majorVersion = 1;
+        header.minorVersion = 1;
 
-    CharVector headerData((char*)&header, (char*)&header.data);
-    decodedData.insert(decodedData.end(), headerData.begin(), headerData.end());
+        CharVector headerData((char*)&header, (char*)&header.data);
+        decodedData.insert(decodedData.end(), headerData.begin(), headerData.end());
 
-    CharVectorPtr base64Data(this->p_base64DataFromMarkersV2());
-    decodedData.insert(decodedData.end(), base64Data->begin(), base64Data->end());
+        CharVectorPtr base64Data(this->p_base64DataFromMarkersV2());
+        decodedData.insert(decodedData.end(), base64Data->begin(), base64Data->end());
 
-    CharVectorPtr encodedData = SeratoBase64::encodeBlock(decodedData.data(), decodedData.size());
-    encodedData->push_back('\0');
+        CharVectorPtr encodedData = SeratoBase64::encodeBlock(decodedData.data(), decodedData.size());
+        encodedData->push_back('\0');
 
-    StringList newList;
-    newList.append(String(encodedData->data()));
+        StringList newList;
+        newList.append(String(encodedData->data()));
 
-    MP4::Item newItem(newList);
-    (*this->p_itemListMap)["----:com.serato.dj:markersv2"] = newItem;
+        MP4::Item newItem(newList);
+        (*this->p_itemListMap)["----:com.serato.dj:markersv2"] = newItem;
+    }
+    else {
+        (*this->p_itemListMap).erase("----:com.serato.dj:markersv2");
+    }
+
+    if (this->gridMarkers().size()) {
+        CharVector decodedData;
+
+        SeratoMP4MarkersHeaderStruct header;
+        memcpy(header.mimeType, "application/octet-stream", 25);
+        header.filename[0] = 0;
+        memcpy(header.description, "Serato Beatgrid", 16);
+        header.majorVersion = 1;
+        header.minorVersion = 0;
+
+        CharVector headerData((char*)&header, (char*)&header.data);
+        decodedData.insert(decodedData.end(), headerData.begin(), headerData.end());
+
+        CharVectorPtr base64Data(this->p_gridMarkerDataFromGridMarkers());
+        decodedData.insert(decodedData.end(), base64Data->begin(), base64Data->end());
+
+        CharVectorPtr encodedData = SeratoBase64::encodeBlock(decodedData.data(), decodedData.size());
+        encodedData->push_back('\0');
+
+        StringList newList;
+        newList.append(String(encodedData->data()));
+
+        MP4::Item newItem(newList);
+        (*this->p_itemListMap)["----:com.serato.dj:beatgrid"] = newItem;
+    }
+    else {
+        (*this->p_itemListMap).erase("----:com.serato.dj:beatgrid");
+    }
 }
 
 bool SeratoMP4TrackFile::hasKey(void) const

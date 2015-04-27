@@ -21,8 +21,8 @@ namespace NxA {
     class SeratoFLACTrackFile : public SeratoTrackFile
     {
         #pragma mark Private Instance Methods
-        void p_readMarkersV2(void);
-        void p_writeMarkersV2(void);
+        void p_readMarkers(void);
+        void p_writeMarkers(void);
 
     public:
         #pragma mark Constructors

@@ -30,7 +30,7 @@ typedef struct {
     unsigned char majorVersion;
     unsigned char minorVersion;
     unsigned char data[0];
-} SeratoMarkerV2Struct;
+} SeratoMarkerHeaderStruct;
 
 #pragma mark Utility Functions
 
@@ -68,7 +68,7 @@ void SeratoTrackFile::p_readMarkersV2FromBase64Data(const char* markerV2Data, si
 
     CharVectorPtr decodedData = SeratoBase64::decodeBlock(markerV2Data, sizeInBytes);
 
-    const SeratoMarkerV2Struct* markerStruct = (const SeratoMarkerV2Struct*)(decodedData->data());
+    const SeratoMarkerHeaderStruct* markerStruct = (const SeratoMarkerHeaderStruct*)(decodedData->data());
     if ((markerStruct->majorVersion != 1) || (markerStruct->minorVersion != 1)) {
         return;
     }
@@ -96,15 +96,36 @@ void SeratoTrackFile::p_readMarkersV2FromBase64Data(const char* markerV2Data, si
     }
 }
 
+void SeratoTrackFile::p_addGridMarker(SeratoGridMarkerPtr gridMarker)
+{
+    this->p_gridMarkers->push_back(move(gridMarker));
+}
+
+void SeratoTrackFile::p_readGridMarkersFrom(const char* gridMarkerData, size_t sizeInBytes)
+{
+    if (!sizeInBytes) {
+        return;
+    }
+
+    uint32_t numberOfMarkers = bigEndianUInt32ValueAt(gridMarkerData);
+    gridMarkerData += 4;
+
+    for (uint32_t index = 0; index < numberOfMarkers; ++index) {
+        this->p_addGridMarker(make_unique<SeratoGridMarker>(gridMarkerData));
+
+        gridMarkerData = SeratoGridMarker::nextGridMarkerAfter(gridMarkerData);
+    }
+}
+
 CharVectorPtr SeratoTrackFile::p_base64DataFromMarkersV2(void)
 {
     CharVector decodedData;
 
-    SeratoMarkerV2Struct markersV2Header;
-    markersV2Header.majorVersion = 1;
-    markersV2Header.minorVersion = 1;
+    SeratoMarkerHeaderStruct markersHeader;
+    markersHeader.majorVersion = 1;
+    markersHeader.minorVersion = 1;
 
-    CharVector headerData((char*)&markersV2Header, (char*)&markersV2Header.data);
+    CharVector headerData((char*)&markersHeader, (char*)&markersHeader.data);
     decodedData.insert(decodedData.end(), headerData.begin(), headerData.end());
 
     for (auto& marker : *this->p_cueMarkers) {
@@ -121,6 +142,23 @@ CharVectorPtr SeratoTrackFile::p_base64DataFromMarkersV2(void)
 
     CharVectorPtr encodedData = SeratoBase64::encodeBlock(decodedData.data(), decodedData.size());
     return move(encodedData);
+}
+
+CharVectorPtr SeratoTrackFile::p_gridMarkerDataFromGridMarkers(void)
+{
+    CharVectorPtr data(make_unique<CharVector>());
+
+    uint32_t numberOfMarkers;
+    writeBigEndianUInt32ValueAt(this->p_gridMarkers->size(), &numberOfMarkers);
+
+    CharVector numberOfMarkersData((char*)&numberOfMarkers, (char*)&numberOfMarkers + sizeof(numberOfMarkers));
+    data->insert(data->end(), numberOfMarkersData.begin(), numberOfMarkersData.end());
+
+    for (auto& marker : *(this->p_gridMarkers)) {
+        marker->addDataTo(*data);
+    }
+
+    return move(data);
 }
 
 string SeratoTrackFile::title(void) const
@@ -259,6 +297,11 @@ const SeratoLoopMarkerVector& SeratoTrackFile::loopMarkers(void) const
     return *(this->p_loopMarkers);
 }
 
+const SeratoGridMarkerVector& SeratoTrackFile::gridMarkers(void) const
+{
+    return *(this->p_gridMarkers);
+}
+
 void SeratoTrackFile::setTitle(const char* title)
 {
     if (this->p_parsedFileTag) {
@@ -321,9 +364,14 @@ void SeratoTrackFile::setLoopMarkers(SeratoLoopMarkerVectorPtr markers)
     this->p_loopMarkers = move(markers);
 }
 
+void SeratoTrackFile::setGridMarkers(SeratoGridMarkerVectorPtr markers)
+{
+    this->p_gridMarkers = move(markers);
+}
+
 void SeratoTrackFile::saveChanges(void)
 {
-    this->p_writeMarkersV2();
+    this->p_writeMarkers();
 
     this->p_file->save();
 }

@@ -19,10 +19,10 @@ using namespace NxA;
 
 XCODE_CPP_TEST_NAMED(SeratoUInt32Tests);
 
-TEST(SeratoUInt32, TagIsCreatedWithCorrectValue)
+TEST(SeratoUInt32, TagCreatedFromNormalConstructor_HasCorrectValue)
 {
-    // -- Given.
-    SeratoUInt32Tag tag(SeratoUInt32Tag('vrsn', 0xDEADBEEF));
+    // -- When.
+    SeratoUInt32Tag tag('vrsn', 0xDEADBEEF);
 
     // -- Then.
     ASSERT_EQ(tag.value(), 0xDEADBEEF);

@@ -27,3 +27,32 @@ TEST(SeratoUInt32, TagCreatedFromNormalConstructor_HasCorrectValue)
     // -- Then.
     ASSERT_EQ(tag.value(), 0xDEADBEEF);
 }
+
+TEST(SeratoUInt32, TagCreatedFromParsingConstructor_HasCorrectValue)
+{
+    // -- Given.
+    unsigned char data[] = { 0x75, 0x61, 0x64, 0x64, 0x00, 0x00, 0x00, 0x04, 0x54, 0xCA, 0x84, 0xAB };
+
+    // -- When.
+    SeratoUInt32Tag tag(data);
+
+    // -- Then.
+    ASSERT_EQ(tag.value(), 0x54CA84AB);
+}
+
+TEST(SeratoUInt32, TagWrittenToData_HasCorrectOutput)
+{
+    // -- When.
+    SeratoUInt32Tag tag('vrsn', 0xDEADBEEF);
+
+    // -- When.
+    CharVector destination;
+    tag.addTo(destination);
+
+    // -- Then.
+    ASSERT_EQ(destination.size(), 12);
+    unsigned char expectedData[] = { 0x76, 0x72, 0x73, 0x6E, 0x00, 0x00, 0x00, 0x04, 0xDE, 0xAD, 0xBE, 0xEF };
+    for (uint32_t index = 0; index < 12; ++index) {
+        ASSERT_EQ((unsigned char )destination[index], expectedData[index]);
+    }
+}

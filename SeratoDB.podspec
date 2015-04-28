@@ -29,7 +29,14 @@ Pod::Spec.new do |s|
   s.dependency 'taglib', '~> 1.9.1-4'
 
   s.compiler_flags = '-std=c++1y'
-  
-  s.source_files = "SeratoDB/*.{h,cpp}"
 
+  s.default_subspec = 'Core'
+  
+  s.subspec "Core" do |sp|
+    sp.source_files = "SeratoDB/*.{h,hpp,cpp}"
+  end
+
+  s.subspec "Tests" do |sp|
+    sp.source_files = "SeratoDB/Tests/*.{h,hpp,cpp}"
+  end
 end

@@ -173,6 +173,7 @@ void SeratoDatabase::saveIfModified(void) const
             continue;
         }
 
+        printf("Saving modifications to Serato track '%s'.\n", track->title().c_str());
         track->saveToTrackFile();
         someTracksWereModified = true;
     }

@@ -34,6 +34,7 @@ Pod::Spec.new do |s|
   
   s.subspec "Core" do |sp|
     sp.source_files = "SeratoDB/*.{hpp,cpp}"
+    sp.header_mappings_dir = "SeratoDB"
   end
 
   s.subspec "Tests" do |sp|

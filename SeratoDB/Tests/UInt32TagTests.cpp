@@ -12,17 +12,17 @@
 #include <GoogleMock/GoogleMock.h>
 
 #include "SeratoDB/MakeXcodeUseCppTests.hpp"
-#include "SeratoDB/Uint32Tag.h"
+#include "SeratoDB/UInt32Tag.hpp"
 
 using namespace testing;
-using namespace NxA;
+using namespace NxA::Serato;
 
 XCODE_CPP_TEST_NAMED(SeratoUInt32Tests);
 
 TEST(SeratoUInt32, TagCreatedFromNormalConstructor_HasCorrectValue)
 {
     // -- When.
-    SeratoUInt32Tag tag('vrsn', 0xDEADBEEF);
+    UInt32Tag tag('vrsn', 0xDEADBEEF);
 
     // -- Then.
     ASSERT_EQ(tag.value(), 0xDEADBEEF);
@@ -34,7 +34,7 @@ TEST(SeratoUInt32, TagCreatedFromParsingConstructor_HasCorrectValue)
     unsigned char data[] = { 0x75, 0x61, 0x64, 0x64, 0x00, 0x00, 0x00, 0x04, 0x54, 0xCA, 0x84, 0xAB };
 
     // -- When.
-    SeratoUInt32Tag tag(data);
+    UInt32Tag tag(data);
 
     // -- Then.
     ASSERT_EQ(tag.value(), 0x54CA84AB);
@@ -43,7 +43,7 @@ TEST(SeratoUInt32, TagCreatedFromParsingConstructor_HasCorrectValue)
 TEST(SeratoUInt32, TagWrittenToData_HasCorrectOutput)
 {
     // -- When.
-    SeratoUInt32Tag tag('vrsn', 0xDEADBEEF);
+    UInt32Tag tag('vrsn', 0xDEADBEEF);
 
     // -- When.
     CharVector destination;

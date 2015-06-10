@@ -33,10 +33,10 @@ Pod::Spec.new do |s|
   s.default_subspec = 'Core'
   
   s.subspec "Core" do |sp|
-    sp.source_files = "SeratoDB/*.{h,hpp,cpp}"
+    sp.source_files = "SeratoDB/*.{hpp,cpp}"
   end
 
   s.subspec "Tests" do |sp|
-    sp.source_files = "SeratoDB/Tests/*.{h,hpp,cpp}"
+    sp.source_files = "SeratoDB/Tests/*.{hpp,cpp}"
   end
 end

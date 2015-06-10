@@ -12,7 +12,7 @@
 #include <GoogleMock/GoogleMock.h>
 
 #include "SeratoDB/MakeXcodeUseCppTests.hpp"
-#include "SeratoDB/SeratoUint32Tag.h"
+#include "SeratoDB/Uint32Tag.h"
 
 using namespace testing;
 using namespace NxA;

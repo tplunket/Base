@@ -24,8 +24,7 @@
 #include "Base/Uncopyable.hpp"
 #include "Base/GeneratedObjectCode.hpp"
 
-namespace NxA {
-    namespace Serato {
+namespace NxA { namespace Serato {
     NXA_GENERATED_FORWARD_DECLARATIONS_FOR(Object);
 
     class Object : private Uncopyable {
@@ -38,8 +37,7 @@ namespace NxA {
         #pragma mark Instance Methods
         virtual const NxA::Serato::Pointer<NxA::Serato::String> description(void) const;
     };
-}
-}
+} }
 
 #ifndef NXA_BASE_STRING_ALREADY_INCLUDED
 #include "Base/String.hpp"

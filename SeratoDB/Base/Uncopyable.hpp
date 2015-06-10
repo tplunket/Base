@@ -21,8 +21,7 @@
 
 #pragma once
 
-namespace NxA {
-    namespace Serato {
+namespace NxA { namespace Serato {
     class Uncopyable {
     public:
         #pragma mark Constructors & Destructors
@@ -36,5 +35,4 @@ namespace NxA {
         #pragma mark Constructors & Destructors
         Uncopyable() = default;
     };
-}
-}
+} }

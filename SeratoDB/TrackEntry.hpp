@@ -17,8 +17,7 @@
 
 #include <vector>
 
-namespace NxA {
-    namespace Serato {
+namespace NxA { namespace Serato {
     #pragma mark Forward declarations
     class TrackEntry;
 
@@ -52,5 +51,4 @@ namespace NxA {
 
         void destroy(void);
     };
-}
-}
+} }

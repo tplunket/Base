@@ -27,8 +27,7 @@
 
 #include <string>
 
-namespace NxA {
-    namespace Serato {
+namespace NxA { namespace Serato {
     NXA_GENERATED_FORWARD_DECLARATIONS_FOR(String);
 
     class String : public Object {
@@ -50,5 +49,4 @@ namespace NxA {
         void append(const String::Pointer& other);
         void append(const char* other);
     };
-}
-}
+} }

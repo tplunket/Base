@@ -24,12 +24,8 @@
 #include "Base/Uncopyable.hpp"
 #include "Base/Object.hpp"
 
-namespace NxA {
-    namespace Serato {
-    namespace Internal {
-        struct Object : private Uncopyable {
-            NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(Object);
-        };
-    }
-}
-}
+namespace NxA { namespace Serato { namespace Internal {
+    struct Object : private Uncopyable {
+        NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(Object);
+    };
+} } }

@@ -24,8 +24,7 @@
 
 #include <string>
 
-namespace NxA {
-    namespace Serato {
+namespace NxA { namespace Serato {
     #pragma mark Forward declarations
     class TrackFile;
 
@@ -125,5 +124,4 @@ namespace NxA {
 
         void saveChanges(void);
     };
-}
-}
+} }

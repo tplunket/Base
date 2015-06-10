@@ -15,8 +15,7 @@
 #include <SeratoDB/Tag.hpp>
 #include <SeratoDB/DbUtility.hpp>
 
-namespace NxA {
-    namespace Serato {
+namespace NxA { namespace Serato {
     #pragma mark Class Declaration
     class UInt32Tag : public Tag
     {
@@ -39,5 +38,4 @@ namespace NxA {
 
         void addTo(CharVector& destination) const;
     };
-}
-}
+} }

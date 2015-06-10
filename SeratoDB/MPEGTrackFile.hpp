@@ -16,8 +16,7 @@
 
 #include <taglib/mpegfile.h>
 
-namespace NxA {
-    namespace Serato {
+namespace NxA { namespace Serato {
     #pragma mark Class Declaration
     class MPEGTrackFile : public ID3TrackFile
     {
@@ -25,5 +24,4 @@ namespace NxA {
         #pragma mark Constructors
         explicit MPEGTrackFile(const char* trackFilePath);
     };
-}
-}
+} }

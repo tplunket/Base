@@ -14,8 +14,7 @@
 
 #include <SeratoDB/ID3TrackFile.hpp>
 
-namespace NxA {
-    namespace Serato {
+namespace NxA { namespace Serato {
     #pragma mark Class Declaration
     class SeratoWAVTrackFile : public ID3TrackFile
     {
@@ -27,5 +26,4 @@ namespace NxA {
         virtual uint32_t lengthInMilliseconds(void) const;
         uint32_t bitDepthInBitsOrZeroIfNotApplicable(void) const;
     };
-}
-}
+} }

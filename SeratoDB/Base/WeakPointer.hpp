@@ -25,8 +25,7 @@
 
 #include <memory>
 
-namespace NxA {
-    namespace Serato {
+namespace NxA { namespace Serato {
     template <class T> class WeakPointer{
     public:
         #pragma mark Constructors & Destructors
@@ -51,5 +50,4 @@ namespace NxA {
         #pragma mark Instance Variables
         std::weak_ptr<T> pointer;
     };
-}
-}
+} }

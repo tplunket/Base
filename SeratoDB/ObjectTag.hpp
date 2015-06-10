@@ -17,8 +17,7 @@
 
 #include <map>
 
-namespace NxA {
-    namespace Serato {
+namespace NxA { namespace Serato {
     #pragma mark Containers
     typedef std::map<uint32_t, ConstTagPtr> SeratoIdentifierToTagMap;
 
@@ -44,5 +43,4 @@ namespace NxA {
 
         void addTo(CharVector& destination) const;
     };
-}
-}
+} }

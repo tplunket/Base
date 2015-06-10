@@ -27,8 +27,7 @@
 
 #include <vector>
 
-namespace NxA {
-    namespace Serato {
+namespace NxA { namespace Serato {
     template <class T> class Array {
     protected:
         struct constructor_access { };
@@ -69,5 +68,4 @@ namespace NxA {
         #pragma mark Instance Variables
         std::vector<typename T::Pointer> values;
     };
-}
-}
+} }

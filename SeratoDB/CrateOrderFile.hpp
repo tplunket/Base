@@ -15,8 +15,7 @@
 #include <SeratoDB/DBUtility.hpp>
 #include <SeratoDB/Crate.hpp>
 
-namespace NxA {
-    namespace Serato {
+namespace NxA { namespace Serato {
     #pragma mark Forward declarations
     class CrateOrderFile;
     class Database;
@@ -56,5 +55,4 @@ namespace NxA {
 
         void saveIfModified(void) const;
     };
-}
-}
+} }

@@ -16,8 +16,7 @@
 #include <SeratoDB/TrackEntry.hpp>
 #include <SeratoDB/DbUtility.hpp>
 
-namespace NxA {
-    namespace Serato {
+namespace NxA { namespace Serato {
     #pragma mark Forward declarations
     class Crate;
     class Database;
@@ -91,5 +90,4 @@ namespace NxA {
 
         void destroy(void);
     };
-}
-}
+} }

@@ -16,8 +16,7 @@
 
 #include <string>
 
-namespace NxA {
-    namespace Serato {
+namespace NxA { namespace Serato {
     #pragma mark Class Declaration
     class TrackFileFactory
     {
@@ -25,5 +24,4 @@ namespace NxA {
         #pragma mark Class Methods
         static TrackFilePtr trackFileForPath(const char* trackFilePath);
     };
-}
-}
+} }

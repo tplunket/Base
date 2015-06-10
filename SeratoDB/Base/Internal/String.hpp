@@ -25,15 +25,11 @@
 
 #include <string>
 
-namespace NxA {
-    namespace Serato {
-    namespace Internal {
-        struct String {
-            NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(String);
+namespace NxA { namespace Serato { namespace Internal {
+    struct String {
+        NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(String);
 
-            #pragma mark Instance Variables
-            std::string value;
-        };
-    }
-}
-}
+        #pragma mark Instance Variables
+        std::string value;
+    };
+} } }

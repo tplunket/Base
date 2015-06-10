@@ -16,8 +16,7 @@
 
 #include <vector>
 
-namespace NxA {
-    namespace Serato {
+namespace NxA { namespace Serato {
     #pragma mark Forward Declarations
     class GridMarker;
 
@@ -52,5 +51,4 @@ namespace NxA {
 
         void addDataTo(CharVector& data) const;
     };
-}
-}
+} }

@@ -16,8 +16,7 @@
 
 #include <string>
 
-namespace NxA {
-    namespace Serato {
+namespace NxA { namespace Serato {
     #pragma mark Forward declarations
     class Tag;
 
@@ -65,5 +64,4 @@ namespace NxA {
 
         virtual void addTo(CharVector& destination) const = 0;
     };
-}
-}
+} }

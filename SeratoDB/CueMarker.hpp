@@ -16,8 +16,7 @@
 
 #include <vector>
 
-namespace NxA {
-    namespace Serato {
+namespace NxA { namespace Serato {
     #pragma mark Forward declarations
     class CueMarker;
 
@@ -54,5 +53,4 @@ namespace NxA {
 
         void addId3TagTo(CharVector& data) const;
     };
-}
-}
+} }

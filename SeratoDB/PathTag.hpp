@@ -17,8 +17,7 @@
 
 #include <string>
 
-namespace NxA {
-    namespace Serato {
+namespace NxA { namespace Serato {
     #pragma mark Class Declaration
     class PathTag : public Tag
     {
@@ -40,5 +39,4 @@ namespace NxA {
 
         void addTo(CharVector& destination) const;
     };
-}
-}
+} }

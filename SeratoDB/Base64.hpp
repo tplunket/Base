@@ -14,8 +14,7 @@
 
 #include <SeratoDB/DbUtility.hpp>
 
-namespace NxA {
-    namespace Serato {
+namespace NxA { namespace Serato {
     #pragma mark Class Declaration
     class Base64
     {
@@ -24,5 +23,4 @@ namespace NxA {
         static CharVectorPtr decodeBlock(const char* code_in, size_t length_in);
         static CharVectorPtr encodeBlock(const char* plaintext_in, int length_in);
     };
-}
-}
+} }

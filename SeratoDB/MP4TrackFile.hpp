@@ -22,8 +22,7 @@
 
 #include <string>
 
-namespace NxA {
-    namespace Serato {
+namespace NxA { namespace Serato {
     #pragma mark Class Declaration
     class MP4TrackFile : public TrackFile
     {
@@ -60,5 +59,4 @@ namespace NxA {
 
         virtual void setArtwork(CharVectorPtr artwork);
     };
-}
-}
+} }

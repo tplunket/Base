@@ -15,8 +15,7 @@
 #include <string>
 #include <vector>
 
-namespace NxA {
-    namespace Serato {
+namespace NxA { namespace Serato {
     #pragma mark Containers
     typedef std::unique_ptr<const std::string> ConstStringPtr;
     typedef std::unique_ptr<std::string> StringPtr;
@@ -62,5 +61,4 @@ namespace NxA {
     CharVectorPtr readFileAt(const char* filePath);
     void deleteFileAt(const char* filePath);
     void writeToFile(const char* filePath, const CharVector& content);
-}
-}
+} }

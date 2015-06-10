@@ -16,8 +16,7 @@
 
 #include <string>
 
-namespace NxA {
-    namespace Serato {
+namespace NxA { namespace Serato {
     #pragma mark Class Declaration
     class OGGTrackFile : public ID3TrackFile
     {
@@ -51,5 +50,4 @@ namespace NxA {
 
         virtual void setArtwork(CharVectorPtr artwork);
     };
-}
-}
+} }

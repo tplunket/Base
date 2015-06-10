@@ -15,8 +15,7 @@
 #include <SeratoDB/Tag.hpp>
 #include <SeratoDB/DbUtility.hpp>
 
-namespace NxA {
-    namespace Serato {
+namespace NxA { namespace Serato {
     #pragma mark Class Declaration
     class TagFactory
     {
@@ -30,5 +29,4 @@ namespace NxA {
 
         static TagVectorPtr parseTagsAt(const void* firstTagAddress, size_t sizeFromFirstTagInBytes);
     };
-}
-}
+} }

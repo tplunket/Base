@@ -23,8 +23,7 @@
 
 #include <memory>
 
-namespace NxA {
-    namespace Serato {
+namespace NxA { namespace Serato {
     template <class T> class WeakPointer;
 
     template <class T> class Pointer {
@@ -60,5 +59,4 @@ namespace NxA {
             return this->pointer;
         }
     };
-}
-}
+} }

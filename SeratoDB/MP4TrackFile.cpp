@@ -116,7 +116,7 @@ void MP4TrackFile::p_writeMarkers(void)
         decodedData.insert(decodedData.end(), base64Data->begin(), base64Data->end());
 
         CharVectorPtr encodedData = Base64::encodeBlock(decodedData.data(), decodedData.size());
-        encodedData->push_back('\0');
+        encodedData->insert(encodedData->end(), 0);
 
         StringList newList;
         newList.append(String(encodedData->data()));
@@ -145,7 +145,7 @@ void MP4TrackFile::p_writeMarkers(void)
         decodedData.insert(decodedData.end(), base64Data->begin(), base64Data->end());
 
         CharVectorPtr encodedData = Base64::encodeBlock(decodedData.data(), decodedData.size());
-        encodedData->push_back('\0');
+        encodedData->insert(encodedData->end(), 0);
 
         StringList newList;
         newList.append(String(encodedData->data()));

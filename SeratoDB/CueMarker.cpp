@@ -78,4 +78,5 @@ void CueMarker::addId3TagTo(CharVector& data) const
     data.insert(data.end(), headerData.begin(), headerData.end());
 
     data.insert(data.end(), this->p_label.begin(), this->p_label.end());
+    data.insert(data.end(), 0);
 }

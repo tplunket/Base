@@ -12,43 +12,45 @@
 
 #pragma once
 
-#include <SeratoDb/Tags/ObjectTag.hpp>
 #include <SeratoDB/Utility.hpp>
 
 #include <vector>
 
 namespace NxA { namespace Serato {
     #pragma mark Forward declarations
-    class TrackEntry;
+    class CueMarker;
 
     #pragma mark Containers
-    typedef std::unique_ptr<TrackEntry> TrackEntryPtr;
-    typedef std::vector<TrackEntryPtr> TrackEntryVector;
-    typedef std::unique_ptr<TrackEntryVector> TrackEntryVectorPtr;
+    typedef std::unique_ptr<const CueMarker> CueMarkerPtr;
+    typedef std::vector<CueMarkerPtr> CueMarkerVector;
+    typedef std::unique_ptr<CueMarkerVector> CueMarkerVectorPtr;
 
     #pragma mark Class Declaration
-    class TrackEntry
+    class CueMarker
     {
     private:
         #pragma mark Private Instance Variable
-        TagPtr p_trackEntryTag;
-        ConstStringPtr p_rootVolumePath;
+        uint32_t p_positionInMilliSeconds;
 
-        #pragma mark Private Instance Methods
-        bool p_containsAValidTrackEntryTag(void) const;
+        uint32_t p_index;
+
+        std::string p_label;
 
     public:
         #pragma mark Constructors
-        explicit TrackEntry(TagPtr trackEntryTag, const char* locatedOnVolumePath) :
-                            p_trackEntryTag(std::move(trackEntryTag)),
-                            p_rootVolumePath(std::make_unique<std::string>(locatedOnVolumePath)) { };
-        explicit TrackEntry(const char* trackPath, const char* locatedOnVolumePath);
+        explicit CueMarker(const char* id3TagStart);
+        explicit CueMarker(const std::string& label,
+                           uint32_t positionInMilliseconds,
+                           uint16_t index) :
+                            p_positionInMilliSeconds(positionInMilliseconds),
+                            p_index(index),
+                            p_label(label) { }
 
         #pragma mark Instance Methods
-        ConstStringPtr trackFilePath(void) const;
+        uint32_t positionInMilliseconds(void) const;
+        uint16_t index(void) const;
+        const std::string& label(void) const;
 
-        const Tag& tagForEntry(void) const;
-
-        void destroy(void);
+        void addId3TagTo(CharVector& data) const;
     };
 } }

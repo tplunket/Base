@@ -10,10 +10,10 @@
 //  or email licensing@serato.com.
 //
 
-#include "SeratoDB/Database.hpp"
-#include "SeratoDB/DatabaseV2Tags.hpp"
-#include "SeratoDB/TagFactory.hpp"
-#include "SeratoDB/TextTag.hpp"
+#include "Database.hpp"
+#include "Tags/DatabaseV2Tags.hpp"
+#include "Tags/TagFactory.hpp"
+#include "Tags/TextTag.hpp"
 
 using namespace NxA::Serato;
 using namespace std;

@@ -33,11 +33,14 @@ Pod::Spec.new do |s|
   s.default_subspec = 'Core'
   
   s.subspec "Core" do |sp|
-    sp.source_files = "SeratoDB/*.{hpp,cpp}"
+    sp.source_files = "SeratoDB/*.{hpp,cpp}", "SeratoDB/Internal/*.{hpp,cpp}", "SeratoDB/**/*.{hpp,cpp}", "SeratoDB/**/Internal/*.{hpp,cpp}"
+    sp.exclude_files = "SeratoDB/Tests/*.{hpp,cpp}", "SeratoDB/**/Tests/*.{hpp,cpp}"
     sp.header_mappings_dir = "SeratoDB"
   end
-
+  
   s.subspec "Tests" do |sp|
-    sp.source_files = "SeratoDB/Tests/*.{hpp,cpp}"
+    sp.source_files = "SeratoDB/Tests/*.{hpp,cpp}", "SeratoDB/**/Tests/*.{hpp,cpp}"
+    sp.dependency 'taglib', '~> 1.9.1-4'
+    sp.header_mappings_dir = "SeratoDB"
   end
 end

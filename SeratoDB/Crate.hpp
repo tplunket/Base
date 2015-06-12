@@ -12,9 +12,9 @@
 
 #pragma once
 
-#include <SeratoDB/Tag.hpp>
+#include <SeratoDB/Tags/Tag.hpp>
 #include <SeratoDB/TrackEntry.hpp>
-#include <SeratoDB/DbUtility.hpp>
+#include <SeratoDB/Utility.hpp>
 
 namespace NxA { namespace Serato {
     #pragma mark Forward declarations

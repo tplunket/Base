@@ -12,15 +12,28 @@
 
 #pragma once
 
+#include <SeratoDb/Tags/Tag.hpp>
 #include <SeratoDB/Utility.hpp>
 
 namespace NxA { namespace Serato {
     #pragma mark Class Declaration
-    class Base64
+    class BlobTag : public Tag
     {
+    private:
+        #pragma mark Private Instance Variables
+        CharVectorPtr p_value;
+
     public:
-        #pragma mark Class Methods
-        static CharVectorPtr decodeBlock(const char* code_in, size_t length_in);
-        static CharVectorPtr encodeBlock(const char* plaintext_in, int length_in);
+        #pragma mark Constructors
+        explicit BlobTag(const void* tagAddress);
+        explicit BlobTag(uint32_t identifier, ConstCharVectorPtr value) :
+                         Tag(identifier),
+                         p_value(std::make_unique<CharVector>(*value)) { }
+
+        #pragma mark Instance Methods
+        const CharVector& value(void) const;
+        CharVector& value(void);
+
+        void addTo(CharVector& destination) const;
     };
 } }

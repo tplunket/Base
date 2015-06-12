@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include <SeratoDB/DBUtility.hpp>
+#include <SeratoDB/Utility.hpp>
 #include <SeratoDB/Crate.hpp>
 
 namespace NxA { namespace Serato {

@@ -12,8 +12,8 @@
 
 #pragma once
 
-#include <SeratoDB/Tag.hpp>
-#include <SeratoDB/TrackFile.hpp>
+#include <SeratoDb/Tags/Tag.hpp>
+#include <SeratoDb/TrackFiles/TrackFile.hpp>
 
 #include <string>
 #include <vector>

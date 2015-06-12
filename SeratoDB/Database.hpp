@@ -12,11 +12,11 @@
 
 #pragma once
 
-#include <SeratoDB/Tag.hpp>
+#include <SeratoDB/Tags/Tag.hpp>
 #include <SeratoDB/Track.hpp>
 #include <SeratoDB/Crate.hpp>
 #include <SeratoDB/CrateOrderFile.hpp>
-#include <SeratoDB/DBUtility.hpp>
+#include <SeratoDB/Utility.hpp>
 
 namespace NxA { namespace Serato {
     #pragma mark Class Declaration

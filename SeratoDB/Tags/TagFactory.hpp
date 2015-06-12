@@ -12,15 +12,21 @@
 
 #pragma once
 
+#include <SeratoDb/Tags/Tag.hpp>
 #include <SeratoDB/Utility.hpp>
 
 namespace NxA { namespace Serato {
     #pragma mark Class Declaration
-    class Base64
+    class TagFactory
     {
+    private:
+        #pragma mark Private Constructors
+        TagFactory() { }
+
     public:
         #pragma mark Class Methods
-        static CharVectorPtr decodeBlock(const char* code_in, size_t length_in);
-        static CharVectorPtr encodeBlock(const char* plaintext_in, int length_in);
+        static TagPtr tagForBinaryRepresentationAt(const void* tagAddress);
+
+        static TagVectorPtr parseTagsAt(const void* firstTagAddress, size_t sizeFromFirstTagInBytes);
     };
 } }

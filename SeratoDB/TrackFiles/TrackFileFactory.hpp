@@ -12,15 +12,16 @@
 
 #pragma once
 
-#include <SeratoDB/Utility.hpp>
+#include <SeratoDb/TrackFiles/TrackFile.hpp>
+
+#include <string>
 
 namespace NxA { namespace Serato {
     #pragma mark Class Declaration
-    class Base64
+    class TrackFileFactory
     {
     public:
         #pragma mark Class Methods
-        static CharVectorPtr decodeBlock(const char* code_in, size_t length_in);
-        static CharVectorPtr encodeBlock(const char* plaintext_in, int length_in);
+        static TrackFilePtr trackFileForPath(const char* trackFilePath);
     };
 } }

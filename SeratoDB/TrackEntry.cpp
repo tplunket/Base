@@ -10,9 +10,9 @@
 //  or email licensing@serato.com.
 //
 
-#include "SeratoDB/TrackEntry.hpp"
-#include "SeratoDB/PathTag.hpp"
-#include "SeratoDB/CrateV1Tags.hpp"
+#include "TrackEntry.hpp"
+#include "Tags/PathTag.hpp"
+#include "Tags/CrateV1Tags.hpp"
 
 using namespace NxA::Serato;
 using namespace std;

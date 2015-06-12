@@ -10,7 +10,7 @@
 //  or email licensing@serato.com.
 //
 
-#include "SeratoDB/Base64.hpp"
+#include "Base64.hpp"
 
 #include <stdlib.h>
 

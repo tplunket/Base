@@ -12,15 +12,28 @@
 
 #pragma once
 
+#include <SeratoDb/Tags/Tag.hpp>
 #include <SeratoDB/Utility.hpp>
 
 namespace NxA { namespace Serato {
     #pragma mark Class Declaration
-    class Base64
+    class BooleanTag : public Tag
     {
+    private:
+        #pragma mark Private Instance Variables
+        bool p_value;
+
     public:
-        #pragma mark Class Methods
-        static CharVectorPtr decodeBlock(const char* code_in, size_t length_in);
-        static CharVectorPtr encodeBlock(const char* plaintext_in, int length_in);
+        #pragma mark Constructors
+        explicit BooleanTag(const void* tagAddress);
+        explicit BooleanTag(const uint32_t& identifier, const bool& value) :
+                            Tag(identifier), p_value(value) { }
+
+        #pragma mark Instance Methods
+        const uint32_t& identifier(void) const;
+        const bool& value(void) const;
+        bool& value(void);
+
+        void addTo(CharVector& destination) const;
     };
 } }

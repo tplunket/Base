@@ -10,8 +10,8 @@
 //  or email licensing@serato.com.
 //
 
-#include "SeratoDB/CrateOrderFile.hpp"
-#include "SeratoDB/DbUtility.hpp"
+#include "CrateOrderFile.hpp"
+#include "Utility.hpp"
 
 #include <string>
 #include <errno.h>

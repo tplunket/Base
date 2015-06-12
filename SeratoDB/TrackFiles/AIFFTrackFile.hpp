@@ -12,15 +12,18 @@
 
 #pragma once
 
-#include <SeratoDB/Utility.hpp>
+#include <SeratoDb/TrackFiles/ID3TrackFile.hpp>
 
 namespace NxA { namespace Serato {
-    #pragma mark Class Declaration
-    class Base64
+#pragma mark Class Declaration
+    class AIFFTrackFile : public ID3TrackFile
     {
     public:
-        #pragma mark Class Methods
-        static CharVectorPtr decodeBlock(const char* code_in, size_t length_in);
-        static CharVectorPtr encodeBlock(const char* plaintext_in, int length_in);
+        #pragma mark Constructors
+        explicit AIFFTrackFile(const char* filePath);
+
+        #pragma mark Instance Variables
+        virtual uint32_t lengthInMilliseconds(void) const;
+        uint32_t bitDepthInBitsOrZeroIfNotApplicable(void) const;
     };
 } }

@@ -44,6 +44,14 @@ String::String(Internal::Object::Pointer initial_internal) : Object(initial_inte
 
 #pragma mark Factory Methods
 
+String::Pointer String::string(void)
+{
+    String::Pointer newString(String::makeShared());
+    newString->internal->value = "";
+
+    return newString;
+}
+
 String::Pointer String::stringWithCharPointer(const char* other)
 {
     String::Pointer newString(String::makeShared());

@@ -34,6 +34,7 @@ namespace NxA {
 
     public:
         #pragma mark Factory Methods
+        static String::Pointer string(void);
         static String::Pointer stringWithCharPointer(const char* other);
         static String::Pointer stringWithFormat(const char* format, ... );
         static String::Pointer stringWithUTF16Blob(const NxA::Pointer<NxA::Blob>& other);

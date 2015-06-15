@@ -35,7 +35,7 @@
 namespace NxA {
     class Debugger : public Uncopyable {
     public:
-        #pragma mark Constructors & Desctructors
+        #pragma mark Constructors & Destructors
         Debugger() = delete;
 
         #pragma mark Class Methods

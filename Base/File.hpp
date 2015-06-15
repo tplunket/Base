@@ -24,21 +24,25 @@
 #include "Base/Blob.hpp"
 #include "Base/String.hpp"
 #include "Base/Types.hpp"
+#include "Base/Uncopyable.hpp"
 
 namespace NxA {
-    class File {
+    class File : private Uncopyable {
     public:
+        #pragma mark Constructors & Destructors
+        Debugger() = delete;
+
         #pragma mark Class Methods
-        Blob::Pointer readFileAt(String::Pointer path);
-        void writeToFile(String::Pointer Path, const Blob::Pointer content);
-        void deleteFileAt(String::Pointer path);
+        static Blob::Pointer readFileAt(String::Pointer path);
+        static void writeToFile(String::Pointer Path, const Blob::Pointer content);
+        static void deleteFileAt(String::Pointer path);
 
-        String::Pointer joinPaths(String::Pointer first, String::Pointer second);
-        String::Pointer removePrefixFromPath(String::Pointer prefix, String::Pointer path);
+        static String::Pointer joinPaths(String::Pointer first, String::Pointer second);
+        static String::Pointer removePrefixFromPath(String::Pointer prefix, String::Pointer path);
 
-        bool fileExistsAt(String::Pointer path);
-        count sizeOfFileAt(String::Pointer path);
+        static bool fileExistsAt(String::Pointer path);
+        static count sizeOfFileAt(String::Pointer path);
 
-        timestamp modificationDateInSecondsSince1970ForFile(String::Pointer path);
+        static timestamp modificationDateInSecondsSince1970ForFile(String::Pointer path);
     };
 }

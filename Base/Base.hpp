@@ -32,3 +32,4 @@
 #include "Base/String.hpp"
 #include "Base/Array.hpp"
 #include "Base/Blob.hpp"
+#include "Base/File.hpp"

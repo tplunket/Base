@@ -9,6 +9,13 @@ If you are not a party to a Confidentiality/Non-Disclosure Agreement with Serato
 
 For further information, please refer to the modified MIT license provided with this library, or email licensing@serato.com.
 
+## Dependencies
+
+SeratoDB depends on the following externals:
+
+- Base: https://github.com/DidierMalenfant/Base
+- taglib: https://github.com/DidierMalenfant/taglib-pod (fork of taglib)
+
 ## Credits
 
 This library was originally written by Didier Malenfant of Next Audio Labs, LLC (didier@nextaudiolabs.com).

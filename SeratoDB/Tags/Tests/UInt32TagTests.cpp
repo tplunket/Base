@@ -9,17 +9,15 @@
 //  please email info@nextaudiolabs.com.
 //
 
-#include <GoogleMock/GoogleMock.h>
-
-#include "Tests/MakeXcodeUseCppTests.hpp"
+#include "Base/Test.hpp"
 #include "Tags/UInt32Tag.hpp"
 
 using namespace testing;
 using namespace NxA::Serato;
 
-XCODE_CPP_TEST_NAMED(SeratoUInt32Tests);
+NXA_CONTAINS_TEST_SUITE_NAMED(SeratoDB_UInt32Tag_Tests);
 
-TEST(SeratoUInt32, TagCreatedFromNormalConstructor_HasCorrectValue)
+TEST(SeratoDB_UInt32Tag, TagCreatedFromNormalConstructor_HasCorrectValue)
 {
     // -- When.
     UInt32Tag tag('vrsn', 0xDEADBEEF);
@@ -28,7 +26,7 @@ TEST(SeratoUInt32, TagCreatedFromNormalConstructor_HasCorrectValue)
     ASSERT_EQ(tag.value(), 0xDEADBEEF);
 }
 
-TEST(SeratoUInt32, TagCreatedFromParsingConstructor_HasCorrectValue)
+TEST(SeratoDB_UInt32Tag, TagCreatedFromParsingConstructor_HasCorrectValue)
 {
     // -- Given.
     unsigned char data[] = { 0x75, 0x61, 0x64, 0x64, 0x00, 0x00, 0x00, 0x04, 0x54, 0xCA, 0x84, 0xAB };
@@ -40,7 +38,7 @@ TEST(SeratoUInt32, TagCreatedFromParsingConstructor_HasCorrectValue)
     ASSERT_EQ(tag.value(), 0x54CA84AB);
 }
 
-TEST(SeratoUInt32, TagWrittenToData_HasCorrectOutput)
+TEST(SeratoDB_UInt32Tag, TagWrittenToData_HasCorrectOutput)
 {
     // -- When.
     UInt32Tag tag('vrsn', 0xDEADBEEF);

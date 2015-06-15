@@ -25,9 +25,9 @@
 using namespace testing;
 using namespace NxA;
 
-NXA_CONTAINS_TEST_SUITE_NAMED(StringTests);
+NXA_CONTAINS_TEST_SUITE_NAMED(Base_String_Tests);
 
-TEST(String, StringCreatedFromCharPointerContainsCorrectValue)
+TEST(Base_String, StringCreatedFromCharPointerContainsCorrectValue)
 {
     // -- When.
     String::Pointer test{ String::stringWithCharPointer("test") };

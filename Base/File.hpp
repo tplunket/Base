@@ -30,7 +30,7 @@ namespace NxA {
     class File : private Uncopyable {
     public:
         #pragma mark Constructors & Destructors
-        Debugger() = delete;
+        File() = delete;
 
         #pragma mark Class Methods
         static Blob::Pointer readFileAt(String::Pointer path);

@@ -1,0 +1,44 @@
+//
+//  Copyright (c) 2015 Next Audio Labs, LLC. All rights reserved.
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy of
+//  this software and associated documentation files (the "Software"), to deal in the
+//  Software without restriction, including without limitation the rights to use, copy,
+//  modify, merge, publish, distribute, sublicense, and/or sell copies of the Software,
+//  and to permit persons to whom the Software is furnished to do so, subject to the
+//  following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in all
+//  copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+//  INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+//  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+//  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+//  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+//  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
+
+#include "Base/Object.hpp"
+#include "Base/String.hpp"
+#include "Base/Internal/Object.hpp"
+
+NXA_GENERATED_IMPLEMENTATION_FOR(NxA, Object);
+
+using namespace NxA;
+
+#pragma mark Constructors & Destructors
+
+Object::Object(Internal::Object::Pointer initial_internal) : internal(initial_internal)
+{
+#if NXA_DEBUG_OBJECT_LIFECYCLE
+    printf("Construct Object at 0x%08lx.\n", (long)this);
+#endif
+}
+
+#pragma mark Instance Methods
+
+const String::Pointer Object::description(void) const
+{
+    return String::stringWithFormat("<%s at 0x%08lx>", this->className()->toCharPointer(), this);
+}

@@ -35,6 +35,8 @@ namespace NxA {
     using uinteger32 = uint32_t;
     using integer32 = int32_t;
 
+    using character = char;
+
     using count = size_t;
 
     using timestamp = time_t;

@@ -24,7 +24,7 @@ using namespace std;
 
 static const char* databaseFileCurrentVersionString = "2.0/Serato Scratch LIVE Database";
 
-#pragma Utility Functions
+#pragma mark Utility Functions
 
 #if PRINT_DEBUG_INFO
 static void p_debugListCrate(const Crate* crate, std::string spacing)

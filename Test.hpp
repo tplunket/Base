@@ -21,6 +21,8 @@
 
 #pragma once
 
+#include <GoogleMock/GoogleMock.h>
+
 #define NXA_CONTAINS_TEST_SUITE_NAMED(name) void* name;
 
 #define NXA_USING_TEST_SUITE_NAMED(name) extern void* name;

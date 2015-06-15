@@ -19,8 +19,6 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include <GoogleMock/GoogleMock.h>
-
 #include "Base/String.hpp"
 #include "Base/Test.hpp"
 

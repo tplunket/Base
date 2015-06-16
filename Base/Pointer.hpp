@@ -50,6 +50,14 @@ namespace NxA {
         {
             return this->pointer.get();
         }
+        T& operator*()
+        {
+            return *this->pointer.get();
+        }
+        const T& operator*() const
+        {
+            return *this->pointer.get();
+        }
 
         #pragma mark Instance Methods
         std::shared_ptr<T> const& toStdSharedPointer(void) const

@@ -97,7 +97,7 @@ namespace NxA {
             return this->values.size();
         }
 
-        void append(typename T::Pointer const& object)
+        void append(const typename T::Pointer& object)
         {
             this->values.push_back(object);
         }

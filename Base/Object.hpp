@@ -24,9 +24,9 @@
 #include "Base/Uncopyable.hpp"
 #include "Base/GeneratedObjectCode.hpp"
 
-NXA_GENERATED_FORWARD_DECLARATIONS_FOR(NxA, Object);
-
 namespace NxA {
+    NXA_GENERATED_FORWARD_DECLARATIONS_FOR(Object);
+
     class String;
 
     class Object : private Uncopyable {

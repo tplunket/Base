@@ -27,23 +27,24 @@
 
 #include <memory>
 
+#pragma mark Forward Declaration
+
+namespace NxA {
+    class String;
+    namespace Internal {
+        class Object;
+    }
+}
+
 #pragma mark Macros
 
 #define NXA_DEBUG_OBJECT_LIFECYCLE                  0
 
 #define NXA_STR_VALUE_FOR(arg) #arg
 
-#define NXA_GENERATED_FORWARD_DECLARATIONS_FOR(namespace_name, class_name) \
-        namespace NxA { \
-            class String; \
-            namespace Internal { \
-                class Object; \
-            } \
-        } \
-        namespace namespace_name { \
-            namespace Internal { \
-                class class_name; \
-            } \
+#define NXA_GENERATED_FORWARD_DECLARATIONS_FOR(class_name) \
+        namespace Internal { \
+            class class_name; \
         }
 
 #if NXA_DEBUG_OBJECT_LIFECYCLE

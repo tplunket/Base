@@ -24,9 +24,9 @@
 #include "Base/Object.hpp"
 #include "Base/Types.hpp"
 
-NXA_GENERATED_FORWARD_DECLARATIONS_FOR(NxA, String);
-
 namespace NxA {
+    NXA_GENERATED_FORWARD_DECLARATIONS_FOR(String);
+    
     class Blob;
 
     class String : public Object {

@@ -58,5 +58,6 @@ namespace NxA {
         void clear(void);
 
         void append(const Blob::Pointer& other);
+        void append(const character* other);
     };
 }

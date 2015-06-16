@@ -59,6 +59,39 @@ namespace NxA {
         }
 
         #pragma mark Instance Methods
+        typename std::vector<typename T::Pointer>::iterator begin() noexcept
+        {
+            return this->values.begin();
+        }
+        typename std::vector<typename T::Pointer>::const_iterator begin() const noexcept
+        {
+            return this->values.begin();
+        }
+        typename std::vector<typename T::Pointer>::iterator end() noexcept
+        {
+            return this->values.end();
+        }
+        typename std::vector<typename T::Pointer>::const_iterator end() const noexcept
+        {
+            return this->values.end();
+        }
+        typename std::vector<typename T::Pointer>::iterator cbegin() noexcept
+        {
+            return this->values.end();
+        }
+        typename std::vector<typename T::Pointer>::const_iterator cbegin() const noexcept
+        {
+            return this->values.cbegin();
+        }
+        typename std::vector<typename T::Pointer>::iterator cend() noexcept
+        {
+            return this->values.cend();
+        }
+        typename std::vector<typename T::Pointer>::const_iterator cend() const noexcept
+        {
+            return this->values.end();
+        }
+
         count length(void) const
         {
             return this->values.size();

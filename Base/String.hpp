@@ -48,6 +48,10 @@ namespace NxA {
         virtual const String::Pointer description(void) const;
 
         count length(void) const;
+        bool isEmpty(void) const
+        {
+            return this->length() == 0;
+        };
 
         const char* toUTF8(void) const;
         NxA::Pointer<NxA::Blob> toUTF16(void) const;

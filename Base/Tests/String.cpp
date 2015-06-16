@@ -30,8 +30,8 @@ NXA_CONTAINS_TEST_SUITE_NAMED(Base_String_Tests);
 TEST(Base_String, StringCreatedFromCharPointerContainsCorrectValue)
 {
     // -- When.
-    String::Pointer test{ String::stringWithCharPointer("test") };
+    auto test = String::stringWithUTF8("test");
 
     // -- Then.
-    ASSERT_TRUE(strcmp(test->toCharPointer(), "test") == 0);
+    ASSERT_TRUE(strcmp(test->toUTF8(), "test") == 0);
 }

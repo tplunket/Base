@@ -40,5 +40,5 @@ Object::Object(Internal::Object::Pointer initial_internal) : internal(initial_in
 
 const String::Pointer Object::description(void) const
 {
-    return String::stringWithFormat("<%s at 0x%08lx>", this->className()->toCharPointer(), this);
+    return String::stringWithFormat("<%s at 0x%08lx>", this->className()->toUTF8(), this);
 }

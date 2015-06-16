@@ -37,7 +37,7 @@ Blob::Pointer File::readFileAt(String::Pointer path)
     if (fileSize) {
         char* fileData = new char[fileSize];
         if (fileData) {
-            fstream file(path->toCharPointer(), ios::in | ios::binary);
+            fstream file(path->toUTF8(), ios::in | ios::binary);
             file.read(fileData, fileSize);
             file.close();
 
@@ -53,14 +53,14 @@ Blob::Pointer File::readFileAt(String::Pointer path)
 
 void File::writeToFile(String::Pointer path, const Blob::Pointer content)
 {
-    fstream file(path->toCharPointer(), ios::out | ios::binary);
+    fstream file(path->toUTF8(), ios::out | ios::binary);
     file.write(reinterpret_cast<const char *>(content->data()), content->size());
     file.close();
 }
 
 void File::deleteFileAt(String::Pointer path)
 {
-    ::remove(path->toCharPointer());
+    ::remove(path->toUTF8());
 }
 
 String::Pointer File::joinPaths(String::Pointer first, String::Pointer second)
@@ -88,13 +88,13 @@ String::Pointer File::removePrefixFromPath(String::Pointer prefix, String::Point
 bool File::fileExistsAt(String::Pointer path)
 {
     struct stat buf;
-    return (::stat(path->toCharPointer(), &buf) != -1);
+    return (::stat(path->toUTF8(), &buf) != -1);
 }
 
 NxA::count File::sizeOfFileAt(String::Pointer path)
 {
     struct stat buf;
-    if (::stat(path->toCharPointer(), &buf) == -1) {
+    if (::stat(path->toUTF8(), &buf) == -1) {
         return 0;
     }
 
@@ -104,7 +104,7 @@ NxA::count File::sizeOfFileAt(String::Pointer path)
 timestamp File::modificationDateInSecondsSince1970ForFile(String::Pointer path)
 {
     struct stat buf;
-    if (::stat(path->toCharPointer(), &buf) == -1) {
+    if (::stat(path->toUTF8(), &buf) == -1) {
         return 0;
     }
 

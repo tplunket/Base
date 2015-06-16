@@ -52,7 +52,7 @@ String::Pointer String::string(void)
     return newString;
 }
 
-String::Pointer String::stringWithCharPointer(const char* other)
+String::Pointer String::stringWithUTF8(const char* other)
 {
     String::Pointer newString(String::makeShared());
     newString->internal->value = other;
@@ -70,10 +70,10 @@ String::Pointer String::stringWithFormat(const char* format, ...)
     vsnprintf(buffer, formatStringBufferSize, format, args);
     va_end(args);
 
-    return String::stringWithCharPointer(buffer);
+    return String::stringWithUTF8(buffer);
 }
 
-String::Pointer String::stringWithUTF16Blob(const Blob::Pointer& other)
+String::Pointer String::stringWithUTF16(const Blob::Pointer& other)
 {
     const integer16* characters = reinterpret_cast<const integer16*>(other->data());
     count length = other->size() / 2;
@@ -123,15 +123,15 @@ count String::length(void) const
 
 const String::Pointer String::description(void) const
 {
-    return String::stringWithCharPointer(this->toCharPointer());
+    return String::stringWithUTF8(this->toUTF8());
 }
 
-const char* String::toCharPointer(void) const
+const char* String::toUTF8(void) const
 {
     return internal->value.c_str();
 }
 
-Blob::Pointer String::toUTF16Blob(void) const
+Blob::Pointer String::toUTF16(void) const
 {
     std::wstring_convert<std::codecvt_utf8_utf16<char16_t>,char16_t> convert;
     std::u16string u16 = convert.from_bytes(internal->value.c_str());
@@ -153,7 +153,7 @@ Blob::Pointer String::toUTF16Blob(void) const
 
 void String::append(const String::Pointer& other)
 {
-    internal->value.append(other->toCharPointer());
+    internal->value.append(other->toUTF8());
 }
 
 void String::append(const char* other)
@@ -164,11 +164,11 @@ void String::append(const char* other)
 String::Array::Pointer String::splitBySeperator(char seperator) const
 {
     String::Array::Pointer results{ String::Array::array() };
-    std::stringstream stream(this->toCharPointer());
+    std::stringstream stream(this->toUTF8());
     std::string line;
 
     while(getline(stream, line, seperator)) {
-        results->append(String::stringWithCharPointer(line.c_str()));
+        results->append(String::stringWithUTF8(line.c_str()));
     }
 
     return results;
@@ -188,12 +188,12 @@ String::Pointer String::subString(count start, count end)
 
 bool String::hasPrefix(String::Pointer prefix) const
 {
-    return this->hasPrefix(prefix->toCharPointer());
+    return this->hasPrefix(prefix->toUTF8());
 }
 
 bool String::hasPostfix(String::Pointer postfix) const
 {
-    size_t pos = internal->value.rfind(postfix->toCharPointer());
+    size_t pos = internal->value.rfind(postfix->toUTF8());
     if (pos == std::string::npos) {
         return false;
     }

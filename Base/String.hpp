@@ -35,9 +35,9 @@ namespace NxA {
     public:
         #pragma mark Factory Methods
         static String::Pointer string(void);
-        static String::Pointer stringWithCharPointer(const char* other);
+        static String::Pointer stringWithUTF8(const char* other);
+        static String::Pointer stringWithUTF16(const NxA::Pointer<NxA::Blob>& other);
         static String::Pointer stringWithFormat(const char* format, ... );
-        static String::Pointer stringWithUTF16Blob(const NxA::Pointer<NxA::Blob>& other);
         static String::Pointer stringWithString(const String::Pointer& other);
 
         #pragma mark Operators
@@ -49,8 +49,8 @@ namespace NxA {
 
         count length(void) const;
 
-        const char* toCharPointer(void) const;
-        NxA::Pointer<NxA::Blob> toUTF16Blob(void) const;
+        const char* toUTF8(void) const;
+        NxA::Pointer<NxA::Blob> toUTF16(void) const;
 
         void append(const String::Pointer& other);
         void append(const char* other);

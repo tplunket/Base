@@ -12,6 +12,9 @@
 
 #include "Markers/GridMarker.hpp"
 
+#include <Base/Platform.hpp>
+
+using namespace NxA;
 using namespace NxA::Serato;
 using namespace std;
 
@@ -29,8 +32,8 @@ GridMarker::GridMarker(const char* markerData)
 {
     const GridMarkerStruct* gridMarker = (const GridMarkerStruct* )markerData;
 
-    this->p_positionInSeconds = bigEndianFloatValueAt(gridMarker->positionInSeconds);
-    this->p_bpm = bigEndianFloatValueAt(gridMarker->bpm);
+    this->p_positionInSeconds = Platform::bigEndianFloatValueAt(gridMarker->positionInSeconds);
+    this->p_bpm = Platform::bigEndianFloatValueAt(gridMarker->bpm);
 }
 
 #pragma mark Class Methods
@@ -56,8 +59,8 @@ void GridMarker::addDataTo(CharVector& data) const
 {
     GridMarkerStruct marker;
 
-    writeBigEndianFloatValueAt(this->p_positionInSeconds, marker.positionInSeconds);
-    writeBigEndianFloatValueAt(this->p_bpm, marker.bpm);
+    Platform::writeBigEndianFloatValueAt(this->p_positionInSeconds, marker.positionInSeconds);
+    Platform::writeBigEndianFloatValueAt(this->p_bpm, marker.bpm);
 
     CharVector markerData((char*)&marker, (char*)&marker.endOfStruct);
     data.insert(data.end(), markerData.begin(), markerData.end());

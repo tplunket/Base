@@ -12,8 +12,8 @@
 
 #include "Tags/UInt16Tag.hpp"
 
+using namespace NxA;
 using namespace NxA::Serato;
-using namespace std;
 
 #pragma mark Instance Methods
 
@@ -27,16 +27,15 @@ uint16_t& UInt16Tag::value(void)
     return const_cast<uint16_t&>(static_cast<const UInt16Tag&>(*this).value());
 }
 
-void UInt16Tag::addTo(CharVector& destination) const
+void UInt16Tag::addTo(Blob::Pointer& destination) const
 {
     size_t dataSize = 2;
-    size_t memoryNeededInBytes = Tag::p_memoryNeededWithDataOfSize(dataSize);
-    CharVectorPtr memoryRepresentation = make_unique<CharVector>(memoryNeededInBytes, 0);
+    Blob::Pointer memoryRepresentation = Blob::blobWithCapacity(Tag::p_memoryNeededForTagHeader() + dataSize);
 
     void* tagAddress = memoryRepresentation->data();
     Tag::p_setIdentifierForTagAt(this->identifier(), tagAddress);
     Tag::p_setDataSizeForTagAt(dataSize, tagAddress);
-    writeBigEndianUInt16ValueAt(this->p_value, Tag::p_dataForTagAt(tagAddress));
+    Platform::writeBigEndianUInt16ValueAt(this->p_value, Tag::p_dataForTagAt(tagAddress));
 
-    destination.insert(destination.end(), memoryRepresentation->begin(), memoryRepresentation->end());
+    destination->append(memoryRepresentation);
 }

@@ -67,13 +67,13 @@ void MP4TrackFile::p_readMarkers(void)
 
     MP4::Item markersItem = (*this->p_itemListMap)["----:com.serato.dj:markersv2"];
     if (markersItem.isValid()) {
-        const String encodedData = markersItem.toStringList().toString();
+        const TagLib::String encodedData = markersItem.toStringList().toString();
         uint32_t encodedDataSize = encodedData.size();
         if (!encodedDataSize) {
             return;
         }
 
-        CharVectorPtr decodedData = Base64::decodeBlock((const char*)encodedData.data(String::UTF8).data(),
+        CharVectorPtr decodedData = Base64::decodeBlock((const char*)encodedData.data(TagLib::String::UTF8).data(),
                                                         encodedDataSize);
         const SeratoMP4MarkersHeaderStruct* headerStruct = (const SeratoMP4MarkersHeaderStruct*)decodedData->data();
         this->p_readMarkersV2FromBase64Data((const char*)headerStruct->data, decodedData->size() - sizeof(SeratoMP4MarkersHeaderStruct));
@@ -81,13 +81,13 @@ void MP4TrackFile::p_readMarkers(void)
 
     MP4::Item beatgridItem = (*this->p_itemListMap)["----:com.serato.dj:beatgrid"];
     if (beatgridItem.isValid()) {
-        const String encodedData = beatgridItem.toStringList().toString();
+        const TagLib::String encodedData = beatgridItem.toStringList().toString();
         uint32_t encodedDataSize = encodedData.size();
         if (!encodedDataSize) {
             return;
         }
 
-        CharVectorPtr decodedData = Base64::decodeBlock((const char*)encodedData.data(String::UTF8).data(),
+        CharVectorPtr decodedData = Base64::decodeBlock((const char*)encodedData.data(TagLib::String::UTF8).data(),
                                                         encodedDataSize);
 
         const SeratoMP4MarkersHeaderStruct* headerStruct = (const SeratoMP4MarkersHeaderStruct*)decodedData->data();
@@ -119,7 +119,7 @@ void MP4TrackFile::p_writeMarkers(void)
         encodedData->insert(encodedData->end(), 0);
 
         StringList newList;
-        newList.append(String(encodedData->data()));
+        newList.append(TagLib::String(encodedData->data()));
 
         MP4::Item newItem(newList);
         (*this->p_itemListMap)["----:com.serato.dj:markersv2"] = newItem;
@@ -148,7 +148,7 @@ void MP4TrackFile::p_writeMarkers(void)
         encodedData->insert(encodedData->end(), 0);
 
         StringList newList;
-        newList.append(String(encodedData->data()));
+        newList.append(TagLib::String(encodedData->data()));
 
         MP4::Item newItem(newList);
         (*this->p_itemListMap)["----:com.serato.dj:beatgrid"] = newItem;
@@ -167,8 +167,8 @@ string MP4TrackFile::key(void) const
 {
     MP4::Item item = (*this->p_itemListMap)["----:com.apple.iTunes:initialkey"];
     if (item.isValid()) {
-        String text = item.toStringList().front();
-        if (text != String::null) {
+        TagLib::String text = item.toStringList().front();
+        if (text != TagLib::String::null) {
             return text.to8Bit();
         }
     }
@@ -178,8 +178,8 @@ string MP4TrackFile::key(void) const
 
 string MP4TrackFile::grouping(void) const
 {
-    String text = this->p_properties["GROUPING"].toString();
-    if (text != String::null) {
+    TagLib::String text = this->p_properties["GROUPING"].toString();
+    if (text != TagLib::String::null) {
         return text.to8Bit();
     }
 
@@ -208,8 +208,8 @@ string MP4TrackFile::remixer(void) const
 
 string MP4TrackFile::yearReleased(void) const
 {
-    String text = this->p_properties["DATE"].toString();
-    if (text != String::null) {
+    TagLib::String text = this->p_properties["DATE"].toString();
+    if (text != TagLib::String::null) {
         return text.to8Bit();
     }
 
@@ -237,15 +237,15 @@ CharVectorPtr MP4TrackFile::artwork(void) const
 
 void MP4TrackFile::setKey(const char* key)
 {
-    StringList newList;
-    newList.append(String(key));
+    TagLib::StringList newList;
+    newList.append(TagLib::String(key));
     MP4::Item newItem(newList);
     (*this->p_itemListMap)["----:com.apple.iTunes:initialkey"] = newItem;
 }
 
 void MP4TrackFile::setGrouping(const char* grouping)
 {
-    this->p_properties["GROUPING"] = String(grouping);
+    this->p_properties["GROUPING"] = TagLib::String(grouping);
 }
 
 void MP4TrackFile::setRecordLabel(const char* recordLabel)
@@ -260,7 +260,7 @@ void MP4TrackFile::setRemixer(const char* remixer)
 
 void MP4TrackFile::setYearReleased(const char* year)
 {
-    this->p_properties["DATE"] = String(year);
+    this->p_properties["DATE"] = TagLib::String(year);
 }
 
 void MP4TrackFile::setArtwork(CharVectorPtr artwork)

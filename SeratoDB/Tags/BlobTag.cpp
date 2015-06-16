@@ -12,41 +12,37 @@
 
 #include "Tags/BlobTag.hpp"
 
+using namespace NxA;
 using namespace NxA::Serato;
-using namespace std;
 
 #pragma mark Constructors
 
-BlobTag::BlobTag(const void* tagAddress) : Tag(tagAddress)
-{
-    size_t dataSizeInBytes = Tag::p_dataSizeInBytesForTagAt(tagAddress);
-    const char* dataStart = static_cast<const char*>(Tag::p_dataForTagAt(tagAddress));
-
-    this->p_value = make_unique<CharVector>(dataStart, dataStart + dataSizeInBytes);
-}
+BlobTag::BlobTag(const void* tagAddress) : Tag(tagAddress),
+    p_value(Blob::blobWithCharPointer(static_cast<const char*>(Tag::p_dataForTagAt(tagAddress)),
+                                      Tag::p_dataSizeInBytesForTagAt(tagAddress))) { }
 
 #pragma mark Instance Methods
 
-const CharVector& BlobTag::value(void) const
+const Blob::Pointer& BlobTag::value(void) const
 {
-    return *(this->p_value);
+    return this->p_value;
 }
 
-CharVector& BlobTag::value(void)
+Blob::Pointer& BlobTag::value(void)
 {
-    return const_cast<CharVector&>(static_cast<const BlobTag&>(*this).value());
+    return const_cast<Blob::Pointer&>(static_cast<const BlobTag&>(*this).value());
 }
 
-void BlobTag::addTo(CharVector& destination) const
+void BlobTag::addTo(Blob::Pointer& destination) const
 {
     size_t dataSize = this->p_value->size();
-    size_t memoryNeededInBytes = Tag::p_memoryNeededWithDataOfSize(this->p_value->size());
-    CharVectorPtr memoryRepresentation = make_unique<CharVector>(memoryNeededInBytes, 0);
+    size_t memoryNeededInBytes = Tag::p_memoryNeededForTagHeader() + dataSize;
+    Blob::Pointer memoryRepresentation = Blob::blobWithCapacity(memoryNeededInBytes);
 
     void* tagAddress = memoryRepresentation->data();
     Tag::p_setIdentifierForTagAt(this->identifier(), tagAddress);
     Tag::p_setDataSizeForTagAt(dataSize, tagAddress);
     memcpy(Tag::p_dataForTagAt(tagAddress), this->p_value->data(), this->p_value->size());
 
-    destination.insert(destination.end(), memoryRepresentation->begin(), memoryRepresentation->end());
+    destination->append(memoryRepresentation);
 }

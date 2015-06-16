@@ -12,6 +12,9 @@
 
 #include "Tags/Tag.hpp"
 
+#include "Base/Platform.hpp"
+
+using namespace NxA;
 using namespace NxA::Serato;
 using namespace std;
 
@@ -28,25 +31,25 @@ typedef struct {
 void Tag::p_setIdentifierForTagAt(const uint32_t& identifier, const void* tagAddress)
 {
     TagStruct* tagStructPtr = (TagStruct*)tagAddress;
-    writeBigEndianUInt32ValueAt(identifier, tagStructPtr->identifier);
+    Platform::writeBigEndianUInt32ValueAt(identifier, tagStructPtr->identifier);
 }
 
 size_t Tag::p_dataSizeInBytesForTagAt(const void* tagAddress)
 {
     TagStruct* tagStructPtr = (TagStruct*)tagAddress;
-    unsigned long dataSizeInBytes = bigEndianUInt32ValueAt(tagStructPtr->length);
+    unsigned long dataSizeInBytes = Platform::bigEndianUInt32ValueAt(tagStructPtr->length);
     return dataSizeInBytes;
 }
 
 void Tag::p_setDataSizeForTagAt(const size_t& dataSizeInBytes, const void* tagAddress)
 {
     TagStruct* tagStructPtr = (TagStruct*)tagAddress;
-    writeBigEndianUInt32ValueAt((uint32_t)dataSizeInBytes, tagStructPtr->length);
+    Platform::writeBigEndianUInt32ValueAt((uint32_t)dataSizeInBytes, tagStructPtr->length);
 }
 
-size_t Tag::p_memoryNeededWithDataOfSize(const size_t& dataSizeInBytes)
+size_t Tag::p_memoryNeededForTagHeader(void)
 {
-    return dataSizeInBytes + sizeof(TagStruct);
+    return sizeof(TagStruct);
 }
 
 const void* Tag::p_dataForTagAt(const void* tagAddress)
@@ -64,7 +67,7 @@ void* Tag::p_dataForTagAt(void* tagAddress)
 uint32_t Tag::identifierForTagAt(const void* tagAddress)
 {
     const TagStruct* tagStructPtr = (const TagStruct*)tagAddress;
-    uint32_t identifier = bigEndianUInt32ValueAt(tagStructPtr->identifier);
+    uint32_t identifier = Platform::bigEndianUInt32ValueAt(tagStructPtr->identifier);
     return identifier;
 }
 

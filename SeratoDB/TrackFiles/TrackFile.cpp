@@ -13,9 +13,13 @@
 #include "TrackFiles/TrackFile.hpp"
 #include "Base64.hpp"
 
+#include <Base/File.hpp>
+#include <Base/Platform.hpp>
+
 #include <taglib/tpropertymap.h>
 #include <taglib/generalencapsulatedobjectframe.h>
 
+using namespace NxA;
 using namespace NxA::Serato;
 using namespace TagLib;
 using namespace std;
@@ -39,7 +43,7 @@ static const char* p_nextTagPositionAfterTagNamed(const string tagName, const ch
     const char* parserPosition = currentTagPosition;
 
     parserPosition += tagName.length() + 1;
-    uint32_t tagSize = bigEndianUInt32ValueAt(parserPosition);
+    uint32_t tagSize = Platform::bigEndianUInt32ValueAt(parserPosition);
     parserPosition += 4 + tagSize;
 
     return parserPosition;
@@ -52,7 +56,7 @@ static CharVectorPtr p_markerV2TagDataFrom(const char* tagStart)
     const size_t sizeOfSizeField = 4;
 
     const char* sizePosition = tagStart + sizeOfNameField;
-    size_t tagSize = bigEndianUInt32ValueAt(sizePosition) + sizeOfNameField + sizeOfSizeField;
+    size_t tagSize = Platform::bigEndianUInt32ValueAt(sizePosition) + sizeOfNameField + sizeOfSizeField;
 
     CharVectorPtr data(make_unique<CharVector>(tagStart, tagStart + tagSize));
     return move(data);
@@ -107,7 +111,7 @@ void TrackFile::p_readGridMarkersFrom(const char* gridMarkerData, size_t sizeInB
         return;
     }
 
-    uint32_t numberOfMarkers = bigEndianUInt32ValueAt(gridMarkerData);
+    uint32_t numberOfMarkers = Platform::bigEndianUInt32ValueAt(gridMarkerData);
     gridMarkerData += 4;
 
     for (uint32_t index = 0; index < numberOfMarkers; ++index) {
@@ -149,7 +153,7 @@ CharVectorPtr TrackFile::p_gridMarkerDataFromGridMarkers(void)
     CharVectorPtr data(make_unique<CharVector>());
 
     uint32_t numberOfMarkers;
-    writeBigEndianUInt32ValueAt(this->p_gridMarkers->size(), &numberOfMarkers);
+    Platform::writeBigEndianUInt32ValueAt(this->p_gridMarkers->size(), &numberOfMarkers);
 
     CharVector numberOfMarkersData((char*)&numberOfMarkers, (char*)&numberOfMarkers + sizeof(numberOfMarkers));
     data->insert(data->end(), numberOfMarkersData.begin(), numberOfMarkersData.end());
@@ -164,8 +168,8 @@ CharVectorPtr TrackFile::p_gridMarkerDataFromGridMarkers(void)
 string TrackFile::title(void) const
 {
     if (this->p_parsedFileTag) {
-        String text = this->p_parsedFileTag->title();
-        if (text != String::null) {
+        auto text = this->p_parsedFileTag->title();
+        if (text != TagLib::String::null) {
             return text.to8Bit();
         }
     }
@@ -176,8 +180,8 @@ string TrackFile::title(void) const
 string TrackFile::artist(void) const
 {
     if (this->p_parsedFileTag) {
-        String text = this->p_parsedFileTag->artist();
-        if (text != String::null) {
+        auto text = this->p_parsedFileTag->artist();
+        if (text != TagLib::String::null) {
             return text.to8Bit();
         }
     }
@@ -188,8 +192,8 @@ string TrackFile::artist(void) const
 string TrackFile::genre(void) const
 {
     if (this->p_parsedFileTag) {
-        String text = this->p_parsedFileTag->genre();
-        if (text != String::null) {
+        auto text = this->p_parsedFileTag->genre();
+        if (text != TagLib::String::null) {
             return text.to8Bit();
         }
     }
@@ -200,8 +204,8 @@ string TrackFile::genre(void) const
 string TrackFile::comments(void) const
 {
     if (this->p_parsedFileTag) {
-        String text = this->p_parsedFileTag->comment();
-        if (text != String::null) {
+        auto text = this->p_parsedFileTag->comment();
+        if (text != TagLib::String::null) {
             return text.to8Bit();
         }
     }
@@ -212,8 +216,8 @@ string TrackFile::comments(void) const
 string TrackFile::album(void) const
 {
     if (this->p_parsedFileTag) {
-        String text = this->p_parsedFileTag->album();
-        if (text != String::null) {
+        auto text = this->p_parsedFileTag->album();
+        if (text != TagLib::String::null) {
             return text.to8Bit();
         }
     }
@@ -223,8 +227,8 @@ string TrackFile::album(void) const
 
 string TrackFile::composer(void) const
 {
-    String text = this->p_properties["COMPOSER"].toString();
-    if (text != String::null) {
+    auto text = this->p_properties["COMPOSER"].toString();
+    if (text != TagLib::String::null) {
         return text.to8Bit();
     }
 
@@ -233,8 +237,8 @@ string TrackFile::composer(void) const
 
 string TrackFile::bpm(void) const
 {
-    String text = this->p_properties["BPM"].toString();
-    if (text != String::null) {
+    auto text = this->p_properties["BPM"].toString();
+    if (text != TagLib::String::null) {
         return text.to8Bit();
     }
 
@@ -243,7 +247,7 @@ string TrackFile::bpm(void) const
 
 size_t TrackFile::sizeInBytes(void) const
 {
-    return sizeOfFileAt(this->p_trackFilePath->c_str());
+    return File::sizeOfFileAt(String::stringWithUTF8(this->p_trackFilePath->c_str()));
 }
 
 uint32_t TrackFile::lengthInMilliseconds(void) const
@@ -305,46 +309,46 @@ const GridMarkerVector& TrackFile::gridMarkers(void) const
 void TrackFile::setTitle(const char* title)
 {
     if (this->p_parsedFileTag) {
-        this->p_parsedFileTag->setTitle(String(title));
+        this->p_parsedFileTag->setTitle(TagLib::String(title));
     }
 }
 
 void TrackFile::setArtist(const char* artist)
 {
     if (this->p_parsedFileTag) {
-        this->p_parsedFileTag->setArtist(String(artist));
+        this->p_parsedFileTag->setArtist(TagLib::String(artist));
     }
 }
 
 void TrackFile::setGenre(const char* genre)
 {
     if (this->p_parsedFileTag) {
-        this->p_parsedFileTag->setGenre(String(genre));
+        this->p_parsedFileTag->setGenre(TagLib::String(genre));
     }
 }
 
 void TrackFile::setComments(const char* comments)
 {
     if (this->p_parsedFileTag) {
-        this->p_parsedFileTag->setComment(String(comments));
+        this->p_parsedFileTag->setComment(TagLib::String(comments));
     }
 }
 
 void TrackFile::setAlbum(const char* album)
 {
     if (this->p_parsedFileTag) {
-        this->p_parsedFileTag->setAlbum(String(album));
+        this->p_parsedFileTag->setAlbum(TagLib::String(album));
     }
 }
 
 void TrackFile::setComposer(const char* composer)
 {
-    this->p_properties["COMPOSER"] = String(composer);
+    this->p_properties["COMPOSER"] = TagLib::String(composer);
 }
 
 void TrackFile::setBpm(const char* bpm)
 {
-    this->p_properties["BPM"] = String(bpm);
+    this->p_properties["BPM"] = TagLib::String(bpm);
 }
 
 void TrackFile::setTrackNumber(const uint32_t& trackNumber)

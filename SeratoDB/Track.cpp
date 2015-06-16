@@ -18,6 +18,9 @@
 #include "Tags/PathTag.hpp"
 #include "Tags/UInt32Tag.hpp"
 
+#include "Base/File.hpp"
+
+using namespace NxA;
 using namespace NxA::Serato;
 using namespace std;
 
@@ -27,7 +30,7 @@ using namespace std;
 
 #pragma mark Constants
 
-static const string emptyString("");
+static const String::Pointer emptyString = String::string();
 static const uint32_t zeroValue = 0;
 
 #pragma mark Utility Functions
@@ -131,7 +134,7 @@ static void p_debugPrintComparaison(const Track* track, const TrackFile* trackFi
 Track::Track(TagPtr trackTag, const char* locatedOnVolumePath) :
              p_wasModified(false),
              p_trackTag(move(trackTag)),
-             p_rootFolder(make_unique<string>(locatedOnVolumePath)),
+             p_rootFolder(String::stringWithUTF8(locatedOnVolumePath)),
              p_cueMarkers(make_unique<CueMarkerVector>()),
              p_loopMarkers(make_unique<LoopMarkerVector>()),
              p_gridMarkers(make_unique<GridMarkerVector>())
@@ -150,14 +153,15 @@ Track::Track(TagPtr trackTag, const char* locatedOnVolumePath) :
 
 Track::Track(const char* trackFilePath, const char* locatedOnVolumePath) :
              p_wasModified(true),
-             p_rootFolder(make_unique<string>(locatedOnVolumePath)),
+             p_rootFolder(String::stringWithUTF8(locatedOnVolumePath)),
              p_cueMarkers(make_unique<CueMarkerVector>()),
              p_loopMarkers(make_unique<LoopMarkerVector>()),
              p_gridMarkers(make_unique<GridMarkerVector>())
 {
-    ConstStringPtr relativePath = removePrefixFromPath(locatedOnVolumePath, trackFilePath);
+    String::Pointer relativePath = File::removePrefixFromPath(String::stringWithUTF8(locatedOnVolumePath),
+                                                              String::stringWithUTF8(trackFilePath));
     TagVectorPtr tags(make_unique<TagVector>());
-    tags->push_back(make_unique<PathTag>(NxASeratoTrackFilePathTag, relativePath->c_str()));
+    tags->push_back(make_unique<PathTag>(NxASeratoTrackFilePathTag, relativePath->toUTF8()));
 
     this->p_trackTag = make_unique<ObjectTag>(NxASeratoTrackObjectTag, move(tags));
 
@@ -185,7 +189,7 @@ bool Track::p_containsAValidTrackTag(void) const
     return this->p_trackTag.get() != NULL;
 }
 
-const string& Track::p_stringForSubTagForIdentifier(const uint32_t& identifier) const
+const String::Pointer& Track::p_stringForSubTagForIdentifier(const uint32_t& identifier) const
 {
     if (this->p_containsAValidTrackTag()) {
         const ObjectTag* trackObjectTag = dynamic_cast<const ObjectTag*>(this->p_trackTag.get());
@@ -198,7 +202,7 @@ const string& Track::p_stringForSubTagForIdentifier(const uint32_t& identifier) 
     return emptyString;
 }
 
-const string& Track::p_pathForSubTagForIdentifier(const uint32_t& identifier) const
+const String::Pointer& Track::p_pathForSubTagForIdentifier(const uint32_t& identifier) const
 {
     if (this->p_containsAValidTrackTag()) {
         const ObjectTag* trackObjectTag = dynamic_cast<const ObjectTag*>(this->p_trackTag.get());
@@ -236,7 +240,7 @@ void Track::p_setStringForSubTagForIdentifier(const char* value, const uint32_t&
     }
     else {
         TextTag& textTag = dynamic_cast<TextTag&>(trackObjectTag->subTagForIdentifier(identifier));
-        textTag.value() = string(value);
+        textTag.value() = String::stringWithUTF8(value);
     }
 
     this->p_wasModified = true;
@@ -254,7 +258,7 @@ void Track::p_setPathForSubTagForIdentifier(const char* value, const uint32_t& i
     }
     else {
         PathTag& pathTag = dynamic_cast<PathTag&>(trackObjectTag->subTagForIdentifier(identifier));
-        pathTag.value() = string(value);
+        pathTag.value() = String::stringWithUTF8(value);
     }
 
     this->p_wasModified = true;
@@ -280,7 +284,7 @@ void Track::p_setUInt32ForSubTagForIdentifier(const uint32_t& value, const uint3
 
 void Track::p_loadTrackFile(void)
 {
-    this->p_trackFile = TrackFileFactory::trackFileForPath(this->trackFilePath()->c_str());
+    this->p_trackFile = TrackFileFactory::trackFileForPath(this->trackFilePath()->toUTF8());
 }
 
 void Track::p_saveTrackFile(void)
@@ -311,64 +315,64 @@ void Track::p_readMarkers(void)
     }
 }
 
-ConstStringPtr Track::trackFilePath(void) const
+String::Pointer Track::trackFilePath(void) const
 {
-    const string& pathFromRootFolder = this->p_pathForSubTagForIdentifier(NxASeratoTrackFilePathTag);
-    ConstStringPtr trackFilePath = joinPaths(this->p_rootFolder->c_str(), pathFromRootFolder.c_str());
+    const String::Pointer& pathFromRootFolder = this->p_pathForSubTagForIdentifier(NxASeratoTrackFilePathTag);
+    String::Pointer trackFilePath = File::joinPaths(this->p_rootFolder, pathFromRootFolder);
     return trackFilePath;
 }
 
-const string& Track::title(void) const
+const String::Pointer& Track::title(void) const
 {
     return this->p_stringForSubTagForIdentifier(NxASeratoTrackTitleTag);
 }
 
-const string& Track::artist(void) const
+const String::Pointer& Track::artist(void) const
 {
     return this->p_stringForSubTagForIdentifier(NxASeratoTrackArtistTag);
 }
 
-const string& Track::album(void) const
+const String::Pointer& Track::album(void) const
 {
     return this->p_stringForSubTagForIdentifier(NxASeratoTrackAlbumTag);
 }
 
-const string& Track::genre(void) const
+const String::Pointer& Track::genre(void) const
 {
     return this->p_stringForSubTagForIdentifier(NxASeratoTrackGenreTag);
 }
 
-const string& Track::comments(void) const
+const String::Pointer& Track::comments(void) const
 {
     return this->p_stringForSubTagForIdentifier(NxASeratoTrackCommentsTag);
 }
 
-const string& Track::grouping(void) const
+const String::Pointer& Track::grouping(void) const
 {
     return this->p_stringForSubTagForIdentifier(NxASeratoTrackGroupingTag);
 }
 
-const string& Track::remixer(void) const
+const String::Pointer& Track::remixer(void) const
 {
     return this->p_stringForSubTagForIdentifier(NxASeratoTrackRemixerTag);
 }
 
-const string& Track::recordLabel(void) const
+const String::Pointer& Track::recordLabel(void) const
 {
     return this->p_stringForSubTagForIdentifier(NxASeratoTrackLabelTag);
 }
 
-const string& Track::composer(void) const
+const String::Pointer& Track::composer(void) const
 {
     return this->p_stringForSubTagForIdentifier(NxASeratoTrackComposerTag);
 }
 
-const string& Track::key(void) const
+const String::Pointer& Track::key(void) const
 {
     return this->p_stringForSubTagForIdentifier(NxASeratoTrackKeyTag);
 }
 
-const string& Track::length(void) const
+const String::Pointer& Track::length(void) const
 {
     return this->p_stringForSubTagForIdentifier(NxASeratoTrackLengthTag);
 }
@@ -378,22 +382,22 @@ const uint32_t& Track::sizeInBytes(void) const
     return this->p_uint32ForSubTagForIdentifier(NxASeratoTrackSizeTag);
 }
 
-const string& Track::bitRate(void) const
+const String::Pointer& Track::bitRate(void) const
 {
     return this->p_stringForSubTagForIdentifier(NxASeratoTrackBitrateTag);
 }
 
-const string& Track::sampleRate(void) const
+const String::Pointer& Track::sampleRate(void) const
 {
     return this->p_stringForSubTagForIdentifier(NxASeratoTrackSampleRateTag);
 }
 
-const string& Track::bpm(void) const
+const String::Pointer& Track::bpm(void) const
 {
     return this->p_stringForSubTagForIdentifier(NxASeratoTrackBpmTag);
 }
 
-const string& Track::year(void) const
+const String::Pointer& Track::year(void) const
 {
     return this->p_stringForSubTagForIdentifier(NxASeratoTrackYearTag);
 }
@@ -536,7 +540,7 @@ bool Track::wasModified(void) const
     return this->p_wasModified;
 }
 
-void Track::addTo(CharVector& destination) const
+void Track::addTo(Blob::Pointer& destination) const
 {
     this->p_trackTag->addTo(destination);
 }
@@ -546,18 +550,18 @@ void Track::saveToTrackFile(void)
     this->p_loadTrackFile();
 
     TrackFile& trackFile = *(this->p_trackFile);
-    trackFile.setTitle(this->title().c_str());
-    trackFile.setArtist(this->artist().c_str());
-    trackFile.setAlbum(this->album().c_str());
-    trackFile.setGenre(this->genre().c_str());
-    trackFile.setComments(this->comments().c_str());
-    trackFile.setGrouping(this->grouping().c_str());
-    trackFile.setRemixer(this->remixer().c_str());
-    trackFile.setRecordLabel(this->recordLabel().c_str());
-    trackFile.setComposer(this->composer().c_str());
-    trackFile.setKey(this->key().c_str());
-    trackFile.setBpm(this->bpm().c_str());
-    trackFile.setYearReleased(this->year().c_str());
+    trackFile.setTitle(this->title()->toUTF8());
+    trackFile.setArtist(this->artist()->toUTF8());
+    trackFile.setAlbum(this->album()->toUTF8());
+    trackFile.setGenre(this->genre()->toUTF8());
+    trackFile.setComments(this->comments()->toUTF8());
+    trackFile.setGrouping(this->grouping()->toUTF8());
+    trackFile.setRemixer(this->remixer()->toUTF8());
+    trackFile.setRecordLabel(this->recordLabel()->toUTF8());
+    trackFile.setComposer(this->composer()->toUTF8());
+    trackFile.setKey(this->key()->toUTF8());
+    trackFile.setBpm(this->bpm()->toUTF8());
+    trackFile.setYearReleased(this->year()->toUTF8());
     trackFile.setTrackNumber(this->trackNumber());
 
     CueMarkerVectorPtr cueMarkers = make_unique<CueMarkerVector>();

@@ -13,36 +13,39 @@
 #include "CrateOrderFile.hpp"
 #include "Utility.hpp"
 
+#include <Base/File.hpp>
+#include <Base/String.hpp>
+#include <Base/Types.hpp>
+
 #include <string>
 #include <errno.h>
 #include <dirent.h>
 
+using namespace NxA;
 using namespace NxA::Serato;
 using namespace std;
 
 #pragma mark Utility Functions
 
-static ConstStringPtr p_crateNameIfValidCrateOrNullIfNot(const string& name)
+static String::Pointer p_crateNameIfValidCrateOrEmptyIfNot(const String::Pointer& name)
 {
-    ConstStringPtr result;
+    String::Pointer result = String::string();
 
-    if (stringHasPrefix(name, "[crate]")) {
-        result = make_unique<string>(name.substr(7, name.length() - 7));
+    if (name->hasPrefix("[crate]")) {
+        result = name->subString(7, name->length() - 7);
     }
 
-    return move(result);
+    return result;
 }
 
-static bool p_filenameIsAValidCrateName(const string& fileName)
+static bool p_filenameIsAValidCrateName(const String::Pointer& fileName)
 {
-    return !stringHasPrefix(fileName, ".") && stringHasPostfix(fileName, ".crate");
+    return !fileName->hasPrefix(".") && fileName->hasPostfix(".crate");
 }
 
-static string p_crateNameFromFilename(const string& filename)
+static String::Pointer p_crateNameFromFilename(const String::Pointer& fileName)
 {
-    string crateName(filename);
-    crateName.resize(filename.length() - 6);
-    return crateName;
+    return fileName->subString(0, fileName->length() - 6);
 }
 
 static StringVectorPtr p_cratesInSubCratesDirectory(const string& directory)
@@ -52,13 +55,13 @@ static StringVectorPtr p_cratesInSubCratesDirectory(const string& directory)
     DIR *pdir;
     struct dirent *pent;
 
-    pdir=opendir(directory.c_str()); //"." refers to the current dir
+    pdir = opendir(directory.c_str()); //"." refers to the current dir
     if (pdir){
-        errno=0;
-        while ((pent=readdir(pdir))){
-            string fileName(pent->d_name);
+        errno = 0;
+        while ((pent = readdir(pdir))){
+            auto fileName = String::stringWithUTF8(pent->d_name);
             if (::p_filenameIsAValidCrateName(fileName)) {
-                crateNamesFound->push_back(make_unique<string>(p_crateNameFromFilename(fileName)));
+                crateNamesFound->push_back(make_unique<string>(p_crateNameFromFilename(fileName)->toUTF8()));
             }
         }
     }
@@ -70,24 +73,21 @@ static StringVectorPtr p_cratesInSubCratesDirectory(const string& directory)
     return move(crateNamesFound);
 }
 
-static StringVectorPtr p_readCratesNamesInCrateOrderFile(const string& crateOrderFilePath)
+static StringVectorPtr p_readCratesNamesInCrateOrderFile(const String::Pointer& crateOrderFilePath)
 {
     StringVectorPtr cratesInOrder(make_unique<StringVector>());
 
-    CharVectorPtr crateOrderFile = readFileAt(crateOrderFilePath.c_str());
+    const Blob::Pointer crateOrderFile = File::readFileAt(crateOrderFilePath);
     if (crateOrderFile->size()) {
-        const char16_t* textToRead = (const char16_t*)crateOrderFile->data();
-        int numberOfCharacters = (int)crateOrderFile->size() / 2;
-        ConstStringPtr textAString = convertUTF16ToStdString(textToRead, numberOfCharacters);
-
-        StringVectorPtr lines(splitStringIntoOneStringForEachLine(*textAString));
+        auto textAsString = String::stringWithUTF16(crateOrderFile);
+        auto lines = textAsString->splitBySeperator('\n');
         for (auto& crateLine : *lines) {
-            const ConstStringPtr fullCrateName = p_crateNameIfValidCrateOrNullIfNot(*crateLine);
-            if (!fullCrateName.get()) {
+            auto fullCrateName = p_crateNameIfValidCrateOrEmptyIfNot(crateLine);
+            if (fullCrateName->isEmpty()) {
                 continue;
             }
 
-            cratesInOrder->push_back(make_unique<string>(*fullCrateName));
+            cratesInOrder->push_back(make_unique<string>(fullCrateName->toUTF8()));
         }
     }
 
@@ -96,7 +96,7 @@ static StringVectorPtr p_readCratesNamesInCrateOrderFile(const string& crateOrde
 
 static void p_addCratesNamesAtTheStartOfUnlessAlreadyThere(StringVector& cratesToAddTo, const StringVector& cratesToAdd)
 {
-    StringVector::iterator insertionPosition = cratesToAddTo.begin();
+    auto insertionPosition = cratesToAddTo.begin();
     for (auto& crateName : cratesToAdd) {
         bool alreadyHaveThisCrate = false;
 
@@ -121,9 +121,9 @@ CrateOrderFile::CrateOrderFile(const char* seratoFolderPath, const char* rootFol
                                p_unknownCrates(make_unique<StringVector>()),
                                p_rootCrate(make_unique<Crate>("", "", "", database))
 {
-    ConstStringPtr subCratesDirectory = subCratesDirectoryPathInSeratoFolder(seratoFolderPath);
-    StringVectorPtr subCratesFound(::p_cratesInSubCratesDirectory(subCratesDirectory->c_str()));
-    StringVectorPtr cratesInOrder(::p_readCratesNamesInCrateOrderFile(*(this->p_crateOrderFilePath)));
+    auto subCratesDirectory = subCratesDirectoryPathInSeratoFolder(seratoFolderPath);
+    StringVectorPtr subCratesFound(::p_cratesInSubCratesDirectory(subCratesDirectory->toUTF8()));
+    StringVectorPtr cratesInOrder(::p_readCratesNamesInCrateOrderFile(this->p_crateOrderFilePath));
 
     ::p_addCratesNamesAtTheStartOfUnlessAlreadyThere(*cratesInOrder, *subCratesFound);
 
@@ -148,29 +148,29 @@ CrateVectorPtr CrateOrderFile::p_childrenCratesOfCrateNamedUsingNameList(const s
     CrateVectorPtr cratesFound = make_unique<CrateVector>();
 
     while (it != end) {
-        string fullCrateName = *(it->get());
-        if (name.length() && !stringHasPrefix(fullCrateName, name)) {
+        auto fullCrateName = String::stringWithUTF8(it->get()->c_str());
+        if (name.length() && !fullCrateName->hasPrefix(name.c_str())) {
             break;
         }
 
-        if (Crate::isASmartCrateName(fullCrateName.c_str(), seratoFolderPath)) {
-            this->p_unknownCrates->push_back(make_unique<string>(fullCrateName));
+        if (Crate::isASmartCrateName(fullCrateName->toUTF8(), seratoFolderPath)) {
+            this->p_unknownCrates->push_back(make_unique<string>(fullCrateName->toUTF8()));
             ++it;
             continue;
         }
 
-        CratePtr newCrate = make_unique<Crate>(fullCrateName.c_str(), seratoFolderPath, rootFolderPath, database);
+        CratePtr newCrate = make_unique<Crate>(fullCrateName->toUTF8(), seratoFolderPath, rootFolderPath, database);
 
-        if (Crate::isAValidCrateName(fullCrateName.c_str(), seratoFolderPath)) {
+        if (Crate::isAValidCrateName(fullCrateName->toUTF8(), seratoFolderPath)) {
             newCrate->loadFromFile();
         }
 
         ++it;
 
-        string crateNameWithSeperator = fullCrateName;
-        crateNameWithSeperator += "%%";
+        auto crateNameWithSeperator = String::stringWithString(fullCrateName);
+        crateNameWithSeperator->append("%%");
 
-        CrateVectorPtr childCrates = p_childrenCratesOfCrateNamedUsingNameList(crateNameWithSeperator,
+        CrateVectorPtr childCrates = p_childrenCratesOfCrateNamedUsingNameList(std::string(crateNameWithSeperator->toUTF8()),
                                                                                it,
                                                                                end,
                                                                                seratoFolderPath,
@@ -193,9 +193,9 @@ const Crate* CrateOrderFile::rootCrate(void) const
     return this->p_rootCrate.get();
 }
 
-time_t CrateOrderFile::modificationDateInSecondsSince1970(void) const
+timestamp CrateOrderFile::modificationDateInSecondsSince1970(void) const
 {
-    return modificationDateInSecondsSince1970ForFile(this->p_crateOrderFilePath->c_str());
+    return File::modificationDateInSecondsSince1970ForFile(this->p_crateOrderFilePath);
 }
 
 void CrateOrderFile::saveIfModified(void) const
@@ -206,17 +206,15 @@ void CrateOrderFile::saveIfModified(void) const
         return;
     }
 
-    string result;
-    result += "[begin record]\n";
+    auto result = String::string();
+    result->append("[begin record]\n");
     this->p_rootCrate->addFullCrateNameWithPrefixAndRecurseToChildren(result, "[crate]");
     for (auto& crateName : *this->p_unknownCrates) {
-        result += "[crate]";
-        result += *(crateName.get());
-        result += "\n";
+        result->append("[crate]");
+        result->append(crateName.get()->c_str());
+        result->append("\n");
     }
-    result += "[end record]\n";
+    result->append("[end record]\n");
 
-    CharVectorPtr content = make_unique<CharVector>(result.size() * 2, 0);
-    writeStringAsUTF16At(result.c_str(), content->data());
-    writeToFile(this->p_crateOrderFilePath->c_str(), *content);
+    File::writeToFile(this->p_crateOrderFilePath, result->toUTF16());
 }

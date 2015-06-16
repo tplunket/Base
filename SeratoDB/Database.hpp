@@ -18,17 +18,21 @@
 #include <SeratoDB/CrateOrderFile.hpp>
 #include <SeratoDB/Utility.hpp>
 
+#include <Base/String.hpp>
+
+#include <vector>
+
 namespace NxA { namespace Serato {
     #pragma mark Class Declaration
     class Database
     {
     private:
         #pragma mark Private Instance Variables
-        ConstStringPtr p_databaseFilePath;
+        String::Pointer p_databaseFilePath;
         TrackVectorPtr p_tracks;
         ConstTagVector p_otherTags;
 
-        StringVector p_crateFilesToDelete;
+        std::vector<String::Pointer> p_crateFilesToDelete;
 
         CrateOrderFilePtr p_crateOrderFile;
 
@@ -43,7 +47,7 @@ namespace NxA { namespace Serato {
         explicit Database(const char* seratoFolderPath);
 
         #pragma mark Class Methods
-        static ConstStringPtr versionAsStringForDatabaseIn(const char* seratoFolderPath);
+        static String::Pointer versionAsStringForDatabaseIn(const char* seratoFolderPath);
 
         #pragma mark Instance Methods
         time_t databaseModificationDateInSecondsSince1970(void) const;
@@ -54,7 +58,7 @@ namespace NxA { namespace Serato {
 
         TrackVectorPtr removeAndReturnTracks(void);
 
-        void addCrateFileToDelete(const std::string& path);
+        void addCrateFileToDelete(const String::Pointer& path);
 
         void addTrack(TrackPtr track);
 

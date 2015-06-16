@@ -15,25 +15,27 @@
 #include <SeratoDb/Tags/Tag.hpp>
 #include <SeratoDB/Utility.hpp>
 
+#include <Base/Blob.hpp>
+
 namespace NxA { namespace Serato {
     #pragma mark Class Declaration
     class BlobTag : public Tag
     {
     private:
         #pragma mark Private Instance Variables
-        CharVectorPtr p_value;
+        Blob::Pointer p_value;
 
     public:
         #pragma mark Constructors
         explicit BlobTag(const void* tagAddress);
-        explicit BlobTag(uint32_t identifier, ConstCharVectorPtr value) :
+        explicit BlobTag(uint32_t identifier, const Blob::Pointer value) :
                          Tag(identifier),
-                         p_value(std::make_unique<CharVector>(*value)) { }
+                         p_value(Blob::blobWithBlob(value)) { }
 
         #pragma mark Instance Methods
-        const CharVector& value(void) const;
-        CharVector& value(void);
+        const Blob::Pointer& value(void) const;
+        Blob::Pointer& value(void);
 
-        void addTo(CharVector& destination) const;
+        void addTo(Blob::Pointer& destination) const;
     };
 } }

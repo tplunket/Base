@@ -15,6 +15,8 @@
 #include <SeratoDb/Tags/Tag.hpp>
 #include <SeratoDB/Utility.hpp>
 
+#include <Base/Blob.hpp>
+
 #include <map>
 
 namespace NxA { namespace Serato {
@@ -41,6 +43,6 @@ namespace NxA { namespace Serato {
 
         void addSubTag(ConstTagPtr tag);
 
-        void addTo(CharVector& destination) const;
+        void addTo(Blob::Pointer& destination) const;
     };
 } }

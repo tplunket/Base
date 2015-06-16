@@ -15,7 +15,8 @@
 #include <SeratoDb/Tags/Tag.hpp>
 #include <SeratoDB/Utility.hpp>
 
-#include <string>
+#include <Base/Blob.hpp>
+#include <Base/String.hpp>
 
 namespace NxA { namespace Serato {
     #pragma mark Class Declaration
@@ -23,20 +24,20 @@ namespace NxA { namespace Serato {
     {
     private:
         #pragma mark Private Instance Variables
-        ConstStringPtr p_value;
+        String::Pointer p_value;
 
     public:
         #pragma mark Constructors
         explicit PathTag(const void* tagAddress);
         explicit PathTag(const uint32_t& identifier, const char* value) :
                          Tag(identifier),
-                         p_value(std::make_unique<std::string>(value)) { }
+                         p_value(String::stringWithUTF8(value)) { }
 
         #pragma mark Instance Methods
         const uint32_t& identifier(void) const;
-        const std::string& value(void) const;
-        std::string& value(void);
+        const String::Pointer& value(void) const;
+        String::Pointer& value(void);
 
-        void addTo(CharVector& destination) const;
+        void addTo(Blob::Pointer& destination) const;
     };
 } }

@@ -13,6 +13,7 @@
 #pragma once
 
 #include <SeratoDB/Utility.hpp>
+#include <Base/Blob.hpp>
 
 #include <string>
 
@@ -46,7 +47,7 @@ namespace NxA { namespace Serato {
         static void p_setDataSizeForTagAt(const size_t& dataSizeInBytes, const void* tagAddress);
         static const void* p_dataForTagAt(const void* tagAddress);
         static void* p_dataForTagAt(void* tagAddress);
-        static size_t p_memoryNeededWithDataOfSize(const size_t& dataSizeInBytes);
+        static size_t p_memoryNeededForTagHeader(void);
 
         #pragma mark Protected Instance Variables
         uint32_t p_identifier;
@@ -62,6 +63,6 @@ namespace NxA { namespace Serato {
         #pragma mark Instance Methods
         const uint32_t& identifier(void) const;
 
-        virtual void addTo(CharVector& destination) const = 0;
+        virtual void addTo(Blob::Pointer& destination) const = 0;
     };
 } }

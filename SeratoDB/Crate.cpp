@@ -16,6 +16,9 @@
 #include "Tags/TagFactory.hpp"
 #include "Database.hpp"
 
+#include "Base/File.hpp"
+
+using namespace NxA;
 using namespace NxA::Serato;
 using namespace std;
 
@@ -53,14 +56,14 @@ Crate::Crate(const char* crateFullName,
 
 bool Crate::isAValidCrateName(const char* crateFullName, const char* seratoFolderPath)
 {
-    ConstStringPtr crateFilePath = crateFilePathForCrateNameInSeratoFolder(crateFullName, seratoFolderPath);
-    return fileExistsAt(crateFilePath->c_str());
+    String::Pointer crateFilePath = crateFilePathForCrateNameInSeratoFolder(crateFullName, seratoFolderPath);
+    return File::fileExistsAt(crateFilePath);
 }
 
 bool Crate::isASmartCrateName(const char* crateFullName, const char* seratoFolderPath)
 {
-    ConstStringPtr crateFilePath = crateFilePathForSmartCrateNameInSeratoFolder(crateFullName, seratoFolderPath);
-    return fileExistsAt(crateFilePath->c_str());
+    String::Pointer crateFilePath = crateFilePathForSmartCrateNameInSeratoFolder(crateFullName, seratoFolderPath);
+    return File::fileExistsAt(crateFilePath);
 }
 
 #pragma mark Instance Methods
@@ -94,13 +97,13 @@ const std::string& Crate::crateFullName(void) const
     return *(this->p_crateFullName);
 }
 
-void Crate::addFullCrateNameWithPrefixAndRecurseToChildren(std::string& destination, const char* prefix) const
+void Crate::addFullCrateNameWithPrefixAndRecurseToChildren(String::Pointer& destination, const char* prefix) const
 {
     const string& fullName = *(this->p_crateFullName.get());
     if (fullName.length()) {
-        destination += prefix;
-        destination += fullName;
-        destination += '\n';
+        destination->append(prefix);
+        destination->append(fullName.c_str());
+        destination->append("\n");
     }
 
     for (auto& crate : *this->p_childrenCrates) {
@@ -120,7 +123,7 @@ const CrateVector& Crate::crates(void) const
 
 void Crate::loadFromFile(void)
 {
-    CharVectorPtr crateFileData = readFileAt(this->p_crateFilePath->c_str());
+    Blob::Pointer crateFileData = File::readFileAt(this->p_crateFilePath);
     TagVectorPtr tags(TagFactory::parseTagsAt(crateFileData->data(), crateFileData->size()));
     if (!tags->size()) {
         return;
@@ -131,7 +134,7 @@ void Crate::loadFromFile(void)
         switch (tag->identifier()) {
             case NxASeratoCrateVersionTag: {
                 const TextTag* versionTag = dynamic_cast<const TextTag*>(tag);
-                if (versionTag->value() != crateFileCurrentVersionString) {
+                if (!versionTag->value()->isEqualTo(crateFileCurrentVersionString)) {
                     this->p_otherTags.clear();
                     this->p_trackEntries->clear();
                     return;
@@ -174,20 +177,20 @@ bool Crate::childrenCratesWereModified(void) const
 void Crate::saveIfModifiedAndRecurseToChildren(void) const
 {
     if (this->p_rootVolumePath.get() && this->p_tracksWereModified) {
-        CharVectorPtr outputData = make_unique<CharVector>();
+        Blob::Pointer outputData = Blob::blob();
 
         TagPtr versionTag(make_unique<TextTag>(NxASeratoCrateVersionTag, crateFileCurrentVersionString));
-        versionTag->addTo(*outputData);
+        versionTag->addTo(outputData);
 
         for (auto& trackEntry : *this->p_trackEntries) {
-            trackEntry->tagForEntry().addTo(*outputData);
+            trackEntry->tagForEntry().addTo(outputData);
         }
 
         for (auto& tag : this->p_otherTags) {
-            tag->addTo(*outputData);
+            tag->addTo(outputData);
         }
 
-        writeToFile(this->p_crateFilePath->c_str(), *outputData);
+        File::writeToFile(this->p_crateFilePath, outputData);
     }
 
     for (auto& crate : *this->p_childrenCrates) {
@@ -263,7 +266,7 @@ void Crate::destroy(void)
         childrenCrate->destroy();
     }
 
-    this->p_parentDatabase.addCrateFileToDelete(*(this->p_crateFilePath));
+    this->p_parentDatabase.addCrateFileToDelete(this->p_crateFilePath);
     
     if (this->hasParentCrate()) {
         Crate &parentCrate = this->parentCrate();

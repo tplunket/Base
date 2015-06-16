@@ -15,6 +15,8 @@
 #include <SeratoDb/Tags/ObjectTag.hpp>
 #include <SeratoDB/Utility.hpp>
 
+#include <Base/String.hpp>
+
 #include <vector>
 
 namespace NxA { namespace Serato {
@@ -45,7 +47,7 @@ namespace NxA { namespace Serato {
         explicit TrackEntry(const char* trackPath, const char* locatedOnVolumePath);
 
         #pragma mark Instance Methods
-        ConstStringPtr trackFilePath(void) const;
+        String::Pointer trackFilePath(void) const;
 
         const Tag& tagForEntry(void) const;
 

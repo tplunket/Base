@@ -12,8 +12,8 @@
 
 #include "Tags/BooleanTag.hpp"
 
+using namespace NxA;
 using namespace NxA::Serato;
-using namespace std;
 
 #pragma mark Constructors
 
@@ -40,11 +40,11 @@ bool& BooleanTag::value(void)
     return const_cast<bool&>(static_cast<const BooleanTag&>(*this).value());
 }
 
-void BooleanTag::addTo(CharVector& destination) const
+void BooleanTag::addTo(Blob::Pointer& destination) const
 {
     size_t dataSize = 1;
-    size_t memoryNeededInBytes = Tag::p_memoryNeededWithDataOfSize(dataSize);
-    CharVectorPtr memoryRepresentation = make_unique<CharVector>(memoryNeededInBytes, 0);
+    size_t memoryNeededInBytes = Tag::p_memoryNeededForTagHeader() + dataSize;
+    Blob::Pointer memoryRepresentation = Blob::blobWithCapacity(memoryNeededInBytes);
 
     void* tagAddress = memoryRepresentation->data();
     Tag::p_setIdentifierForTagAt(this->identifier(), tagAddress);
@@ -52,5 +52,5 @@ void BooleanTag::addTo(CharVector& destination) const
     char* tagData = (char*)Tag::p_dataForTagAt(tagAddress);
     *tagData = this->value() ? 1 : 0;
 
-    destination.insert(destination.end(), memoryRepresentation->begin(), memoryRepresentation->end());
+    destination->append(memoryRepresentation);
 }

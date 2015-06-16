@@ -12,6 +12,8 @@
 
 #pragma once
 
+#include <Base/String.hpp>
+
 #include <string>
 #include <vector>
 
@@ -27,38 +29,13 @@ namespace NxA { namespace Serato {
     typedef std::vector<CharVectorPtr> CharVectorPtrVector;
 
     #pragma mark Utility Functions
-    ConstStringPtr convertUTF16ToStdString(const char16_t* characters, int numberOfCharacters);
-    void writeStringAsUTF16At(const char* characters, void* destination);
-
-    StringVectorPtr splitStringIntoOneStringForEachLine(const std::string& text);
-    bool stringHasPrefix(const std::string& stringToTest, const std::string& prefix);
-    bool stringHasPostfix(const std::string& stringToTest, const std::string& postfix);
-
-    float bigEndianFloatValueAt(const void* ptr);
-    uint32_t bigEndianUInt32ValueAt(const void* ptr);
-    uint16_t bigEndianUInt16ValueAt(const void* ptr);
-    void writeBigEndianFloatValueAt(float value, const void* ptr);
-    void writeBigEndianUInt32ValueAt(uint32_t value, void* ptr);
-    void writeBigEndianUInt16ValueAt(uint16_t value, void* ptr);
-
     bool containsAValidSeratoFolder(const char* folderPath);
 
-    ConstStringPtr seratoFolderPathForFolder(const char* folderPath);
-    ConstStringPtr databaseFilePathForSeratoFolder(const char* seratoFolderPath);
-    ConstStringPtr crateOrderFilePathForSeratoFolder(const char* seratoFolderPath);
-    ConstStringPtr subCratesDirectoryPathInSeratoFolder(const char* seratoFolderPath);
-    ConstStringPtr smartCratesDirectoryPathInSeratoFolder(const char* seratoFolderPath);
-    ConstStringPtr crateFilePathForCrateNameInSeratoFolder(const char* crateName, const char* seratoFolderPath);
-    ConstStringPtr crateFilePathForSmartCrateNameInSeratoFolder(const char* crateName, const char* seratoFolderPath);
-
-    ConstStringPtr joinPaths(const char* firstPath, const char* secondPath);
-    ConstStringPtr removePrefixFromPath(const char* prefixPath, const char* fullPath);
-
-    bool fileExistsAt(const char* filePath);
-    size_t sizeOfFileAt(const char* filePath);
-    time_t modificationDateInSecondsSince1970ForFile(const char* filePath);
-
-    CharVectorPtr readFileAt(const char* filePath);
-    void deleteFileAt(const char* filePath);
-    void writeToFile(const char* filePath, const CharVector& content);
+    String::Pointer seratoFolderPathForFolder(const char* folderPath);
+    String::Pointer databaseFilePathForSeratoFolder(const char* seratoFolderPath);
+    String::Pointer crateOrderFilePathForSeratoFolder(const char* seratoFolderPath);
+    String::Pointer subCratesDirectoryPathInSeratoFolder(const char* seratoFolderPath);
+    String::Pointer smartCratesDirectoryPathInSeratoFolder(const char* seratoFolderPath);
+    String::Pointer crateFilePathForCrateNameInSeratoFolder(const char* crateName, const char* seratoFolderPath);
+    String::Pointer crateFilePathForSmartCrateNameInSeratoFolder(const char* crateName, const char* seratoFolderPath);
 } }

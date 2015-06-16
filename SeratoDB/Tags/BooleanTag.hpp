@@ -15,6 +15,8 @@
 #include <SeratoDb/Tags/Tag.hpp>
 #include <SeratoDB/Utility.hpp>
 
+#include <Base/Blob.hpp>
+
 namespace NxA { namespace Serato {
     #pragma mark Class Declaration
     class BooleanTag : public Tag
@@ -34,6 +36,6 @@ namespace NxA { namespace Serato {
         const bool& value(void) const;
         bool& value(void);
 
-        void addTo(CharVector& destination) const;
+        void addTo(Blob::Pointer& destination) const;
     };
 } }

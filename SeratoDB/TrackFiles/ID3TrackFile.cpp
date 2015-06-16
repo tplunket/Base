@@ -92,7 +92,7 @@ void ID3TrackFile::p_readMarkers(void)
             continue;
         }
 
-        const String description = frame->description();
+        const TagLib::String description = frame->description();
         if (description == "Serato Markers2") {
             uint32_t encodedDataSize = frame->size() - sizeof(SeratoGeobBodyHeaderStruct);
             const ByteVector frameObject = frame->object();
@@ -130,7 +130,7 @@ void ID3TrackFile::p_writeMarkersV2Frame(void)
     ByteVector newData(encodedData->data(), encodedData->size());
 
     ID3v2::GeneralEncapsulatedObjectFrame* newFrame = new ID3v2::GeneralEncapsulatedObjectFrame(newData);
-    newFrame->setTextEncoding(String::Latin1);
+    newFrame->setTextEncoding(TagLib::String::Latin1);
     newFrame->setMimeType("application/octet-stream");
     newFrame->setFileName("");
     newFrame->setDescription("Serato Markers2");
@@ -161,7 +161,7 @@ void ID3TrackFile::p_writeGridMarkersFrame(void)
 
     ByteVector newData(data.data(), data.size());
     ID3v2::GeneralEncapsulatedObjectFrame* newFrame = new ID3v2::GeneralEncapsulatedObjectFrame(newData);
-    newFrame->setTextEncoding(String::Latin1);
+    newFrame->setTextEncoding(TagLib::String::Latin1);
     newFrame->setMimeType("application/octet-stream");
     newFrame->setFileName("");
     newFrame->setDescription("Serato BeatGrid");
@@ -218,8 +218,8 @@ bool ID3TrackFile::hasKey(void) const
 
 string ID3TrackFile::key(void) const
 {
-    String text = this->p_properties["INITIALKEY"].toString();
-    if (text != String::null) {
+    TagLib::String text = this->p_properties["INITIALKEY"].toString();
+    if (text != TagLib::String::null) {
         return text.to8Bit();
     }
 
@@ -228,8 +228,8 @@ string ID3TrackFile::key(void) const
 
 string ID3TrackFile::grouping(void) const
 {
-    String text = this->p_properties["CONTENTGROUP"].toString();
-    if (text != String::null) {
+    TagLib::String text = this->p_properties["CONTENTGROUP"].toString();
+    if (text != TagLib::String::null) {
         return text.to8Bit();
     }
 
@@ -243,8 +243,8 @@ bool ID3TrackFile::hasRecordLabel(void) const
 
 string ID3TrackFile::recordLabel(void) const
 {
-    String text = this->p_properties["LABEL"].toString();
-    if (text != String::null) {
+    TagLib::String text = this->p_properties["LABEL"].toString();
+    if (text != TagLib::String::null) {
         return text.to8Bit();
     }
 
@@ -258,8 +258,8 @@ bool ID3TrackFile::hasRemixer(void) const
 
 string ID3TrackFile::remixer(void) const
 {
-    String text = this->p_properties["REMIXER"].toString();
-    if (text != String::null) {
+    TagLib::String text = this->p_properties["REMIXER"].toString();
+    if (text != TagLib::String::null) {
         return text.to8Bit();
     }
 
@@ -268,8 +268,8 @@ string ID3TrackFile::remixer(void) const
 
 string ID3TrackFile::yearReleased(void) const
 {
-    String text = this->p_properties["DATE"].toString();
-    if (text != String::null) {
+    TagLib::String text = this->p_properties["DATE"].toString();
+    if (text != TagLib::String::null) {
         return text.to8Bit();
     }
 
@@ -313,27 +313,27 @@ CharVectorPtr ID3TrackFile::artwork(void) const
 
 void ID3TrackFile::setKey(const char* key)
 {
-    this->p_properties["INITIALKEY"] = String(key);
+    this->p_properties["INITIALKEY"] = TagLib::String(key);
 }
 
 void ID3TrackFile::setGrouping(const char* grouping)
 {
-    this->p_properties["CONTENTGROUP"] = String(grouping);
+    this->p_properties["CONTENTGROUP"] = TagLib::String(grouping);
 }
 
 void ID3TrackFile::setRecordLabel(const char* recordLabel)
 {
-    this->p_properties["RECORD"] = String(recordLabel);
+    this->p_properties["RECORD"] = TagLib::String(recordLabel);
 }
 
 void ID3TrackFile::setRemixer(const char* remixer)
 {
-    this->p_properties["REMIXER"] = String(remixer);
+    this->p_properties["REMIXER"] = TagLib::String(remixer);
 }
 
 void ID3TrackFile::setYearReleased(const char* year)
 {
-    this->p_properties["DATE"] = String(year);
+    this->p_properties["DATE"] = TagLib::String(year);
 }
 
 void ID3TrackFile::setArtwork(CharVectorPtr artwork)
@@ -364,7 +364,7 @@ void ID3TrackFile::setArtwork(CharVectorPtr artwork)
         newFrame->setData(data);
         newFrame->setType(ID3v2::AttachedPictureFrame::FrontCover);
         newFrame->setDescription("");
-        newFrame->setTextEncoding(String::Latin1);
+        newFrame->setTextEncoding(TagLib::String::Latin1);
         frameList.append(newFrame);
     }
 }

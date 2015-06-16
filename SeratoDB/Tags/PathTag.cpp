@@ -12,17 +12,18 @@
 
 #include "Tags/PathTag.hpp"
 
+using namespace NxA;
 using namespace NxA::Serato;
-using namespace std;
 
 #pragma mark Constructors
 
-PathTag::PathTag(const void* tagAddress) : Tag(tagAddress)
+PathTag::PathTag(const void* tagAddress) : Tag(tagAddress), p_value(String::string())
 {
-    int numberOfCharacters = (int)Tag::p_dataSizeInBytesForTagAt(tagAddress) / 2;
+    count size = Tag::p_dataSizeInBytesForTagAt(tagAddress);
+    const character* textToRead = static_cast<const character*>(p_dataForTagAt(tagAddress));
+    Blob::Pointer utf16Text = Blob::blobWithCharPointer(textToRead, size);
 
-    const char16_t* textToRead = (const char16_t*)p_dataForTagAt(tagAddress);
-    this->p_value = convertUTF16ToStdString(textToRead, numberOfCharacters);
+    this->p_value = String::stringWithUTF16(utf16Text);
 }
 
 #pragma mark Instance Methods
@@ -32,26 +33,25 @@ const uint32_t& PathTag::identifier(void) const
     return this->p_identifier;
 }
 
-const string& PathTag::value(void) const
+const String::Pointer& PathTag::value(void) const
 {
-    return *(this->p_value);
+    return this->p_value;
 }
 
-string& PathTag::value(void)
+String::Pointer& PathTag::value(void)
 {
-    return const_cast<string&>(static_cast<const PathTag&>(*this).value());
+    return const_cast<String::Pointer&>(static_cast<const PathTag&>(*this).value());
 }
 
-void PathTag::addTo(CharVector& destination) const
+void PathTag::addTo(Blob::Pointer& destination) const
 {
+    Blob::Pointer memoryRepresentation = Blob::blobWithCapacity(Tag::p_memoryNeededForTagHeader());
     size_t dataSize = this->p_value->length() * 2;
-    size_t memoryNeededInBytes = Tag::p_memoryNeededWithDataOfSize(dataSize);
-    CharVectorPtr memoryRepresentation = make_unique<CharVector>(memoryNeededInBytes, 0);
 
     void* tagAddress = memoryRepresentation->data();
     Tag::p_setIdentifierForTagAt(this->identifier(), tagAddress);
     Tag::p_setDataSizeForTagAt(dataSize, tagAddress);
-    writeStringAsUTF16At(this->p_value->c_str(), Tag::p_dataForTagAt(tagAddress));
 
-    destination.insert(destination.end(), memoryRepresentation->begin(), memoryRepresentation->end());
+    destination->append(memoryRepresentation);
+    destination->append(this->p_value->toUTF16());
 }

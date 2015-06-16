@@ -12,6 +12,8 @@
 
 #include "Markers/LoopMarker.hpp"
 
+#include <Base/Platform.hpp>
+
 #include <string>
 
 using namespace NxA::Serato;
@@ -43,9 +45,9 @@ LoopMarker::LoopMarker(const char* id3TagStart)
 {
     const SeratoLoopTagStruct* tagStruct = (const SeratoLoopTagStruct* )id3TagStart;
 
-    this->p_startPositionInMilliSeconds = bigEndianUInt32ValueAt(tagStruct->position);
-    this->p_endPositionInMilliSeconds = bigEndianUInt32ValueAt(tagStruct->loopPosition);
-    this->p_index = bigEndianUInt16ValueAt(tagStruct->index);
+    this->p_startPositionInMilliSeconds = Platform::bigEndianUInt32ValueAt(tagStruct->position);
+    this->p_endPositionInMilliSeconds = Platform::bigEndianUInt32ValueAt(tagStruct->loopPosition);
+    this->p_index = Platform::bigEndianUInt16ValueAt(tagStruct->index);
     this->p_label = (char*)tagStruct->label;
 }
 
@@ -77,12 +79,12 @@ void LoopMarker::addId3TagTo(CharVector& data) const
 
     memcpy(header.tag, "LOOP", 5);
     size_t size = sizeof(SeratoLoopTagStruct) + this->p_label.length() + 1 - sizeof(SeratoLoopTagHeaderStruct);
-    writeBigEndianUInt32ValueAt((uint32_t)size, &header.size);
-    writeBigEndianUInt16ValueAt(this->p_index, &header.index);
-    writeBigEndianUInt32ValueAt(this->p_startPositionInMilliSeconds, &header.position);
-    writeBigEndianUInt32ValueAt(this->p_endPositionInMilliSeconds, &header.loopPosition);
-    writeBigEndianUInt32ValueAt(0, &header.loopIterations);
-    writeBigEndianUInt32ValueAt(0, &header.color);
+    Platform::writeBigEndianUInt32ValueAt((uint32_t)size, &header.size);
+    Platform::writeBigEndianUInt16ValueAt(this->p_index, &header.index);
+    Platform::writeBigEndianUInt32ValueAt(this->p_startPositionInMilliSeconds, &header.position);
+    Platform::writeBigEndianUInt32ValueAt(this->p_endPositionInMilliSeconds, &header.loopPosition);
+    Platform::writeBigEndianUInt32ValueAt(0, &header.loopIterations);
+    Platform::writeBigEndianUInt32ValueAt(0, &header.color);
     header.loop_enabled = 0;
     header.loop_locked = 0;
 

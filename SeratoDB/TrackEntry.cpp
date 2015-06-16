@@ -14,6 +14,9 @@
 #include "Tags/PathTag.hpp"
 #include "Tags/CrateV1Tags.hpp"
 
+#include <Base/File.hpp>
+
+using namespace NxA;
 using namespace NxA::Serato;
 using namespace std;
 
@@ -22,10 +25,11 @@ using namespace std;
 TrackEntry::TrackEntry(const char* trackPath, const char* locatedOnVolumePath) :
                                    p_rootVolumePath(make_unique<string>(locatedOnVolumePath))
 {
-    ConstStringPtr entryPath = removePrefixFromPath(locatedOnVolumePath, trackPath);
+    String::Pointer entryPath = File::removePrefixFromPath(String::stringWithUTF8(locatedOnVolumePath),
+                                                           String::stringWithUTF8(trackPath));
 
     TagVectorPtr tags(make_unique<TagVector>());
-    tags->push_back(make_unique<PathTag>(NxASeratoTrackEntryPathTag, entryPath->c_str()));
+    tags->push_back(make_unique<PathTag>(NxASeratoTrackEntryPathTag, entryPath->toUTF8()));
 
     this->p_trackEntryTag = make_unique<ObjectTag>(NxASeratoTrackEntryTag, move(tags));
 }
@@ -37,19 +41,20 @@ bool TrackEntry::p_containsAValidTrackEntryTag(void) const
     return this->p_trackEntryTag.get() != NULL;
 }
 
-ConstStringPtr TrackEntry::trackFilePath(void) const
+String::Pointer TrackEntry::trackFilePath(void) const
 {
     if (this->p_containsAValidTrackEntryTag()) {
         const ObjectTag* trackObjectTag = dynamic_cast<const ObjectTag*>(this->p_trackEntryTag.get());
         if (trackObjectTag->hasSubTagForIdentifier(NxASeratoTrackEntryPathTag)) {
             const PathTag& pathTag = dynamic_cast<const PathTag&>(trackObjectTag->subTagForIdentifier(NxASeratoTrackEntryPathTag));
-            const string& pathFromRootFolder = pathTag.value();
-            ConstStringPtr trackFilePath = joinPaths(this->p_rootVolumePath->c_str(), pathFromRootFolder.c_str());
+            const String::Pointer& pathFromRootFolder = pathTag.value();
+            String::Pointer trackFilePath = File::joinPaths(String::stringWithUTF8(this->p_rootVolumePath->c_str()),
+                                                            String::stringWithUTF8(pathFromRootFolder->toUTF8()));
             return trackFilePath;
         }
     }
 
-    return make_unique<string>("");
+    return String::string();
 }
 
 const Tag& TrackEntry::tagForEntry(void) const

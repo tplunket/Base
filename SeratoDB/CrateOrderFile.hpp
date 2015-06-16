@@ -15,6 +15,9 @@
 #include <SeratoDB/Utility.hpp>
 #include <SeratoDB/Crate.hpp>
 
+#include <Base/String.hpp>
+#include <Base/Types.hpp>
+
 namespace NxA { namespace Serato {
     #pragma mark Forward declarations
     class CrateOrderFile;
@@ -28,7 +31,7 @@ namespace NxA { namespace Serato {
     {
     private:
         #pragma mark Private Instance Variables
-        ConstStringPtr p_crateOrderFilePath;
+        String::Pointer p_crateOrderFilePath;
 
         CratePtr p_rootCrate;
 
@@ -51,7 +54,7 @@ namespace NxA { namespace Serato {
         #pragma mark Instance Methods
         const Crate* rootCrate(void) const;
 
-        time_t modificationDateInSecondsSince1970(void) const;
+        timestamp modificationDateInSecondsSince1970(void) const;
 
         void saveIfModified(void) const;
     };

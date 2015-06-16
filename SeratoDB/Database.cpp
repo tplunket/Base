@@ -15,6 +15,9 @@
 #include "Tags/TagFactory.hpp"
 #include "Tags/TextTag.hpp"
 
+#include <Base/File.hpp>
+
+using namespace NxA;
 using namespace NxA::Serato;
 using namespace std;
 
@@ -47,11 +50,11 @@ static void p_debugListCrate(const Crate* crate, std::string spacing)
 #pragma mark Constructors
 
 Database::Database(const char* seratoFolderPath) :
+    p_databaseFilePath(databaseFilePathForSeratoFolder(seratoFolderPath)),
     p_tracks(make_unique<TrackVector>()),
     p_databaseIsValid(false)
 {
-    this->p_databaseFilePath = databaseFilePathForSeratoFolder(seratoFolderPath);
-    CharVectorPtr databaseFile = readFileAt(this->p_databaseFilePath->c_str());
+    Blob::Pointer databaseFile = File::readFileAt(this->p_databaseFilePath);
 
     TagVectorPtr tags(TagFactory::parseTagsAt(databaseFile->data(), databaseFile->size()));
     for (auto& tag : *tags) {
@@ -61,8 +64,8 @@ Database::Database(const char* seratoFolderPath) :
                 break;
             }
             case NxASeratoDatabaseVersionTag: {
-                string& versionText = (dynamic_cast<TextTag&>(*tag)).value();
-                if (versionText != databaseFileCurrentVersionString) {
+                String::Pointer& versionText = (dynamic_cast<TextTag&>(*tag)).value();
+                if (!versionText->isEqualTo(databaseFileCurrentVersionString)) {
                     this->p_tracks->clear();
                     this->p_otherTags.clear();
                     return;
@@ -88,20 +91,20 @@ Database::Database(const char* seratoFolderPath) :
 
 #pragma mark Class Methods
 
-ConstStringPtr Database::versionAsStringForDatabaseIn(const char* seratoFolderPath)
+String::Pointer Database::versionAsStringForDatabaseIn(const char* seratoFolderPath)
 {
-    ConstStringPtr databaseFilePath = databaseFilePathForSeratoFolder(seratoFolderPath);
-    CharVectorPtr databaseFile = readFileAt(databaseFilePath->c_str());
+    String::Pointer databaseFilePath = databaseFilePathForSeratoFolder(seratoFolderPath);
+    Blob::Pointer databaseFile = File::readFileAt(databaseFilePath);
 
     TagVectorPtr tags(TagFactory::parseTagsAt(databaseFile->data(), databaseFile->size()));
     for (const TagPtr& tag : *(tags)) {
         if (tag->identifier() == NxASeratoDatabaseVersionTag) {
             const TextTag* textTag = dynamic_cast<const TextTag*>(tag.get());
-            return make_unique<string>(textTag->value());
+            return String::stringWithString(textTag->value());
         }
     }
 
-    return make_unique<string>("");
+    return String::string();
 }
 
 #pragma mark Instance Methods
@@ -119,7 +122,7 @@ void Database::p_storeOtherTag(TagPtr tag)
 
 time_t Database::databaseModificationDateInSecondsSince1970(void) const
 {
-    return modificationDateInSecondsSince1970ForFile(this->p_databaseFilePath->c_str());
+    return File::modificationDateInSecondsSince1970ForFile(this->p_databaseFilePath);
 }
 
 time_t Database::rootCrateModificationDateInSecondsSince1970(void) const
@@ -145,9 +148,9 @@ TrackVectorPtr Database::removeAndReturnTracks(void)
     return tracks;
 }
 
-void Database::addCrateFileToDelete(const std::string& path)
+void Database::addCrateFileToDelete(const String::Pointer& path)
 {
-    this->p_crateFilesToDelete.push_back(StringPtr(make_unique<string>(path)));
+    this->p_crateFilesToDelete.push_back(path);
 }
 
 void Database::addTrack(TrackPtr track)
@@ -162,7 +165,7 @@ void Database::saveIfModified(void) const
     }
 
     for (auto& path : this->p_crateFilesToDelete) {
-        ::deleteFileAt(path->c_str());
+        File::deleteFileAt(path);
     }
 
     this->p_crateOrderFile->saveIfModified();
@@ -173,25 +176,25 @@ void Database::saveIfModified(void) const
             continue;
         }
 
-        printf("Saving modifications to Serato track '%s'.\n", track->title().c_str());
+        printf("Saving modifications to Serato track '%s'.\n", track->title()->toUTF8());
         track->saveToTrackFile();
         someTracksWereModified = true;
     }
 
     if (someTracksWereModified) {
-        CharVectorPtr outputData = make_unique<CharVector>();
+        Blob::Pointer outputData = Blob::blob();
 
         TagPtr versionTag(make_unique<TextTag>(NxASeratoDatabaseVersionTag, databaseFileCurrentVersionString));
-        versionTag->addTo(*outputData);
+        versionTag->addTo(outputData);
 
         for (auto& track : *this->p_tracks) {
-            track->addTo(*outputData);
+            track->addTo(outputData);
         }
 
         for (auto& tag : this->p_otherTags) {
-            tag->addTo(*outputData);
+            tag->addTo(outputData);
         }
 
-        writeToFile(this->p_databaseFilePath->c_str(), *outputData);
+        File::writeToFile(this->p_databaseFilePath, outputData);
     }
 }

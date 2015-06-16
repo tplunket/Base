@@ -58,20 +58,20 @@ FLACTrackFile::FLACTrackFile(const char* trackFilePath) : TrackFile(trackFilePat
 
 void FLACTrackFile::p_readMarkers(void)
 {
-    const String markersEncodedData = this->p_properties["SERATO_MARKERS_V2"].toString();
+    const TagLib::String markersEncodedData = this->p_properties["SERATO_MARKERS_V2"].toString();
     uint32_t encodedDataSize = markersEncodedData.size();
     if (encodedDataSize) {
-        CharVectorPtr decodedMarkersData = Base64::decodeBlock((const char*)markersEncodedData.data(String::UTF8).data(),
+        CharVectorPtr decodedMarkersData = Base64::decodeBlock((const char*)markersEncodedData.data(TagLib::String::UTF8).data(),
                                                                encodedDataSize);
 
         const SeratoFLACMarkersHeaderStruct* headerStruct = (const SeratoFLACMarkersHeaderStruct*)decodedMarkersData->data();
         this->p_readMarkersV2FromBase64Data((const char*)headerStruct->data, decodedMarkersData->size() - sizeof(SeratoFLACMarkersHeaderStruct));
     }
 
-    const String beatGridEncodedData = this->p_properties["SERATO_BEATGRID"].toString();
+    const TagLib::String beatGridEncodedData = this->p_properties["SERATO_BEATGRID"].toString();
     uint32_t encodedBeatGridDataSize = beatGridEncodedData.size();
     if (encodedBeatGridDataSize) {
-        CharVectorPtr decodedGridMarkersData = Base64::decodeBlock((const char*)beatGridEncodedData.data(String::UTF8).data(),
+        CharVectorPtr decodedGridMarkersData = Base64::decodeBlock((const char*)beatGridEncodedData.data(TagLib::String::UTF8).data(),
                                                                    encodedBeatGridDataSize);
         const SeratoFLACMarkersHeaderStruct* headerStruct = (const SeratoFLACMarkersHeaderStruct*)decodedGridMarkersData->data();
         if ((headerStruct->majorVersion == 1) && (headerStruct->minorVersion == 0)) {
@@ -102,7 +102,7 @@ void FLACTrackFile::p_writeMarkers(void)
         encodedData->insert(encodedData->end(), 0);
 
         StringList newList;
-        newList.append(String(encodedData->data()));
+        newList.append(TagLib::String(encodedData->data()));
         this->p_properties["SERATO_MARKERS_V2"] = newList;
     }
     else {
@@ -129,7 +129,7 @@ void FLACTrackFile::p_writeMarkers(void)
         encodedData->insert(encodedData->end(), 0);
 
         StringList newList;
-        newList.append(String(encodedData->data()));
+        newList.append(TagLib::String(encodedData->data()));
         this->p_properties["SERATO_BEATGRID"] = newList;
     }
     else {
@@ -144,8 +144,8 @@ bool FLACTrackFile::hasKey(void) const
 
 string FLACTrackFile::key(void) const
 {
-    String text = this->p_properties["INITIALKEY"].toString();
-    if (text != String::null) {
+    TagLib::String text = this->p_properties["INITIALKEY"].toString();
+    if (text != TagLib::String::null) {
         return text.to8Bit();
     }
 
@@ -154,8 +154,8 @@ string FLACTrackFile::key(void) const
 
 string FLACTrackFile::grouping(void) const
 {
-    String text = this->p_properties["GROUPING"].toString();
-    if (text != String::null) {
+    TagLib::String text = this->p_properties["GROUPING"].toString();
+    if (text != TagLib::String::null) {
         return text.to8Bit();
     }
 
@@ -210,8 +210,8 @@ string FLACTrackFile::remixer(void) const
 
 string FLACTrackFile::yearReleased(void) const
 {
-    String text = this->p_properties["DATE"].toString();
-    if (text != String::null) {
+    auto text = this->p_properties["DATE"].toString();
+    if (text != TagLib::String::null) {
         return text.to8Bit();
     }
 
@@ -226,12 +226,12 @@ CharVectorPtr FLACTrackFile::artwork(void) const
 
 void FLACTrackFile::setKey(const char* key)
 {
-    this->p_properties["INITIALKEY"] = String(key);
+    this->p_properties["INITIALKEY"] = TagLib::String(key);
 }
 
 void FLACTrackFile::setGrouping(const char* grouping)
 {
-    this->p_properties["GROUPING"] = String(grouping);
+    this->p_properties["GROUPING"] = TagLib::String(grouping);
 }
 
 void FLACTrackFile::setRecordLabel(const char* recordLabel)
@@ -246,7 +246,7 @@ void FLACTrackFile::setRemixer(const char* remixer)
 
 void FLACTrackFile::setYearReleased(const char* year)
 {
-    this->p_properties["DATE"] = String(year);
+    this->p_properties["DATE"] = TagLib::String(year);
 }
 
 void FLACTrackFile::setArtwork(CharVectorPtr artwork)

@@ -12,6 +12,8 @@
 
 #include "Markers/CueMarker.hpp"
 
+#include <Base/Platform.hpp>
+
 using namespace NxA::Serato;
 using namespace std;
 
@@ -39,8 +41,8 @@ CueMarker::CueMarker(const char* id3TagStart)
 {
     const SeratoCueTagStruct* tagStruct = (const SeratoCueTagStruct* )id3TagStart;
 
-    this->p_positionInMilliSeconds = bigEndianUInt32ValueAt(tagStruct->position);
-    this->p_index = bigEndianUInt16ValueAt(tagStruct->index);
+    this->p_positionInMilliSeconds = Platform::bigEndianUInt32ValueAt(tagStruct->position);
+    this->p_index = Platform::bigEndianUInt16ValueAt(tagStruct->index);
     this->p_label = (char*)tagStruct->label;
 }
 
@@ -67,10 +69,10 @@ void CueMarker::addId3TagTo(CharVector& data) const
 
     memcpy(header.tag, "CUE", 4);
     size_t size = sizeof(SeratoCueTagStruct) + this->p_label.length() + 1 - sizeof(SeratoCueTagHeaderStruct);
-    writeBigEndianUInt32ValueAt((uint32_t)size, &header.size);
-    writeBigEndianUInt16ValueAt(this->p_index, &header.index);
-    writeBigEndianUInt32ValueAt(this->p_positionInMilliSeconds, &header.position);
-    writeBigEndianUInt32ValueAt(0, &header.color);
+    Platform::writeBigEndianUInt32ValueAt((uint32_t)size, &header.size);
+    Platform::writeBigEndianUInt16ValueAt(this->p_index, &header.index);
+    Platform::writeBigEndianUInt32ValueAt(this->p_positionInMilliSeconds, &header.position);
+    Platform::writeBigEndianUInt32ValueAt(0, &header.color);
     header.loop_enabled = 0;
     header.loop_locked = 0;
 

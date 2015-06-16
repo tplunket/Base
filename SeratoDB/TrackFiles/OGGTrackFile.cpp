@@ -47,13 +47,13 @@ OGGTrackFile::OGGTrackFile(const char* trackFilePath) : ID3TrackFile(trackFilePa
 
 void OGGTrackFile::p_readMarkers(void)
 {
-    const String markersEncodedData = this->p_properties["SERATO_MARKERS2"].toString();
+    const TagLib::String markersEncodedData = this->p_properties["SERATO_MARKERS2"].toString();
     uint32_t encodedDataSize = markersEncodedData.size();
     if (encodedDataSize) {
-        this->p_readMarkersV2FromBase64Data((char*)markersEncodedData.data(String::UTF8).data(), encodedDataSize);
+        this->p_readMarkersV2FromBase64Data((char*)markersEncodedData.data(TagLib::String::UTF8).data(), encodedDataSize);
     }
 
-    const String beatGridEncodedData = this->p_properties["SERATO_BEATGRID"].toString();
+    const TagLib::String beatGridEncodedData = this->p_properties["SERATO_BEATGRID"].toString();
     uint32_t encodedBeatGridDataSize = beatGridEncodedData.size();
     if (encodedBeatGridDataSize) {
         uint32_t majorVersion = beatGridEncodedData.substr(0, 8).toInt();
@@ -83,7 +83,7 @@ void OGGTrackFile::p_writeMarkers(void)
         base64Data->push_back('\0');
 
         StringList newList;
-        newList.append(String(base64Data->data()));
+        newList.append(TagLib::String(base64Data->data()));
         this->p_properties["SERATO_MARKERS2"] = newList;
     }
     else {
@@ -91,7 +91,7 @@ void OGGTrackFile::p_writeMarkers(void)
     }
 
     if (this->gridMarkers().size()) {
-        String propertyString;
+        TagLib::String propertyString;
         char buffer[32];
 
         propertyString.append("00000001");
@@ -125,8 +125,8 @@ string OGGTrackFile::key(void) const
 
 string OGGTrackFile::grouping(void) const
 {
-    String text = this->p_properties["GROUPING"].toString();
-    if (text != String::null) {
+    TagLib::String text = this->p_properties["GROUPING"].toString();
+    if (text != TagLib::String::null) {
         return text.to8Bit();
     }
 
@@ -140,8 +140,8 @@ bool OGGTrackFile::hasRecordLabel(void) const
 
 string OGGTrackFile::recordLabel(void) const
 {
-    String text = this->p_properties["LABEL"].toString();
-    if (text != String::null) {
+    TagLib::String text = this->p_properties["LABEL"].toString();
+    if (text != TagLib::String::null) {
         return text.to8Bit();
     }
 
@@ -155,8 +155,8 @@ bool OGGTrackFile::hasRemixer(void) const
 
 string OGGTrackFile::remixer(void) const
 {
-    String text = this->p_properties["REMIXER"].toString();
-    if (text != String::null) {
+    TagLib::String text = this->p_properties["REMIXER"].toString();
+    if (text != TagLib::String::null) {
         return text.to8Bit();
     }
 
@@ -165,8 +165,8 @@ string OGGTrackFile::remixer(void) const
 
 string OGGTrackFile::yearReleased(void) const
 {
-    String text = this->p_properties["YEAR"].toString();
-    if (text != String::null) {
+    TagLib::String text = this->p_properties["YEAR"].toString();
+    if (text != TagLib::String::null) {
         return text.to8Bit();
     }
 
@@ -186,22 +186,22 @@ void OGGTrackFile::setKey(const char* key)
 
 void OGGTrackFile::setGrouping(const char* grouping)
 {
-    this->p_properties["GROUPING"] = String(grouping);
+    this->p_properties["GROUPING"] = TagLib::String(grouping);
 }
 
 void OGGTrackFile::setRecordLabel(const char* recordLabel)
 {
-    this->p_properties["LABEL"] = String(recordLabel);
+    this->p_properties["LABEL"] = TagLib::String(recordLabel);
 }
 
 void OGGTrackFile::setRemixer(const char* remixer)
 {
-    this->p_properties["REMIXER"] = String(remixer);
+    this->p_properties["REMIXER"] = TagLib::String(remixer);
 }
 
 void OGGTrackFile::setYearReleased(const char* year)
 {
-    this->p_properties["YEAR"] = String(year);
+    this->p_properties["YEAR"] = TagLib::String(year);
 }
 
 void OGGTrackFile::setArtwork(CharVectorPtr artwork)

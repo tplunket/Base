@@ -13,7 +13,9 @@
 #pragma once
 
 #include <SeratoDb/Tags/Tag.hpp>
-#include <SeratoDB/Utility.hpp>
+
+#include <Base/Blob.hpp>
+#include <Base/Platform.hpp>
 
 namespace NxA { namespace Serato {
     #pragma mark Class Declaration
@@ -27,7 +29,7 @@ namespace NxA { namespace Serato {
         #pragma mark Constructors
         explicit UInt32Tag(const void* tagAddress) :
                             Tag(tagAddress),
-                            p_value(bigEndianUInt32ValueAt(Tag::p_dataForTagAt(tagAddress))) { }
+                            p_value(Platform::bigEndianUInt32ValueAt(Tag::p_dataForTagAt(tagAddress))) { }
         explicit UInt32Tag(const uint32_t& identifier, const uint32_t& value) :
                             Tag(identifier),
                             p_value(value) { }
@@ -36,6 +38,6 @@ namespace NxA { namespace Serato {
         const uint32_t& value(void) const;
         uint32_t& value(void);
 
-        void addTo(CharVector& destination) const;
+        void addTo(Blob::Pointer& destination) const;
     };
 } }

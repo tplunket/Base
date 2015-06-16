@@ -13,8 +13,8 @@
 #include "Tags/ObjectTag.hpp"
 #include "Tags/TagFactory.hpp"
 
+using namespace NxA;
 using namespace NxA::Serato;
-using namespace std;
 
 #pragma mark Constructors
 
@@ -60,19 +60,19 @@ void ObjectTag::addSubTag(ConstTagPtr tag)
     this->p_subTagForIdentifier[tag->identifier()] = move(tag);
 }
 
-void ObjectTag::addTo(CharVector& destination) const
+void ObjectTag::addTo(Blob::Pointer& destination) const
 {
-    CharVector subTagsRepresentation;
+    Blob::Pointer subTagsRepresentation = Blob::blob();
     for (auto& identifierAndTag : this->p_subTagForIdentifier) {
         identifierAndTag.second->addTo(subTagsRepresentation);
     }
 
-    size_t memoryNeededForHeaderInBytes = Tag::p_memoryNeededWithDataOfSize(0);
-    CharVectorPtr headerRepresentation = make_unique<CharVector>(memoryNeededForHeaderInBytes, 0);
+    size_t memoryNeededForHeaderInBytes = Tag::p_memoryNeededForTagHeader();
+    Blob::Pointer headerRepresentation = Blob::blobWithCapacity(memoryNeededForHeaderInBytes);
     void* tagAddress = headerRepresentation->data();
     Tag::p_setIdentifierForTagAt(this->identifier(), tagAddress);
-    Tag::p_setDataSizeForTagAt(subTagsRepresentation.size(), tagAddress);
+    Tag::p_setDataSizeForTagAt(subTagsRepresentation->size(), tagAddress);
 
-    destination.insert(destination.end(), headerRepresentation->begin(), headerRepresentation->end());
-    destination.insert(destination.end(), subTagsRepresentation.begin(), subTagsRepresentation.end());
+    destination->append(headerRepresentation);
+    destination->append(subTagsRepresentation);
 }

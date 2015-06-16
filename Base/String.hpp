@@ -56,7 +56,7 @@ namespace NxA {
         void append(const char* other);
 
         String::Array::Pointer splitBySeperator(char seperator) const;
-        String::Pointer subString(count start, count end = -1);
+        String::Pointer subString(count start, count end = -1) const;
 
         bool hasPrefix(String::Pointer prefix) const;
         bool hasPostfix(String::Pointer postfix) const;

@@ -174,7 +174,7 @@ String::Array::Pointer String::splitBySeperator(char seperator) const
     return results;
 }
 
-String::Pointer String::subString(count start, count end)
+String::Pointer String::subString(count start, count end) const
 {
     if (end == -1) {
         end = this->length();

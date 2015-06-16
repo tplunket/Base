@@ -52,7 +52,7 @@ String::Pointer String::string(void)
     return newString;
 }
 
-String::Pointer String::stringWithUTF8(const char* other)
+String::Pointer String::stringWithUTF8(const character* other)
 {
     String::Pointer newString(String::makeShared());
     newString->internal->value = other;
@@ -60,7 +60,7 @@ String::Pointer String::stringWithUTF8(const char* other)
     return newString;
 }
 
-String::Pointer String::stringWithFormat(const char* format, ...)
+String::Pointer String::stringWithFormat(const character* format, ...)
 {
     constexpr count formatStringBufferSize = 256;
     char buffer[formatStringBufferSize];
@@ -109,7 +109,7 @@ bool String::isEqualTo(String const& other) const
     return internal->value == other.internal->value;
 }
 
-bool String::isEqualTo(const char* other) const
+bool String::isEqualTo(const character* other) const
 {
     return internal->value == other;
 }
@@ -126,7 +126,7 @@ const String::Pointer String::description(void) const
     return String::stringWithUTF8(this->toUTF8());
 }
 
-const char* String::toUTF8(void) const
+const character* String::toUTF8(void) const
 {
     return internal->value.c_str();
 }
@@ -142,7 +142,7 @@ Blob::Pointer String::toUTF16(void) const
         characters = Internal::String::convertEndiannessOfUTF16Characters(characters, length);
     }
 
-    Blob::Pointer newBlob = Blob::blobWithCharPointer(reinterpret_cast<const char*>(characters), length);
+    Blob::Pointer newBlob = Blob::blobWithCharPointer(reinterpret_cast<const character*>(characters), length);
 
     if (Platform::endianOrder == Platform::LitleEndian) {
         free((void*)characters);
@@ -156,7 +156,7 @@ void String::append(const String::Pointer& other)
     internal->value.append(other->toUTF8());
 }
 
-void String::append(const char* other)
+void String::append(const character* other)
 {
     internal->value.append(other);
 }
@@ -201,12 +201,12 @@ bool String::hasPostfix(String::Pointer postfix) const
     return pos == (this->length() - postfix->length());
 }
 
-bool String::hasPrefix(const char* prefix) const
+bool String::hasPrefix(const character* prefix) const
 {
     return internal->value.find(prefix) == 0;
 }
 
-bool String::hasPostfix(const char* postfix) const
+bool String::hasPostfix(const character* postfix) const
 {
     size_t pos = internal->value.rfind(postfix);
     if (pos == std::string::npos) {

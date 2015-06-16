@@ -35,9 +35,9 @@ namespace NxA {
     public:
         #pragma mark Factory Methods
         static String::Pointer string(void);
-        static String::Pointer stringWithUTF8(const char* other);
+        static String::Pointer stringWithUTF8(const character* other);
         static String::Pointer stringWithUTF16(const NxA::Pointer<NxA::Blob>& other);
-        static String::Pointer stringWithFormat(const char* format, ... );
+        static String::Pointer stringWithFormat(const character* format, ... );
         static String::Pointer stringWithString(const String::Pointer& other);
 
         #pragma mark Operators
@@ -53,18 +53,18 @@ namespace NxA {
             return this->length() == 0;
         };
 
-        const char* toUTF8(void) const;
+        const character* toUTF8(void) const;
         NxA::Pointer<NxA::Blob> toUTF16(void) const;
 
         void append(const String::Pointer& other);
-        void append(const char* other);
+        void append(const character* other);
 
         String::Array::Pointer splitBySeperator(char seperator) const;
         String::Pointer subString(count start, count end = -1) const;
 
         bool hasPrefix(String::Pointer prefix) const;
         bool hasPostfix(String::Pointer postfix) const;
-        bool hasPrefix(const char* prefix) const;
-        bool hasPostfix(const char* postfix) const;
+        bool hasPrefix(const character* prefix) const;
+        bool hasPostfix(const character* postfix) const;
     };
 }

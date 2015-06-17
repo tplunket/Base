@@ -45,7 +45,7 @@ Blob::Pointer Blob::blob(void)
 
 Blob::Pointer Blob::blobWithCapacity(count length)
 {
-    Blob::Pointer newBlob(Blob::makeShared());
+    auto newBlob = Blob::makeShared();
     newBlob->internal->data = Internal::Blob::InternalVector(length);
     newBlob->clear();
 
@@ -54,7 +54,7 @@ Blob::Pointer Blob::blobWithCapacity(count length)
 
 Blob::Pointer Blob::blobWithCharPointer(const char* other, count length)
 {
-    Blob::Pointer newBlob(Blob::makeShared());
+    auto newBlob = Blob::makeShared();
     newBlob->internal->data = Internal::Blob::InternalVector(other, other + length);
 
     return newBlob;
@@ -62,7 +62,7 @@ Blob::Pointer Blob::blobWithCharPointer(const char* other, count length)
 
 Blob::Pointer Blob::blobWithBlob(const Blob::Pointer& other)
 {
-    Blob::Pointer newBlob(Blob::makeShared());
+    auto newBlob = Blob::makeShared();
     newBlob->internal->data = other->internal->data;
 
     return newBlob;

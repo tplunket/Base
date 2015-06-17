@@ -46,7 +46,7 @@ String::String(Internal::Object::Pointer initial_internal) : Object(initial_inte
 
 String::Pointer String::string(void)
 {
-    String::Pointer newString(String::makeShared());
+    auto newString = String::makeShared();
     newString->internal->value = "";
 
     return newString;
@@ -54,7 +54,7 @@ String::Pointer String::string(void)
 
 String::Pointer String::stringWithUTF8(const character* other)
 {
-    String::Pointer newString(String::makeShared());
+    auto newString = String::makeShared();
     newString->internal->value = other;
 
     return newString;
@@ -82,7 +82,7 @@ String::Pointer String::stringWithUTF16(const Blob::Pointer& other)
         characters = Internal::String::convertEndiannessOfUTF16Characters(characters, length);
     }
 
-    String::Pointer newString(String::makeShared());
+    auto newString = String::makeShared();
 
     std::wstring_convert<std::codecvt_utf8_utf16<char16_t>,char16_t> convert;
     newString->internal->value = convert.to_bytes(reinterpret_cast<const char16_t*>(characters), reinterpret_cast<const char16_t*>(characters + length));
@@ -96,7 +96,7 @@ String::Pointer String::stringWithUTF16(const Blob::Pointer& other)
 
 String::Pointer String::stringWithString(const String::Pointer& other)
 {
-    String::Pointer newString{ String::makeShared() };
+    auto newString = String::makeShared();
     newString->internal->value = other->internal->value;
 
     return newString;
@@ -142,7 +142,7 @@ Blob::Pointer String::toUTF16(void) const
         characters = Internal::String::convertEndiannessOfUTF16Characters(characters, length);
     }
 
-    Blob::Pointer newBlob = Blob::blobWithCharPointer(reinterpret_cast<const character*>(characters), length);
+    auto newBlob = Blob::blobWithCharPointer(reinterpret_cast<const character*>(characters), length);
 
     if (Platform::endianOrder == Platform::LitleEndian) {
         free((void*)characters);
@@ -163,7 +163,7 @@ void String::append(const character* other)
 
 String::Array::Pointer String::splitBySeperator(char seperator) const
 {
-    String::Array::Pointer results{ String::Array::array() };
+    auto results = String::Array::array();
     std::stringstream stream(this->toUTF8());
     std::string line;
 
@@ -180,7 +180,7 @@ String::Pointer String::subString(count start, count end) const
         end = this->length();
     }
 
-    String::Pointer newString{ String::makeShared() };
+    auto newString = String::makeShared();
     newString->internal->value = internal->value.substr(start, end);
 
     return newString;

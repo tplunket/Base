@@ -41,7 +41,7 @@ Blob::Pointer File::readFileAt(String::Pointer path)
             file.read(fileData, fileSize);
             file.close();
 
-            Blob::Pointer result = Blob::blobWithCharPointer(fileData, fileSize);
+            auto result = Blob::blobWithCharPointer(fileData, fileSize);
             delete[] fileData;
 
             return result;
@@ -65,7 +65,7 @@ void File::deleteFileAt(String::Pointer path)
 
 String::Pointer File::joinPaths(String::Pointer first, String::Pointer second)
 {
-    String::Pointer result = String::stringWithString(first);
+    auto result = String::stringWithString(first);
 
     if (Platform::platform == Platform::Windows) {
         result->append("\\");

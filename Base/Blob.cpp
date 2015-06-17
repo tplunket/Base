@@ -55,7 +55,7 @@ Blob::Pointer Blob::blobWithCapacity(count length)
 Blob::Pointer Blob::blobWithCharPointer(const char* other, count length)
 {
     Blob::Pointer newBlob(Blob::makeShared());
-    newBlob->internal->data = Internal::Blob::InternalVector(length, *other);
+    newBlob->internal->data = Internal::Blob::InternalVector(other, other + length);
 
     return newBlob;
 }

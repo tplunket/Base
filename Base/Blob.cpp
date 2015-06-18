@@ -111,3 +111,8 @@ void Blob::append(const character* other)
 
     internal->data.insert(internal->data.end(), length + 1, *other);
 }
+
+void Blob::append(const character other)
+{
+    internal->data.insert(internal->data.end(), 1, other);
+}

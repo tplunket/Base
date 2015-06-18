@@ -60,7 +60,7 @@ void ObjectTag::addSubTag(ConstTagPtr tag)
     this->p_subTagForIdentifier[tag->identifier()] = move(tag);
 }
 
-void ObjectTag::addTo(Blob::Pointer& destination) const
+void ObjectTag::addTo(Blob::Pointer const& destination) const
 {
     Blob::Pointer subTagsRepresentation = Blob::blob();
     for (auto& identifierAndTag : this->p_subTagForIdentifier) {

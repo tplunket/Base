@@ -28,11 +28,11 @@ namespace NxA { namespace Serato {
     {
     private:
         #pragma mark Private Instance Variables
-        String::Pointer p_databaseFilePath;
+        String::ConstPointer p_databaseFilePath;
         TrackVectorPtr p_tracks;
         ConstTagVector p_otherTags;
 
-        std::vector<String::Pointer> p_crateFilesToDelete;
+        std::vector<String::ConstPointer> p_crateFilesToDelete;
 
         CrateOrderFilePtr p_crateOrderFile;
 
@@ -58,7 +58,7 @@ namespace NxA { namespace Serato {
 
         TrackVectorPtr removeAndReturnTracks(void);
 
-        void addCrateFileToDelete(const String::Pointer& path);
+        void addCrateFileToDelete(String::ConstPointer const& path);
 
         void addTrack(TrackPtr track);
 

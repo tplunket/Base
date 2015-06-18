@@ -97,7 +97,7 @@ const std::string& Crate::crateFullName(void) const
     return *(this->p_crateFullName);
 }
 
-void Crate::addFullCrateNameWithPrefixAndRecurseToChildren(String::Pointer& destination, const char* prefix) const
+void Crate::addFullCrateNameWithPrefixAndRecurseToChildren(String::Pointer const& destination, const char* prefix) const
 {
     const string& fullName = *(this->p_crateFullName.get());
     if (fullName.length()) {

@@ -47,7 +47,7 @@ namespace NxA { namespace Serato {
         explicit TrackEntry(const char* trackPath, const char* locatedOnVolumePath);
 
         #pragma mark Instance Methods
-        String::Pointer trackFilePath(void) const;
+        String::ConstPointer trackFilePath(void) const;
 
         const Tag& tagForEntry(void) const;
 

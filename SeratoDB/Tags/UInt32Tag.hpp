@@ -38,6 +38,6 @@ namespace NxA { namespace Serato {
         const uint32_t& value(void) const;
         uint32_t& value(void);
 
-        void addTo(Blob::Pointer& destination) const;
+        void addTo(Blob::Pointer const& destination) const;
     };
 } }

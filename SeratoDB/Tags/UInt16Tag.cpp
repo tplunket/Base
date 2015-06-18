@@ -27,7 +27,7 @@ uint16_t& UInt16Tag::value(void)
     return const_cast<uint16_t&>(static_cast<const UInt16Tag&>(*this).value());
 }
 
-void UInt16Tag::addTo(Blob::Pointer& destination) const
+void UInt16Tag::addTo(Blob::Pointer const& destination) const
 {
     size_t dataSize = 2;
     Blob::Pointer memoryRepresentation = Blob::blobWithCapacity(Tag::p_memoryNeededForTagHeader() + dataSize);

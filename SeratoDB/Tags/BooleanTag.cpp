@@ -40,7 +40,7 @@ bool& BooleanTag::value(void)
     return const_cast<bool&>(static_cast<const BooleanTag&>(*this).value());
 }
 
-void BooleanTag::addTo(Blob::Pointer& destination) const
+void BooleanTag::addTo(Blob::Pointer const& destination) const
 {
     size_t dataSize = 1;
     size_t memoryNeededInBytes = Tag::p_memoryNeededForTagHeader() + dataSize;

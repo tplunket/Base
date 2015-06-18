@@ -31,7 +31,7 @@ namespace NxA { namespace Serato {
     {
     private:
         #pragma mark Private Instance Variables
-        String::Pointer p_crateOrderFilePath;
+        String::ConstPointer p_crateOrderFilePath;
 
         CratePtr p_rootCrate;
 

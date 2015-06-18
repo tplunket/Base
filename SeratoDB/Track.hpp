@@ -36,7 +36,7 @@ namespace NxA { namespace Serato {
         #pragma mark Private Instance Variables
         TagPtr p_trackTag;
         TrackFilePtr p_trackFile;
-        String::Pointer p_rootFolder;
+        String::ConstPointer p_rootFolder;
 
         bool p_wasModified;
 
@@ -47,8 +47,8 @@ namespace NxA { namespace Serato {
         #pragma mark Private Instance Methods
         inline bool p_containsAValidTrackTag(void) const;
 
-        const String::Pointer& p_stringForSubTagForIdentifier(const uint32_t& identifier) const;
-        const String::Pointer& p_pathForSubTagForIdentifier(const uint32_t& identifier) const;
+        String::ConstPointer const& p_stringForSubTagForIdentifier(const uint32_t& identifier) const;
+        String::ConstPointer const& p_pathForSubTagForIdentifier(const uint32_t& identifier) const;
         const uint32_t& p_uint32ForSubTagForIdentifier(const uint32_t& identifier) const;
 
         void p_setStringForSubTagForIdentifier(const char* value, const uint32_t& identifier);
@@ -67,24 +67,24 @@ namespace NxA { namespace Serato {
         explicit Track(const char* trackFilePath, const char* locatedOnVolumePath);
 
         #pragma mark Instance Methods
-        String::Pointer trackFilePath(void) const;
+        String::ConstPointer trackFilePath(void) const;
 
-        const String::Pointer& title(void) const;
-        const String::Pointer& artist(void) const;
-        const String::Pointer& album(void) const;
-        const String::Pointer& genre(void) const;
-        const String::Pointer& comments(void) const;
-        const String::Pointer& grouping(void) const;
-        const String::Pointer& remixer(void) const;
-        const String::Pointer& recordLabel(void) const;
-        const String::Pointer& composer(void) const;
-        const String::Pointer& key(void) const;
-        const String::Pointer& length(void) const;
+        String::ConstPointer const& title(void) const;
+        String::ConstPointer const& artist(void) const;
+        String::ConstPointer const& album(void) const;
+        String::ConstPointer const& genre(void) const;
+        String::ConstPointer const& comments(void) const;
+        String::ConstPointer const& grouping(void) const;
+        String::ConstPointer const& remixer(void) const;
+        String::ConstPointer const& recordLabel(void) const;
+        String::ConstPointer const& composer(void) const;
+        String::ConstPointer const& key(void) const;
+        String::ConstPointer const& length(void) const;
         const uint32_t& sizeInBytes(void) const;
-        const String::Pointer& bitRate(void) const;
-        const String::Pointer& sampleRate(void) const;
-        const String::Pointer& bpm(void) const;
-        const String::Pointer& year(void) const;
+        String::ConstPointer const& bitRate(void) const;
+        String::ConstPointer const& sampleRate(void) const;
+        String::ConstPointer const& bpm(void) const;
+        String::ConstPointer const& year(void) const;
         const uint32_t& trackNumber(void) const;
         const uint32_t& discNumber(void) const;
         const uint32_t& dateModifiedInSecondsSinceJanuary1st1970(void) const;
@@ -116,7 +116,7 @@ namespace NxA { namespace Serato {
         void setGridMarkers(GridMarkerVectorPtr markers);
 
         bool wasModified(void) const;
-        void addTo(Blob::Pointer& destination) const;
+        void addTo(Blob::Pointer const& destination) const;
         void saveToTrackFile(void);
 
         void destroy(void);

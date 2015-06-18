@@ -43,6 +43,6 @@ namespace NxA { namespace Serato {
 
         void addSubTag(ConstTagPtr tag);
 
-        void addTo(Blob::Pointer& destination) const;
+        void addTo(Blob::Pointer const& destination) const;
     };
 } }

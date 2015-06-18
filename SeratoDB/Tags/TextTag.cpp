@@ -33,17 +33,17 @@ const uint32_t& TextTag::identifier(void) const
     return this->p_identifier;
 }
 
-const String::Pointer& TextTag::value(void) const
+String::ConstPointer const& TextTag::value(void) const
 {
     return this->p_value;
 }
 
-String::Pointer& TextTag::value(void)
+String::ConstPointer& TextTag::value(void)
 {
-    return const_cast<String::Pointer&>(static_cast<const TextTag&>(*this).value());
+    return const_cast<String::ConstPointer&>(static_cast<const TextTag&>(*this).value());
 }
 
-void TextTag::addTo(Blob::Pointer& destination) const
+void TextTag::addTo(Blob::Pointer const& destination) const
 {
     Blob::Pointer memoryRepresentation = Blob::blobWithCapacity(Tag::p_memoryNeededForTagHeader());
     size_t dataSize = this->p_value->length() * 2;

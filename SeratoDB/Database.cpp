@@ -148,7 +148,7 @@ TrackVectorPtr Database::removeAndReturnTracks(void)
     return tracks;
 }
 
-void Database::addCrateFileToDelete(const String::Pointer& path)
+void Database::addCrateFileToDelete(String::ConstPointer const& path)
 {
     this->p_crateFilesToDelete.push_back(path);
 }

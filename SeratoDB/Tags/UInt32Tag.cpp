@@ -27,7 +27,7 @@ uint32_t& UInt32Tag::value(void)
     return const_cast<uint32_t&>(static_cast<const UInt32Tag&>(*this).value());
 }
 
-void UInt32Tag::addTo(Blob::Pointer& destination) const
+void UInt32Tag::addTo(Blob::Pointer const& destination) const
 {
     size_t dataSize = 4;
     Blob::Pointer memoryRepresentation = Blob::blobWithCapacity(Tag::p_memoryNeededForTagHeader() + dataSize);

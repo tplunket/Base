@@ -28,14 +28,14 @@ namespace NxA { namespace Serato {
     public:
         #pragma mark Constructors
         explicit BlobTag(const void* tagAddress);
-        explicit BlobTag(uint32_t identifier, const Blob::Pointer value) :
+        explicit BlobTag(uint32_t identifier, Blob::ConstPointer const& value) :
                          Tag(identifier),
                          p_value(Blob::blobWithBlob(value)) { }
 
         #pragma mark Instance Methods
-        const Blob::Pointer& value(void) const;
-        Blob::Pointer& value(void);
+        Blob::ConstPointer const& value(void) const;
+        Blob::ConstPointer& value(void);
 
-        void addTo(Blob::Pointer& destination) const;
+        void addTo(Blob::Pointer const& destination) const;
     };
 } }

@@ -33,17 +33,17 @@ const uint32_t& PathTag::identifier(void) const
     return this->p_identifier;
 }
 
-const String::Pointer& PathTag::value(void) const
+String::ConstPointer const& PathTag::value(void) const
 {
     return this->p_value;
 }
 
-String::Pointer& PathTag::value(void)
+String::ConstPointer& PathTag::value(void)
 {
-    return const_cast<String::Pointer&>(static_cast<const PathTag&>(*this).value());
+    return const_cast<String::ConstPointer&>(static_cast<const PathTag&>(*this).value());
 }
 
-void PathTag::addTo(Blob::Pointer& destination) const
+void PathTag::addTo(Blob::Pointer const& destination) const
 {
     Blob::Pointer memoryRepresentation = Blob::blobWithCapacity(Tag::p_memoryNeededForTagHeader());
     size_t dataSize = this->p_value->length() * 2;

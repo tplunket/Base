@@ -36,7 +36,7 @@ namespace NxA { namespace Serato {
         ConstStringPtr p_crateName;
         ConstStringPtr p_crateFullName;
         ConstStringPtr p_rootVolumePath;
-        NxA::String::Pointer p_crateFilePath;
+        NxA::String::ConstPointer p_crateFilePath;
 
         bool p_tracksWereModified;
         bool p_cratesWereModified;
@@ -69,7 +69,7 @@ namespace NxA { namespace Serato {
         #pragma mark Instance Methods
         const std::string& crateName(void) const;
         const std::string& crateFullName(void) const;
-        void addFullCrateNameWithPrefixAndRecurseToChildren(String::Pointer& destination, const char* prefix) const;
+        void addFullCrateNameWithPrefixAndRecurseToChildren(String::Pointer const& destination, const char* prefix) const;
 
         const TrackEntryVector& trackEntries(void) const;
         const CrateVector& crates(void) const;

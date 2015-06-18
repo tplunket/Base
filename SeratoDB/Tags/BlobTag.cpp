@@ -23,17 +23,17 @@ BlobTag::BlobTag(const void* tagAddress) : Tag(tagAddress),
 
 #pragma mark Instance Methods
 
-const Blob::Pointer& BlobTag::value(void) const
+Blob::ConstPointer const& BlobTag::value(void) const
 {
     return this->p_value;
 }
 
-Blob::Pointer& BlobTag::value(void)
+Blob::ConstPointer& BlobTag::value(void)
 {
-    return const_cast<Blob::Pointer&>(static_cast<const BlobTag&>(*this).value());
+    return const_cast<Blob::ConstPointer&>(static_cast<const BlobTag&>(*this).value());
 }
 
-void BlobTag::addTo(Blob::Pointer& destination) const
+void BlobTag::addTo(Blob::Pointer const& destination) const
 {
     size_t dataSize = this->p_value->size();
     size_t memoryNeededInBytes = Tag::p_memoryNeededForTagHeader() + dataSize;

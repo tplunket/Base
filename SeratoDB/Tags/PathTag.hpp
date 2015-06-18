@@ -24,7 +24,7 @@ namespace NxA { namespace Serato {
     {
     private:
         #pragma mark Private Instance Variables
-        String::Pointer p_value;
+        String::ConstPointer p_value;
 
     public:
         #pragma mark Constructors
@@ -35,9 +35,9 @@ namespace NxA { namespace Serato {
 
         #pragma mark Instance Methods
         const uint32_t& identifier(void) const;
-        const String::Pointer& value(void) const;
-        String::Pointer& value(void);
+        String::ConstPointer const& value(void) const;
+        String::ConstPointer& value(void);
 
-        void addTo(Blob::Pointer& destination) const;
+        void addTo(Blob::Pointer const& destination) const;
     };
 } }

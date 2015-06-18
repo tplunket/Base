@@ -27,7 +27,7 @@ using namespace std;
 
 #pragma mark Utility Functions
 
-static String::Pointer p_crateNameIfValidCrateOrEmptyIfNot(const String::Pointer& name)
+static String::Pointer p_crateNameIfValidCrateOrEmptyIfNot(String::ConstPointer const& name)
 {
     String::Pointer result = String::string();
 
@@ -38,12 +38,12 @@ static String::Pointer p_crateNameIfValidCrateOrEmptyIfNot(const String::Pointer
     return result;
 }
 
-static bool p_filenameIsAValidCrateName(const String::Pointer& fileName)
+static bool p_filenameIsAValidCrateName(String::ConstPointer const& fileName)
 {
     return !fileName->hasPrefix(".") && fileName->hasPostfix(".crate");
 }
 
-static String::Pointer p_crateNameFromFilename(const String::Pointer& fileName)
+static String::Pointer p_crateNameFromFilename(String::ConstPointer const& fileName)
 {
     return fileName->subString(0, fileName->length() - 6);
 }
@@ -73,7 +73,7 @@ static StringVectorPtr p_cratesInSubCratesDirectory(const string& directory)
     return move(crateNamesFound);
 }
 
-static StringVectorPtr p_readCratesNamesInCrateOrderFile(const String::Pointer& crateOrderFilePath)
+static StringVectorPtr p_readCratesNamesInCrateOrderFile(String::ConstPointer const& crateOrderFilePath)
 {
     StringVectorPtr cratesInOrder(make_unique<StringVector>());
 

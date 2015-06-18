@@ -31,11 +31,11 @@ namespace NxA { namespace Serato {
     #pragma mark Utility Functions
     bool containsAValidSeratoFolder(const char* folderPath);
 
-    String::Pointer seratoFolderPathForFolder(const char* folderPath);
-    String::Pointer databaseFilePathForSeratoFolder(const char* seratoFolderPath);
-    String::Pointer crateOrderFilePathForSeratoFolder(const char* seratoFolderPath);
-    String::Pointer subCratesDirectoryPathInSeratoFolder(const char* seratoFolderPath);
-    String::Pointer smartCratesDirectoryPathInSeratoFolder(const char* seratoFolderPath);
-    String::Pointer crateFilePathForCrateNameInSeratoFolder(const char* crateName, const char* seratoFolderPath);
-    String::Pointer crateFilePathForSmartCrateNameInSeratoFolder(const char* crateName, const char* seratoFolderPath);
+    String::ConstPointer seratoFolderPathForFolder(const char* folderPath);
+    String::ConstPointer databaseFilePathForSeratoFolder(const char* seratoFolderPath);
+    String::ConstPointer crateOrderFilePathForSeratoFolder(const char* seratoFolderPath);
+    String::ConstPointer subCratesDirectoryPathInSeratoFolder(const char* seratoFolderPath);
+    String::ConstPointer smartCratesDirectoryPathInSeratoFolder(const char* seratoFolderPath);
+    String::ConstPointer crateFilePathForCrateNameInSeratoFolder(const char* crateName, const char* seratoFolderPath);
+    String::ConstPointer crateFilePathForSmartCrateNameInSeratoFolder(const char* crateName, const char* seratoFolderPath);
 } }

@@ -36,6 +36,6 @@ namespace NxA { namespace Serato {
         const bool& value(void) const;
         bool& value(void);
 
-        void addTo(Blob::Pointer& destination) const;
+        void addTo(Blob::Pointer const& destination) const;
     };
 } }

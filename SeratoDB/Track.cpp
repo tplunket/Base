@@ -30,7 +30,7 @@ using namespace std;
 
 #pragma mark Constants
 
-static const String::Pointer emptyString = String::string();
+static const String::ConstPointer emptyString = String::string();
 static const uint32_t zeroValue = 0;
 
 #pragma mark Utility Functions
@@ -189,7 +189,7 @@ bool Track::p_containsAValidTrackTag(void) const
     return this->p_trackTag.get() != NULL;
 }
 
-const String::Pointer& Track::p_stringForSubTagForIdentifier(const uint32_t& identifier) const
+String::ConstPointer const& Track::p_stringForSubTagForIdentifier(const uint32_t& identifier) const
 {
     if (this->p_containsAValidTrackTag()) {
         const ObjectTag* trackObjectTag = dynamic_cast<const ObjectTag*>(this->p_trackTag.get());
@@ -202,7 +202,7 @@ const String::Pointer& Track::p_stringForSubTagForIdentifier(const uint32_t& ide
     return emptyString;
 }
 
-const String::Pointer& Track::p_pathForSubTagForIdentifier(const uint32_t& identifier) const
+String::ConstPointer const& Track::p_pathForSubTagForIdentifier(const uint32_t& identifier) const
 {
     if (this->p_containsAValidTrackTag()) {
         const ObjectTag* trackObjectTag = dynamic_cast<const ObjectTag*>(this->p_trackTag.get());
@@ -315,64 +315,64 @@ void Track::p_readMarkers(void)
     }
 }
 
-String::Pointer Track::trackFilePath(void) const
+String::ConstPointer Track::trackFilePath(void) const
 {
     const String::Pointer& pathFromRootFolder = this->p_pathForSubTagForIdentifier(NxASeratoTrackFilePathTag);
     String::Pointer trackFilePath = File::joinPaths(this->p_rootFolder, pathFromRootFolder);
     return trackFilePath;
 }
 
-const String::Pointer& Track::title(void) const
+String::ConstPointer const& Track::title(void) const
 {
     return this->p_stringForSubTagForIdentifier(NxASeratoTrackTitleTag);
 }
 
-const String::Pointer& Track::artist(void) const
+String::ConstPointer const& Track::artist(void) const
 {
     return this->p_stringForSubTagForIdentifier(NxASeratoTrackArtistTag);
 }
 
-const String::Pointer& Track::album(void) const
+String::ConstPointer const& Track::album(void) const
 {
     return this->p_stringForSubTagForIdentifier(NxASeratoTrackAlbumTag);
 }
 
-const String::Pointer& Track::genre(void) const
+String::ConstPointer const& Track::genre(void) const
 {
     return this->p_stringForSubTagForIdentifier(NxASeratoTrackGenreTag);
 }
 
-const String::Pointer& Track::comments(void) const
+String::ConstPointer const& Track::comments(void) const
 {
     return this->p_stringForSubTagForIdentifier(NxASeratoTrackCommentsTag);
 }
 
-const String::Pointer& Track::grouping(void) const
+String::ConstPointer const& Track::grouping(void) const
 {
     return this->p_stringForSubTagForIdentifier(NxASeratoTrackGroupingTag);
 }
 
-const String::Pointer& Track::remixer(void) const
+String::ConstPointer const& Track::remixer(void) const
 {
     return this->p_stringForSubTagForIdentifier(NxASeratoTrackRemixerTag);
 }
 
-const String::Pointer& Track::recordLabel(void) const
+String::ConstPointer const& Track::recordLabel(void) const
 {
     return this->p_stringForSubTagForIdentifier(NxASeratoTrackLabelTag);
 }
 
-const String::Pointer& Track::composer(void) const
+String::ConstPointer const& Track::composer(void) const
 {
     return this->p_stringForSubTagForIdentifier(NxASeratoTrackComposerTag);
 }
 
-const String::Pointer& Track::key(void) const
+String::ConstPointer const& Track::key(void) const
 {
     return this->p_stringForSubTagForIdentifier(NxASeratoTrackKeyTag);
 }
 
-const String::Pointer& Track::length(void) const
+String::ConstPointer const& Track::length(void) const
 {
     return this->p_stringForSubTagForIdentifier(NxASeratoTrackLengthTag);
 }
@@ -382,22 +382,22 @@ const uint32_t& Track::sizeInBytes(void) const
     return this->p_uint32ForSubTagForIdentifier(NxASeratoTrackSizeTag);
 }
 
-const String::Pointer& Track::bitRate(void) const
+String::ConstPointer const& Track::bitRate(void) const
 {
     return this->p_stringForSubTagForIdentifier(NxASeratoTrackBitrateTag);
 }
 
-const String::Pointer& Track::sampleRate(void) const
+String::ConstPointer const& Track::sampleRate(void) const
 {
     return this->p_stringForSubTagForIdentifier(NxASeratoTrackSampleRateTag);
 }
 
-const String::Pointer& Track::bpm(void) const
+String::ConstPointer const& Track::bpm(void) const
 {
     return this->p_stringForSubTagForIdentifier(NxASeratoTrackBpmTag);
 }
 
-const String::Pointer& Track::year(void) const
+String::ConstPointer const& Track::year(void) const
 {
     return this->p_stringForSubTagForIdentifier(NxASeratoTrackYearTag);
 }
@@ -540,7 +540,7 @@ bool Track::wasModified(void) const
     return this->p_wasModified;
 }
 
-void Track::addTo(Blob::Pointer& destination) const
+void Track::addTo(Blob::Pointer const& destination) const
 {
     this->p_trackTag->addTo(destination);
 }

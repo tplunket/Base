@@ -41,7 +41,7 @@ bool TrackEntry::p_containsAValidTrackEntryTag(void) const
     return this->p_trackEntryTag.get() != NULL;
 }
 
-String::Pointer TrackEntry::trackFilePath(void) const
+String::ConstPointer TrackEntry::trackFilePath(void) const
 {
     if (this->p_containsAValidTrackEntryTag()) {
         const ObjectTag* trackObjectTag = dynamic_cast<const ObjectTag*>(this->p_trackEntryTag.get());

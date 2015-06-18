@@ -50,9 +50,9 @@ static void p_debugListCrate(const Crate* crate, std::string spacing)
 #pragma mark Constructors
 
 Database::Database(const char* seratoFolderPath) :
-    p_databaseFilePath(databaseFilePathForSeratoFolder(seratoFolderPath)),
-    p_tracks(make_unique<TrackVector>()),
-    p_databaseIsValid(false)
+                   p_databaseFilePath(databaseFilePathForSeratoFolder(seratoFolderPath)),
+                   p_tracks(make_unique<TrackVector>()),
+                   p_databaseIsValid(false)
 {
     auto databaseFile = File::readFileAt(this->p_databaseFilePath);
 

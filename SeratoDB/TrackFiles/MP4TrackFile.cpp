@@ -13,8 +13,11 @@
 #include "TrackFiles/MP4TrackFile.hpp"
 #include "Base64.hpp"
 
+#include <Base/Base.hpp>
+
 #include <taglib/mp4tag.h>
 
+using namespace NxA;
 using namespace NxA::Serato;
 using namespace TagLib;
 using namespace std;
@@ -26,12 +29,12 @@ static const string emptyString("");
 #pragma mark Structures
 
 typedef struct {
-    unsigned char mimeType[25];
-    unsigned char filename[1];
-    unsigned char description[16];
-    unsigned char majorVersion;
-    unsigned char minorVersion;
-    unsigned char data[0];
+    byte mimeType[25];
+    byte filename[1];
+    byte description[16];
+    byte majorVersion;
+    byte minorVersion;
+    byte data[0];
 } SeratoMP4MarkersHeaderStruct;
 
 #pragma mark Constructors
@@ -76,7 +79,7 @@ void MP4TrackFile::p_readMarkers(void)
         auto decodedData = Base64::decodeBlock((const char*)encodedData.data(TagLib::String::UTF8).data(),
                                                encodedDataSize);
         const SeratoMP4MarkersHeaderStruct* headerStruct = (const SeratoMP4MarkersHeaderStruct*)decodedData->data();
-        this->p_readMarkersV2FromBase64Data((const char*)headerStruct->data, decodedData->size() - sizeof(SeratoMP4MarkersHeaderStruct));
+        this->p_readMarkersV2FromBase64Data(headerStruct->data, decodedData->size() - sizeof(SeratoMP4MarkersHeaderStruct));
     }
 
     MP4::Item beatgridItem = (*this->p_itemListMap)["----:com.serato.dj:beatgrid"];
@@ -92,7 +95,7 @@ void MP4TrackFile::p_readMarkers(void)
 
         const SeratoMP4MarkersHeaderStruct* headerStruct = (const SeratoMP4MarkersHeaderStruct*)decodedData->data();
         if ((headerStruct->majorVersion == 1) && (headerStruct->minorVersion == 0)) {
-            this->p_readGridMarkersFrom((const char*)headerStruct->data, decodedData->size() - sizeof(SeratoMP4MarkersHeaderStruct));
+            this->p_readGridMarkersFrom(headerStruct->data, decodedData->size() - sizeof(SeratoMP4MarkersHeaderStruct));
         }
     }
 }

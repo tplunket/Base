@@ -65,7 +65,7 @@ void FLACTrackFile::p_readMarkers(void)
                                                       encodedDataSize);
 
         const SeratoFLACMarkersHeaderStruct* headerStruct = (const SeratoFLACMarkersHeaderStruct*)decodedMarkersData->data();
-        this->p_readMarkersV2FromBase64Data((const char*)headerStruct->data, decodedMarkersData->size() - sizeof(SeratoFLACMarkersHeaderStruct));
+        this->p_readMarkersV2FromBase64Data(headerStruct->data, decodedMarkersData->size() - sizeof(SeratoFLACMarkersHeaderStruct));
     }
 
     const TagLib::String beatGridEncodedData = this->p_properties["SERATO_BEATGRID"].toString();
@@ -75,7 +75,7 @@ void FLACTrackFile::p_readMarkers(void)
                                                           encodedBeatGridDataSize);
         const SeratoFLACMarkersHeaderStruct* headerStruct = (const SeratoFLACMarkersHeaderStruct*)decodedGridMarkersData->data();
         if ((headerStruct->majorVersion == 1) && (headerStruct->minorVersion == 0)) {
-            this->p_readGridMarkersFrom((const char*)headerStruct->data, decodedGridMarkersData->size() - sizeof(SeratoFLACMarkersHeaderStruct));
+            this->p_readGridMarkersFrom(headerStruct->data, decodedGridMarkersData->size() - sizeof(SeratoFLACMarkersHeaderStruct));
         }
     }
 }

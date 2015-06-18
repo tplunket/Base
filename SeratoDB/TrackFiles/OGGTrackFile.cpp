@@ -50,7 +50,8 @@ void OGGTrackFile::p_readMarkers(void)
     const TagLib::String markersEncodedData = this->p_properties["SERATO_MARKERS2"].toString();
     uint32_t encodedDataSize = markersEncodedData.size();
     if (encodedDataSize) {
-        this->p_readMarkersV2FromBase64Data((char*)markersEncodedData.data(TagLib::String::UTF8).data(), encodedDataSize);
+        this->p_readMarkersV2FromBase64Data(reinterpret_cast<const byte*>(markersEncodedData.data(TagLib::String::UTF8).data()),
+                                            encodedDataSize);
     }
 
     const TagLib::String beatGridEncodedData = this->p_properties["SERATO_BEATGRID"].toString();

@@ -21,9 +21,9 @@ using namespace NxA::Serato;
 #pragma mark Structures
 
 typedef struct {
-    unsigned char positionInSeconds[4];
-    unsigned char bpm[4];
-    unsigned char endOfStruct[0];
+    byte positionInSeconds[4];
+    byte beatsPerMinute[4];
+    byte endOfStruct[0];
 } GridMarkerStruct;
 
 #pragma mark Constructors & Destructors
@@ -34,7 +34,7 @@ GridMarker::GridMarker(NxA::Internal::Object::Pointer const& initial_internal) :
 
 #pragma mark Factory Methods
 
-GridMarker::Pointer GridMarker::gridMarkerWith(const char* markerData)
+GridMarker::Pointer GridMarker::gridMarkerWith(const byte* markerData)
 {
     const GridMarkerStruct* gridMarker = (const GridMarkerStruct* )markerData;
 
@@ -58,7 +58,7 @@ GridMarker::Pointer GridMarker::gridMarkerWith(GridMarker::ConstPointer const& o
 
 #pragma mark Class Methods
 
-const char* GridMarker::nextGridMarkerAfter(const char* markerData)
+const byte* GridMarker::nextGridMarkerAfter(const byte* markerData)
 {
     return markerData + sizeof(GridMarkerStruct);
 }

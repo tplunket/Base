@@ -21,21 +21,21 @@ using namespace NxA::Serato;
 #pragma mark Structures
 
 typedef struct {
-    unsigned char tag[5];
-    unsigned char size[4];
+    byte tag[5];
+    byte size[4];
 } SeratoLoopTagHeaderStruct;
 
 typedef struct {
-    unsigned char tag[5];
-    unsigned char size[4];
-    unsigned char index[2];
-    unsigned char position[4];
-    unsigned char loopPosition[4];
-    unsigned char loopIterations[4];
-    unsigned char color[4];
-    unsigned char loop_enabled;
-    unsigned char loop_locked;
-    unsigned char label[0];
+    byte tag[5];
+    byte size[4];
+    byte index[2];
+    byte position[4];
+    byte loopPosition[4];
+    byte loopIterations[4];
+    byte color[4];
+    byte loop_enabled;
+    byte loop_locked;
+    byte label[0];
 } SeratoLoopTagStruct;
 
 #pragma mark Constructors & Destructors
@@ -46,9 +46,9 @@ LoopMarker::LoopMarker(NxA::Internal::Object::Pointer const& initial_internal) :
 
 #pragma mark Factory Methods
 
-LoopMarker::Pointer LoopMarker::loopMarkerWith(const char* id3TagStart)
+LoopMarker::Pointer LoopMarker::loopMarkerWith(const byte* id3TagStart)
 {
-    const SeratoLoopTagStruct* tagStruct = (const SeratoLoopTagStruct* )id3TagStart;
+    const SeratoLoopTagStruct* tagStruct = reinterpret_cast<const SeratoLoopTagStruct*>(id3TagStart);
 
     return LoopMarker::loopMarkerWith(String::stringWith(reinterpret_cast<const character*>(tagStruct->label)),
                                       Platform::bigEndianUInt32ValueAt(tagStruct->position),

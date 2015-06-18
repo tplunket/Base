@@ -21,19 +21,19 @@ using namespace NxA::Serato;
 #pragma mark Structures
 
 typedef struct {
-    unsigned char tag[4];
-    unsigned char size[4];
+    byte tag[4];
+    byte size[4];
 } SeratoCueTagHeaderStruct;
 
 typedef struct {
-    unsigned char tag[4];
-    unsigned char size[4];
-    unsigned char index[2];
-    unsigned char position[4];
-    unsigned char color[4];
-    unsigned char loop_enabled;
-    unsigned char loop_locked;
-    unsigned char label[0];
+    byte tag[4];
+    byte size[4];
+    byte index[2];
+    byte position[4];
+    byte color[4];
+    byte loop_enabled;
+    byte loop_locked;
+    byte label[0];
 } SeratoCueTagStruct;
 
 #pragma mark Constructors & Destructors
@@ -44,7 +44,7 @@ CueMarker::CueMarker(NxA::Internal::Object::Pointer const& initial_internal) :
 
 #pragma mark Factory Methods
 
-CueMarker::Pointer CueMarker::cueMarkerWith(const char* id3TagStart)
+CueMarker::Pointer CueMarker::cueMarkerWith(const byte* id3TagStart)
 {
     auto tagStruct = reinterpret_cast<const SeratoCueTagStruct*>(id3TagStart);
 

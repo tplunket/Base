@@ -13,10 +13,13 @@
 #include "TrackFiles/ID3TrackFile.hpp"
 #include "Base64.hpp"
 
+#include <Base/Base.hpp>
+
 #include <taglib/generalencapsulatedobjectframe.h>
 #include <taglib/id3v2tag.h>
 #include <taglib/attachedpictureframe.h>
 
+using namespace NxA;
 using namespace NxA::Serato;
 using namespace TagLib;
 using namespace std;
@@ -28,30 +31,30 @@ static const string emptyString("");
 #pragma mark Structures
 
 typedef struct {
-    unsigned char dummy;
-    unsigned char mimeType[25];
-    unsigned char filename;
-    unsigned char description[16];
-    unsigned char majorVersion;
-    unsigned char minorVersion;
+    byte dummy;
+    byte mimeType[25];
+    byte filename;
+    byte description[16];
+    byte majorVersion;
+    byte minorVersion;
 } SeratoGeobBodyHeaderStruct;
 
 typedef struct {
-    unsigned char majorVersion;
-    unsigned char minorVersion;
-    unsigned char data[0];
+    byte majorVersion;
+    byte minorVersion;
+    byte data[0];
 } SeratoGeobObjectStruct;
 
 #pragma mark Utility Functions
 
 static bool p_isAValidGeobFrame(const ID3v2::GeneralEncapsulatedObjectFrame* frame)
 {
-    String frameID(frame->frameID().data());
+    TagLib::String frameID(reinterpret_cast<char*>(frame->frameID().data()));
     if (frameID != "GEOB") {
         return false;
     }
 
-    String mimeType = frame->mimeType();
+    TagLib::String mimeType = frame->mimeType();
     return mimeType == "application/octet-stream";
 }
 
@@ -98,7 +101,7 @@ void ID3TrackFile::p_readMarkers(void)
             const ByteVector frameObject = frame->object();
 
             SeratoGeobObjectStruct* objectData = (SeratoGeobObjectStruct*)frameObject.data();
-            this->p_readMarkersV2FromBase64Data((char*)objectData->data, encodedDataSize);
+            this->p_readMarkersV2FromBase64Data(objectData->data, encodedDataSize);
         }
         else if (description == "Serato BeatGrid") {
             uint32_t dataSize = frame->size() - sizeof(SeratoGeobBodyHeaderStruct);
@@ -106,7 +109,7 @@ void ID3TrackFile::p_readMarkers(void)
 
             SeratoGeobObjectStruct* headerStruct = (SeratoGeobObjectStruct*)frameObject.data();
             if ((headerStruct->majorVersion == 1) && (headerStruct->minorVersion == 0)) {
-                this->p_readGridMarkersFrom((char*)headerStruct->data, dataSize);
+                this->p_readGridMarkersFrom(headerStruct->data, dataSize);
             }
         }
     }

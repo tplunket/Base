@@ -38,9 +38,9 @@ typedef struct {
 
 #pragma mark Utility Functions
 
-static const char* p_nextTagPositionAfterTagNamed(const string tagName, const char* currentTagPosition)
+static const byte* p_nextTagPositionAfterTagNamed(const string tagName, const byte* currentTagPosition)
 {
-    const char* parserPosition = currentTagPosition;
+    const byte* parserPosition = currentTagPosition;
 
     parserPosition += tagName.length() + 1;
     uint32_t tagSize = Platform::bigEndianUInt32ValueAt(parserPosition);
@@ -49,13 +49,13 @@ static const char* p_nextTagPositionAfterTagNamed(const string tagName, const ch
     return parserPosition;
 }
 
-static Blob::Pointer p_markerV2TagDataFrom(const char* tagStart)
+static Blob::Pointer p_markerV2TagDataFrom(const byte* tagStart)
 {
-    const string tagName(tagStart);
+    const string tagName(reinterpret_cast<const char*>(tagStart));
     size_t sizeOfNameField = tagName.length() + 1;
     const size_t sizeOfSizeField = 4;
 
-    const char* sizePosition = tagStart + sizeOfNameField;
+    const byte* sizePosition = tagStart + sizeOfNameField;
     size_t tagSize = Platform::bigEndianUInt32ValueAt(sizePosition) + sizeOfNameField + sizeOfSizeField;
 
     return Blob::blobWithMemoryAndSize(tagStart, tagSize);
@@ -63,7 +63,7 @@ static Blob::Pointer p_markerV2TagDataFrom(const char* tagStart)
 
 #pragma mark Instance Methods
 
-void TrackFile::p_readMarkersV2FromBase64Data(const char* markerV2Data, size_t totalSize)
+void TrackFile::p_readMarkersV2FromBase64Data(const byte* markerV2Data, size_t totalSize)
 {
     if (!totalSize) {
         return;
@@ -79,11 +79,11 @@ void TrackFile::p_readMarkersV2FromBase64Data(const char* markerV2Data, size_t t
     // -- FIXME: The data written by Serato sometimes contains an extra byte at the end.
     // -- This might be a bug in the decode method but since marker data is always more
     // -- than one byte long, we substract one here to make sure we don't go over the end.
-    const char* markerDataEnd = (const char*)markerStruct + decodedData->size() - 1;
-    const char* tagStart = (const char*)markerStruct->data;
+    const byte* markerDataEnd = (const byte*)markerStruct + decodedData->size() - 1;
+    const byte* tagStart = (const byte*)markerStruct->data;
 
     while (tagStart < markerDataEnd) {
-        string tagName(tagStart);
+        string tagName(reinterpret_cast<const char*>(tagStart));
 
         if (tagName == "CUE") {
             this->p_cueMarkers->append(CueMarker::cueMarkerWith(tagStart));
@@ -104,7 +104,7 @@ void TrackFile::p_addGridMarker(GridMarker::ConstPointer const& gridMarker)
     this->p_gridMarkers->append(GridMarker::gridMarkerWith(gridMarker));
 }
 
-void TrackFile::p_readGridMarkersFrom(const char* gridMarkerData, size_t totalSize)
+void TrackFile::p_readGridMarkersFrom(const byte* gridMarkerData, size_t totalSize)
 {
     if (!totalSize) {
         return;

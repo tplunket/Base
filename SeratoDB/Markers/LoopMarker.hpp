@@ -22,7 +22,7 @@ namespace NxA { namespace Serato {
         
     public:
         #pragma mark Factory Methods
-        static LoopMarker::Pointer loopMarkerWith(const char* id3TagStart);
+        static LoopMarker::Pointer loopMarkerWith(const byte* id3TagStart);
         static LoopMarker::Pointer loopMarkerWith(String::ConstPointer const& label,
                                                   uinteger32 startPositionInMilliseconds,
                                                   uinteger32 endPositionInMilliseconds,

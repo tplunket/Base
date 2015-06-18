@@ -46,7 +46,7 @@ namespace NxA { namespace Serato {
 
     protected:
         #pragma mark Protected Constructors
-        explicit TrackFile(const char* trackFilePath) :
+        explicit TrackFile(const character* trackFilePath) :
                             p_trackFilePath(std::make_unique<std::string>(trackFilePath)),
                             p_cueMarkers(CueMarker::Array::array()),
                             p_loopMarkers(LoopMarker::Array::array()),
@@ -61,8 +61,8 @@ namespace NxA { namespace Serato {
         TagLib::AudioProperties* p_audioProperties;
 
         #pragma mark Protected Instance Methods
-        void p_readMarkersV2FromBase64Data(const char* markerV2Data, size_t totalSize);
-        void p_readGridMarkersFrom(const char* gridMarkerData, size_t totalSize);
+        void p_readMarkersV2FromBase64Data(const byte* markerV2Data, size_t totalSize);
+        void p_readGridMarkersFrom(const byte* gridMarkerData, size_t totalSize);
         void p_addGridMarker(GridMarker::ConstPointer const& gridMarker);
         Blob::Pointer p_base64DataFromMarkersV2(void);
         Blob::Pointer p_gridMarkerDataFromGridMarkers(void);
@@ -105,19 +105,19 @@ namespace NxA { namespace Serato {
         LoopMarker::Array::ConstPointer const& loopMarkers(void) const;
         GridMarker::Array::ConstPointer const& gridMarkers(void) const;
 
-        virtual void setTitle(const char* title);
-        virtual void setArtist(const char* artist);
-        virtual void setGenre(const char* genre);
-        virtual void setKey(const char* key) = 0;
-        virtual void setComments(const char* comments);
-        virtual void setAlbum(const char* album);
-        virtual void setComposer(const char* composer);
-        virtual void setGrouping(const char* grouping) = 0;
-        virtual void setBpm(const char* bpm);
-        virtual void setTrackNumber(const uint32_t& trackNumber);
-        virtual void setRecordLabel(const char* recordLabel) = 0;
-        virtual void setRemixer(const char* remixer) = 0;
-        virtual void setYearReleased(const char* year) = 0;
+        virtual void setTitle(const character* title);
+        virtual void setArtist(const character* artist);
+        virtual void setGenre(const character* genre);
+        virtual void setKey(const character* key) = 0;
+        virtual void setComments(const character* comments);
+        virtual void setAlbum(const character* album);
+        virtual void setComposer(const character* composer);
+        virtual void setGrouping(const character* grouping) = 0;
+        virtual void setBpm(const character* bpm);
+        virtual void setTrackNumber(const uinteger32& trackNumber);
+        virtual void setRecordLabel(const character* recordLabel) = 0;
+        virtual void setRemixer(const character* remixer) = 0;
+        virtual void setYearReleased(const character* year) = 0;
 
         virtual void setArtwork(CharVectorPtr artwork) = 0;
 

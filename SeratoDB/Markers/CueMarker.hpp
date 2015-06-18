@@ -22,7 +22,7 @@ namespace NxA { namespace Serato {
 
     public:
         #pragma mark Factory Methods
-        static CueMarker::Pointer cueMarkerWith(const char* id3TagStart);
+        static CueMarker::Pointer cueMarkerWith(const byte* id3TagStart);
         static CueMarker::Pointer cueMarkerWith(String::ConstPointer const& label,
                                                 uinteger32 positionInMilliseconds,
                                                 uinteger16 index);

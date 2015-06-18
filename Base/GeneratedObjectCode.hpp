@@ -24,6 +24,7 @@
 #include "Base/Pointer.hpp"
 #include "Base/WeakPointer.hpp"
 #include "Base/Array.hpp"
+#include "Base/ConstArray.hpp"
 
 #include <memory>
 
@@ -53,6 +54,7 @@ namespace NxA {
             static NxA::Pointer<class_name> makeShared(void); \
         public: \
             using Pointer = NxA::Pointer<namespace_name::class_name>; \
+            using ConstPointer = NxA::ConstPointer<namespace_name::class_name>; \
             virtual ~class_name() \
             { \
                 printf("Destroying " NXA_STR_VALUE_FOR(namespace_name) "::" NXA_STR_VALUE_FOR(class_name) " at 0x%08lx.\n", (long)this); \
@@ -62,20 +64,22 @@ namespace NxA {
         protected: \
             static NxA::Pointer<class_name> makeShared(void); \
         public: \
-            using Pointer = NxA::Pointer<namespace_name::class_name>;
+            using Pointer = NxA::Pointer<namespace_name::class_name>; \
+            using ConstPointer = NxA::ConstPointer<namespace_name::class_name>;
 #endif
 
 #define NXA_GENERATED_DECLARATIONS_FOR(namespace_name, class_name) \
         protected: \
             struct class_name ## _constructor_access { }; \
             class_name() : class_name(namespace_name::class_name::makeInternal()) { } \
-            class_name(NxA::Pointer<NxA::Internal::Object> initial_internal); \
+            class_name(NxA::Pointer<NxA::Internal::Object> const& initial_internal); \
         NXA_GENERATED_SHARED_DECLARATIONS_FOR(namespace_name, class_name) \
         public: \
             explicit class_name(const class_name ## _constructor_access&) : class_name() { } \
             using WeakPointer = NxA::WeakPointer<namespace_name::class_name>; \
             using Array = NxA::Array<namespace_name::class_name>; \
-            virtual const NxA::Pointer<NxA::String> className(void) const; \
+            using ConstArray = NxA::ConstArray<namespace_name::class_name>; \
+            virtual const NxA::ConstPointer<NxA::String> className(void) const; \
         protected: \
             NxA::Pointer<namespace_name::Internal::class_name> internal; \
             static NxA::Pointer<NxA::Internal::Object> makeInternal(void);
@@ -87,7 +91,7 @@ namespace NxA {
             struct Internal_ ## class_name ## _constructor_access { }; \
         NXA_GENERATED_SHARED_DECLARATIONS_FOR(namespace_name::Internal, class_name) \
         public: \
-            explicit class_name(const Internal_ ## class_name ## _constructor_access&) : class_name() { }
+            explicit class_name(Internal_ ## class_name ## _constructor_access const&) : class_name() { }
 
 #if NXA_DEBUG_OBJECT_LIFECYCLE
 #define NXA_GENERATED_INTERNAL_IMPLEMENTATION_FOR(namespace_name, class_name) \
@@ -103,7 +107,7 @@ namespace NxA {
             printf("Calling makeShared for " NXA_STR_VALUE_FOR(namespace_name) "::" NXA_STR_VALUE_FOR(class_name) "\n"); \
             return NxA::Pointer<namespace_name::class_name>(std::make_shared<namespace_name::class_name>(namespace_name::class_name::class_name ## _constructor_access())); \
         } \
-        const NxA::Pointer<NxA::String> namespace_name::class_name::className(void) const \
+        const NxA::ConstPointer<NxA::String> namespace_name::class_name::className(void) const \
         { \
             return NxA::String::stringWithUTF8(NXA_STR_VALUE_FOR(namespace_name) "::" NXA_STR_VALUE_FOR(class_name)); \
         } \
@@ -124,7 +128,7 @@ namespace NxA {
         { \
             return NxA::Pointer<namespace_name::class_name>(std::make_shared<namespace_name::class_name>(namespace_name::class_name::class_name ## _constructor_access())); \
         } \
-        const NxA::Pointer<NxA::String> namespace_name::class_name::className(void) const \
+        const NxA::ConstPointer<NxA::String> namespace_name::class_name::className(void) const \
         { \
             return NxA::String::stringWithUTF8(NXA_STR_VALUE_FOR(namespace_name) "::" NXA_STR_VALUE_FOR(class_name)); \
         } \

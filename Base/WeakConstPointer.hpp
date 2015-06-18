@@ -21,30 +21,30 @@
 
 #pragma once
 
-#include "Base/WeakConstPointer.hpp"
+#include "Base/Pointer.hpp"
 
 #include <memory>
 
 namespace NxA {
-    template <class T> class WeakPointer : public WeakConstPointer<T> {
+    template <class T> class WeakConstPointer : private std::weak_ptr<T> {
     public:
         #pragma mark Constructors & Destructors
-        WeakPointer() { };
-        WeakPointer(Pointer<T> const& other) : WeakConstPointer<T>(other.toStdSharedPointer()) { }
-        WeakPointer(WeakPointer<T> const& other) : WeakConstPointer<T>(other.pointer) { }
-        ~WeakPointer() = default;
+        WeakConstPointer() { };
+        WeakConstPointer(Pointer<T> const& other) : std::weak_ptr<T>(other.toStdSharedPointer()) { }
+        WeakConstPointer(WeakPointer<T> const& other) : std::weak_ptr<T>(other.pointer) { }
+        ~WeakConstPointer() = default;
 
         #pragma mark Operators
-        T* operator->() {
-            return this->pointer.get();
+        const T* operator->() {
+            return this->get();
         }
-        T* operator->() const {
-            return this->pointer.get();
+        const T* operator->() const {
+            return this->get();
         }
 
         #pragma mark Instance Methods
         bool isValid(void) const {
-            return !this->pointer.expired();
+            return !this->expired();
         }
     };
 }

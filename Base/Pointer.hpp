@@ -21,53 +21,48 @@
 
 #pragma once
 
-#include <memory>
-#include <cassert>
+#include "Base/ConstPointer.hpp"
 
 namespace NxA {
     template <class T> class WeakPointer;
 
-    template <class T> class Pointer {
+    template <class T> class Pointer : public ConstPointer<T> {
         friend class WeakPointer<T>;
 
     public:
         #pragma mark Constructors & Destructors
-        Pointer() = delete;
-        Pointer(std::shared_ptr<T> const &other) : pointer(other) { }
-        Pointer(Pointer<T> const &other) : pointer(other.pointer) { }
-        template <class From> Pointer(Pointer<From> const &other) :
-                pointer(std::dynamic_pointer_cast<T>(other.toStdSharedPointer()))
+        Pointer(std::shared_ptr<T> const& other) : ConstPointer<T>(other) { };
+        Pointer(Pointer<T> const& other) : ConstPointer<T>(other) { }
+        template <class From> Pointer(Pointer<From> const& other) :
+                ConstPointer<T>(std::dynamic_pointer_cast<T>(other.toStdSharedPointer()))
         {
-            assert(this->pointer.get() != nullptr);
+            assert(this->get() != nullptr);
         }
+        ~Pointer() = default;
 
         #pragma mark Operators
+        T* operator->() const
+        {
+            return this->get();
+        }
         T* operator->()
         {
-            return this->pointer.get();
+            return static_cast<const Pointer<T>>(*this).operator->();
         }
-        const T* operator->() const
+        T& operator*() const
         {
-            return this->pointer.get();
+            return *this->get();
         }
         T& operator*()
         {
-            return *this->pointer.get();
-        }
-        const T& operator*() const
-        {
-            return *this->pointer.get();
+            return static_cast<const Pointer<T>>(*this).operator*();
         }
 
         #pragma mark Instance Methods
         std::shared_ptr<T> const& toStdSharedPointer(void) const
         {
-            return this->pointer;
+            return *this;
         }
-
-    private:
-        #pragma mark Instance Variables
-        std::shared_ptr<T> pointer;
     };
 }
 

@@ -21,30 +21,50 @@
 
 #pragma once
 
-#include "Base/WeakConstPointer.hpp"
-
 #include <memory>
+#include <cassert>
 
 namespace NxA {
-    template <class T> class WeakPointer : public WeakConstPointer<T> {
+    template <class T> class ConstWeakPointer;
+
+    template <class T> class ConstPointer : protected std::shared_ptr<T> {
+        friend class ConstWeakPointer<T>;
+
     public:
         #pragma mark Constructors & Destructors
-        WeakPointer() { };
-        WeakPointer(Pointer<T> const& other) : WeakConstPointer<T>(other.toStdSharedPointer()) { }
-        WeakPointer(WeakPointer<T> const& other) : WeakConstPointer<T>(other.pointer) { }
-        ~WeakPointer() = default;
+        ConstPointer() = delete;
+        ConstPointer(std::shared_ptr<T> const& other) : std::shared_ptr<T>(other) { }
+        ConstPointer(ConstPointer<T> const& other) : std::shared_ptr<T>(other) { }
+        template <class From> ConstPointer(ConstPointer<From> const& other) :
+            std::shared_ptr<T>(std::dynamic_pointer_cast<T>(other.toStdSharedPointer()))
+        {
+            assert(this->get() != nullptr);
+        }
+        ~ConstPointer() = default;
 
         #pragma mark Operators
-        T* operator->() {
-            return this->pointer.get();
+        const T* operator->() const
+        {
+            return this->get();
         }
-        T* operator->() const {
-            return this->pointer.get();
+        const T* operator->()
+        {
+            return static_cast<const ConstPointer<T>>(*this).operator->();
+        }
+        const T& operator*() const
+        {
+            return *this->get();
+        }
+        const T& operator*()
+        {
+            return static_cast<const ConstPointer<T>>(*this).operator*();
         }
 
         #pragma mark Instance Methods
-        bool isValid(void) const {
-            return !this->pointer.expired();
+        std::shared_ptr<const T> const& toStdSharedPointer(void) const
+        {
+            return this;
         }
     };
 }
+

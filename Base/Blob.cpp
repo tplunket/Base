@@ -53,7 +53,7 @@ Blob::Pointer Blob::blobWithCapacity(count length)
     return newBlob;
 }
 
-Blob::Pointer Blob::blobWithMemoryAndSizeInBytes(const void* other, count length)
+Blob::Pointer Blob::blobWithMemoryAndSize(const void* other, count length)
 {
     auto newBlob = Blob::makeShared();
     newBlob->internal->data = Internal::Blob::InternalVector(static_cast<const char*>(other),

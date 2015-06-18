@@ -139,7 +139,7 @@ Blob::ConstPointer String::toUTF16(void) const
         characters = Internal::String::convertEndiannessOfUTF16Characters(characters, length);
     }
 
-    auto newBlob = Blob::blobWithMemoryAndSizeInBytes(reinterpret_cast<const character*>(characters), length);
+    auto newBlob = Blob::blobWithMemoryAndSize(reinterpret_cast<const character*>(characters), length);
 
     if (Platform::endianOrder == Platform::LitleEndian) {
         free((void*)characters);

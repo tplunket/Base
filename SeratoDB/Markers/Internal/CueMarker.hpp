@@ -31,7 +31,7 @@ namespace NxA { namespace Serato { namespace Internal {
         NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, CueMarker);
 
         #pragma mark Instance Variables
-        uinteger32 positionInMilliSeconds;
+        uinteger32 positionInMilliseconds;
 
         uinteger16 index;
 

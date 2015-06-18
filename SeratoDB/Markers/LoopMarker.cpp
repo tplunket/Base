@@ -62,8 +62,8 @@ LoopMarker::Pointer LoopMarker::loopMarkerWith(String::ConstPointer const& label
                                                uinteger16 index)
 {
     auto newMarker = LoopMarker::makeShared();
-    newMarker->internal->startPositionInMilliSeconds = startPositionInMilliseconds;
-    newMarker->internal->endPositionInMilliSeconds = endPositionInMilliseconds;
+    newMarker->internal->startPositionInMilliseconds = startPositionInMilliseconds;
+    newMarker->internal->endPositionInMilliseconds = endPositionInMilliseconds;
     newMarker->internal->index = index;
     newMarker->internal->label = label;
 
@@ -82,12 +82,12 @@ LoopMarker::Pointer LoopMarker::loopMarkerWith(LoopMarker::ConstPointer const& o
 
 uinteger32 LoopMarker::startPositionInMilliseconds(void) const
 {
-    return internal->startPositionInMilliSeconds;
+    return internal->startPositionInMilliseconds;
 }
 
 uinteger32 LoopMarker::endPositionInMilliseconds(void) const
 {
-    return internal->endPositionInMilliSeconds;
+    return internal->endPositionInMilliseconds;
 }
 
 uinteger16 LoopMarker::index(void) const

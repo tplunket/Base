@@ -58,7 +58,7 @@ CueMarker::Pointer CueMarker::cueMarkerWith(String::ConstPointer const& label,
                                             uinteger16 index)
 {
     auto newMarker = CueMarker::makeShared();
-    newMarker->internal->positionInMilliSeconds = positionInMilliseconds;
+    newMarker->internal->positionInMilliseconds = positionInMilliseconds;
     newMarker->internal->index = index;
     newMarker->internal->label = label;
 
@@ -74,7 +74,7 @@ CueMarker::Pointer CueMarker::cueMarkerWith(CueMarker::ConstPointer const& other
 
 uint32_t CueMarker::positionInMilliseconds(void) const
 {
-    return internal->positionInMilliSeconds;
+    return internal->positionInMilliseconds;
 }
 
 uint16_t CueMarker::index(void) const

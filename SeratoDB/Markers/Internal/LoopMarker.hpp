@@ -31,8 +31,8 @@ namespace NxA { namespace Serato { namespace Internal {
         NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, LoopMarker);
 
         #pragma mark Instance Variable
-        uinteger32 startPositionInMilliSeconds;
-        uinteger32 endPositionInMilliSeconds;
+        uinteger32 startPositionInMilliseconds;
+        uinteger32 endPositionInMilliseconds;
 
         uinteger16 index;
 

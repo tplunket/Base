@@ -216,5 +216,5 @@ void CrateOrderFile::saveIfModified(void) const
     }
     result->append("[end record]\n");
 
-    File::writeToFile(this->p_crateOrderFilePath, result->toUTF16());
+    File::writeBlobToFileAt(result->toUTF16(), this->p_crateOrderFilePath);
 }

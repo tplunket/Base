@@ -190,7 +190,7 @@ void Crate::saveIfModifiedAndRecurseToChildren(void) const
             tag->addTo(outputData);
         }
 
-        File::writeToFile(this->p_crateFilePath, outputData);
+        File::writeBlobToFileAt(outputData, this->p_crateFilePath);
     }
 
     for (auto& crate : *this->p_childrenCrates) {

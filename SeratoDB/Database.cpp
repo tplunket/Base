@@ -195,6 +195,6 @@ void Database::saveIfModified(void) const
             tag->addTo(outputData);
         }
 
-        File::writeToFile(this->p_databaseFilePath, outputData);
+        File::writeBlobToFileAt(outputData, this->p_databaseFilePath);
     }
 }

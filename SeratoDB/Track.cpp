@@ -158,8 +158,8 @@ Track::Track(const char* trackFilePath, const char* locatedOnVolumePath) :
              p_loopMarkers(make_unique<LoopMarkerVector>()),
              p_gridMarkers(make_unique<GridMarkerVector>())
 {
-    String::Pointer relativePath = File::removePrefixFromPath(String::stringWithUTF8(locatedOnVolumePath),
-                                                              String::stringWithUTF8(trackFilePath));
+    auto relativePath = File::removePrefixFromPath(String::stringWithUTF8(locatedOnVolumePath),
+                                                   String::stringWithUTF8(trackFilePath));
     TagVectorPtr tags(make_unique<TagVector>());
     tags->push_back(make_unique<PathTag>(NxASeratoTrackFilePathTag, relativePath->toUTF8()));
 
@@ -317,8 +317,8 @@ void Track::p_readMarkers(void)
 
 String::ConstPointer Track::trackFilePath(void) const
 {
-    const String::Pointer& pathFromRootFolder = this->p_pathForSubTagForIdentifier(NxASeratoTrackFilePathTag);
-    String::Pointer trackFilePath = File::joinPaths(this->p_rootFolder, pathFromRootFolder);
+    auto& pathFromRootFolder = this->p_pathForSubTagForIdentifier(NxASeratoTrackFilePathTag);
+    auto trackFilePath = File::joinPaths(this->p_rootFolder, pathFromRootFolder);
     return trackFilePath;
 }
 

@@ -29,7 +29,7 @@ using namespace std;
 
 static String::Pointer p_crateNameIfValidCrateOrEmptyIfNot(String::ConstPointer const& name)
 {
-    String::Pointer result = String::string();
+    auto result = String::string();
 
     if (name->hasPrefix("[crate]")) {
         result = name->subString(7, name->length() - 7);
@@ -77,7 +77,7 @@ static StringVectorPtr p_readCratesNamesInCrateOrderFile(String::ConstPointer co
 {
     StringVectorPtr cratesInOrder(make_unique<StringVector>());
 
-    const Blob::Pointer crateOrderFile = File::readFileAt(crateOrderFilePath);
+    auto crateOrderFile = File::readFileAt(crateOrderFilePath);
     if (crateOrderFile->size()) {
         auto textAsString = String::stringWithUTF16(crateOrderFile);
         auto lines = textAsString->splitBySeperator('\n');

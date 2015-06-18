@@ -62,13 +62,13 @@ void ObjectTag::addSubTag(ConstTagPtr tag)
 
 void ObjectTag::addTo(Blob::Pointer const& destination) const
 {
-    Blob::Pointer subTagsRepresentation = Blob::blob();
+    auto subTagsRepresentation = Blob::blob();
     for (auto& identifierAndTag : this->p_subTagForIdentifier) {
         identifierAndTag.second->addTo(subTagsRepresentation);
     }
 
     size_t memoryNeededForHeaderInBytes = Tag::p_memoryNeededForTagHeader();
-    Blob::Pointer headerRepresentation = Blob::blobWithCapacity(memoryNeededForHeaderInBytes);
+    auto headerRepresentation = Blob::blobWithCapacity(memoryNeededForHeaderInBytes);
     void* tagAddress = headerRepresentation->data();
     Tag::p_setIdentifierForTagAt(this->identifier(), tagAddress);
     Tag::p_setDataSizeForTagAt(subTagsRepresentation->size(), tagAddress);

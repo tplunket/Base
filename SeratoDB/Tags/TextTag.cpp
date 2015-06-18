@@ -21,7 +21,7 @@ TextTag::TextTag(const void* tagAddress) : Tag(tagAddress), p_value(String::stri
 {
     count size = Tag::p_dataSizeInBytesForTagAt(tagAddress);
     const character* textToRead = static_cast<const character*>(p_dataForTagAt(tagAddress));
-    Blob::Pointer utf16Text = Blob::blobWithCharPointer(textToRead, size);
+    auto utf16Text = Blob::blobWithCharPointer(textToRead, size);
 
     this->p_value = String::stringWithUTF16(utf16Text);
 }
@@ -45,7 +45,7 @@ String::ConstPointer& TextTag::value(void)
 
 void TextTag::addTo(Blob::Pointer const& destination) const
 {
-    Blob::Pointer memoryRepresentation = Blob::blobWithCapacity(Tag::p_memoryNeededForTagHeader());
+    auto memoryRepresentation = Blob::blobWithCapacity(Tag::p_memoryNeededForTagHeader());
     size_t dataSize = this->p_value->length() * 2;
 
     void* tagAddress = memoryRepresentation->data();

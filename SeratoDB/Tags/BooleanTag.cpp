@@ -44,7 +44,7 @@ void BooleanTag::addTo(Blob::Pointer const& destination) const
 {
     size_t dataSize = 1;
     size_t memoryNeededInBytes = Tag::p_memoryNeededForTagHeader() + dataSize;
-    Blob::Pointer memoryRepresentation = Blob::blobWithCapacity(memoryNeededInBytes);
+    auto memoryRepresentation = Blob::blobWithCapacity(memoryNeededInBytes);
 
     void* tagAddress = memoryRepresentation->data();
     Tag::p_setIdentifierForTagAt(this->identifier(), tagAddress);

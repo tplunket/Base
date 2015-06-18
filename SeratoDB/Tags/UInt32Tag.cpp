@@ -30,7 +30,7 @@ uint32_t& UInt32Tag::value(void)
 void UInt32Tag::addTo(Blob::Pointer const& destination) const
 {
     size_t dataSize = 4;
-    Blob::Pointer memoryRepresentation = Blob::blobWithCapacity(Tag::p_memoryNeededForTagHeader() + dataSize);
+    auto memoryRepresentation = Blob::blobWithCapacity(Tag::p_memoryNeededForTagHeader() + dataSize);
 
     void* tagAddress = memoryRepresentation->data();
     Tag::p_setIdentifierForTagAt(this->identifier(), tagAddress);

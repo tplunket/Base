@@ -56,13 +56,13 @@ Crate::Crate(const char* crateFullName,
 
 bool Crate::isAValidCrateName(const char* crateFullName, const char* seratoFolderPath)
 {
-    String::Pointer crateFilePath = crateFilePathForCrateNameInSeratoFolder(crateFullName, seratoFolderPath);
+    auto crateFilePath = crateFilePathForCrateNameInSeratoFolder(crateFullName, seratoFolderPath);
     return File::fileExistsAt(crateFilePath);
 }
 
 bool Crate::isASmartCrateName(const char* crateFullName, const char* seratoFolderPath)
 {
-    String::Pointer crateFilePath = crateFilePathForSmartCrateNameInSeratoFolder(crateFullName, seratoFolderPath);
+    auto crateFilePath = crateFilePathForSmartCrateNameInSeratoFolder(crateFullName, seratoFolderPath);
     return File::fileExistsAt(crateFilePath);
 }
 
@@ -123,7 +123,7 @@ const CrateVector& Crate::crates(void) const
 
 void Crate::loadFromFile(void)
 {
-    Blob::Pointer crateFileData = File::readFileAt(this->p_crateFilePath);
+    auto crateFileData = File::readFileAt(this->p_crateFilePath);
     TagVectorPtr tags(TagFactory::parseTagsAt(crateFileData->data(), crateFileData->size()));
     if (!tags->size()) {
         return;
@@ -177,7 +177,7 @@ bool Crate::childrenCratesWereModified(void) const
 void Crate::saveIfModifiedAndRecurseToChildren(void) const
 {
     if (this->p_rootVolumePath.get() && this->p_tracksWereModified) {
-        Blob::Pointer outputData = Blob::blob();
+        auto outputData = Blob::blob();
 
         TagPtr versionTag(make_unique<TextTag>(NxASeratoCrateVersionTag, crateFileCurrentVersionString));
         versionTag->addTo(outputData);

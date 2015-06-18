@@ -73,8 +73,8 @@ void MP4TrackFile::p_readMarkers(void)
             return;
         }
 
-        CharVectorPtr decodedData = Base64::decodeBlock((const char*)encodedData.data(TagLib::String::UTF8).data(),
-                                                        encodedDataSize);
+        auto decodedData = Base64::decodeBlock((const char*)encodedData.data(TagLib::String::UTF8).data(),
+                                               encodedDataSize);
         const SeratoMP4MarkersHeaderStruct* headerStruct = (const SeratoMP4MarkersHeaderStruct*)decodedData->data();
         this->p_readMarkersV2FromBase64Data((const char*)headerStruct->data, decodedData->size() - sizeof(SeratoMP4MarkersHeaderStruct));
     }
@@ -87,8 +87,8 @@ void MP4TrackFile::p_readMarkers(void)
             return;
         }
 
-        CharVectorPtr decodedData = Base64::decodeBlock((const char*)encodedData.data(TagLib::String::UTF8).data(),
-                                                        encodedDataSize);
+        auto decodedData = Base64::decodeBlock((const char*)encodedData.data(TagLib::String::UTF8).data(),
+                                               encodedDataSize);
 
         const SeratoMP4MarkersHeaderStruct* headerStruct = (const SeratoMP4MarkersHeaderStruct*)decodedData->data();
         if ((headerStruct->majorVersion == 1) && (headerStruct->minorVersion == 0)) {

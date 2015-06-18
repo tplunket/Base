@@ -54,7 +54,7 @@ Database::Database(const char* seratoFolderPath) :
     p_tracks(make_unique<TrackVector>()),
     p_databaseIsValid(false)
 {
-    Blob::Pointer databaseFile = File::readFileAt(this->p_databaseFilePath);
+    auto databaseFile = File::readFileAt(this->p_databaseFilePath);
 
     TagVectorPtr tags(TagFactory::parseTagsAt(databaseFile->data(), databaseFile->size()));
     for (auto& tag : *tags) {
@@ -64,7 +64,7 @@ Database::Database(const char* seratoFolderPath) :
                 break;
             }
             case NxASeratoDatabaseVersionTag: {
-                String::Pointer& versionText = (dynamic_cast<TextTag&>(*tag)).value();
+                auto& versionText = (dynamic_cast<TextTag&>(*tag)).value();
                 if (!versionText->isEqualTo(databaseFileCurrentVersionString)) {
                     this->p_tracks->clear();
                     this->p_otherTags.clear();
@@ -93,8 +93,8 @@ Database::Database(const char* seratoFolderPath) :
 
 String::Pointer Database::versionAsStringForDatabaseIn(const char* seratoFolderPath)
 {
-    String::Pointer databaseFilePath = databaseFilePathForSeratoFolder(seratoFolderPath);
-    Blob::Pointer databaseFile = File::readFileAt(databaseFilePath);
+    auto databaseFilePath = databaseFilePathForSeratoFolder(seratoFolderPath);
+    auto databaseFile = File::readFileAt(databaseFilePath);
 
     TagVectorPtr tags(TagFactory::parseTagsAt(databaseFile->data(), databaseFile->size()));
     for (const TagPtr& tag : *(tags)) {
@@ -182,7 +182,7 @@ void Database::saveIfModified(void) const
     }
 
     if (someTracksWereModified) {
-        Blob::Pointer outputData = Blob::blob();
+        auto outputData = Blob::blob();
 
         TagPtr versionTag(make_unique<TextTag>(NxASeratoDatabaseVersionTag, databaseFileCurrentVersionString));
         versionTag->addTo(outputData);

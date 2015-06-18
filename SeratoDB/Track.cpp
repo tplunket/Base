@@ -135,9 +135,9 @@ Track::Track(TagPtr trackTag, const char* locatedOnVolumePath) :
              p_wasModified(false),
              p_trackTag(move(trackTag)),
              p_rootFolder(String::stringWithUTF8(locatedOnVolumePath)),
-             p_cueMarkers(make_unique<CueMarkerVector>()),
-             p_loopMarkers(make_unique<LoopMarkerVector>()),
-             p_gridMarkers(make_unique<GridMarkerVector>())
+             p_cueMarkers(CueMarker::Array::array()),
+             p_loopMarkers(LoopMarker::Array::array()),
+             p_gridMarkers(GridMarker::Array::array())
 {
     this->p_loadTrackFile();
 
@@ -154,9 +154,9 @@ Track::Track(TagPtr trackTag, const char* locatedOnVolumePath) :
 Track::Track(const char* trackFilePath, const char* locatedOnVolumePath) :
              p_wasModified(true),
              p_rootFolder(String::stringWithUTF8(locatedOnVolumePath)),
-             p_cueMarkers(make_unique<CueMarkerVector>()),
-             p_loopMarkers(make_unique<LoopMarkerVector>()),
-             p_gridMarkers(make_unique<GridMarkerVector>())
+             p_cueMarkers(CueMarker::Array::array()),
+             p_loopMarkers(LoopMarker::Array::array()),
+             p_gridMarkers(GridMarker::Array::array())
 {
     auto relativePath = File::removePrefixFromPath(String::stringWithUTF8(locatedOnVolumePath),
                                                    String::stringWithUTF8(trackFilePath));
@@ -299,19 +299,19 @@ void Track::p_unloadTrackFile(void)
 
 void Track::p_readMarkers(void)
 {
-    const CueMarkerVector& cueMarkers = this->p_trackFile->cueMarkers();
-    for (auto& marker : cueMarkers) {
-        this->p_cueMarkers->push_back(make_unique<CueMarker>(*marker));
+    auto& cueMarkers = this->p_trackFile->cueMarkers();
+    for (auto& marker : *cueMarkers) {
+        this->p_cueMarkers->append(CueMarker::cueMarkerWith(marker));
     }
 
-    const LoopMarkerVector& loopMarkers = this->p_trackFile->loopMarkers();
-    for (auto& marker : loopMarkers) {
-        this->p_loopMarkers->push_back(make_unique<LoopMarker>(*marker));
+    auto& loopMarkers = this->p_trackFile->loopMarkers();
+    for (auto& marker : *loopMarkers) {
+        this->p_loopMarkers->append(LoopMarker::loopMarkerWith(marker));
     }
 
-    const GridMarkerVector& gridMarkers = this->p_trackFile->gridMarkers();
-    for (auto& marker : gridMarkers) {
-        this->p_gridMarkers->push_back(make_unique<GridMarker>(*marker));
+    auto& gridMarkers = this->p_trackFile->gridMarkers();
+    for (auto& marker : *gridMarkers) {
+        this->p_gridMarkers->append(GridMarker::gridMarkerWith(marker));
     }
 }
 
@@ -422,19 +422,19 @@ const uint32_t& Track::dateAddedInSecondsSinceJanuary1st1970(void) const
     return this->p_uint32ForSubTagForIdentifier(NxASeratoTrackDateAddedTag);
 }
 
-const CueMarkerVector& Track::cueMarkers(void) const
+CueMarker::Array::ConstPointer const& Track::cueMarkers(void) const
 {
-    return *(this->p_cueMarkers);
+    return this->p_cueMarkers;
 }
 
-const LoopMarkerVector& Track::loopMarkers(void) const
+LoopMarker::Array::ConstPointer const& Track::loopMarkers(void) const
 {
-    return *(this->p_loopMarkers);
+    return this->p_loopMarkers;
 }
 
-const GridMarkerVector& Track::gridMarkers(void) const
+GridMarker::Array::ConstPointer const& Track::gridMarkers(void) const
 {
-    return *(this->p_gridMarkers);
+    return this->p_gridMarkers;
 }
 
 void Track::setTitle(const char* title)
@@ -517,21 +517,21 @@ void Track::setDateAddedInSecondsSinceJanuary1st1970(const uint32_t& dateAdded)
     this->p_setUInt32ForSubTagForIdentifier(dateAdded, NxASeratoTrackDateAddedTag);
 }
 
-void Track::setCueMarkers(CueMarkerVectorPtr markers)
+void Track::setCueMarkers(CueMarker::Array::Pointer const& markers)
 {
-    this->p_cueMarkers = move(markers);
+    this->p_cueMarkers = markers;
     this->p_wasModified = true;
 }
 
-void Track::setLoopMarkers(LoopMarkerVectorPtr markers)
+void Track::setLoopMarkers(LoopMarker::Array::Pointer const& markers)
 {
-    this->p_loopMarkers = move(markers);
+    this->p_loopMarkers = markers;
     this->p_wasModified = true;
 }
 
-void Track::setGridMarkers(GridMarkerVectorPtr markers)
+void Track::setGridMarkers(GridMarker::Array::Pointer const& markers)
 {
-    this->p_gridMarkers = move(markers);
+    this->p_gridMarkers = markers;
     this->p_wasModified = true;
 }
 
@@ -564,26 +564,26 @@ void Track::saveToTrackFile(void)
     trackFile.setYearReleased(this->year()->toUTF8());
     trackFile.setTrackNumber(this->trackNumber());
 
-    CueMarkerVectorPtr cueMarkers = make_unique<CueMarkerVector>();
+    auto cueMarkers = CueMarker::Array::array();
     for (auto& marker : *(this->p_cueMarkers)) {
-        CueMarkerPtr markerCopy = make_unique<CueMarker>(*marker);
-        cueMarkers->push_back(move(markerCopy));
+        auto markerCopy = CueMarker::cueMarkerWith(marker);
+        cueMarkers->append(markerCopy);
     }
-    trackFile.setCueMarkers(move(cueMarkers));
+    trackFile.setCueMarkers(cueMarkers);
 
-    LoopMarkerVectorPtr loopMarkers = make_unique<LoopMarkerVector>();
+    auto loopMarkers = LoopMarker::Array::array();
     for (auto& marker : *(this->p_loopMarkers)) {
-        LoopMarkerPtr markerCopy = make_unique<LoopMarker>(*marker);
-        loopMarkers->push_back(move(markerCopy));
+        auto markerCopy = LoopMarker::loopMarkerWith(marker);
+        loopMarkers->append(markerCopy);
     }
-    trackFile.setLoopMarkers(move(loopMarkers));
+    trackFile.setLoopMarkers(loopMarkers);
 
-    GridMarkerVectorPtr gridMarkers = make_unique<GridMarkerVector>();
+    auto gridMarkers = GridMarker::Array::array();
     for (auto& marker : *(this->p_gridMarkers)) {
-        GridMarkerPtr markerCopy = make_unique<GridMarker>(*marker);
-        gridMarkers->push_back(move(markerCopy));
+        auto markerCopy = GridMarker::gridMarkerWith(marker);
+        gridMarkers->append(markerCopy);
     }
-    trackFile.setGridMarkers(move(gridMarkers));
+    trackFile.setGridMarkers(gridMarkers);
 
     this->p_saveTrackFile();
 

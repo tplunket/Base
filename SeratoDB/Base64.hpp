@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include <SeratoDB/Utility.hpp>
+#include <Base/Base.hpp>
 
 namespace NxA { namespace Serato {
     #pragma mark Class Declaration
@@ -20,7 +20,7 @@ namespace NxA { namespace Serato {
     {
     public:
         #pragma mark Class Methods
-        static CharVectorPtr decodeBlock(const char* code_in, size_t length_in);
-        static CharVectorPtr encodeBlock(const char* plaintext_in, int length_in);
+        static Blob::Pointer decodeBlock(const void* code_in, count length_in);
+        static Blob::Pointer encodeBlock(const void* plaintext_in, count length_in);
     };
 } }

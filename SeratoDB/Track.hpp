@@ -40,9 +40,9 @@ namespace NxA { namespace Serato {
 
         bool p_wasModified;
 
-        CueMarkerVectorPtr p_cueMarkers;
-        LoopMarkerVectorPtr p_loopMarkers;
-        GridMarkerVectorPtr p_gridMarkers;
+        CueMarker::Array::Pointer p_cueMarkers;
+        LoopMarker::Array::Pointer p_loopMarkers;
+        GridMarker::Array::Pointer p_gridMarkers;
 
         #pragma mark Private Instance Methods
         inline bool p_containsAValidTrackTag(void) const;
@@ -90,9 +90,9 @@ namespace NxA { namespace Serato {
         const uint32_t& dateModifiedInSecondsSinceJanuary1st1970(void) const;
         const uint32_t& dateAddedInSecondsSinceJanuary1st1970(void) const;
 
-        const CueMarkerVector& cueMarkers(void) const;
-        const LoopMarkerVector& loopMarkers(void) const;
-        const GridMarkerVector& gridMarkers(void) const;
+        CueMarker::Array::ConstPointer const& cueMarkers(void) const;
+        LoopMarker::Array::ConstPointer const& loopMarkers(void) const;
+        GridMarker::Array::ConstPointer const& gridMarkers(void) const;
 
         void setTitle(const char* title);
         void setArtist(const char* artist);
@@ -111,9 +111,9 @@ namespace NxA { namespace Serato {
         void setDateModifiedInSecondsSinceJanuary1st1970(const uint32_t& dateModified);
         void setDateAddedInSecondsSinceJanuary1st1970(const uint32_t& dateAdded);
 
-        void setCueMarkers(CueMarkerVectorPtr markers);
-        void setLoopMarkers(LoopMarkerVectorPtr markers);
-        void setGridMarkers(GridMarkerVectorPtr markers);
+        void setCueMarkers(CueMarker::Array::Pointer const& markers);
+        void setLoopMarkers(LoopMarker::Array::Pointer const& markers);
+        void setGridMarkers(GridMarker::Array::Pointer const& markers);
 
         bool wasModified(void) const;
         void addTo(Blob::Pointer const& destination) const;

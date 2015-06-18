@@ -67,7 +67,7 @@ void OGGTrackFile::p_readMarkers(void)
                     double position = stod(values[0].toCString());
                     double bpm = stod(values[1].substr(0, values[1].length() - 1).toCString());
 
-                    this->p_addGridMarker(make_unique<GridMarker>(position, bpm));
+                    this->p_addGridMarker(GridMarker::gridMarkerWith(position, bpm));
                 }
             }
         }
@@ -76,30 +76,30 @@ void OGGTrackFile::p_readMarkers(void)
 
 void OGGTrackFile::p_writeMarkers(void)
 {
-    if (this->cueMarkers().size() || this->loopMarkers().size()) {
+    if (this->cueMarkers()->length() || this->loopMarkers()->length()) {
         CharVector decodedData;
 
-        CharVectorPtr base64Data(this->p_base64DataFromMarkersV2());
-        base64Data->push_back('\0');
+        auto base64Data = this->p_base64DataFromMarkersV2();
+        base64Data->append(static_cast<character>(0));
 
         StringList newList;
-        newList.append(TagLib::String(base64Data->data()));
+        newList.append(TagLib::String((char*)base64Data->data()));
         this->p_properties["SERATO_MARKERS2"] = newList;
     }
     else {
         this->p_properties.erase("SERATO_MARKERS2");
     }
 
-    if (this->gridMarkers().size()) {
+    if (this->gridMarkers()->length()) {
         TagLib::String propertyString;
         char buffer[32];
 
         propertyString.append("00000001");
         propertyString.append("00000000");
-        ::snprintf(buffer, sizeof(buffer), "%08ld", this->gridMarkers().size());
+        ::snprintf(buffer, sizeof(buffer), "%08ld", this->gridMarkers()->length());
         propertyString.append(buffer);
 
-        for (auto& marker : this->gridMarkers()) {
+        for (auto& marker : *(this->gridMarkers())) {
             ::snprintf(buffer, sizeof(buffer), "(%0.6f,%0.6f)", marker->positionInSeconds(), marker->bpm());
             propertyString.append(buffer);
         }

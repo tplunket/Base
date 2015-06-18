@@ -11,13 +11,12 @@
 //
 
 #include "Markers/LoopMarker.hpp"
+#include "Markers/Internal/LoopMarker.hpp"
 
-#include <Base/Platform.hpp>
+NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, LoopMarker);
 
-#include <string>
-
+using namespace NxA;
 using namespace NxA::Serato;
-using namespace std;
 
 #pragma mark Structures
 
@@ -39,46 +38,75 @@ typedef struct {
     unsigned char label[0];
 } SeratoLoopTagStruct;
 
-#pragma mark Constructors
+#pragma mark Constructors & Destructors
 
-LoopMarker::LoopMarker(const char* id3TagStart)
+LoopMarker::LoopMarker(NxA::Internal::Object::Pointer const& initial_internal) :
+                       Object(initial_internal),
+                       internal(initial_internal),
+                       p_label(String::string()) { }
+
+#pragma mark Factory Methods
+
+LoopMarker::Pointer LoopMarker::loopMarkerWith(const char* id3TagStart)
 {
     const SeratoLoopTagStruct* tagStruct = (const SeratoLoopTagStruct* )id3TagStart;
 
-    this->p_startPositionInMilliSeconds = Platform::bigEndianUInt32ValueAt(tagStruct->position);
-    this->p_endPositionInMilliSeconds = Platform::bigEndianUInt32ValueAt(tagStruct->loopPosition);
-    this->p_index = Platform::bigEndianUInt16ValueAt(tagStruct->index);
-    this->p_label = (char*)tagStruct->label;
+    return LoopMarker::loopMarkerWith(String::stringWithUTF8(reinterpret_cast<const character*>(tagStruct->label)),
+                                      Platform::bigEndianUInt32ValueAt(tagStruct->position),
+                                      Platform::bigEndianUInt32ValueAt(tagStruct->loopPosition),
+                                      Platform::bigEndianUInt16ValueAt(tagStruct->index));
+}
+
+LoopMarker::Pointer LoopMarker::loopMarkerWith(String::ConstPointer const& label,
+                                               uinteger32 startPositionInMilliseconds,
+                                               uinteger32 endPositionInMilliseconds,
+                                               uinteger16 index)
+{
+    auto newMarker = LoopMarker::makeShared();
+    newMarker->p_startPositionInMilliSeconds = startPositionInMilliseconds;
+    newMarker->p_endPositionInMilliSeconds = endPositionInMilliseconds;
+    newMarker->p_index = index;
+    newMarker->p_label = label;
+
+    return newMarker;
+}
+
+LoopMarker::Pointer LoopMarker::loopMarkerWith(LoopMarker::ConstPointer const& other)
+{
+    return LoopMarker::loopMarkerWith(other->label(),
+                                      other->p_startPositionInMilliSeconds,
+                                      other->p_endPositionInMilliSeconds,
+                                      other->index());
 }
 
 #pragma mark Instance Methods
 
-uint32_t LoopMarker::startPositionInMilliseconds(void) const
+uinteger32 LoopMarker::startPositionInMilliseconds(void) const
 {
     return this->p_startPositionInMilliSeconds;
 }
 
-uint32_t LoopMarker::endPositionInMilliseconds(void) const
+uinteger32 LoopMarker::endPositionInMilliseconds(void) const
 {
     return this->p_endPositionInMilliSeconds;
 }
 
-uint16_t LoopMarker::index(void) const
+uinteger16 LoopMarker::index(void) const
 {
     return this->p_index;
 }
 
-const string& LoopMarker::label(void) const
+String::ConstPointer const& LoopMarker::label(void) const
 {
     return this->p_label;
 }
 
-void LoopMarker::addId3TagTo(CharVector& data) const
+void LoopMarker::addId3TagTo(Blob::Pointer const& data) const
 {
     SeratoLoopTagStruct header;
 
     memcpy(header.tag, "LOOP", 5);
-    size_t size = sizeof(SeratoLoopTagStruct) + this->p_label.length() + 1 - sizeof(SeratoLoopTagHeaderStruct);
+    size_t size = sizeof(SeratoLoopTagStruct) + this->p_label->length() + 1 - sizeof(SeratoLoopTagHeaderStruct);
     Platform::writeBigEndianUInt32ValueAt((uint32_t)size, &header.size);
     Platform::writeBigEndianUInt16ValueAt(this->p_index, &header.index);
     Platform::writeBigEndianUInt32ValueAt(this->p_startPositionInMilliSeconds, &header.position);
@@ -88,9 +116,7 @@ void LoopMarker::addId3TagTo(CharVector& data) const
     header.loop_enabled = 0;
     header.loop_locked = 0;
 
-    CharVector headerData((char*)&header, (char*)&header.label);
-    data.insert(data.end(), headerData.begin(), headerData.end());
-
-    data.insert(data.end(), this->p_label.begin(), this->p_label.end());
-    data.insert(data.end(), 0);
+    auto headerData = Blob::blobWithCharPointer(reinterpret_cast<const character*>(&header), sizeof(SeratoLoopTagStruct));
+    data->append(headerData);
+    data->append(this->p_label->toUTF8());
 }

@@ -12,22 +12,14 @@
 
 #pragma once
 
-#include <SeratoDB/Utility.hpp>
-
-#include <vector>
+#include <Base/Base.hpp>
 
 namespace NxA { namespace Serato {
-    #pragma mark Forward Declarations
-    class GridMarker;
+    NXA_GENERATED_FORWARD_DECLARATIONS_FOR(GridMarker);
 
-    #pragma mark Containers
-    typedef std::unique_ptr<const GridMarker> GridMarkerPtr;
-    typedef std::vector<GridMarkerPtr> GridMarkerVector;
-    typedef std::unique_ptr<GridMarkerVector> GridMarkerVectorPtr;
+    class GridMarker : public NxA::Object {
+        NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, GridMarker);
 
-    #pragma mark Class Declaration
-    class GridMarker
-    {
     private:
         #pragma mark Private Instance Variables
         float p_positionInSeconds;
@@ -35,12 +27,11 @@ namespace NxA { namespace Serato {
         float p_bpm;
 
     public:
-        #pragma mark Constructors
-        explicit GridMarker(const char* markerData);
-        explicit GridMarker(float positionInSeconds,
-                            float bpm) :
-                        p_positionInSeconds(positionInSeconds),
-                        p_bpm(bpm) { }
+        #pragma mark Factory Methods
+        static GridMarker::Pointer gridMarkerWith(const char* markerData);
+        static GridMarker::Pointer gridMarkerWith(float positionInSeconds,
+                                                  float bpm);
+        static GridMarker::Pointer gridMarkerWith(GridMarker::ConstPointer const& other);
 
         #pragma mark Class Methods
         static const char* nextGridMarkerAfter(const char* markerData);
@@ -49,6 +40,6 @@ namespace NxA { namespace Serato {
         float positionInSeconds(void) const;
         float bpm(void) const;
 
-        void addDataTo(CharVector& data) const;
+        void addDataTo(Blob::Pointer const& data) const;
     };
 } }

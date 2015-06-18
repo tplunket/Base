@@ -99,8 +99,8 @@ void MP4TrackFile::p_readMarkers(void)
 
 void MP4TrackFile::p_writeMarkers(void)
 {
-    if (this->cueMarkers().size() || this->loopMarkers().size()) {
-        CharVector decodedData;
+    if (this->cueMarkers()->length() || this->loopMarkers()->length()) {
+        auto decodedData = Blob::blob();
 
         SeratoMP4MarkersHeaderStruct header;
         memcpy(header.mimeType, "application/octet-stream", 25);
@@ -109,17 +109,15 @@ void MP4TrackFile::p_writeMarkers(void)
         header.majorVersion = 1;
         header.minorVersion = 1;
 
-        CharVector headerData((char*)&header, (char*)&header.data);
-        decodedData.insert(decodedData.end(), headerData.begin(), headerData.end());
+        auto headerData = Blob::blobWithCharPointer(reinterpret_cast<character*>(&header), sizeof(header));
+        decodedData->append(headerData);
+        decodedData->append(this->p_base64DataFromMarkersV2());
 
-        CharVectorPtr base64Data(this->p_base64DataFromMarkersV2());
-        decodedData.insert(decodedData.end(), base64Data->begin(), base64Data->end());
-
-        CharVectorPtr encodedData = Base64::encodeBlock(decodedData.data(), decodedData.size());
-        encodedData->insert(encodedData->end(), 0);
+        auto encodedData = Base64::encodeBlock(decodedData->data(), decodedData->size());
+        encodedData->append(static_cast<character>(0));
 
         StringList newList;
-        newList.append(TagLib::String(encodedData->data()));
+        newList.append(TagLib::String(reinterpret_cast<character*>(encodedData->data())));
 
         MP4::Item newItem(newList);
         (*this->p_itemListMap)["----:com.serato.dj:markersv2"] = newItem;
@@ -128,8 +126,8 @@ void MP4TrackFile::p_writeMarkers(void)
         (*this->p_itemListMap).erase("----:com.serato.dj:markersv2");
     }
 
-    if (this->gridMarkers().size()) {
-        CharVector decodedData;
+    if (this->gridMarkers()->length()) {
+        auto decodedData = Blob::blob();
 
         SeratoMP4MarkersHeaderStruct header;
         memcpy(header.mimeType, "application/octet-stream", 25);
@@ -138,17 +136,15 @@ void MP4TrackFile::p_writeMarkers(void)
         header.majorVersion = 1;
         header.minorVersion = 0;
 
-        CharVector headerData((char*)&header, (char*)&header.data);
-        decodedData.insert(decodedData.end(), headerData.begin(), headerData.end());
+        auto headerData = Blob::blobWithCharPointer(reinterpret_cast<character*>(&header), sizeof(header));
+        decodedData->append(headerData);
+        decodedData->append(this->p_gridMarkerDataFromGridMarkers());
 
-        CharVectorPtr base64Data(this->p_gridMarkerDataFromGridMarkers());
-        decodedData.insert(decodedData.end(), base64Data->begin(), base64Data->end());
-
-        CharVectorPtr encodedData = Base64::encodeBlock(decodedData.data(), decodedData.size());
-        encodedData->insert(encodedData->end(), 0);
+        auto encodedData = Base64::encodeBlock(decodedData->data(), decodedData->size());
+        encodedData->append(static_cast<character>(0));
 
         StringList newList;
-        newList.append(TagLib::String(encodedData->data()));
+        newList.append(TagLib::String(reinterpret_cast<character*>(encodedData->data())));
 
         MP4::Item newItem(newList);
         (*this->p_itemListMap)["----:com.serato.dj:beatgrid"] = newItem;

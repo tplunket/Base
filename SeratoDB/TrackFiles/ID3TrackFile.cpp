@@ -114,20 +114,18 @@ void ID3TrackFile::p_readMarkers(void)
 
 void ID3TrackFile::p_writeMarkersV2Frame(void)
 {
-    CharVector decodedData;
+    auto decodedData = Blob::blob();
 
     SeratoGeobObjectStruct header;
     header.majorVersion = 1;
     header.minorVersion = 1;
-    CharVector headerData((char*)&header, (char*)&header.data);
-    decodedData.insert(decodedData.end(), headerData.begin(), headerData.end());
+    auto headerData = Blob::blobWithCharPointer((char*)&header, sizeof(header));
+    decodedData->append(headerData);
+    decodedData->append(this->p_base64DataFromMarkersV2());
 
-    CharVectorPtr base64Data(this->p_base64DataFromMarkersV2());
-    decodedData.insert(decodedData.end(), base64Data->begin(), base64Data->end());
+    auto encodedData = Base64::encodeBlock(decodedData->data(), decodedData->size());
 
-    CharVectorPtr encodedData = Base64::encodeBlock(decodedData.data(), decodedData.size());
-
-    ByteVector newData(encodedData->data(), encodedData->size());
+    ByteVector newData((char*)encodedData->data(), encodedData->size());
 
     ID3v2::GeneralEncapsulatedObjectFrame* newFrame = new ID3v2::GeneralEncapsulatedObjectFrame(newData);
     newFrame->setTextEncoding(TagLib::String::Latin1);
@@ -148,18 +146,17 @@ void ID3TrackFile::p_writeMarkersV2Frame(void)
 
 void ID3TrackFile::p_writeGridMarkersFrame(void)
 {
-    CharVector data;
+    auto data = Blob::blob();
 
     SeratoGeobObjectStruct header;
     header.majorVersion = 1;
     header.minorVersion = 0;
-    CharVector headerData((char*)&header, (char*)&header.data);
-    data.insert(data.end(), headerData.begin(), headerData.end());
+    auto headerData = Blob::blobWithCharPointer((char*)&header, sizeof(header));
+    data->append(headerData);
+    data->append(this->p_gridMarkerDataFromGridMarkers());
 
-    CharVectorPtr gridMarkerData(this->p_gridMarkerDataFromGridMarkers());
-    data.insert(data.end(), gridMarkerData->begin(), gridMarkerData->end());
+    ByteVector newData((char*)data->data(), data->size());
 
-    ByteVector newData(data.data(), data.size());
     ID3v2::GeneralEncapsulatedObjectFrame* newFrame = new ID3v2::GeneralEncapsulatedObjectFrame(newData);
     newFrame->setTextEncoding(TagLib::String::Latin1);
     newFrame->setMimeType("application/octet-stream");
@@ -198,15 +195,15 @@ void ID3TrackFile::p_writeMarkers(void)
             geobFrames.erase(frameToDelete);
         }
     }
-    else if (this->cueMarkers().size() || this->loopMarkers().size() || this->gridMarkers().size()) {
+    else if (this->cueMarkers()->length() || this->loopMarkers()->length() || this->gridMarkers()->length()) {
         frameListMap["GEOB"] = ID3v2::FrameList();
     }
 
-    if (this->cueMarkers().size() || this->loopMarkers().size()) {
+    if (this->cueMarkers()->length() || this->loopMarkers()->length()) {
         this->p_writeMarkersV2Frame();
     }
 
-    if (this->gridMarkers().size()) {
+    if (this->gridMarkers()->length()) {
         this->p_writeGridMarkersFrame();
     }
 }

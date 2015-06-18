@@ -12,45 +12,32 @@
 
 #pragma once
 
-#include <SeratoDB/Utility.hpp>
-
-#include <vector>
+#include <Base/Base.hpp>
 
 namespace NxA { namespace Serato {
-    #pragma mark Forward declarations
-    class CueMarker;
+    NXA_GENERATED_FORWARD_DECLARATIONS_FOR(CueMarker);
 
-    #pragma mark Containers
-    typedef std::unique_ptr<const CueMarker> CueMarkerPtr;
-    typedef std::vector<CueMarkerPtr> CueMarkerVector;
-    typedef std::unique_ptr<CueMarkerVector> CueMarkerVectorPtr;
+    class CueMarker : public NxA::Object {
+        NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, CueMarker);
 
-    #pragma mark Class Declaration
-    class CueMarker
-    {
     private:
-        #pragma mark Private Instance Variable
-        uint32_t p_positionInMilliSeconds;
-
-        uint32_t p_index;
-
-        std::string p_label;
+        uinteger32 p_positionInMilliSeconds;
+        uinteger16 p_index;
+        String::ConstPointer p_label;
 
     public:
-        #pragma mark Constructors
-        explicit CueMarker(const char* id3TagStart);
-        explicit CueMarker(const std::string& label,
-                           uint32_t positionInMilliseconds,
-                           uint16_t index) :
-                            p_positionInMilliSeconds(positionInMilliseconds),
-                            p_index(index),
-                            p_label(label) { }
+        #pragma mark Factory Methods
+        static CueMarker::Pointer cueMarkerWith(const char* id3TagStart);
+        static CueMarker::Pointer cueMarkerWith(String::ConstPointer const& label,
+                                                uinteger32 positionInMilliseconds,
+                                                uinteger16 index);
+        static CueMarker::Pointer cueMarkerWith(CueMarker::ConstPointer const& other);
 
         #pragma mark Instance Methods
-        uint32_t positionInMilliseconds(void) const;
-        uint16_t index(void) const;
-        const std::string& label(void) const;
+        uinteger32 positionInMilliseconds(void) const;
+        uinteger16 index(void) const;
+        const String::ConstPointer& label(void) const;
 
-        void addId3TagTo(CharVector& data) const;
+        void addId3TagTo(Blob::Pointer const& data) const;
     };
 } }

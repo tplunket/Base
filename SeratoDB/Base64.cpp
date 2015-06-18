@@ -14,8 +14,8 @@
 
 #include <stdlib.h>
 
+using namespace NxA;
 using namespace NxA::Serato;
-using namespace std;
 
 #pragma mark Utility Functions
 
@@ -62,86 +62,79 @@ static inline char base64_encode_value(char value_in)
 
 #pragma mark Class Methods
 
-CharVectorPtr Base64::decodeBlock(const char* code_in, size_t length_in)
+Blob::Pointer Base64::decodeBlock(const void* code_in, count length_in)
 {
-    if (!length_in) {
-        return CharVectorPtr();
+    if (length_in) {
+        const char* codechar = reinterpret_cast<const char*>(code_in);
+        const char* code_in_end = reinterpret_cast<const char*>(code_in) + length_in;
+
+        auto buffer = Blob::blobWithCapacity(length_in);
+        char* plaintext_out = reinterpret_cast<char*>(buffer->data());
+        char* plaintext_out_end = plaintext_out + length_in;
+        char* plainchar = plaintext_out;
+        char fragment;
+
+        *plainchar = 0;
+
+        while (plainchar < plaintext_out_end) {
+            codechar = base64_decode_loop(codechar, code_in_end, fragment);
+            if (!codechar) {
+                return Blob::blobWithCharPointer(plaintext_out, plainchar - plaintext_out);
+            }
+
+            *plainchar = (fragment & 0x03f) << 2;
+
+            codechar = base64_decode_loop(codechar, code_in_end, fragment);
+            if (!codechar) {
+                return Blob::blobWithCharPointer(plaintext_out, plainchar - plaintext_out);
+            }
+
+            *plainchar++ |= (fragment & 0x030) >> 4;
+            if (plainchar >= plaintext_out_end) {
+                break;
+            }
+
+            *plainchar = (fragment & 0x00f) << 4;
+
+            codechar = base64_decode_loop(codechar, code_in_end, fragment);
+            if (!codechar) {
+                return Blob::blobWithCharPointer(plaintext_out, plainchar - plaintext_out);
+            }
+
+            *plainchar++ |= (fragment & 0x03c) >> 2;
+            if (plainchar >= plaintext_out_end) {
+                break;
+            }
+
+            *plainchar = (fragment & 0x003) << 6;
+            
+            codechar = base64_decode_loop(codechar, code_in_end, fragment);
+            if (!codechar) {
+                return Blob::blobWithCharPointer(plaintext_out, plainchar - plaintext_out);
+            }
+            
+            *plainchar++ |= (fragment & 0x03f);
+        }
     }
 
-    const char* codechar = code_in;
-    const char* code_in_end = code_in + length_in;
-
-    CharVector buffer(length_in);
-    char* plaintext_out = buffer.data();
-    char* plaintext_out_end = plaintext_out + length_in;
-    char* plainchar = plaintext_out;
-    char fragment;
-    CharVectorPtr result;
-
-    *plainchar = 0;
-
-    while (plainchar < plaintext_out_end) {
-        codechar = base64_decode_loop(codechar, code_in_end, fragment);
-        if (!codechar) {
-            result = make_unique<CharVector>(plaintext_out, plainchar);
-            break;
-        }
-
-        *plainchar = (fragment & 0x03f) << 2;
-
-        codechar = base64_decode_loop(codechar, code_in_end, fragment);
-        if (!codechar) {
-            result = make_unique<CharVector>(plaintext_out, plainchar);
-            break;
-        }
-
-        *plainchar++ |= (fragment & 0x030) >> 4;
-        if (plainchar >= plaintext_out_end) {
-            break;
-        }
-
-        *plainchar = (fragment & 0x00f) << 4;
-
-        codechar = base64_decode_loop(codechar, code_in_end, fragment);
-        if (!codechar) {
-            result = make_unique<CharVector>(plaintext_out, plainchar);
-            break;
-        }
-
-        *plainchar++ |= (fragment & 0x03c) >> 2;
-        if (plainchar >= plaintext_out_end) {
-            break;
-        }
-
-        *plainchar = (fragment & 0x003) << 6;
-
-        codechar = base64_decode_loop(codechar, code_in_end, fragment);
-        if (!codechar) {
-            result = make_unique<CharVector>(plaintext_out, plainchar);
-            break;
-        }
-
-        *plainchar++ |= (fragment & 0x03f);
-    }
-
-    return move(result);
+    return Blob::blob();
 }
 
-CharVectorPtr Base64::encodeBlock(const char* plaintext_in, int length_in)
+Blob::Pointer Base64::encodeBlock(const void* plaintext_in, count length_in)
 {
-    const char* plainchar = plaintext_in;
-    const char* const plaintextend = plaintext_in + length_in;
+    const char* plainchar = reinterpret_cast<const char*>(plaintext_in);
+    const char* const plaintextend = reinterpret_cast<const char*>(plaintext_in) + length_in;
     char* code_out = (char*)malloc(length_in * 2);
     char* code_out_end = code_out + (length_in * 2);
     char* codechar = code_out;
     char charToOutput = 0;
     char fragment;
-    CharVectorPtr result;
+    auto result = Blob::blob();
 
     while (1) {
         if (plainchar == plaintextend) {
             *codechar++ = '\n';
-            result = make_unique<CharVector>(code_out, codechar);
+            result = Blob::blobWithCharPointer(code_out, codechar - code_out);
             break;
         }
 
@@ -163,7 +156,7 @@ CharVectorPtr Base64::encodeBlock(const char* plaintext_in, int length_in)
             *codechar++ = '=';
             *codechar++ = '\n';
 
-            result = make_unique<CharVector>(code_out, codechar);
+            result = Blob::blobWithCharPointer(code_out, codechar - code_out);
             break;
         }
 
@@ -184,7 +177,7 @@ CharVectorPtr Base64::encodeBlock(const char* plaintext_in, int length_in)
             *codechar++ = '=';
             *codechar++ = '\n';
 
-            result = make_unique<CharVector>(code_out, codechar);
+            result = Blob::blobWithCharPointer(code_out, codechar - code_out);
             break;
         }
 
@@ -204,5 +197,5 @@ CharVectorPtr Base64::encodeBlock(const char* plaintext_in, int length_in)
 
     free(code_out);
 
-    return move(result);
+    return result;
 }

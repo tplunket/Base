@@ -11,12 +11,12 @@
 //
 
 #include "Markers/GridMarker.hpp"
+#include "Markers/Internal/GridMarker.hpp"
 
-#include <Base/Platform.hpp>
+NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, GridMarker);
 
 using namespace NxA;
 using namespace NxA::Serato;
-using namespace std;
 
 #pragma mark Structures
 
@@ -26,14 +26,34 @@ typedef struct {
     unsigned char endOfStruct[0];
 } GridMarkerStruct;
 
-#pragma mark Constructors
+#pragma mark Constructors & Destructors
 
-GridMarker::GridMarker(const char* markerData)
+GridMarker::GridMarker(NxA::Internal::Object::Pointer const& initial_internal) :
+                       Object(initial_internal),
+                       internal(initial_internal) { }
+
+#pragma mark Factory Methods
+
+GridMarker::Pointer GridMarker::gridMarkerWith(const char* markerData)
 {
     const GridMarkerStruct* gridMarker = (const GridMarkerStruct* )markerData;
 
-    this->p_positionInSeconds = Platform::bigEndianFloatValueAt(gridMarker->positionInSeconds);
-    this->p_bpm = Platform::bigEndianFloatValueAt(gridMarker->bpm);
+    return GridMarker::gridMarkerWith(Platform::bigEndianFloatValueAt(gridMarker->positionInSeconds),
+                                      Platform::bigEndianFloatValueAt(gridMarker->bpm));
+}
+
+GridMarker::Pointer GridMarker::gridMarkerWith(float positionInSeconds, float bpm)
+{
+    auto newMarker = GridMarker::makeShared();
+    newMarker->p_positionInSeconds = positionInSeconds;
+    newMarker->p_bpm = bpm;
+
+    return newMarker;
+}
+
+GridMarker::Pointer GridMarker::gridMarkerWith(GridMarker::ConstPointer const& other)
+{
+    return GridMarker::gridMarkerWith(other->positionInSeconds(), other->bpm());
 }
 
 #pragma mark Class Methods
@@ -55,13 +75,13 @@ float GridMarker::bpm(void) const
     return this->p_bpm;
 }
 
-void GridMarker::addDataTo(CharVector& data) const
+void GridMarker::addDataTo(Blob::Pointer const& data) const
 {
     GridMarkerStruct marker;
 
     Platform::writeBigEndianFloatValueAt(this->p_positionInSeconds, marker.positionInSeconds);
     Platform::writeBigEndianFloatValueAt(this->p_bpm, marker.bpm);
 
-    CharVector markerData((char*)&marker, (char*)&marker.endOfStruct);
-    data.insert(data.end(), markerData.begin(), markerData.end());
+    auto headerData = Blob::blobWithCharPointer(reinterpret_cast<const character*>(&marker), sizeof(GridMarkerStruct));
+    data->append(headerData);
 }

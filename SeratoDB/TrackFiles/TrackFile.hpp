@@ -22,6 +22,8 @@
 #include <taglib/tpropertymap.h>
 #include <taglib/audioproperties.h>
 
+#include <Base/Base.hpp>
+
 #include <string>
 
 namespace NxA { namespace Serato {
@@ -37,18 +39,19 @@ namespace NxA { namespace Serato {
     {
     private:
         #pragma mark Protected Instance Variables
-        CueMarkerVectorPtr p_cueMarkers;
-        LoopMarkerVectorPtr p_loopMarkers;
-        GridMarkerVectorPtr p_gridMarkers;
-        CharVectorPtrVector p_otherTags;
+        CueMarker::Array::Pointer p_cueMarkers;
+        LoopMarker::Array::Pointer p_loopMarkers;
+        GridMarker::Array::Pointer p_gridMarkers;
+        Blob::Array::Pointer p_otherTags;
 
     protected:
         #pragma mark Protected Constructors
         explicit TrackFile(const char* trackFilePath) :
                             p_trackFilePath(std::make_unique<std::string>(trackFilePath)),
-                            p_cueMarkers(std::make_unique<CueMarkerVector>()),
-                            p_loopMarkers(std::make_unique<LoopMarkerVector>()),
-                            p_gridMarkers(std::make_unique<GridMarkerVector>()) { };
+                            p_cueMarkers(CueMarker::Array::array()),
+                            p_loopMarkers(LoopMarker::Array::array()),
+                            p_gridMarkers(GridMarker::Array::array()),
+                            p_otherTags(Blob::Array::array()) { };
 
         #pragma mark Protected Instance Variables
         ConstStringPtr p_trackFilePath;
@@ -60,9 +63,9 @@ namespace NxA { namespace Serato {
         #pragma mark Protected Instance Methods
         void p_readMarkersV2FromBase64Data(const char* markerV2Data, size_t sizeInBytes);
         void p_readGridMarkersFrom(const char* gridMarkerData, size_t sizeInBytes);
-        void p_addGridMarker(GridMarkerPtr gridMarker);
-        CharVectorPtr p_base64DataFromMarkersV2(void);
-        CharVectorPtr p_gridMarkerDataFromGridMarkers(void);
+        void p_addGridMarker(GridMarker::ConstPointer const& gridMarker);
+        Blob::Pointer p_base64DataFromMarkersV2(void);
+        Blob::Pointer p_gridMarkerDataFromGridMarkers(void);
         virtual void p_writeMarkers(void) = 0;
 
     public:
@@ -98,9 +101,9 @@ namespace NxA { namespace Serato {
 
         virtual CharVectorPtr artwork(void) const = 0;
         
-        const CueMarkerVector& cueMarkers(void) const;
-        const LoopMarkerVector& loopMarkers(void) const;
-        const GridMarkerVector& gridMarkers(void) const;
+        CueMarker::Array::ConstPointer const& cueMarkers(void) const;
+        LoopMarker::Array::ConstPointer const& loopMarkers(void) const;
+        GridMarker::Array::ConstPointer const& gridMarkers(void) const;
 
         virtual void setTitle(const char* title);
         virtual void setArtist(const char* artist);
@@ -118,9 +121,9 @@ namespace NxA { namespace Serato {
 
         virtual void setArtwork(CharVectorPtr artwork) = 0;
 
-        void setCueMarkers(CueMarkerVectorPtr markers);
-        void setLoopMarkers(LoopMarkerVectorPtr markers);
-        void setGridMarkers(GridMarkerVectorPtr markers);
+        void setCueMarkers(CueMarker::Array::Pointer const& markers);
+        void setLoopMarkers(LoopMarker::Array::Pointer const& markers);
+        void setGridMarkers(GridMarker::Array::Pointer const& markers);
 
         void saveChanges(void);
     };

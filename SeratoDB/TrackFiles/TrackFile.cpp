@@ -49,7 +49,7 @@ static const char* p_nextTagPositionAfterTagNamed(const string tagName, const ch
     return parserPosition;
 }
 
-static CharVectorPtr p_markerV2TagDataFrom(const char* tagStart)
+static Blob::Pointer p_markerV2TagDataFrom(const char* tagStart)
 {
     const string tagName(tagStart);
     size_t sizeOfNameField = tagName.length() + 1;
@@ -58,8 +58,7 @@ static CharVectorPtr p_markerV2TagDataFrom(const char* tagStart)
     const char* sizePosition = tagStart + sizeOfNameField;
     size_t tagSize = Platform::bigEndianUInt32ValueAt(sizePosition) + sizeOfNameField + sizeOfSizeField;
 
-    CharVectorPtr data(make_unique<CharVector>(tagStart, tagStart + tagSize));
-    return move(data);
+    return Blob::blobWithCharPointer(tagStart, tagSize);
 }
 
 #pragma mark Instance Methods
@@ -87,22 +86,22 @@ void TrackFile::p_readMarkersV2FromBase64Data(const char* markerV2Data, size_t s
         string tagName(tagStart);
 
         if (tagName == "CUE") {
-            this->p_cueMarkers->push_back(make_unique<CueMarker>(tagStart));
+            this->p_cueMarkers->append(CueMarker::cueMarkerWith(tagStart));
         }
         else if (tagName == "LOOP") {
-            this->p_loopMarkers->push_back(make_unique<LoopMarker>(tagStart));
+            this->p_loopMarkers->append(LoopMarker::loopMarkerWith(tagStart));
         }
         else {
-            this->p_otherTags.push_back(p_markerV2TagDataFrom(tagStart));
+            this->p_otherTags->append(p_markerV2TagDataFrom(tagStart));
         }
 
         tagStart = p_nextTagPositionAfterTagNamed(tagName, tagStart);
     }
 }
 
-void TrackFile::p_addGridMarker(GridMarkerPtr gridMarker)
+void TrackFile::p_addGridMarker(GridMarker::ConstPointer const& gridMarker)
 {
-    this->p_gridMarkers->push_back(move(gridMarker));
+    this->p_gridMarkers->append(GridMarker::gridMarkerWith(gridMarker));
 }
 
 void TrackFile::p_readGridMarkersFrom(const char* gridMarkerData, size_t sizeInBytes)
@@ -115,22 +114,22 @@ void TrackFile::p_readGridMarkersFrom(const char* gridMarkerData, size_t sizeInB
     gridMarkerData += 4;
 
     for (uint32_t index = 0; index < numberOfMarkers; ++index) {
-        this->p_addGridMarker(make_unique<GridMarker>(gridMarkerData));
+        this->p_addGridMarker(GridMarker::gridMarkerWith(gridMarkerData));
 
         gridMarkerData = GridMarker::nextGridMarkerAfter(gridMarkerData);
     }
 }
 
-CharVectorPtr TrackFile::p_base64DataFromMarkersV2(void)
+Blob::Pointer TrackFile::p_base64DataFromMarkersV2(void)
 {
-    CharVector decodedData;
+    auto decodedData = Blob::blob();
 
     SeratoMarkerHeaderStruct markersHeader;
     markersHeader.majorVersion = 1;
     markersHeader.minorVersion = 1;
 
-    CharVector headerData((char*)&markersHeader, (char*)&markersHeader.data);
-    decodedData.insert(decodedData.end(), headerData.begin(), headerData.end());
+    auto headerData = Blob::blobWithCharPointer(reinterpret_cast<character*>(&markersHeader), sizeof(SeratoMarkerHeaderStruct));
+    decodedData->append(headerData);
 
     for (auto& marker : *this->p_cueMarkers) {
         marker->addId3TagTo(decodedData);
@@ -140,26 +139,26 @@ CharVectorPtr TrackFile::p_base64DataFromMarkersV2(void)
         marker->addId3TagTo(decodedData);
     }
 
-    for (auto& tagData : this->p_otherTags) {
-        decodedData.insert(decodedData.end(), tagData->begin(), tagData->end());
+    for (auto& tagData : *this->p_otherTags) {
+        decodedData->append(tagData);
     }
 
-    CharVectorPtr encodedData = Base64::encodeBlock(decodedData.data(), decodedData.size());
-    return move(encodedData);
+    auto encodedData = Base64::encodeBlock(decodedData->data(), decodedData->size());
+    return encodedData;
 }
 
-CharVectorPtr TrackFile::p_gridMarkerDataFromGridMarkers(void)
+Blob::Pointer TrackFile::p_gridMarkerDataFromGridMarkers(void)
 {
-    CharVectorPtr data(make_unique<CharVector>());
+    auto data = Blob::blob();
 
-    uint32_t numberOfMarkers;
-    Platform::writeBigEndianUInt32ValueAt(this->p_gridMarkers->size(), &numberOfMarkers);
+    uinteger32 numberOfMarkers;
+    Platform::writeBigEndianUInt32ValueAt(this->p_gridMarkers->length(), &numberOfMarkers);
 
-    CharVector numberOfMarkersData((char*)&numberOfMarkers, (char*)&numberOfMarkers + sizeof(numberOfMarkers));
-    data->insert(data->end(), numberOfMarkersData.begin(), numberOfMarkersData.end());
+    auto numberOfMarkersData = Blob::blobWithCharPointer(reinterpret_cast<character*>(&numberOfMarkers), sizeof(numberOfMarkers));
+    data->append(numberOfMarkersData);
 
     for (auto& marker : *(this->p_gridMarkers)) {
-        marker->addDataTo(*data);
+        marker->addDataTo(data);
     }
 
     return move(data);
@@ -291,19 +290,19 @@ uint32_t TrackFile::trackNumber(void) const
     return 0;
 }
 
-const CueMarkerVector& TrackFile::cueMarkers(void) const
+CueMarker::Array::ConstPointer const& TrackFile::cueMarkers(void) const
 {
-    return *(this->p_cueMarkers);
+    return this->p_cueMarkers;
 }
 
-const LoopMarkerVector& TrackFile::loopMarkers(void) const
+LoopMarker::Array::ConstPointer const& TrackFile::loopMarkers(void) const
 {
-    return *(this->p_loopMarkers);
+    return this->p_loopMarkers;
 }
 
-const GridMarkerVector& TrackFile::gridMarkers(void) const
+GridMarker::Array::ConstPointer const& TrackFile::gridMarkers(void) const
 {
-    return *(this->p_gridMarkers);
+    return this->p_gridMarkers;
 }
 
 void TrackFile::setTitle(const char* title)
@@ -358,19 +357,19 @@ void TrackFile::setTrackNumber(const uint32_t& trackNumber)
     }
 }
 
-void TrackFile::setCueMarkers(CueMarkerVectorPtr markers)
+void TrackFile::setCueMarkers(CueMarker::Array::Pointer const& markers)
 {
-    this->p_cueMarkers = move(markers);
+    this->p_cueMarkers = markers;
 }
 
-void TrackFile::setLoopMarkers(LoopMarkerVectorPtr markers)
+void TrackFile::setLoopMarkers(LoopMarker::Array::Pointer const& markers)
 {
-    this->p_loopMarkers = move(markers);
+    this->p_loopMarkers = markers;
 }
 
-void TrackFile::setGridMarkers(GridMarkerVectorPtr markers)
+void TrackFile::setGridMarkers(GridMarker::Array::Pointer const& markers)
 {
-    this->p_gridMarkers = move(markers);
+    this->p_gridMarkers = markers;
 }
 
 void TrackFile::saveChanges(void)

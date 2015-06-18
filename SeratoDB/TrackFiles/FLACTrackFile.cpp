@@ -82,8 +82,8 @@ void FLACTrackFile::p_readMarkers(void)
 
 void FLACTrackFile::p_writeMarkers(void)
 {
-    if (this->cueMarkers().size() || this->loopMarkers().size()) {
-        CharVector decodedData;
+    if (this->cueMarkers()->length() || this->loopMarkers()->length()) {
+        auto decodedData = Blob::blob();
 
         SeratoFLACMarkersHeaderStruct header;
         memcpy(header.mimeType, "application/octet-stream", 25);
@@ -92,25 +92,25 @@ void FLACTrackFile::p_writeMarkers(void)
         header.majorVersion = 1;
         header.minorVersion = 1;
 
-        CharVector headerData((char*)&header, (char*)&header.data);
-        decodedData.insert(decodedData.end(), headerData.begin(), headerData.end());
+        auto headerData = Blob::blobWithCharPointer((char*)&header, sizeof(header));
+        decodedData->append(headerData);
 
-        CharVectorPtr base64Data(this->p_base64DataFromMarkersV2());
-        decodedData.insert(decodedData.end(), base64Data->begin(), base64Data->end());
+        auto base64Data = this->p_base64DataFromMarkersV2();
+        decodedData->append(base64Data);
 
-        CharVectorPtr encodedData = Base64::encodeBlock(decodedData.data(), decodedData.size());
-        encodedData->insert(encodedData->end(), 0);
+        auto encodedData = Base64::encodeBlock(decodedData->data(), decodedData->size());
+        encodedData->append(static_cast<character>(0));
 
         StringList newList;
-        newList.append(TagLib::String(encodedData->data()));
+        newList.append(TagLib::String(reinterpret_cast<character*>(encodedData->data())));
         this->p_properties["SERATO_MARKERS_V2"] = newList;
     }
     else {
         this->p_properties.erase("SERATO_MARKERS_V2");
     }
 
-    if (this->gridMarkers().size()) {
-        CharVector decodedData;
+    if (this->gridMarkers()->length()) {
+        auto decodedData = Blob::blob();
 
         SeratoFLACMarkersHeaderStruct header;
         memcpy(header.mimeType, "application/octet-stream", 25);
@@ -119,17 +119,17 @@ void FLACTrackFile::p_writeMarkers(void)
         header.majorVersion = 1;
         header.minorVersion = 0;
 
-        CharVector headerData((char*)&header, (char*)&header.data);
-        decodedData.insert(decodedData.end(), headerData.begin(), headerData.end());
+        auto headerData = Blob::blobWithCharPointer((char*)&header, sizeof(header));
+        decodedData->append(headerData);
 
-        CharVectorPtr base64Data(this->p_gridMarkerDataFromGridMarkers());
-        decodedData.insert(decodedData.end(), base64Data->begin(), base64Data->end());
+        auto base64Data = this->p_gridMarkerDataFromGridMarkers();
+        decodedData->append(base64Data);
 
-        CharVectorPtr encodedData = Base64::encodeBlock(decodedData.data(), decodedData.size());
-        encodedData->insert(encodedData->end(), 0);
+        auto encodedData = Base64::encodeBlock(decodedData->data(), decodedData->size());
+        encodedData->append(static_cast<character>(0));
 
         StringList newList;
-        newList.append(TagLib::String(encodedData->data()));
+        newList.append(TagLib::String(reinterpret_cast<character*>(encodedData->data())));
         this->p_properties["SERATO_BEATGRID"] = newList;
     }
     else {

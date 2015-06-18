@@ -12,49 +12,38 @@
 
 #pragma once
 
-#include <SeratoDB/Utility.hpp>
-
-#include <vector>
+#include <Base/Base.hpp>
 
 namespace NxA { namespace Serato {
-    #pragma mark Forward declarations
-    class LoopMarker;
+    NXA_GENERATED_FORWARD_DECLARATIONS_FOR(LoopMarker);
 
-    #pragma mark Containers
-    typedef std::unique_ptr<const LoopMarker> LoopMarkerPtr;
-    typedef std::vector<LoopMarkerPtr> LoopMarkerVector;
-    typedef std::unique_ptr<LoopMarkerVector> LoopMarkerVectorPtr;
-
-    #pragma mark Class Declaration
-    class LoopMarker
-    {
+    class LoopMarker : public NxA::Object {
+        NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, LoopMarker);
+        
     private:
         #pragma mark Private Instance Variable
-        uint32_t p_startPositionInMilliSeconds;
-        uint32_t p_endPositionInMilliSeconds;
+        uinteger32 p_startPositionInMilliSeconds;
+        uinteger32 p_endPositionInMilliSeconds;
 
-        uint32_t p_index;
+        uinteger16 p_index;
 
-        std::string p_label;
+        String::ConstPointer p_label;
 
     public:
-        #pragma mark Constructors
-        explicit LoopMarker(const char* id3TagStart);
-        explicit LoopMarker(const std::string& label,
-                            uint32_t startPositionInMilliseconds,
-                            uint32_t endPositionInMilliseconds,
-                            uint16_t index) :
-                    p_startPositionInMilliSeconds(startPositionInMilliseconds),
-                    p_endPositionInMilliSeconds(endPositionInMilliseconds),
-                    p_index(index),
-                    p_label(label) { }
+        #pragma mark Factory Methods
+        static LoopMarker::Pointer loopMarkerWith(const char* id3TagStart);
+        static LoopMarker::Pointer loopMarkerWith(String::ConstPointer const& label,
+                                                  uinteger32 startPositionInMilliseconds,
+                                                  uinteger32 endPositionInMilliseconds,
+                                                  uinteger16 index);
+        static LoopMarker::Pointer loopMarkerWith(LoopMarker::ConstPointer const& other);
 
         #pragma mark Instance Methods
-        uint32_t startPositionInMilliseconds(void) const;
-        uint32_t endPositionInMilliseconds(void) const;
-        uint16_t index(void) const;
-        const std::string& label(void) const;
+        uinteger32 startPositionInMilliseconds(void) const;
+        uinteger32 endPositionInMilliseconds(void) const;
+        uinteger16 index(void) const;
+        String::ConstPointer const& label(void) const;
 
-        void addId3TagTo(CharVector& data) const;
+        void addId3TagTo(Blob::Pointer const& data) const;
     };
 } }

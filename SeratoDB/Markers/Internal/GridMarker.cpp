@@ -27,4 +27,5 @@ using namespace NxA::Serato::Internal;
 
 #pragma mark Constructors & Destructors
 
-GridMarker::GridMarker() : positionInSeconds(0.0f), bpm(0.0f) { }
+GridMarker::GridMarker() : positionInSeconds(0.0f),
+                           beatsPerMinute(0.0f) { }

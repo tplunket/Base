@@ -31,7 +31,7 @@ using namespace std;
 
 #pragma mark mark Class Methods
 
-Blob::ConstPointer File::readFileAt(String::ConstPointer const& path)
+Blob::Pointer File::readFileAt(String::ConstPointer const& path)
 {
     count fileSize = File::sizeOfFileAt(path);
     if (fileSize) {

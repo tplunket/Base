@@ -51,7 +51,7 @@ LoopMarker::Pointer LoopMarker::loopMarkerWith(const char* id3TagStart)
 {
     const SeratoLoopTagStruct* tagStruct = (const SeratoLoopTagStruct* )id3TagStart;
 
-    return LoopMarker::loopMarkerWith(String::stringWithUTF8(reinterpret_cast<const character*>(tagStruct->label)),
+    return LoopMarker::loopMarkerWith(String::stringWith(reinterpret_cast<const character*>(tagStruct->label)),
                                       Platform::bigEndianUInt32ValueAt(tagStruct->position),
                                       Platform::bigEndianUInt32ValueAt(tagStruct->loopPosition),
                                       Platform::bigEndianUInt16ValueAt(tagStruct->index));

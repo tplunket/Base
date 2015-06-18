@@ -100,7 +100,7 @@ String::Pointer Database::versionAsStringForDatabaseIn(const char* seratoFolderP
     for (const TagPtr& tag : *(tags)) {
         if (tag->identifier() == NxASeratoDatabaseVersionTag) {
             const TextTag* textTag = dynamic_cast<const TextTag*>(tag.get());
-            return String::stringWithString(textTag->value());
+            return String::stringWith(textTag->value());
         }
     }
 

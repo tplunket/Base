@@ -49,7 +49,7 @@ CueMarker::Pointer CueMarker::cueMarkerWith(const char* id3TagStart)
 {
     auto tagStruct = reinterpret_cast<const SeratoCueTagStruct*>(id3TagStart);
 
-    return CueMarker::cueMarkerWith(String::stringWithUTF8(reinterpret_cast<const character*>(tagStruct->label)),
+    return CueMarker::cueMarkerWith(String::stringWith(reinterpret_cast<const character*>(tagStruct->label)),
                                     Platform::bigEndianUInt32ValueAt(tagStruct->position),
                                     Platform::bigEndianUInt16ValueAt(tagStruct->index));
 }

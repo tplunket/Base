@@ -31,7 +31,7 @@ namespace NxA { namespace Serato {
         explicit TextTag(const void* tagAddress);
         explicit TextTag(const uint32_t& identifier, const char* value) :
                          Tag(identifier),
-                         p_value(String::stringWithUTF8(value)) { }
+                         p_value(String::stringWith(value)) { }
 
         #pragma mark Instance Methods
         const uint32_t& identifier(void) const;

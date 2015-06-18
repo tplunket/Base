@@ -134,7 +134,7 @@ static void p_debugPrintComparaison(const Track* track, const TrackFile* trackFi
 Track::Track(TagPtr trackTag, const char* locatedOnVolumePath) :
              p_wasModified(false),
              p_trackTag(move(trackTag)),
-             p_rootFolder(String::stringWithUTF8(locatedOnVolumePath)),
+             p_rootFolder(String::stringWith(locatedOnVolumePath)),
              p_cueMarkers(CueMarker::Array::array()),
              p_loopMarkers(LoopMarker::Array::array()),
              p_gridMarkers(GridMarker::Array::array())
@@ -153,13 +153,13 @@ Track::Track(TagPtr trackTag, const char* locatedOnVolumePath) :
 
 Track::Track(const char* trackFilePath, const char* locatedOnVolumePath) :
              p_wasModified(true),
-             p_rootFolder(String::stringWithUTF8(locatedOnVolumePath)),
+             p_rootFolder(String::stringWith(locatedOnVolumePath)),
              p_cueMarkers(CueMarker::Array::array()),
              p_loopMarkers(LoopMarker::Array::array()),
              p_gridMarkers(GridMarker::Array::array())
 {
-    auto relativePath = File::removePrefixFromPath(String::stringWithUTF8(locatedOnVolumePath),
-                                                   String::stringWithUTF8(trackFilePath));
+    auto relativePath = File::removePrefixFromPath(String::stringWith(locatedOnVolumePath),
+                                                   String::stringWith(trackFilePath));
     TagVectorPtr tags(make_unique<TagVector>());
     tags->push_back(make_unique<PathTag>(NxASeratoTrackFilePathTag, relativePath->toUTF8()));
 
@@ -240,7 +240,7 @@ void Track::p_setStringForSubTagForIdentifier(const char* value, const uint32_t&
     }
     else {
         TextTag& textTag = dynamic_cast<TextTag&>(trackObjectTag->subTagForIdentifier(identifier));
-        textTag.value() = String::stringWithUTF8(value);
+        textTag.value() = String::stringWith(value);
     }
 
     this->p_wasModified = true;
@@ -258,7 +258,7 @@ void Track::p_setPathForSubTagForIdentifier(const char* value, const uint32_t& i
     }
     else {
         PathTag& pathTag = dynamic_cast<PathTag&>(trackObjectTag->subTagForIdentifier(identifier));
-        pathTag.value() = String::stringWithUTF8(value);
+        pathTag.value() = String::stringWith(value);
     }
 
     this->p_wasModified = true;

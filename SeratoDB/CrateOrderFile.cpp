@@ -59,7 +59,7 @@ static StringVectorPtr p_cratesInSubCratesDirectory(const string& directory)
     if (pdir){
         errno = 0;
         while ((pent = readdir(pdir))){
-            auto fileName = String::stringWithUTF8(pent->d_name);
+            auto fileName = String::stringWith(pent->d_name);
             if (::p_filenameIsAValidCrateName(fileName)) {
                 crateNamesFound->push_back(make_unique<string>(p_crateNameFromFilename(fileName)->toUTF8()));
             }
@@ -148,7 +148,7 @@ CrateVectorPtr CrateOrderFile::p_childrenCratesOfCrateNamedUsingNameList(const s
     CrateVectorPtr cratesFound = make_unique<CrateVector>();
 
     while (it != end) {
-        auto fullCrateName = String::stringWithUTF8(it->get()->c_str());
+        auto fullCrateName = String::stringWith(it->get()->c_str());
         if (name.length() && !fullCrateName->hasPrefix(name.c_str())) {
             break;
         }
@@ -167,7 +167,7 @@ CrateVectorPtr CrateOrderFile::p_childrenCratesOfCrateNamedUsingNameList(const s
 
         ++it;
 
-        auto crateNameWithSeperator = String::stringWithString(fullCrateName);
+        auto crateNameWithSeperator = String::stringWith(fullCrateName);
         crateNameWithSeperator->append("%%");
 
         CrateVectorPtr childCrates = p_childrenCratesOfCrateNamedUsingNameList(std::string(crateNameWithSeperator->toUTF8()),

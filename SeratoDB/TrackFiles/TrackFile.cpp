@@ -246,7 +246,7 @@ string TrackFile::bpm(void) const
 
 size_t TrackFile::sizeInBytes(void) const
 {
-    return File::sizeOfFileAt(String::stringWithUTF8(this->p_trackFilePath->c_str()));
+    return File::sizeOfFileAt(String::stringWith(this->p_trackFilePath->c_str()));
 }
 
 uint32_t TrackFile::lengthInMilliseconds(void) const

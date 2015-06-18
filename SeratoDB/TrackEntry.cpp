@@ -25,8 +25,8 @@ using namespace std;
 TrackEntry::TrackEntry(const char* trackPath, const char* locatedOnVolumePath) :
                                    p_rootVolumePath(make_unique<string>(locatedOnVolumePath))
 {
-    auto entryPath = File::removePrefixFromPath(String::stringWithUTF8(locatedOnVolumePath),
-                                                String::stringWithUTF8(trackPath));
+    auto entryPath = File::removePrefixFromPath(String::stringWith(locatedOnVolumePath),
+                                                String::stringWith(trackPath));
 
     TagVectorPtr tags(make_unique<TagVector>());
     tags->push_back(make_unique<PathTag>(NxASeratoTrackEntryPathTag, entryPath->toUTF8()));
@@ -48,8 +48,8 @@ String::ConstPointer TrackEntry::trackFilePath(void) const
         if (trackObjectTag->hasSubTagForIdentifier(NxASeratoTrackEntryPathTag)) {
             const PathTag& pathTag = dynamic_cast<const PathTag&>(trackObjectTag->subTagForIdentifier(NxASeratoTrackEntryPathTag));
             auto& pathFromRootFolder = pathTag.value();
-            auto trackFilePath = File::joinPaths(String::stringWithUTF8(this->p_rootVolumePath->c_str()),
-                                                 String::stringWithUTF8(pathFromRootFolder->toUTF8()));
+            auto trackFilePath = File::joinPaths(String::stringWith(this->p_rootVolumePath->c_str()),
+                                                 String::stringWith(pathFromRootFolder->toUTF8()));
             return trackFilePath;
         }
     }

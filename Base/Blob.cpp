@@ -29,7 +29,8 @@ using namespace NxA;
 
 #pragma mark mark Constructors & Destructors
 
-Blob::Blob(Internal::Object::Pointer initial_internal) : Object(initial_internal), internal(initial_internal)
+Blob::Blob(Internal::Object::Pointer  const& initial_internal) :
+           Object(initial_internal), internal(initial_internal)
 {
 #if NXA_DEBUG_OBJECT_LIFECYCLE
     printf("Construct Blob at 0x%08lx.\n", (long)this);
@@ -60,7 +61,7 @@ Blob::Pointer Blob::blobWithCharPointer(const char* other, count length)
     return newBlob;
 }
 
-Blob::Pointer Blob::blobWithBlob(const Blob::Pointer& other)
+Blob::Pointer Blob::blobWithBlob(Blob::ConstPointer const& other)
 {
     auto newBlob = Blob::makeShared();
     newBlob->internal->data = other->internal->data;
@@ -87,7 +88,7 @@ const uinteger8* Blob::data(void) const
     return internal->data.data();
 }
 
-bool Blob::isEqualTo(const Blob::Pointer& other) const
+bool Blob::isEqualTo(Blob::ConstPointer const& other) const
 {
     return internal->data == other->internal->data;
 }
@@ -97,7 +98,7 @@ void Blob::clear(void)
     std::memset(this->data(), 0, this->size());
 }
 
-void Blob::append(const Blob::Pointer& other)
+void Blob::append(Blob::ConstPointer const& other)
 {
     internal->data.insert(internal->data.end(), other->internal->data.begin(), other->internal->data.end());
 }

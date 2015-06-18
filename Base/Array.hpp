@@ -22,8 +22,10 @@
 #pragma once
 
 #include "Base/Types.hpp"
+#include "Base/ConstPointer.hpp"
 #include "Base/Pointer.hpp"
 #include "Base/WeakPointer.hpp"
+#include "Base/WeakConstPointer.hpp"
 
 #include <vector>
 
@@ -36,8 +38,10 @@ namespace NxA {
         Array() { }
 
     public:
+        using ConstPointer = NxA::ConstPointer<Array>;
         using Pointer = NxA::Pointer<Array>;
         using WeakPointer = NxA::WeakPointer<Array>;
+        using WeakConstPointer = NxA::WeakConstPointer<Array>;
 
         #pragma mark Constructors & Destructors
         explicit Array(const constructor_access&) : Array() { };

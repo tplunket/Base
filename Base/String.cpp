@@ -35,7 +35,9 @@ using namespace NxA;
 
 #pragma mark mark Constructors & Destructors
 
-String::String(Internal::Object::Pointer initial_internal) : Object(initial_internal), internal(initial_internal)
+String::String(Internal::Object::Pointer const& initial_internal) :
+               Object(initial_internal),
+               internal(initial_internal)
 {
 #if NXA_DEBUG_OBJECT_LIFECYCLE
     printf("Construct String at 0x%08lx.\n", (long)this);
@@ -73,7 +75,7 @@ String::Pointer String::stringWithFormat(const character* format, ...)
     return String::stringWithUTF8(buffer);
 }
 
-String::Pointer String::stringWithUTF16(const Blob::Pointer& other)
+String::Pointer String::stringWithUTF16(Blob::ConstPointer const& other)
 {
     const integer16* characters = reinterpret_cast<const integer16*>(other->data());
     count length = other->size() / 2;
@@ -94,7 +96,7 @@ String::Pointer String::stringWithUTF16(const Blob::Pointer& other)
     return newString;
 }
 
-String::Pointer String::stringWithString(const String::Pointer& other)
+String::Pointer String::stringWithString(String::ConstPointer const& other)
 {
     auto newString = String::makeShared();
     newString->internal->value = other->internal->value;
@@ -104,9 +106,9 @@ String::Pointer String::stringWithString(const String::Pointer& other)
 
 #pragma mark Operators
 
-bool String::isEqualTo(String const& other) const
+bool String::isEqualTo(String::ConstPointer const& other) const
 {
-    return internal->value == other.internal->value;
+    return internal->value == other->internal->value;
 }
 
 bool String::isEqualTo(const character* other) const
@@ -121,7 +123,7 @@ count String::length(void) const
     return internal->value.size();
 }
 
-const String::Pointer String::description(void) const
+String::ConstPointer String::description(void) const
 {
     return String::stringWithUTF8(this->toUTF8());
 }
@@ -131,7 +133,7 @@ const character* String::toUTF8(void) const
     return internal->value.c_str();
 }
 
-Blob::Pointer String::toUTF16(void) const
+Blob::ConstPointer String::toUTF16(void) const
 {
     std::wstring_convert<std::codecvt_utf8_utf16<char16_t>,char16_t> convert;
     std::u16string u16 = convert.from_bytes(internal->value.c_str());
@@ -151,7 +153,7 @@ Blob::Pointer String::toUTF16(void) const
     return newBlob;
 }
 
-void String::append(const String::Pointer& other)
+void String::append(String::ConstPointer const& other)
 {
     internal->value.append(other->toUTF8());
 }
@@ -186,12 +188,12 @@ String::Pointer String::subString(count start, count end) const
     return newString;
 }
 
-bool String::hasPrefix(String::Pointer prefix) const
+bool String::hasPrefix(String::ConstPointer const& prefix) const
 {
     return this->hasPrefix(prefix->toUTF8());
 }
 
-bool String::hasPostfix(String::Pointer postfix) const
+bool String::hasPostfix(String::ConstPointer const& postfix) const
 {
     size_t pos = internal->value.rfind(postfix->toUTF8());
     if (pos == std::string::npos) {

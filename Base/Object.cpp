@@ -29,7 +29,7 @@ using namespace NxA;
 
 #pragma mark Constructors & Destructors
 
-Object::Object(Internal::Object::Pointer initial_internal) : internal(initial_internal)
+Object::Object(Internal::Object::Pointer const& initial_internal) : internal(initial_internal)
 {
 #if NXA_DEBUG_OBJECT_LIFECYCLE
     printf("Construct Object at 0x%08lx.\n", (long)this);
@@ -38,7 +38,7 @@ Object::Object(Internal::Object::Pointer initial_internal) : internal(initial_in
 
 #pragma mark Instance Methods
 
-const String::Pointer Object::description(void) const
+String::ConstPointer Object::description(void) const
 {
     return String::stringWithFormat("<%s at 0x%08lx>", this->className()->toUTF8(), this);
 }

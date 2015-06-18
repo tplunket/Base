@@ -41,7 +41,7 @@ Blob::ConstPointer File::readFileAt(String::ConstPointer const& path)
             file.read(fileData, fileSize);
             file.close();
 
-            auto result = Blob::blobWithCharPointer(fileData, fileSize);
+            auto result = Blob::blobWithMemoryAndSizeInBytes(fileData, fileSize);
             delete[] fileData;
 
             return result;

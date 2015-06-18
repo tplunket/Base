@@ -28,7 +28,7 @@
 
 #include <memory>
 
-#pragma mark Forward Declaration
+#pragma mark Forward Declarations
 
 namespace NxA {
     class String;

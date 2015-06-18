@@ -28,7 +28,7 @@
 #include <vector>
 
 namespace NxA {
-    template <class T> class Array {
+    template <class T> class Array : private std::vector<typename T::Pointer> {
     protected:
         struct constructor_access { };
 
@@ -51,7 +51,7 @@ namespace NxA {
         #pragma mark Operators
         const T& operator[] (integer index) const
         {
-            return this->values[index];
+            return (*this)[index];
         }
         T& operator[] (integer index)
         {
@@ -61,49 +61,45 @@ namespace NxA {
         #pragma mark Instance Methods
         typename std::vector<typename T::Pointer>::iterator begin() noexcept
         {
-            return this->values.begin();
+            return this->begin();
         }
         typename std::vector<typename T::Pointer>::const_iterator begin() const noexcept
         {
-            return this->values.begin();
+            return this->begin();
         }
         typename std::vector<typename T::Pointer>::iterator end() noexcept
         {
-            return this->values.end();
+            return this->end();
         }
         typename std::vector<typename T::Pointer>::const_iterator end() const noexcept
         {
-            return this->values.end();
+            return this->end();
         }
         typename std::vector<typename T::Pointer>::iterator cbegin() noexcept
         {
-            return this->values.end();
+            return this->cbegin();
         }
         typename std::vector<typename T::Pointer>::const_iterator cbegin() const noexcept
         {
-            return this->values.cbegin();
+            return this->cbegin();
         }
         typename std::vector<typename T::Pointer>::iterator cend() noexcept
         {
-            return this->values.cend();
+            return this->cend();
         }
         typename std::vector<typename T::Pointer>::const_iterator cend() const noexcept
         {
-            return this->values.end();
+            return this->cend();
         }
 
         count length(void) const
         {
-            return this->values.size();
+            return this->size();
         }
 
-        void append(const typename T::Pointer& object)
+        void append(typename T::Pointer const& object)
         {
-            this->values.push_back(object);
+            this->push_back(object);
         }
-
-    private:
-        #pragma mark Instance Variables
-        std::vector<typename T::Pointer> values;
     };
 }

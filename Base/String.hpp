@@ -35,10 +35,9 @@ namespace NxA {
     public:
         #pragma mark Factory Methods
         static String::Pointer string(void);
-        static String::Pointer stringWithUTF8(const character* other);
+        static String::Pointer stringWith(const character* format, ... );
+        static String::Pointer stringWith(String::ConstPointer const& other);
         static String::Pointer stringWithUTF16(NxA::ConstPointer<NxA::Blob> const& other);
-        static String::Pointer stringWithFormat(const character* format, ... );
-        static String::Pointer stringWithString(String::ConstPointer const& other);
 
         #pragma mark Operators
         bool isEqualTo(String::ConstPointer const& other) const;

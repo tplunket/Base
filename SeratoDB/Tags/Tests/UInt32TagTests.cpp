@@ -9,10 +9,12 @@
 //  please email info@nextaudiolabs.com.
 //
 
-#include "Base/Test.hpp"
 #include "Tags/UInt32Tag.hpp"
+#include "Base/Base.hpp"
+#include "Base/Test.hpp"
 
 using namespace testing;
+using namespace NxA;
 using namespace NxA::Serato;
 
 NXA_CONTAINS_TEST_SUITE_NAMED(SeratoDB_UInt32Tag_Tests);
@@ -44,13 +46,13 @@ TEST(SeratoDB_UInt32Tag, TagWrittenToData_HasCorrectOutput)
     UInt32Tag tag('vrsn', 0xDEADBEEF);
 
     // -- When.
-    CharVector destination;
+    auto destination = Blob::blob();
     tag.addTo(destination);
 
     // -- Then.
-    ASSERT_EQ(destination.size(), 12);
-    unsigned char expectedData[] = { 0x76, 0x72, 0x73, 0x6E, 0x00, 0x00, 0x00, 0x04, 0xDE, 0xAD, 0xBE, 0xEF };
-    for (uint32_t index = 0; index < 12; ++index) {
-        ASSERT_EQ((unsigned char )destination[index], expectedData[index]);
+    ASSERT_EQ(destination->size(), 12);
+    uinteger8 expectedData[] = { 0x76, 0x72, 0x73, 0x6E, 0x00, 0x00, 0x00, 0x04, 0xDE, 0xAD, 0xBE, 0xEF };
+    for (uint32_t index = 0; index < sizeof(expectedData); ++index) {
+        ASSERT_EQ((*destination)[index], expectedData[index]);
     }
 }

@@ -39,21 +39,21 @@ GridMarker::Pointer GridMarker::gridMarkerWith(const byte* markerData)
     const GridMarkerStruct* gridMarker = (const GridMarkerStruct* )markerData;
 
     return GridMarker::gridMarkerWith(Platform::bigEndianFloatValueAt(gridMarker->positionInSeconds),
-                                      Platform::bigEndianFloatValueAt(gridMarker->bpm));
+                                      Platform::bigEndianFloatValueAt(gridMarker->beatsPerMinute));
 }
 
-GridMarker::Pointer GridMarker::gridMarkerWith(float positionInSeconds, float bpm)
+GridMarker::Pointer GridMarker::gridMarkerWith(decimal positionInSeconds, decimal beatsPerMinute)
 {
     auto newMarker = GridMarker::makeShared();
     newMarker->internal->positionInSeconds = positionInSeconds;
-    newMarker->internal->bpm = bpm;
+    newMarker->internal->beatsPerMinute = beatsPerMinute;
 
     return newMarker;
 }
 
 GridMarker::Pointer GridMarker::gridMarkerWith(GridMarker::ConstPointer const& other)
 {
-    return GridMarker::gridMarkerWith(other->positionInSeconds(), other->bpm());
+    return GridMarker::gridMarkerWith(other->positionInSeconds(), other->beatsPerMinute());
 }
 
 #pragma mark Class Methods
@@ -65,14 +65,14 @@ const byte* GridMarker::nextGridMarkerAfter(const byte* markerData)
 
 #pragma mark Instance Methods
 
-float GridMarker::positionInSeconds(void) const
+decimal GridMarker::positionInSeconds(void) const
 {
     return internal->positionInSeconds;
 }
 
-float GridMarker::bpm(void) const
+decimal GridMarker::beatsPerMinute(void) const
 {
-    return internal->bpm;
+    return internal->beatsPerMinute;
 }
 
 void GridMarker::addDataTo(Blob::Pointer const& data) const
@@ -80,7 +80,7 @@ void GridMarker::addDataTo(Blob::Pointer const& data) const
     GridMarkerStruct marker;
 
     Platform::writeBigEndianFloatValueAt(this->positionInSeconds(), marker.positionInSeconds);
-    Platform::writeBigEndianFloatValueAt(this->bpm(), marker.bpm);
+    Platform::writeBigEndianFloatValueAt(this->beatsPerMinute(), marker.beatsPerMinute);
 
     auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<const character*>(&marker), sizeof(GridMarkerStruct));
     data->append(headerData);

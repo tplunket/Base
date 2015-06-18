@@ -101,7 +101,7 @@ void OGGTrackFile::p_writeMarkers(void)
         propertyString.append(buffer);
 
         for (auto& marker : *(this->gridMarkers())) {
-            ::snprintf(buffer, sizeof(buffer), "(%0.6f,%0.6f)", marker->positionInSeconds(), marker->bpm());
+            ::snprintf(buffer, sizeof(buffer), "(%0.6f,%0.6f)", marker->positionInSeconds(), marker->beatsPerMinute());
             propertyString.append(buffer);
         }
 

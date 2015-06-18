@@ -22,17 +22,17 @@ namespace NxA { namespace Serato {
 
     public:
         #pragma mark Factory Methods
-        static GridMarker::Pointer gridMarkerWith(float positionInSeconds,
-                                                  float bpm);
         static GridMarker::Pointer gridMarkerWith(const byte* markerData);
+        static GridMarker::Pointer gridMarkerWith(decimal positionInSeconds,
+                                                  decimal beatsPerMinute);
         static GridMarker::Pointer gridMarkerWith(GridMarker::ConstPointer const& other);
 
         #pragma mark Class Methods
         static const byte* nextGridMarkerAfter(const byte* markerData);
 
         #pragma mark Instance Methods
-        float positionInSeconds(void) const;
-        float bpm(void) const;
+        decimal positionInSeconds(void) const;
+        decimal beatsPerMinute(void) const;
 
         void addDataTo(Blob::Pointer const& data) const;
     };

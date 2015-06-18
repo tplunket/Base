@@ -51,7 +51,7 @@ Blob::ConstPointer File::readFileAt(String::ConstPointer const& path)
     return Blob::blob();
 }
 
-void File::writeToFile(String::ConstPointer const& path, Blob::ConstPointer const& content)
+void File::writeBlobToFileAt(Blob::ConstPointer const& content, String::ConstPointer const& path)
 {
     fstream file(path->toUTF8(), ios::out | ios::binary);
     file.write(reinterpret_cast<const char *>(content->data()), content->size());

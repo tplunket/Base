@@ -34,8 +34,8 @@ namespace NxA {
 
         #pragma mark Class Methods
         static Blob::ConstPointer readFileAt(String::ConstPointer const& path);
-        static void writeToFile(String::ConstPointer const& Path,
-                                Blob::ConstPointer const& content);
+        static void writeBlobToFileAt(Blob::ConstPointer const& content,
+                                      String::ConstPointer const& path);
         static void deleteFileAt(String::ConstPointer const& path);
 
         static String::Pointer joinPaths(String::ConstPointer const& first,

@@ -20,10 +20,10 @@ using namespace NxA::Serato;
 
 ObjectTag::ObjectTag(const void* tagAddress) : Tag(tagAddress)
 {
-    size_t dataSizeInBytes = Tag::p_dataSizeInBytesForTagAt(tagAddress);
+    size_t dataSize = Tag::p_dataSizeForTagAt(tagAddress);
     const void* dataAddress = Tag::p_dataForTagAt(tagAddress);
 
-    TagVectorPtr subTags = TagFactory::parseTagsAt(dataAddress, dataSizeInBytes);
+    TagVectorPtr subTags = TagFactory::parseTagsAt(dataAddress, dataSize);
     for (TagPtr& subTag : *(subTags)) {
         this->p_subTagForIdentifier[subTag->identifier()] = move(subTag);
     }
@@ -67,8 +67,8 @@ void ObjectTag::addTo(Blob::Pointer const& destination) const
         identifierAndTag.second->addTo(subTagsRepresentation);
     }
 
-    size_t memoryNeededForHeaderInBytes = Tag::p_memoryNeededForTagHeader();
-    auto headerRepresentation = Blob::blobWithCapacity(memoryNeededForHeaderInBytes);
+    size_t sizeNeededForHeader = Tag::p_memoryNeededForTagHeader();
+    auto headerRepresentation = Blob::blobWithCapacity(sizeNeededForHeader);
     void* tagAddress = headerRepresentation->data();
     Tag::p_setIdentifierForTagAt(this->identifier(), tagAddress);
     Tag::p_setDataSizeForTagAt(subTagsRepresentation->size(), tagAddress);

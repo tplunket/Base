@@ -18,8 +18,8 @@ using namespace NxA::Serato;
 #pragma mark Constructors
 
 BlobTag::BlobTag(const void* tagAddress) : Tag(tagAddress),
-    p_value(Blob::blobWithMemoryAndSizeInBytes(static_cast<const char*>(Tag::p_dataForTagAt(tagAddress)),
-                                      Tag::p_dataSizeInBytesForTagAt(tagAddress))) { }
+    p_value(Blob::blobWithMemoryAndSize(static_cast<const char*>(Tag::p_dataForTagAt(tagAddress)),
+                                        Tag::p_dataSizeForTagAt(tagAddress))) { }
 
 #pragma mark Instance Methods
 
@@ -36,8 +36,8 @@ Blob::ConstPointer& BlobTag::value(void)
 void BlobTag::addTo(Blob::Pointer const& destination) const
 {
     size_t dataSize = this->p_value->size();
-    size_t memoryNeededInBytes = Tag::p_memoryNeededForTagHeader() + dataSize;
-    auto memoryRepresentation = Blob::blobWithCapacity(memoryNeededInBytes);
+    size_t totalSizeNeeded = Tag::p_memoryNeededForTagHeader() + dataSize;
+    auto memoryRepresentation = Blob::blobWithCapacity(totalSizeNeeded);
 
     void* tagAddress = memoryRepresentation->data();
     Tag::p_setIdentifierForTagAt(this->identifier(), tagAddress);

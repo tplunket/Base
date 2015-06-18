@@ -66,10 +66,10 @@ TagPtr TagFactory::tagForBinaryRepresentationAt(const void* tagAddress)
     return move(newTag);
 }
 
-TagVectorPtr TagFactory::parseTagsAt(const void* firstTagAddress, size_t sizeFromFirstTagInBytes)
+TagVectorPtr TagFactory::parseTagsAt(const void* firstTagAddress, size_t sizeFromFirstTag)
 {
     const void* tagAddress = firstTagAddress;
-    const void* endOfTagsAddress = (unsigned char*)firstTagAddress + sizeFromFirstTagInBytes;
+    const void* endOfTagsAddress = (unsigned char*)firstTagAddress + sizeFromFirstTag;
 
     TagVectorPtr newTags = make_unique<TagVector>();
 

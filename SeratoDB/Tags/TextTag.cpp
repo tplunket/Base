@@ -19,9 +19,9 @@ using namespace NxA::Serato;
 
 TextTag::TextTag(const void* tagAddress) : Tag(tagAddress), p_value(String::string())
 {
-    count size = Tag::p_dataSizeInBytesForTagAt(tagAddress);
+    count size = Tag::p_dataSizeForTagAt(tagAddress);
     const character* textToRead = static_cast<const character*>(p_dataForTagAt(tagAddress));
-    auto utf16Text = Blob::blobWithMemoryAndSizeInBytes(textToRead, size);
+    auto utf16Text = Blob::blobWithMemoryAndSize(textToRead, size);
 
     this->p_value = String::stringWithUTF16(utf16Text);
 }

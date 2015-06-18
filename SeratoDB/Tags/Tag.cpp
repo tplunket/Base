@@ -34,17 +34,17 @@ void Tag::p_setIdentifierForTagAt(const uint32_t& identifier, const void* tagAdd
     Platform::writeBigEndianUInt32ValueAt(identifier, tagStructPtr->identifier);
 }
 
-size_t Tag::p_dataSizeInBytesForTagAt(const void* tagAddress)
+size_t Tag::p_dataSizeForTagAt(const void* tagAddress)
 {
     TagStruct* tagStructPtr = (TagStruct*)tagAddress;
-    unsigned long dataSizeInBytes = Platform::bigEndianUInt32ValueAt(tagStructPtr->length);
-    return dataSizeInBytes;
+    unsigned long dataSize = Platform::bigEndianUInt32ValueAt(tagStructPtr->length);
+    return dataSize;
 }
 
-void Tag::p_setDataSizeForTagAt(const size_t& dataSizeInBytes, const void* tagAddress)
+void Tag::p_setDataSizeForTagAt(const size_t& dataSize, const void* tagAddress)
 {
     TagStruct* tagStructPtr = (TagStruct*)tagAddress;
-    Platform::writeBigEndianUInt32ValueAt((uint32_t)dataSizeInBytes, tagStructPtr->length);
+    Platform::writeBigEndianUInt32ValueAt((uint32_t)dataSize, tagStructPtr->length);
 }
 
 size_t Tag::p_memoryNeededForTagHeader(void)
@@ -73,7 +73,7 @@ uint32_t Tag::identifierForTagAt(const void* tagAddress)
 
 const void* Tag::nextTagAfterBinaryRepresentationAt(const void* tagAddress)
 {
-    return (const unsigned char*)tagAddress + Tag::p_dataSizeInBytesForTagAt(tagAddress) + sizeof(TagStruct);
+    return (const unsigned char*)tagAddress + Tag::p_dataSizeForTagAt(tagAddress) + sizeof(TagStruct);
 }
 
 #pragma mark Instance Methods

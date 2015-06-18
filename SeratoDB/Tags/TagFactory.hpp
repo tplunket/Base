@@ -27,6 +27,6 @@ namespace NxA { namespace Serato {
         #pragma mark Class Methods
         static TagPtr tagForBinaryRepresentationAt(const void* tagAddress);
 
-        static TagVectorPtr parseTagsAt(const void* firstTagAddress, size_t sizeFromFirstTagInBytes);
+        static TagVectorPtr parseTagsAt(const void* firstTagAddress, size_t sizeFromFirstTag);
     };
 } }

@@ -61,8 +61,8 @@ namespace NxA { namespace Serato {
         TagLib::AudioProperties* p_audioProperties;
 
         #pragma mark Protected Instance Methods
-        void p_readMarkersV2FromBase64Data(const char* markerV2Data, size_t sizeInBytes);
-        void p_readGridMarkersFrom(const char* gridMarkerData, size_t sizeInBytes);
+        void p_readMarkersV2FromBase64Data(const char* markerV2Data, size_t totalSize);
+        void p_readGridMarkersFrom(const char* gridMarkerData, size_t totalSize);
         void p_addGridMarker(GridMarker::ConstPointer const& gridMarker);
         Blob::Pointer p_base64DataFromMarkersV2(void);
         Blob::Pointer p_gridMarkerDataFromGridMarkers(void);
@@ -84,7 +84,7 @@ namespace NxA { namespace Serato {
         virtual std::string grouping(void) const = 0;
         virtual std::string bpm(void) const;
 
-        virtual size_t sizeInBytes(void) const;
+        virtual size_t size(void) const;
         virtual uint32_t lengthInMilliseconds(void) const;
         virtual uint32_t bitRateInKiloBitsPerSecond(void) const;
         virtual uint32_t bitDepthInBitsOrZeroIfNotApplicable(void) const;

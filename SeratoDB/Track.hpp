@@ -80,7 +80,7 @@ namespace NxA { namespace Serato {
         String::ConstPointer const& composer(void) const;
         String::ConstPointer const& key(void) const;
         String::ConstPointer const& length(void) const;
-        const uint32_t& sizeInBytes(void) const;
+        const uint32_t& size(void) const;
         String::ConstPointer const& bitRate(void) const;
         String::ConstPointer const& sampleRate(void) const;
         String::ConstPointer const& bpm(void) const;

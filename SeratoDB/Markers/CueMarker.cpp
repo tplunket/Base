@@ -100,7 +100,7 @@ void CueMarker::addId3TagTo(Blob::Pointer const& data) const
     header.loop_enabled = 0;
     header.loop_locked = 0;
 
-    auto headerData = Blob::blobWithMemoryAndSizeInBytes(reinterpret_cast<const character*>(&header), sizeof(SeratoCueTagStruct));
+    auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<const character*>(&header), sizeof(SeratoCueTagStruct));
     data->append(headerData);
     data->append(this->label()->toUTF8());
 }

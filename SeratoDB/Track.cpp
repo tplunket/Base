@@ -67,8 +67,8 @@ static void p_debugPrintDate(time_t value, const char* name)
 static void p_debugPrintComparaison(const Track* track, const TrackFile* trackFile)
 {
     printf("----------------------------------------\n");
-    p_debugPrintUint((uint32_t)track->sizeInBytes(), "size");
-    p_debugPrintUint((uint32_t)trackFile->sizeInBytes(), "size");
+    p_debugPrintUint((uint32_t)track->size(), "size");
+    p_debugPrintUint((uint32_t)trackFile->size(), "size");
     p_debugPrintDate(track->dateModifiedInSecondsSinceJanuary1st1970(), "datemodified");
     p_debugPrintDate(track->dateAddedInSecondsSinceJanuary1st1970(), "dateadded");
 
@@ -377,7 +377,7 @@ String::ConstPointer const& Track::length(void) const
     return this->p_stringForSubTagForIdentifier(NxASeratoTrackLengthTag);
 }
 
-const uint32_t& Track::sizeInBytes(void) const
+const uint32_t& Track::size(void) const
 {
     return this->p_uint32ForSubTagForIdentifier(NxASeratoTrackSizeTag);
 }

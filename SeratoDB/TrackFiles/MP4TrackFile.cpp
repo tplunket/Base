@@ -109,7 +109,7 @@ void MP4TrackFile::p_writeMarkers(void)
         header.majorVersion = 1;
         header.minorVersion = 1;
 
-        auto headerData = Blob::blobWithMemoryAndSizeInBytes(reinterpret_cast<character*>(&header), sizeof(header));
+        auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<character*>(&header), sizeof(header));
         decodedData->append(headerData);
         decodedData->append(this->p_base64DataFromMarkersV2());
 
@@ -136,7 +136,7 @@ void MP4TrackFile::p_writeMarkers(void)
         header.majorVersion = 1;
         header.minorVersion = 0;
 
-        auto headerData = Blob::blobWithMemoryAndSizeInBytes(reinterpret_cast<character*>(&header), sizeof(header));
+        auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<character*>(&header), sizeof(header));
         decodedData->append(headerData);
         decodedData->append(this->p_gridMarkerDataFromGridMarkers());
 

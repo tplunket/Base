@@ -43,8 +43,8 @@ namespace NxA { namespace Serato {
 
         #pragma mark Protected Class Methods
         static void p_setIdentifierForTagAt(const uint32_t& identifier, const void* tagAddress);
-        static size_t p_dataSizeInBytesForTagAt(const void* tagAddress);
-        static void p_setDataSizeForTagAt(const size_t& dataSizeInBytes, const void* tagAddress);
+        static size_t p_dataSizeForTagAt(const void* tagAddress);
+        static void p_setDataSizeForTagAt(const size_t& dataSize, const void* tagAddress);
         static const void* p_dataForTagAt(const void* tagAddress);
         static void* p_dataForTagAt(void* tagAddress);
         static size_t p_memoryNeededForTagHeader(void);

@@ -58,18 +58,18 @@ static Blob::Pointer p_markerV2TagDataFrom(const char* tagStart)
     const char* sizePosition = tagStart + sizeOfNameField;
     size_t tagSize = Platform::bigEndianUInt32ValueAt(sizePosition) + sizeOfNameField + sizeOfSizeField;
 
-    return Blob::blobWithMemoryAndSizeInBytes(tagStart, tagSize);
+    return Blob::blobWithMemoryAndSize(tagStart, tagSize);
 }
 
 #pragma mark Instance Methods
 
-void TrackFile::p_readMarkersV2FromBase64Data(const char* markerV2Data, size_t sizeInBytes)
+void TrackFile::p_readMarkersV2FromBase64Data(const char* markerV2Data, size_t totalSize)
 {
-    if (!sizeInBytes) {
+    if (!totalSize) {
         return;
     }
 
-    auto decodedData = Base64::decodeBlock(markerV2Data, sizeInBytes);
+    auto decodedData = Base64::decodeBlock(markerV2Data, totalSize);
 
     const SeratoMarkerHeaderStruct* markerStruct = (const SeratoMarkerHeaderStruct*)(decodedData->data());
     if ((markerStruct->majorVersion != 1) || (markerStruct->minorVersion != 1)) {
@@ -104,9 +104,9 @@ void TrackFile::p_addGridMarker(GridMarker::ConstPointer const& gridMarker)
     this->p_gridMarkers->append(GridMarker::gridMarkerWith(gridMarker));
 }
 
-void TrackFile::p_readGridMarkersFrom(const char* gridMarkerData, size_t sizeInBytes)
+void TrackFile::p_readGridMarkersFrom(const char* gridMarkerData, size_t totalSize)
 {
-    if (!sizeInBytes) {
+    if (!totalSize) {
         return;
     }
 
@@ -128,7 +128,7 @@ Blob::Pointer TrackFile::p_base64DataFromMarkersV2(void)
     markersHeader.majorVersion = 1;
     markersHeader.minorVersion = 1;
 
-    auto headerData = Blob::blobWithMemoryAndSizeInBytes(reinterpret_cast<character*>(&markersHeader), sizeof(SeratoMarkerHeaderStruct));
+    auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<character*>(&markersHeader), sizeof(SeratoMarkerHeaderStruct));
     decodedData->append(headerData);
 
     for (auto& marker : *this->p_cueMarkers) {
@@ -154,7 +154,7 @@ Blob::Pointer TrackFile::p_gridMarkerDataFromGridMarkers(void)
     uinteger32 numberOfMarkers;
     Platform::writeBigEndianUInt32ValueAt(this->p_gridMarkers->length(), &numberOfMarkers);
 
-    auto numberOfMarkersData = Blob::blobWithMemoryAndSizeInBytes(reinterpret_cast<character*>(&numberOfMarkers), sizeof(numberOfMarkers));
+    auto numberOfMarkersData = Blob::blobWithMemoryAndSize(reinterpret_cast<character*>(&numberOfMarkers), sizeof(numberOfMarkers));
     data->append(numberOfMarkersData);
 
     for (auto& marker : *(this->p_gridMarkers)) {
@@ -244,7 +244,7 @@ string TrackFile::bpm(void) const
     return emptyString;
 }
 
-size_t TrackFile::sizeInBytes(void) const
+size_t TrackFile::size(void) const
 {
     return File::sizeOfFileAt(String::stringWith(this->p_trackFilePath->c_str()));
 }

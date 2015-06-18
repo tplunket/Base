@@ -92,7 +92,7 @@ void FLACTrackFile::p_writeMarkers(void)
         header.majorVersion = 1;
         header.minorVersion = 1;
 
-        auto headerData = Blob::blobWithMemoryAndSizeInBytes((char*)&header, sizeof(header));
+        auto headerData = Blob::blobWithMemoryAndSize((char*)&header, sizeof(header));
         decodedData->append(headerData);
 
         auto base64Data = this->p_base64DataFromMarkersV2();
@@ -119,7 +119,7 @@ void FLACTrackFile::p_writeMarkers(void)
         header.majorVersion = 1;
         header.minorVersion = 0;
 
-        auto headerData = Blob::blobWithMemoryAndSizeInBytes((char*)&header, sizeof(header));
+        auto headerData = Blob::blobWithMemoryAndSize((char*)&header, sizeof(header));
         decodedData->append(headerData);
 
         auto base64Data = this->p_gridMarkerDataFromGridMarkers();

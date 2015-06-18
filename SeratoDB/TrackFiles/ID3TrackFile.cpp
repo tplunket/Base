@@ -119,7 +119,7 @@ void ID3TrackFile::p_writeMarkersV2Frame(void)
     SeratoGeobObjectStruct header;
     header.majorVersion = 1;
     header.minorVersion = 1;
-    auto headerData = Blob::blobWithCharPointer((char*)&header, sizeof(header));
+    auto headerData = Blob::blobWithMemoryAndSizeInBytes((char*)&header, sizeof(header));
     decodedData->append(headerData);
     decodedData->append(this->p_base64DataFromMarkersV2());
 
@@ -151,7 +151,7 @@ void ID3TrackFile::p_writeGridMarkersFrame(void)
     SeratoGeobObjectStruct header;
     header.majorVersion = 1;
     header.minorVersion = 0;
-    auto headerData = Blob::blobWithCharPointer((char*)&header, sizeof(header));
+    auto headerData = Blob::blobWithMemoryAndSizeInBytes((char*)&header, sizeof(header));
     data->append(headerData);
     data->append(this->p_gridMarkerDataFromGridMarkers());
 

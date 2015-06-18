@@ -18,7 +18,7 @@ using namespace NxA::Serato;
 #pragma mark Constructors
 
 BlobTag::BlobTag(const void* tagAddress) : Tag(tagAddress),
-    p_value(Blob::blobWithCharPointer(static_cast<const char*>(Tag::p_dataForTagAt(tagAddress)),
+    p_value(Blob::blobWithMemoryAndSizeInBytes(static_cast<const char*>(Tag::p_dataForTagAt(tagAddress)),
                                       Tag::p_dataSizeInBytesForTagAt(tagAddress))) { }
 
 #pragma mark Instance Methods

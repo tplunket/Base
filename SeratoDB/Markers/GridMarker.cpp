@@ -82,6 +82,6 @@ void GridMarker::addDataTo(Blob::Pointer const& data) const
     Platform::writeBigEndianFloatValueAt(this->p_positionInSeconds, marker.positionInSeconds);
     Platform::writeBigEndianFloatValueAt(this->p_bpm, marker.bpm);
 
-    auto headerData = Blob::blobWithCharPointer(reinterpret_cast<const character*>(&marker), sizeof(GridMarkerStruct));
+    auto headerData = Blob::blobWithMemoryAndSizeInBytes(reinterpret_cast<const character*>(&marker), sizeof(GridMarkerStruct));
     data->append(headerData);
 }

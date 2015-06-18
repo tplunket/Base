@@ -21,7 +21,7 @@ PathTag::PathTag(const void* tagAddress) : Tag(tagAddress), p_value(String::stri
 {
     count size = Tag::p_dataSizeInBytesForTagAt(tagAddress);
     const character* textToRead = static_cast<const character*>(p_dataForTagAt(tagAddress));
-    auto utf16Text = Blob::blobWithCharPointer(textToRead, size);
+    auto utf16Text = Blob::blobWithMemoryAndSizeInBytes(textToRead, size);
 
     this->p_value = String::stringWithUTF16(utf16Text);
 }

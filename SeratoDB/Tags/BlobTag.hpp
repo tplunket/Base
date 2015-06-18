@@ -30,7 +30,7 @@ namespace NxA { namespace Serato {
         explicit BlobTag(const void* tagAddress);
         explicit BlobTag(uint32_t identifier, Blob::ConstPointer const& value) :
                          Tag(identifier),
-                         p_value(Blob::blobWithBlob(value)) { }
+                         p_value(Blob::blobWith(value)) { }
 
         #pragma mark Instance Methods
         Blob::ConstPointer const& value(void) const;

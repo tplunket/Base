@@ -58,7 +58,7 @@ static Blob::Pointer p_markerV2TagDataFrom(const char* tagStart)
     const char* sizePosition = tagStart + sizeOfNameField;
     size_t tagSize = Platform::bigEndianUInt32ValueAt(sizePosition) + sizeOfNameField + sizeOfSizeField;
 
-    return Blob::blobWithCharPointer(tagStart, tagSize);
+    return Blob::blobWithMemoryAndSizeInBytes(tagStart, tagSize);
 }
 
 #pragma mark Instance Methods
@@ -128,7 +128,7 @@ Blob::Pointer TrackFile::p_base64DataFromMarkersV2(void)
     markersHeader.majorVersion = 1;
     markersHeader.minorVersion = 1;
 
-    auto headerData = Blob::blobWithCharPointer(reinterpret_cast<character*>(&markersHeader), sizeof(SeratoMarkerHeaderStruct));
+    auto headerData = Blob::blobWithMemoryAndSizeInBytes(reinterpret_cast<character*>(&markersHeader), sizeof(SeratoMarkerHeaderStruct));
     decodedData->append(headerData);
 
     for (auto& marker : *this->p_cueMarkers) {
@@ -154,7 +154,7 @@ Blob::Pointer TrackFile::p_gridMarkerDataFromGridMarkers(void)
     uinteger32 numberOfMarkers;
     Platform::writeBigEndianUInt32ValueAt(this->p_gridMarkers->length(), &numberOfMarkers);
 
-    auto numberOfMarkersData = Blob::blobWithCharPointer(reinterpret_cast<character*>(&numberOfMarkers), sizeof(numberOfMarkers));
+    auto numberOfMarkersData = Blob::blobWithMemoryAndSizeInBytes(reinterpret_cast<character*>(&numberOfMarkers), sizeof(numberOfMarkers));
     data->append(numberOfMarkersData);
 
     for (auto& marker : *(this->p_gridMarkers)) {

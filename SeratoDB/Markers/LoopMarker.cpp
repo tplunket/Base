@@ -42,8 +42,7 @@ typedef struct {
 
 LoopMarker::LoopMarker(NxA::Internal::Object::Pointer const& initial_internal) :
                        Object(initial_internal),
-                       internal(initial_internal),
-                       p_label(String::string()) { }
+                       internal(initial_internal) { }
 
 #pragma mark Factory Methods
 
@@ -63,10 +62,10 @@ LoopMarker::Pointer LoopMarker::loopMarkerWith(String::ConstPointer const& label
                                                uinteger16 index)
 {
     auto newMarker = LoopMarker::makeShared();
-    newMarker->p_startPositionInMilliSeconds = startPositionInMilliseconds;
-    newMarker->p_endPositionInMilliSeconds = endPositionInMilliseconds;
-    newMarker->p_index = index;
-    newMarker->p_label = label;
+    newMarker->internal->startPositionInMilliSeconds = startPositionInMilliseconds;
+    newMarker->internal->endPositionInMilliSeconds = endPositionInMilliseconds;
+    newMarker->internal->index = index;
+    newMarker->internal->label = label;
 
     return newMarker;
 }
@@ -74,8 +73,8 @@ LoopMarker::Pointer LoopMarker::loopMarkerWith(String::ConstPointer const& label
 LoopMarker::Pointer LoopMarker::loopMarkerWith(LoopMarker::ConstPointer const& other)
 {
     return LoopMarker::loopMarkerWith(other->label(),
-                                      other->p_startPositionInMilliSeconds,
-                                      other->p_endPositionInMilliSeconds,
+                                      other->startPositionInMilliseconds(),
+                                      other->endPositionInMilliseconds(),
                                       other->index());
 }
 
@@ -83,22 +82,22 @@ LoopMarker::Pointer LoopMarker::loopMarkerWith(LoopMarker::ConstPointer const& o
 
 uinteger32 LoopMarker::startPositionInMilliseconds(void) const
 {
-    return this->p_startPositionInMilliSeconds;
+    return internal->startPositionInMilliSeconds;
 }
 
 uinteger32 LoopMarker::endPositionInMilliseconds(void) const
 {
-    return this->p_endPositionInMilliSeconds;
+    return internal->endPositionInMilliSeconds;
 }
 
 uinteger16 LoopMarker::index(void) const
 {
-    return this->p_index;
+    return internal->index;
 }
 
 String::ConstPointer const& LoopMarker::label(void) const
 {
-    return this->p_label;
+    return internal->label;
 }
 
 void LoopMarker::addId3TagTo(Blob::Pointer const& data) const
@@ -106,11 +105,11 @@ void LoopMarker::addId3TagTo(Blob::Pointer const& data) const
     SeratoLoopTagStruct header;
 
     memcpy(header.tag, "LOOP", 5);
-    size_t size = sizeof(SeratoLoopTagStruct) + this->p_label->length() + 1 - sizeof(SeratoLoopTagHeaderStruct);
+    size_t size = sizeof(SeratoLoopTagStruct) + this->label()->length() + 1 - sizeof(SeratoLoopTagHeaderStruct);
     Platform::writeBigEndianUInt32ValueAt((uint32_t)size, &header.size);
-    Platform::writeBigEndianUInt16ValueAt(this->p_index, &header.index);
-    Platform::writeBigEndianUInt32ValueAt(this->p_startPositionInMilliSeconds, &header.position);
-    Platform::writeBigEndianUInt32ValueAt(this->p_endPositionInMilliSeconds, &header.loopPosition);
+    Platform::writeBigEndianUInt16ValueAt(this->index(), &header.index);
+    Platform::writeBigEndianUInt32ValueAt(this->startPositionInMilliseconds(), &header.position);
+    Platform::writeBigEndianUInt32ValueAt(this->endPositionInMilliseconds(), &header.loopPosition);
     Platform::writeBigEndianUInt32ValueAt(0, &header.loopIterations);
     Platform::writeBigEndianUInt32ValueAt(0, &header.color);
     header.loop_enabled = 0;
@@ -118,5 +117,5 @@ void LoopMarker::addId3TagTo(Blob::Pointer const& data) const
 
     auto headerData = Blob::blobWithMemoryAndSizeInBytes(reinterpret_cast<const character*>(&header), sizeof(SeratoLoopTagStruct));
     data->append(headerData);
-    data->append(this->p_label->toUTF8());
+    data->append(this->label()->toUTF8());
 }

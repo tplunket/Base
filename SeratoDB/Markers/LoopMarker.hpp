@@ -20,15 +20,6 @@ namespace NxA { namespace Serato {
     class LoopMarker : public NxA::Object {
         NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, LoopMarker);
         
-    private:
-        #pragma mark Private Instance Variable
-        uinteger32 p_startPositionInMilliSeconds;
-        uinteger32 p_endPositionInMilliSeconds;
-
-        uinteger16 p_index;
-
-        String::ConstPointer p_label;
-
     public:
         #pragma mark Factory Methods
         static LoopMarker::Pointer loopMarkerWith(const char* id3TagStart);

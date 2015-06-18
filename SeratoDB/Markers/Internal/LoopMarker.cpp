@@ -27,4 +27,7 @@ using namespace NxA::Serato::Internal;
 
 #pragma mark Constructors & Destructors
 
-LoopMarker::LoopMarker() { }
+LoopMarker::LoopMarker() : startPositionInMilliSeconds(0),
+                           endPositionInMilliSeconds(0),
+                           index(0),
+                           label(String::string()) { }

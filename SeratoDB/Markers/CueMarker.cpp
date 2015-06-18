@@ -40,8 +40,7 @@ typedef struct {
 
 CueMarker::CueMarker(NxA::Internal::Object::Pointer const& initial_internal) :
                      Object(initial_internal),
-                     internal(initial_internal),
-                     p_label(String::string()) { }
+                     internal(initial_internal) { }
 
 #pragma mark Factory Methods
 
@@ -59,9 +58,9 @@ CueMarker::Pointer CueMarker::cueMarkerWith(String::ConstPointer const& label,
                                             uinteger16 index)
 {
     auto newMarker = CueMarker::makeShared();
-    newMarker->p_positionInMilliSeconds = positionInMilliseconds;
-    newMarker->p_index = index;
-    newMarker->p_label = label;
+    newMarker->internal->positionInMilliSeconds = positionInMilliseconds;
+    newMarker->internal->index = index;
+    newMarker->internal->label = label;
 
     return newMarker;
 }
@@ -75,17 +74,17 @@ CueMarker::Pointer CueMarker::cueMarkerWith(CueMarker::ConstPointer const& other
 
 uint32_t CueMarker::positionInMilliseconds(void) const
 {
-    return this->p_positionInMilliSeconds;
+    return internal->positionInMilliSeconds;
 }
 
 uint16_t CueMarker::index(void) const
 {
-    return this->p_index;
+    return internal->index;
 }
 
 const String::ConstPointer& CueMarker::label(void) const
 {
-    return this->p_label;
+    return internal->label;
 }
 
 void CueMarker::addId3TagTo(Blob::Pointer const& data) const
@@ -93,15 +92,15 @@ void CueMarker::addId3TagTo(Blob::Pointer const& data) const
     SeratoCueTagStruct header;
 
     memcpy(header.tag, "CUE", 4);
-    size_t size = sizeof(SeratoCueTagStruct) + this->p_label->length() + 1 - sizeof(SeratoCueTagHeaderStruct);
+    size_t size = sizeof(SeratoCueTagStruct) + this->label()->length() + 1 - sizeof(SeratoCueTagHeaderStruct);
     Platform::writeBigEndianUInt32ValueAt((uint32_t)size, &header.size);
-    Platform::writeBigEndianUInt16ValueAt(this->p_index, &header.index);
-    Platform::writeBigEndianUInt32ValueAt(this->p_positionInMilliSeconds, &header.position);
+    Platform::writeBigEndianUInt16ValueAt(this->index(), &header.index);
+    Platform::writeBigEndianUInt32ValueAt(this->positionInMilliseconds(), &header.position);
     Platform::writeBigEndianUInt32ValueAt(0, &header.color);
     header.loop_enabled = 0;
     header.loop_locked = 0;
 
     auto headerData = Blob::blobWithMemoryAndSizeInBytes(reinterpret_cast<const character*>(&header), sizeof(SeratoCueTagStruct));
     data->append(headerData);
-    data->append(this->p_label->toUTF8());
+    data->append(this->label()->toUTF8());
 }

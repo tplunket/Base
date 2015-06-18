@@ -29,5 +29,13 @@
 namespace NxA { namespace Serato { namespace Internal {
     struct LoopMarker : public Object {
         NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, LoopMarker);
+
+        #pragma mark Instance Variable
+        uinteger32 startPositionInMilliSeconds;
+        uinteger32 endPositionInMilliSeconds;
+
+        uinteger16 index;
+
+        String::ConstPointer label;
     };
 } } }

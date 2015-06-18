@@ -45,8 +45,8 @@ GridMarker::Pointer GridMarker::gridMarkerWith(const char* markerData)
 GridMarker::Pointer GridMarker::gridMarkerWith(float positionInSeconds, float bpm)
 {
     auto newMarker = GridMarker::makeShared();
-    newMarker->p_positionInSeconds = positionInSeconds;
-    newMarker->p_bpm = bpm;
+    newMarker->internal->positionInSeconds = positionInSeconds;
+    newMarker->internal->bpm = bpm;
 
     return newMarker;
 }
@@ -67,20 +67,20 @@ const char* GridMarker::nextGridMarkerAfter(const char* markerData)
 
 float GridMarker::positionInSeconds(void) const
 {
-    return this->p_positionInSeconds;
+    return internal->positionInSeconds;
 }
 
 float GridMarker::bpm(void) const
 {
-    return this->p_bpm;
+    return internal->bpm;
 }
 
 void GridMarker::addDataTo(Blob::Pointer const& data) const
 {
     GridMarkerStruct marker;
 
-    Platform::writeBigEndianFloatValueAt(this->p_positionInSeconds, marker.positionInSeconds);
-    Platform::writeBigEndianFloatValueAt(this->p_bpm, marker.bpm);
+    Platform::writeBigEndianFloatValueAt(this->positionInSeconds(), marker.positionInSeconds);
+    Platform::writeBigEndianFloatValueAt(this->bpm(), marker.bpm);
 
     auto headerData = Blob::blobWithMemoryAndSizeInBytes(reinterpret_cast<const character*>(&marker), sizeof(GridMarkerStruct));
     data->append(headerData);

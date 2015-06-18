@@ -29,5 +29,12 @@
 namespace NxA { namespace Serato { namespace Internal {
     struct CueMarker : public Object {
         NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, CueMarker);
+
+        #pragma mark Instance Variables
+        uinteger32 positionInMilliSeconds;
+
+        uinteger16 index;
+
+        String::ConstPointer label;
     };
 } } }

@@ -29,5 +29,10 @@
 namespace NxA { namespace Serato { namespace Internal {
     struct GridMarker : public Object {
         NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, GridMarker);
+
+        #pragma mark Instance Variables
+        float positionInSeconds;
+
+        float bpm;
     };
 } } }

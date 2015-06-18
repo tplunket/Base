@@ -20,12 +20,6 @@ namespace NxA { namespace Serato {
     class GridMarker : public NxA::Object {
         NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, GridMarker);
 
-    private:
-        #pragma mark Private Instance Variables
-        float p_positionInSeconds;
-
-        float p_bpm;
-
     public:
         #pragma mark Factory Methods
         static GridMarker::Pointer gridMarkerWith(const char* markerData);

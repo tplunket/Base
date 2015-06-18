@@ -20,11 +20,6 @@ namespace NxA { namespace Serato {
     class CueMarker : public NxA::Object {
         NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, CueMarker);
 
-    private:
-        uinteger32 p_positionInMilliSeconds;
-        uinteger16 p_index;
-        String::ConstPointer p_label;
-
     public:
         #pragma mark Factory Methods
         static CueMarker::Pointer cueMarkerWith(const char* id3TagStart);

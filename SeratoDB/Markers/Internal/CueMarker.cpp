@@ -27,4 +27,4 @@ using namespace NxA::Serato::Internal;
 
 #pragma mark Constructors & Destructors
 
-CueMarker::CueMarker() { }
+CueMarker::CueMarker() : positionInMilliSeconds(0), index(0), label(String::string()) { }

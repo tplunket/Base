@@ -109,7 +109,7 @@ namespace NxA {
         } \
         const NxA::ConstPointer<NxA::String> namespace_name::class_name::className(void) const \
         { \
-            return NxA::String::stringWithUTF8(NXA_STR_VALUE_FOR(namespace_name) "::" NXA_STR_VALUE_FOR(class_name)); \
+            return NxA::String::stringWith(NXA_STR_VALUE_FOR(namespace_name) "::" NXA_STR_VALUE_FOR(class_name)); \
         } \
         NxA::Pointer<NxA::Internal::Object> namespace_name::class_name::makeInternal(void) \
         { \
@@ -130,7 +130,7 @@ namespace NxA {
         } \
         const NxA::ConstPointer<NxA::String> namespace_name::class_name::className(void) const \
         { \
-            return NxA::String::stringWithUTF8(NXA_STR_VALUE_FOR(namespace_name) "::" NXA_STR_VALUE_FOR(class_name)); \
+            return NxA::String::stringWith(NXA_STR_VALUE_FOR(namespace_name) "::" NXA_STR_VALUE_FOR(class_name)); \
         } \
         NxA::Pointer<NxA::Internal::Object> namespace_name::class_name::makeInternal(void) \
         { \

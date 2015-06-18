@@ -66,7 +66,7 @@ void File::deleteFileAt(String::ConstPointer const& path)
 String::Pointer File::joinPaths(String::ConstPointer const& first,
                                 String::ConstPointer const& second)
 {
-    auto result = String::stringWithString(first);
+    auto result = String::stringWith(first);
 
     if (Platform::platform == Platform::Windows) {
         result->append("\\");

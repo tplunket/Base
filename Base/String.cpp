@@ -54,15 +54,7 @@ String::Pointer String::string(void)
     return newString;
 }
 
-String::Pointer String::stringWithUTF8(const character* other)
-{
-    auto newString = String::makeShared();
-    newString->internal->value = other;
-
-    return newString;
-}
-
-String::Pointer String::stringWithFormat(const character* format, ...)
+String::Pointer String::stringWith(const character* format, ...)
 {
     constexpr count formatStringBufferSize = 256;
     char buffer[formatStringBufferSize];
@@ -72,7 +64,10 @@ String::Pointer String::stringWithFormat(const character* format, ...)
     vsnprintf(buffer, formatStringBufferSize, format, args);
     va_end(args);
 
-    return String::stringWithUTF8(buffer);
+    auto newString = String::makeShared();
+    newString->internal->value = buffer;
+
+    return newString;
 }
 
 String::Pointer String::stringWithUTF16(Blob::ConstPointer const& other)
@@ -96,7 +91,7 @@ String::Pointer String::stringWithUTF16(Blob::ConstPointer const& other)
     return newString;
 }
 
-String::Pointer String::stringWithString(String::ConstPointer const& other)
+String::Pointer String::stringWith(String::ConstPointer const& other)
 {
     auto newString = String::makeShared();
     newString->internal->value = other->internal->value;
@@ -125,7 +120,7 @@ count String::length(void) const
 
 String::ConstPointer String::description(void) const
 {
-    return String::stringWithUTF8(this->toUTF8());
+    return String::stringWith(this->toUTF8());
 }
 
 const character* String::toUTF8(void) const
@@ -170,7 +165,7 @@ String::Array::Pointer String::splitBySeperator(char seperator) const
     std::string line;
 
     while(getline(stream, line, seperator)) {
-        results->append(String::stringWithUTF8(line.c_str()));
+        results->append(String::stringWith(line.c_str()));
     }
 
     return results;

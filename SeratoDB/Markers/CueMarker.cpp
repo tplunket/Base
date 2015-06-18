@@ -72,12 +72,12 @@ CueMarker::Pointer CueMarker::cueMarkerWith(CueMarker::ConstPointer const& other
 
 #pragma mark Instance Methods
 
-uint32_t CueMarker::positionInMilliseconds(void) const
+uinteger32 CueMarker::positionInMilliseconds(void) const
 {
     return internal->positionInMilliseconds;
 }
 
-uint16_t CueMarker::index(void) const
+uinteger16 CueMarker::index(void) const
 {
     return internal->index;
 }

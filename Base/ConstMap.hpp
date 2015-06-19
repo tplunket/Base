@@ -30,7 +30,7 @@
 #include <map>
 
 namespace NxA {
-    template <class Tkey, class Tvalue> class Map : private std::map<Tkey, typename Tvalue::Pointer> {
+    template <class Tkey, class Tvalue> class Map : private std::map<Tkey, typename Tvalue::ConstPointer> {
     protected:
         struct constructor_access { };
 
@@ -63,35 +63,35 @@ namespace NxA {
         }
 
         #pragma mark Instance Methods
-        typename std::map<Tkey, typename Tvalue::Pointer>::iterator begin() noexcept
+        typename std::map<Tkey, typename Tvalue::ConstPointer>::iterator begin() noexcept
         {
             return this->begin();
         }
-        typename std::map<Tkey, typename Tvalue::Pointer>::const_iterator begin() const noexcept
+        typename std::map<Tkey, typename Tvalue::ConstPointer>::const_iterator begin() const noexcept
         {
             return this->begin();
         }
-        typename std::map<Tkey, typename Tvalue::Pointer>::iterator end() noexcept
+        typename std::map<Tkey, typename Tvalue::ConstPointer>::iterator end() noexcept
         {
             return this->end();
         }
-        typename std::map<Tkey, typename Tvalue::Pointer>::const_iterator end() const noexcept
+        typename std::map<Tkey, typename Tvalue::ConstPointer>::const_iterator end() const noexcept
         {
             return this->end();
         }
-        typename std::map<Tkey, typename Tvalue::Pointer>::iterator cbegin() noexcept
+        typename std::map<Tkey, typename Tvalue::ConstPointer>::iterator cbegin() noexcept
         {
             return this->cbegin();
         }
-        typename std::map<Tkey, typename Tvalue::Pointer>::const_iterator cbegin() const noexcept
+        typename std::map<Tkey, typename Tvalue::ConstPointer>::const_iterator cbegin() const noexcept
         {
             return this->cbegin();
         }
-        typename std::map<Tkey, typename Tvalue::Pointer>::iterator cend() noexcept
+        typename std::map<Tkey, typename Tvalue::ConstPointer>::iterator cend() noexcept
         {
             return this->cend();
         }
-        typename std::map<Tkey, typename Tvalue::Pointer>::const_iterator cend() const noexcept
+        typename std::map<Tkey, typename Tvalue::ConstPointer>::const_iterator cend() const noexcept
         {
             return this->cend();
         }
@@ -103,7 +103,7 @@ namespace NxA {
 
         bool containsValueForKey(Tkey const& keyValue)
         {
-            typename std::map<typename Tkey::ConstPointer, typename Tvalue::Pointer>::const_iterator it = this->find(keyValue);
+            typename std::map<typename Tkey::ConstPointer, typename Tvalue::ConstPointer>::const_iterator it = this->find(keyValue);
             return it != this->end();
         }
     };

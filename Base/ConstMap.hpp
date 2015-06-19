@@ -30,26 +30,26 @@
 #include <map>
 
 namespace NxA {
-    template <class Tkey, class Tvalue> class Map : private std::map<Tkey, typename Tvalue::ConstPointer> {
+    template <class Tkey, class Tvalue> class ConstMap : private std::map<Tkey, typename Tvalue::ConstPointer> {
     protected:
         struct constructor_access { };
 
         #pragma mark Constructors & Destructors
-        Map() { }
+        ConstMap() { }
 
     public:
-        using ConstPointer = NxA::ConstPointer<Map>;
-        using Pointer = NxA::Pointer<Map>;
-        using WeakPointer = NxA::WeakPointer<Map>;
-        using WeakConstPointer = NxA::WeakConstPointer<Map>;
+        using ConstPointer = NxA::ConstPointer<ConstMap>;
+        using Pointer = NxA::Pointer<ConstMap>;
+        using WeakPointer = NxA::WeakPointer<ConstMap>;
+        using WeakConstPointer = NxA::WeakConstPointer<ConstMap>;
 
         #pragma mark Constructors & Destructors
-        explicit Map(const constructor_access&) : Map() { };
+        explicit ConstMap(const constructor_access&) : ConstMap() { };
 
         #pragma mark Factory Methods
-        static Map::Pointer map(void)
+        static ConstMap::Pointer map(void)
         {
-            return Map::Pointer(std::make_shared<Map>(Map::constructor_access()));
+            return ConstMap::Pointer(std::make_shared<ConstMap>(ConstMap::constructor_access()));
         }
 
         #pragma mark Operators
@@ -59,7 +59,7 @@ namespace NxA {
         }
         typename Tvalue::ConstPointer& operator[] (Tkey const& key)
         {
-            return const_cast<typename Tvalue::ConstPointer&>(static_cast<const Map<Tkey, Tvalue>>(*this)[key]);
+            return const_cast<typename Tvalue::ConstPointer&>(static_cast<const ConstMap<Tkey, Tvalue>>(*this)[key]);
         }
 
         #pragma mark Instance Methods

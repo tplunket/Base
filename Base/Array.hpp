@@ -102,10 +102,37 @@ namespace NxA {
         {
             return this->size();
         }
+        void emptyAll(void)
+        {
+            return this->clear();
+        }
 
         void append(typename T::Pointer const& object)
         {
             this->push_back(object);
+        }
+        void insertAt(typename T::Pointer const& object, iterator pos)
+        {
+            this->insert(pos, object);
+        }
+        iterator find(typename T::Pointer const& object)
+        {
+            for (iterator it = this->begin(); it != this->end(); ++it) {
+                auto& other = *it;
+                if (other.toStdSharedPointer() == object.toStdSharedPointer()) {
+                    return it;
+                }
+            }
+
+            return this->end();
+        }
+        void remove(iterator objectPosition)
+        {
+            this->erase(objectPosition);
+        }
+        void remove(typename T::Pointer const& object)
+        {
+            this->std::vector<typename T::Pointer>::remove(this->find(object));
         }
     };
 }

@@ -54,13 +54,13 @@ namespace NxA {
         }
 
         #pragma mark Operators
-        const T& operator[] (integer index) const
+        typename T::ConstPointer const& operator[] (integer index) const
         {
-            return (*this)[index];
+            return this->std::vector<typename T::ConstPointer>::operator[](index);
         }
-        T& operator[] (integer index)
+        typename T::ConstPointer& operator[] (integer index)
         {
-            return const_cast<T&>(static_cast<const ConstArray<T>>(*this)[index]);
+            return const_cast<typename T::ConstPointer&>(static_cast<const Array<T>>(*this)[index]);
         }
 
         #pragma mark Instance Methods

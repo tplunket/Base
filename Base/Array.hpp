@@ -51,7 +51,7 @@ namespace NxA {
         #pragma mark Factory Methods
         static Array::Pointer array(void)
         {
-            return std::make_shared<Array>(Array::constructor_access());
+            return Array::Pointer(std::make_shared<Array>(Array::constructor_access()));
         }
 
         #pragma mark Operators

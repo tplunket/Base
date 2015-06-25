@@ -50,7 +50,7 @@ namespace NxA {
         #pragma mark Factory Methods
         static ConstArray::Pointer array(void)
         {
-            return std::make_shared<ConstArray>(ConstArray::constructor_access());
+            return ConstArray::Pointer(std::make_shared<ConstArray>(ConstArray::constructor_access()));
         }
 
         #pragma mark Operators

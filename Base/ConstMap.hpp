@@ -57,7 +57,7 @@ namespace NxA {
         #pragma mark Operators
         typename Tvalue::ConstPointer const& operator[] (Tkey const& key) const
         {
-            return (*this)[key];
+            return this->std::map<Tkey, typename Tvalue::ConstPointer>::at(key);
         }
         typename Tvalue::ConstPointer& operator[] (Tkey const& key)
         {

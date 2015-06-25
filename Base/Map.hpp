@@ -55,13 +55,13 @@ namespace NxA {
         }
 
         #pragma mark Operators
-        typename Tvalue::ConstPointer const& operator[] (Tkey const& key) const
+        typename Tvalue::Pointer const& operator[] (Tkey const& key) const
         {
-            return (*this)[key];
+            return this->std::map<Tkey, typename Tvalue::Pointer>::at(key);
         }
-        typename Tvalue::ConstPointer& operator[] (Tkey const& key)
+        typename Tvalue::Pointer& operator[] (Tkey const& key)
         {
-            return const_cast<typename Tvalue::ConstPointer&>(static_cast<const Map<Tkey, Tvalue>>(*this)[key]);
+            return const_cast<typename Tvalue::Pointer&>(static_cast<const Map<Tkey, Tvalue>>(*this)[key]);
         }
 
         #pragma mark Instance Methods

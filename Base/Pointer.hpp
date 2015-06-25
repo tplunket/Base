@@ -47,7 +47,7 @@ namespace NxA {
         }
         T* operator->()
         {
-            return static_cast<const Pointer<T>>(*this).operator->();
+            return const_cast<T*>(static_cast<const Pointer<T>>(*this).operator->());
         }
         T& operator*() const
         {
@@ -55,7 +55,7 @@ namespace NxA {
         }
         T& operator*()
         {
-            return static_cast<const Pointer<T>>(*this).operator*();
+            return const_cast<T&>(static_cast<const Pointer<T>>(*this).operator*());
         }
 
         #pragma mark Instance Methods

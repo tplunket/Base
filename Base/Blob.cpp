@@ -44,20 +44,19 @@ Blob::Pointer Blob::blob(void)
     return Blob::makeShared();
 }
 
-Blob::Pointer Blob::blobWithCapacity(count length)
+Blob::Pointer Blob::blobWithCapacity(count size)
 {
     auto newBlob = Blob::makeShared();
-    newBlob->internal->data = Internal::Blob::InternalVector(length);
+    newBlob->internal->data = Internal::Blob::InternalVector(size);
     newBlob->clear();
 
     return newBlob;
 }
 
-Blob::Pointer Blob::blobWithMemoryAndSize(const void* other, count length)
+Blob::Pointer Blob::blobWithMemoryAndSize(const byte* other, count size)
 {
     auto newBlob = Blob::makeShared();
-    newBlob->internal->data = Internal::Blob::InternalVector(static_cast<const char*>(other),
-                                                             static_cast<const char*>(other) + length);
+    newBlob->internal->data = Internal::Blob::InternalVector(other, other + size);
 
     return newBlob;
 }

@@ -33,8 +33,8 @@ namespace NxA {
     public:
         #pragma mark Factory Methods
         static Blob::Pointer blob(void);
-        static Blob::Pointer blobWithCapacity(count length);
-        static Blob::Pointer blobWithMemoryAndSize(const void* other, count length);
+        static Blob::Pointer blobWithCapacity(count size);
+        static Blob::Pointer blobWithMemoryAndSize(const byte* other, count size);
         static Blob::Pointer blobWith(Blob::ConstPointer const& other);
 
         #pragma mark Operators

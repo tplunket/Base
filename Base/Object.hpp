@@ -33,11 +33,6 @@ namespace NxA {
         NXA_GENERATED_DECLARATIONS_FOR(NxA, Object);
 
     public:
-        #pragma mark Constructors & Destructors
-#if !NXA_DEBUG_OBJECT_LIFECYCLE
-        virtual ~Object() = default;
-#endif
-
         #pragma mark Instance Methods
         virtual NxA::ConstPointer<NxA::String> description(void) const;
     };

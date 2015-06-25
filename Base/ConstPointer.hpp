@@ -61,9 +61,9 @@ namespace NxA {
         }
 
         #pragma mark Instance Methods
-        std::shared_ptr<const T> const& toStdSharedPointer(void) const
+        std::shared_ptr<T> const& toStdSharedPointer(void) const
         {
-            return this;
+            return *this;
         }
     };
 }

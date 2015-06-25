@@ -213,3 +213,33 @@ bool String::hasPostfix(const character* postfix) const
     count length = strlen(postfix);
     return pos == (this->length() - length);
 }
+
+count String::indexOfFirstOccurenceOf(String::ConstPointer const& other) const
+{
+    return this->indexOfFirstOccurenceOf(other->toUTF8());
+}
+
+count String::indexOfLastOccurenceOf(String::ConstPointer const& other) const
+{
+    return this->indexOfLastOccurenceOf(other->toUTF8());
+}
+
+count String::indexOfFirstOccurenceOf(const char* other) const
+{
+    size_t pos = internal->value.find(other);
+    if (pos == std::string::npos) {
+        return this->length();
+    }
+
+    return pos;
+}
+
+count String::indexOfLastOccurenceOf(const char*  other) const
+{
+    size_t pos = internal->value.rfind(other);
+    if (pos == std::string::npos) {
+        return this->length();
+    }
+
+    return pos;
+}

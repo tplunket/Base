@@ -65,5 +65,10 @@ namespace NxA {
         bool hasPostfix(String::ConstPointer const& postfix) const;
         bool hasPrefix(const character* prefix) const;
         bool hasPostfix(const character* postfix) const;
+
+        count indexOfFirstOccurenceOf(String::ConstPointer const& other) const;
+        count indexOfLastOccurenceOf(String::ConstPointer const& other) const;
+        count indexOfFirstOccurenceOf(const character* other) const;
+        count indexOfLastOccurenceOf(const character* other) const;
     };
 }

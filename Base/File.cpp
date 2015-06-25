@@ -35,10 +35,10 @@ Blob::Pointer File::readFileAt(String::ConstPointer const& path)
 {
     count fileSize = File::sizeOfFileAt(path);
     if (fileSize) {
-        char* fileData = new char[fileSize];
+        byte* fileData = new byte[fileSize];
         if (fileData) {
             fstream file(path->toUTF8(), ios::in | ios::binary);
-            file.read(fileData, fileSize);
+            file.read(reinterpret_cast<char*>(fileData), fileSize);
             file.close();
 
             auto result = Blob::blobWithMemoryAndSize(fileData, fileSize);

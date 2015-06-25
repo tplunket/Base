@@ -72,7 +72,7 @@ Blob::Pointer Blob::blobWith(Blob::ConstPointer const& other)
 
 #pragma mark Operators
 
-const uinteger8& Blob::operator[] (integer index) const
+const byte& Blob::operator[] (integer index) const
 {
     return internal->data[index];
 }
@@ -84,7 +84,7 @@ count Blob::size(void) const
     return internal->data.size();
 }
 
-const uinteger8* Blob::data(void) const
+const byte* Blob::data(void) const
 {
     return internal->data.data();
 }

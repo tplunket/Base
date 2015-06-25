@@ -38,8 +38,8 @@ namespace NxA {
         static Blob::Pointer blobWith(Blob::ConstPointer const& other);
 
         #pragma mark Operators
-        const uinteger8& operator[] (integer index) const;
-        uinteger8& operator[] (integer index)
+        const byte& operator[] (integer index) const;
+        byte& operator[] (integer index)
         {
             return const_cast<uinteger8&>(static_cast<const Blob&>(*this)[index]);
         }
@@ -47,8 +47,8 @@ namespace NxA {
         #pragma mark Instance Methods
         count size(void) const;
 
-        const uinteger8* data(void) const;
-        uinteger8* data(void)
+        const byte* data(void) const;
+        byte* data(void)
         {
             return const_cast<uinteger8*>(static_cast<const Blob&>(*this).data());
         }

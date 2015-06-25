@@ -70,11 +70,11 @@ namespace NxA {
           : Platform::UnknownEndian;
 
         #pragma mark Class Methods
-        static float bigEndianFloatValueAt(const void* ptr);
-        static uinteger32 bigEndianUInt32ValueAt(const void* ptr);
-        static uinteger16 bigEndianUInt16ValueAt(const void* ptr);
-        static void writeBigEndianFloatValueAt(float value, void* ptr);
-        static void writeBigEndianUInt32ValueAt(uinteger32 value, void* ptr);
-        static void writeBigEndianUInt16ValueAt(uinteger16 value, void* ptr);
+        static float bigEndianFloatValueAt(const byte* ptr);
+        static uinteger32 bigEndianUInt32ValueAt(const byte* ptr);
+        static uinteger16 bigEndianUInt16ValueAt(const byte* ptr);
+        static void writeBigEndianFloatValueAt(float value, byte* ptr);
+        static void writeBigEndianUInt32ValueAt(uinteger32 value, byte* ptr);
+        static void writeBigEndianUInt16ValueAt(uinteger16 value, byte* ptr);
     };
 }

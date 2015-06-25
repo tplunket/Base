@@ -31,7 +31,7 @@ namespace NxA { namespace Internal {
     struct Blob : public Object {
         NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA, Blob);
 
-        using InternalVector = std::vector<uinteger8>;
+        using InternalVector = std::vector<byte>;
 
         #pragma mark Instance Variables
         InternalVector data;

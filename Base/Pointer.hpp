@@ -36,7 +36,7 @@ namespace NxA {
         template <class From> Pointer(Pointer<From> const& other) :
                 ConstPointer<T>(std::dynamic_pointer_cast<T>(other.toStdSharedPointer()))
         {
-            assert(this->get() != nullptr);
+            NXA_ASSERT_TRUE(this->get() != nullptr);
         }
         ~Pointer() = default;
 

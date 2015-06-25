@@ -31,7 +31,7 @@ namespace NxA {
         #pragma mark Constructors & Destructors
         WeakConstPointer() { };
         WeakConstPointer(Pointer<T> const& other) : std::weak_ptr<T>(other.toStdSharedPointer()) { }
-        WeakConstPointer(WeakPointer<T> const& other) : std::weak_ptr<T>(other.pointer) { }
+        WeakConstPointer(WeakPointer<T> const& other) : std::weak_ptr<T>(other) { }
         ~WeakConstPointer() = default;
 
         #pragma mark Instance Methods

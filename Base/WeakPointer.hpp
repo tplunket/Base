@@ -34,17 +34,11 @@ namespace NxA {
         WeakPointer(WeakPointer<T> const& other) : WeakConstPointer<T>(other.pointer) { }
         ~WeakPointer() = default;
 
-        #pragma mark Operators
-        T* operator->() {
-            return this->pointer.get();
-        }
-        T* operator->() const {
-            return this->pointer.get();
-        }
-
         #pragma mark Instance Methods
-        bool isValid(void) const {
-            return !this->pointer.expired();
+        Pointer<T> toPointer(void) const
+        {
+            NXA_ASSERT_TRUE(this->isValid());
+            return Pointer<T>(std::shared_ptr<T>(*this));
         }
     };
 }

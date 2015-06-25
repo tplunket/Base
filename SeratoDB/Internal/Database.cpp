@@ -19,3 +19,55 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#include "Internal/Database.hpp"
+
+// -- Generated internal implementation ommitted because this class does not use the default contructor.
+
+using namespace NxA::Serato::Internal;
+
+#pragma mark Constructors & Destructors
+
+Database::Database(String::ConstPointer const& path,
+                   Serato::CrateOrderFile::Pointer usingCrateOrderFile) :
+                   databaseFilePath(path),
+                   tracks(Serato::Track::Array::array()),
+                   otherTags(Serato::Tag::ConstArray::array()),
+                   crateFilesToDelete(String::ConstArray::array()),
+                   crateOrderFile(usingCrateOrderFile),
+                   databaseIsValid(false) { }
+
+#pragma mark Class Methods
+
+#if PRINT_DEBUG_INFO
+void Database::debugListCrate(Serato::Crate::ConstPointer const& crate,
+                              String::ConstPointer const& spacing)
+{
+    auto& crates = crate->crates();
+    for (auto& subCrate : *crates) {
+        auto& crateName = subCrate->crateName();
+        printf("%sCrate '%s'\n", spacing->toUTF8(), crateName->toUTF8());
+
+        auto& crateTracks = subCrate->trackEntries();
+        for (auto& trackEntry : *crateTracks) {
+            printf("%s   Track '%s'\n", spacing->toUTF8(), trackEntry->trackFilePath()->toUTF8());
+        }
+
+        String::Pointer newSpacing = String::stringWith(spacing);
+        newSpacing->append("   ");
+
+        Database::debugListCrate(subCrate, newSpacing);
+    }
+}
+#endif
+
+#pragma mark Instance Methods
+
+void Database::storeTrackTag(Serato::Tag::Pointer const& tag)
+{
+    this->tracks->append(Serato::Track::trackWithTagOnVolume(tag, String::stringWith("")));
+}
+
+void Database::storeOtherTag(Serato::Tag::Pointer const& tag)
+{
+    this->otherTags->append(tag);
+}

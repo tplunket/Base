@@ -20,3 +20,33 @@
 //
 
 #pragma once
+
+#include <Base/Base.hpp>
+#include <Base/Internal/Object.hpp>
+
+#include "Tags/Tag.hpp"
+
+namespace NxA { namespace Serato {
+    typedef struct {
+        byte identifier[4];
+        byte length[4];
+        byte data[0];
+    } TagStruct;
+} }
+
+namespace NxA { namespace Serato { namespace Internal {
+    struct Tag : public NxA::Internal::Object {
+        NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, Tag);
+
+        #pragma mark Class Methods
+        static void setIdentifierForTagAt(uinteger32 identifier, byte* tagAddress);
+        static count dataSizeForTagAt(const byte* tagAddress);
+        static void setDataSizeForTagAt(count dataSize, byte* tagAddress);
+        static const byte* dataForTagAt(const byte* tagAddress);
+        static byte* dataForTagAt(byte* tagAddress);
+        static count memoryNeededForTagHeader(void);
+
+        #pragma mark Instance Variables
+        uinteger32 identifier;
+    };
+} } }

@@ -24,63 +24,52 @@ using namespace std;
 
 #pragma mark Class Methods
 
-TagPtr TagFactory::tagForBinaryRepresentationAt(const void* tagAddress)
+Tag::Pointer TagFactory::tagForTagAt(const byte* tagAddress)
 {
-    uint32_t identifier = Tag::identifierForTagAt(tagAddress);
+    uinteger32 identifier = Tag::identifierForTagAt(tagAddress);
     char typeIdentifier = (identifier >> 24) & 0xff;
-
-    TagPtr newTag;
 
     switch (typeIdentifier) {
         case 'b': {
-            newTag = make_unique<BooleanTag>(tagAddress);
-            break;
+            return BooleanTag::tagWithMemoryAt(tagAddress);
         }
         case 's': {
-            newTag = make_unique<UInt16Tag>(tagAddress);
-            break;
+            return UInteger16Tag::tagWithMemoryAt(tagAddress);
         }
         case 'u': {
-            newTag = make_unique<UInt32Tag>(tagAddress);
-            break;
+            return UInteger32Tag::tagWithMemoryAt(tagAddress);
         }
         case 'v':
         case 't': {
-            newTag = make_unique<TextTag>(tagAddress);
-            break;
+            return TextTag::tagWithMemoryAt(tagAddress);
         }
         case 'p': {
-            newTag = make_unique<PathTag>(tagAddress);
-            break;
+            return PathTag::tagWithMemoryAt(tagAddress);
         }
         case 'a': {
-            newTag = make_unique<BlobTag>(tagAddress);
-            break;
+            return BlobTag::tagWithMemoryAt(tagAddress);
         }
         case 'o': {
-            newTag = make_unique<ObjectTag>(tagAddress);
-            break;
+            return ObjectTag::tagWithMemoryAt(tagAddress);
         }
     }
 
-    return move(newTag);
+    NXA_ALOG("Illegal Serato tag type.");
 }
 
-TagVectorPtr TagFactory::parseTagsAt(const void* firstTagAddress, size_t sizeFromFirstTag)
+Tag::Array::Pointer TagFactory::parseTagsAt(const byte* firstTagAddress, count sizeFromFirstTag)
 {
-    const void* tagAddress = firstTagAddress;
-    const void* endOfTagsAddress = (unsigned char*)firstTagAddress + sizeFromFirstTag;
+    const byte* tagAddress = firstTagAddress;
+    const byte* endOfTagsAddress = firstTagAddress + sizeFromFirstTag;
 
-    TagVectorPtr newTags = make_unique<TagVector>();
+    auto newTags = Tag::Array::array();
 
     while (tagAddress < endOfTagsAddress) {
-        TagPtr tag(TagFactory::tagForBinaryRepresentationAt(tagAddress));
-        if (tag.get()) {
-            newTags->push_back(move(tag));
-        }
+        auto tag = TagFactory::tagForTagAt(tagAddress);
+        newTags->append(tag);
 
-        tagAddress = Tag::nextTagAfterBinaryRepresentationAt(tagAddress);
+        tagAddress = Tag::nextTagAfterTagAt(tagAddress);
     }
 
-    return move(newTags);
+    return newTags;
 }

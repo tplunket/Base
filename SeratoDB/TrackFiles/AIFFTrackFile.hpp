@@ -14,16 +14,20 @@
 
 #include <SeratoDb/TrackFiles/ID3TrackFile.hpp>
 
-namespace NxA { namespace Serato {
-#pragma mark Class Declaration
-    class AIFFTrackFile : public ID3TrackFile
-    {
-    public:
-        #pragma mark Constructors
-        explicit AIFFTrackFile(const char* filePath);
+#include <Base/Base.hpp>
 
-        #pragma mark Instance Variables
-        virtual uint32_t lengthInMilliseconds(void) const;
-        uint32_t bitDepthInBitsOrZeroIfNotApplicable(void) const;
+namespace NxA { namespace Serato {
+    NXA_GENERATED_FORWARD_DECLARATIONS_FOR(AIFFTrackFile);
+
+    class AIFFTrackFile : public ID3TrackFile {
+        NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, AIFFTrackFile);
+
+    public:
+        #pragma mark Factory Methods
+        static AIFFTrackFile::Pointer fileWithFileAt(String::ConstPointer const& path);
+
+        #pragma mark Instance Methods
+        virtual uinteger32 lengthInMilliseconds(void) const;
+        uinteger32 bitDepthInBitsOrZeroIfNotApplicable(void) const;
     };
 } }

@@ -19,3 +19,126 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#include "TrackFiles/Internal/MP4TrackFile.hpp"
+
+#include "SeratoDB/Base64.hpp"
+
+// -- Generated internal implementation ommitted because this class does not use the default contructor.
+
+using namespace NxA;
+using namespace NxA::Serato::Internal;
+
+#pragma mark Structures
+
+namespace NxA { namespace Serato { namespace Internal {
+    typedef struct {
+        byte mimeType[25];
+        byte filename[1];
+        byte description[16];
+        byte majorVersion;
+        byte minorVersion;
+        byte data[0];
+    } MP4MarkersHeaderStruct;
+} } }
+
+#pragma mark Constructors & Destructors
+
+MP4TrackFile::MP4TrackFile(String::ConstPointer const& path, TagLibFilePointer const& newFile) :
+                           TrackFile(path, newFile) { }
+
+#pragma mark Instance Methods
+
+void MP4TrackFile::readMarkers(void)
+{
+    if (!this->itemListMap) {
+        return;
+    }
+
+    auto markersItem = (*this->itemListMap)["----:com.serato.dj:markersv2"];
+    if (markersItem.isValid()) {
+        const TagLib::String encodedData = markersItem.toStringList().toString();
+        uint32_t encodedDataSize = encodedData.size();
+        if (!encodedDataSize) {
+            return;
+        }
+
+        auto decodedData = Base64::decodeBlock(reinterpret_cast<const char*>(encodedData.data(TagLib::String::UTF8).data()),
+                                               encodedDataSize);
+        auto headerStruct = reinterpret_cast<const MP4MarkersHeaderStruct*>(decodedData->data());
+        this->readMarkersV2FromBase64Data(headerStruct->data, decodedData->size() - sizeof(MP4MarkersHeaderStruct));
+    }
+
+    TagLib::MP4::Item beatgridItem = (*this->itemListMap)["----:com.serato.dj:beatgrid"];
+    if (beatgridItem.isValid()) {
+        const TagLib::String encodedData = beatgridItem.toStringList().toString();
+        uint32_t encodedDataSize = encodedData.size();
+        if (!encodedDataSize) {
+            return;
+        }
+
+        auto decodedData = Base64::decodeBlock(reinterpret_cast<const char*>(encodedData.data(TagLib::String::UTF8).data()),
+                                               encodedDataSize);
+
+        auto headerStruct = reinterpret_cast<const MP4MarkersHeaderStruct*>(decodedData->data());
+        if ((headerStruct->majorVersion == 1) && (headerStruct->minorVersion == 0)) {
+            this->readGridMarkersFrom(headerStruct->data, decodedData->size() - sizeof(MP4MarkersHeaderStruct));
+        }
+    }
+}
+
+void MP4TrackFile::writeMarkers(void)
+{
+    if (this->cueMarkers->length() || this->loopMarkers->length()) {
+        auto decodedData = Blob::blob();
+
+        MP4MarkersHeaderStruct header;
+        memcpy(header.mimeType, "application/octet-stream", 25);
+        header.filename[0] = 0;
+        memcpy(header.description, "Serato Markers2", 16);
+        header.majorVersion = 1;
+        header.minorVersion = 1;
+
+        auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<byte*>(&header), sizeof(header));
+        decodedData->append(headerData);
+        decodedData->append(this->base64DataFromMarkersV2());
+
+        auto encodedData = Base64::encodeBlock(decodedData->data(), decodedData->size());
+        encodedData->append(static_cast<character>(0));
+
+        TagLib::StringList newList;
+        newList.append(TagLib::String(reinterpret_cast<character*>(encodedData->data())));
+
+        TagLib::MP4::Item newItem(newList);
+        (*this->itemListMap)["----:com.serato.dj:markersv2"] = newItem;
+    }
+    else {
+        (*this->itemListMap).erase("----:com.serato.dj:markersv2");
+    }
+
+    if (this->gridMarkers->length()) {
+        auto decodedData = Blob::blob();
+
+        MP4MarkersHeaderStruct header;
+        memcpy(header.mimeType, "application/octet-stream", 25);
+        header.filename[0] = 0;
+        memcpy(header.description, "Serato Beatgrid", 16);
+        header.majorVersion = 1;
+        header.minorVersion = 0;
+
+        auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<byte*>(&header), sizeof(header));
+        decodedData->append(headerData);
+        decodedData->append(this->gridMarkerDataFromGridMarkers());
+
+        auto encodedData = Base64::encodeBlock(decodedData->data(), decodedData->size());
+        encodedData->append(static_cast<character>(0));
+
+        TagLib::StringList newList;
+        newList.append(TagLib::String(reinterpret_cast<character*>(encodedData->data())));
+
+        TagLib::MP4::Item newItem(newList);
+        (*this->itemListMap)["----:com.serato.dj:beatgrid"] = newItem;
+    }
+    else {
+        (*this->itemListMap).erase("----:com.serato.dj:beatgrid");
+    }
+}

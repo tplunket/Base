@@ -20,3 +20,17 @@
 //
 
 #pragma once
+
+#include <Base/Base.hpp>
+
+#include "Tags/Internal/Tag.hpp"
+#include "Tags/UInt16Tag.hpp"
+
+namespace NxA { namespace Serato { namespace Internal {
+    struct UInteger16Tag : public Tag {
+        NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, UInteger16Tag);
+
+        #pragma mark Instance Variables
+        uinteger16 value;
+    };
+} } }

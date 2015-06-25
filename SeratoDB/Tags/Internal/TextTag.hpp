@@ -20,3 +20,17 @@
 //
 
 #pragma once
+
+#include <Base/Base.hpp>
+
+#include "Tags/Internal/Tag.hpp"
+#include "Tags/TextTag.hpp"
+
+namespace NxA { namespace Serato { namespace Internal {
+    struct TextTag : public Tag {
+        NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, TextTag);
+
+        #pragma mark Instance Variables
+        String::ConstPointer value;
+    };
+} } }

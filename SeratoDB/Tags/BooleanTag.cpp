@@ -11,45 +11,60 @@
 //
 
 #include "Tags/BooleanTag.hpp"
+#include "Tags/Internal/BooleanTag.hpp"
+
+NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, BooleanTag);
 
 using namespace NxA;
 using namespace NxA::Serato;
 
-#pragma mark Constructors
+#pragma mark Constructors & Destructors
 
-BooleanTag::BooleanTag(const void* tagAddress) : Tag(tagAddress)
+BooleanTag::BooleanTag(NxA::Internal::Object::Pointer const& initial_internal) :
+                       Tag(initial_internal),
+                       internal(initial_internal) { }
+
+#pragma mark Factory Methods
+
+BooleanTag::Pointer BooleanTag::tagWithMemoryAt(const byte* tagAddress)
 {
-    char* tagData = (char*)Tag::p_dataForTagAt(tagAddress);
-    this->p_value = (*tagData == 1) ? true : false;
+    const byte* tagData = Internal::Tag::dataForTagAt(tagAddress);
+
+    return BooleanTag::tagWithIdentifierAndValue(Tag::identifierForTagAt(tagAddress),
+                                                 (*tagData == 1) ? true : false);
+}
+
+BooleanTag::Pointer BooleanTag::tagWithIdentifierAndValue(uinteger32 identifier, bool value)
+{
+    auto newTag = BooleanTag::makeShared();
+    newTag->internal->identifier = identifier;
+    newTag->internal->value = value;
+
+    return newTag;
 }
 
 #pragma mark Instance Methods
 
-const uint32_t& BooleanTag::identifier(void) const
+bool BooleanTag::value(void) const
 {
-    return this->p_identifier;
+    return internal->value;
 }
 
-const bool& BooleanTag::value(void) const
+void BooleanTag::setValue(bool newValue)
 {
-    return this->p_value;
-}
-
-bool& BooleanTag::value(void)
-{
-    return const_cast<bool&>(static_cast<const BooleanTag&>(*this).value());
+    internal->value = newValue;
 }
 
 void BooleanTag::addTo(Blob::Pointer const& destination) const
 {
-    size_t dataSize = 1;
-    size_t totalSizeNeeded = Tag::p_memoryNeededForTagHeader() + dataSize;
+    count dataSize = 1;
+    count totalSizeNeeded = Internal::Tag::memoryNeededForTagHeader() + dataSize;
     auto memoryRepresentation = Blob::blobWithCapacity(totalSizeNeeded);
 
-    void* tagAddress = memoryRepresentation->data();
-    Tag::p_setIdentifierForTagAt(this->identifier(), tagAddress);
-    Tag::p_setDataSizeForTagAt(dataSize, tagAddress);
-    char* tagData = (char*)Tag::p_dataForTagAt(tagAddress);
+    byte* tagAddress = memoryRepresentation->data();
+    Internal::Tag::setIdentifierForTagAt(this->identifier(), tagAddress);
+    Internal::Tag::setDataSizeForTagAt(dataSize, tagAddress);
+    byte* tagData = Internal::Tag::dataForTagAt(tagAddress);
     *tagData = this->value() ? 1 : 0;
 
     destination->append(memoryRepresentation);

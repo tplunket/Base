@@ -19,4 +19,12 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#include "Tags/Internal/UInt16Tag.hpp"
 
+NXA_GENERATED_INTERNAL_IMPLEMENTATION_FOR(NxA::Serato, UInteger16Tag);
+
+using namespace NxA::Serato::Internal;
+
+#pragma mark Constructors & Destructors
+
+UInteger16Tag::UInteger16Tag() { }

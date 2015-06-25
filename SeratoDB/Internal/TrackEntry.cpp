@@ -19,3 +19,15 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#include "Internal/TrackEntry.hpp"
+
+// -- Generated internal implementation ommitted because this class does not use the default contructor.
+
+using namespace NxA::Serato::Internal;
+
+#pragma mark Constructors & Destructors
+
+TrackEntry::TrackEntry(Serato::Tag::ConstPointer const& tag,
+                       String::ConstPointer const& locatedOnVolumePath) :
+                       trackEntryTag(tag),
+                       rootVolumePath(locatedOnVolumePath) { }

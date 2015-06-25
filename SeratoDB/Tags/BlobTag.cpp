@@ -11,38 +11,59 @@
 //
 
 #include "Tags/BlobTag.hpp"
+#include "Tags/Internal/BlobTag.hpp"
+
+NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, BlobTag);
 
 using namespace NxA;
 using namespace NxA::Serato;
 
-#pragma mark Constructors
+#pragma mark Constructors & Destructors
 
-BlobTag::BlobTag(const void* tagAddress) : Tag(tagAddress),
-    p_value(Blob::blobWithMemoryAndSize(static_cast<const char*>(Tag::p_dataForTagAt(tagAddress)),
-                                        Tag::p_dataSizeForTagAt(tagAddress))) { }
+BlobTag::BlobTag(NxA::Internal::Object::Pointer const& initial_internal) :
+                 Tag(initial_internal),
+                 internal(initial_internal) { }
+
+#pragma mark Factory Methods
+
+BlobTag::Pointer BlobTag::tagWithMemoryAt(const byte* tagAddress)
+{
+    return BlobTag::tagWithIdentifierAndValue(Tag::identifierForTagAt(tagAddress),
+                                              Blob::blobWithMemoryAndSize(Internal::Tag::dataForTagAt(tagAddress),
+                                                                          Internal::Tag::dataSizeForTagAt(tagAddress)));
+}
+
+BlobTag::Pointer BlobTag::tagWithIdentifierAndValue(uinteger32 identifier, Blob::ConstPointer const& value)
+{
+    auto newTag = BlobTag::makeShared();
+    newTag->internal->identifier = identifier;
+    newTag->internal->value = value;
+
+    return newTag;
+}
 
 #pragma mark Instance Methods
 
 Blob::ConstPointer const& BlobTag::value(void) const
 {
-    return this->p_value;
+    return internal->value;
 }
 
-Blob::ConstPointer& BlobTag::value(void)
+void BlobTag::setValue(Blob::ConstPointer const& newValue)
 {
-    return const_cast<Blob::ConstPointer&>(static_cast<const BlobTag&>(*this).value());
+    internal->value = newValue;
 }
 
 void BlobTag::addTo(Blob::Pointer const& destination) const
 {
-    size_t dataSize = this->p_value->size();
-    size_t totalSizeNeeded = Tag::p_memoryNeededForTagHeader() + dataSize;
+    count dataSize = internal->value->size();
+    count totalSizeNeeded = Internal::Tag::memoryNeededForTagHeader() + dataSize;
     auto memoryRepresentation = Blob::blobWithCapacity(totalSizeNeeded);
 
-    void* tagAddress = memoryRepresentation->data();
-    Tag::p_setIdentifierForTagAt(this->identifier(), tagAddress);
-    Tag::p_setDataSizeForTagAt(dataSize, tagAddress);
-    memcpy(Tag::p_dataForTagAt(tagAddress), this->p_value->data(), this->p_value->size());
+    byte* tagAddress = memoryRepresentation->data();
+    Internal::Tag::setIdentifierForTagAt(this->identifier(), tagAddress);
+    Internal::Tag::setDataSizeForTagAt(dataSize, tagAddress);
+    memcpy(Internal::Tag::dataForTagAt(tagAddress), this->value()->data(), this->value()->size());
 
     destination->append(memoryRepresentation);
 }

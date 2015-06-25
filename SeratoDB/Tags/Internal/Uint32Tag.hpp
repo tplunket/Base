@@ -20,3 +20,17 @@
 //
 
 #pragma once
+
+#include <Base/Base.hpp>
+
+#include "Tags/Internal/Tag.hpp"
+#include "Tags/UInt32Tag.hpp"
+
+namespace NxA { namespace Serato { namespace Internal {
+    struct UInteger32Tag : public Tag {
+        NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, UInteger32Tag);
+
+        #pragma mark Instance Variables
+        uinteger32 value;
+    };
+} } }

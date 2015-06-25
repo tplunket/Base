@@ -20,3 +20,17 @@
 //
 
 #pragma once
+
+#include <Base/Base.hpp>
+
+#include "Tags/Internal/Tag.hpp"
+#include "Tags/BlobTag.hpp"
+
+namespace NxA { namespace Serato { namespace Internal {
+    struct BlobTag : public Tag {
+        NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, BlobTag);
+
+        #pragma mark Instance Variables
+        Blob::ConstPointer value;
+    };
+} } }

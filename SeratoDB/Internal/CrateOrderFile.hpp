@@ -20,3 +20,43 @@
 //
 
 #pragma once
+
+#include "SeratoDb/CrateOrderFile.hpp"
+#include "SeratoDb/Crate.hpp"
+#include "SeratoDb/Database.hpp"
+
+#include <Base/Base.hpp>
+#include <Base/Internal/Object.hpp>
+
+namespace NxA { namespace Serato { namespace Internal {
+    struct CrateOrderFile : public NxA::Internal::Object {
+        NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTOR_FOR(NxA::Serato, CrateOrderFile);
+
+        #pragma mark Constructors & Desctructors
+        CrateOrderFile(String::ConstPointer const& path,
+                       Serato::Crate::Pointer const& root);
+
+        #pragma mark Class Methods
+        static String::Pointer crateNameIfValidCrateOrEmptyIfNot(String::ConstPointer const& name);
+        static bool filenameIsAValidCrateName(String::ConstPointer const& fileName);
+        static String::Pointer crateNameFromFilename(String::ConstPointer const& fileName);
+        static String::Array::Pointer cratesInSubCratesDirectory(String::ConstPointer const& directory);
+        static String::Array::Pointer readCratesNamesInCrateOrderFile(String::ConstPointer const& crateOrderFilePath);
+        static void addCratesNamesAtTheStartOfUnlessAlreadyThere(String::Array::Pointer const& cratesToAddTo,
+                                                                 String::Array::ConstPointer const& cratesToAdd);
+
+        #pragma mark Instance Variables
+        String::ConstPointer crateOrderFilePath;
+
+        Serato::Crate::Pointer rootCrate;
+
+        String::Array::Pointer unknownCratesNames;
+
+        #pragma mark Instance Methods
+        Serato::Crate::Array::Pointer childrenCratesOfCrateNamedUsingNameList(String::ConstPointer const& name,
+                                                                              String::Array::iterator& it,
+                                                                              const String::Array::iterator& end,
+                                                                              String::ConstPointer const& seratoFolderPath,
+                                                                              String::ConstPointer const& rootFolderPath);
+    };
+} } }

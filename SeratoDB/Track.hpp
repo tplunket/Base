@@ -12,62 +12,27 @@
 
 #pragma once
 
-#include <SeratoDb/Tags/Tag.hpp>
-#include <SeratoDb/TrackFiles/TrackFile.hpp>
+#include "Markers/CueMarker.hpp"
+#include "Markers/LoopMarker.hpp"
+#include "Markers/GridMarker.hpp"
 
-#include <Base/String.hpp>
-
-#include <string>
-#include <vector>
+#include <Base/Base.hpp>
 
 namespace NxA { namespace Serato {
-    #pragma mark Forward declarations
-    class Track;
+    NXA_GENERATED_FORWARD_DECLARATIONS_FOR(Track);
 
-    #pragma mark Containers
-    typedef std::unique_ptr<Track> TrackPtr;
-    typedef std::vector<TrackPtr> TrackVector;
-    typedef std::unique_ptr<TrackVector> TrackVectorPtr;
+    class Tag;
 
-    #pragma mark Class Declaration
-    class Track
-    {
-    private:
-        #pragma mark Private Instance Variables
-        TagPtr p_trackTag;
-        TrackFilePtr p_trackFile;
-        String::ConstPointer p_rootFolder;
-
-        bool p_wasModified;
-
-        CueMarker::Array::Pointer p_cueMarkers;
-        LoopMarker::Array::Pointer p_loopMarkers;
-        GridMarker::Array::Pointer p_gridMarkers;
-
-        #pragma mark Private Instance Methods
-        inline bool p_containsAValidTrackTag(void) const;
-
-        String::ConstPointer const& p_stringForSubTagForIdentifier(const uint32_t& identifier) const;
-        String::ConstPointer const& p_pathForSubTagForIdentifier(const uint32_t& identifier) const;
-        const uint32_t& p_uint32ForSubTagForIdentifier(const uint32_t& identifier) const;
-
-        void p_setStringForSubTagForIdentifier(const char* value, const uint32_t& identifier);
-        void p_setPathForSubTagForIdentifier(const char* value, const uint32_t& identifier);
-        void p_setUInt32ForSubTagForIdentifier(const uint32_t& value, const uint32_t& identifier);
-
-        void p_loadTrackFile(void);
-        void p_saveTrackFile(void);
-        void p_unloadTrackFile(void);
-
-        void p_readMarkers(void);
+    class Track : public NxA::Object {
+        NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, Track);
 
     public:
-        #pragma mark Constructors
-        explicit Track(TagPtr trackTag, const char* locatedOnVolumePath);
-        explicit Track(const char* trackFilePath, const char* locatedOnVolumePath);
+        #pragma mark Factory Methods
+        static Track::Pointer trackWithTagOnVolume(NxA::Pointer<Tag> const& trackTag, String::ConstPointer const& locatedOnVolumePath);
+        static Track::Pointer trackWithFileAtOnVolume(String::ConstPointer const& trackFilePath, String::ConstPointer const& locatedOnVolumePath);
 
         #pragma mark Instance Methods
-        String::ConstPointer trackFilePath(void) const;
+        String::Pointer trackFilePath(void) const;
 
         String::ConstPointer const& title(void) const;
         String::ConstPointer const& artist(void) const;
@@ -80,36 +45,36 @@ namespace NxA { namespace Serato {
         String::ConstPointer const& composer(void) const;
         String::ConstPointer const& key(void) const;
         String::ConstPointer const& length(void) const;
-        const uint32_t& size(void) const;
+        count size(void) const;
         String::ConstPointer const& bitRate(void) const;
         String::ConstPointer const& sampleRate(void) const;
         String::ConstPointer const& bpm(void) const;
         String::ConstPointer const& year(void) const;
-        const uint32_t& trackNumber(void) const;
-        const uint32_t& discNumber(void) const;
-        const uint32_t& dateModifiedInSecondsSinceJanuary1st1970(void) const;
-        const uint32_t& dateAddedInSecondsSinceJanuary1st1970(void) const;
+        count trackNumber(void) const;
+        count discNumber(void) const;
+        timestamp dateModifiedInSecondsSinceJanuary1st1970(void) const;
+        timestamp dateAddedInSecondsSinceJanuary1st1970(void) const;
 
         CueMarker::Array::ConstPointer const& cueMarkers(void) const;
         LoopMarker::Array::ConstPointer const& loopMarkers(void) const;
         GridMarker::Array::ConstPointer const& gridMarkers(void) const;
 
-        void setTitle(const char* title);
-        void setArtist(const char* artist);
-        void setAlbum(const char* album);
-        void setGenre(const char* genre);
-        void setComments(const char* comments);
-        void setGrouping(const char* grouping);
-        void setRemixer(const char* remixer);
-        void setRecordLabel(const char* recordLabel);
-        void setComposer(const char* composer);
-        void setKey(const char* key);
-        void setBpm(const char* bpm);
-        void setYear(const char* year);
-        void setTrackNumber(const uint32_t& trackNumber);
-        void setDiscNumber(const uint32_t& discNumber);
-        void setDateModifiedInSecondsSinceJanuary1st1970(const uint32_t& dateModified);
-        void setDateAddedInSecondsSinceJanuary1st1970(const uint32_t& dateAdded);
+        void setTitle(String::ConstPointer const& title);
+        void setArtist(String::ConstPointer const& artist);
+        void setAlbum(String::ConstPointer const& album);
+        void setGenre(String::ConstPointer const& genre);
+        void setComments(String::ConstPointer const& comments);
+        void setGrouping(String::ConstPointer const& grouping);
+        void setRemixer(String::ConstPointer const& remixer);
+        void setRecordLabel(String::ConstPointer const& recordLabel);
+        void setComposer(String::ConstPointer const& composer);
+        void setKey(String::ConstPointer const& key);
+        void setBpm(String::ConstPointer const& bpm);
+        void setYear(String::ConstPointer const& year);
+        void setTrackNumber(count trackNumber);
+        void setDiscNumber(count discNumber);
+        void setDateModifiedInSecondsSinceJanuary1st1970(timestamp dateModified);
+        void setDateAddedInSecondsSinceJanuary1st1970(timestamp dateAdded);
 
         void setCueMarkers(CueMarker::Array::Pointer const& markers);
         void setLoopMarkers(LoopMarker::Array::Pointer const& markers);
@@ -122,4 +87,3 @@ namespace NxA { namespace Serato {
         void destroy(void);
     };
 } }
-

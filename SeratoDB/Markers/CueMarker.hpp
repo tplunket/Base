@@ -22,16 +22,16 @@ namespace NxA { namespace Serato {
 
     public:
         #pragma mark Factory Methods
-        static CueMarker::Pointer cueMarkerWith(const byte* id3TagStart);
-        static CueMarker::Pointer cueMarkerWith(String::ConstPointer const& label,
-                                                uinteger32 positionInMilliseconds,
-                                                uinteger16 index);
-        static CueMarker::Pointer cueMarkerWith(CueMarker::ConstPointer const& other);
+        static CueMarker::Pointer markerWithMemoryAt(const byte* id3TagStart);
+        static CueMarker::Pointer markerWithLabelPositionAndIndex(String::ConstPointer const& label,
+                                                                  uinteger32 positionInMilliseconds,
+                                                                  uinteger16 index);
+        static CueMarker::Pointer markerWith(CueMarker::ConstPointer const& other);
 
         #pragma mark Instance Methods
         uinteger32 positionInMilliseconds(void) const;
         uinteger16 index(void) const;
-        const String::ConstPointer& label(void) const;
+        String::ConstPointer const& label(void) const;
 
         void addId3TagTo(Blob::Pointer const& data) const;
     };

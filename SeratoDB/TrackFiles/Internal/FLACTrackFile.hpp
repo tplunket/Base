@@ -20,3 +20,21 @@
 //
 
 #pragma once
+
+#include "TrackFiles/FLACTrackFile.hpp"
+#include "TrackFiles/Internal/TrackFile.hpp"
+
+#include <Base/Base.hpp>
+
+namespace NxA { namespace Serato { namespace Internal {
+    struct FLACTrackFile : public TrackFile {
+        NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTOR_FOR(NxA::Serato, FLACTrackFile);
+
+        #pragma mark Constructor & Destructors
+        FLACTrackFile(String::ConstPointer const& path, TagLibFilePointer const& newFile);
+
+        #pragma mark Instance Methods
+        void readMarkers(void);
+        void writeMarkers(void);
+    };
+} } }

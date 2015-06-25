@@ -19,4 +19,12 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#include "Tags/Internal/PathTag.hpp"
 
+NXA_GENERATED_INTERNAL_IMPLEMENTATION_FOR(NxA::Serato, PathTag);
+
+using namespace NxA::Serato::Internal;
+
+#pragma mark Constructors & Destructors
+
+PathTag::PathTag() : value(String::string()) { }

@@ -12,44 +12,27 @@
 
 #pragma once
 
-#include <SeratoDb/Tags/ObjectTag.hpp>
-#include <SeratoDB/Utility.hpp>
-
-#include <Base/String.hpp>
-
-#include <vector>
+#include <Base/Base.hpp>
 
 namespace NxA { namespace Serato {
-    #pragma mark Forward declarations
-    class TrackEntry;
+    NXA_GENERATED_FORWARD_DECLARATIONS_FOR(TrackEntry);
 
-    #pragma mark Containers
-    typedef std::unique_ptr<TrackEntry> TrackEntryPtr;
-    typedef std::vector<TrackEntryPtr> TrackEntryVector;
-    typedef std::unique_ptr<TrackEntryVector> TrackEntryVectorPtr;
+    class Tag;
 
-    #pragma mark Class Declaration
-    class TrackEntry
-    {
-    private:
-        #pragma mark Private Instance Variable
-        TagPtr p_trackEntryTag;
-        ConstStringPtr p_rootVolumePath;
-
-        #pragma mark Private Instance Methods
-        bool p_containsAValidTrackEntryTag(void) const;
+    class TrackEntry : public NxA::Object {
+        NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, TrackEntry);
 
     public:
-        #pragma mark Constructors
-        explicit TrackEntry(TagPtr trackEntryTag, const char* locatedOnVolumePath) :
-                            p_trackEntryTag(std::move(trackEntryTag)),
-                            p_rootVolumePath(std::make_unique<std::string>(locatedOnVolumePath)) { };
-        explicit TrackEntry(const char* trackPath, const char* locatedOnVolumePath);
+        #pragma mark Factory Methods
+        static TrackEntry::Pointer entryWithTagOnVolume(NxA::ConstPointer<Tag> const& tag,
+                                                        String::ConstPointer const& volumePath);
+        static TrackEntry::Pointer entryWithTrackFileAtOnVolume(String::ConstPointer const& path,
+                                                                String::ConstPointer const& volumePath);
 
         #pragma mark Instance Methods
         String::ConstPointer trackFilePath(void) const;
 
-        const Tag& tagForEntry(void) const;
+        NxA::ConstPointer<Tag> const& tagForEntry(void) const;
 
         void destroy(void);
     };

@@ -20,3 +20,31 @@
 //
 
 #pragma once
+
+#include "TrackFiles/ID3TrackFile.hpp"
+#include "TrackFiles/Internal/TrackFile.hpp"
+
+#include <Base/Base.hpp>
+
+#include <taglib/id3v2tag.h>
+#include <taglib/generalencapsulatedobjectframe.h>
+
+namespace NxA { namespace Serato { namespace Internal {
+    struct ID3TrackFile : public TrackFile {
+        NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTOR_FOR(NxA::Serato, ID3TrackFile);
+
+        #pragma mark Constructor & Destructors
+        ID3TrackFile(String::ConstPointer const& path, TagLibFilePointer const& newFile);
+
+        #pragma mark Class Methods
+        static bool isAValidGeobFrame(const TagLib::ID3v2::GeneralEncapsulatedObjectFrame* frame);
+        static TagLib::ID3v2::FrameList::Iterator frameInListWithDescription(TagLib::ID3v2::FrameList& list,
+                                                                             String::ConstPointer const& description);
+        
+        #pragma mark Instance Methods
+        void readMarkers(void);
+        void writeMarkers(void);
+        void writeMarkersV2Frame(void);
+        void writeGridMarkersFrame(void);
+    };
+} } }

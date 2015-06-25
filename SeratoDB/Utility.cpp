@@ -29,63 +29,60 @@ using namespace NxA::Serato;
 
 #pragma mark Utility Functions
 
-String::ConstPointer NxA::Serato::seratoFolderPathForFolder(const char* folderPath)
+String::ConstPointer NxA::Serato::seratoFolderPathForFolder(String::ConstPointer const& folderPath)
 {
-    auto joinedPath = File::joinPaths(String::stringWith(folderPath),
-                                      String::stringWith("_Serato_"));
+    auto joinedPath = File::joinPaths(folderPath, String::stringWith("_Serato_"));
     return joinedPath;
 }
 
-String::ConstPointer NxA::Serato::databaseFilePathForSeratoFolder(const char* seratoFolderPath)
+String::ConstPointer NxA::Serato::databaseFilePathForSeratoFolder(String::ConstPointer const& seratoFolderPath)
 {
-    auto joinedPath = File::joinPaths(String::stringWith(seratoFolderPath),
-                                      String::stringWith("database V2"));
+    auto joinedPath = File::joinPaths(seratoFolderPath, String::stringWith("database V2"));
     return joinedPath;
 }
 
-String::ConstPointer NxA::Serato::crateOrderFilePathForSeratoFolder(const char* seratoFolderPath)
+String::ConstPointer NxA::Serato::crateOrderFilePathForSeratoFolder(String::ConstPointer const& seratoFolderPath)
 {
-    auto joinedPath = File::joinPaths(String::stringWith(seratoFolderPath),
-                                      String::stringWith("neworder.pref"));
+    auto joinedPath = File::joinPaths(seratoFolderPath, String::stringWith("neworder.pref"));
     return joinedPath;
 }
 
-String::ConstPointer NxA::Serato::subCratesDirectoryPathInSeratoFolder(const char* seratoFolderPath)
+String::ConstPointer NxA::Serato::subCratesDirectoryPathInSeratoFolder(String::ConstPointer const& seratoFolderPath)
 {
-    auto joinedPath = File::joinPaths(String::stringWith(seratoFolderPath),
-                                      String::stringWith("Subcrates"));
+    auto joinedPath = File::joinPaths(seratoFolderPath, String::stringWith("Subcrates"));
     return joinedPath;
 }
 
-String::ConstPointer NxA::Serato::smartCratesDirectoryPathInSeratoFolder(const char* seratoFolderPath)
+String::ConstPointer NxA::Serato::smartCratesDirectoryPathInSeratoFolder(String::ConstPointer const& seratoFolderPath)
 {
-    auto joinedPath = File::joinPaths(String::stringWith(seratoFolderPath),
-                                      String::stringWith("SmartCrates"));
+    auto joinedPath = File::joinPaths(seratoFolderPath, String::stringWith("SmartCrates"));
     return joinedPath;
 }
 
-String::ConstPointer NxA::Serato::crateFilePathForCrateNameInSeratoFolder(const char* crateName, const char* seratoFolderPath)
+String::ConstPointer NxA::Serato::crateFilePathForCrateNameInSeratoFolder(String::ConstPointer const& crateName,
+                                                                          String::ConstPointer const& seratoFolderPath)
 {
     auto cratesFolderPath = subCratesDirectoryPathInSeratoFolder(seratoFolderPath);
-    auto crateFilePartialPath = File::joinPaths(cratesFolderPath, String::stringWith(crateName));
+    auto crateFilePartialPath = File::joinPaths(cratesFolderPath, crateName);
     crateFilePartialPath->append(".crate");
 
     return crateFilePartialPath;
 }
 
-String::ConstPointer NxA::Serato::crateFilePathForSmartCrateNameInSeratoFolder(const char* crateName, const char* seratoFolderPath)
+String::ConstPointer NxA::Serato::crateFilePathForSmartCrateNameInSeratoFolder(String::ConstPointer const& crateName,
+                                                                               String::ConstPointer const& seratoFolderPath)
 {
     auto cratesFolderPath = subCratesDirectoryPathInSeratoFolder(seratoFolderPath);
-    auto crateFilePartialPath = File::joinPaths(cratesFolderPath, String::stringWith(crateName));
+    auto crateFilePartialPath = File::joinPaths(cratesFolderPath, crateName);
     crateFilePartialPath->append(".scrate");
 
     return crateFilePartialPath;
 }
 
-bool NxA::Serato::containsAValidSeratoFolder(const char* folderPath)
+bool NxA::Serato::containsAValidSeratoFolder(String::ConstPointer const& folderPath)
 {
     auto seratoFolderPath = seratoFolderPathForFolder(folderPath);
-    auto databaseFilePath = databaseFilePathForSeratoFolder(seratoFolderPath->toUTF8());
-    auto crateOrderFilePath = crateOrderFilePathForSeratoFolder(seratoFolderPath->toUTF8());
+    auto databaseFilePath = databaseFilePathForSeratoFolder(seratoFolderPath);
+    auto crateOrderFilePath = crateOrderFilePathForSeratoFolder(seratoFolderPath);
     return File::fileExistsAt(databaseFilePath) && File::fileExistsAt(crateOrderFilePath);
 }

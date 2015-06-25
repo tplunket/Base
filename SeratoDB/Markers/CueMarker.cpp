@@ -44,18 +44,18 @@ CueMarker::CueMarker(NxA::Internal::Object::Pointer const& initial_internal) :
 
 #pragma mark Factory Methods
 
-CueMarker::Pointer CueMarker::cueMarkerWith(const byte* id3TagStart)
+CueMarker::Pointer CueMarker::markerWithMemoryAt(const byte* id3TagStart)
 {
     auto tagStruct = reinterpret_cast<const SeratoCueTagStruct*>(id3TagStart);
 
-    return CueMarker::cueMarkerWith(String::stringWith(reinterpret_cast<const character*>(tagStruct->label)),
-                                    Platform::bigEndianUInt32ValueAt(tagStruct->position),
-                                    Platform::bigEndianUInt16ValueAt(tagStruct->index));
+    return CueMarker::markerWithLabelPositionAndIndex(String::stringWith(reinterpret_cast<const character*>(tagStruct->label)),
+                                                      Platform::bigEndianUInt32ValueAt(tagStruct->position),
+                                                      Platform::bigEndianUInt16ValueAt(tagStruct->index));
 }
 
-CueMarker::Pointer CueMarker::cueMarkerWith(String::ConstPointer const& label,
-                                            uinteger32 positionInMilliseconds,
-                                            uinteger16 index)
+CueMarker::Pointer CueMarker::markerWithLabelPositionAndIndex(String::ConstPointer const& label,
+                                                              uinteger32 positionInMilliseconds,
+                                                              uinteger16 index)
 {
     auto newMarker = CueMarker::makeShared();
     newMarker->internal->positionInMilliseconds = positionInMilliseconds;
@@ -65,9 +65,9 @@ CueMarker::Pointer CueMarker::cueMarkerWith(String::ConstPointer const& label,
     return newMarker;
 }
 
-CueMarker::Pointer CueMarker::cueMarkerWith(CueMarker::ConstPointer const& other)
+CueMarker::Pointer CueMarker::markerWith(CueMarker::ConstPointer const& other)
 {
-    return CueMarker::cueMarkerWith(other->label(), other->positionInMilliseconds(), other->index());
+    return CueMarker::markerWithLabelPositionAndIndex(other->label(), other->positionInMilliseconds(), other->index());
 }
 
 #pragma mark Instance Methods
@@ -82,7 +82,7 @@ uinteger16 CueMarker::index(void) const
     return internal->index;
 }
 
-const String::ConstPointer& CueMarker::label(void) const
+String::ConstPointer const& CueMarker::label(void) const
 {
     return internal->label;
 }
@@ -92,15 +92,15 @@ void CueMarker::addId3TagTo(Blob::Pointer const& data) const
     SeratoCueTagStruct header;
 
     memcpy(header.tag, "CUE", 4);
-    size_t size = sizeof(SeratoCueTagStruct) + this->label()->length() + 1 - sizeof(SeratoCueTagHeaderStruct);
-    Platform::writeBigEndianUInt32ValueAt((uint32_t)size, &header.size);
-    Platform::writeBigEndianUInt16ValueAt(this->index(), &header.index);
-    Platform::writeBigEndianUInt32ValueAt(this->positionInMilliseconds(), &header.position);
-    Platform::writeBigEndianUInt32ValueAt(0, &header.color);
+    count size = sizeof(SeratoCueTagStruct) + this->label()->length() + 1 - sizeof(SeratoCueTagHeaderStruct);
+    Platform::writeBigEndianUInt32ValueAt(static_cast<uinteger32>(size), header.size);
+    Platform::writeBigEndianUInt16ValueAt(this->index(), header.index);
+    Platform::writeBigEndianUInt32ValueAt(this->positionInMilliseconds(), header.position);
+    Platform::writeBigEndianUInt32ValueAt(0, header.color);
     header.loop_enabled = 0;
     header.loop_locked = 0;
 
-    auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<const character*>(&header), sizeof(SeratoCueTagStruct));
+    auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<const byte*>(&header), sizeof(SeratoCueTagStruct));
     data->append(headerData);
     data->append(this->label()->toUTF8());
 }

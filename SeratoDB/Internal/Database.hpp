@@ -20,3 +20,45 @@
 //
 
 #pragma once
+
+#include "SeratoDB/Database.hpp"
+#include "SeratoDB/Track.hpp"
+#include "SeratoDB/Crate.hpp"
+#include "SeratoDB/CrateOrderFile.hpp"
+#include "Tags/Tag.hpp"
+
+#include <Base/Base.hpp>
+#include <Base/Internal/Object.hpp>
+
+#define PRINT_DEBUG_INFO        1
+
+namespace NxA { namespace Serato { namespace Internal {
+    struct Database : public NxA::Internal::Object {
+        NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTOR_FOR(NxA::Serato, Database);
+
+        #pragma mark Constructors & Destructors
+        Database(String::ConstPointer const& path,
+                 Serato::CrateOrderFile::Pointer usingCrateOrderFile);
+
+        #pragma mark Class Methods
+#if PRINT_DEBUG_INFO
+        static void debugListCrate(Serato::Crate::ConstPointer const& crate,
+                                   String::ConstPointer const& spacing);
+#endif
+
+        #pragma mark Instance Variables
+        String::ConstPointer databaseFilePath;
+        Serato::Track::Array::Pointer tracks;
+        Serato::Tag::ConstArray::Pointer otherTags;
+
+        String::ConstArray::Pointer crateFilesToDelete;
+
+        Serato::CrateOrderFile::Pointer crateOrderFile;
+
+        bool databaseIsValid;
+
+        #pragma mark Instance Methods
+        void storeTrackTag(Serato::Tag::Pointer const& tag);
+        void storeOtherTag(Serato::Tag::Pointer const& tag);
+    };
+} } }

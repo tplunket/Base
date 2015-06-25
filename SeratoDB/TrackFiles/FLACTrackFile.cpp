@@ -11,177 +11,90 @@
 //
 
 #include "TrackFiles/FLACTrackFile.hpp"
-#include "Base64.hpp"
+#include "TrackFiles/Internal/FLACTrackFile.hpp"
 
 #include <taglib/flacfile.h>
 
+using namespace NxA;
 using namespace NxA::Serato;
-using namespace TagLib;
-using namespace std;
 
-#pragma mark Constants
+NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, FLACTrackFile);
 
-static const string emptyString("");
+#pragma mark Constructors & Destructors
 
-#pragma mark Structures
+FLACTrackFile::FLACTrackFile(NxA::Internal::Object::Pointer const& initial_internal) :
+                             TrackFile(initial_internal),
+                             internal(initial_internal) { }
 
-typedef struct {
-    unsigned char mimeType[25];
-    unsigned char filename[1];
-    unsigned char description[16];
-    unsigned char majorVersion;
-    unsigned char minorVersion;
-    unsigned char data[0];
-} SeratoFLACMarkersHeaderStruct;
+#pragma mark Factory Methods
 
-#pragma mark Constructors
-
-FLACTrackFile::FLACTrackFile(const char* trackFilePath) : TrackFile(trackFilePath)
+FLACTrackFile::Pointer FLACTrackFile::fileWithFileAt(String::ConstPointer const& path)
 {
-    TaglibFilePtr file = make_unique<FLAC::File>(trackFilePath);
+    auto file = Internal::TagLibFilePointer(std::make_shared<TagLib::FLAC::File>(path->toUTF8()));
+    auto internalObject = Internal::FLACTrackFile::Pointer(std::make_shared<Internal::FLACTrackFile>(path, file));
+    auto newFile = FLACTrackFile::makeSharedWithInternal(internalObject);
+
     if (!file->isValid()) {
-        this->p_file = TaglibFilePtr();
-        this->p_parsedFileTag = NULL;
-        this->p_audioProperties = NULL;
-        return;
+        newFile->internal->parsedFileTag = nullptr;
+        newFile->internal->audioProperties = nullptr;
+        return newFile;
     }
 
-    this->p_parsedFileTag = file->tag();
-    this->p_audioProperties = file->audioProperties();
-    this->p_properties = file->properties();
-    this->p_file = move(file);
+    newFile->internal->parsedFileTag = file->tag();
+    newFile->internal->audioProperties = file->audioProperties();
+    newFile->internal->properties = file->properties();
 
-    this->p_readMarkers();
+    newFile->internal->readMarkers();
+
+    return newFile;
 }
 
 #pragma mark Instance Methods
-
-void FLACTrackFile::p_readMarkers(void)
-{
-    const TagLib::String markersEncodedData = this->p_properties["SERATO_MARKERS_V2"].toString();
-    uint32_t encodedDataSize = markersEncodedData.size();
-    if (encodedDataSize) {
-        auto decodedMarkersData = Base64::decodeBlock((const char*)markersEncodedData.data(TagLib::String::UTF8).data(),
-                                                      encodedDataSize);
-
-        const SeratoFLACMarkersHeaderStruct* headerStruct = (const SeratoFLACMarkersHeaderStruct*)decodedMarkersData->data();
-        this->p_readMarkersV2FromBase64Data(headerStruct->data, decodedMarkersData->size() - sizeof(SeratoFLACMarkersHeaderStruct));
-    }
-
-    const TagLib::String beatGridEncodedData = this->p_properties["SERATO_BEATGRID"].toString();
-    uint32_t encodedBeatGridDataSize = beatGridEncodedData.size();
-    if (encodedBeatGridDataSize) {
-        auto decodedGridMarkersData = Base64::decodeBlock((const char*)beatGridEncodedData.data(TagLib::String::UTF8).data(),
-                                                          encodedBeatGridDataSize);
-        const SeratoFLACMarkersHeaderStruct* headerStruct = (const SeratoFLACMarkersHeaderStruct*)decodedGridMarkersData->data();
-        if ((headerStruct->majorVersion == 1) && (headerStruct->minorVersion == 0)) {
-            this->p_readGridMarkersFrom(headerStruct->data, decodedGridMarkersData->size() - sizeof(SeratoFLACMarkersHeaderStruct));
-        }
-    }
-}
-
-void FLACTrackFile::p_writeMarkers(void)
-{
-    if (this->cueMarkers()->length() || this->loopMarkers()->length()) {
-        auto decodedData = Blob::blob();
-
-        SeratoFLACMarkersHeaderStruct header;
-        memcpy(header.mimeType, "application/octet-stream", 25);
-        header.filename[0] = 0;
-        memcpy(header.description, "Serato Markers2", 16);
-        header.majorVersion = 1;
-        header.minorVersion = 1;
-
-        auto headerData = Blob::blobWithMemoryAndSize((char*)&header, sizeof(header));
-        decodedData->append(headerData);
-
-        auto base64Data = this->p_base64DataFromMarkersV2();
-        decodedData->append(base64Data);
-
-        auto encodedData = Base64::encodeBlock(decodedData->data(), decodedData->size());
-        encodedData->append(static_cast<character>(0));
-
-        StringList newList;
-        newList.append(TagLib::String(reinterpret_cast<character*>(encodedData->data())));
-        this->p_properties["SERATO_MARKERS_V2"] = newList;
-    }
-    else {
-        this->p_properties.erase("SERATO_MARKERS_V2");
-    }
-
-    if (this->gridMarkers()->length()) {
-        auto decodedData = Blob::blob();
-
-        SeratoFLACMarkersHeaderStruct header;
-        memcpy(header.mimeType, "application/octet-stream", 25);
-        header.filename[0] = 0;
-        memcpy(header.description, "Serato Beatgrid", 16);
-        header.majorVersion = 1;
-        header.minorVersion = 0;
-
-        auto headerData = Blob::blobWithMemoryAndSize((char*)&header, sizeof(header));
-        decodedData->append(headerData);
-
-        auto base64Data = this->p_gridMarkerDataFromGridMarkers();
-        decodedData->append(base64Data);
-
-        auto encodedData = Base64::encodeBlock(decodedData->data(), decodedData->size());
-        encodedData->append(static_cast<character>(0));
-
-        StringList newList;
-        newList.append(TagLib::String(reinterpret_cast<character*>(encodedData->data())));
-        this->p_properties["SERATO_BEATGRID"] = newList;
-    }
-    else {
-        this->p_properties.erase("SERATO_BEATGRID");
-    }
-}
 
 bool FLACTrackFile::hasKey(void) const
 {
     return true;
 }
 
-string FLACTrackFile::key(void) const
+String::Pointer FLACTrackFile::key(void) const
 {
-    TagLib::String text = this->p_properties["INITIALKEY"].toString();
+    auto text = internal->properties["INITIALKEY"].toString();
     if (text != TagLib::String::null) {
-        return text.to8Bit();
+        return String::stringWith(text.toCString());
     }
 
-    return emptyString;
+    return String::string();
 }
 
-string FLACTrackFile::grouping(void) const
+String::Pointer FLACTrackFile::grouping(void) const
 {
-    TagLib::String text = this->p_properties["GROUPING"].toString();
+    auto text = internal->properties["GROUPING"].toString();
     if (text != TagLib::String::null) {
-        return text.to8Bit();
+        return String::stringWith(text.toCString());
     }
 
-    return emptyString;
+    return String::string();
 }
 
-uint32_t FLACTrackFile::lengthInMilliseconds(void) const
+uinteger32 FLACTrackFile::lengthInMilliseconds(void) const
 {
-    if (this->p_audioProperties) {
-        const FLAC::Properties* audioProperties = (const FLAC::Properties*)this->p_audioProperties;
+    if (internal->audioProperties) {
+        auto audioProperties = reinterpret_cast<const TagLib::FLAC::Properties*>(internal->audioProperties);
 
-        uint32_t numberOfFrames = audioProperties->sampleFrames();
-        uint32_t sampleRate = audioProperties->sampleRate();
-        uint32_t numberOfMilliseconds = ((double)numberOfFrames * 1000.0) / (double)sampleRate;
+        auto numberOfFrames = audioProperties->sampleFrames();
+        auto sampleRate = audioProperties->sampleRate();
 
+        uinteger32 numberOfMilliseconds = (static_cast<double>(numberOfFrames) * 1000.0) / static_cast<double>(sampleRate);
         return numberOfMilliseconds;
     }
 
     return 0;
 }
 
-uint32_t FLACTrackFile::bitDepthInBitsOrZeroIfNotApplicable(void) const
+uinteger32 FLACTrackFile::bitDepthInBitsOrZeroIfNotApplicable(void) const
 {
-    if (this->p_audioProperties) {
-        const FLAC::Properties* audioProperties = (const FLAC::Properties*)this->p_audioProperties;
-
+    if (internal->audioProperties) {
+        auto audioProperties = reinterpret_cast<const TagLib::FLAC::Properties*>(internal->audioProperties);
         return audioProperties->sampleWidth();
     }
 
@@ -193,9 +106,9 @@ bool FLACTrackFile::hasRecordLabel(void) const
     return false;
 }
 
-string FLACTrackFile::recordLabel(void) const
+String::Pointer FLACTrackFile::recordLabel(void) const
 {
-    return emptyString;
+    return String::string();
 }
 
 bool FLACTrackFile::hasRemixer(void) const
@@ -203,53 +116,53 @@ bool FLACTrackFile::hasRemixer(void) const
     return false;
 }
 
-string FLACTrackFile::remixer(void) const
+String::Pointer FLACTrackFile::remixer(void) const
 {
-    return emptyString;
+    return String::string();
 }
 
-string FLACTrackFile::yearReleased(void) const
+String::Pointer FLACTrackFile::yearReleased(void) const
 {
-    auto text = this->p_properties["DATE"].toString();
+    auto text = internal->properties["DATE"].toString();
     if (text != TagLib::String::null) {
-        return text.to8Bit();
+        return String::stringWith(text.toCString());
     }
 
-    return emptyString;
+    return String::string();
 }
 
-CharVectorPtr FLACTrackFile::artwork(void) const
+Blob::Pointer FLACTrackFile::artwork(void) const
 {
     // -- TODO: To be implemented.
-    return CharVectorPtr();
+    return Blob::blob();
 }
 
-void FLACTrackFile::setKey(const char* key)
+void FLACTrackFile::setKey(String::ConstPointer const& key)
 {
-    this->p_properties["INITIALKEY"] = TagLib::String(key);
+    internal->properties["INITIALKEY"] = TagLib::String(key->toUTF8());
 }
 
-void FLACTrackFile::setGrouping(const char* grouping)
+void FLACTrackFile::setGrouping(String::ConstPointer const& grouping)
 {
-    this->p_properties["GROUPING"] = TagLib::String(grouping);
+    internal->properties["GROUPING"] = TagLib::String(grouping->toUTF8());
 }
 
-void FLACTrackFile::setRecordLabel(const char* recordLabel)
-{
-    // -- This is not supported by FLAC files.
-}
-
-void FLACTrackFile::setRemixer(const char* remixer)
+void FLACTrackFile::setRecordLabel(String::ConstPointer const& recordLabel)
 {
     // -- This is not supported by FLAC files.
 }
 
-void FLACTrackFile::setYearReleased(const char* year)
+void FLACTrackFile::setRemixer(String::ConstPointer const& remixer)
 {
-    this->p_properties["DATE"] = TagLib::String(year);
+    // -- This is not supported by FLAC files.
 }
 
-void FLACTrackFile::setArtwork(CharVectorPtr artwork)
+void FLACTrackFile::setYearReleased(String::ConstPointer const& year)
+{
+    internal->properties["DATE"] = TagLib::String(year->toUTF8());
+}
+
+void FLACTrackFile::setArtwork(Blob::ConstPointer const& artwork)
 {
     // -- TODO: To be implemented.
 }

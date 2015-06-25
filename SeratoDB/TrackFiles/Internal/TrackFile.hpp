@@ -20,3 +20,48 @@
 //
 
 #pragma once
+
+#include <Base/Base.hpp>
+#include <Base/Internal/Object.hpp>
+
+#include "TrackFiles/TrackFile.hpp"
+
+#include <taglib/tag.h>
+#include <taglib/tfile.h>
+#include <taglib/tpropertymap.h>
+#include <taglib/audioproperties.h>
+
+namespace NxA { namespace Serato { namespace Internal {
+    using TagLibFilePointer = NxA::Pointer<TagLib::File>;
+
+    struct TrackFile : public NxA::Internal::Object {
+        NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTOR_FOR(NxA::Serato, TrackFile);
+
+        #pragma mark Constructor & Destructors
+        TrackFile(String::ConstPointer const& path, TagLibFilePointer const& newFile);
+
+        #pragma mark Class Methods
+        static const byte* nextTagPositionAfterTagNamed(String::ConstPointer const& tagName, const byte* currentTagPosition);
+        static Blob::Pointer markerV2TagDataFrom(const byte* tagStart);
+
+        #pragma mark Instance Variables
+        String::ConstPointer trackFilePath;
+        TagLibFilePointer file;
+        TagLib::Tag* parsedFileTag;
+        TagLib::PropertyMap properties;
+        TagLib::AudioProperties* audioProperties;
+
+        Serato::CueMarker::Array::Pointer cueMarkers;
+        Serato::LoopMarker::Array::Pointer loopMarkers;
+        Serato::GridMarker::Array::Pointer gridMarkers;
+        Blob::Array::Pointer otherTags;
+
+        #pragma mark Instance Methods
+        void readMarkersV2FromBase64Data(const byte* markerV2Data, count totalSize);
+        void readGridMarkersFrom(const byte* gridMarkerData, count totalSize);
+        void addGridMarker(Serato::GridMarker::ConstPointer const& gridMarker);
+        Blob::Pointer base64DataFromMarkersV2(void);
+        Blob::Pointer gridMarkerDataFromGridMarkers(void);
+        virtual void writeMarkers(void) = 0;
+    };
+} } }

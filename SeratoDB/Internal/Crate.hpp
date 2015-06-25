@@ -21,16 +21,43 @@
 
 #pragma once
 
-#include <Base/Base.hpp>
+#include "SeratoDB/Crate.hpp"
+#include "SeratoDB/TrackEntry.hpp"
+#include "Tags/Tag.hpp"
 
-#include "TrackFiles/WAVTrackFile.hpp"
-#include "TrackFiles/Internal/ID3TrackFile.hpp"
+#include <Base/Base.hpp>
+#include <Base/Internal/Object.hpp>
 
 namespace NxA { namespace Serato { namespace Internal {
-    struct WAVTrackFile : public ID3TrackFile {
-        NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, WAVTrackFile);
+    struct Crate : public NxA::Internal::Object {
+        NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTOR_FOR(NxA::Serato, Crate);
 
-        #pragma mark Constructor & Destructors
-        WAVTrackFile(String::ConstPointer const& path, TagLibFilePointer const& newFile);
+        #pragma mark Constructors & Destructors
+        Crate(String::ConstPointer const& fullName,
+              String::ConstPointer const& volumePath,
+              String::ConstPointer const& filePath);
+
+        #pragma mark Instance Variables
+        String::ConstPointer crateName;
+        String::ConstPointer crateFullName;
+        String::ConstPointer rootVolumePath;
+        String::ConstPointer crateFilePath;
+
+        bool tracksWereModified;
+        bool cratesWereModified;
+
+        Serato::Crate::WeakPointer parentCrate;
+        Serato::Crate::Array::Pointer childrenCrates;
+        Serato::TrackEntry::Array::Pointer trackEntries;
+
+        Serato::Tag::ConstArray::Pointer otherTags;
+
+        #pragma mark Instance Methods
+        void addTrackEntry(Serato::TrackEntry::Pointer const& trackEntry);
+
+        void storeTrackTag(Serato::Tag::ConstPointer const& tag);
+        void storeOtherTag(Serato::Tag::Pointer const& tag);
+
+        void markCratesAsModified(void);
     };
 } } }

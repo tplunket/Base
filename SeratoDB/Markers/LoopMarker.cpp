@@ -46,20 +46,20 @@ LoopMarker::LoopMarker(NxA::Internal::Object::Pointer const& initial_internal) :
 
 #pragma mark Factory Methods
 
-LoopMarker::Pointer LoopMarker::loopMarkerWith(const byte* id3TagStart)
+LoopMarker::Pointer LoopMarker::markerWithMemoryAt(const byte* id3TagStart)
 {
     const SeratoLoopTagStruct* tagStruct = reinterpret_cast<const SeratoLoopTagStruct*>(id3TagStart);
 
-    return LoopMarker::loopMarkerWith(String::stringWith(reinterpret_cast<const character*>(tagStruct->label)),
-                                      Platform::bigEndianUInt32ValueAt(tagStruct->position),
-                                      Platform::bigEndianUInt32ValueAt(tagStruct->loopPosition),
-                                      Platform::bigEndianUInt16ValueAt(tagStruct->index));
+    return LoopMarker::markerWithLabelStartEndPositionsAndIndex(String::stringWith(reinterpret_cast<const character*>(tagStruct->label)),
+                                                                Platform::bigEndianUInt32ValueAt(tagStruct->position),
+                                                                Platform::bigEndianUInt32ValueAt(tagStruct->loopPosition),
+                                                                Platform::bigEndianUInt16ValueAt(tagStruct->index));
 }
 
-LoopMarker::Pointer LoopMarker::loopMarkerWith(String::ConstPointer const& label,
-                                               uinteger32 startPositionInMilliseconds,
-                                               uinteger32 endPositionInMilliseconds,
-                                               uinteger16 index)
+LoopMarker::Pointer LoopMarker::markerWithLabelStartEndPositionsAndIndex(String::ConstPointer const& label,
+                                                                         uinteger32 startPositionInMilliseconds,
+                                                                         uinteger32 endPositionInMilliseconds,
+                                                                         uinteger16 index)
 {
     auto newMarker = LoopMarker::makeShared();
     newMarker->internal->startPositionInMilliseconds = startPositionInMilliseconds;
@@ -70,12 +70,12 @@ LoopMarker::Pointer LoopMarker::loopMarkerWith(String::ConstPointer const& label
     return newMarker;
 }
 
-LoopMarker::Pointer LoopMarker::loopMarkerWith(LoopMarker::ConstPointer const& other)
+LoopMarker::Pointer LoopMarker::markerWith(LoopMarker::ConstPointer const& other)
 {
-    return LoopMarker::loopMarkerWith(other->label(),
-                                      other->startPositionInMilliseconds(),
-                                      other->endPositionInMilliseconds(),
-                                      other->index());
+    return LoopMarker::markerWithLabelStartEndPositionsAndIndex(other->label(),
+                                                                other->startPositionInMilliseconds(),
+                                                                other->endPositionInMilliseconds(),
+                                                                other->index());
 }
 
 #pragma mark Instance Methods
@@ -106,16 +106,16 @@ void LoopMarker::addId3TagTo(Blob::Pointer const& data) const
 
     memcpy(header.tag, "LOOP", 5);
     size_t size = sizeof(SeratoLoopTagStruct) + this->label()->length() + 1 - sizeof(SeratoLoopTagHeaderStruct);
-    Platform::writeBigEndianUInt32ValueAt((uint32_t)size, &header.size);
-    Platform::writeBigEndianUInt16ValueAt(this->index(), &header.index);
-    Platform::writeBigEndianUInt32ValueAt(this->startPositionInMilliseconds(), &header.position);
-    Platform::writeBigEndianUInt32ValueAt(this->endPositionInMilliseconds(), &header.loopPosition);
-    Platform::writeBigEndianUInt32ValueAt(0, &header.loopIterations);
-    Platform::writeBigEndianUInt32ValueAt(0, &header.color);
+    Platform::writeBigEndianUInt32ValueAt((uint32_t)size, header.size);
+    Platform::writeBigEndianUInt16ValueAt(this->index(), header.index);
+    Platform::writeBigEndianUInt32ValueAt(this->startPositionInMilliseconds(), header.position);
+    Platform::writeBigEndianUInt32ValueAt(this->endPositionInMilliseconds(), header.loopPosition);
+    Platform::writeBigEndianUInt32ValueAt(0, header.loopIterations);
+    Platform::writeBigEndianUInt32ValueAt(0, header.color);
     header.loop_enabled = 0;
     header.loop_locked = 0;
 
-    auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<const character*>(&header), sizeof(SeratoLoopTagStruct));
+    auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<const byte*>(&header), sizeof(SeratoLoopTagStruct));
     data->append(headerData);
     data->append(this->label()->toUTF8());
 }

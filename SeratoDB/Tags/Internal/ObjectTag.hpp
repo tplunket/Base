@@ -20,3 +20,22 @@
 //
 
 #pragma once
+
+#include <Base/Base.hpp>
+
+#include "Tags/Internal/Tag.hpp"
+#include "Tags/ObjectTag.hpp"
+
+namespace NxA { namespace Serato {
+    #pragma mark Containers
+    typedef Map<uinteger32, Tag> SeratoIdentifierToTagMap;
+} }
+
+namespace NxA { namespace Serato { namespace Internal {
+    struct ObjectTag : public Tag {
+        NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, ObjectTag);
+
+        #pragma mark Instance Variables
+        SeratoIdentifierToTagMap::Pointer subTagForIdentifier;
+    };
+} } }

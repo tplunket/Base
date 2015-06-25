@@ -13,50 +13,38 @@
 #pragma once
 
 #include <SeratoDb/TrackFiles/TrackFile.hpp>
-#include <SeratoDB/Utility.hpp>
 
-#include <taglib/mp4file.h>
-#include <taglib/mp4tag.h>
-#include <taglib/tpropertymap.h>
-#include <taglib/audioproperties.h>
-
-#include <string>
+#include <Base/Base.hpp>
 
 namespace NxA { namespace Serato {
-    #pragma mark Class Declaration
-    class MP4TrackFile : public TrackFile
-    {
-    private:
-        #pragma mark Private Instance Variable
-        TagLib::MP4::ItemListMap* p_itemListMap;
+    NXA_GENERATED_FORWARD_DECLARATIONS_FOR(MP4TrackFile);
 
-        #pragma mark Private Instance Methods
-        void p_readMarkers(void);
-        void p_writeMarkers(void);
+    class MP4TrackFile : public TrackFile {
+        NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, MP4TrackFile);
 
     public:
-        #pragma mark Constructors
-        explicit MP4TrackFile(const char* trackFilePath);
+        #pragma mark Factory Methods
+        static MP4TrackFile::Pointer fileWithFileAt(String::ConstPointer const& path);
 
         #pragma mark Instance Methods
         virtual bool hasKey(void) const;
-        virtual std::string key(void) const;
-        virtual std::string grouping(void) const;
+        virtual String::Pointer key(void) const;
+        virtual String::Pointer grouping(void) const;
 
         virtual bool hasRecordLabel(void) const;
-        virtual std::string recordLabel(void) const;
+        virtual String::Pointer recordLabel(void) const;
         virtual bool hasRemixer(void) const;
-        virtual std::string remixer(void) const;
-        virtual std::string yearReleased(void) const;
+        virtual String::Pointer remixer(void) const;
+        virtual String::Pointer yearReleased(void) const;
 
-        virtual CharVectorPtr artwork(void) const;
+        virtual Blob::Pointer artwork(void) const;
 
-        virtual void setKey(const char* key);
-        virtual void setGrouping(const char* grouping);
-        virtual void setRecordLabel(const char* recordLabel);
-        virtual void setRemixer(const char* remixer);
-        virtual void setYearReleased(const char* year);
+        virtual void setKey(String::ConstPointer const& key);
+        virtual void setGrouping(String::ConstPointer const& grouping);
+        virtual void setRecordLabel(String::ConstPointer const& recordLabel);
+        virtual void setRemixer(String::ConstPointer const& emixer);
+        virtual void setYearReleased(String::ConstPointer const& year);
 
-        virtual void setArtwork(CharVectorPtr artwork);
+        virtual void setArtwork(Blob::ConstPointer const& artwork);
     };
 } }

@@ -10,68 +10,80 @@
 //  or email licensing@serato.com.
 //
 
-#include "Tags/ObjectTag.hpp"
 #include "Tags/TagFactory.hpp"
+
+#include "Tags/ObjectTag.hpp"
+#include "Tags/Internal/ObjectTag.hpp"
+
+NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, ObjectTag);
 
 using namespace NxA;
 using namespace NxA::Serato;
 
-#pragma mark Constructors
+#pragma mark Constructors & Destructors
 
-ObjectTag::ObjectTag(const void* tagAddress) : Tag(tagAddress)
+ObjectTag::ObjectTag(NxA::Internal::Object::Pointer const& initial_internal) :
+                     Tag(initial_internal),
+                     internal(initial_internal) { }
+
+#pragma mark Factory Methods
+
+ObjectTag::Pointer ObjectTag::tagWithMemoryAt(const byte* tagAddress)
 {
-    size_t dataSize = Tag::p_dataSizeForTagAt(tagAddress);
-    const void* dataAddress = Tag::p_dataForTagAt(tagAddress);
+    auto dataSize = Internal::Tag::dataSizeForTagAt(tagAddress);
+    auto tagData = Internal::Tag::dataForTagAt(tagAddress);
+    auto subTags = TagFactory::parseTagsAt(tagData, dataSize);
 
-    TagVectorPtr subTags = TagFactory::parseTagsAt(dataAddress, dataSize);
-    for (TagPtr& subTag : *(subTags)) {
-        this->p_subTagForIdentifier[subTag->identifier()] = move(subTag);
-    }
+    return ObjectTag::tagWithIdentifierAndValue(Tag::identifierForTagAt(tagAddress),
+                                                subTags);
 }
 
-ObjectTag::ObjectTag(const uint32_t& identifier, TagVectorPtr content) : Tag(identifier)
+ObjectTag::Pointer ObjectTag::tagWithIdentifierAndValue(uinteger32 identifier, Tag::Array::Pointer const& content)
 {
-    for (TagPtr& subTag : *(content)) {
-        this->p_subTagForIdentifier[subTag->identifier()] = move(subTag);
+    auto newTag = ObjectTag::makeShared();
+    newTag->internal->identifier = identifier;
+
+    for (auto& subTag : *content) {
+        newTag->addSubTag(subTag);
     }
+
+    return newTag;
 }
 
 #pragma mark Instance Methods
 
-bool ObjectTag::hasSubTagForIdentifier(const uint32_t& identifier) const
+bool ObjectTag::hasSubTagForIdentifier(uinteger32 identifier) const
 {
-    SeratoIdentifierToTagMap::const_iterator it = this->p_subTagForIdentifier.find(identifier);
-    return it != this->p_subTagForIdentifier.end();
+    return internal->subTagForIdentifier->containsValueForKey(identifier);
 }
 
-const Tag& ObjectTag::subTagForIdentifier(const uint32_t& identifier) const
+Tag::ConstPointer const& ObjectTag::subTagForIdentifier(uinteger32 identifier) const
 {
-    SeratoIdentifierToTagMap::const_iterator it = this->p_subTagForIdentifier.find(identifier);
-    return *(it->second);
+    return (*internal->subTagForIdentifier)[identifier];
 }
 
-Tag& ObjectTag::subTagForIdentifier(const uint32_t& identifier)
+Tag::Pointer const& ObjectTag::subTagForIdentifier(uinteger32 identifier)
 {
-    return const_cast<Tag&>(static_cast<const ObjectTag&>(*this).subTagForIdentifier(identifier));
+    return (*internal->subTagForIdentifier)[identifier];
 }
 
-void ObjectTag::addSubTag(ConstTagPtr tag)
+void ObjectTag::addSubTag(Tag::Pointer const& tag)
 {
-    this->p_subTagForIdentifier[tag->identifier()] = move(tag);
+    (*internal->subTagForIdentifier)[tag->identifier()] = tag;
 }
 
 void ObjectTag::addTo(Blob::Pointer const& destination) const
 {
     auto subTagsRepresentation = Blob::blob();
-    for (auto& identifierAndTag : this->p_subTagForIdentifier) {
+    for (auto& identifierAndTag : *(internal->subTagForIdentifier)) {
         identifierAndTag.second->addTo(subTagsRepresentation);
     }
 
-    size_t sizeNeededForHeader = Tag::p_memoryNeededForTagHeader();
+    auto sizeNeededForHeader = Internal::Tag::memoryNeededForTagHeader();
     auto headerRepresentation = Blob::blobWithCapacity(sizeNeededForHeader);
-    void* tagAddress = headerRepresentation->data();
-    Tag::p_setIdentifierForTagAt(this->identifier(), tagAddress);
-    Tag::p_setDataSizeForTagAt(subTagsRepresentation->size(), tagAddress);
+    auto tagAddress = headerRepresentation->data();
+    Internal::Tag::setIdentifierForTagAt(this->identifier(), tagAddress);
+    Internal::Tag::setDataSizeForTagAt(subTagsRepresentation->size(), tagAddress);
 
     destination->append(headerRepresentation);
     destination->append(subTagsRepresentation);

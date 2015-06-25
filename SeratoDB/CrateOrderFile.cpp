@@ -10,211 +10,84 @@
 //  or email licensing@serato.com.
 //
 
-#include "CrateOrderFile.hpp"
-#include "Utility.hpp"
+#include "SeratoDB/CrateOrderFile.hpp"
+#include "SeratoDB/Internal/CrateOrderFile.hpp"
+#include "SeratoDB/Utility.hpp"
+#include "SeratoDB/Crate.hpp"
 
-#include <Base/File.hpp>
-#include <Base/String.hpp>
-#include <Base/Types.hpp>
-
-#include <string>
-#include <errno.h>
-#include <dirent.h>
+NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, CrateOrderFile);
 
 using namespace NxA;
 using namespace NxA::Serato;
-using namespace std;
 
-#pragma mark Utility Functions
+#pragma mark Constructors & Destructors
 
-static String::Pointer p_crateNameIfValidCrateOrEmptyIfNot(String::ConstPointer const& name)
+CrateOrderFile::CrateOrderFile(NxA::Internal::Object::Pointer const& initial_internal) :
+                               Object(initial_internal),
+                               internal(initial_internal) { }
+
+#pragma mark Factory Methods
+
+CrateOrderFile::Pointer CrateOrderFile::fileWithSeratoFolderInRootFolder(String::ConstPointer const& seratoFolderPath,
+                                                                         String::ConstPointer const& rootFolderPath)
 {
-    auto result = String::string();
+    auto rootCrate = Crate::crateWithNameInFolderOnVolume(String::string(),
+                                                          String::string(),
+                                                          String::string());
+    auto internalObject = Internal::CrateOrderFile::Pointer(std::make_shared<Internal::CrateOrderFile>(crateOrderFilePathForSeratoFolder(seratoFolderPath),
+                                                                                                       rootCrate));
+    auto newCrateOrderFile = CrateOrderFile::makeSharedWithInternal(internalObject);
 
-    if (name->hasPrefix("[crate]")) {
-        result = name->subString(7, name->length() - 7);
-    }
-
-    return result;
-}
-
-static bool p_filenameIsAValidCrateName(String::ConstPointer const& fileName)
-{
-    return !fileName->hasPrefix(".") && fileName->hasPostfix(".crate");
-}
-
-static String::Pointer p_crateNameFromFilename(String::ConstPointer const& fileName)
-{
-    return fileName->subString(0, fileName->length() - 6);
-}
-
-static StringVectorPtr p_cratesInSubCratesDirectory(const string& directory)
-{
-    StringVectorPtr crateNamesFound(make_unique<StringVector>());
-
-    DIR *pdir;
-    struct dirent *pent;
-
-    pdir = opendir(directory.c_str()); //"." refers to the current dir
-    if (pdir){
-        errno = 0;
-        while ((pent = readdir(pdir))){
-            auto fileName = String::stringWith(pent->d_name);
-            if (::p_filenameIsAValidCrateName(fileName)) {
-                crateNamesFound->push_back(make_unique<string>(p_crateNameFromFilename(fileName)->toUTF8()));
-            }
-        }
-    }
-
-    if (!errno){
-        closedir(pdir);
-    }
-
-    return move(crateNamesFound);
-}
-
-static StringVectorPtr p_readCratesNamesInCrateOrderFile(String::ConstPointer const& crateOrderFilePath)
-{
-    StringVectorPtr cratesInOrder(make_unique<StringVector>());
-
-    auto crateOrderFile = File::readFileAt(crateOrderFilePath);
-    if (crateOrderFile->size()) {
-        auto textAsString = String::stringWithUTF16(crateOrderFile);
-        auto lines = textAsString->splitBySeperator('\n');
-        for (auto& crateLine : *lines) {
-            auto fullCrateName = p_crateNameIfValidCrateOrEmptyIfNot(crateLine);
-            if (fullCrateName->isEmpty()) {
-                continue;
-            }
-
-            cratesInOrder->push_back(make_unique<string>(fullCrateName->toUTF8()));
-        }
-    }
-
-    return move(cratesInOrder);
-}
-
-static void p_addCratesNamesAtTheStartOfUnlessAlreadyThere(StringVector& cratesToAddTo, const StringVector& cratesToAdd)
-{
-    auto insertionPosition = cratesToAddTo.begin();
-    for (auto& crateName : cratesToAdd) {
-        bool alreadyHaveThisCrate = false;
-
-        for (auto& otherCrateName : cratesToAddTo) {
-            if (*crateName == *otherCrateName) {
-                alreadyHaveThisCrate = true;
-                break;
-            }
-        }
-
-        if (!alreadyHaveThisCrate) {
-            printf("added: %s\n", crateName->c_str());
-            insertionPosition = cratesToAddTo.insert(insertionPosition, make_unique<string>(*crateName)) + 1;
-        }
-    }
-}
-
-#pragma mark Constructors
-
-CrateOrderFile::CrateOrderFile(const char* seratoFolderPath, const char* rootFolderPath, Database& database) :
-                               p_crateOrderFilePath(crateOrderFilePathForSeratoFolder(seratoFolderPath)),
-                               p_unknownCrates(make_unique<StringVector>()),
-                               p_rootCrate(make_unique<Crate>("", "", "", database))
-{
     auto subCratesDirectory = subCratesDirectoryPathInSeratoFolder(seratoFolderPath);
-    StringVectorPtr subCratesFound(::p_cratesInSubCratesDirectory(subCratesDirectory->toUTF8()));
-    StringVectorPtr cratesInOrder(::p_readCratesNamesInCrateOrderFile(this->p_crateOrderFilePath));
+    auto subCratesFound = Internal::CrateOrderFile::cratesInSubCratesDirectory(subCratesDirectory);
+    auto cratesInOrder = Internal::CrateOrderFile::readCratesNamesInCrateOrderFile(newCrateOrderFile->internal->crateOrderFilePath);
 
-    ::p_addCratesNamesAtTheStartOfUnlessAlreadyThere(*cratesInOrder, *subCratesFound);
+    Internal::CrateOrderFile::addCratesNamesAtTheStartOfUnlessAlreadyThere(cratesInOrder, subCratesFound);
 
-    StringVector::iterator it = cratesInOrder->begin();
-    CrateVectorPtr crates = this->p_childrenCratesOfCrateNamedUsingNameList("", it, cratesInOrder->end(), seratoFolderPath, rootFolderPath, database);
-    for (auto& crateName : *crates) {
-        this->p_rootCrate->addChildCrate(move(crateName));
+    auto it = cratesInOrder->begin();
+    auto crates = newCrateOrderFile->internal->childrenCratesOfCrateNamedUsingNameList(String::string(),
+                                                                                       it,
+                                                                                       cratesInOrder->end(),
+                                                                                       seratoFolderPath,
+                                                                                       rootFolderPath);
+    for (auto& crate : *crates) {
+        Crate::addCrateAsChildOfCrate(crate, newCrateOrderFile->internal->rootCrate);
     }
 
-    this->p_rootCrate->resetModificationFlags();
+    newCrateOrderFile->internal->rootCrate->resetModificationFlags();
+
+    return newCrateOrderFile;
 }
 
 #pragma mark Instance Methods
 
-CrateVectorPtr CrateOrderFile::p_childrenCratesOfCrateNamedUsingNameList(const string& name,
-                                                                         StringVector::iterator& it,
-                                                                         const StringVector::iterator& end,
-                                                                         const char* seratoFolderPath,
-                                                                         const char* rootFolderPath,
-                                                                         Database& database)
+Crate::Pointer const& CrateOrderFile::rootCrate(void) const
 {
-    CrateVectorPtr cratesFound = make_unique<CrateVector>();
-
-    while (it != end) {
-        auto fullCrateName = String::stringWith(it->get()->c_str());
-        if (name.length() && !fullCrateName->hasPrefix(name.c_str())) {
-            break;
-        }
-
-        if (Crate::isASmartCrateName(fullCrateName->toUTF8(), seratoFolderPath)) {
-            this->p_unknownCrates->push_back(make_unique<string>(fullCrateName->toUTF8()));
-            ++it;
-            continue;
-        }
-
-        CratePtr newCrate = make_unique<Crate>(fullCrateName->toUTF8(), seratoFolderPath, rootFolderPath, database);
-
-        if (Crate::isAValidCrateName(fullCrateName->toUTF8(), seratoFolderPath)) {
-            newCrate->loadFromFile();
-        }
-
-        ++it;
-
-        auto crateNameWithSeperator = String::stringWith(fullCrateName);
-        crateNameWithSeperator->append("%%");
-
-        CrateVectorPtr childCrates = p_childrenCratesOfCrateNamedUsingNameList(std::string(crateNameWithSeperator->toUTF8()),
-                                                                               it,
-                                                                               end,
-                                                                               seratoFolderPath,
-                                                                               rootFolderPath,
-                                                                               database);
-        for (auto& crate : *childCrates) {
-            newCrate->addChildCrate(move(crate));
-        }
-
-        newCrate->resetModificationFlags();
-
-        cratesFound->push_back(move(newCrate));
-    }
-    
-    return move(cratesFound);
-}
-
-const Crate* CrateOrderFile::rootCrate(void) const
-{
-    return this->p_rootCrate.get();
+    return internal->rootCrate;
 }
 
 timestamp CrateOrderFile::modificationDateInSecondsSince1970(void) const
 {
-    return File::modificationDateInSecondsSince1970ForFile(this->p_crateOrderFilePath);
+    return File::modificationDateInSecondsSince1970ForFile(internal->crateOrderFilePath);
 }
 
 void CrateOrderFile::saveIfModified(void) const
 {
-    this->p_rootCrate->saveIfModifiedAndRecurseToChildren();
+    internal->rootCrate->saveIfModifiedAndRecurseToChildren();
 
-    if (!this->p_rootCrate->childrenCratesWereModified()) {
+    if (!internal->rootCrate->childrenCratesWereModified()) {
         return;
     }
 
     auto result = String::string();
     result->append("[begin record]\n");
-    this->p_rootCrate->addFullCrateNameWithPrefixAndRecurseToChildren(result, "[crate]");
-    for (auto& crateName : *this->p_unknownCrates) {
+    internal->rootCrate->addFullCrateNameWithPrefixAndRecurseToChildren(result, "[crate]");
+    for (auto& crateName : *internal->unknownCratesNames) {
         result->append("[crate]");
-        result->append(crateName.get()->c_str());
+        result->append(crateName);
         result->append("\n");
     }
     result->append("[end record]\n");
 
-    File::writeBlobToFileAt(result->toUTF16(), this->p_crateOrderFilePath);
+    File::writeBlobToFileAt(result->toUTF16(), internal->crateOrderFilePath);
 }

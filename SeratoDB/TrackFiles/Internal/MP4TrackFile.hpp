@@ -20,3 +20,29 @@
 //
 
 #pragma once
+
+#include "TrackFiles/MP4TrackFile.hpp"
+#include "TrackFiles/Internal/TrackFile.hpp"
+
+#include <Base/Base.hpp>
+
+#include <taglib/mp4file.h>
+#include <taglib/mp4tag.h>
+#include <taglib/tpropertymap.h>
+#include <taglib/audioproperties.h>
+
+namespace NxA { namespace Serato { namespace Internal {
+    struct MP4TrackFile : public TrackFile {
+        NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTOR_FOR(NxA::Serato, MP4TrackFile);
+
+        #pragma mark Constructor & Destructors
+        MP4TrackFile(String::ConstPointer const& path, TagLibFilePointer const& newFile);
+
+        #pragma mark Private Instance Variables
+        TagLib::MP4::ItemListMap* itemListMap;
+
+        #pragma mark Private Instance Methods
+        void readMarkers(void);
+        void writeMarkers(void);
+    };
+} } }

@@ -14,16 +14,20 @@
 
 #include <SeratoDb/TrackFiles/ID3TrackFile.hpp>
 
-namespace NxA { namespace Serato {
-    #pragma mark Class Declaration
-    class SeratoWAVTrackFile : public ID3TrackFile
-    {
-    public:
-        #pragma mark Constructors
-        SeratoWAVTrackFile(const char* trackFilePath);
+#include <Base/Base.hpp>
 
+namespace NxA { namespace Serato {
+    NXA_GENERATED_FORWARD_DECLARATIONS_FOR(WAVTrackFile);
+
+    class WAVTrackFile : public ID3TrackFile {
+        NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, WAVTrackFile);
+
+    public:
+        #pragma mark Factory Methods
+        static WAVTrackFile::Pointer fileWithFileAt(String::ConstPointer const& path);
+        
         #pragma mark Instance Variables
-        virtual uint32_t lengthInMilliseconds(void) const;
-        uint32_t bitDepthInBitsOrZeroIfNotApplicable(void) const;
+        virtual uinteger32 lengthInMilliseconds(void) const;
+        uinteger32 bitDepthInBitsOrZeroIfNotApplicable(void) const;
     };
 } }

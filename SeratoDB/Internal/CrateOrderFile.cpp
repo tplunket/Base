@@ -19,3 +19,164 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#include "Internal/CrateOrderFile.hpp"
+
+#include <string>
+#include <errno.h>
+#include <dirent.h>
+
+// -- Generated internal implementation ommitted because this class does not use the default contructor.
+
+using namespace NxA;
+using namespace NxA::Serato::Internal;
+
+#pragma mark Constructors & Destructors
+
+CrateOrderFile::CrateOrderFile(String::ConstPointer const& path,
+                               Serato::Crate::Pointer const& root) :
+                               crateOrderFilePath(path),
+                               rootCrate(root),
+                               unknownCratesNames(String::Array::array()) { }
+
+#pragma mark Class Methods
+
+String::Pointer CrateOrderFile::crateNameIfValidCrateOrEmptyIfNot(String::ConstPointer const& name)
+{
+    auto result = String::string();
+
+    if (name->hasPrefix("[crate]")) {
+        result = name->subString(7, name->length() - 7);
+    }
+
+    return result;
+}
+
+bool CrateOrderFile::filenameIsAValidCrateName(String::ConstPointer const& fileName)
+{
+    return !fileName->hasPrefix(".") && fileName->hasPostfix(".crate");
+}
+
+String::Pointer CrateOrderFile::crateNameFromFilename(String::ConstPointer const& fileName)
+{
+    return fileName->subString(0, fileName->length() - 6);
+}
+
+String::Array::Pointer CrateOrderFile::cratesInSubCratesDirectory(String::ConstPointer const& directory)
+{
+    auto crateNamesFound = String::Array::array();
+
+    DIR *pdir;
+    struct dirent *pent;
+
+    pdir = opendir(directory->toUTF8()); //"." refers to the current dir
+    if (pdir){
+        errno = 0;
+        while ((pent = readdir(pdir))){
+            auto fileName = String::stringWith(pent->d_name);
+            if (CrateOrderFile::filenameIsAValidCrateName(fileName)) {
+                crateNamesFound->append(CrateOrderFile::crateNameFromFilename(fileName));
+            }
+        }
+    }
+
+    if (!errno){
+        closedir(pdir);
+    }
+
+    return move(crateNamesFound);
+}
+
+String::Array::Pointer CrateOrderFile::readCratesNamesInCrateOrderFile(String::ConstPointer const& crateOrderFilePath)
+{
+    auto cratesInOrder = String::Array::array();
+
+    auto crateOrderFile = File::readFileAt(crateOrderFilePath);
+    if (crateOrderFile->size()) {
+        auto textAsString = String::stringWithUTF16(crateOrderFile);
+        auto lines = textAsString->splitBySeperator('\n');
+        for (auto& crateLine : *lines) {
+            auto fullCrateName = CrateOrderFile::crateNameIfValidCrateOrEmptyIfNot(crateLine);
+            if (fullCrateName->isEmpty()) {
+                continue;
+            }
+
+            cratesInOrder->append(fullCrateName);
+        }
+    }
+
+    return move(cratesInOrder);
+}
+
+void CrateOrderFile::addCratesNamesAtTheStartOfUnlessAlreadyThere(String::Array::Pointer const& cratesToAddTo,
+                                                                  String::Array::ConstPointer const& cratesToAdd)
+{
+    auto insertionPosition = cratesToAddTo->begin();
+    for (auto& crateName : *cratesToAdd) {
+        bool alreadyHaveThisCrate = false;
+
+        for (auto& otherCrateName : *cratesToAddTo) {
+            if (crateName->isEqualTo(otherCrateName)) {
+                alreadyHaveThisCrate = true;
+                break;
+            }
+        }
+
+        if (!alreadyHaveThisCrate) {
+            printf("added: %s\n", crateName->toUTF8());
+            cratesToAddTo->insertAt(crateName, insertionPosition);
+            insertionPosition += 1;
+        }
+    }
+}
+
+#pragma mark Instance Methods
+
+Serato::Crate::Array::Pointer CrateOrderFile::childrenCratesOfCrateNamedUsingNameList(String::ConstPointer const& name,
+                                                                                      String::Array::iterator& it,
+                                                                                      const String::Array::iterator& end,
+                                                                                      String::ConstPointer const& seratoFolderPath,
+                                                                                      String::ConstPointer const& rootFolderPath)
+{
+    auto cratesFound = Serato::Crate::Array::array();
+
+    while (it != end) {
+        auto fullCrateName = *it;
+        if (name->length() && !fullCrateName->hasPrefix(name->toUTF8())) {
+            break;
+        }
+
+        if (Serato::Crate::isASmartCrateName(fullCrateName, seratoFolderPath)) {
+            this->unknownCratesNames->append(fullCrateName);
+            ++it;
+            continue;
+        }
+
+        auto newCrate = Serato::Crate::crateWithNameInFolderOnVolume(fullCrateName,
+                                                                     seratoFolderPath,
+                                                                     rootFolderPath);
+
+        if (Serato::Crate::isAValidCrateName(fullCrateName, seratoFolderPath)) {
+            newCrate->loadFromFile();
+        }
+
+        ++it;
+
+        auto crateNameWithSeperator = String::stringWith(fullCrateName);
+        crateNameWithSeperator->append("%%");
+
+        auto childCrates = CrateOrderFile::childrenCratesOfCrateNamedUsingNameList(crateNameWithSeperator,
+                                                                                   it,
+                                                                                   end,
+                                                                                   seratoFolderPath,
+                                                                                   rootFolderPath);
+        for (auto& crate : *childCrates) {
+            Serato::Crate::addCrateAsChildOfCrate(crate, newCrate);
+        }
+
+        newCrate->resetModificationFlags();
+
+        cratesFound->append(newCrate);
+    }
+    
+    return cratesFound;
+}

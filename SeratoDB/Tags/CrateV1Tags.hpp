@@ -12,16 +12,20 @@
 
 #pragma once
 
+#include <Base/Base.hpp>
+
 #pragma mark Constants
 
-// -- Known crate tag identifiers.
-#define NxASeratoCrateVersionTag                           'vrsn'
-#define NxASeratoTrackEntryTag                             'otrk'
-#define NxASeratoTrackEntryPathTag                         'ptrk'
-#define NxASeratoCrateRemoveTrackActionTag                 'ortk'
-#define NxASeratoCrateColumnSortingTag                     'osrt'
-#define NxASeratoCrateColumnNameTag                        'tvcn'
-#define NxASeratoCrateColumnSortDirectionTag               'brev'
-#define NxASeratoCrateColumnVisibilityTag                  'ovct'
-#define NxASeratoCrateColumnWidthTag                       'tvcw'
-#define NxASeratoCrateRemoveColumnVisibilityActionTag      'orvc'
+namespace NxA { namespace Serato {
+    // -- Known crate tag identifiers.
+    constexpr uinteger32 crateVersionTagIdentifier                      = 'vrsn';
+    constexpr uinteger32 trackEntryTagIdentifier                        = 'otrk';
+    constexpr uinteger32 trackEntryPathTagIdentifier                    = 'ptrk';
+    constexpr uinteger32 crateRemoveTrackActionTagIdentifier            = 'ortk';
+    constexpr uinteger32 crateColumnSortingTagIdentifier                = 'osrt';
+    constexpr uinteger32 crateColumnNameTag                             = 'tvcn';
+    constexpr uinteger32 crateColumnSortDirectionTagIdentifier          = 'brev';
+    constexpr uinteger32 cateColumnVisibilityTagIdentifier              = 'ovct';
+    constexpr uinteger32 crateColumnWidthTagIdentifier                  = 'tvcw';
+    constexpr uinteger32 crateRemoveColumnVisibilityActionTagIdentifier = 'orvc';
+} }

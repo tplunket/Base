@@ -13,30 +13,23 @@
 #pragma once
 
 #include <SeratoDb/Tags/Tag.hpp>
-#include <SeratoDB/Utility.hpp>
 
-#include <Base/Blob.hpp>
-#include <Base/String.hpp>
+#include <Base/Base.hpp>
 
 namespace NxA { namespace Serato {
-    #pragma mark Class Declaration
-    class TextTag : public Tag
-    {
-    private:
-        #pragma mark Private Instance Variables
-        String::ConstPointer p_value;
+    NXA_GENERATED_FORWARD_DECLARATIONS_FOR(TextTag);
+
+    class TextTag : public Tag {
+        NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, TextTag);
 
     public:
-        #pragma mark Constructors
-        explicit TextTag(const void* tagAddress);
-        explicit TextTag(const uint32_t& identifier, const char* value) :
-                         Tag(identifier),
-                         p_value(String::stringWith(value)) { }
+        #pragma mark Factory Methods
+        static TextTag::Pointer tagWithMemoryAt(const byte* tagAddress);
+        static TextTag::Pointer tagWithIdentifierAndValue(uinteger32 identifier, String::ConstPointer const& value);
 
         #pragma mark Instance Methods
-        const uint32_t& identifier(void) const;
         String::ConstPointer const& value(void) const;
-        String::ConstPointer& value(void);
+        void setValue(String::ConstPointer const& value);
 
         void addTo(Blob::Pointer const& destination) const;
     };

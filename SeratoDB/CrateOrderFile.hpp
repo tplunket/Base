@@ -12,47 +12,25 @@
 
 #pragma once
 
-#include <SeratoDB/Utility.hpp>
-#include <SeratoDB/Crate.hpp>
+#include <SeratoDB/TrackEntry.hpp>
 
-#include <Base/String.hpp>
-#include <Base/Types.hpp>
+#include <Base/Base.hpp>
 
 namespace NxA { namespace Serato {
-    #pragma mark Forward declarations
-    class CrateOrderFile;
-    class Database;
+    NXA_GENERATED_FORWARD_DECLARATIONS_FOR(CrateOrderFile);
 
-    #pragma mark Containers
-    typedef std::unique_ptr<const CrateOrderFile> CrateOrderFilePtr;
+    class Crate;
 
-    #pragma mark Class Declaration
-    class CrateOrderFile
-    {
-    private:
-        #pragma mark Private Instance Variables
-        String::ConstPointer p_crateOrderFilePath;
-
-        CratePtr p_rootCrate;
-
-        StringVectorPtr p_unknownCrates;
-
-        #pragma mark Private Instance Methods
-        CrateVectorPtr p_childrenCratesOfCrateNamedUsingNameList(const std::string& name,
-                                                                 StringVector::iterator& it,
-                                                                 const StringVector::iterator& end,
-                                                                 const char* seratoFolderPath,
-                                                                 const char* rootFolderPath,
-                                                                 Database& database);
+    class CrateOrderFile : public NxA::Object {
+        NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, CrateOrderFile);
 
     public:
-        #pragma mark Constructors
-        explicit CrateOrderFile(const char* seratoFolderPath,
-                                const char* rootFolderPath,
-                                Database& database);
+        #pragma mark Factory Methods
+        static CrateOrderFile::Pointer fileWithSeratoFolderInRootFolder(String::ConstPointer const& seratoFolderPath,
+                                                                        String::ConstPointer const& rootFolderPath);
 
         #pragma mark Instance Methods
-        const Crate* rootCrate(void) const;
+        NxA::Pointer<Crate> const& rootCrate(void) const;
 
         timestamp modificationDateInSecondsSince1970(void) const;
 

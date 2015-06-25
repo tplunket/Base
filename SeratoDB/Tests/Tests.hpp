@@ -25,8 +25,8 @@
 
 // -- This forces the linker to link the object files where these tests
 // -- are defined. Otherwise they would get stripped out.
-NXA_USING_TEST_SUITE_NAMED(SeratoDB_UInt32Tag_Tests);
+NXA_USING_TEST_SUITE_NAMED(SeratoDB_UInteger32Tag_Tests);
 
 NXA_USE_TEST_SUITES_FOR_MODULE(SeratoDB) {
-    SeratoDB_UInt32Tag_Tests
+    SeratoDB_UInteger32Tag_Tests
 };

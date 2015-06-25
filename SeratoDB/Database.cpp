@@ -10,96 +10,84 @@
 //  or email licensing@serato.com.
 //
 
-#include "Database.hpp"
+#include "SeratoDB/Database.hpp"
+#include "SeratoDb/Internal/Database.hpp"
+#include "SeratoDB/CrateOrderFile.hpp"
+#include "SeratoDB/Utility.hpp"
 #include "Tags/DatabaseV2Tags.hpp"
 #include "Tags/TagFactory.hpp"
 #include "Tags/TextTag.hpp"
 
-#include <Base/File.hpp>
+NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, Database);
 
 using namespace NxA;
 using namespace NxA::Serato;
-using namespace std;
-
-#define PRINT_DEBUG_INFO        0
 
 #pragma mark Constants
 
 static const char* databaseFileCurrentVersionString = "2.0/Serato Scratch LIVE Database";
 
-#pragma mark Utility Functions
+#pragma mark Constructors & Destructors
 
-#if PRINT_DEBUG_INFO
-static void p_debugListCrate(const Crate* crate, std::string spacing)
+Database::Database(NxA::Internal::Object::Pointer const& initial_internal) :
+                   Object(initial_internal),
+                   internal(initial_internal) { }
+
+#pragma mark Factory Methods
+
+Database::Pointer Database::databaseWithFileAt(String::ConstPointer const& seratoFolderPath)
 {
-    const CrateVector& crates = crate->crates();
-    for (const CratePtr& crate : crates) {
-        const string& crateName = crate->crateName();
-        printf("%sCrate '%s'\n", spacing.c_str(), crateName.c_str());
+    auto crateOrderFile = CrateOrderFile::fileWithSeratoFolderInRootFolder(seratoFolderPath,
+                                                                           String::string());
+    auto internalObject = Internal::Database::Pointer(std::make_shared<Internal::Database>(databaseFilePathForSeratoFolder(seratoFolderPath),
+                                                                                           crateOrderFile));
+    auto newDatabase = Database::makeSharedWithInternal(internalObject);
 
-        const TrackEntryVector& crateTracks = crate->trackEntries();
-        for (const TrackEntryPtr& trackEntry : crateTracks) {
-            printf("%s   Track '%s'\n", spacing.c_str(), trackEntry->trackFilePath()->c_str());
-        }
+    auto databaseFile = File::readFileAt(newDatabase->internal->databaseFilePath);
 
-        p_debugListCrate(crate.get(), (spacing + "   "));
-    }
-}
-#endif
-
-#pragma mark Constructors
-
-Database::Database(const char* seratoFolderPath) :
-                   p_databaseFilePath(databaseFilePathForSeratoFolder(seratoFolderPath)),
-                   p_tracks(make_unique<TrackVector>()),
-                   p_databaseIsValid(false)
-{
-    auto databaseFile = File::readFileAt(this->p_databaseFilePath);
-
-    TagVectorPtr tags(TagFactory::parseTagsAt(databaseFile->data(), databaseFile->size()));
+    auto tags = TagFactory::parseTagsAt(databaseFile->data(), databaseFile->size());
     for (auto& tag : *tags) {
         switch (tag->identifier()) {
-            case NxASeratoTrackObjectTag: {
-                this->p_storeTrackTag(move(tag));
+            case trackObjectTagIdentifier: {
+                newDatabase->internal->storeTrackTag(tag);
                 break;
             }
-            case NxASeratoDatabaseVersionTag: {
-                auto& versionText = (dynamic_cast<TextTag&>(*tag)).value();
+            case databaseVersionTagIdentifier: {
+                auto& versionText = TextTag::Pointer(tag)->value();
                 if (!versionText->isEqualTo(databaseFileCurrentVersionString)) {
-                    this->p_tracks->clear();
-                    this->p_otherTags.clear();
-                    return;
+                    newDatabase->internal->tracks->emptyAll();
+                    newDatabase->internal->otherTags->emptyAll();
+                    return newDatabase;
                 }
                 break;
             }
             default: {
-                this->p_storeOtherTag(move(tag));
+                newDatabase->internal->storeOtherTag(tag);
                 break;
             }
         }
     }
 
-    // -- TODO: This will eventually select the root folder based on where the database is.
-    this->p_crateOrderFile = make_unique<CrateOrderFile>(seratoFolderPath, "", *this);
-
 #if PRINT_DEBUG_INFO
-    p_debugListCrate(this->rootCrate(), "");
+    Internal::Database::debugListCrate(newDatabase->rootCrate(), String::string());
 #endif
 
-    this->p_databaseIsValid = true;
+    newDatabase->internal->databaseIsValid = true;
+
+    return newDatabase;
 }
 
 #pragma mark Class Methods
 
-String::Pointer Database::versionAsStringForDatabaseIn(const char* seratoFolderPath)
+String::Pointer Database::versionAsStringForDatabaseIn(String::ConstPointer const& seratoFolderPath)
 {
     auto databaseFilePath = databaseFilePathForSeratoFolder(seratoFolderPath);
     auto databaseFile = File::readFileAt(databaseFilePath);
 
-    TagVectorPtr tags(TagFactory::parseTagsAt(databaseFile->data(), databaseFile->size()));
-    for (const TagPtr& tag : *(tags)) {
-        if (tag->identifier() == NxASeratoDatabaseVersionTag) {
-            const TextTag* textTag = dynamic_cast<const TextTag*>(tag.get());
+    auto tags(TagFactory::parseTagsAt(databaseFile->data(), databaseFile->size()));
+    for (auto& tag : *(tags)) {
+        if (tag->identifier() == databaseVersionTagIdentifier) {
+            auto textTag = TextTag::Pointer(tag);
             return String::stringWith(textTag->value());
         }
     }
@@ -109,69 +97,69 @@ String::Pointer Database::versionAsStringForDatabaseIn(const char* seratoFolderP
 
 #pragma mark Instance Methods
 
-void Database::p_storeTrackTag(TagPtr tag)
+timestamp Database::databaseModificationDateInSecondsSince1970(void) const
 {
-    // -- TODO: This will eventually select the root folder based on where the database is.
-    this->p_tracks->push_back(make_unique<Track>(move(tag), ""));
+    return File::modificationDateInSecondsSince1970ForFile(internal->databaseFilePath);
 }
 
-void Database::p_storeOtherTag(TagPtr tag)
+timestamp Database::rootCrateModificationDateInSecondsSince1970(void) const
 {
-    this->p_otherTags.push_back(move(tag));
+    return internal->crateOrderFile->modificationDateInSecondsSince1970();
 }
 
-time_t Database::databaseModificationDateInSecondsSince1970(void) const
+Crate::Pointer const& Database::rootCrate(void) const
 {
-    return File::modificationDateInSecondsSince1970ForFile(this->p_databaseFilePath);
+    return internal->crateOrderFile->rootCrate();
 }
 
-time_t Database::rootCrateModificationDateInSecondsSince1970(void) const
+Track::Array::ConstPointer const& Database::tracks(void) const
 {
-    return this->p_crateOrderFile->modificationDateInSecondsSince1970();
+    return internal->tracks;
 }
 
-const Crate* Database::rootCrate(void) const
+Track::Array::Pointer Database::removeAndReturnTracks(void)
 {
-    return this->p_crateOrderFile->rootCrate();
-}
-
-const TrackVector& Database::tracks(void) const
-{
-    return *this->p_tracks;
-}
-
-TrackVectorPtr Database::removeAndReturnTracks(void)
-{
-    TrackVectorPtr tracks = move(this->p_tracks);
-    this->p_tracks = TrackVectorPtr(make_unique<TrackVector>());
+    auto tracks = internal->tracks;
+    internal->tracks = Track::Array::array();
 
     return tracks;
 }
 
-void Database::addCrateFileToDelete(String::ConstPointer const& path)
+void Database::deleteTrackEntry(TrackEntry::Pointer const& entry)
 {
-    this->p_crateFilesToDelete.push_back(path);
+    entry->destroy();
 }
 
-void Database::addTrack(TrackPtr track)
+void Database::deleteCrate(Crate::Pointer const& crate)
 {
-    this->p_tracks->push_back(move(track));
+    internal->crateFilesToDelete->append(String::stringWith(crate->crateFilePath()));
+    Crate::destroy(crate);
+}
+
+void Database::addTrack(Track::Pointer const& track)
+{
+    internal->tracks->append(track);
+}
+
+void Database::deleteTrack(Track::Pointer const& track)
+{
+    track->destroy();
 }
 
 void Database::saveIfModified(void) const
 {
-    if (!this->p_databaseIsValid) {
+    if (!internal->databaseIsValid) {
         return;
     }
 
-    for (auto& path : this->p_crateFilesToDelete) {
+    for (auto& path : *(internal->crateFilesToDelete)) {
         File::deleteFileAt(path);
     }
 
-    this->p_crateOrderFile->saveIfModified();
+    internal->crateOrderFile->saveIfModified();
 
     bool someTracksWereModified = false;
-    for (auto& track : *this->p_tracks) {
+    for (auto& track : *(internal->tracks)) {
         if (!track->wasModified()) {
             continue;
         }
@@ -184,17 +172,18 @@ void Database::saveIfModified(void) const
     if (someTracksWereModified) {
         auto outputData = Blob::blob();
 
-        TagPtr versionTag(make_unique<TextTag>(NxASeratoDatabaseVersionTag, databaseFileCurrentVersionString));
+        auto versionTag = TextTag::tagWithIdentifierAndValue(databaseVersionTagIdentifier,
+                                                             String::stringWith(databaseFileCurrentVersionString));
         versionTag->addTo(outputData);
 
-        for (auto& track : *this->p_tracks) {
+        for (auto& track : *(internal->tracks)) {
             track->addTo(outputData);
         }
 
-        for (auto& tag : this->p_otherTags) {
+        for (auto& tag : *(internal->otherTags)) {
             tag->addTo(outputData);
         }
 
-        File::writeBlobToFileAt(outputData, this->p_databaseFilePath);
+        File::writeBlobToFileAt(outputData, internal->databaseFilePath);
     }
 }

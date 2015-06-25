@@ -13,20 +13,19 @@
 #pragma once
 
 #include <SeratoDb/Tags/Tag.hpp>
-#include <SeratoDB/Utility.hpp>
+
+#include <Base/Base.hpp>
 
 namespace NxA { namespace Serato {
-    #pragma mark Class Declaration
-    class TagFactory
+    class TagFactory : public Uncopyable
     {
-    private:
-        #pragma mark Private Constructors
-        TagFactory() { }
-
     public:
-        #pragma mark Class Methods
-        static TagPtr tagForBinaryRepresentationAt(const void* tagAddress);
+        #pragma mark Constructors & Destructors
+        TagFactory() = delete;
 
-        static TagVectorPtr parseTagsAt(const void* firstTagAddress, size_t sizeFromFirstTag);
+        #pragma mark Class Methods
+        static Tag::Pointer tagForTagAt(const byte* tagAddress);
+
+        static Tag::Array::Pointer parseTagsAt(const byte* firstTagAddress, count sizeFromFirstTag);
     };
 } }

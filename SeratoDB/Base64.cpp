@@ -12,8 +12,6 @@
 
 #include "Base64.hpp"
 
-#include <stdlib.h>
-
 using namespace NxA;
 using namespace NxA::Serato;
 
@@ -79,14 +77,14 @@ Blob::Pointer Base64::decodeBlock(const void* code_in, count length_in)
         while (plainchar < plaintext_out_end) {
             codechar = base64_decode_loop(codechar, code_in_end, fragment);
             if (!codechar) {
-                return Blob::blobWithMemoryAndSize(plaintext_out, plainchar - plaintext_out);
+                return Blob::blobWithMemoryAndSize(reinterpret_cast<byte*>(plaintext_out), plainchar - plaintext_out);
             }
 
             *plainchar = (fragment & 0x03f) << 2;
 
             codechar = base64_decode_loop(codechar, code_in_end, fragment);
             if (!codechar) {
-                return Blob::blobWithMemoryAndSize(plaintext_out, plainchar - plaintext_out);
+                return Blob::blobWithMemoryAndSize(reinterpret_cast<byte*>(plaintext_out), plainchar - plaintext_out);
             }
 
             *plainchar++ |= (fragment & 0x030) >> 4;
@@ -98,7 +96,7 @@ Blob::Pointer Base64::decodeBlock(const void* code_in, count length_in)
 
             codechar = base64_decode_loop(codechar, code_in_end, fragment);
             if (!codechar) {
-                return Blob::blobWithMemoryAndSize(plaintext_out, plainchar - plaintext_out);
+                return Blob::blobWithMemoryAndSize(reinterpret_cast<byte*>(plaintext_out), plainchar - plaintext_out);
             }
 
             *plainchar++ |= (fragment & 0x03c) >> 2;
@@ -110,7 +108,7 @@ Blob::Pointer Base64::decodeBlock(const void* code_in, count length_in)
             
             codechar = base64_decode_loop(codechar, code_in_end, fragment);
             if (!codechar) {
-                return Blob::blobWithMemoryAndSize(plaintext_out, plainchar - plaintext_out);
+                return Blob::blobWithMemoryAndSize(reinterpret_cast<byte*>(plaintext_out), plainchar - plaintext_out);
             }
             
             *plainchar++ |= (fragment & 0x03f);
@@ -134,7 +132,7 @@ Blob::Pointer Base64::encodeBlock(const void* plaintext_in, count length_in)
     while (1) {
         if (plainchar == plaintextend) {
             *codechar++ = '\n';
-            result = Blob::blobWithMemoryAndSize(code_out, codechar - code_out);
+            result = Blob::blobWithMemoryAndSize(reinterpret_cast<byte*>(code_out), codechar - code_out);
             break;
         }
 
@@ -156,7 +154,7 @@ Blob::Pointer Base64::encodeBlock(const void* plaintext_in, count length_in)
             *codechar++ = '=';
             *codechar++ = '\n';
 
-            result = Blob::blobWithMemoryAndSize(code_out, codechar - code_out);
+            result = Blob::blobWithMemoryAndSize(reinterpret_cast<byte*>(code_out), codechar - code_out);
             break;
         }
 
@@ -177,7 +175,7 @@ Blob::Pointer Base64::encodeBlock(const void* plaintext_in, count length_in)
             *codechar++ = '=';
             *codechar++ = '\n';
 
-            result = Blob::blobWithMemoryAndSize(code_out, codechar - code_out);
+            result = Blob::blobWithMemoryAndSize(reinterpret_cast<byte*>(code_out), codechar - code_out);
             break;
         }
 

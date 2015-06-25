@@ -10,56 +10,65 @@
 //  or email licensing@serato.com.
 //
 
-#include "TrackEntry.hpp"
+#include "SeratoDB/TrackEntry.hpp"
+#include "SeratoDB/Internal/TrackEntry.hpp"
 #include "Tags/PathTag.hpp"
+#include "Tags/ObjectTag.hpp"
 #include "Tags/CrateV1Tags.hpp"
 
-#include <Base/File.hpp>
+NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, TrackEntry);
 
 using namespace NxA;
 using namespace NxA::Serato;
-using namespace std;
 
-#pragma mark Constructors
+#pragma mark Constructors & Destructors
 
-TrackEntry::TrackEntry(const char* trackPath, const char* locatedOnVolumePath) :
-                                   p_rootVolumePath(make_unique<string>(locatedOnVolumePath))
+TrackEntry::TrackEntry(NxA::Internal::Object::Pointer const& initial_internal) :
+                       Object(initial_internal),
+                       internal(initial_internal) { }
+
+#pragma mark Factory Methods
+
+TrackEntry::Pointer TrackEntry::entryWithTagOnVolume(NxA::ConstPointer<Tag> const& tag,
+                                                     String::ConstPointer const& volumePath)
 {
-    auto entryPath = File::removePrefixFromPath(String::stringWith(locatedOnVolumePath),
-                                                String::stringWith(trackPath));
+    auto internalObject = Internal::TrackEntry::Pointer(std::make_shared<Internal::TrackEntry>(tag, volumePath));
+    auto newTrackEntry = TrackEntry::makeSharedWithInternal(internalObject);
+    return newTrackEntry;
+}
 
-    TagVectorPtr tags(make_unique<TagVector>());
-    tags->push_back(make_unique<PathTag>(NxASeratoTrackEntryPathTag, entryPath->toUTF8()));
+TrackEntry::Pointer TrackEntry::entryWithTrackFileAtOnVolume(String::ConstPointer const& path,
+                                                             String::ConstPointer const& volumePath)
+{
+    auto entryPath = File::removePrefixFromPath(volumePath, path);
 
-    this->p_trackEntryTag = make_unique<ObjectTag>(NxASeratoTrackEntryTag, move(tags));
+    auto tags = Tag::Array::array();
+    tags->append(PathTag::tagWithIdentifierAndValue(trackEntryPathTagIdentifier, entryPath));
+
+    auto trackEntryTag = ObjectTag::tagWithIdentifierAndValue(trackEntryTagIdentifier, tags);
+
+    return TrackEntry::entryWithTagOnVolume(trackEntryTag, volumePath);
 }
 
 #pragma mark Instance Methods
 
-bool TrackEntry::p_containsAValidTrackEntryTag(void) const
-{
-    return this->p_trackEntryTag.get() != NULL;
-}
-
 String::ConstPointer TrackEntry::trackFilePath(void) const
 {
-    if (this->p_containsAValidTrackEntryTag()) {
-        const ObjectTag* trackObjectTag = dynamic_cast<const ObjectTag*>(this->p_trackEntryTag.get());
-        if (trackObjectTag->hasSubTagForIdentifier(NxASeratoTrackEntryPathTag)) {
-            const PathTag& pathTag = dynamic_cast<const PathTag&>(trackObjectTag->subTagForIdentifier(NxASeratoTrackEntryPathTag));
-            auto& pathFromRootFolder = pathTag.value();
-            auto trackFilePath = File::joinPaths(String::stringWith(this->p_rootVolumePath->c_str()),
-                                                 String::stringWith(pathFromRootFolder->toUTF8()));
-            return trackFilePath;
-        }
+    auto trackObjectTag = ObjectTag::ConstPointer(internal->trackEntryTag);
+    if (trackObjectTag->hasSubTagForIdentifier(trackEntryPathTagIdentifier)) {
+        auto pathTag = PathTag::ConstPointer(trackObjectTag->subTagForIdentifier(trackEntryPathTagIdentifier));
+        auto& pathFromRootFolder = pathTag->value();
+
+        auto trackFilePath = File::joinPaths(internal->rootVolumePath, pathFromRootFolder);
+        return trackFilePath;
     }
 
     return String::string();
 }
 
-const Tag& TrackEntry::tagForEntry(void) const
+Tag::ConstPointer const& TrackEntry::tagForEntry(void) const
 {
-    return *(this->p_trackEntryTag.get());
+    return internal->trackEntryTag;
 }
 
 void TrackEntry::destroy(void)

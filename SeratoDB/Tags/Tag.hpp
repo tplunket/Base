@@ -12,56 +12,21 @@
 
 #pragma once
 
-#include <SeratoDB/Utility.hpp>
-#include <Base/Blob.hpp>
-
-#include <string>
+#include <Base/Base.hpp>
 
 namespace NxA { namespace Serato {
-    #pragma mark Forward declarations
-    class Tag;
+    NXA_GENERATED_FORWARD_DECLARATIONS_FOR(Tag);
 
-    #pragma mark Containers
-    typedef std::unique_ptr<const Tag> ConstTagPtr;
-    typedef std::unique_ptr<Tag> TagPtr;
-    typedef std::vector<TagPtr> TagVector;
-    typedef std::vector<ConstTagPtr> ConstTagVector;
-    typedef std::unique_ptr<TagVector> TagVectorPtr;
-    typedef std::unique_ptr<ConstTagVector> ConstTagVectorPtr;
-
-    #pragma mark Class Declaration
-    class Tag
-    {
-    private:
-        #pragma mark Private Constructors/Destructors
-        Tag() { };
-
-    protected:
-        #pragma mark Protected Constructors/Destructors
-        explicit Tag(const uint32_t& identifier) : p_identifier(identifier) { }
-        explicit Tag(const void* tagAddress) : p_identifier(Tag::identifierForTagAt(tagAddress)) { }
-
-        #pragma mark Protected Class Methods
-        static void p_setIdentifierForTagAt(const uint32_t& identifier, const void* tagAddress);
-        static size_t p_dataSizeForTagAt(const void* tagAddress);
-        static void p_setDataSizeForTagAt(const size_t& dataSize, const void* tagAddress);
-        static const void* p_dataForTagAt(const void* tagAddress);
-        static void* p_dataForTagAt(void* tagAddress);
-        static size_t p_memoryNeededForTagHeader(void);
-
-        #pragma mark Protected Instance Variables
-        uint32_t p_identifier;
+    class Tag : public Object {
+        NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, Tag);
 
     public:
-        #pragma mark Public Constructors/Destructors
-        virtual ~Tag() { };
-
         #pragma mark Class Methods
-        static uint32_t identifierForTagAt(const void* tagAddress);
-        static const void* nextTagAfterBinaryRepresentationAt(const void* tagAddress);
+        static uinteger32 identifierForTagAt(const byte* tagAddress);
+        static const byte* nextTagAfterTagAt(const byte* tagAddress);
 
         #pragma mark Instance Methods
-        const uint32_t& identifier(void) const;
+        uinteger32 identifier(void) const;
 
         virtual void addTo(Blob::Pointer const& destination) const = 0;
     };

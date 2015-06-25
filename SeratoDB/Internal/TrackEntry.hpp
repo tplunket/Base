@@ -20,3 +20,23 @@
 //
 
 #pragma once
+
+#include "SeratoDB/TrackEntry.hpp"
+#include "Tags/Tag.hpp"
+
+#include <Base/Base.hpp>
+#include <Base/Internal/Object.hpp>
+
+namespace NxA { namespace Serato { namespace Internal {
+    struct TrackEntry : public NxA::Internal::Object {
+        NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTOR_FOR(NxA::Serato, TrackEntry);
+
+        #pragma mark Constructors & Destructors
+        TrackEntry(Serato::Tag::ConstPointer const& tag,
+                   String::ConstPointer const& locatedOnVolumePath);
+
+        #pragma mark Instance Variable
+        Serato::Tag::ConstPointer trackEntryTag;
+        String::ConstPointer rootVolumePath;
+    };
+} } }

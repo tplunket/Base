@@ -20,3 +20,17 @@
 //
 
 #pragma once
+
+#include <Base/Base.hpp>
+
+#include "TrackFiles/WAVTrackFile.hpp"
+#include "TrackFiles/Internal/ID3TrackFile.hpp"
+
+namespace NxA { namespace Serato { namespace Internal {
+    struct WAVTrackFile : public ID3TrackFile {
+        NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTOR_FOR(NxA::Serato, WAVTrackFile);
+
+        #pragma mark Constructor & Destructors
+        WAVTrackFile(String::ConstPointer const& path, TagLibFilePointer const& newFile);
+    };
+} } }

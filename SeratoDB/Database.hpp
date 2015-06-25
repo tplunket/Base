@@ -12,55 +12,38 @@
 
 #pragma once
 
-#include <SeratoDB/Tags/Tag.hpp>
-#include <SeratoDB/Track.hpp>
-#include <SeratoDB/Crate.hpp>
-#include <SeratoDB/CrateOrderFile.hpp>
-#include <SeratoDB/Utility.hpp>
-
-#include <Base/String.hpp>
-
-#include <vector>
+#include <Base/Base.hpp>
 
 namespace NxA { namespace Serato {
-    #pragma mark Class Declaration
-    class Database
-    {
-    private:
-        #pragma mark Private Instance Variables
-        String::ConstPointer p_databaseFilePath;
-        TrackVectorPtr p_tracks;
-        ConstTagVector p_otherTags;
+    NXA_GENERATED_FORWARD_DECLARATIONS_FOR(Database);
 
-        std::vector<String::ConstPointer> p_crateFilesToDelete;
+    class Crate;
+    class Track;
+    class TrackEntry;
 
-        CrateOrderFilePtr p_crateOrderFile;
-
-        bool p_databaseIsValid;
-
-        #pragma mark Private Instance Methods
-        void p_storeTrackTag(TagPtr tag);
-        void p_storeOtherTag(TagPtr tag);
+    class Database : public NxA::Object {
+        NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, Database);
 
     public:
-        #pragma mark Constructors
-        explicit Database(const char* seratoFolderPath);
+        #pragma mark Factory Methods
+        static Database::Pointer databaseWithFileAt(String::ConstPointer const& seratoFolderPath);
 
         #pragma mark Class Methods
-        static String::Pointer versionAsStringForDatabaseIn(const char* seratoFolderPath);
+        static String::Pointer versionAsStringForDatabaseIn(String::ConstPointer const& seratoFolderPath);
 
         #pragma mark Instance Methods
-        time_t databaseModificationDateInSecondsSince1970(void) const;
-        time_t rootCrateModificationDateInSecondsSince1970(void) const;
+        timestamp databaseModificationDateInSecondsSince1970(void) const;
+        timestamp rootCrateModificationDateInSecondsSince1970(void) const;
 
-        const Crate* rootCrate(void) const;
-        const TrackVector& tracks(void) const;
+        NxA::Pointer<Crate> const& rootCrate(void) const;
+        NxA::ConstPointer<NxA::Array<Track>> const& tracks(void) const;
+        NxA::Pointer<NxA::Array<Track>> removeAndReturnTracks(void);
 
-        TrackVectorPtr removeAndReturnTracks(void);
+        void deleteTrackEntry(NxA::Pointer<TrackEntry> const& crate);
+        void deleteCrate(NxA::Pointer<Crate> const& crate);
 
-        void addCrateFileToDelete(String::ConstPointer const& path);
-
-        void addTrack(TrackPtr track);
+        void addTrack(NxA::Pointer<Track> const& track);
+        void deleteTrack(NxA::Pointer<Track> const& track);
 
         void saveIfModified(void) const;
     };

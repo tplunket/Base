@@ -19,3 +19,14 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#include "TrackFiles/Internal/WAVTrackFile.hpp"
+
+// -- Generated internal implementation ommitted because this class does not use the default contructor.
+
+using namespace NxA;
+using namespace NxA::Serato::Internal;
+
+#pragma mark Constructors & Destructors
+
+WAVTrackFile::WAVTrackFile(String::ConstPointer const& path, TagLibFilePointer const& newFile) :
+                           ID3TrackFile(path, newFile) { }

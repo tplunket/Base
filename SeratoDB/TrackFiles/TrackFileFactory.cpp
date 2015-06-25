@@ -21,39 +21,28 @@
 using namespace NxA::Serato;
 using namespace std;
 
-#pragma mark Utility Functions
-
-bool p_hasSuffix(const string& str, const string& suffix)
-{
-    return str.size() >= suffix.size() &&
-    str.compare(str.size() - suffix.size(), suffix.size(), suffix) == 0;
-}
-
 #pragma mark Class Methods
 
-TrackFilePtr TrackFileFactory::trackFileForPath(const char* trackFilePath)
+TrackFile::Pointer TrackFileFactory::trackFileForPath(String::ConstPointer const& trackFilePath)
 {
-    string path(trackFilePath);
-    TrackFilePtr file;
-
-    if (p_hasSuffix(path, ".aiff") || p_hasSuffix(path, ".aif")) {
-        file = make_unique<AIFFTrackFile>(trackFilePath);
+    if (trackFilePath->hasPostfix(".aiff") || trackFilePath->hasPostfix(".aif")) {
+        return AIFFTrackFile::fileWithFileAt(trackFilePath);
     }
-    else if (p_hasSuffix(trackFilePath, ".mp3")) {
-        file = make_unique<MPEGTrackFile>(trackFilePath);
+    else if (trackFilePath->hasPostfix(".mp3")) {
+        return MPEGTrackFile::fileWithFileAt(trackFilePath);
     }
-    else if (p_hasSuffix(trackFilePath, ".m4a")) {
-        file = make_unique<MP4TrackFile>(trackFilePath);
+    else if (trackFilePath->hasPostfix(".m4a")) {
+        return MP4TrackFile::fileWithFileAt(trackFilePath);
     }
-    else if (p_hasSuffix(trackFilePath, ".flac")) {
-        file = make_unique<FLACTrackFile>(trackFilePath);
+    else if (trackFilePath->hasPostfix(".flac")) {
+        return FLACTrackFile::fileWithFileAt(trackFilePath);
     }
-    else if (p_hasSuffix(trackFilePath, ".ogg")) {
-        file = make_unique<OGGTrackFile>(trackFilePath);
+    else if (trackFilePath->hasPostfix(".ogg")) {
+        return OGGTrackFile::fileWithFileAt(trackFilePath);
     }
-    else if (p_hasSuffix(trackFilePath, ".wav")) {
-        file = make_unique<SeratoWAVTrackFile>(trackFilePath);
+    else if (trackFilePath->hasPostfix(".wav")) {
+        return WAVTrackFile::fileWithFileAt(trackFilePath);
     }
 
-    return move(file);
+    NXA_ALOG("Unknown file extension.");
 }

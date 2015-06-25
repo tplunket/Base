@@ -20,3 +20,21 @@
 //
 
 #pragma once
+
+#include "TrackFiles/OGGTrackFile.hpp"
+#include "TrackFiles/Internal/ID3TrackFile.hpp"
+
+#include <Base/Base.hpp>
+
+namespace NxA { namespace Serato { namespace Internal {
+    struct OGGTrackFile : public ID3TrackFile {
+        NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTOR_FOR(NxA::Serato, OGGTrackFile);
+
+        #pragma mark Constructor & Destructors
+        OGGTrackFile(String::ConstPointer const& path, TagLibFilePointer const& newFile);
+
+        #pragma mark Instance Methods
+        void readMarkers(void);
+        void writeMarkers(void);
+    };
+} } }

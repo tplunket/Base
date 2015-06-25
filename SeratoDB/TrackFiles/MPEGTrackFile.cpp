@@ -11,29 +11,42 @@
 //
 
 #include "TrackFiles/MPEGTrackFile.hpp"
+#include "TrackFiles/Internal/MPEGTrackFile.hpp"
 
+#include <taglib/mpegfile.h>
 #include <taglib/mpegproperties.h>
 
+using namespace NxA;
 using namespace NxA::Serato;
-using namespace TagLib;
-using namespace std;
 
-#pragma mark Constructors
+NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, MPEGTrackFile);
 
-MPEGTrackFile::MPEGTrackFile(const char* trackFilePath) : ID3TrackFile(trackFilePath)
+#pragma mark Constructors & Destructors
+
+MPEGTrackFile::MPEGTrackFile(NxA::Internal::Object::Pointer const& initial_internal) :
+                             ID3TrackFile(initial_internal),
+                             internal(initial_internal) { }
+
+#pragma mark Factory Methods
+
+MPEGTrackFile::Pointer MPEGTrackFile::fileWithFileAt(String::ConstPointer const& path)
 {
-    TaglibFilePtr file = make_unique<MPEG::File>(trackFilePath);
+    auto file = Internal::TagLibFilePointer(std::make_shared<TagLib::MPEG::File>(path->toUTF8()));
+    auto internalObject = Internal::MPEGTrackFile::Pointer(std::make_shared<Internal::MPEGTrackFile>(path, file));
+    auto newFile = MPEGTrackFile::makeSharedWithInternal(internalObject);
+
     if (!file->isValid()) {
-        this->p_file = TaglibFilePtr();
-        this->p_parsedFileTag = NULL;
-        this->p_audioProperties = NULL;
-        return;
+        newFile->internal->parsedFileTag = nullptr;
+        newFile->internal->audioProperties = nullptr;
+        return newFile;
     }
 
-    this->p_parsedFileTag = (TagLib::Tag*)(((MPEG::File*)file.get())->ID3v2Tag());
-    this->p_audioProperties = file->audioProperties();
-    this->p_properties = file->properties();
-    this->p_file = move(file);
+    auto mpegFile = dynamic_cast<TagLib::MPEG::File*>(&(*file));
+    newFile->internal->parsedFileTag = dynamic_cast<TagLib::Tag*>(mpegFile->ID3v2Tag());
+    newFile->internal->audioProperties = file->audioProperties();
+    newFile->internal->properties = file->properties();
 
-    this->p_readMarkers();
+    newFile->internal->readMarkers();
+
+    return newFile;
 }

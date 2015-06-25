@@ -10,143 +10,154 @@
 //  or email licensing@serato.com.
 //
 
-#include "Crate.hpp"
+#include "SeratoDB/Crate.hpp"
+#include "Internal/Crate.hpp"
+#include "SeratoDB/Database.hpp"
 #include "Tags/CrateV1Tags.hpp"
 #include "Tags/TextTag.hpp"
 #include "Tags/TagFactory.hpp"
-#include "Database.hpp"
+#include "Utility.hpp"
 
-#include "Base/File.hpp"
+NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, Crate);
 
 using namespace NxA;
 using namespace NxA::Serato;
-using namespace std;
+
+#pragma mark Constructors & Destructors
+
+Crate::Crate(NxA::Internal::Object::Pointer const& initial_internal) :
+             Object(initial_internal),
+             internal(initial_internal) { }
 
 #pragma mark Constants
 
-static const char* crateFileCurrentVersionString = "1.0/Serato ScratchLive Crate";
+static const character* crateFileCurrentVersionString = "1.0/Serato ScratchLive Crate";
 
-#pragma mark Constructors
+#pragma mark Factory Methods
 
-Crate::Crate(const char* crateFullName,
-             const char* inSeratoFolderPath,
-             const char* locatedOnVolumePath,
-             Database& database) :
-        p_crateFullName(ConstStringPtr(make_unique<string>(crateFullName))),
-        p_rootVolumePath(ConstStringPtr(make_unique<string>(locatedOnVolumePath))),
-        p_crateFilePath(crateFilePathForCrateNameInSeratoFolder(crateFullName, inSeratoFolderPath)),
-        p_parentDatabase(database),
-        p_parentCrate(NULL),
-        p_tracksWereModified(true),
-        p_cratesWereModified(false),
-        p_trackEntries(make_unique<TrackEntryVector>()),
-        p_childrenCrates(make_unique<CrateVector>())
+Crate::Pointer Crate::crateWithNameInFolderOnVolume(String::ConstPointer const& crateFullName,
+                                                    String::ConstPointer const& seratoFolderPath,
+                                                    String::ConstPointer const& volumePath)
 {
-    string crateName(crateFullName);
-    size_t lastSeperator = crateName.rfind("%%");
-    if (lastSeperator != string::npos) {
-        this->p_crateName = make_unique<string>(crateName.substr(lastSeperator + 2));
+    auto internalObject = Internal::Crate::Pointer(std::make_shared<Internal::Crate>(crateFullName,
+                                                                                     volumePath,
+                                                                                     crateFilePathForCrateNameInSeratoFolder(crateFullName,
+                                                                                                                             seratoFolderPath)));
+    auto newCrate = Crate::makeSharedWithInternal(internalObject);
+
+    auto lastSeperatorIndex = crateFullName->indexOfLastOccurenceOf("%%");
+    if (lastSeperatorIndex != crateFullName->length()) {
+        newCrate->internal->crateName = crateFullName->subString(lastSeperatorIndex + 2);
     }
     else {
-        this->p_crateName = make_unique<string>(crateFullName);
+        newCrate->internal->crateName = crateFullName;
     }
+
+    return newCrate;
 }
 
 #pragma mark Class Methods
 
-bool Crate::isAValidCrateName(const char* crateFullName, const char* seratoFolderPath)
+bool Crate::isAValidCrateName(String::ConstPointer const& crateFullName,
+                              String::ConstPointer const& seratoFolderPath)
 {
     auto crateFilePath = crateFilePathForCrateNameInSeratoFolder(crateFullName, seratoFolderPath);
     return File::fileExistsAt(crateFilePath);
 }
 
-bool Crate::isASmartCrateName(const char* crateFullName, const char* seratoFolderPath)
+bool Crate::isASmartCrateName(String::ConstPointer const& crateFullName,
+                              String::ConstPointer const& seratoFolderPath)
 {
     auto crateFilePath = crateFilePathForSmartCrateNameInSeratoFolder(crateFullName, seratoFolderPath);
     return File::fileExistsAt(crateFilePath);
 }
 
-#pragma mark Instance Methods
-
-void Crate::p_storeTrackTag(TagPtr tag)
+void Crate::addCrateAsChildOfCrate(Crate::Pointer const& crate, Crate::Pointer const& parentCrate)
 {
-    this->addTrackEntry(make_unique<TrackEntry>(move(tag), this->p_rootVolumePath->c_str()));
+    crate->internal->parentCrate = Crate::WeakPointer(parentCrate);
+
+    parentCrate->internal->markCratesAsModified();
+
+    parentCrate->internal->childrenCrates->append(crate);
 }
 
-void Crate::p_storeOtherTag(TagPtr tag)
+void Crate::destroy(Crate::Pointer const& crate)
 {
-    this->p_otherTags.push_back(move(tag));
-}
+    for (auto &childrenCrate : *(crate->internal->childrenCrates)) {
+        Crate::destroy(childrenCrate);
+    }
 
-void Crate::p_markCratesAsModified()
-{
-    this->p_cratesWereModified = true;
-
-    if (this->p_parentCrate) {
-        this->p_parentCrate->p_markCratesAsModified();
+    if (crate->hasParentCrate()) {
+        auto parentCrate = crate->internal->parentCrate.toPointer();
+        parentCrate->removeChildrenCrate(crate);
     }
 }
 
-const std::string& Crate::crateName(void) const
+#pragma mark Instance Methods
+
+String::ConstPointer const& Crate::crateName(void) const
 {
-    return *(this->p_crateName);
+    return internal->crateName;
 }
 
-const std::string& Crate::crateFullName(void) const
+String::ConstPointer const& Crate::crateFullName(void) const
 {
-    return *(this->p_crateFullName);
+    return internal->crateFullName;
 }
 
 void Crate::addFullCrateNameWithPrefixAndRecurseToChildren(String::Pointer const& destination, const char* prefix) const
 {
-    const string& fullName = *(this->p_crateFullName.get());
-    if (fullName.length()) {
+    if (internal->crateFullName->length()) {
         destination->append(prefix);
-        destination->append(fullName.c_str());
+        destination->append(internal->crateFullName);
         destination->append("\n");
     }
 
-    for (auto& crate : *this->p_childrenCrates) {
+    for (auto& crate : *internal->childrenCrates) {
         crate->addFullCrateNameWithPrefixAndRecurseToChildren(destination, prefix);
     }
 }
 
-const TrackEntryVector& Crate::trackEntries(void) const
+TrackEntry::Array::ConstPointer const& Crate::trackEntries(void) const
 {
-    return *(this->p_trackEntries.get());
+    return internal->trackEntries;
 }
 
-const CrateVector& Crate::crates(void) const
+Crate::Array::ConstPointer const& Crate::crates(void) const
 {
-    return *(this->p_childrenCrates.get());
+    return internal->childrenCrates;
+}
+
+void Crate::addTrackEntry(Serato::TrackEntry::Pointer const& trackEntry)
+{
+    internal->addTrackEntry(trackEntry);
 }
 
 void Crate::loadFromFile(void)
 {
-    auto crateFileData = File::readFileAt(this->p_crateFilePath);
-    TagVectorPtr tags(TagFactory::parseTagsAt(crateFileData->data(), crateFileData->size()));
-    if (!tags->size()) {
+    auto crateFileData = File::readFileAt(internal->crateFilePath);
+    auto tags = TagFactory::parseTagsAt(crateFileData->data(), crateFileData->size());
+    if (!tags->length()) {
         return;
     }
 
-    for (auto& tagPtr : *(tags)) {
-        Tag* tag = tagPtr.get();
+    for (auto& tag : *(tags)) {
         switch (tag->identifier()) {
-            case NxASeratoCrateVersionTag: {
-                const TextTag* versionTag = dynamic_cast<const TextTag*>(tag);
+            case crateVersionTagIdentifier: {
+                auto versionTag = TextTag::Pointer(tag);
                 if (!versionTag->value()->isEqualTo(crateFileCurrentVersionString)) {
-                    this->p_otherTags.clear();
-                    this->p_trackEntries->clear();
+                    internal->otherTags->emptyAll();
+                    internal->trackEntries->emptyAll();
                     return;
                 }
                 break;
             }
-            case NxASeratoTrackEntryTag: {
-                this->p_storeTrackTag(move(tagPtr));
+            case trackEntryTagIdentifier: {
+                internal->storeTrackTag(tag);
                 break;
             }
             default: {
-                this->p_storeOtherTag(move(tagPtr));
+                internal->storeOtherTag(tag);
                 break;
             }
         }
@@ -155,126 +166,87 @@ void Crate::loadFromFile(void)
 
 bool Crate::hasParentCrate(void) const
 {
-    return this->p_parentCrate != nullptr;
+    return internal->parentCrate.isValid();
 }
 
-Crate& Crate::parentCrate(void) const
+Crate::Pointer Crate::parentCrate(void) const
 {
-    return *(this->p_parentCrate);
+    return internal->parentCrate.toPointer();
+}
+
+String::ConstPointer const& Crate::crateFilePath(void) const
+{
+    return internal->crateFilePath;
 }
 
 void Crate::resetModificationFlags()
 {
-    this->p_cratesWereModified = false;
-    this->p_tracksWereModified = false;
+    internal->cratesWereModified = false;
+    internal->tracksWereModified = false;
 }
 
 bool Crate::childrenCratesWereModified(void) const
 {
-    return this->p_cratesWereModified;
+    return internal->cratesWereModified;
 }
 
 void Crate::saveIfModifiedAndRecurseToChildren(void) const
 {
-    if (this->p_rootVolumePath.get() && this->p_tracksWereModified) {
+    if (internal->rootVolumePath->length() && internal->tracksWereModified) {
         auto outputData = Blob::blob();
 
-        TagPtr versionTag(make_unique<TextTag>(NxASeratoCrateVersionTag, crateFileCurrentVersionString));
+        auto versionTag = TextTag::tagWithIdentifierAndValue(crateVersionTagIdentifier,
+                                                             String::stringWith(crateFileCurrentVersionString));
         versionTag->addTo(outputData);
 
-        for (auto& trackEntry : *this->p_trackEntries) {
-            trackEntry->tagForEntry().addTo(outputData);
+        for (auto& trackEntry : *internal->trackEntries) {
+            trackEntry->tagForEntry()->addTo(outputData);
         }
 
-        for (auto& tag : this->p_otherTags) {
+        for (auto& tag : *internal->otherTags) {
             tag->addTo(outputData);
         }
 
-        File::writeBlobToFileAt(outputData, this->p_crateFilePath);
+        File::writeBlobToFileAt(outputData, internal->crateFilePath);
     }
 
-    for (auto& crate : *this->p_childrenCrates) {
+    for (auto& crate : *internal->childrenCrates) {
         crate->saveIfModifiedAndRecurseToChildren();
     }
 }
 
-void Crate::addTrackEntry(TrackEntryPtr trackEntry)
+void Crate::removeChildrenCrate(Crate::Pointer const& crate)
 {
-    this->p_tracksWereModified = true;
-    this->p_trackEntries->push_back(move(trackEntry));
-}
-
-void Crate::addChildCrate(CratePtr crate)
-{
-    crate->p_parentCrate = this;
-
-    this->p_markCratesAsModified();
-
-    this->p_childrenCrates->push_back(move(crate));
-}
-
-CratePtr Crate::removeAndReturnChildrenCrate(Crate& crate)
-{
-    crate.p_parentCrate = nullptr;
-
-    uint32_t indexOfChildrenCrate = 0;
-    CrateVector& childrenCrates = *(this->p_childrenCrates);
-    for (auto& childrenCrate : childrenCrates) {
-        if (childrenCrate.get() == &crate) {
-            CratePtr crateToRemove(move(childrenCrate));
-
-            this->p_markCratesAsModified();
-
-            childrenCrates.erase(childrenCrates.begin() + indexOfChildrenCrate);
-
-            return move(crateToRemove);
-        }
-
-        ++indexOfChildrenCrate;
+    auto position = internal->childrenCrates->find(crate);
+    if (position == internal->childrenCrates->end()) {
+        return;
     }
 
-    return CratePtr(nullptr);
+    crate->internal->parentCrate.release();
+    internal->childrenCrates->remove(position);
+    internal->markCratesAsModified();
 }
 
-TrackEntryVectorPtr Crate::removeAndReturnTrackEntries(void)
+TrackEntry::Array::Pointer Crate::removeAndReturnTrackEntries(void)
 {
-    TrackEntryVectorPtr trackEntries = move(this->p_trackEntries);
-    this->p_trackEntries = TrackEntryVectorPtr(make_unique<TrackEntryVector>());
+    auto currentEntries = internal->trackEntries;
 
-    this->p_tracksWereModified = true;
+    internal->trackEntries = TrackEntry::Array::array();
+    internal->tracksWereModified = true;
 
-    return trackEntries;
+    return currentEntries;
 }
 
-CrateVectorPtr Crate::removeAndReturnChildrenCrates(void)
+Crate::Array::Pointer Crate::removeAndReturnChildrenCrates(void)
 {
-    CrateVectorPtr childrenCrates = move(this->p_childrenCrates);
-    this->p_childrenCrates = CrateVectorPtr(make_unique<CrateVector>());
+    auto currentChildrenCrates = internal->childrenCrates;
 
-    this->p_markCratesAsModified();
+    internal->childrenCrates = Crate::Array::array();
+    internal->markCratesAsModified();
 
-    for (auto& crate : *this->p_childrenCrates) {
-        crate->p_parentCrate = NULL;
+    for (auto& crate : *currentChildrenCrates) {
+        crate->internal->parentCrate.release();
     }
 
-    return childrenCrates;
-}
-
-void Crate::destroy(void)
-{
-    for (auto &childrenCrate : *(this->p_childrenCrates)) {
-        childrenCrate->destroy();
-    }
-
-    this->p_parentDatabase.addCrateFileToDelete(this->p_crateFilePath);
-    
-    if (this->hasParentCrate()) {
-        Crate &parentCrate = this->parentCrate();
-
-        CratePtr self(parentCrate.removeAndReturnChildrenCrate(*this));
-        delete self.release();
-    }
-    else {
-        delete this;
-    }
+    return currentChildrenCrates;
 }

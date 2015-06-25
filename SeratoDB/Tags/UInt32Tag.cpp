@@ -11,31 +11,59 @@
 //
 
 #include "Tags/UInt32Tag.hpp"
+#include "Tags/Internal/UInt32Tag.hpp"
+
+NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, UInteger32Tag);
 
 using namespace NxA;
 using namespace NxA::Serato;
 
+#pragma mark Constructors & Destructors
+
+UInteger32Tag::UInteger32Tag(NxA::Internal::Object::Pointer const& initial_internal) :
+Tag(initial_internal),
+internal(initial_internal) { }
+
+#pragma mark Factory Methods
+
+UInteger32Tag::Pointer UInteger32Tag::tagWithMemoryAt(const byte* tagAddress)
+{
+    const byte* tagData = Internal::Tag::dataForTagAt(tagAddress);
+
+    return UInteger32Tag::tagWithIdentifierAndValue(Tag::identifierForTagAt(tagAddress),
+                                                Platform::bigEndianUInt32ValueAt(tagData));
+}
+
+UInteger32Tag::Pointer UInteger32Tag::tagWithIdentifierAndValue(uinteger32 identifier, uinteger32 value)
+{
+    auto newTag = UInteger32Tag::makeShared();
+    newTag->internal->identifier = identifier;
+    newTag->internal->value = value;
+
+    return newTag;
+}
+
 #pragma mark Instance Methods
 
-const uint32_t& UInt32Tag::value(void) const
+uinteger32 UInteger32Tag::value(void) const
 {
-    return this->p_value;
+    return internal->value;
 }
 
-uint32_t& UInt32Tag::value(void)
+void UInteger32Tag::setValue(uinteger32 value)
 {
-    return const_cast<uint32_t&>(static_cast<const UInt32Tag&>(*this).value());
+    this->internal->value = value;
 }
 
-void UInt32Tag::addTo(Blob::Pointer const& destination) const
+void UInteger32Tag::addTo(Blob::Pointer const& destination) const
 {
     size_t dataSize = 4;
-    auto memoryRepresentation = Blob::blobWithCapacity(Tag::p_memoryNeededForTagHeader() + dataSize);
+    auto memoryRepresentation = Blob::blobWithCapacity(Internal::Tag::memoryNeededForTagHeader() + dataSize);
 
-    void* tagAddress = memoryRepresentation->data();
-    Tag::p_setIdentifierForTagAt(this->identifier(), tagAddress);
-    Tag::p_setDataSizeForTagAt(dataSize, tagAddress);
-    Platform::writeBigEndianUInt32ValueAt(this->p_value, Tag::p_dataForTagAt(tagAddress));
+    byte* tagAddress = memoryRepresentation->data();
+    Internal::Tag::setIdentifierForTagAt(this->identifier(), tagAddress);
+    Internal::Tag::setDataSizeForTagAt(dataSize, tagAddress);
+    Platform::writeBigEndianUInt32ValueAt(this->value(), Internal::Tag::dataForTagAt(tagAddress));
 
     destination->append(memoryRepresentation);
 }

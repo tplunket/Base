@@ -11,280 +11,145 @@
 //
 
 #include "TrackFiles/TrackFile.hpp"
-#include "Base64.hpp"
-
-#include <Base/File.hpp>
-#include <Base/Platform.hpp>
+#include "TrackFiles/Internal/TrackFile.hpp"
 
 #include <taglib/tpropertymap.h>
 #include <taglib/generalencapsulatedobjectframe.h>
 
 using namespace NxA;
 using namespace NxA::Serato;
-using namespace TagLib;
-using namespace std;
 
-#pragma mark Constants
+NXA_GENERATED_PURE_VIRTUAL_IMPLEMENTATION_FOR(NxA::Serato, TrackFile);
 
-static const string emptyString("");
+#pragma mark Constructors & Destructors
 
-#pragma mark Structures
-
-typedef struct {
-    unsigned char majorVersion;
-    unsigned char minorVersion;
-    unsigned char data[0];
-} SeratoMarkerHeaderStruct;
-
-#pragma mark Utility Functions
-
-static const byte* p_nextTagPositionAfterTagNamed(const string tagName, const byte* currentTagPosition)
-{
-    const byte* parserPosition = currentTagPosition;
-
-    parserPosition += tagName.length() + 1;
-    uint32_t tagSize = Platform::bigEndianUInt32ValueAt(parserPosition);
-    parserPosition += 4 + tagSize;
-
-    return parserPosition;
-}
-
-static Blob::Pointer p_markerV2TagDataFrom(const byte* tagStart)
-{
-    const string tagName(reinterpret_cast<const char*>(tagStart));
-    size_t sizeOfNameField = tagName.length() + 1;
-    const size_t sizeOfSizeField = 4;
-
-    const byte* sizePosition = tagStart + sizeOfNameField;
-    size_t tagSize = Platform::bigEndianUInt32ValueAt(sizePosition) + sizeOfNameField + sizeOfSizeField;
-
-    return Blob::blobWithMemoryAndSize(tagStart, tagSize);
-}
+TrackFile::TrackFile(NxA::Internal::Object::Pointer const& initial_internal) :
+                     Object(initial_internal),
+                     internal(initial_internal) { }
 
 #pragma mark Instance Methods
 
-void TrackFile::p_readMarkersV2FromBase64Data(const byte* markerV2Data, size_t totalSize)
+String::Pointer TrackFile::title(void) const
 {
-    if (!totalSize) {
-        return;
-    }
-
-    auto decodedData = Base64::decodeBlock(markerV2Data, totalSize);
-
-    const SeratoMarkerHeaderStruct* markerStruct = (const SeratoMarkerHeaderStruct*)(decodedData->data());
-    if ((markerStruct->majorVersion != 1) || (markerStruct->minorVersion != 1)) {
-        return;
-    }
-
-    // -- FIXME: The data written by Serato sometimes contains an extra byte at the end.
-    // -- This might be a bug in the decode method but since marker data is always more
-    // -- than one byte long, we substract one here to make sure we don't go over the end.
-    const byte* markerDataEnd = (const byte*)markerStruct + decodedData->size() - 1;
-    const byte* tagStart = (const byte*)markerStruct->data;
-
-    while (tagStart < markerDataEnd) {
-        string tagName(reinterpret_cast<const char*>(tagStart));
-
-        if (tagName == "CUE") {
-            this->p_cueMarkers->append(CueMarker::cueMarkerWith(tagStart));
-        }
-        else if (tagName == "LOOP") {
-            this->p_loopMarkers->append(LoopMarker::loopMarkerWith(tagStart));
-        }
-        else {
-            this->p_otherTags->append(p_markerV2TagDataFrom(tagStart));
-        }
-
-        tagStart = p_nextTagPositionAfterTagNamed(tagName, tagStart);
-    }
-}
-
-void TrackFile::p_addGridMarker(GridMarker::ConstPointer const& gridMarker)
-{
-    this->p_gridMarkers->append(GridMarker::gridMarkerWith(gridMarker));
-}
-
-void TrackFile::p_readGridMarkersFrom(const byte* gridMarkerData, size_t totalSize)
-{
-    if (!totalSize) {
-        return;
-    }
-
-    uint32_t numberOfMarkers = Platform::bigEndianUInt32ValueAt(gridMarkerData);
-    gridMarkerData += 4;
-
-    for (uint32_t index = 0; index < numberOfMarkers; ++index) {
-        this->p_addGridMarker(GridMarker::gridMarkerWith(gridMarkerData));
-
-        gridMarkerData = GridMarker::nextGridMarkerAfter(gridMarkerData);
-    }
-}
-
-Blob::Pointer TrackFile::p_base64DataFromMarkersV2(void)
-{
-    auto decodedData = Blob::blob();
-
-    SeratoMarkerHeaderStruct markersHeader;
-    markersHeader.majorVersion = 1;
-    markersHeader.minorVersion = 1;
-
-    auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<character*>(&markersHeader), sizeof(SeratoMarkerHeaderStruct));
-    decodedData->append(headerData);
-
-    for (auto& marker : *this->p_cueMarkers) {
-        marker->addId3TagTo(decodedData);
-    }
-
-    for (auto& marker : *this->p_loopMarkers) {
-        marker->addId3TagTo(decodedData);
-    }
-
-    for (auto& tagData : *this->p_otherTags) {
-        decodedData->append(tagData);
-    }
-
-    auto encodedData = Base64::encodeBlock(decodedData->data(), decodedData->size());
-    return encodedData;
-}
-
-Blob::Pointer TrackFile::p_gridMarkerDataFromGridMarkers(void)
-{
-    auto data = Blob::blob();
-
-    uinteger32 numberOfMarkers;
-    Platform::writeBigEndianUInt32ValueAt(this->p_gridMarkers->length(), &numberOfMarkers);
-
-    auto numberOfMarkersData = Blob::blobWithMemoryAndSize(reinterpret_cast<character*>(&numberOfMarkers), sizeof(numberOfMarkers));
-    data->append(numberOfMarkersData);
-
-    for (auto& marker : *(this->p_gridMarkers)) {
-        marker->addDataTo(data);
-    }
-
-    return move(data);
-}
-
-string TrackFile::title(void) const
-{
-    if (this->p_parsedFileTag) {
-        auto text = this->p_parsedFileTag->title();
+    if (internal->parsedFileTag) {
+        auto text = internal->parsedFileTag->title();
         if (text != TagLib::String::null) {
-            return text.to8Bit();
+            return String::stringWith(text.toCString());
         }
     }
 
-    return emptyString;
+    return String::string();
 }
 
-string TrackFile::artist(void) const
+String::Pointer TrackFile::artist(void) const
 {
-    if (this->p_parsedFileTag) {
-        auto text = this->p_parsedFileTag->artist();
+    if (internal->parsedFileTag) {
+        auto text = internal->parsedFileTag->artist();
         if (text != TagLib::String::null) {
-            return text.to8Bit();
+            return String::stringWith(text.toCString());
         }
     }
 
-    return emptyString;
+    return String::string();
 }
 
-string TrackFile::genre(void) const
+String::Pointer TrackFile::genre(void) const
 {
-    if (this->p_parsedFileTag) {
-        auto text = this->p_parsedFileTag->genre();
+    if (internal->parsedFileTag) {
+        auto text = internal->parsedFileTag->genre();
         if (text != TagLib::String::null) {
-            return text.to8Bit();
+            return String::stringWith(text.toCString());
         }
     }
 
-    return emptyString;
+    return String::string();
 }
 
-string TrackFile::comments(void) const
+String::Pointer TrackFile::comments(void) const
 {
-    if (this->p_parsedFileTag) {
-        auto text = this->p_parsedFileTag->comment();
+    if (internal->parsedFileTag) {
+        auto text = internal->parsedFileTag->comment();
         if (text != TagLib::String::null) {
-            return text.to8Bit();
+            return String::stringWith(text.toCString());
         }
     }
 
-    return emptyString;
+    return String::string();
 }
 
-string TrackFile::album(void) const
+String::Pointer TrackFile::album(void) const
 {
-    if (this->p_parsedFileTag) {
-        auto text = this->p_parsedFileTag->album();
+    if (internal->parsedFileTag) {
+        auto text = internal->parsedFileTag->album();
         if (text != TagLib::String::null) {
-            return text.to8Bit();
+            return String::stringWith(text.toCString());
         }
     }
 
-    return emptyString;
+    return String::string();
 }
 
-string TrackFile::composer(void) const
+String::Pointer TrackFile::composer(void) const
 {
-    auto text = this->p_properties["COMPOSER"].toString();
+    auto text = internal->properties["COMPOSER"].toString();
     if (text != TagLib::String::null) {
-        return text.to8Bit();
+        return String::stringWith(text.toCString());
     }
 
-    return emptyString;
+    return String::string();
 }
 
-string TrackFile::bpm(void) const
+String::Pointer TrackFile::bpm(void) const
 {
-    auto text = this->p_properties["BPM"].toString();
+    auto text = internal->properties["BPM"].toString();
     if (text != TagLib::String::null) {
-        return text.to8Bit();
+        return String::stringWith(text.toCString());
     }
 
-    return emptyString;
+    return String::string();
 }
 
-size_t TrackFile::size(void) const
+count TrackFile::size(void) const
 {
-    return File::sizeOfFileAt(String::stringWith(this->p_trackFilePath->c_str()));
+    return File::sizeOfFileAt(String::stringWith(internal->trackFilePath->toUTF8()));
 }
 
-uint32_t TrackFile::lengthInMilliseconds(void) const
+uinteger32 TrackFile::lengthInMilliseconds(void) const
 {
-    if (this->p_audioProperties) {
-        return this->p_audioProperties->length() * 1000;
-    }
-
-    return 0;
-}
-
-uint32_t TrackFile::bitRateInKiloBitsPerSecond(void) const
-{
-    if (this->p_audioProperties) {
-        return this->p_audioProperties->bitrate();
+    if (internal->audioProperties) {
+        return internal->audioProperties->length() * 1000;
     }
 
     return 0;
 }
 
-uint32_t TrackFile::bitDepthInBitsOrZeroIfNotApplicable(void) const
+uinteger32 TrackFile::bitRateInKiloBitsPerSecond(void) const
 {
-    return 0;
-}
-
-uint32_t TrackFile::sampleRateInSamplesPerSecond(void) const
-{
-    if (this->p_audioProperties) {
-        return this->p_audioProperties->sampleRate();
+    if (internal->audioProperties) {
+        return internal->audioProperties->bitrate();
     }
 
     return 0;
 }
 
-uint32_t TrackFile::trackNumber(void) const
+uinteger32 TrackFile::bitDepthInBitsOrZeroIfNotApplicable(void) const
 {
-    if (this->p_parsedFileTag) {
-        return this->p_parsedFileTag->track();
+    return 0;
+}
+
+uinteger32 TrackFile::sampleRateInSamplesPerSecond(void) const
+{
+    if (internal->audioProperties) {
+        return internal->audioProperties->sampleRate();
+    }
+
+    return 0;
+}
+
+count TrackFile::trackNumber(void) const
+{
+    if (internal->parsedFileTag) {
+        return internal->parsedFileTag->track();
     }
 
     return 0;
@@ -292,89 +157,88 @@ uint32_t TrackFile::trackNumber(void) const
 
 CueMarker::Array::ConstPointer const& TrackFile::cueMarkers(void) const
 {
-    return this->p_cueMarkers;
+    return internal->cueMarkers;
 }
 
 LoopMarker::Array::ConstPointer const& TrackFile::loopMarkers(void) const
 {
-    return this->p_loopMarkers;
+    return internal->loopMarkers;
 }
 
 GridMarker::Array::ConstPointer const& TrackFile::gridMarkers(void) const
 {
-    return this->p_gridMarkers;
+    return internal->gridMarkers;
 }
 
-void TrackFile::setTitle(const char* title)
+void TrackFile::setTitle(String::ConstPointer const& title)
 {
-    if (this->p_parsedFileTag) {
-        this->p_parsedFileTag->setTitle(TagLib::String(title));
+    if (internal->parsedFileTag) {
+        internal->parsedFileTag->setTitle(TagLib::String(title->toUTF8()));
     }
 }
 
-void TrackFile::setArtist(const char* artist)
+void TrackFile::setArtist(String::ConstPointer const& artist)
 {
-    if (this->p_parsedFileTag) {
-        this->p_parsedFileTag->setArtist(TagLib::String(artist));
+    if (internal->parsedFileTag) {
+        internal->parsedFileTag->setArtist(TagLib::String(artist->toUTF8()));
     }
 }
 
-void TrackFile::setGenre(const char* genre)
+void TrackFile::setGenre(String::ConstPointer const& genre)
 {
-    if (this->p_parsedFileTag) {
-        this->p_parsedFileTag->setGenre(TagLib::String(genre));
+    if (internal->parsedFileTag) {
+        internal->parsedFileTag->setGenre(TagLib::String(genre->toUTF8()));
     }
 }
 
-void TrackFile::setComments(const char* comments)
+void TrackFile::setComments(String::ConstPointer const& comments)
 {
-    if (this->p_parsedFileTag) {
-        this->p_parsedFileTag->setComment(TagLib::String(comments));
+    if (internal->parsedFileTag) {
+        internal->parsedFileTag->setComment(TagLib::String(comments->toUTF8()));
     }
 }
 
-void TrackFile::setAlbum(const char* album)
+void TrackFile::setAlbum(String::ConstPointer const& album)
 {
-    if (this->p_parsedFileTag) {
-        this->p_parsedFileTag->setAlbum(TagLib::String(album));
+    if (internal->parsedFileTag) {
+        internal->parsedFileTag->setAlbum(TagLib::String(album->toUTF8()));
     }
 }
 
-void TrackFile::setComposer(const char* composer)
+void TrackFile::setComposer(String::ConstPointer const& composer)
 {
-    this->p_properties["COMPOSER"] = TagLib::String(composer);
+    internal->properties["COMPOSER"] = TagLib::String(composer->toUTF8());
 }
 
-void TrackFile::setBpm(const char* bpm)
+void TrackFile::setBpm(String::ConstPointer const& bpm)
 {
-    this->p_properties["BPM"] = TagLib::String(bpm);
+    internal->properties["BPM"] = TagLib::String(bpm->toUTF8());
 }
 
-void TrackFile::setTrackNumber(const uint32_t& trackNumber)
+void TrackFile::setTrackNumber(count trackNumber)
 {
-    if (this->p_parsedFileTag) {
-        this->p_parsedFileTag->setTrack(trackNumber);
+    if (internal->parsedFileTag) {
+        internal->parsedFileTag->setTrack(trackNumber);
     }
 }
 
 void TrackFile::setCueMarkers(CueMarker::Array::Pointer const& markers)
 {
-    this->p_cueMarkers = markers;
+    internal->cueMarkers = markers;
 }
 
 void TrackFile::setLoopMarkers(LoopMarker::Array::Pointer const& markers)
 {
-    this->p_loopMarkers = markers;
+    internal->loopMarkers = markers;
 }
 
 void TrackFile::setGridMarkers(GridMarker::Array::Pointer const& markers)
 {
-    this->p_gridMarkers = markers;
+    internal->gridMarkers = markers;
 }
 
 void TrackFile::saveChanges(void)
 {
-    this->p_writeMarkers();
-
-    this->p_file->save();
+    internal->writeMarkers();
+    internal->file->save();
 }

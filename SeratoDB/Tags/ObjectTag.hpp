@@ -13,35 +13,27 @@
 #pragma once
 
 #include <SeratoDb/Tags/Tag.hpp>
-#include <SeratoDB/Utility.hpp>
 
-#include <Base/Blob.hpp>
-
-#include <map>
+#include <Base/Base.hpp>
 
 namespace NxA { namespace Serato {
-    #pragma mark Containers
-    typedef std::map<uint32_t, ConstTagPtr> SeratoIdentifierToTagMap;
+    NXA_GENERATED_FORWARD_DECLARATIONS_FOR(ObjectTag);
 
-    #pragma mark Class Declaration
-    class ObjectTag : public Tag
-    {
-    private:
-        #pragma mark Private Instance Variables
-        SeratoIdentifierToTagMap p_subTagForIdentifier;
-
+    class ObjectTag : public Tag {
+        NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, ObjectTag);
+        
     public:
-        #pragma mark Constructors
-        explicit ObjectTag(const void* tagAddress);
-        explicit ObjectTag(const uint32_t &identifier, TagVectorPtr content);
+        #pragma mark Factory Methods
+        static ObjectTag::Pointer tagWithMemoryAt(const byte* tagAddress);
+        static ObjectTag::Pointer tagWithIdentifierAndValue(uinteger32 identifier, Tag::Array::Pointer const& content);
 
         #pragma mark Instance Methods
-        bool hasSubTagForIdentifier(const uint32_t& identifier) const;
+        bool hasSubTagForIdentifier(uinteger32 identifier) const;
 
-        const Tag& subTagForIdentifier(const uint32_t& identifier) const;
-        Tag& subTagForIdentifier(const uint32_t& identifier);
+        Tag::ConstPointer const& subTagForIdentifier(uinteger32 identifier) const;
+        Tag::Pointer const& subTagForIdentifier(uinteger32 identifier);
 
-        void addSubTag(ConstTagPtr tag);
+        void addSubTag(Tag::Pointer const& tag);
 
         void addTo(Blob::Pointer const& destination) const;
     };

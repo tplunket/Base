@@ -11,127 +11,64 @@
 //
 
 #include "TrackFiles/OGGTrackFile.hpp"
-#include "Base64.hpp"
+#include "TrackFiles/Internal/OGGTrackFile.hpp"
 
 #include <taglib/vorbisfile.h>
 
+using namespace NxA;
 using namespace NxA::Serato;
-using namespace TagLib;
-using namespace std;
 
-#pragma mark Constants
+NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, OGGTrackFile);
 
-static const string emptyString("");
+#pragma mark Constructors & Destructors
 
-#pragma mark Constructors
+OGGTrackFile::OGGTrackFile(NxA::Internal::Object::Pointer const& initial_internal) :
+                           ID3TrackFile(initial_internal),
+                           internal(initial_internal) { }
 
-OGGTrackFile::OGGTrackFile(const char* trackFilePath) : ID3TrackFile(trackFilePath)
+#pragma mark Factory Methods
+
+OGGTrackFile::Pointer OGGTrackFile::fileWithFileAt(String::ConstPointer const& path)
 {
-    TaglibFilePtr file = make_unique<Vorbis::File>(trackFilePath);
+    auto file = Internal::TagLibFilePointer(std::make_shared<TagLib::Vorbis::File>(path->toUTF8()));
+    auto internalObject = Internal::OGGTrackFile::Pointer(std::make_shared<Internal::OGGTrackFile>(path, file));
+    auto newFile = OGGTrackFile::makeSharedWithInternal(internalObject);
+
     if (!file->isValid()) {
-        this->p_file = TaglibFilePtr();
-        this->p_parsedFileTag = NULL;
-        this->p_audioProperties = NULL;
-        return;
+        newFile->internal->parsedFileTag = nullptr;
+        newFile->internal->audioProperties = nullptr;
+        return newFile;
     }
 
-    this->p_parsedFileTag = file->tag();
-    this->p_audioProperties = file->audioProperties();
-    this->p_properties = file->properties();
-    this->p_file = move(file);
+    newFile->internal->parsedFileTag = file->tag();
+    newFile->internal->audioProperties = file->audioProperties();
+    newFile->internal->properties = file->properties();
 
-    this->p_readMarkers();
+    newFile->internal->readMarkers();
+
+    return newFile;
 }
 
 #pragma mark Instance Methods
-
-void OGGTrackFile::p_readMarkers(void)
-{
-    const TagLib::String markersEncodedData = this->p_properties["SERATO_MARKERS2"].toString();
-    uint32_t encodedDataSize = markersEncodedData.size();
-    if (encodedDataSize) {
-        this->p_readMarkersV2FromBase64Data(reinterpret_cast<const byte*>(markersEncodedData.data(TagLib::String::UTF8).data()),
-                                            encodedDataSize);
-    }
-
-    const TagLib::String beatGridEncodedData = this->p_properties["SERATO_BEATGRID"].toString();
-    uint32_t encodedBeatGridDataSize = beatGridEncodedData.size();
-    if (encodedBeatGridDataSize) {
-        uint32_t majorVersion = beatGridEncodedData.substr(0, 8).toInt();
-        uint32_t minorVersion = beatGridEncodedData.substr(8, 8).toInt();
-        if ((majorVersion == 1) && (minorVersion == 0)) {
-            uint32_t numberOfGridMarkers = beatGridEncodedData.substr(16, 8).toInt();
-            StringList markerStrings(beatGridEncodedData.substr(25).split("("));
-            if (markerStrings.size() == numberOfGridMarkers) {
-                for (auto& markerString : markerStrings) {
-                    StringList values = markerString.split(",");
-                    double position = stod(values[0].toCString());
-                    double bpm = stod(values[1].substr(0, values[1].length() - 1).toCString());
-
-                    this->p_addGridMarker(GridMarker::gridMarkerWith(position, bpm));
-                }
-            }
-        }
-    }
-}
-
-void OGGTrackFile::p_writeMarkers(void)
-{
-    if (this->cueMarkers()->length() || this->loopMarkers()->length()) {
-        CharVector decodedData;
-
-        auto base64Data = this->p_base64DataFromMarkersV2();
-        base64Data->append(static_cast<character>(0));
-
-        StringList newList;
-        newList.append(TagLib::String((char*)base64Data->data()));
-        this->p_properties["SERATO_MARKERS2"] = newList;
-    }
-    else {
-        this->p_properties.erase("SERATO_MARKERS2");
-    }
-
-    if (this->gridMarkers()->length()) {
-        TagLib::String propertyString;
-        char buffer[32];
-
-        propertyString.append("00000001");
-        propertyString.append("00000000");
-        ::snprintf(buffer, sizeof(buffer), "%08ld", this->gridMarkers()->length());
-        propertyString.append(buffer);
-
-        for (auto& marker : *(this->gridMarkers())) {
-            ::snprintf(buffer, sizeof(buffer), "(%0.6f,%0.6f)", marker->positionInSeconds(), marker->beatsPerMinute());
-            propertyString.append(buffer);
-        }
-
-        StringList newList;
-        newList.append(propertyString);
-        this->p_properties["SERATO_BEATGRID"] = newList;
-    }
-    else {
-        this->p_properties.erase("SERATO_BEATGRID");
-    }
-}
 
 bool OGGTrackFile::hasKey(void) const
 {
     return false;
 }
 
-string OGGTrackFile::key(void) const
+String::Pointer OGGTrackFile::key(void) const
 {
-    return emptyString;
+    return String::string();
 }
 
-string OGGTrackFile::grouping(void) const
+String::Pointer OGGTrackFile::grouping(void) const
 {
-    TagLib::String text = this->p_properties["GROUPING"].toString();
+    auto text = internal->properties["GROUPING"].toString();
     if (text != TagLib::String::null) {
-        return text.to8Bit();
+        return String::stringWith(text.toCString());
     }
 
-    return emptyString;
+    return String::string();
 }
 
 bool OGGTrackFile::hasRecordLabel(void) const
@@ -139,14 +76,14 @@ bool OGGTrackFile::hasRecordLabel(void) const
     return true;
 }
 
-string OGGTrackFile::recordLabel(void) const
+String::Pointer OGGTrackFile::recordLabel(void) const
 {
-    TagLib::String text = this->p_properties["LABEL"].toString();
+    auto text = internal->properties["LABEL"].toString();
     if (text != TagLib::String::null) {
-        return text.to8Bit();
+        return String::stringWith(text.toCString());
     }
 
-    return emptyString;
+    return String::string();
 }
 
 bool OGGTrackFile::hasRemixer(void) const
@@ -154,58 +91,58 @@ bool OGGTrackFile::hasRemixer(void) const
     return true;
 }
 
-string OGGTrackFile::remixer(void) const
+String::Pointer OGGTrackFile::remixer(void) const
 {
-    TagLib::String text = this->p_properties["REMIXER"].toString();
+    auto text = internal->properties["REMIXER"].toString();
     if (text != TagLib::String::null) {
-        return text.to8Bit();
+        return String::stringWith(text.toCString());
     }
 
-    return emptyString;
+    return String::string();
 }
 
-string OGGTrackFile::yearReleased(void) const
+String::Pointer OGGTrackFile::yearReleased(void) const
 {
-    TagLib::String text = this->p_properties["YEAR"].toString();
+    auto text = internal->properties["YEAR"].toString();
     if (text != TagLib::String::null) {
-        return text.to8Bit();
+        return String::stringWith(text.toCString());
     }
 
-    return emptyString;
+    return String::string();
 }
 
-CharVectorPtr OGGTrackFile::artwork(void) const
+Blob::Pointer OGGTrackFile::artwork(void) const
 {
     // -- TODO: To be implemented.
-    return CharVectorPtr();
+    return Blob::blob();
 }
 
-void OGGTrackFile::setKey(const char* key)
+void OGGTrackFile::setKey(String::ConstPointer const& key)
 {
     // -- This is not supported by OGG files.
 }
 
-void OGGTrackFile::setGrouping(const char* grouping)
+void OGGTrackFile::setGrouping(String::ConstPointer const& grouping)
 {
-    this->p_properties["GROUPING"] = TagLib::String(grouping);
+    internal->properties["GROUPING"] = TagLib::String(grouping->toUTF8());
 }
 
-void OGGTrackFile::setRecordLabel(const char* recordLabel)
+void OGGTrackFile::setRecordLabel(String::ConstPointer const& recordLabel)
 {
-    this->p_properties["LABEL"] = TagLib::String(recordLabel);
+    internal->properties["LABEL"] = TagLib::String(recordLabel->toUTF8());
 }
 
-void OGGTrackFile::setRemixer(const char* remixer)
+void OGGTrackFile::setRemixer(String::ConstPointer const& remixer)
 {
-    this->p_properties["REMIXER"] = TagLib::String(remixer);
+    internal->properties["REMIXER"] = TagLib::String(remixer->toUTF8());
 }
 
-void OGGTrackFile::setYearReleased(const char* year)
+void OGGTrackFile::setYearReleased(String::ConstPointer const& year)
 {
-    this->p_properties["YEAR"] = TagLib::String(year);
+    internal->properties["YEAR"] = TagLib::String(year->toUTF8());
 }
 
-void OGGTrackFile::setArtwork(CharVectorPtr artwork)
+void OGGTrackFile::setArtwork(Blob::ConstPointer const& artwork)
 {
     // -- TODO: To be implemented.
 }

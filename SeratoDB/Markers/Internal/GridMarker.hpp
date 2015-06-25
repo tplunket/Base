@@ -27,7 +27,7 @@
 #include "Markers/GridMarker.hpp"
 
 namespace NxA { namespace Serato { namespace Internal {
-    struct GridMarker : public Object {
+    struct GridMarker : public NxA::Internal::Object {
         NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, GridMarker);
 
         #pragma mark Instance Variables

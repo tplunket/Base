@@ -20,3 +20,17 @@
 //
 
 #pragma once
+
+#include <Base/Base.hpp>
+
+#include "Tags/Internal/Tag.hpp"
+#include "Tags/BooleanTag.hpp"
+
+namespace NxA { namespace Serato { namespace Internal {
+    struct BooleanTag : public Tag {
+        NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, BooleanTag);
+
+        #pragma mark Instance Variables
+        bool value;
+    };
+} } }

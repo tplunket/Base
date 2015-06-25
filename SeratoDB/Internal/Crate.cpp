@@ -19,14 +19,52 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include "TrackFiles/Internal/WAVTrackFile.hpp"
+#include "Internal/Crate.hpp"
+#include "SeratoDB/Database.hpp"
 
-NXA_GENERATED_INTERNAL_IMPLEMENTATION_FOR(NxA::Serato, WAVTrackFile);
+// -- Generated internal implementation ommitted because this class does not use the default contructor.
 
-using namespace NxA;
 using namespace NxA::Serato::Internal;
 
 #pragma mark Constructors & Destructors
 
-WAVTrackFile::WAVTrackFile(String::ConstPointer const& path, TagLibFilePointer const& newFile) :
-                           ID3TrackFile(path, newFile) { }
+Crate::Crate(String::ConstPointer const& fullName,
+             String::ConstPointer const& volumePath,
+             String::ConstPointer const& filePath) :
+             crateName(String::string()),
+             crateFullName(fullName),
+             rootVolumePath(volumePath),
+             crateFilePath(filePath),
+             tracksWereModified(true),
+             cratesWereModified(false),
+             childrenCrates(Serato::Crate::Array::array()),
+             trackEntries(Serato::TrackEntry::Array::array()),
+             otherTags(Serato::Tag::ConstArray::array()) { }
+
+#pragma mark Instance Methods
+
+void Crate::addTrackEntry(Serato::TrackEntry::Pointer const& trackEntry)
+{
+    this->tracksWereModified = true;
+    this->trackEntries->append(trackEntry);
+}
+
+void Crate::storeTrackTag(Serato::Tag::ConstPointer const& tag)
+{
+    this->addTrackEntry(Serato::TrackEntry::entryWithTagOnVolume(tag, this->rootVolumePath));
+}
+
+void Crate::storeOtherTag(Serato::Tag::Pointer const& tag)
+{
+    this->otherTags->append(tag);
+}
+
+void Crate::markCratesAsModified(void)
+{
+    this->cratesWereModified = true;
+
+    if (this->parentCrate.isValid()) {
+        auto parent = this->parentCrate.toPointer();
+        parent->internal->markCratesAsModified();
+    }
+}

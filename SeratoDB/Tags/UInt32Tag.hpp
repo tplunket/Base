@@ -14,29 +14,22 @@
 
 #include <SeratoDb/Tags/Tag.hpp>
 
-#include <Base/Blob.hpp>
-#include <Base/Platform.hpp>
+#include <Base/Base.hpp>
 
 namespace NxA { namespace Serato {
-    #pragma mark Class Declaration
-    class UInt32Tag : public Tag
-    {
-    private:
-        #pragma mark Private Instance Variables
-        uint32_t p_value;
+    NXA_GENERATED_FORWARD_DECLARATIONS_FOR(UInteger32Tag);
+
+    class UInteger32Tag : public Tag {
+        NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, UInteger32Tag);
 
     public:
-        #pragma mark Constructors
-        explicit UInt32Tag(const void* tagAddress) :
-                            Tag(tagAddress),
-                            p_value(Platform::bigEndianUInt32ValueAt(Tag::p_dataForTagAt(tagAddress))) { }
-        explicit UInt32Tag(const uint32_t& identifier, const uint32_t& value) :
-                            Tag(identifier),
-                            p_value(value) { }
+        #pragma mark Factory Methods
+        static UInteger32Tag::Pointer tagWithMemoryAt(const byte* tagAddress);
+        static UInteger32Tag::Pointer tagWithIdentifierAndValue(uinteger32 identifier, uinteger32 value);
 
         #pragma mark Instance Methods
-        const uint32_t& value(void) const;
-        uint32_t& value(void);
+        uinteger32 value(void) const;
+        void setValue(uinteger32 value);
 
         void addTo(Blob::Pointer const& destination) const;
     };

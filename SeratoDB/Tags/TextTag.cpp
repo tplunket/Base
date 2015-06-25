@@ -11,47 +11,59 @@
 //
 
 #include "Tags/TextTag.hpp"
+#include "Tags/Internal/TextTag.hpp"
+
+NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, TextTag);
 
 using namespace NxA;
 using namespace NxA::Serato;
 
-#pragma mark Constructors
+#pragma mark Constructors & Destructors
 
-TextTag::TextTag(const void* tagAddress) : Tag(tagAddress), p_value(String::string())
+TextTag::TextTag(NxA::Internal::Object::Pointer const& initial_internal) :
+                 Tag(initial_internal),
+                 internal(initial_internal) { }
+
+#pragma mark Factory Methods
+
+TextTag::Pointer TextTag::tagWithMemoryAt(const byte* tagAddress)
 {
-    count size = Tag::p_dataSizeForTagAt(tagAddress);
-    const character* textToRead = static_cast<const character*>(p_dataForTagAt(tagAddress));
-    auto utf16Text = Blob::blobWithMemoryAndSize(textToRead, size);
+    count size = Internal::Tag::dataSizeForTagAt(tagAddress);
+    auto text = String::stringWithUTF16(Blob::blobWithMemoryAndSize(Internal::Tag::dataForTagAt(tagAddress), size));
 
-    this->p_value = String::stringWithUTF16(utf16Text);
+    return TextTag::tagWithIdentifierAndValue(Tag::identifierForTagAt(tagAddress), text);
+}
+
+TextTag::Pointer TextTag::tagWithIdentifierAndValue(uinteger32 identifier, String::ConstPointer const& value)
+{
+    auto newTag = TextTag::makeShared();
+    newTag->internal->identifier = identifier;
+    newTag->internal->value = value;
+
+    return newTag;
 }
 
 #pragma mark Instance Methods
 
-const uint32_t& TextTag::identifier(void) const
-{
-    return this->p_identifier;
-}
-
 String::ConstPointer const& TextTag::value(void) const
 {
-    return this->p_value;
+    return internal->value;
 }
 
-String::ConstPointer& TextTag::value(void)
+void TextTag::setValue(String::ConstPointer const& value)
 {
-    return const_cast<String::ConstPointer&>(static_cast<const TextTag&>(*this).value());
+    internal->value = value;
 }
 
 void TextTag::addTo(Blob::Pointer const& destination) const
 {
-    auto memoryRepresentation = Blob::blobWithCapacity(Tag::p_memoryNeededForTagHeader());
-    size_t dataSize = this->p_value->length() * 2;
+    auto memoryRepresentation = Blob::blobWithCapacity(Internal::Tag::memoryNeededForTagHeader());
+    count dataSize = internal->value->length() * 2;
 
-    void* tagAddress = memoryRepresentation->data();
-    Tag::p_setIdentifierForTagAt(this->identifier(), tagAddress);
-    Tag::p_setDataSizeForTagAt(dataSize, tagAddress);
+    byte* tagAddress = memoryRepresentation->data();
+    Internal::Tag::setIdentifierForTagAt(this->identifier(), tagAddress);
+    Internal::Tag::setDataSizeForTagAt(dataSize, tagAddress);
 
     destination->append(memoryRepresentation);
-    destination->append(this->p_value->toUTF16());
+    destination->append(internal->value->toUTF16());
 }

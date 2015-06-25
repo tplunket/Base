@@ -11,74 +11,36 @@
 //
 
 #include "Tags/Tag.hpp"
-
-#include "Base/Platform.hpp"
+#include "Tags/Internal/BlobTag.hpp"
 
 using namespace NxA;
 using namespace NxA::Serato;
-using namespace std;
 
-#pragma mark Structures
+NXA_GENERATED_PURE_VIRTUAL_IMPLEMENTATION_FOR(NxA::Serato, Tag);
 
-typedef struct {
-    unsigned char identifier[4];
-    unsigned char length[4];
-    unsigned char data[0];
-} TagStruct;
+#pragma mark Constructors & Destructors
+
+Tag::Tag(NxA::Internal::Object::Pointer const& initial_internal) :
+         Object(initial_internal),
+         internal(initial_internal) { }
 
 #pragma mark Class Methods
 
-void Tag::p_setIdentifierForTagAt(const uint32_t& identifier, const void* tagAddress)
+uint32_t Tag::identifierForTagAt(const byte* tagAddress)
 {
-    TagStruct* tagStructPtr = (TagStruct*)tagAddress;
-    Platform::writeBigEndianUInt32ValueAt(identifier, tagStructPtr->identifier);
-}
-
-size_t Tag::p_dataSizeForTagAt(const void* tagAddress)
-{
-    TagStruct* tagStructPtr = (TagStruct*)tagAddress;
-    unsigned long dataSize = Platform::bigEndianUInt32ValueAt(tagStructPtr->length);
-    return dataSize;
-}
-
-void Tag::p_setDataSizeForTagAt(const size_t& dataSize, const void* tagAddress)
-{
-    TagStruct* tagStructPtr = (TagStruct*)tagAddress;
-    Platform::writeBigEndianUInt32ValueAt((uint32_t)dataSize, tagStructPtr->length);
-}
-
-size_t Tag::p_memoryNeededForTagHeader(void)
-{
-    return sizeof(TagStruct);
-}
-
-const void* Tag::p_dataForTagAt(const void* tagAddress)
-{
-    const TagStruct* tagStructPtr = (const TagStruct*)tagAddress;
-    const void* data = tagStructPtr->data;
-    return data;
-}
-
-void* Tag::p_dataForTagAt(void* tagAddress)
-{
-    return const_cast<void*>(Tag::p_dataForTagAt(const_cast<const void*>(tagAddress)));
-}
-
-uint32_t Tag::identifierForTagAt(const void* tagAddress)
-{
-    const TagStruct* tagStructPtr = (const TagStruct*)tagAddress;
+    const TagStruct* tagStructPtr = reinterpret_cast<const TagStruct*>(tagAddress);
     uint32_t identifier = Platform::bigEndianUInt32ValueAt(tagStructPtr->identifier);
     return identifier;
 }
 
-const void* Tag::nextTagAfterBinaryRepresentationAt(const void* tagAddress)
+const byte* Tag::nextTagAfterTagAt(const byte* tagAddress)
 {
-    return (const unsigned char*)tagAddress + Tag::p_dataSizeForTagAt(tagAddress) + sizeof(TagStruct);
+    return tagAddress + Internal::Tag::dataSizeForTagAt(tagAddress) + sizeof(TagStruct);
 }
 
 #pragma mark Instance Methods
 
-const uint32_t& Tag::identifier(void) const
+uinteger32 Tag::identifier(void) const
 {
-    return this->p_identifier;
+    return internal->identifier;
 }

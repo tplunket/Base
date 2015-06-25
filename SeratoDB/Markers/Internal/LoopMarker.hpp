@@ -27,7 +27,7 @@
 #include "Markers/LoopMarker.hpp"
 
 namespace NxA { namespace Serato { namespace Internal {
-    struct LoopMarker : public Object {
+    struct LoopMarker : public NxA::Internal::Object {
         NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, LoopMarker);
 
         #pragma mark Instance Variable

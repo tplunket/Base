@@ -19,4 +19,12 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#include "Tags/Internal/UInt32Tag.hpp"
 
+NXA_GENERATED_INTERNAL_IMPLEMENTATION_FOR(NxA::Serato, UInteger32Tag);
+
+using namespace NxA::Serato::Internal;
+
+#pragma mark Constructors & Destructors
+
+UInteger32Tag::UInteger32Tag() { }

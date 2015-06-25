@@ -10,56 +10,66 @@
 //  or email licensing@serato.com.
 //
 
-#include "TrackFiles/WavTrackFile.hpp"
+#include "TrackFiles/WAVTrackFile.hpp"
+#include "TrackFiles/Internal/WAVTrackFile.hpp"
 
 #include <taglib/wavfile.h>
 
+using namespace NxA;
 using namespace NxA::Serato;
-using namespace TagLib;
-using namespace std;
 
-#pragma mark Constructors
+NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, WAVTrackFile);
 
-SeratoWAVTrackFile::SeratoWAVTrackFile(const char* trackFilePath) : ID3TrackFile(trackFilePath)
+#pragma mark Constructors & Destructors
+
+WAVTrackFile::WAVTrackFile(NxA::Internal::Object::Pointer const& initial_internal) :
+                           ID3TrackFile(initial_internal),
+                           internal(initial_internal) { }
+
+#pragma mark Factory Methods
+
+WAVTrackFile::Pointer WAVTrackFile::fileWithFileAt(String::ConstPointer const& path)
 {
-    TaglibFilePtr file = make_unique<RIFF::WAV::File>(trackFilePath);
+    auto file = Internal::TagLibFilePointer(std::make_shared<TagLib::RIFF::WAV::File>(path->toUTF8()));
+    auto internalObject = Internal::WAVTrackFile::Pointer(std::make_shared<Internal::WAVTrackFile>(path, file));
+    auto newFile = WAVTrackFile::makeSharedWithInternal(internalObject);
+
     if (!file->isValid()) {
-        this->p_file = TaglibFilePtr();
-        this->p_parsedFileTag = NULL;
-        this->p_audioProperties = NULL;
-        return;
+        newFile->internal->parsedFileTag = nullptr;
+        newFile->internal->audioProperties = nullptr;
+        return newFile;
     }
 
-    this->p_parsedFileTag = file->tag();
-    this->p_audioProperties = file->audioProperties();
-    this->p_properties = file->properties();
-    this->p_file = move(file);
+    newFile->internal->parsedFileTag = file->tag();
+    newFile->internal->audioProperties = file->audioProperties();
+    newFile->internal->properties = file->properties();
 
-    this->p_readMarkers();
+    newFile->internal->readMarkers();
+
+    return newFile;
 }
 
 #pragma mark Instance Variables
 
-uint32_t SeratoWAVTrackFile::lengthInMilliseconds(void) const
+uinteger32 WAVTrackFile::lengthInMilliseconds(void) const
 {
-    if (this->p_audioProperties) {
-        const RIFF::WAV::Properties* audioProperties = (RIFF::WAV::Properties*)this->p_audioProperties;
+    if (internal->audioProperties) {
+        auto audioProperties = reinterpret_cast<const TagLib::RIFF::WAV::Properties*>(internal->audioProperties);
 
-        uint32_t numberOfFrames = audioProperties->sampleFrames();
-        uint32_t sampleRate = audioProperties->sampleRate();
-        uint32_t numberOfMilliseconds = ((double)numberOfFrames * 1000.0) / (double)sampleRate;
+        auto numberOfFrames = audioProperties->sampleFrames();
+        auto sampleRate = audioProperties->sampleRate();
 
+        uinteger32 numberOfMilliseconds = (static_cast<double>(numberOfFrames) * 1000.0) / static_cast<double>(sampleRate);
         return numberOfMilliseconds;
     }
-    
+
     return 0;
 }
 
-uint32_t SeratoWAVTrackFile::bitDepthInBitsOrZeroIfNotApplicable(void) const
+uinteger32 WAVTrackFile::bitDepthInBitsOrZeroIfNotApplicable(void) const
 {
-    if (this->p_audioProperties) {
-        const RIFF::WAV::Properties* audioProperties = (RIFF::WAV::Properties*)this->p_audioProperties;
-
+    if (internal->audioProperties) {
+        auto audioProperties = reinterpret_cast<const TagLib::RIFF::WAV::Properties*>(internal->audioProperties);
         return audioProperties->sampleWidth();
     }
 

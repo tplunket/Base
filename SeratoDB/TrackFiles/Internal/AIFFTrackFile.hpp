@@ -20,3 +20,17 @@
 //
 
 #pragma once
+
+#include "TrackFiles/Internal/ID3TrackFile.hpp"
+#include "TrackFiles/AIFFTrackFile.hpp"
+
+#include <Base/Base.hpp>
+
+namespace NxA { namespace Serato { namespace Internal {
+    struct AIFFTrackFile : public ID3TrackFile {
+        NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTOR_FOR(NxA::Serato, AIFFTrackFile);
+
+        #pragma mark Constructors & Destuctors
+        AIFFTrackFile(String::ConstPointer const& path, TagLibFilePointer const& newFile);
+    };
+} } }

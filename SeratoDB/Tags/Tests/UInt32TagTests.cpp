@@ -17,41 +17,41 @@ using namespace testing;
 using namespace NxA;
 using namespace NxA::Serato;
 
-NXA_CONTAINS_TEST_SUITE_NAMED(SeratoDB_UInt32Tag_Tests);
+NXA_CONTAINS_TEST_SUITE_NAMED(SeratoDB_UInteger32Tag_Tests);
 
-TEST(SeratoDB_UInt32Tag, TagCreatedFromNormalConstructor_HasCorrectValue)
+TEST(SeratoDB_UInteger32Tag, TagCreatedFromNormalConstructor_HasCorrectValue)
 {
     // -- When.
-    UInt32Tag tag('vrsn', 0xDEADBEEF);
+    auto tag = UInteger32Tag::tagWithIdentifierAndValue('vrsn', 0xDEADBEEF);
 
     // -- Then.
-    ASSERT_EQ(tag.value(), 0xDEADBEEF);
+    ASSERT_EQ(tag->value(), 0xDEADBEEF);
 }
 
-TEST(SeratoDB_UInt32Tag, TagCreatedFromParsingConstructor_HasCorrectValue)
+TEST(SeratoDB_UInteger32Tag, TagCreatedFromParsingConstructor_HasCorrectValue)
 {
     // -- Given.
-    unsigned char data[] = { 0x75, 0x61, 0x64, 0x64, 0x00, 0x00, 0x00, 0x04, 0x54, 0xCA, 0x84, 0xAB };
+    constexpr unsigned char data[] = { 0x75, 0x61, 0x64, 0x64, 0x00, 0x00, 0x00, 0x04, 0x54, 0xCA, 0x84, 0xAB };
 
     // -- When.
-    UInt32Tag tag(data);
+    auto tag = UInteger32Tag::tagWithMemoryAt(data);
 
     // -- Then.
-    ASSERT_EQ(tag.value(), 0x54CA84AB);
+    ASSERT_EQ(tag->value(), 0x54CA84AB);
 }
 
-TEST(SeratoDB_UInt32Tag, TagWrittenToData_HasCorrectOutput)
+TEST(SeratoDB_UInteger32Tag, TagWrittenToData_HasCorrectOutput)
 {
     // -- When.
-    UInt32Tag tag('vrsn', 0xDEADBEEF);
+    auto tag = UInteger32Tag::tagWithIdentifierAndValue('vrsn', 0xDEADBEEF);
 
     // -- When.
     auto destination = Blob::blob();
-    tag.addTo(destination);
+    tag->addTo(destination);
 
     // -- Then.
     ASSERT_EQ(destination->size(), 12);
-    uinteger8 expectedData[] = { 0x76, 0x72, 0x73, 0x6E, 0x00, 0x00, 0x00, 0x04, 0xDE, 0xAD, 0xBE, 0xEF };
+    constexpr uinteger8 expectedData[] = { 0x76, 0x72, 0x73, 0x6E, 0x00, 0x00, 0x00, 0x04, 0xDE, 0xAD, 0xBE, 0xEF };
     for (uint32_t index = 0; index < sizeof(expectedData); ++index) {
         ASSERT_EQ((*destination)[index], expectedData[index]);
     }

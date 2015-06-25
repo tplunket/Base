@@ -18,3 +18,13 @@
 //  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#include "Tags/Internal/BlobTag.hpp"
+
+NXA_GENERATED_INTERNAL_IMPLEMENTATION_FOR(NxA::Serato, BlobTag);
+
+using namespace NxA::Serato::Internal;
+
+#pragma mark Constructors & Destructors
+
+BlobTag::BlobTag() : value(Blob::blob()) { }

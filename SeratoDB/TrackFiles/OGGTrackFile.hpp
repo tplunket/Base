@@ -14,40 +14,37 @@
 
 #include <SeratoDb/TrackFiles/ID3TrackFile.hpp>
 
-#include <string>
+#include <Base/Base.hpp>
 
 namespace NxA { namespace Serato {
-    #pragma mark Class Declaration
-    class OGGTrackFile : public ID3TrackFile
-    {
-    private:
-        #pragma mark Private Instance Methods
-        void p_readMarkers(void);
-        void p_writeMarkers(void);
+    NXA_GENERATED_FORWARD_DECLARATIONS_FOR(OGGTrackFile);
+
+    class OGGTrackFile : public ID3TrackFile {
+        NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, OGGTrackFile);
 
     public:
-        #pragma mark Constructors
-        explicit OGGTrackFile(const char* filePath);
+        #pragma mark Factory Methods
+        static OGGTrackFile::Pointer fileWithFileAt(String::ConstPointer const& path);
 
         #pragma mark Instance Methods
         virtual bool hasKey(void) const;
-        virtual std::string key(void) const;
-        virtual std::string grouping(void) const;
+        virtual String::Pointer key(void) const;
+        virtual String::Pointer grouping(void) const;
 
         virtual bool hasRecordLabel(void) const;
-        virtual std::string recordLabel(void) const;
+        virtual String::Pointer recordLabel(void) const;
         virtual bool hasRemixer(void) const;
-        virtual std::string remixer(void) const;
-        virtual std::string yearReleased(void) const;
+        virtual String::Pointer remixer(void) const;
+        virtual String::Pointer yearReleased(void) const;
 
-        virtual CharVectorPtr artwork(void) const;
+        virtual Blob::Pointer artwork(void) const;
 
-        virtual void setKey(const char* key);
-        virtual void setGrouping(const char* grouping);
-        virtual void setRecordLabel(const char* recordLabel);
-        virtual void setRemixer(const char* remixer);
-        virtual void setYearReleased(const char* year);
+        virtual void setKey(String::ConstPointer const& key);
+        virtual void setGrouping(String::ConstPointer const& grouping);
+        virtual void setRecordLabel(String::ConstPointer const& recordLabel);
+        virtual void setRemixer(String::ConstPointer const& remixer);
+        virtual void setYearReleased(String::ConstPointer const& year);
 
-        virtual void setArtwork(CharVectorPtr artwork);
+        virtual void setArtwork(Blob::ConstPointer const& artwork);
     };
 } }

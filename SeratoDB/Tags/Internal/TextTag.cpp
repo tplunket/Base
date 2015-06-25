@@ -19,4 +19,12 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#include "Tags/Internal/TextTag.hpp"
 
+NXA_GENERATED_INTERNAL_IMPLEMENTATION_FOR(NxA::Serato, TextTag);
+
+using namespace NxA::Serato::Internal;
+
+#pragma mark Constructors & Destructors
+
+TextTag::TextTag() : value(String::string()) { }

@@ -27,7 +27,7 @@
 #include "Markers/CueMarker.hpp"
 
 namespace NxA { namespace Serato { namespace Internal {
-    struct CueMarker : public Object {
+    struct CueMarker : public NxA::Internal::Object {
         NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, CueMarker);
 
         #pragma mark Instance Variables

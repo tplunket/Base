@@ -15,111 +15,64 @@
 #include <SeratoDb/Markers/CueMarker.hpp>
 #include <SeratoDb/Markers/LoopMarker.hpp>
 #include <SeratoDb/Markers/GridMarker.hpp>
-#include <SeratoDB/Utility.hpp>
-
-#include <taglib/tag.h>
-#include <taglib/tfile.h>
-#include <taglib/tpropertymap.h>
-#include <taglib/audioproperties.h>
 
 #include <Base/Base.hpp>
 
-#include <string>
-
 namespace NxA { namespace Serato {
-    #pragma mark Forward declarations
-    class TrackFile;
+    NXA_GENERATED_FORWARD_DECLARATIONS_FOR(TrackFile);
 
-    #pragma mark Containers
-    typedef std::unique_ptr<TrackFile> TrackFilePtr;
-    typedef std::unique_ptr<TagLib::File> TaglibFilePtr;
-
-    #pragma mark Class Declaration
-    class TrackFile
-    {
-    private:
-        #pragma mark Protected Instance Variables
-        CueMarker::Array::Pointer p_cueMarkers;
-        LoopMarker::Array::Pointer p_loopMarkers;
-        GridMarker::Array::Pointer p_gridMarkers;
-        Blob::Array::Pointer p_otherTags;
-
-    protected:
-        #pragma mark Protected Constructors
-        explicit TrackFile(const character* trackFilePath) :
-                            p_trackFilePath(std::make_unique<std::string>(trackFilePath)),
-                            p_cueMarkers(CueMarker::Array::array()),
-                            p_loopMarkers(LoopMarker::Array::array()),
-                            p_gridMarkers(GridMarker::Array::array()),
-                            p_otherTags(Blob::Array::array()) { };
-
-        #pragma mark Protected Instance Variables
-        ConstStringPtr p_trackFilePath;
-        TaglibFilePtr p_file;
-        TagLib::Tag* p_parsedFileTag;
-        TagLib::PropertyMap p_properties;
-        TagLib::AudioProperties* p_audioProperties;
-
-        #pragma mark Protected Instance Methods
-        void p_readMarkersV2FromBase64Data(const byte* markerV2Data, size_t totalSize);
-        void p_readGridMarkersFrom(const byte* gridMarkerData, size_t totalSize);
-        void p_addGridMarker(GridMarker::ConstPointer const& gridMarker);
-        Blob::Pointer p_base64DataFromMarkersV2(void);
-        Blob::Pointer p_gridMarkerDataFromGridMarkers(void);
-        virtual void p_writeMarkers(void) = 0;
+    class TrackFile : public Object {
+        NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, TrackFile);
 
     public:
-        #pragma mark Public Constructor/Destructor
-        virtual ~TrackFile() { }
-
         #pragma mark Instance Methods
-        virtual std::string title(void) const;
-        virtual std::string artist(void) const;
-        virtual std::string genre(void) const;
+        virtual String::Pointer title(void) const;
+        virtual String::Pointer artist(void) const;
+        virtual String::Pointer genre(void) const;
         virtual bool hasKey(void) const = 0;
-        virtual std::string key(void) const = 0;
-        virtual std::string comments(void) const;
-        virtual std::string album(void) const;
-        virtual std::string composer(void) const;
-        virtual std::string grouping(void) const = 0;
-        virtual std::string bpm(void) const;
+        virtual String::Pointer key(void) const = 0;
+        virtual String::Pointer comments(void) const;
+        virtual String::Pointer album(void) const;
+        virtual String::Pointer composer(void) const;
+        virtual String::Pointer grouping(void) const = 0;
+        virtual String::Pointer bpm(void) const;
 
-        virtual size_t size(void) const;
-        virtual uint32_t lengthInMilliseconds(void) const;
-        virtual uint32_t bitRateInKiloBitsPerSecond(void) const;
-        virtual uint32_t bitDepthInBitsOrZeroIfNotApplicable(void) const;
-        virtual uint32_t sampleRateInSamplesPerSecond(void) const;
-        virtual uint32_t trackNumber(void) const;
+        virtual count size(void) const;
+        virtual uinteger32 lengthInMilliseconds(void) const;
+        virtual uinteger32 bitRateInKiloBitsPerSecond(void) const;
+        virtual uinteger32 bitDepthInBitsOrZeroIfNotApplicable(void) const;
+        virtual uinteger32 sampleRateInSamplesPerSecond(void) const;
+        virtual count trackNumber(void) const;
 
         // -- TODO: Look into adding discNumber and numberOfAlbumTracks if they are available.
 
         virtual bool hasRecordLabel(void) const = 0;
-        virtual std::string recordLabel(void) const = 0;
+        virtual String::Pointer recordLabel(void) const = 0;
         virtual bool hasRemixer(void) const = 0;
-        virtual std::string remixer(void) const = 0;
-        virtual std::string yearReleased(void) const = 0;
+        virtual String::Pointer remixer(void) const = 0;
+        virtual String::Pointer yearReleased(void) const = 0;
 
-        virtual CharVectorPtr artwork(void) const = 0;
+        virtual Blob::Pointer artwork(void) const = 0;
         
         CueMarker::Array::ConstPointer const& cueMarkers(void) const;
         LoopMarker::Array::ConstPointer const& loopMarkers(void) const;
         GridMarker::Array::ConstPointer const& gridMarkers(void) const;
 
-        virtual void setTitle(const character* title);
-        virtual void setArtist(const character* artist);
-        virtual void setGenre(const character* genre);
-        virtual void setKey(const character* key) = 0;
-        virtual void setComments(const character* comments);
-        virtual void setAlbum(const character* album);
-        virtual void setComposer(const character* composer);
-        virtual void setGrouping(const character* grouping) = 0;
-        virtual void setBpm(const character* bpm);
-        virtual void setTrackNumber(const uinteger32& trackNumber);
-        virtual void setRecordLabel(const character* recordLabel) = 0;
-        virtual void setRemixer(const character* remixer) = 0;
-        virtual void setYearReleased(const character* year) = 0;
+        virtual void setTitle(String::ConstPointer const& title);
+        virtual void setArtist(String::ConstPointer const& artist);
+        virtual void setGenre(String::ConstPointer const& genre);
+        virtual void setKey(String::ConstPointer const& key) = 0;
+        virtual void setComments(String::ConstPointer const& comments);
+        virtual void setAlbum(String::ConstPointer const& album);
+        virtual void setComposer(String::ConstPointer const& composer);
+        virtual void setGrouping(String::ConstPointer const& grouping) = 0;
+        virtual void setBpm(String::ConstPointer const& bpm);
+        virtual void setTrackNumber(count trackNumber);
+        virtual void setRecordLabel(String::ConstPointer const& recordLabel) = 0;
+        virtual void setRemixer(String::ConstPointer const& remixer) = 0;
+        virtual void setYearReleased(String::ConstPointer const& year) = 0;
 
-        virtual void setArtwork(CharVectorPtr artwork) = 0;
+        virtual void setArtwork(Blob::ConstPointer const& artwork) = 0;
 
         void setCueMarkers(CueMarker::Array::Pointer const& markers);
         void setLoopMarkers(LoopMarker::Array::Pointer const& markers);

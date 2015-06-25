@@ -13,15 +13,16 @@
 #pragma once
 
 #include <SeratoDb/TrackFiles/TrackFile.hpp>
-
-#include <string>
+#include <Base/Base.hpp>
 
 namespace NxA { namespace Serato {
-    #pragma mark Class Declaration
-    class TrackFileFactory
+    class TrackFileFactory : public Uncopyable
     {
     public:
+        #pragma mark Constructors & Destructors
+        TrackFileFactory() = delete;
+
         #pragma mark Class Methods
-        static TrackFilePtr trackFileForPath(const char* trackFilePath);
+        static NxA::Serato::TrackFile::Pointer trackFileForPath(String::ConstPointer const& trackFilePath);
     };
 } }

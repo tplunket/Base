@@ -11,229 +11,46 @@
 //
 
 #include "TrackFiles/ID3TrackFile.hpp"
-#include "Base64.hpp"
+#include "TrackFiles/Internal/ID3TrackFile.hpp"
 
-#include <Base/Base.hpp>
-
-#include <taglib/generalencapsulatedobjectframe.h>
-#include <taglib/id3v2tag.h>
 #include <taglib/attachedpictureframe.h>
 
 using namespace NxA;
 using namespace NxA::Serato;
-using namespace TagLib;
-using namespace std;
 
-#pragma mark Constants
+NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, ID3TrackFile);
 
-static const string emptyString("");
+#pragma mark Constructors & Destructors
 
-#pragma mark Structures
-
-typedef struct {
-    byte dummy;
-    byte mimeType[25];
-    byte filename;
-    byte description[16];
-    byte majorVersion;
-    byte minorVersion;
-} SeratoGeobBodyHeaderStruct;
-
-typedef struct {
-    byte majorVersion;
-    byte minorVersion;
-    byte data[0];
-} SeratoGeobObjectStruct;
-
-#pragma mark Utility Functions
-
-static bool p_isAValidGeobFrame(const ID3v2::GeneralEncapsulatedObjectFrame* frame)
-{
-    TagLib::String frameID(reinterpret_cast<char*>(frame->frameID().data()));
-    if (frameID != "GEOB") {
-        return false;
-    }
-
-    TagLib::String mimeType = frame->mimeType();
-    return mimeType == "application/octet-stream";
-}
-
-static ID3v2::FrameList::Iterator p_frameInListWithDescription(ID3v2::FrameList& list, const char* description)
-{
-    for (ID3v2::FrameList::Iterator it = list.begin(); it != list.end(); ++it) {
-        ID3v2::GeneralEncapsulatedObjectFrame* frame = (ID3v2::GeneralEncapsulatedObjectFrame*)*it;
-        if (!p_isAValidGeobFrame(frame)) {
-            continue;
-        }
-
-        if (frame->description() == description) {
-            return it;
-        }
-    }
-
-    return list.end();
-}
+ID3TrackFile::ID3TrackFile(NxA::Internal::Object::Pointer const& initial_internal) :
+                           TrackFile(initial_internal),
+                           internal(initial_internal) { }
 
 #pragma mark Instance Methods
-
-void ID3TrackFile::p_readMarkers(void)
-{
-    ID3v2::Tag* tag = (ID3v2::Tag*)this->p_parsedFileTag;
-    if (!tag) {
-        return;
-    }
-
-    ID3v2::FrameListMap frameListMap = tag->frameListMap();
-    if (!frameListMap.contains("GEOB")) {
-        return;
-    }
-
-    ID3v2::FrameList geobFrames = frameListMap["GEOB"];
-    for (auto& framePtr : geobFrames) {
-        const ID3v2::GeneralEncapsulatedObjectFrame* frame = (const ID3v2::GeneralEncapsulatedObjectFrame*)framePtr;
-        if (!p_isAValidGeobFrame(frame)) {
-            continue;
-        }
-
-        const TagLib::String description = frame->description();
-        if (description == "Serato Markers2") {
-            uint32_t encodedDataSize = frame->size() - sizeof(SeratoGeobBodyHeaderStruct);
-            const ByteVector frameObject = frame->object();
-
-            SeratoGeobObjectStruct* objectData = (SeratoGeobObjectStruct*)frameObject.data();
-            this->p_readMarkersV2FromBase64Data(objectData->data, encodedDataSize);
-        }
-        else if (description == "Serato BeatGrid") {
-            uint32_t dataSize = frame->size() - sizeof(SeratoGeobBodyHeaderStruct);
-            const ByteVector frameObject = frame->object();
-
-            SeratoGeobObjectStruct* headerStruct = (SeratoGeobObjectStruct*)frameObject.data();
-            if ((headerStruct->majorVersion == 1) && (headerStruct->minorVersion == 0)) {
-                this->p_readGridMarkersFrom(headerStruct->data, dataSize);
-            }
-        }
-    }
-}
-
-void ID3TrackFile::p_writeMarkersV2Frame(void)
-{
-    auto decodedData = Blob::blob();
-
-    SeratoGeobObjectStruct header;
-    header.majorVersion = 1;
-    header.minorVersion = 1;
-    auto headerData = Blob::blobWithMemoryAndSize((char*)&header, sizeof(header));
-    decodedData->append(headerData);
-    decodedData->append(this->p_base64DataFromMarkersV2());
-
-    auto encodedData = Base64::encodeBlock(decodedData->data(), decodedData->size());
-
-    ByteVector newData((char*)encodedData->data(), encodedData->size());
-
-    ID3v2::GeneralEncapsulatedObjectFrame* newFrame = new ID3v2::GeneralEncapsulatedObjectFrame(newData);
-    newFrame->setTextEncoding(TagLib::String::Latin1);
-    newFrame->setMimeType("application/octet-stream");
-    newFrame->setFileName("");
-    newFrame->setDescription("Serato Markers2");
-
-    ID3v2::Tag* tag = (ID3v2::Tag*)this->p_parsedFileTag;
-    if (!tag) {
-        // -- TODO: This should be asserted against.
-        return;
-    }
-
-    ID3v2::FrameListMap frameListMap = tag->frameListMap();
-    ID3v2::FrameList geobFrames = frameListMap["GEOB"];
-    geobFrames.append(newFrame);
-}
-
-void ID3TrackFile::p_writeGridMarkersFrame(void)
-{
-    auto data = Blob::blob();
-
-    SeratoGeobObjectStruct header;
-    header.majorVersion = 1;
-    header.minorVersion = 0;
-    auto headerData = Blob::blobWithMemoryAndSize((char*)&header, sizeof(header));
-    data->append(headerData);
-    data->append(this->p_gridMarkerDataFromGridMarkers());
-
-    ByteVector newData((char*)data->data(), data->size());
-
-    ID3v2::GeneralEncapsulatedObjectFrame* newFrame = new ID3v2::GeneralEncapsulatedObjectFrame(newData);
-    newFrame->setTextEncoding(TagLib::String::Latin1);
-    newFrame->setMimeType("application/octet-stream");
-    newFrame->setFileName("");
-    newFrame->setDescription("Serato BeatGrid");
-
-    ID3v2::Tag* tag = (ID3v2::Tag*)this->p_parsedFileTag;
-    if (!tag) {
-        // -- TODO: This should be asserted against.
-        return;
-    }
-
-    ID3v2::FrameListMap frameListMap = tag->frameListMap();
-    ID3v2::FrameList geobFrames = frameListMap["GEOB"];
-    geobFrames.append(newFrame);
-}
-
-void ID3TrackFile::p_writeMarkers(void)
-{
-    ID3v2::Tag* tag = (ID3v2::Tag*)this->p_parsedFileTag;
-    if (!tag) {
-        return;
-    }
-
-    ID3v2::FrameListMap frameListMap = tag->frameListMap();
-    if (frameListMap.contains("GEOB")) {
-        ID3v2::FrameList geobFrames = frameListMap["GEOB"];
-
-        ID3v2::FrameList::Iterator frameToDelete = p_frameInListWithDescription(geobFrames, "Serato Markers2");
-        if (frameToDelete != geobFrames.end()) {
-            geobFrames.erase(frameToDelete);
-        }
-
-        frameToDelete = p_frameInListWithDescription(geobFrames, "Serato BeatGrid");
-        if (frameToDelete != geobFrames.end()) {
-            geobFrames.erase(frameToDelete);
-        }
-    }
-    else if (this->cueMarkers()->length() || this->loopMarkers()->length() || this->gridMarkers()->length()) {
-        frameListMap["GEOB"] = ID3v2::FrameList();
-    }
-
-    if (this->cueMarkers()->length() || this->loopMarkers()->length()) {
-        this->p_writeMarkersV2Frame();
-    }
-
-    if (this->gridMarkers()->length()) {
-        this->p_writeGridMarkersFrame();
-    }
-}
 
 bool ID3TrackFile::hasKey(void) const
 {
     return true;
 }
 
-string ID3TrackFile::key(void) const
+String::Pointer ID3TrackFile::key(void) const
 {
-    TagLib::String text = this->p_properties["INITIALKEY"].toString();
+    auto text = internal->properties["INITIALKEY"].toString();
     if (text != TagLib::String::null) {
-        return text.to8Bit();
+        return String::stringWith(text.toCString());
     }
 
-    return emptyString;
+    return String::string();
 }
 
-string ID3TrackFile::grouping(void) const
+String::Pointer ID3TrackFile::grouping(void) const
 {
-    TagLib::String text = this->p_properties["CONTENTGROUP"].toString();
+    auto text = internal->properties["CONTENTGROUP"].toString();
     if (text != TagLib::String::null) {
-        return text.to8Bit();
+        return String::stringWith(text.toCString());
     }
 
-    return emptyString;
+    return String::string();
 }
 
 bool ID3TrackFile::hasRecordLabel(void) const
@@ -241,14 +58,14 @@ bool ID3TrackFile::hasRecordLabel(void) const
     return true;
 }
 
-string ID3TrackFile::recordLabel(void) const
+String::Pointer ID3TrackFile::recordLabel(void) const
 {
-    TagLib::String text = this->p_properties["LABEL"].toString();
+    auto text = internal->properties["LABEL"].toString();
     if (text != TagLib::String::null) {
-        return text.to8Bit();
+        return String::stringWith(text.toCString());
     }
 
-    return emptyString;
+    return String::string();
 }
 
 bool ID3TrackFile::hasRemixer(void) const
@@ -256,113 +73,113 @@ bool ID3TrackFile::hasRemixer(void) const
     return true;
 }
 
-string ID3TrackFile::remixer(void) const
+String::Pointer ID3TrackFile::remixer(void) const
 {
-    TagLib::String text = this->p_properties["REMIXER"].toString();
+    auto text = internal->properties["REMIXER"].toString();
     if (text != TagLib::String::null) {
-        return text.to8Bit();
+        return String::stringWith(text.toCString());
     }
 
-    return emptyString;
+    return String::string();
 }
 
-string ID3TrackFile::yearReleased(void) const
+String::Pointer ID3TrackFile::yearReleased(void) const
 {
-    TagLib::String text = this->p_properties["DATE"].toString();
+    auto text = internal->properties["DATE"].toString();
     if (text != TagLib::String::null) {
-        return text.to8Bit();
+        return String::stringWith(text.toCString());
     }
 
-    return emptyString;
+    return String::string();
 }
 
-CharVectorPtr ID3TrackFile::artwork(void) const
+Blob::Pointer ID3TrackFile::artwork(void) const
 {
-    CharVectorPtr result;
+    auto tag = dynamic_cast<TagLib::ID3v2::Tag*>(internal->parsedFileTag);
+    if(!tag) {
+        return Blob::blob();
+    }
 
-    ID3v2::Tag* tag = (ID3v2::Tag*)this->p_parsedFileTag;
-    if(tag) {
-        ID3v2::FrameListMap frameListMap = tag->frameListMap();
-        ID3v2::FrameList frameList = frameListMap["APIC"];
+    auto frameListMap = tag->frameListMap();
+    auto frameList = frameListMap["APIC"];
 
-        const ID3v2::AttachedPictureFrame* artworkFrame = nullptr;
+    const TagLib::ID3v2::AttachedPictureFrame* artworkFrame = nullptr;
 
-        for (const ID3v2::Frame* frame : frameList) {
-            const ID3v2::AttachedPictureFrame* pic = dynamic_cast<const ID3v2::AttachedPictureFrame*>(frame);
-            if (pic->type() == ID3v2::AttachedPictureFrame::FrontCover) {
-                artworkFrame = pic;
-                break;
-            }
-            else if (pic->type() == ID3v2::AttachedPictureFrame::Other) {
-                artworkFrame = pic;
-            }
+    for (const TagLib::ID3v2::Frame* frame : frameList) {
+        auto pic = dynamic_cast<const TagLib::ID3v2::AttachedPictureFrame*>(frame);
+        if (pic->type() == TagLib::ID3v2::AttachedPictureFrame::FrontCover) {
+            artworkFrame = pic;
+            break;
         }
-
-        if (artworkFrame) {
-            ByteVector picture(artworkFrame->picture());
-            size_t size = picture.size();
-            if (size) {
-                char* data = picture.data();
-                result = make_unique<CharVector>(data, data + size);
-            }
+        else if (pic->type() == TagLib::ID3v2::AttachedPictureFrame::Other) {
+            artworkFrame = pic;
         }
     }
 
-    return move(result);
+    if (artworkFrame) {
+        auto picture = artworkFrame->picture();
+        auto size = picture.size();
+        if (size) {
+            auto data = picture.data();
+            return Blob::blobWithMemoryAndSize(reinterpret_cast<byte *>(data), size);
+        }
+    }
+
+    return Blob::blob();
 }
 
-void ID3TrackFile::setKey(const char* key)
+void ID3TrackFile::setKey(String::ConstPointer const& key)
 {
-    this->p_properties["INITIALKEY"] = TagLib::String(key);
+    internal->properties["INITIALKEY"] = TagLib::String(key->toUTF8());
 }
 
-void ID3TrackFile::setGrouping(const char* grouping)
+void ID3TrackFile::setGrouping(String::ConstPointer const& grouping)
 {
-    this->p_properties["CONTENTGROUP"] = TagLib::String(grouping);
+    internal->properties["CONTENTGROUP"] = TagLib::String(grouping->toUTF8());
 }
 
-void ID3TrackFile::setRecordLabel(const char* recordLabel)
+void ID3TrackFile::setRecordLabel(String::ConstPointer const& recordLabel)
 {
-    this->p_properties["RECORD"] = TagLib::String(recordLabel);
+    internal->properties["RECORD"] = TagLib::String(recordLabel->toUTF8());
 }
 
-void ID3TrackFile::setRemixer(const char* remixer)
+void ID3TrackFile::setRemixer(String::ConstPointer const& remixer)
 {
-    this->p_properties["REMIXER"] = TagLib::String(remixer);
+    internal->properties["REMIXER"] = TagLib::String(remixer->toUTF8());
 }
 
-void ID3TrackFile::setYearReleased(const char* year)
+void ID3TrackFile::setYearReleased(String::ConstPointer const& year)
 {
-    this->p_properties["DATE"] = TagLib::String(year);
+    internal->properties["DATE"] = TagLib::String(year->toUTF8());
 }
 
-void ID3TrackFile::setArtwork(CharVectorPtr artwork)
+void ID3TrackFile::setArtwork(Blob::ConstPointer const& artwork)
 {
-    ID3v2::Tag* tag = (ID3v2::Tag*)this->p_parsedFileTag;
+    auto tag = reinterpret_cast<TagLib::ID3v2::Tag*>(internal->parsedFileTag);
     if(tag) {
-        ID3v2::FrameListMap frameListMap = tag->frameListMap();
-        ID3v2::FrameList frameList = frameListMap["APIC"];
+        auto frameListMap = tag->frameListMap();
+        auto frameList = frameListMap["APIC"];
 
-        ID3v2::FrameList::Iterator frameToRemove = frameList.end();
-        for (ID3v2::FrameList::Iterator it = frameList.begin(); it != frameList.end(); ++it) {
-            ID3v2::AttachedPictureFrame* pic = dynamic_cast<ID3v2::AttachedPictureFrame*>(*it);
+        auto frameToRemove = frameList.end();
+        for (auto it = frameList.begin(); it != frameList.end(); ++it) {
+            auto* pic = dynamic_cast<TagLib::ID3v2::AttachedPictureFrame*>(*it);
 
-            if (pic->type() == ID3v2::AttachedPictureFrame::FrontCover) {
+            if (pic->type() == TagLib::ID3v2::AttachedPictureFrame::FrontCover) {
                 frameToRemove = it;
                 break;
             }
-            else if (pic->type() == ID3v2::AttachedPictureFrame::Other) {
+            else if (pic->type() == TagLib::ID3v2::AttachedPictureFrame::Other) {
                 frameToRemove = it;
             }
         }
 
         frameList.erase(frameToRemove);
 
-        ByteVector data(artwork->data(), artwork->size());
+        TagLib::ByteVector data(*artwork->data(), artwork->size());
 
-        ID3v2::AttachedPictureFrame* newFrame = new ID3v2::AttachedPictureFrame;
+        auto* newFrame = new TagLib::ID3v2::AttachedPictureFrame;
         newFrame->setData(data);
-        newFrame->setType(ID3v2::AttachedPictureFrame::FrontCover);
+        newFrame->setType(TagLib::ID3v2::AttachedPictureFrame::FrontCover);
         newFrame->setDescription("");
         newFrame->setTextEncoding(TagLib::String::Latin1);
         frameList.append(newFrame);

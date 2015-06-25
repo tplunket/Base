@@ -14,14 +14,16 @@
 
 #include <SeratoDb/TrackFiles/ID3TrackFile.hpp>
 
-#include <taglib/mpegfile.h>
+#include <Base/Base.hpp>
 
 namespace NxA { namespace Serato {
-    #pragma mark Class Declaration
-    class MPEGTrackFile : public ID3TrackFile
-    {
+    NXA_GENERATED_FORWARD_DECLARATIONS_FOR(MPEGTrackFile);
+
+    class MPEGTrackFile : public ID3TrackFile {
+        NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, MPEGTrackFile);
+
     public:
-        #pragma mark Constructors
-        explicit MPEGTrackFile(const char* trackFilePath);
+        #pragma mark Factory Methods
+        static MPEGTrackFile::Pointer fileWithFileAt(String::ConstPointer const& path);
     };
 } }

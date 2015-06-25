@@ -105,8 +105,7 @@ namespace NxA {
 
         bool containsValueForKey(Tkey const& keyValue)
         {
-            typename std::map<typename Tkey::ConstPointer, typename Tvalue::ConstPointer>::const_iterator it = this->find(keyValue);
-            return it != this->end();
+            return this->find(keyValue) != this->std::map<Tkey, typename Tvalue::ConstPointer>::end();
         }
     };
 }

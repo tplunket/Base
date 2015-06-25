@@ -13,7 +13,7 @@
 #include "TrackFiles/OGGTrackFile.hpp"
 #include "TrackFiles/Internal/OGGTrackFile.hpp"
 
-#include <taglib/vorbisfile.h>
+#include <vorbisfile.h>
 
 using namespace NxA;
 using namespace NxA::Serato;

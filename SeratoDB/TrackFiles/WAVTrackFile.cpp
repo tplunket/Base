@@ -13,7 +13,7 @@
 #include "TrackFiles/WAVTrackFile.hpp"
 #include "TrackFiles/Internal/WAVTrackFile.hpp"
 
-#include <taglib/wavfile.h>
+#include <wavfile.h>
 
 using namespace NxA;
 using namespace NxA::Serato;

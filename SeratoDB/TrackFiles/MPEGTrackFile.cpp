@@ -13,8 +13,8 @@
 #include "TrackFiles/MPEGTrackFile.hpp"
 #include "TrackFiles/Internal/MPEGTrackFile.hpp"
 
-#include <taglib/mpegfile.h>
-#include <taglib/mpegproperties.h>
+#include <mpegfile.h>
+#include <mpegproperties.h>
 
 using namespace NxA;
 using namespace NxA::Serato;

@@ -13,7 +13,7 @@
 #include "TrackFiles/FLACTrackFile.hpp"
 #include "TrackFiles/Internal/FLACTrackFile.hpp"
 
-#include <taglib/flacfile.h>
+#include <flacfile.h>
 
 using namespace NxA;
 using namespace NxA::Serato;

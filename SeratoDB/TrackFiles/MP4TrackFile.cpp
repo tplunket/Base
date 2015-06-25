@@ -13,7 +13,7 @@
 #include "TrackFiles/MP4TrackFile.hpp"
 #include "TrackFiles/Internal/MP4TrackFile.hpp"
 
-#include <taglib/mp4tag.h>
+#include <mp4tag.h>
 
 using namespace NxA;
 using namespace NxA::Serato;

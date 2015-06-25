@@ -26,10 +26,10 @@
 
 #include <Base/Base.hpp>
 
-#include <taglib/mp4file.h>
-#include <taglib/mp4tag.h>
-#include <taglib/tpropertymap.h>
-#include <taglib/audioproperties.h>
+#include <mp4file.h>
+#include <mp4tag.h>
+#include <tpropertymap.h>
+#include <audioproperties.h>
 
 namespace NxA { namespace Serato { namespace Internal {
     struct MP4TrackFile : public TrackFile {

@@ -26,10 +26,10 @@
 
 #include "TrackFiles/TrackFile.hpp"
 
-#include <taglib/tag.h>
-#include <taglib/tfile.h>
-#include <taglib/tpropertymap.h>
-#include <taglib/audioproperties.h>
+#include <tag.h>
+#include <tfile.h>
+#include <tpropertymap.h>
+#include <audioproperties.h>
 
 namespace NxA { namespace Serato { namespace Internal {
     using TagLibFilePointer = NxA::Pointer<TagLib::File>;

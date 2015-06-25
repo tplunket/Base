@@ -13,8 +13,8 @@
 #include "TrackFiles/TrackFile.hpp"
 #include "TrackFiles/Internal/TrackFile.hpp"
 
-#include <taglib/tpropertymap.h>
-#include <taglib/generalencapsulatedobjectframe.h>
+#include <tpropertymap.h>
+#include <generalencapsulatedobjectframe.h>
 
 using namespace NxA;
 using namespace NxA::Serato;

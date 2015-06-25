@@ -26,8 +26,8 @@
 
 #include <Base/Base.hpp>
 
-#include <taglib/id3v2tag.h>
-#include <taglib/generalencapsulatedobjectframe.h>
+#include <id3v2tag.h>
+#include <generalencapsulatedobjectframe.h>
 
 namespace NxA { namespace Serato { namespace Internal {
     struct ID3TrackFile : public TrackFile {

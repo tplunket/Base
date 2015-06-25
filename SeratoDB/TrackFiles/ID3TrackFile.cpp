@@ -13,7 +13,7 @@
 #include "TrackFiles/ID3TrackFile.hpp"
 #include "TrackFiles/Internal/ID3TrackFile.hpp"
 
-#include <taglib/attachedpictureframe.h>
+#include <attachedpictureframe.h>
 
 using namespace NxA;
 using namespace NxA::Serato;

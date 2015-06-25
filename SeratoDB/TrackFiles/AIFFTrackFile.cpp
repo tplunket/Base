@@ -13,7 +13,7 @@
 #include "TrackFiles/AIFFTrackFile.hpp"
 #include "TrackFiles/Internal/AIFFTrackFile.hpp"
 
-#include <taglib/aifffile.h>
+#include <aifffile.h>
 
 using namespace NxA;
 using namespace NxA::Serato;

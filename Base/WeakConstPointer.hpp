@@ -26,7 +26,7 @@
 #include <memory>
 
 namespace NxA {
-    template <class T> class WeakConstPointer : private std::weak_ptr<T> {
+    template <class T> class WeakConstPointer : protected std::weak_ptr<T> {
     public:
         #pragma mark Constructors & Destructors
         WeakConstPointer() { };

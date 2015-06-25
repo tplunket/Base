@@ -42,6 +42,8 @@ namespace NxA {
         using Pointer = NxA::Pointer<Array>;
         using WeakPointer = NxA::WeakPointer<Array>;
         using WeakConstPointer = NxA::WeakConstPointer<Array>;
+        using iterator = typename std::vector<typename T::Pointer>::iterator;
+        using const_iterator = typename std::vector<typename T::Pointer>::const_iterator;
 
         #pragma mark Constructors & Destructors
         explicit Array(const constructor_access&) : Array() { };
@@ -63,35 +65,35 @@ namespace NxA {
         }
 
         #pragma mark Instance Methods
-        typename std::vector<typename T::Pointer>::iterator begin() noexcept
+        iterator begin() noexcept
         {
             return this->begin();
         }
-        typename std::vector<typename T::Pointer>::const_iterator begin() const noexcept
+        const_iterator begin() const noexcept
         {
             return this->begin();
         }
-        typename std::vector<typename T::Pointer>::iterator end() noexcept
+        iterator end() noexcept
         {
             return this->end();
         }
-        typename std::vector<typename T::Pointer>::const_iterator end() const noexcept
+        const_iterator end() const noexcept
         {
             return this->end();
         }
-        typename std::vector<typename T::Pointer>::iterator cbegin() noexcept
+        iterator cbegin() noexcept
         {
             return this->cbegin();
         }
-        typename std::vector<typename T::Pointer>::const_iterator cbegin() const noexcept
+        const_iterator cbegin() const noexcept
         {
             return this->cbegin();
         }
-        typename std::vector<typename T::Pointer>::iterator cend() noexcept
+        iterator cend() noexcept
         {
             return this->cend();
         }
-        typename std::vector<typename T::Pointer>::const_iterator cend() const noexcept
+        const_iterator cend() const noexcept
         {
             return this->cend();
         }

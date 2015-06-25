@@ -42,6 +42,8 @@ namespace NxA {
         using Pointer = NxA::Pointer<Map>;
         using WeakPointer = NxA::WeakPointer<Map>;
         using WeakConstPointer = NxA::WeakConstPointer<Map>;
+        using iterator = typename std::map<Tkey, typename Tvalue::Pointer>::iterator;
+        using const_iterator = typename std::map<Tkey, typename Tvalue::Pointer>::const_iterator;
 
         #pragma mark Constructors & Destructors
         explicit Map(const constructor_access&) : Map() { };
@@ -63,35 +65,35 @@ namespace NxA {
         }
 
         #pragma mark Instance Methods
-        typename std::map<Tkey, typename Tvalue::Pointer>::iterator begin() noexcept
+        iterator begin() noexcept
         {
             return this->begin();
         }
-        typename std::map<Tkey, typename Tvalue::Pointer>::const_iterator begin() const noexcept
+        const_iterator begin() const noexcept
         {
             return this->begin();
         }
-        typename std::map<Tkey, typename Tvalue::Pointer>::iterator end() noexcept
+        iterator end() noexcept
         {
             return this->end();
         }
-        typename std::map<Tkey, typename Tvalue::Pointer>::const_iterator end() const noexcept
+        const_iterator end() const noexcept
         {
             return this->end();
         }
-        typename std::map<Tkey, typename Tvalue::Pointer>::iterator cbegin() noexcept
+        iterator cbegin() noexcept
         {
             return this->cbegin();
         }
-        typename std::map<Tkey, typename Tvalue::Pointer>::const_iterator cbegin() const noexcept
+        const_iterator cbegin() const noexcept
         {
             return this->cbegin();
         }
-        typename std::map<Tkey, typename Tvalue::Pointer>::iterator cend() noexcept
+        iterator cend() noexcept
         {
             return this->cend();
         }
-        typename std::map<Tkey, typename Tvalue::Pointer>::const_iterator cend() const noexcept
+        const_iterator cend() const noexcept
         {
             return this->cend();
         }

@@ -39,7 +39,7 @@ namespace NxA {
         static Pointer<T> dynamicCastFrom(Pointer<Tfrom> const& other)
         {
             Pointer<T> result = Pointer(std::shared_ptr<T>(std::dynamic_pointer_cast<T>(other.toStdSharedPointer())));
-            NXA_ASSERT_TRUE(result.get() != nullptr);
+            NXA_ASSERT_NOT_NULL(result.get());
             return result;
         }
 

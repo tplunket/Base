@@ -35,7 +35,7 @@ float Platform::bigEndianFloatValueAt(const byte* ptr)
     return *reinterpret_cast<float*>(&bigEndianVersion);
 }
 
-uinteger32 Platform::bigEndianUInt32ValueAt(const byte* ptr)
+uinteger32 Platform::bigEndianUInteger32ValueAt(const byte* ptr)
 {
     const char* charsPtr = reinterpret_cast<const char*>(ptr);
     return ((charsPtr[0] << 24) & 0xff000000) |
@@ -44,7 +44,7 @@ uinteger32 Platform::bigEndianUInt32ValueAt(const byte* ptr)
             (charsPtr[3] & 0xff);
 }
 
-uinteger16 Platform::bigEndianUInt16ValueAt(const byte* ptr)
+uinteger16 Platform::bigEndianUInteger16ValueAt(const byte* ptr)
 {
     const char* charsPtr = reinterpret_cast<const char*>(ptr);
     return ((charsPtr[0] << 8) & 0xff00) |
@@ -61,7 +61,7 @@ void Platform::writeBigEndianFloatValueAt(float value, byte* ptr)
     charsPtr[3] = valuePtr[0];
 }
 
-void Platform::writeBigEndianUInt32ValueAt(uinteger32 value, byte* ptr)
+void Platform::writeBigEndianUInteger32ValueAt(uinteger32 value, byte* ptr)
 {
     char* charsPtr = reinterpret_cast<char*>(ptr);
     charsPtr[0] = (value >> 24) & 0xff;
@@ -70,7 +70,7 @@ void Platform::writeBigEndianUInt32ValueAt(uinteger32 value, byte* ptr)
     charsPtr[3] = value & 0xff;
 }
 
-void Platform::writeBigEndianUInt16ValueAt(uinteger16 value, byte* ptr)
+void Platform::writeBigEndianUInteger16ValueAt(uinteger16 value, byte* ptr)
 {
     char* charsPtr = reinterpret_cast<char*>(ptr);
     charsPtr[0] = (value >> 8) & 0xff;

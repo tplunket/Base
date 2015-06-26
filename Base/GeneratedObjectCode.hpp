@@ -131,9 +131,9 @@ namespace NxA {
         }
 
 #define NXA_GENERATED_CONSTRUCTORS_FOR(namespace_name, class_name, parent_class) \
-        namespace_name::class_name::class_name(NxA::Internal::Object::Pointer const& initial_internal) : \
+        namespace_name::class_name::class_name(NxA::Pointer<Internal::Object> const& initial_internal) : \
                                                parent_class(initial_internal), \
-                                               internal(namespace_name::Internal::class_name::Pointer::dynamicCastFrom(initial_internal.toStdSharedPointer())) { }
+                                               internal(NxA::Pointer<namespace_name::Internal::class_name>::dynamicCastFrom(initial_internal)) { }
 #else
 #define NXA_GENERATED_INTERNAL_IMPLEMENTATION_FOR(namespace_name, class_name) \
         NxA::Pointer<namespace_name::Internal::class_name> namespace_name::Internal::class_name::makeShared(void) \
@@ -153,13 +153,13 @@ namespace NxA {
         } \
         NxA::Pointer<NxA::Internal::Object> namespace_name::class_name::makeInternal(void) \
         { \
-            return NxA::Internal::Object::Pointer::dynamicCastFrom(namespace_name::Internal::class_name::makeShared()); \
+            return NxA::Pointer<NxA::Internal::Object>::dynamicCastFrom(namespace_name::Internal::class_name::makeShared()); \
         } 
 
 #define NXA_GENERATED_CONSTRUCTORS_FOR(namespace_name, class_name, parent_class) \
-        namespace_name::class_name::class_name(NxA::Internal::Object::Pointer const& initial_internal) : \
+        namespace_name::class_name::class_name(NxA::Pointer<NxA::Internal::Object> const& initial_internal) : \
                                                parent_class(initial_internal), \
-                                               internal(namespace_name::Internal::class_name::Pointer::dynamicCastFrom(initial_internal)) { }
+                                               internal(NxA::Pointer<namespace_name::Internal::class_name>::dynamicCastFrom(initial_internal)) { }
 #endif
 
 #define NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(namespace_name, class_name, parent_class) \

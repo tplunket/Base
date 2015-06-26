@@ -31,13 +31,13 @@ using namespace std;
 
 #pragma mark mark Class Methods
 
-Blob::Pointer File::readFileAt(String::Pointer const& path)
+Blob::Pointer File::readFileAt(const String& path)
 {
     count fileSize = File::sizeOfFileAt(path);
     if (fileSize) {
         byte* fileData = new byte[fileSize];
         if (fileData) {
-            fstream file(path->toUTF8(), ios::in | ios::binary);
+            fstream file(path.toUTF8(), ios::in | ios::binary);
             file.read(reinterpret_cast<char*>(fileData), fileSize);
             file.close();
 
@@ -51,20 +51,20 @@ Blob::Pointer File::readFileAt(String::Pointer const& path)
     return Blob::blob();
 }
 
-void File::writeBlobToFileAt(Blob::Pointer const& content, String::Pointer const& path)
+void File::writeBlobToFileAt(Blob::Pointer const& content, const String& path)
 {
-    fstream file(path->toUTF8(), ios::out | ios::binary);
+    fstream file(path.toUTF8(), ios::out | ios::binary);
     file.write(reinterpret_cast<const char *>(content->data()), content->size());
     file.close();
 }
 
-void File::deleteFileAt(String::Pointer const& path)
+void File::deleteFileAt(const String& path)
 {
-    ::remove(path->toUTF8());
+    ::remove(path.toUTF8());
 }
 
-String::Pointer File::joinPaths(String::Pointer const& first,
-                                String::Pointer const& second)
+String::Pointer File::joinPaths(const String& first,
+                                const String& second)
 {
     auto result = String::stringWith(first);
 
@@ -80,33 +80,33 @@ String::Pointer File::joinPaths(String::Pointer const& first,
     return result;
 }
 
-String::Pointer File::removePrefixFromPath(String::Pointer const& prefix,
-                                           String::Pointer const& path)
+String::Pointer File::removePrefixFromPath(const String& prefix,
+                                           const String& path)
 {
-    count lengthToCrop = prefix->length();
-    return path->subString(lengthToCrop);
+    count lengthToCrop = prefix.length();
+    return path.subString(lengthToCrop);
 }
 
-bool File::fileExistsAt(String::Pointer const& path)
+bool File::fileExistsAt(const String& path)
 {
     struct stat buf;
-    return (::stat(path->toUTF8(), &buf) != -1);
+    return (::stat(path.toUTF8(), &buf) != -1);
 }
 
-NxA::count File::sizeOfFileAt(String::Pointer const& path)
+NxA::count File::sizeOfFileAt(const String& path)
 {
     struct stat buf;
-    if (::stat(path->toUTF8(), &buf) == -1) {
+    if (::stat(path.toUTF8(), &buf) == -1) {
         return 0;
     }
 
     return buf.st_size;
 }
 
-timestamp File::modificationDateInSecondsSince1970ForFile(String::Pointer const& path)
+timestamp File::modificationDateInSecondsSince1970ForFile(const String& path)
 {
     struct stat buf;
-    if (::stat(path->toUTF8(), &buf) == -1) {
+    if (::stat(path.toUTF8(), &buf) == -1) {
         return 0;
     }
 

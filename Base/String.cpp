@@ -59,10 +59,10 @@ String::Pointer String::stringWith(const character* format, ...)
     return newString;
 }
 
-String::Pointer String::stringWithUTF16(Blob::Pointer const& other)
+String::Pointer String::stringWithUTF16(const Blob& other)
 {
-    const integer16* characters = reinterpret_cast<const integer16*>(other->data());
-    count length = other->size() / 2;
+    const integer16* characters = reinterpret_cast<const integer16*>(other.data());
+    count length = other.size() / 2;
 
     if (Platform::endianOrder == Platform::LitleEndian) {
         characters = Internal::String::convertEndiannessOfUTF16Characters(characters, length);

@@ -51,10 +51,10 @@ Blob::Pointer File::readFileAt(const String& path)
     return Blob::blob();
 }
 
-void File::writeBlobToFileAt(Blob::Pointer const& content, const String& path)
+void File::writeBlobToFileAt(const Blob& content, const String& path)
 {
     fstream file(path.toUTF8(), ios::out | ios::binary);
-    file.write(reinterpret_cast<const char *>(content->data()), content->size());
+    file.write(reinterpret_cast<const char *>(content.data()), content.size());
     file.close();
 }
 

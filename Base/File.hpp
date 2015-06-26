@@ -34,7 +34,7 @@ namespace NxA {
 
         #pragma mark Class Methods
         static Blob::Pointer readFileAt(const String& path);
-        static void writeBlobToFileAt(Blob::Pointer const& content,
+        static void writeBlobToFileAt(const Blob& content,
                                       const String& path);
         static void deleteFileAt(const String& path);
 

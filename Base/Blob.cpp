@@ -51,10 +51,10 @@ Blob::Pointer Blob::blobWithMemoryAndSize(const byte* other, count size)
     return newBlob;
 }
 
-Blob::Pointer Blob::blobWith(Blob::Pointer const& other)
+Blob::Pointer Blob::blobWith(const Blob& other)
 {
     auto newBlob = Blob::makeShared();
-    newBlob->internal->data = other->internal->data;
+    newBlob->internal->data = other.internal->data;
 
     return newBlob;
 }
@@ -78,9 +78,9 @@ const byte* Blob::data(void) const
     return internal->data.data();
 }
 
-bool Blob::isEqualTo(Blob::Pointer const& other) const
+bool Blob::isEqualTo(const Blob& other) const
 {
-    return internal->data == other->internal->data;
+    return internal->data == other.internal->data;
 }
 
 void Blob::clear(void)
@@ -88,9 +88,9 @@ void Blob::clear(void)
     std::memset(this->data(), 0, this->size());
 }
 
-void Blob::append(Blob::Pointer const& other)
+void Blob::append(const Blob& other)
 {
-    internal->data.insert(internal->data.end(), other->internal->data.begin(), other->internal->data.end());
+    internal->data.insert(internal->data.end(), other.internal->data.begin(), other.internal->data.end());
 }
 
 void Blob::append(const character* other)

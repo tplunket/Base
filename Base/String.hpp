@@ -37,7 +37,7 @@ namespace NxA {
         static String::Pointer string(void);
         static String::Pointer stringWith(const character* format, ... );
         static String::Pointer stringWith(const String& other);
-        static String::Pointer stringWithUTF16(NxA::Pointer<NxA::Blob> const& other);
+        static String::Pointer stringWithUTF16(const Blob& other);
 
         #pragma mark Operators
         bool isEqualTo(const String& other) const;

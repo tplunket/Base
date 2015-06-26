@@ -45,6 +45,10 @@ namespace NxA {
         }
 
         #pragma mark Operators
+        operator Pointer<const T>() const
+        {
+            return Pointer<const T>(this->toStdSharedPointer());
+        }
         const T* operator->() const
         {
             return this->get();

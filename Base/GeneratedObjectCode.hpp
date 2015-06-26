@@ -62,6 +62,7 @@ namespace NxA {
 #define NXA_GENERATED_SHARED_DECLARATIONS_FOR(namespace_name, class_name) \
         public: \
             using Pointer = NxA::Pointer<namespace_name::class_name>; \
+            using PointerToConst = NxA::Pointer<const namespace_name::class_name>; \
             virtual ~class_name() = default;
 #endif
 

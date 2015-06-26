@@ -27,25 +27,25 @@ BlobTag::Pointer BlobTag::tagWithMemoryAt(const byte* tagAddress)
                                                                           Internal::Tag::dataSizeForTagAt(tagAddress)));
 }
 
-BlobTag::Pointer BlobTag::tagWithIdentifierAndValue(uinteger32 identifier, Blob::Pointer const& value)
+BlobTag::Pointer BlobTag::tagWithIdentifierAndValue(uinteger32 identifier, const Blob& value)
 {
     auto newTag = BlobTag::makeShared();
     newTag->internal->identifier = identifier;
-    newTag->internal->value = value;
+    newTag->internal->value = value.constPointer();
 
     return newTag;
 }
 
 #pragma mark Instance Methods
 
-Blob::Pointer const& BlobTag::value(void) const
+const Blob& BlobTag::value(void) const
 {
     return internal->value;
 }
 
-void BlobTag::setValue(Blob::Pointer const& newValue)
+void BlobTag::setValue(const Blob& newValue)
 {
-    internal->value = newValue;
+    internal->value = newValue.constPointer();
 }
 
 void BlobTag::addTo(Blob::Pointer& destination) const
@@ -57,7 +57,7 @@ void BlobTag::addTo(Blob::Pointer& destination) const
     byte* tagAddress = memoryRepresentation->data();
     Internal::Tag::setIdentifierForTagAt(this->identifier(), tagAddress);
     Internal::Tag::setDataSizeForTagAt(dataSize, tagAddress);
-    memcpy(Internal::Tag::dataForTagAt(tagAddress), this->value()->data(), this->value()->size());
+    memcpy(Internal::Tag::dataForTagAt(tagAddress), this->value().data(), this->value().size());
 
     destination->append(memoryRepresentation);
 }

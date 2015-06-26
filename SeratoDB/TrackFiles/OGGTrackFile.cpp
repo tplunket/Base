@@ -136,7 +136,7 @@ void OGGTrackFile::setYearReleased(const String& year)
     internal->properties["YEAR"] = TagLib::String(year.toUTF8());
 }
 
-void OGGTrackFile::setArtwork(Blob::Pointer const& artwork)
+void OGGTrackFile::setArtwork(const Blob& artwork)
 {
     // -- TODO: To be implemented.
 }

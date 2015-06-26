@@ -147,7 +147,7 @@ void ID3TrackFile::setYearReleased(const String& year)
     internal->properties["DATE"] = TagLib::String(year.toUTF8());
 }
 
-void ID3TrackFile::setArtwork(Blob::Pointer const& artwork)
+void ID3TrackFile::setArtwork(const Blob& artwork)
 {
     auto tag = reinterpret_cast<TagLib::ID3v2::Tag*>(internal->parsedFileTag);
     if(tag) {
@@ -169,7 +169,7 @@ void ID3TrackFile::setArtwork(Blob::Pointer const& artwork)
 
         frameList.erase(frameToRemove);
 
-        TagLib::ByteVector data(*artwork->data(), artwork->size());
+        TagLib::ByteVector data(*artwork.data(), artwork.size());
 
         auto* newFrame = new TagLib::ID3v2::AttachedPictureFrame;
         newFrame->setData(data);

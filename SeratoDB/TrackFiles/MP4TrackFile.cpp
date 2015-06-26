@@ -151,9 +151,9 @@ void MP4TrackFile::setYearReleased(const String& year)
     internal->properties["DATE"] = TagLib::String(year.toUTF8());
 }
 
-void MP4TrackFile::setArtwork(Blob::Pointer const& artwork)
+void MP4TrackFile::setArtwork(const Blob& artwork)
 {
-    TagLib::ByteVector data(*artwork->data(), artwork->size());
+    TagLib::ByteVector data(*artwork.data(), artwork.size());
     TagLib::MP4::CoverArt newCoverArt(TagLib::MP4::CoverArt::Unknown, data);
     TagLib::MP4::CoverArtList newCoverArtList;
     newCoverArtList.append(newCoverArt);

@@ -25,11 +25,11 @@ namespace NxA { namespace Serato {
     public:
         #pragma mark Factory Methods
         static BlobTag::Pointer tagWithMemoryAt(const byte* tagAddress);
-        static BlobTag::Pointer tagWithIdentifierAndValue(uint32_t identifier, Blob::Pointer const& value);
+        static BlobTag::Pointer tagWithIdentifierAndValue(uint32_t identifier, const Blob& value);
 
         #pragma mark Instance Methods
-        Blob::Pointer const& value(void) const;
-        void setValue(Blob::Pointer const& newValue);
+        const Blob& value(void) const;
+        void setValue(const Blob& newValue);
 
         void addTo(Blob::Pointer& destination) const;
     };

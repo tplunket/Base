@@ -72,7 +72,7 @@ namespace NxA { namespace Serato {
         virtual void setRemixer(const String& remixer) = 0;
         virtual void setYearReleased(const String& year) = 0;
 
-        virtual void setArtwork(Blob::Pointer const& artwork) = 0;
+        virtual void setArtwork(const Blob& artwork) = 0;
 
         void setCueMarkers(CueMarker::Array::Pointer const& markers);
         void setLoopMarkers(LoopMarker::Array::Pointer const& markers);

@@ -156,7 +156,7 @@ void FLACTrackFile::setYearReleased(const String& year)
     internal->properties["DATE"] = TagLib::String(year.toUTF8());
 }
 
-void FLACTrackFile::setArtwork(Blob::Pointer const& artwork)
+void FLACTrackFile::setArtwork(const Blob& artwork)
 {
     // -- TODO: To be implemented.
 }

@@ -48,6 +48,6 @@ namespace NxA { namespace Serato {
         virtual void setRemixer(const String& remixer);
         virtual void setYearReleased(const String& year);
 
-        virtual void setArtwork(Blob::Pointer const& artwork);
+        virtual void setArtwork(const Blob& artwork);
     };
 } }

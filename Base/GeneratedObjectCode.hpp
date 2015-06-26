@@ -81,6 +81,8 @@ namespace NxA {
             using WeakPointerToConst = NxA::WeakPointer<namespace_name::class_name>; \
             using Array = NxA::Array<namespace_name::class_name>; \
             using ArrayOfConst = NxA::Array<const namespace_name::class_name>; \
+            NxA::Pointer<namespace_name::class_name> pointer(void) { return NxA::Pointer<namespace_name::class_name>(this->std::template enable_shared_from_this<namespace_name::class_name>::shared_from_this()); } \
+            NxA::Pointer<const namespace_name::class_name> constPointer(void) const { return NxA::Pointer<const namespace_name::class_name>(this->std::template enable_shared_from_this<namespace_name::class_name>::shared_from_this()); } \
             virtual NxA::Pointer<NxA::String> className(void) const; \
         protected: \
             NxA::Pointer<namespace_name::Internal::class_name> internal; \

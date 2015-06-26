@@ -29,8 +29,8 @@ namespace NxA {
     template <class T> class WeakPointer : protected std::weak_ptr<T> {
     public:
         #pragma mark Constructors & Destructors
-        WeakPointer() { };
-        WeakPointer(Pointer<T> const& other) : std::weak_ptr<T>(other.toStdSharedPointer()) { }
+        WeakPointer() = default;
+        WeakPointer(Pointer<T> const& other) : std::weak_ptr<T>(other) { }
         WeakPointer(WeakPointer<T> const& other) : std::weak_ptr<T>(other) { }
         ~WeakPointer() = default;
 

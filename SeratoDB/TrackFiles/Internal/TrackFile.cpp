@@ -54,7 +54,7 @@ const byte* TrackFile::nextTagPositionAfterTagNamed(String::Pointer const& tagNa
     auto parserPosition = currentTagPosition;
     parserPosition += tagName->length() + 1;
 
-    auto tagSize = Platform::bigEndianUInt32ValueAt(parserPosition);
+    auto tagSize = Platform::bigEndianUInteger32ValueAt(parserPosition);
     parserPosition += 4 + tagSize;
 
     return parserPosition;
@@ -67,7 +67,7 @@ Blob::Pointer TrackFile::markerV2TagDataFrom(const byte* tagStart)
     constexpr count sizeOfSizeField = 4;
 
     auto sizePosition = tagStart + sizeOfNameField;
-    count tagSize = Platform::bigEndianUInt32ValueAt(sizePosition) + sizeOfNameField + sizeOfSizeField;
+    count tagSize = Platform::bigEndianUInteger32ValueAt(sizePosition) + sizeOfNameField + sizeOfSizeField;
 
     return Blob::blobWithMemoryAndSize(tagStart, tagSize);
 }
@@ -121,7 +121,7 @@ void TrackFile::readGridMarkersFrom(const byte* gridMarkerData, size_t totalSize
         return;
     }
 
-    auto numberOfMarkers = Platform::bigEndianUInt32ValueAt(gridMarkerData);
+    auto numberOfMarkers = Platform::bigEndianUInteger32ValueAt(gridMarkerData);
     gridMarkerData += 4;
 
     for (uint32_t index = 0; index < numberOfMarkers; ++index) {
@@ -163,7 +163,7 @@ Blob::Pointer TrackFile::gridMarkerDataFromGridMarkers(void)
     auto data = Blob::blob();
 
     uinteger32 numberOfMarkers;
-    Platform::writeBigEndianUInt32ValueAt(this->gridMarkers->length(), reinterpret_cast<byte*>(&numberOfMarkers));
+    Platform::writeBigEndianUInteger32ValueAt(this->gridMarkers->length(), reinterpret_cast<byte*>(&numberOfMarkers));
 
     auto numberOfMarkersData = Blob::blobWithMemoryAndSize(reinterpret_cast<byte*>(&numberOfMarkers), sizeof(numberOfMarkers));
     data->append(numberOfMarkersData);

@@ -45,9 +45,9 @@ LoopMarker::Pointer LoopMarker::markerWithMemoryAt(const byte* id3TagStart)
     const SeratoLoopTagStruct* tagStruct = reinterpret_cast<const SeratoLoopTagStruct*>(id3TagStart);
 
     return LoopMarker::markerWithLabelStartEndPositionsAndIndex(String::stringWith(reinterpret_cast<const character*>(tagStruct->label)),
-                                                                Platform::bigEndianUInt32ValueAt(tagStruct->position),
-                                                                Platform::bigEndianUInt32ValueAt(tagStruct->loopPosition),
-                                                                Platform::bigEndianUInt16ValueAt(tagStruct->index));
+                                                                Platform::bigEndianUInteger32ValueAt(tagStruct->position),
+                                                                Platform::bigEndianUInteger32ValueAt(tagStruct->loopPosition),
+                                                                Platform::bigEndianUInteger16ValueAt(tagStruct->index));
 }
 
 LoopMarker::Pointer LoopMarker::markerWithLabelStartEndPositionsAndIndex(String::Pointer const& label,
@@ -100,12 +100,12 @@ void LoopMarker::addId3TagTo(Blob::Pointer& data) const
 
     memcpy(header.tag, "LOOP", 5);
     size_t size = sizeof(SeratoLoopTagStruct) + this->label()->length() + 1 - sizeof(SeratoLoopTagHeaderStruct);
-    Platform::writeBigEndianUInt32ValueAt((uint32_t)size, header.size);
-    Platform::writeBigEndianUInt16ValueAt(this->index(), header.index);
-    Platform::writeBigEndianUInt32ValueAt(this->startPositionInMilliseconds(), header.position);
-    Platform::writeBigEndianUInt32ValueAt(this->endPositionInMilliseconds(), header.loopPosition);
-    Platform::writeBigEndianUInt32ValueAt(0, header.loopIterations);
-    Platform::writeBigEndianUInt32ValueAt(0, header.color);
+    Platform::writeBigEndianUInteger32ValueAt((uint32_t)size, header.size);
+    Platform::writeBigEndianUInteger16ValueAt(this->index(), header.index);
+    Platform::writeBigEndianUInteger32ValueAt(this->startPositionInMilliseconds(), header.position);
+    Platform::writeBigEndianUInteger32ValueAt(this->endPositionInMilliseconds(), header.loopPosition);
+    Platform::writeBigEndianUInteger32ValueAt(0, header.loopIterations);
+    Platform::writeBigEndianUInteger32ValueAt(0, header.color);
     header.loop_enabled = 0;
     header.loop_locked = 0;
 

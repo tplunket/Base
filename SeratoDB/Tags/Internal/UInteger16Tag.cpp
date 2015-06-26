@@ -19,18 +19,12 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#pragma once
+#include "Tags/Internal/UInteger16Tag.hpp"
 
-#include <Base/Base.hpp>
+NXA_GENERATED_INTERNAL_IMPLEMENTATION_FOR(NxA::Serato, UInteger16Tag);
 
-#include "Tags/Internal/Tag.hpp"
-#include "Tags/UInt16Tag.hpp"
+using namespace NxA::Serato::Internal;
 
-namespace NxA { namespace Serato { namespace Internal {
-    struct UInteger16Tag : public Tag {
-        NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, UInteger16Tag);
+#pragma mark Constructors & Destructors
 
-        #pragma mark Instance Variables
-        uinteger16 value;
-    };
-} } }
+UInteger16Tag::UInteger16Tag() { }

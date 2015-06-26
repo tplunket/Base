@@ -24,13 +24,13 @@
 #include <Base/Base.hpp>
 
 #include "Tags/Internal/Tag.hpp"
-#include "Tags/UInt32Tag.hpp"
+#include "Tags/UInteger16Tag.hpp"
 
 namespace NxA { namespace Serato { namespace Internal {
-    struct UInteger32Tag : public Tag {
-        NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, UInteger32Tag);
+    struct UInteger16Tag : public Tag {
+        NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, UInteger16Tag);
 
         #pragma mark Instance Variables
-        uinteger32 value;
+        uinteger16 value;
     };
 } } }

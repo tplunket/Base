@@ -24,7 +24,7 @@ NXA_GENERATED_CONSTRUCTORS_FOR(NxA::Serato, Tag, Object);
 uint32_t Tag::identifierForTagAt(const byte* tagAddress)
 {
     const TagStruct* tagStructPtr = reinterpret_cast<const TagStruct*>(tagAddress);
-    uint32_t identifier = Platform::bigEndianUInt32ValueAt(tagStructPtr->identifier);
+    uint32_t identifier = Platform::bigEndianUInteger32ValueAt(tagStructPtr->identifier);
     return identifier;
 }
 

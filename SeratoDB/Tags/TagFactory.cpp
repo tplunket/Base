@@ -16,8 +16,8 @@
 #include "Tags/TextTag.hpp"
 #include "Tags/BlobTag.hpp"
 #include "Tags/ObjectTag.hpp"
-#include "Tags/UInt16Tag.hpp"
-#include "Tags/UInt32Tag.hpp"
+#include "Tags/UInteger16Tag.hpp"
+#include "Tags/UInteger32Tag.hpp"
 
 using namespace NxA::Serato;
 using namespace std;

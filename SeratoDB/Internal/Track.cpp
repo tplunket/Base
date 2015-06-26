@@ -24,7 +24,7 @@
 #include "Tags/ObjectTag.hpp"
 #include "Tags/TextTag.hpp"
 #include "Tags/PathTag.hpp"
-#include "Tags/UInt32Tag.hpp"
+#include "Tags/UInteger32Tag.hpp"
 
 // -- Generated internal implementation ommitted because this class does not use the default contructor.
 

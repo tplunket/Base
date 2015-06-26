@@ -9,7 +9,7 @@
 //  please email info@nextaudiolabs.com.
 //
 
-#include "Tags/UInt32Tag.hpp"
+#include "Tags/UInteger32Tag.hpp"
 #include "Base/Base.hpp"
 #include "Base/Test.hpp"
 

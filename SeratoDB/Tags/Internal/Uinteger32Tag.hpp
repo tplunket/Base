@@ -19,12 +19,18 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include "Tags/Internal/UInt32Tag.hpp"
+#pragma once
 
-NXA_GENERATED_INTERNAL_IMPLEMENTATION_FOR(NxA::Serato, UInteger32Tag);
+#include <Base/Base.hpp>
 
-using namespace NxA::Serato::Internal;
+#include "Tags/Internal/Tag.hpp"
+#include "Tags/UInteger32Tag.hpp"
 
-#pragma mark Constructors & Destructors
+namespace NxA { namespace Serato { namespace Internal {
+    struct UInteger32Tag : public Tag {
+        NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, UInteger32Tag);
 
-UInteger32Tag::UInteger32Tag() { }
+        #pragma mark Instance Variables
+        uinteger32 value;
+    };
+} } }

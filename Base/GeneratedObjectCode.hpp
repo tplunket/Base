@@ -53,6 +53,7 @@ namespace NxA {
             static NxA::Pointer<class_name> makeShared(void); \
         public: \
             using Pointer = NxA::Pointer<namespace_name::class_name>; \
+            using PointerToConst = NxA::Pointer<const namespace_name::class_name>; \
             virtual ~class_name() \
             { \
                 printf("Destroying " NXA_STR_VALUE_FOR(namespace_name) "::" NXA_STR_VALUE_FOR(class_name) " at 0x%08lx.\n", (long)this); \
@@ -76,7 +77,9 @@ namespace NxA {
             explicit class_name(const class_name ## _constructor_access&) : class_name() { } \
             explicit class_name(const class_name ## _constructor_access&, NxA::Pointer<NxA::Internal::Object> const& initial_internal) : class_name(initial_internal) { } \
             using WeakPointer = NxA::WeakPointer<namespace_name::class_name>; \
+            using WeakPointerToConst = NxA::WeakPointer<namespace_name::class_name>; \
             using Array = NxA::Array<namespace_name::class_name>; \
+            using ArrayOfConst = NxA::Array<const namespace_name::class_name>; \
             virtual NxA::Pointer<NxA::String> className(void) const; \
         protected: \
             NxA::Pointer<namespace_name::Internal::class_name> internal; \

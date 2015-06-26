@@ -36,11 +36,11 @@ namespace NxA {
         #pragma mark Factory Methods
         static String::Pointer string(void);
         static String::Pointer stringWith(const character* format, ... );
-        static String::Pointer stringWith(String::Pointer const& other);
+        static String::Pointer stringWith(const String& other);
         static String::Pointer stringWithUTF16(NxA::Pointer<NxA::Blob> const& other);
 
         #pragma mark Operators
-        bool isEqualTo(String::Pointer const& other) const;
+        bool isEqualTo(const String& other) const;
         bool isEqualTo(const char* other) const;
 
         #pragma mark Instance Methods
@@ -55,19 +55,19 @@ namespace NxA {
         const character* toUTF8(void) const;
         NxA::Pointer<NxA::Blob> toUTF16(void) const;
 
-        void append(String::Pointer const& other);
+        void append(const String& other);
         void append(const character* other);
 
         String::Array::Pointer splitBySeperator(char seperator) const;
         String::Pointer subString(count start, count end = -1) const;
 
-        bool hasPrefix(String::Pointer const& prefix) const;
-        bool hasPostfix(String::Pointer const& postfix) const;
+        bool hasPrefix(const String& prefix) const;
+        bool hasPostfix(const String& postfix) const;
         bool hasPrefix(const character* prefix) const;
         bool hasPostfix(const character* postfix) const;
 
-        count indexOfFirstOccurenceOf(String::Pointer const& other) const;
-        count indexOfLastOccurenceOf(String::Pointer const& other) const;
+        count indexOfFirstOccurenceOf(const String& other) const;
+        count indexOfLastOccurenceOf(const String& other) const;
         count indexOfFirstOccurenceOf(const character* other) const;
         count indexOfLastOccurenceOf(const character* other) const;
     };

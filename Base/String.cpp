@@ -80,19 +80,19 @@ String::Pointer String::stringWithUTF16(Blob::Pointer const& other)
     return newString;
 }
 
-String::Pointer String::stringWith(String::Pointer const& other)
+String::Pointer String::stringWith(const String& other)
 {
     auto newString = String::makeShared();
-    newString->internal->value = other->internal->value;
+    newString->internal->value = other.internal->value;
 
     return newString;
 }
 
 #pragma mark Operators
 
-bool String::isEqualTo(String::Pointer const& other) const
+bool String::isEqualTo(const String& other) const
 {
-    return internal->value == other->internal->value;
+    return internal->value == other.internal->value;
 }
 
 bool String::isEqualTo(const character* other) const
@@ -137,9 +137,9 @@ Blob::Pointer String::toUTF16(void) const
     return newBlob;
 }
 
-void String::append(String::Pointer const& other)
+void String::append(const String& other)
 {
-    internal->value.append(other->toUTF8());
+    internal->value.append(other.toUTF8());
 }
 
 void String::append(const character* other)
@@ -172,19 +172,19 @@ String::Pointer String::subString(count start, count end) const
     return newString;
 }
 
-bool String::hasPrefix(String::Pointer const& prefix) const
+bool String::hasPrefix(const String& prefix) const
 {
-    return this->hasPrefix(prefix->toUTF8());
+    return this->hasPrefix(prefix.toUTF8());
 }
 
-bool String::hasPostfix(String::Pointer const& postfix) const
+bool String::hasPostfix(const String& postfix) const
 {
-    size_t pos = internal->value.rfind(postfix->toUTF8());
+    size_t pos = internal->value.rfind(postfix.toUTF8());
     if (pos == std::string::npos) {
         return false;
     }
 
-    return pos == (this->length() - postfix->length());
+    return pos == (this->length() - postfix.length());
 }
 
 bool String::hasPrefix(const character* prefix) const
@@ -203,14 +203,14 @@ bool String::hasPostfix(const character* postfix) const
     return pos == (this->length() - length);
 }
 
-count String::indexOfFirstOccurenceOf(String::Pointer const& other) const
+count String::indexOfFirstOccurenceOf(const String& other) const
 {
-    return this->indexOfFirstOccurenceOf(other->toUTF8());
+    return this->indexOfFirstOccurenceOf(other.toUTF8());
 }
 
-count String::indexOfLastOccurenceOf(String::Pointer const& other) const
+count String::indexOfLastOccurenceOf(const String& other) const
 {
-    return this->indexOfLastOccurenceOf(other->toUTF8());
+    return this->indexOfLastOccurenceOf(other.toUTF8());
 }
 
 count String::indexOfFirstOccurenceOf(const char* other) const

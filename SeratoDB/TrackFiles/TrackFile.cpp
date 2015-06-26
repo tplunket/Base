@@ -16,16 +16,11 @@
 #include <tpropertymap.h>
 #include <generalencapsulatedobjectframe.h>
 
+NXA_GENERATED_PURE_VIRTUAL_IMPLEMENTATION_FOR(NxA::Serato, TrackFile);
+NXA_GENERATED_CONSTRUCTORS_FOR(NxA::Serato, TrackFile, Object);
+
 using namespace NxA;
 using namespace NxA::Serato;
-
-NXA_GENERATED_PURE_VIRTUAL_IMPLEMENTATION_FOR(NxA::Serato, TrackFile);
-
-#pragma mark Constructors & Destructors
-
-TrackFile::TrackFile(NxA::Internal::Object::Pointer const& initial_internal) :
-                     Object(initial_internal),
-                     internal(initial_internal) { }
 
 #pragma mark Instance Methods
 
@@ -155,62 +150,62 @@ count TrackFile::trackNumber(void) const
     return 0;
 }
 
-CueMarker::Array::ConstPointer const& TrackFile::cueMarkers(void) const
+CueMarker::Array::Pointer const& TrackFile::cueMarkers(void) const
 {
     return internal->cueMarkers;
 }
 
-LoopMarker::Array::ConstPointer const& TrackFile::loopMarkers(void) const
+LoopMarker::Array::Pointer const& TrackFile::loopMarkers(void) const
 {
     return internal->loopMarkers;
 }
 
-GridMarker::Array::ConstPointer const& TrackFile::gridMarkers(void) const
+GridMarker::Array::Pointer const& TrackFile::gridMarkers(void) const
 {
     return internal->gridMarkers;
 }
 
-void TrackFile::setTitle(String::ConstPointer const& title)
+void TrackFile::setTitle(String::Pointer const& title)
 {
     if (internal->parsedFileTag) {
         internal->parsedFileTag->setTitle(TagLib::String(title->toUTF8()));
     }
 }
 
-void TrackFile::setArtist(String::ConstPointer const& artist)
+void TrackFile::setArtist(String::Pointer const& artist)
 {
     if (internal->parsedFileTag) {
         internal->parsedFileTag->setArtist(TagLib::String(artist->toUTF8()));
     }
 }
 
-void TrackFile::setGenre(String::ConstPointer const& genre)
+void TrackFile::setGenre(String::Pointer const& genre)
 {
     if (internal->parsedFileTag) {
         internal->parsedFileTag->setGenre(TagLib::String(genre->toUTF8()));
     }
 }
 
-void TrackFile::setComments(String::ConstPointer const& comments)
+void TrackFile::setComments(String::Pointer const& comments)
 {
     if (internal->parsedFileTag) {
         internal->parsedFileTag->setComment(TagLib::String(comments->toUTF8()));
     }
 }
 
-void TrackFile::setAlbum(String::ConstPointer const& album)
+void TrackFile::setAlbum(String::Pointer const& album)
 {
     if (internal->parsedFileTag) {
         internal->parsedFileTag->setAlbum(TagLib::String(album->toUTF8()));
     }
 }
 
-void TrackFile::setComposer(String::ConstPointer const& composer)
+void TrackFile::setComposer(String::Pointer const& composer)
 {
     internal->properties["COMPOSER"] = TagLib::String(composer->toUTF8());
 }
 
-void TrackFile::setBpm(String::ConstPointer const& bpm)
+void TrackFile::setBpm(String::Pointer const& bpm)
 {
     internal->properties["BPM"] = TagLib::String(bpm->toUTF8());
 }

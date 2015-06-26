@@ -18,16 +18,10 @@
 #include "Tags/TagFactory.hpp"
 #include "Utility.hpp"
 
-NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, Crate);
+NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, Crate, Object);
 
 using namespace NxA;
 using namespace NxA::Serato;
-
-#pragma mark Constructors & Destructors
-
-Crate::Crate(NxA::Internal::Object::Pointer const& initial_internal) :
-             Object(initial_internal),
-             internal(initial_internal) { }
 
 #pragma mark Constants
 
@@ -35,15 +29,15 @@ static const character* crateFileCurrentVersionString = "1.0/Serato ScratchLive 
 
 #pragma mark Factory Methods
 
-Crate::Pointer Crate::crateWithNameInFolderOnVolume(String::ConstPointer const& crateFullName,
-                                                    String::ConstPointer const& seratoFolderPath,
-                                                    String::ConstPointer const& volumePath)
+Crate::Pointer Crate::crateWithNameInFolderOnVolume(String::Pointer const& crateFullName,
+                                                    String::Pointer const& seratoFolderPath,
+                                                    String::Pointer const& volumePath)
 {
     auto internalObject = Internal::Crate::Pointer(std::make_shared<Internal::Crate>(crateFullName,
                                                                                      volumePath,
                                                                                      crateFilePathForCrateNameInSeratoFolder(crateFullName,
                                                                                                                              seratoFolderPath)));
-    auto newCrate = Crate::makeSharedWithInternal(internalObject);
+    auto newCrate = Crate::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
 
     auto lastSeperatorIndex = crateFullName->indexOfLastOccurenceOf("%%");
     if (lastSeperatorIndex != crateFullName->length()) {
@@ -58,21 +52,21 @@ Crate::Pointer Crate::crateWithNameInFolderOnVolume(String::ConstPointer const& 
 
 #pragma mark Class Methods
 
-bool Crate::isAValidCrateName(String::ConstPointer const& crateFullName,
-                              String::ConstPointer const& seratoFolderPath)
+bool Crate::isAValidCrateName(String::Pointer const& crateFullName,
+                              String::Pointer const& seratoFolderPath)
 {
     auto crateFilePath = crateFilePathForCrateNameInSeratoFolder(crateFullName, seratoFolderPath);
     return File::fileExistsAt(crateFilePath);
 }
 
-bool Crate::isASmartCrateName(String::ConstPointer const& crateFullName,
-                              String::ConstPointer const& seratoFolderPath)
+bool Crate::isASmartCrateName(String::Pointer const& crateFullName,
+                              String::Pointer const& seratoFolderPath)
 {
     auto crateFilePath = crateFilePathForSmartCrateNameInSeratoFolder(crateFullName, seratoFolderPath);
     return File::fileExistsAt(crateFilePath);
 }
 
-void Crate::addCrateAsChildOfCrate(Crate::Pointer const& crate, Crate::Pointer const& parentCrate)
+void Crate::addCrateAsChildOfCrate(Crate::Pointer& crate, Crate::Pointer& parentCrate)
 {
     crate->internal->parentCrate = Crate::WeakPointer(parentCrate);
 
@@ -95,17 +89,17 @@ void Crate::destroy(Crate::Pointer const& crate)
 
 #pragma mark Instance Methods
 
-String::ConstPointer const& Crate::crateName(void) const
+String::Pointer const& Crate::crateName(void) const
 {
     return internal->crateName;
 }
 
-String::ConstPointer const& Crate::crateFullName(void) const
+String::Pointer const& Crate::crateFullName(void) const
 {
     return internal->crateFullName;
 }
 
-void Crate::addFullCrateNameWithPrefixAndRecurseToChildren(String::Pointer const& destination, const char* prefix) const
+void Crate::addFullCrateNameWithPrefixAndRecurseToChildren(String::Pointer& destination, const char* prefix) const
 {
     if (internal->crateFullName->length()) {
         destination->append(prefix);
@@ -118,12 +112,12 @@ void Crate::addFullCrateNameWithPrefixAndRecurseToChildren(String::Pointer const
     }
 }
 
-TrackEntry::Array::ConstPointer const& Crate::trackEntries(void) const
+TrackEntry::Array::Pointer const& Crate::trackEntries(void) const
 {
     return internal->trackEntries;
 }
 
-Crate::Array::ConstPointer const& Crate::crates(void) const
+Crate::Array::Pointer const& Crate::crates(void) const
 {
     return internal->childrenCrates;
 }
@@ -144,7 +138,7 @@ void Crate::loadFromFile(void)
     for (auto& tag : *(tags)) {
         switch (tag->identifier()) {
             case crateVersionTagIdentifier: {
-                auto versionTag = TextTag::Pointer(tag);
+                auto versionTag = TextTag::Pointer::dynamicCastFrom(tag);
                 if (!versionTag->value()->isEqualTo(crateFileCurrentVersionString)) {
                     internal->otherTags->emptyAll();
                     internal->trackEntries->emptyAll();
@@ -174,7 +168,7 @@ Crate::Pointer Crate::parentCrate(void) const
     return internal->parentCrate.toPointer();
 }
 
-String::ConstPointer const& Crate::crateFilePath(void) const
+String::Pointer const& Crate::crateFilePath(void) const
 {
     return internal->crateFilePath;
 }

@@ -16,24 +16,18 @@
 #include <mpegfile.h>
 #include <mpegproperties.h>
 
+NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, MPEGTrackFile, ID3TrackFile);
+
 using namespace NxA;
 using namespace NxA::Serato;
 
-NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, MPEGTrackFile);
-
-#pragma mark Constructors & Destructors
-
-MPEGTrackFile::MPEGTrackFile(NxA::Internal::Object::Pointer const& initial_internal) :
-                             ID3TrackFile(initial_internal),
-                             internal(initial_internal) { }
-
 #pragma mark Factory Methods
 
-MPEGTrackFile::Pointer MPEGTrackFile::fileWithFileAt(String::ConstPointer const& path)
+MPEGTrackFile::Pointer MPEGTrackFile::fileWithFileAt(String::Pointer const& path)
 {
     auto file = Internal::TagLibFilePointer(std::make_shared<TagLib::MPEG::File>(path->toUTF8()));
     auto internalObject = Internal::MPEGTrackFile::Pointer(std::make_shared<Internal::MPEGTrackFile>(path, file));
-    auto newFile = MPEGTrackFile::makeSharedWithInternal(internalObject);
+    auto newFile = MPEGTrackFile::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
 
     if (!file->isValid()) {
         newFile->internal->parsedFileTag = nullptr;

@@ -28,9 +28,9 @@ using namespace NxA::Serato::Internal;
 
 #pragma mark Constructors & Destructors
 
-Crate::Crate(String::ConstPointer const& fullName,
-             String::ConstPointer const& volumePath,
-             String::ConstPointer const& filePath) :
+Crate::Crate(String::Pointer const& fullName,
+             String::Pointer const& volumePath,
+             String::Pointer const& filePath) :
              crateName(String::string()),
              crateFullName(fullName),
              rootVolumePath(volumePath),
@@ -39,7 +39,7 @@ Crate::Crate(String::ConstPointer const& fullName,
              cratesWereModified(false),
              childrenCrates(Serato::Crate::Array::array()),
              trackEntries(Serato::TrackEntry::Array::array()),
-             otherTags(Serato::Tag::ConstArray::array()) { }
+             otherTags(Serato::Tag::Array::array()) { }
 
 #pragma mark Instance Methods
 
@@ -49,7 +49,7 @@ void Crate::addTrackEntry(Serato::TrackEntry::Pointer const& trackEntry)
     this->trackEntries->append(trackEntry);
 }
 
-void Crate::storeTrackTag(Serato::Tag::ConstPointer const& tag)
+void Crate::storeTrackTag(Serato::Tag::Pointer const& tag)
 {
     this->addTrackEntry(Serato::TrackEntry::entryWithTagOnVolume(tag, this->rootVolumePath));
 }

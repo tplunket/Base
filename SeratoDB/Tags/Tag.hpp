@@ -28,6 +28,6 @@ namespace NxA { namespace Serato {
         #pragma mark Instance Methods
         uinteger32 identifier(void) const;
 
-        virtual void addTo(Blob::Pointer const& destination) const = 0;
+        virtual void addTo(Blob::Pointer& destination) const = 0;
     };
 } }

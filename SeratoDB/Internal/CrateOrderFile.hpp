@@ -33,30 +33,30 @@ namespace NxA { namespace Serato { namespace Internal {
         NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTOR_FOR(NxA::Serato, CrateOrderFile);
 
         #pragma mark Constructors & Desctructors
-        CrateOrderFile(String::ConstPointer const& path,
+        CrateOrderFile(String::Pointer const& path,
                        Serato::Crate::Pointer const& root);
 
         #pragma mark Class Methods
-        static String::Pointer crateNameIfValidCrateOrEmptyIfNot(String::ConstPointer const& name);
-        static bool filenameIsAValidCrateName(String::ConstPointer const& fileName);
-        static String::Pointer crateNameFromFilename(String::ConstPointer const& fileName);
-        static String::Array::Pointer cratesInSubCratesDirectory(String::ConstPointer const& directory);
-        static String::Array::Pointer readCratesNamesInCrateOrderFile(String::ConstPointer const& crateOrderFilePath);
-        static void addCratesNamesAtTheStartOfUnlessAlreadyThere(String::Array::Pointer const& cratesToAddTo,
-                                                                 String::Array::ConstPointer const& cratesToAdd);
+        static String::Pointer crateNameIfValidCrateOrEmptyIfNot(String::Pointer const& name);
+        static bool filenameIsAValidCrateName(String::Pointer const& fileName);
+        static String::Pointer crateNameFromFilename(String::Pointer const& fileName);
+        static String::Array::Pointer cratesInSubCratesDirectory(String::Pointer const& directory);
+        static String::Array::Pointer readCratesNamesInCrateOrderFile(String::Pointer const& crateOrderFilePath);
+        static void addCratesNamesAtTheStartOfUnlessAlreadyThere(String::Array::Pointer& cratesToAddTo,
+                                                                 String::Array::Pointer const& cratesToAdd);
 
         #pragma mark Instance Variables
-        String::ConstPointer crateOrderFilePath;
+        String::Pointer crateOrderFilePath;
 
         Serato::Crate::Pointer rootCrate;
 
         String::Array::Pointer unknownCratesNames;
 
         #pragma mark Instance Methods
-        Serato::Crate::Array::Pointer childrenCratesOfCrateNamedUsingNameList(String::ConstPointer const& name,
+        Serato::Crate::Array::Pointer childrenCratesOfCrateNamedUsingNameList(String::Pointer const& name,
                                                                               String::Array::iterator& it,
                                                                               const String::Array::iterator& end,
-                                                                              String::ConstPointer const& seratoFolderPath,
-                                                                              String::ConstPointer const& rootFolderPath);
+                                                                              String::Pointer const& seratoFolderPath,
+                                                                              String::Pointer const& rootFolderPath);
     };
 } } }

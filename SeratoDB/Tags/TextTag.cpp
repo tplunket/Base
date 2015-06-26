@@ -13,16 +13,10 @@
 #include "Tags/TextTag.hpp"
 #include "Tags/Internal/TextTag.hpp"
 
-NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, TextTag);
+NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, TextTag, Tag);
 
 using namespace NxA;
 using namespace NxA::Serato;
-
-#pragma mark Constructors & Destructors
-
-TextTag::TextTag(NxA::Internal::Object::Pointer const& initial_internal) :
-                 Tag(initial_internal),
-                 internal(initial_internal) { }
 
 #pragma mark Factory Methods
 
@@ -34,7 +28,7 @@ TextTag::Pointer TextTag::tagWithMemoryAt(const byte* tagAddress)
     return TextTag::tagWithIdentifierAndValue(Tag::identifierForTagAt(tagAddress), text);
 }
 
-TextTag::Pointer TextTag::tagWithIdentifierAndValue(uinteger32 identifier, String::ConstPointer const& value)
+TextTag::Pointer TextTag::tagWithIdentifierAndValue(uinteger32 identifier, String::Pointer const& value)
 {
     auto newTag = TextTag::makeShared();
     newTag->internal->identifier = identifier;
@@ -45,17 +39,17 @@ TextTag::Pointer TextTag::tagWithIdentifierAndValue(uinteger32 identifier, Strin
 
 #pragma mark Instance Methods
 
-String::ConstPointer const& TextTag::value(void) const
+String::Pointer const& TextTag::value(void) const
 {
     return internal->value;
 }
 
-void TextTag::setValue(String::ConstPointer const& value)
+void TextTag::setValue(String::Pointer const& value)
 {
     internal->value = value;
 }
 
-void TextTag::addTo(Blob::Pointer const& destination) const
+void TextTag::addTo(Blob::Pointer& destination) const
 {
     auto memoryRepresentation = Blob::blobWithCapacity(Internal::Tag::memoryNeededForTagHeader());
     count dataSize = internal->value->length() * 2;

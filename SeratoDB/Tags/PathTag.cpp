@@ -13,16 +13,10 @@
 #include "Tags/PathTag.hpp"
 #include "Tags/Internal/PathTag.hpp"
 
-NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, PathTag);
+NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, PathTag, Tag);
 
 using namespace NxA;
 using namespace NxA::Serato;
-
-#pragma mark Constructors & Destructors
-
-PathTag::PathTag(NxA::Internal::Object::Pointer const& initial_internal) :
-                 Tag(initial_internal),
-                 internal(initial_internal) { }
 
 #pragma mark Factory Methods
 
@@ -34,7 +28,7 @@ PathTag::Pointer PathTag::tagWithMemoryAt(const byte* tagAddress)
     return PathTag::tagWithIdentifierAndValue(Tag::identifierForTagAt(tagAddress), text);
 }
 
-PathTag::Pointer PathTag::tagWithIdentifierAndValue(uinteger32 identifier, String::ConstPointer const& value)
+PathTag::Pointer PathTag::tagWithIdentifierAndValue(uinteger32 identifier, String::Pointer const& value)
 {
     auto newTag = PathTag::makeShared();
     newTag->internal->identifier = identifier;
@@ -45,17 +39,17 @@ PathTag::Pointer PathTag::tagWithIdentifierAndValue(uinteger32 identifier, Strin
 
 #pragma mark Instance Methods
 
-String::ConstPointer const& PathTag::value(void) const
+String::Pointer const& PathTag::value(void) const
 {
     return internal->value;
 }
 
-void PathTag::setValue(String::ConstPointer const& value)
+void PathTag::setValue(String::Pointer const& value)
 {
     internal->value = value;
 }
 
-void PathTag::addTo(Blob::Pointer const& destination) const
+void PathTag::addTo(Blob::Pointer& destination) const
 {
     auto memoryRepresentation = Blob::blobWithCapacity(Internal::Tag::memoryNeededForTagHeader());
     count dataSize = internal->value->length() * 2;

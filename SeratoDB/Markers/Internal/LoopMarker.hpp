@@ -36,6 +36,6 @@ namespace NxA { namespace Serato { namespace Internal {
 
         uinteger16 index;
 
-        String::ConstPointer label;
+        String::Pointer label;
     };
 } } }

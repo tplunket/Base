@@ -33,15 +33,15 @@ namespace NxA { namespace Serato { namespace Internal {
         NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTOR_FOR(NxA::Serato, Crate);
 
         #pragma mark Constructors & Destructors
-        Crate(String::ConstPointer const& fullName,
-              String::ConstPointer const& volumePath,
-              String::ConstPointer const& filePath);
+        Crate(String::Pointer const& fullName,
+              String::Pointer const& volumePath,
+              String::Pointer const& filePath);
 
         #pragma mark Instance Variables
-        String::ConstPointer crateName;
-        String::ConstPointer crateFullName;
-        String::ConstPointer rootVolumePath;
-        String::ConstPointer crateFilePath;
+        String::Pointer crateName;
+        String::Pointer crateFullName;
+        String::Pointer rootVolumePath;
+        String::Pointer crateFilePath;
 
         bool tracksWereModified;
         bool cratesWereModified;
@@ -50,12 +50,12 @@ namespace NxA { namespace Serato { namespace Internal {
         Serato::Crate::Array::Pointer childrenCrates;
         Serato::TrackEntry::Array::Pointer trackEntries;
 
-        Serato::Tag::ConstArray::Pointer otherTags;
+        Serato::Tag::Array::Pointer otherTags;
 
         #pragma mark Instance Methods
         void addTrackEntry(Serato::TrackEntry::Pointer const& trackEntry);
 
-        void storeTrackTag(Serato::Tag::ConstPointer const& tag);
+        void storeTrackTag(Serato::Tag::Pointer const& tag);
         void storeOtherTag(Serato::Tag::Pointer const& tag);
 
         void markCratesAsModified(void);

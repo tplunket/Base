@@ -36,7 +36,7 @@ namespace NxA { namespace Serato { namespace Internal {
         NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTOR_FOR(NxA::Serato, MP4TrackFile);
 
         #pragma mark Constructor & Destructors
-        MP4TrackFile(String::ConstPointer const& path, TagLibFilePointer const& newFile);
+        MP4TrackFile(String::Pointer const& path, TagLibFilePointer const& newFile);
 
         #pragma mark Private Instance Variables
         TagLib::MP4::ItemListMap* itemListMap;

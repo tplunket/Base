@@ -33,12 +33,12 @@ using namespace NxA::Serato::Internal;
 
 #pragma mark Constants
 
-static auto emptyString = String::string();
+static String::Pointer emptyString = String::string();
 
 #pragma mark Constructors & Destructors
 
 Track::Track(Serato::Tag::Pointer const& tag,
-             String::ConstPointer const& rootFolderPath) :
+             String::Pointer const& rootFolderPath) :
              trackTag(tag),
              rootFolder(rootFolderPath),
              wasModified(false),
@@ -49,17 +49,17 @@ Track::Track(Serato::Tag::Pointer const& tag,
 #pragma mark Class Methods
 
 #if PRINT_DEBUG_INFO
-void Track::debugPrint(String::ConstPointer const& text, String::ConstPointer const& name)
+void Track::debugPrint(String::Pointer const& text, String::Pointer const& name)
 {
     printf("%s '%s'\n", name->toUTF8(), text->toUTF8());
 }
 
-void Track::debugPrintUint(uinteger32 value, String::ConstPointer const& name)
+void Track::debugPrintUint(uinteger32 value, String::Pointer const& name)
 {
     printf("%s '%d'\n", name->toUTF8(), value);
 }
 
-void Track::debugPrintTimeFromMilliseconds(uinteger32 value, String::ConstPointer const& name)
+void Track::debugPrintTimeFromMilliseconds(uinteger32 value, String::Pointer const& name)
 {
     uinteger32 minutes = value / 60000;
     uinteger32 milliseconds = value % 1000;
@@ -71,13 +71,13 @@ void Track::debugPrintTimeFromMilliseconds(uinteger32 value, String::ConstPointe
     printf("%s '%02d:%02d.%02d'\n", name->toUTF8(), minutes, seconds, milliseconds);
 }
 
-void Track::debugPrintDate(timestamp value, String::ConstPointer const& name)
+void Track::debugPrintDate(timestamp value, String::Pointer const& name)
 {
     char* stringVersion = ctime(&value);
     printf("%s %s", name->toUTF8(), stringVersion);
 }
 
-void Track::debugPrintComparaison(Serato::Track::ConstPointer const& track, Serato::TrackFile::ConstPointer const& trackFile)
+void Track::debugPrintComparaison(Serato::Track::Pointer const& track, Serato::TrackFile::Pointer const& trackFile)
 {
     printf("----------------------------------------\n");
     Track::debugPrintUint(static_cast<uinteger32>(track->size()), String::stringWith("size"));
@@ -144,22 +144,22 @@ void Track::debugPrintComparaison(Serato::Track::ConstPointer const& track, Sera
 
 #pragma mark Instance Methods
 
-String::ConstPointer const& Track::stringForSubTagForIdentifier(uinteger32 identifier) const
+String::Pointer const& Track::stringForSubTagForIdentifier(uinteger32 identifier) const
 {
-    auto trackObjectTag = Serato::ObjectTag::ConstPointer(this->trackTag);
+    auto trackObjectTag = Serato::ObjectTag::Pointer::dynamicCastFrom(this->trackTag);
     if (trackObjectTag->hasSubTagForIdentifier(identifier)) {
-        auto textTag = Serato::TextTag::ConstPointer(trackObjectTag->subTagForIdentifier(identifier));
+        auto textTag = Serato::TextTag::Pointer::dynamicCastFrom(trackObjectTag->subTagForIdentifier(identifier));
         return textTag->value();
     }
 
     return emptyString;
 }
 
-String::ConstPointer const& Track::pathForSubTagForIdentifier(uinteger32 identifier) const
+String::Pointer const& Track::pathForSubTagForIdentifier(uinteger32 identifier) const
 {
-    auto trackObjectTag = Serato::ObjectTag::ConstPointer(this->trackTag);
+    auto trackObjectTag = Serato::ObjectTag::Pointer::dynamicCastFrom(this->trackTag);
     if (trackObjectTag->hasSubTagForIdentifier(identifier)) {
-        auto pathTag = Serato::PathTag::ConstPointer(trackObjectTag->subTagForIdentifier(identifier));
+        auto pathTag = Serato::PathTag::Pointer::dynamicCastFrom(trackObjectTag->subTagForIdentifier(identifier));
         return pathTag->value();
     }
 
@@ -168,37 +168,37 @@ String::ConstPointer const& Track::pathForSubTagForIdentifier(uinteger32 identif
 
 uinteger32 Track::uint32ForSubTagForIdentifier(uinteger32 identifier) const
 {
-    auto trackObjectTag = Serato::ObjectTag::ConstPointer(this->trackTag);
+    auto trackObjectTag = Serato::ObjectTag::Pointer::dynamicCastFrom(this->trackTag);
     if (trackObjectTag->hasSubTagForIdentifier(identifier)) {
-        auto uintTag = Serato::UInteger32Tag::ConstPointer(trackObjectTag->subTagForIdentifier(identifier));
+        auto uintTag = Serato::UInteger32Tag::Pointer::dynamicCastFrom(trackObjectTag->subTagForIdentifier(identifier));
         return uintTag->value();
     }
 
     return 0;
 }
 
-void Track::setStringForSubTagForIdentifier(String::ConstPointer const& value, uinteger32 identifier)
+void Track::setStringForSubTagForIdentifier(String::Pointer const& value, uinteger32 identifier)
 {
-    auto trackObjectTag = Serato::ObjectTag::Pointer(this->trackTag);
+    auto trackObjectTag = Serato::ObjectTag::Pointer::dynamicCastFrom(this->trackTag);
     if (!trackObjectTag->hasSubTagForIdentifier(identifier)) {
-        trackObjectTag->addSubTag(Serato::TextTag::tagWithIdentifierAndValue(identifier, value));
+        trackObjectTag->addSubTag(Serato::Tag::Pointer::dynamicCastFrom(Serato::TextTag::tagWithIdentifierAndValue(identifier, value)));
     }
     else {
-        auto textTag = Serato::TextTag::Pointer(trackObjectTag->subTagForIdentifier(identifier));
+        auto textTag = Serato::TextTag::Pointer::dynamicCastFrom(trackObjectTag->subTagForIdentifier(identifier));
         textTag->setValue(value);
     }
 
     this->wasModified = true;
 }
 
-void Track::setPathForSubTagForIdentifier(String::ConstPointer const& value, uinteger32 identifier)
+void Track::setPathForSubTagForIdentifier(String::Pointer const& value, uinteger32 identifier)
 {
-    auto trackObjectTag = Serato::ObjectTag::Pointer(this->trackTag);
+    auto trackObjectTag = Serato::ObjectTag::Pointer::dynamicCastFrom(this->trackTag);
     if (!trackObjectTag->hasSubTagForIdentifier(identifier)) {
-        trackObjectTag->addSubTag(Serato::PathTag::tagWithIdentifierAndValue(identifier, value));
+        trackObjectTag->addSubTag(Serato::Tag::Pointer::dynamicCastFrom(Serato::PathTag::tagWithIdentifierAndValue(identifier, value)));
     }
     else {
-        auto pathTag = Serato::PathTag::Pointer(trackObjectTag->subTagForIdentifier(identifier));
+        auto pathTag = Serato::PathTag::Pointer::dynamicCastFrom(trackObjectTag->subTagForIdentifier(identifier));
         pathTag->setValue(value);
     }
 
@@ -207,19 +207,19 @@ void Track::setPathForSubTagForIdentifier(String::ConstPointer const& value, uin
 
 void Track::setUInt32ForSubTagForIdentifier(uinteger32 value, uinteger32 identifier)
 {
-    auto trackObjectTag = Serato::ObjectTag::Pointer(this->trackTag);
+    auto trackObjectTag = Serato::ObjectTag::Pointer::dynamicCastFrom(this->trackTag);
     if (!trackObjectTag->hasSubTagForIdentifier(identifier)) {
-        trackObjectTag->addSubTag(Serato::UInteger32Tag::tagWithIdentifierAndValue(identifier, value));
+        trackObjectTag->addSubTag(Serato::Tag::Pointer::dynamicCastFrom(Serato::UInteger32Tag::tagWithIdentifierAndValue(identifier, value)));
     }
     else {
-        auto UInteger32Tag = Serato::UInteger32Tag::Pointer(trackObjectTag->subTagForIdentifier(identifier));
+        auto UInteger32Tag = Serato::UInteger32Tag::Pointer::dynamicCastFrom(trackObjectTag->subTagForIdentifier(identifier));
         UInteger32Tag->setValue(value);
     }
 
     this->wasModified = true;
 }
 
-void Track::readMarkersFrom(Serato::TrackFile::ConstPointer const& trackFile)
+void Track::readMarkersFrom(Serato::TrackFile::Pointer const& trackFile)
 {
     auto& allCueMarkers = trackFile->cueMarkers();
     for (auto& marker : *allCueMarkers) {

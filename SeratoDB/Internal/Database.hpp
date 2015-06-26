@@ -37,21 +37,21 @@ namespace NxA { namespace Serato { namespace Internal {
         NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTOR_FOR(NxA::Serato, Database);
 
         #pragma mark Constructors & Destructors
-        Database(String::ConstPointer const& path,
+        Database(String::Pointer const& path,
                  Serato::CrateOrderFile::Pointer usingCrateOrderFile);
 
         #pragma mark Class Methods
 #if PRINT_DEBUG_INFO
-        static void debugListCrate(Serato::Crate::ConstPointer const& crate,
-                                   String::ConstPointer const& spacing);
+        static void debugListCrate(Serato::Crate::Pointer const& crate,
+                                   String::Pointer const& spacing);
 #endif
 
         #pragma mark Instance Variables
-        String::ConstPointer databaseFilePath;
+        String::Pointer databaseFilePath;
         Serato::Track::Array::Pointer tracks;
-        Serato::Tag::ConstArray::Pointer otherTags;
+        Serato::Tag::Array::Pointer otherTags;
 
-        String::ConstArray::Pointer crateFilesToDelete;
+        String::Array::Pointer crateFilesToDelete;
 
         Serato::CrateOrderFile::Pointer crateOrderFile;
 

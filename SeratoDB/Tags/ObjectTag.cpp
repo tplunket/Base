@@ -15,16 +15,10 @@
 #include "Tags/ObjectTag.hpp"
 #include "Tags/Internal/ObjectTag.hpp"
 
-NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, ObjectTag);
+NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, ObjectTag, Tag);
 
 using namespace NxA;
 using namespace NxA::Serato;
-
-#pragma mark Constructors & Destructors
-
-ObjectTag::ObjectTag(NxA::Internal::Object::Pointer const& initial_internal) :
-                     Tag(initial_internal),
-                     internal(initial_internal) { }
 
 #pragma mark Factory Methods
 
@@ -57,12 +51,12 @@ bool ObjectTag::hasSubTagForIdentifier(uinteger32 identifier) const
     return internal->subTagForIdentifier->containsValueForKey(identifier);
 }
 
-Tag::ConstPointer const& ObjectTag::subTagForIdentifier(uinteger32 identifier) const
+Tag::Pointer const& ObjectTag::subTagForIdentifier(uinteger32 identifier) const
 {
     return (*internal->subTagForIdentifier)[identifier];
 }
 
-Tag::Pointer const& ObjectTag::subTagForIdentifier(uinteger32 identifier)
+Tag::Pointer& ObjectTag::subTagForIdentifier(uinteger32 identifier)
 {
     return (*internal->subTagForIdentifier)[identifier];
 }
@@ -72,7 +66,7 @@ void ObjectTag::addSubTag(Tag::Pointer const& tag)
     (*internal->subTagForIdentifier)[tag->identifier()] = tag;
 }
 
-void ObjectTag::addTo(Blob::Pointer const& destination) const
+void ObjectTag::addTo(Blob::Pointer& destination) const
 {
     auto subTagsRepresentation = Blob::blob();
     for (auto& identifierAndTag : *(internal->subTagForIdentifier)) {

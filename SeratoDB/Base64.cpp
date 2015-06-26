@@ -122,7 +122,7 @@ Blob::Pointer Base64::encodeBlock(const void* plaintext_in, count length_in)
 {
     const char* plainchar = reinterpret_cast<const char*>(plaintext_in);
     const char* const plaintextend = reinterpret_cast<const char*>(plaintext_in) + length_in;
-    char* code_out = (char*)malloc(length_in * 2);
+    char* code_out = new char[length_in * 2];
     char* code_out_end = code_out + (length_in * 2);
     char* codechar = code_out;
     char charToOutput = 0;
@@ -193,7 +193,7 @@ Blob::Pointer Base64::encodeBlock(const void* plaintext_in, count length_in)
         }
     }
 
-    free(code_out);
+    delete [] code_out;
 
     return result;
 }

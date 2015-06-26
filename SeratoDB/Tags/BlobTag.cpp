@@ -13,16 +13,10 @@
 #include "Tags/BlobTag.hpp"
 #include "Tags/Internal/BlobTag.hpp"
 
-NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, BlobTag);
+NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, BlobTag, Tag);
 
 using namespace NxA;
 using namespace NxA::Serato;
-
-#pragma mark Constructors & Destructors
-
-BlobTag::BlobTag(NxA::Internal::Object::Pointer const& initial_internal) :
-                 Tag(initial_internal),
-                 internal(initial_internal) { }
 
 #pragma mark Factory Methods
 
@@ -33,7 +27,7 @@ BlobTag::Pointer BlobTag::tagWithMemoryAt(const byte* tagAddress)
                                                                           Internal::Tag::dataSizeForTagAt(tagAddress)));
 }
 
-BlobTag::Pointer BlobTag::tagWithIdentifierAndValue(uinteger32 identifier, Blob::ConstPointer const& value)
+BlobTag::Pointer BlobTag::tagWithIdentifierAndValue(uinteger32 identifier, Blob::Pointer const& value)
 {
     auto newTag = BlobTag::makeShared();
     newTag->internal->identifier = identifier;
@@ -44,17 +38,17 @@ BlobTag::Pointer BlobTag::tagWithIdentifierAndValue(uinteger32 identifier, Blob:
 
 #pragma mark Instance Methods
 
-Blob::ConstPointer const& BlobTag::value(void) const
+Blob::Pointer const& BlobTag::value(void) const
 {
     return internal->value;
 }
 
-void BlobTag::setValue(Blob::ConstPointer const& newValue)
+void BlobTag::setValue(Blob::Pointer const& newValue)
 {
     internal->value = newValue;
 }
 
-void BlobTag::addTo(Blob::Pointer const& destination) const
+void BlobTag::addTo(Blob::Pointer& destination) const
 {
     count dataSize = internal->value->size();
     count totalSizeNeeded = Internal::Tag::memoryNeededForTagHeader() + dataSize;

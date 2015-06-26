@@ -54,25 +54,25 @@ namespace NxA { namespace Serato {
 
         virtual Blob::Pointer artwork(void) const = 0;
         
-        CueMarker::Array::ConstPointer const& cueMarkers(void) const;
-        LoopMarker::Array::ConstPointer const& loopMarkers(void) const;
-        GridMarker::Array::ConstPointer const& gridMarkers(void) const;
+        CueMarker::Array::Pointer const& cueMarkers(void) const;
+        LoopMarker::Array::Pointer const& loopMarkers(void) const;
+        GridMarker::Array::Pointer const& gridMarkers(void) const;
 
-        virtual void setTitle(String::ConstPointer const& title);
-        virtual void setArtist(String::ConstPointer const& artist);
-        virtual void setGenre(String::ConstPointer const& genre);
-        virtual void setKey(String::ConstPointer const& key) = 0;
-        virtual void setComments(String::ConstPointer const& comments);
-        virtual void setAlbum(String::ConstPointer const& album);
-        virtual void setComposer(String::ConstPointer const& composer);
-        virtual void setGrouping(String::ConstPointer const& grouping) = 0;
-        virtual void setBpm(String::ConstPointer const& bpm);
+        virtual void setTitle(String::Pointer const& title);
+        virtual void setArtist(String::Pointer const& artist);
+        virtual void setGenre(String::Pointer const& genre);
+        virtual void setKey(String::Pointer const& key) = 0;
+        virtual void setComments(String::Pointer const& comments);
+        virtual void setAlbum(String::Pointer const& album);
+        virtual void setComposer(String::Pointer const& composer);
+        virtual void setGrouping(String::Pointer const& grouping) = 0;
+        virtual void setBpm(String::Pointer const& bpm);
         virtual void setTrackNumber(count trackNumber);
-        virtual void setRecordLabel(String::ConstPointer const& recordLabel) = 0;
-        virtual void setRemixer(String::ConstPointer const& remixer) = 0;
-        virtual void setYearReleased(String::ConstPointer const& year) = 0;
+        virtual void setRecordLabel(String::Pointer const& recordLabel) = 0;
+        virtual void setRemixer(String::Pointer const& remixer) = 0;
+        virtual void setYearReleased(String::Pointer const& year) = 0;
 
-        virtual void setArtwork(Blob::ConstPointer const& artwork) = 0;
+        virtual void setArtwork(Blob::Pointer const& artwork) = 0;
 
         void setCueMarkers(CueMarker::Array::Pointer const& markers);
         void setLoopMarkers(LoopMarker::Array::Pointer const& markers);

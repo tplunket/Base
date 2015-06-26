@@ -13,16 +13,10 @@
 #include "Tags/UInt16Tag.hpp"
 #include "Tags/Internal/UInt16Tag.hpp"
 
-NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, UInteger16Tag);
+NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, UInteger16Tag, Tag);
 
 using namespace NxA;
 using namespace NxA::Serato;
-
-#pragma mark Constructors & Destructors
-
-UInteger16Tag::UInteger16Tag(NxA::Internal::Object::Pointer const& initial_internal) :
-                             Tag(initial_internal),
-                             internal(initial_internal) { }
 
 #pragma mark Factory Methods
 
@@ -55,7 +49,7 @@ void UInteger16Tag::setValue(uinteger16 value)
     this->internal->value = value;
 }
 
-void UInteger16Tag::addTo(Blob::Pointer const& destination) const
+void UInteger16Tag::addTo(Blob::Pointer& destination) const
 {
     size_t dataSize = 2;
     auto memoryRepresentation = Blob::blobWithCapacity(Internal::Tag::memoryNeededForTagHeader() + dataSize);

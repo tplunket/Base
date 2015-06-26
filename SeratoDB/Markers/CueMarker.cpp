@@ -13,7 +13,7 @@
 #include "Markers/CueMarker.hpp"
 #include "Markers/Internal/CueMarker.hpp"
 
-NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, CueMarker);
+NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, CueMarker, Object);
 
 using namespace NxA;
 using namespace NxA::Serato;
@@ -36,12 +36,6 @@ typedef struct {
     byte label[0];
 } SeratoCueTagStruct;
 
-#pragma mark Constructors & Destructors
-
-CueMarker::CueMarker(NxA::Internal::Object::Pointer const& initial_internal) :
-                     Object(initial_internal),
-                     internal(initial_internal) { }
-
 #pragma mark Factory Methods
 
 CueMarker::Pointer CueMarker::markerWithMemoryAt(const byte* id3TagStart)
@@ -53,7 +47,7 @@ CueMarker::Pointer CueMarker::markerWithMemoryAt(const byte* id3TagStart)
                                                       Platform::bigEndianUInt16ValueAt(tagStruct->index));
 }
 
-CueMarker::Pointer CueMarker::markerWithLabelPositionAndIndex(String::ConstPointer const& label,
+CueMarker::Pointer CueMarker::markerWithLabelPositionAndIndex(String::Pointer const& label,
                                                               uinteger32 positionInMilliseconds,
                                                               uinteger16 index)
 {
@@ -65,7 +59,7 @@ CueMarker::Pointer CueMarker::markerWithLabelPositionAndIndex(String::ConstPoint
     return newMarker;
 }
 
-CueMarker::Pointer CueMarker::markerWith(CueMarker::ConstPointer const& other)
+CueMarker::Pointer CueMarker::markerWith(CueMarker::Pointer const& other)
 {
     return CueMarker::markerWithLabelPositionAndIndex(other->label(), other->positionInMilliseconds(), other->index());
 }
@@ -82,12 +76,12 @@ uinteger16 CueMarker::index(void) const
     return internal->index;
 }
 
-String::ConstPointer const& CueMarker::label(void) const
+String::Pointer const& CueMarker::label(void) const
 {
     return internal->label;
 }
 
-void CueMarker::addId3TagTo(Blob::Pointer const& data) const
+void CueMarker::addId3TagTo(Blob::Pointer& data) const
 {
     SeratoCueTagStruct header;
 

@@ -13,16 +13,10 @@
 #include "Tags/UInt32Tag.hpp"
 #include "Tags/Internal/UInt32Tag.hpp"
 
-NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, UInteger32Tag);
+NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, UInteger32Tag, Tag);
 
 using namespace NxA;
 using namespace NxA::Serato;
-
-#pragma mark Constructors & Destructors
-
-UInteger32Tag::UInteger32Tag(NxA::Internal::Object::Pointer const& initial_internal) :
-Tag(initial_internal),
-internal(initial_internal) { }
 
 #pragma mark Factory Methods
 
@@ -31,7 +25,7 @@ UInteger32Tag::Pointer UInteger32Tag::tagWithMemoryAt(const byte* tagAddress)
     const byte* tagData = Internal::Tag::dataForTagAt(tagAddress);
 
     return UInteger32Tag::tagWithIdentifierAndValue(Tag::identifierForTagAt(tagAddress),
-                                                Platform::bigEndianUInt32ValueAt(tagData));
+                                                    Platform::bigEndianUInt32ValueAt(tagData));
 }
 
 UInteger32Tag::Pointer UInteger32Tag::tagWithIdentifierAndValue(uinteger32 identifier, uinteger32 value)
@@ -55,7 +49,7 @@ void UInteger32Tag::setValue(uinteger32 value)
     this->internal->value = value;
 }
 
-void UInteger32Tag::addTo(Blob::Pointer const& destination) const
+void UInteger32Tag::addTo(Blob::Pointer& destination) const
 {
     size_t dataSize = 4;
     auto memoryRepresentation = Blob::blobWithCapacity(Internal::Tag::memoryNeededForTagHeader() + dataSize);

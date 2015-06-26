@@ -17,12 +17,7 @@ using namespace NxA;
 using namespace NxA::Serato;
 
 NXA_GENERATED_PURE_VIRTUAL_IMPLEMENTATION_FOR(NxA::Serato, Tag);
-
-#pragma mark Constructors & Destructors
-
-Tag::Tag(NxA::Internal::Object::Pointer const& initial_internal) :
-         Object(initial_internal),
-         internal(initial_internal) { }
+NXA_GENERATED_CONSTRUCTORS_FOR(NxA::Serato, Tag, Object);
 
 #pragma mark Class Methods
 

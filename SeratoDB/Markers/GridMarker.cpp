@@ -13,7 +13,7 @@
 #include "Markers/GridMarker.hpp"
 #include "Markers/Internal/GridMarker.hpp"
 
-NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, GridMarker);
+NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, GridMarker, Object);
 
 using namespace NxA;
 using namespace NxA::Serato;
@@ -25,12 +25,6 @@ typedef struct {
     byte beatsPerMinute[4];
     byte endOfStruct[0];
 } GridMarkerStruct;
-
-#pragma mark Constructors & Destructors
-
-GridMarker::GridMarker(NxA::Internal::Object::Pointer const& initial_internal) :
-                       Object(initial_internal),
-                       internal(initial_internal) { }
 
 #pragma mark Factory Methods
 
@@ -51,7 +45,7 @@ GridMarker::Pointer GridMarker::markerWithPositionAndBeatsPerMinute(decimal posi
     return newMarker;
 }
 
-GridMarker::Pointer GridMarker::markerWith(GridMarker::ConstPointer const& other)
+GridMarker::Pointer GridMarker::markerWith(GridMarker::Pointer const& other)
 {
     return GridMarker::markerWithPositionAndBeatsPerMinute(other->positionInSeconds(), other->beatsPerMinute());
 }
@@ -75,7 +69,7 @@ decimal GridMarker::beatsPerMinute(void) const
     return internal->beatsPerMinute;
 }
 
-void GridMarker::addDataTo(Blob::Pointer const& data) const
+void GridMarker::addDataTo(Blob::Pointer& data) const
 {
     GridMarkerStruct marker;
 

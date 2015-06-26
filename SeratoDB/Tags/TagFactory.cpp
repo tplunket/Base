@@ -31,26 +31,26 @@ Tag::Pointer TagFactory::tagForTagAt(const byte* tagAddress)
 
     switch (typeIdentifier) {
         case 'b': {
-            return BooleanTag::tagWithMemoryAt(tagAddress);
+            return Tag::Pointer::dynamicCastFrom(BooleanTag::tagWithMemoryAt(tagAddress));
         }
         case 's': {
-            return UInteger16Tag::tagWithMemoryAt(tagAddress);
+            return Tag::Pointer::dynamicCastFrom(UInteger16Tag::tagWithMemoryAt(tagAddress));
         }
         case 'u': {
-            return UInteger32Tag::tagWithMemoryAt(tagAddress);
+            return Tag::Pointer::dynamicCastFrom(UInteger32Tag::tagWithMemoryAt(tagAddress));
         }
         case 'v':
         case 't': {
-            return TextTag::tagWithMemoryAt(tagAddress);
+            return Tag::Pointer::dynamicCastFrom(TextTag::tagWithMemoryAt(tagAddress));
         }
         case 'p': {
-            return PathTag::tagWithMemoryAt(tagAddress);
+            return Tag::Pointer::dynamicCastFrom(PathTag::tagWithMemoryAt(tagAddress));
         }
         case 'a': {
-            return BlobTag::tagWithMemoryAt(tagAddress);
+            return Tag::Pointer::dynamicCastFrom(BlobTag::tagWithMemoryAt(tagAddress));
         }
         case 'o': {
-            return ObjectTag::tagWithMemoryAt(tagAddress);
+            return Tag::Pointer::dynamicCastFrom(ObjectTag::tagWithMemoryAt(tagAddress));
         }
     }
 

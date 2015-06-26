@@ -15,24 +15,18 @@
 
 #include <flacfile.h>
 
+NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, FLACTrackFile, TrackFile);
+
 using namespace NxA;
 using namespace NxA::Serato;
 
-NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, FLACTrackFile);
-
-#pragma mark Constructors & Destructors
-
-FLACTrackFile::FLACTrackFile(NxA::Internal::Object::Pointer const& initial_internal) :
-                             TrackFile(initial_internal),
-                             internal(initial_internal) { }
-
 #pragma mark Factory Methods
 
-FLACTrackFile::Pointer FLACTrackFile::fileWithFileAt(String::ConstPointer const& path)
+FLACTrackFile::Pointer FLACTrackFile::fileWithFileAt(String::Pointer const& path)
 {
     auto file = Internal::TagLibFilePointer(std::make_shared<TagLib::FLAC::File>(path->toUTF8()));
     auto internalObject = Internal::FLACTrackFile::Pointer(std::make_shared<Internal::FLACTrackFile>(path, file));
-    auto newFile = FLACTrackFile::makeSharedWithInternal(internalObject);
+    auto newFile = FLACTrackFile::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
 
     if (!file->isValid()) {
         newFile->internal->parsedFileTag = nullptr;
@@ -137,32 +131,32 @@ Blob::Pointer FLACTrackFile::artwork(void) const
     return Blob::blob();
 }
 
-void FLACTrackFile::setKey(String::ConstPointer const& key)
+void FLACTrackFile::setKey(String::Pointer const& key)
 {
     internal->properties["INITIALKEY"] = TagLib::String(key->toUTF8());
 }
 
-void FLACTrackFile::setGrouping(String::ConstPointer const& grouping)
+void FLACTrackFile::setGrouping(String::Pointer const& grouping)
 {
     internal->properties["GROUPING"] = TagLib::String(grouping->toUTF8());
 }
 
-void FLACTrackFile::setRecordLabel(String::ConstPointer const& recordLabel)
+void FLACTrackFile::setRecordLabel(String::Pointer const& recordLabel)
 {
     // -- This is not supported by FLAC files.
 }
 
-void FLACTrackFile::setRemixer(String::ConstPointer const& remixer)
+void FLACTrackFile::setRemixer(String::Pointer const& remixer)
 {
     // -- This is not supported by FLAC files.
 }
 
-void FLACTrackFile::setYearReleased(String::ConstPointer const& year)
+void FLACTrackFile::setYearReleased(String::Pointer const& year)
 {
     internal->properties["DATE"] = TagLib::String(year->toUTF8());
 }
 
-void FLACTrackFile::setArtwork(Blob::ConstPointer const& artwork)
+void FLACTrackFile::setArtwork(Blob::Pointer const& artwork)
 {
     // -- TODO: To be implemented.
 }

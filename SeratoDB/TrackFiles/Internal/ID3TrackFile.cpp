@@ -48,7 +48,7 @@ namespace NxA { namespace Serato { namespace Internal {
 
 #pragma mark Constructors & Destructors
 
-ID3TrackFile::ID3TrackFile(String::ConstPointer const& path, TagLibFilePointer const& newFile) :
+ID3TrackFile::ID3TrackFile(String::Pointer const& path, TagLibFilePointer const& newFile) :
                            TrackFile(path, newFile) { }
 
 #pragma mark Class Methods
@@ -65,7 +65,7 @@ bool ID3TrackFile::isAValidGeobFrame(const TagLib::ID3v2::GeneralEncapsulatedObj
 }
 
 TagLib::ID3v2::FrameList::Iterator ID3TrackFile::frameInListWithDescription(TagLib::ID3v2::FrameList& list,
-                                                                            String::ConstPointer const& description)
+                                                                            String::Pointer const& description)
 {
     for (auto it = list.begin(); it != list.end(); ++it) {
         auto frame = (TagLib::ID3v2::GeneralEncapsulatedObjectFrame*)*it;

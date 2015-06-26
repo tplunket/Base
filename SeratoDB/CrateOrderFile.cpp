@@ -15,28 +15,22 @@
 #include "SeratoDB/Utility.hpp"
 #include "SeratoDB/Crate.hpp"
 
-NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, CrateOrderFile);
+NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, CrateOrderFile, Object);
 
 using namespace NxA;
 using namespace NxA::Serato;
 
-#pragma mark Constructors & Destructors
-
-CrateOrderFile::CrateOrderFile(NxA::Internal::Object::Pointer const& initial_internal) :
-                               Object(initial_internal),
-                               internal(initial_internal) { }
-
 #pragma mark Factory Methods
 
-CrateOrderFile::Pointer CrateOrderFile::fileWithSeratoFolderInRootFolder(String::ConstPointer const& seratoFolderPath,
-                                                                         String::ConstPointer const& rootFolderPath)
+CrateOrderFile::Pointer CrateOrderFile::fileWithSeratoFolderInRootFolder(String::Pointer const& seratoFolderPath,
+                                                                         String::Pointer const& rootFolderPath)
 {
     auto rootCrate = Crate::crateWithNameInFolderOnVolume(String::string(),
                                                           String::string(),
                                                           String::string());
     auto internalObject = Internal::CrateOrderFile::Pointer(std::make_shared<Internal::CrateOrderFile>(crateOrderFilePathForSeratoFolder(seratoFolderPath),
                                                                                                        rootCrate));
-    auto newCrateOrderFile = CrateOrderFile::makeSharedWithInternal(internalObject);
+    auto newCrateOrderFile = CrateOrderFile::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
 
     auto subCratesDirectory = subCratesDirectoryPathInSeratoFolder(seratoFolderPath);
     auto subCratesFound = Internal::CrateOrderFile::cratesInSubCratesDirectory(subCratesDirectory);

@@ -32,7 +32,7 @@ using namespace NxA::Serato::Internal;
 
 #pragma mark Constructors & Destructors
 
-CrateOrderFile::CrateOrderFile(String::ConstPointer const& path,
+CrateOrderFile::CrateOrderFile(String::Pointer const& path,
                                Serato::Crate::Pointer const& root) :
                                crateOrderFilePath(path),
                                rootCrate(root),
@@ -40,7 +40,7 @@ CrateOrderFile::CrateOrderFile(String::ConstPointer const& path,
 
 #pragma mark Class Methods
 
-String::Pointer CrateOrderFile::crateNameIfValidCrateOrEmptyIfNot(String::ConstPointer const& name)
+String::Pointer CrateOrderFile::crateNameIfValidCrateOrEmptyIfNot(String::Pointer const& name)
 {
     auto result = String::string();
 
@@ -51,17 +51,17 @@ String::Pointer CrateOrderFile::crateNameIfValidCrateOrEmptyIfNot(String::ConstP
     return result;
 }
 
-bool CrateOrderFile::filenameIsAValidCrateName(String::ConstPointer const& fileName)
+bool CrateOrderFile::filenameIsAValidCrateName(String::Pointer const& fileName)
 {
     return !fileName->hasPrefix(".") && fileName->hasPostfix(".crate");
 }
 
-String::Pointer CrateOrderFile::crateNameFromFilename(String::ConstPointer const& fileName)
+String::Pointer CrateOrderFile::crateNameFromFilename(String::Pointer const& fileName)
 {
     return fileName->subString(0, fileName->length() - 6);
 }
 
-String::Array::Pointer CrateOrderFile::cratesInSubCratesDirectory(String::ConstPointer const& directory)
+String::Array::Pointer CrateOrderFile::cratesInSubCratesDirectory(String::Pointer const& directory)
 {
     auto crateNamesFound = String::Array::array();
 
@@ -86,7 +86,7 @@ String::Array::Pointer CrateOrderFile::cratesInSubCratesDirectory(String::ConstP
     return move(crateNamesFound);
 }
 
-String::Array::Pointer CrateOrderFile::readCratesNamesInCrateOrderFile(String::ConstPointer const& crateOrderFilePath)
+String::Array::Pointer CrateOrderFile::readCratesNamesInCrateOrderFile(String::Pointer const& crateOrderFilePath)
 {
     auto cratesInOrder = String::Array::array();
 
@@ -107,8 +107,8 @@ String::Array::Pointer CrateOrderFile::readCratesNamesInCrateOrderFile(String::C
     return move(cratesInOrder);
 }
 
-void CrateOrderFile::addCratesNamesAtTheStartOfUnlessAlreadyThere(String::Array::Pointer const& cratesToAddTo,
-                                                                  String::Array::ConstPointer const& cratesToAdd)
+void CrateOrderFile::addCratesNamesAtTheStartOfUnlessAlreadyThere(String::Array::Pointer& cratesToAddTo,
+                                                                  String::Array::Pointer const& cratesToAdd)
 {
     auto insertionPosition = cratesToAddTo->begin();
     for (auto& crateName : *cratesToAdd) {
@@ -131,11 +131,11 @@ void CrateOrderFile::addCratesNamesAtTheStartOfUnlessAlreadyThere(String::Array:
 
 #pragma mark Instance Methods
 
-Serato::Crate::Array::Pointer CrateOrderFile::childrenCratesOfCrateNamedUsingNameList(String::ConstPointer const& name,
+Serato::Crate::Array::Pointer CrateOrderFile::childrenCratesOfCrateNamedUsingNameList(String::Pointer const& name,
                                                                                       String::Array::iterator& it,
                                                                                       const String::Array::iterator& end,
-                                                                                      String::ConstPointer const& seratoFolderPath,
-                                                                                      String::ConstPointer const& rootFolderPath)
+                                                                                      String::Pointer const& seratoFolderPath,
+                                                                                      String::Pointer const& rootFolderPath)
 {
     auto cratesFound = Serato::Crate::Array::array();
 

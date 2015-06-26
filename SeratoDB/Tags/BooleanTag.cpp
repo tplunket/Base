@@ -13,16 +13,10 @@
 #include "Tags/BooleanTag.hpp"
 #include "Tags/Internal/BooleanTag.hpp"
 
-NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, BooleanTag);
+NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, BooleanTag, Tag);
 
 using namespace NxA;
 using namespace NxA::Serato;
-
-#pragma mark Constructors & Destructors
-
-BooleanTag::BooleanTag(NxA::Internal::Object::Pointer const& initial_internal) :
-                       Tag(initial_internal),
-                       internal(initial_internal) { }
 
 #pragma mark Factory Methods
 
@@ -55,7 +49,7 @@ void BooleanTag::setValue(bool newValue)
     internal->value = newValue;
 }
 
-void BooleanTag::addTo(Blob::Pointer const& destination) const
+void BooleanTag::addTo(Blob::Pointer& destination) const
 {
     count dataSize = 1;
     count totalSizeNeeded = Internal::Tag::memoryNeededForTagHeader() + dataSize;

@@ -27,20 +27,20 @@ using namespace NxA::Serato::Internal;
 
 #pragma mark Constructors & Destructors
 
-Database::Database(String::ConstPointer const& path,
+Database::Database(String::Pointer const& path,
                    Serato::CrateOrderFile::Pointer usingCrateOrderFile) :
                    databaseFilePath(path),
                    tracks(Serato::Track::Array::array()),
-                   otherTags(Serato::Tag::ConstArray::array()),
-                   crateFilesToDelete(String::ConstArray::array()),
+                   otherTags(Serato::Tag::Array::array()),
+                   crateFilesToDelete(String::Array::array()),
                    crateOrderFile(usingCrateOrderFile),
                    databaseIsValid(false) { }
 
 #pragma mark Class Methods
 
 #if PRINT_DEBUG_INFO
-void Database::debugListCrate(Serato::Crate::ConstPointer const& crate,
-                              String::ConstPointer const& spacing)
+void Database::debugListCrate(Serato::Crate::Pointer const& crate,
+                              String::Pointer const& spacing)
 {
     auto& crates = crate->crates();
     for (auto& subCrate : *crates) {

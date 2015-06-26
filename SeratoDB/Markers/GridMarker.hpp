@@ -25,7 +25,7 @@ namespace NxA { namespace Serato {
         static GridMarker::Pointer markerWithMemoryAt(const byte* id3TagStart);
         static GridMarker::Pointer markerWithPositionAndBeatsPerMinute(decimal positionInSeconds,
                                                                        decimal beatsPerMinute);
-        static GridMarker::Pointer markerWith(GridMarker::ConstPointer const& other);
+        static GridMarker::Pointer markerWith(GridMarker::Pointer const& other);
 
         #pragma mark Class Methods
         static const byte* nextGridMarkerAfter(const byte* markerData);
@@ -34,6 +34,6 @@ namespace NxA { namespace Serato {
         decimal positionInSeconds(void) const;
         decimal beatsPerMinute(void) const;
 
-        void addDataTo(Blob::Pointer const& data) const;
+        void addDataTo(Blob::Pointer& data) const;
     };
 } }

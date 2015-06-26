@@ -39,7 +39,7 @@ namespace NxA { namespace Serato { namespace Internal {
 
 #pragma mark Constructors & Destructors
 
-TrackFile::TrackFile(String::ConstPointer const& path, TagLibFilePointer const& newFile) :
+TrackFile::TrackFile(String::Pointer const& path, TagLibFilePointer const& newFile) :
                      trackFilePath(path),
                      file(newFile),
                      cueMarkers(Serato::CueMarker::Array::array()),
@@ -49,7 +49,7 @@ TrackFile::TrackFile(String::ConstPointer const& path, TagLibFilePointer const& 
 
 #pragma mark Class Methods
 
-const byte* TrackFile::nextTagPositionAfterTagNamed(String::ConstPointer const& tagName, const byte* currentTagPosition)
+const byte* TrackFile::nextTagPositionAfterTagNamed(String::Pointer const& tagName, const byte* currentTagPosition)
 {
     auto parserPosition = currentTagPosition;
     parserPosition += tagName->length() + 1;
@@ -110,7 +110,7 @@ void TrackFile::readMarkersV2FromBase64Data(const byte* markerV2Data, count tota
     }
 }
 
-void TrackFile::addGridMarker(Serato::GridMarker::ConstPointer const& gridMarker)
+void TrackFile::addGridMarker(Serato::GridMarker::Pointer const& gridMarker)
 {
     this->gridMarkers->append(Serato::GridMarker::markerWith(gridMarker));
 }

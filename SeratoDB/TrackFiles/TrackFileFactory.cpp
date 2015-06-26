@@ -23,25 +23,25 @@ using namespace std;
 
 #pragma mark Class Methods
 
-TrackFile::Pointer TrackFileFactory::trackFileForPath(String::ConstPointer const& trackFilePath)
+TrackFile::Pointer TrackFileFactory::trackFileForPath(String::Pointer const& trackFilePath)
 {
     if (trackFilePath->hasPostfix(".aiff") || trackFilePath->hasPostfix(".aif")) {
-        return AIFFTrackFile::fileWithFileAt(trackFilePath);
+        return TrackFile::Pointer::dynamicCastFrom(AIFFTrackFile::fileWithFileAt(trackFilePath));
     }
     else if (trackFilePath->hasPostfix(".mp3")) {
-        return MPEGTrackFile::fileWithFileAt(trackFilePath);
+        return TrackFile::Pointer::dynamicCastFrom(MPEGTrackFile::fileWithFileAt(trackFilePath));
     }
     else if (trackFilePath->hasPostfix(".m4a")) {
-        return MP4TrackFile::fileWithFileAt(trackFilePath);
+        return TrackFile::Pointer::dynamicCastFrom(MP4TrackFile::fileWithFileAt(trackFilePath));
     }
     else if (trackFilePath->hasPostfix(".flac")) {
-        return FLACTrackFile::fileWithFileAt(trackFilePath);
+        return TrackFile::Pointer::dynamicCastFrom(FLACTrackFile::fileWithFileAt(trackFilePath));
     }
     else if (trackFilePath->hasPostfix(".ogg")) {
-        return OGGTrackFile::fileWithFileAt(trackFilePath);
+        return TrackFile::Pointer::dynamicCastFrom(OGGTrackFile::fileWithFileAt(trackFilePath));
     }
     else if (trackFilePath->hasPostfix(".wav")) {
-        return WAVTrackFile::fileWithFileAt(trackFilePath);
+        return TrackFile::Pointer::dynamicCastFrom(WAVTrackFile::fileWithFileAt(trackFilePath));
     }
 
     NXA_ALOG("Unknown file extension.");

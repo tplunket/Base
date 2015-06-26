@@ -18,7 +18,7 @@
 #include "Tags/TagFactory.hpp"
 #include "Tags/TextTag.hpp"
 
-NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, Database);
+NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, Database, Object);
 
 using namespace NxA;
 using namespace NxA::Serato;
@@ -27,21 +27,15 @@ using namespace NxA::Serato;
 
 static const char* databaseFileCurrentVersionString = "2.0/Serato Scratch LIVE Database";
 
-#pragma mark Constructors & Destructors
-
-Database::Database(NxA::Internal::Object::Pointer const& initial_internal) :
-                   Object(initial_internal),
-                   internal(initial_internal) { }
-
 #pragma mark Factory Methods
 
-Database::Pointer Database::databaseWithFileAt(String::ConstPointer const& seratoFolderPath)
+Database::Pointer Database::databaseWithFileAt(String::Pointer const& seratoFolderPath)
 {
     auto crateOrderFile = CrateOrderFile::fileWithSeratoFolderInRootFolder(seratoFolderPath,
                                                                            String::string());
     auto internalObject = Internal::Database::Pointer(std::make_shared<Internal::Database>(databaseFilePathForSeratoFolder(seratoFolderPath),
                                                                                            crateOrderFile));
-    auto newDatabase = Database::makeSharedWithInternal(internalObject);
+    auto newDatabase = Database::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
 
     auto databaseFile = File::readFileAt(newDatabase->internal->databaseFilePath);
 
@@ -53,7 +47,7 @@ Database::Pointer Database::databaseWithFileAt(String::ConstPointer const& serat
                 break;
             }
             case databaseVersionTagIdentifier: {
-                auto& versionText = TextTag::Pointer(tag)->value();
+                auto& versionText = TextTag::Pointer::dynamicCastFrom(tag)->value();
                 if (!versionText->isEqualTo(databaseFileCurrentVersionString)) {
                     newDatabase->internal->tracks->emptyAll();
                     newDatabase->internal->otherTags->emptyAll();
@@ -79,7 +73,7 @@ Database::Pointer Database::databaseWithFileAt(String::ConstPointer const& serat
 
 #pragma mark Class Methods
 
-String::Pointer Database::versionAsStringForDatabaseIn(String::ConstPointer const& seratoFolderPath)
+String::Pointer Database::versionAsStringForDatabaseIn(String::Pointer const& seratoFolderPath)
 {
     auto databaseFilePath = databaseFilePathForSeratoFolder(seratoFolderPath);
     auto databaseFile = File::readFileAt(databaseFilePath);
@@ -87,7 +81,7 @@ String::Pointer Database::versionAsStringForDatabaseIn(String::ConstPointer cons
     auto tags(TagFactory::parseTagsAt(databaseFile->data(), databaseFile->size()));
     for (auto& tag : *(tags)) {
         if (tag->identifier() == databaseVersionTagIdentifier) {
-            auto textTag = TextTag::Pointer(tag);
+            auto textTag = TextTag::Pointer::dynamicCastFrom(tag);
             return String::stringWith(textTag->value());
         }
     }
@@ -112,7 +106,7 @@ Crate::Pointer const& Database::rootCrate(void) const
     return internal->crateOrderFile->rootCrate();
 }
 
-Track::Array::ConstPointer const& Database::tracks(void) const
+Track::Array::Pointer const& Database::tracks(void) const
 {
     return internal->tracks;
 }
@@ -125,12 +119,12 @@ Track::Array::Pointer Database::removeAndReturnTracks(void)
     return tracks;
 }
 
-void Database::deleteTrackEntry(TrackEntry::Pointer const& entry)
+void Database::deleteTrackEntry(TrackEntry::Pointer& entry)
 {
     entry->destroy();
 }
 
-void Database::deleteCrate(Crate::Pointer const& crate)
+void Database::deleteCrate(Crate::Pointer& crate)
 {
     internal->crateFilesToDelete->append(String::stringWith(crate->crateFilePath()));
     Crate::destroy(crate);
@@ -141,7 +135,7 @@ void Database::addTrack(Track::Pointer const& track)
     internal->tracks->append(track);
 }
 
-void Database::deleteTrack(Track::Pointer const& track)
+void Database::deleteTrack(Track::Pointer& track)
 {
     track->destroy();
 }

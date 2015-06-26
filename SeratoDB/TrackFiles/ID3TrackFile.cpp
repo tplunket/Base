@@ -15,16 +15,10 @@
 
 #include <attachedpictureframe.h>
 
+NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, ID3TrackFile, TrackFile);
+
 using namespace NxA;
 using namespace NxA::Serato;
-
-NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, ID3TrackFile);
-
-#pragma mark Constructors & Destructors
-
-ID3TrackFile::ID3TrackFile(NxA::Internal::Object::Pointer const& initial_internal) :
-                           TrackFile(initial_internal),
-                           internal(initial_internal) { }
 
 #pragma mark Instance Methods
 
@@ -128,32 +122,32 @@ Blob::Pointer ID3TrackFile::artwork(void) const
     return Blob::blob();
 }
 
-void ID3TrackFile::setKey(String::ConstPointer const& key)
+void ID3TrackFile::setKey(String::Pointer const& key)
 {
     internal->properties["INITIALKEY"] = TagLib::String(key->toUTF8());
 }
 
-void ID3TrackFile::setGrouping(String::ConstPointer const& grouping)
+void ID3TrackFile::setGrouping(String::Pointer const& grouping)
 {
     internal->properties["CONTENTGROUP"] = TagLib::String(grouping->toUTF8());
 }
 
-void ID3TrackFile::setRecordLabel(String::ConstPointer const& recordLabel)
+void ID3TrackFile::setRecordLabel(String::Pointer const& recordLabel)
 {
     internal->properties["RECORD"] = TagLib::String(recordLabel->toUTF8());
 }
 
-void ID3TrackFile::setRemixer(String::ConstPointer const& remixer)
+void ID3TrackFile::setRemixer(String::Pointer const& remixer)
 {
     internal->properties["REMIXER"] = TagLib::String(remixer->toUTF8());
 }
 
-void ID3TrackFile::setYearReleased(String::ConstPointer const& year)
+void ID3TrackFile::setYearReleased(String::Pointer const& year)
 {
     internal->properties["DATE"] = TagLib::String(year->toUTF8());
 }
 
-void ID3TrackFile::setArtwork(Blob::ConstPointer const& artwork)
+void ID3TrackFile::setArtwork(Blob::Pointer const& artwork)
 {
     auto tag = reinterpret_cast<TagLib::ID3v2::Tag*>(internal->parsedFileTag);
     if(tag) {

@@ -26,24 +26,24 @@ namespace NxA { namespace Serato {
 
     public:
         #pragma mark Factory Methods
-        static Database::Pointer databaseWithFileAt(String::ConstPointer const& seratoFolderPath);
+        static Database::Pointer databaseWithFileAt(String::Pointer const& seratoFolderPath);
 
         #pragma mark Class Methods
-        static String::Pointer versionAsStringForDatabaseIn(String::ConstPointer const& seratoFolderPath);
+        static String::Pointer versionAsStringForDatabaseIn(String::Pointer const& seratoFolderPath);
 
         #pragma mark Instance Methods
         timestamp databaseModificationDateInSecondsSince1970(void) const;
         timestamp rootCrateModificationDateInSecondsSince1970(void) const;
 
         NxA::Pointer<Crate> const& rootCrate(void) const;
-        NxA::ConstPointer<NxA::Array<Track>> const& tracks(void) const;
+        NxA::Pointer<NxA::Array<Track>> const& tracks(void) const;
         NxA::Pointer<NxA::Array<Track>> removeAndReturnTracks(void);
 
-        void deleteTrackEntry(NxA::Pointer<TrackEntry> const& crate);
-        void deleteCrate(NxA::Pointer<Crate> const& crate);
+        void deleteTrackEntry(NxA::Pointer<TrackEntry>& crate);
+        void deleteCrate(NxA::Pointer<Crate>& crate);
 
         void addTrack(NxA::Pointer<Track> const& track);
-        void deleteTrack(NxA::Pointer<Track> const& track);
+        void deleteTrack(NxA::Pointer<Track>& track);
 
         void saveIfModified(void) const;
     };

@@ -29,14 +29,14 @@ namespace NxA { namespace Serato {
     typedef std::vector<CharVectorPtr> CharVectorPtrVector;
 
     #pragma mark Utility Functions
-    String::ConstPointer seratoFolderPathForFolder(String::ConstPointer const& folderPath);
-    String::ConstPointer databaseFilePathForSeratoFolder(String::ConstPointer const& seratoFolderPath);
-    String::ConstPointer crateOrderFilePathForSeratoFolder(String::ConstPointer const& seratoFolderPath);
-    String::ConstPointer subCratesDirectoryPathInSeratoFolder(String::ConstPointer const& seratoFolderPath);
-    String::ConstPointer smartCratesDirectoryPathInSeratoFolder(String::ConstPointer const& seratoFolderPath);
-    String::ConstPointer crateFilePathForCrateNameInSeratoFolder(String::ConstPointer const& crateName,
-                                                                 String::ConstPointer const& seratoFolderPath);
-    String::ConstPointer crateFilePathForSmartCrateNameInSeratoFolder(String::ConstPointer const& crateName,
-                                                                      String::ConstPointer const& seratoFolderPath);
-    bool containsAValidSeratoFolder(String::ConstPointer const& folderPath);
+    String::Pointer seratoFolderPathForFolder(String::Pointer const& folderPath);
+    String::Pointer databaseFilePathForSeratoFolder(String::Pointer const& seratoFolderPath);
+    String::Pointer crateOrderFilePathForSeratoFolder(String::Pointer const& seratoFolderPath);
+    String::Pointer subCratesDirectoryPathInSeratoFolder(String::Pointer const& seratoFolderPath);
+    String::Pointer smartCratesDirectoryPathInSeratoFolder(String::Pointer const& seratoFolderPath);
+    String::Pointer crateFilePathForCrateNameInSeratoFolder(String::Pointer const& crateName,
+                                                                 String::Pointer const& seratoFolderPath);
+    String::Pointer crateFilePathForSmartCrateNameInSeratoFolder(String::Pointer const& crateName,
+                                                                      String::Pointer const& seratoFolderPath);
+    bool containsAValidSeratoFolder(String::Pointer const& folderPath);
 } }

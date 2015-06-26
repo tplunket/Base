@@ -24,7 +24,7 @@ namespace NxA { namespace Serato {
 
     public:
         #pragma mark Factory Methods
-        static WAVTrackFile::Pointer fileWithFileAt(String::ConstPointer const& path);
+        static WAVTrackFile::Pointer fileWithFileAt(String::Pointer const& path);
         
         #pragma mark Instance Variables
         virtual uinteger32 lengthInMilliseconds(void) const;

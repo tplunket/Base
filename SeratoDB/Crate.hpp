@@ -26,32 +26,32 @@ namespace NxA { namespace Serato {
 
     public:
         #pragma mark Factory Methods
-        static Crate::Pointer crateWithNameInFolderOnVolume(String::ConstPointer const& crateFullName,
-                                                            String::ConstPointer const& seratoFolderPath,
-                                                            String::ConstPointer const& volumePath);
+        static Crate::Pointer crateWithNameInFolderOnVolume(String::Pointer const& crateFullName,
+                                                            String::Pointer const& seratoFolderPath,
+                                                            String::Pointer const& volumePath);
 
         #pragma mark Class Methods
-        static bool isAValidCrateName(String::ConstPointer const& crateFullName,
-                                      String::ConstPointer const& seratoFolderPath);
-        static bool isASmartCrateName(String::ConstPointer const& crateFullName,
-                                      String::ConstPointer const& seratoFolderPath);
-        static void addCrateAsChildOfCrate(Crate::Pointer const& crate, Crate::Pointer const& parentCrate);
+        static bool isAValidCrateName(String::Pointer const& crateFullName,
+                                      String::Pointer const& seratoFolderPath);
+        static bool isASmartCrateName(String::Pointer const& crateFullName,
+                                      String::Pointer const& seratoFolderPath);
+        static void addCrateAsChildOfCrate(Crate::Pointer& crate, Crate::Pointer& parentCrate);
         static void destroy(Crate::Pointer const& crate);
 
         #pragma mark Instance Methods
-        String::ConstPointer const& crateName(void) const;
-        String::ConstPointer const& crateFullName(void) const;
-        void addFullCrateNameWithPrefixAndRecurseToChildren(String::Pointer const& destination, const char* prefix) const;
+        String::Pointer const& crateName(void) const;
+        String::Pointer const& crateFullName(void) const;
+        void addFullCrateNameWithPrefixAndRecurseToChildren(String::Pointer& destination, const char* prefix) const;
 
-        TrackEntry::Array::ConstPointer const& trackEntries(void) const;
-        Crate::Array::ConstPointer const& crates(void) const;
+        TrackEntry::Array::Pointer const& trackEntries(void) const;
+        Crate::Array::Pointer const& crates(void) const;
 
         void addTrackEntry(Serato::TrackEntry::Pointer const& trackEntry);
 
         bool hasParentCrate(void) const;
         Crate::Pointer parentCrate(void) const;
 
-        String::ConstPointer const& crateFilePath(void) const;
+        String::Pointer const& crateFilePath(void) const;
 
         void resetModificationFlags();
 

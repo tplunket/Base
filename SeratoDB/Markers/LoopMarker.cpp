@@ -13,7 +13,7 @@
 #include "Markers/LoopMarker.hpp"
 #include "Markers/Internal/LoopMarker.hpp"
 
-NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, LoopMarker);
+NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, LoopMarker, Object);
 
 using namespace NxA;
 using namespace NxA::Serato;
@@ -38,12 +38,6 @@ typedef struct {
     byte label[0];
 } SeratoLoopTagStruct;
 
-#pragma mark Constructors & Destructors
-
-LoopMarker::LoopMarker(NxA::Internal::Object::Pointer const& initial_internal) :
-                       Object(initial_internal),
-                       internal(initial_internal) { }
-
 #pragma mark Factory Methods
 
 LoopMarker::Pointer LoopMarker::markerWithMemoryAt(const byte* id3TagStart)
@@ -56,7 +50,7 @@ LoopMarker::Pointer LoopMarker::markerWithMemoryAt(const byte* id3TagStart)
                                                                 Platform::bigEndianUInt16ValueAt(tagStruct->index));
 }
 
-LoopMarker::Pointer LoopMarker::markerWithLabelStartEndPositionsAndIndex(String::ConstPointer const& label,
+LoopMarker::Pointer LoopMarker::markerWithLabelStartEndPositionsAndIndex(String::Pointer const& label,
                                                                          uinteger32 startPositionInMilliseconds,
                                                                          uinteger32 endPositionInMilliseconds,
                                                                          uinteger16 index)
@@ -70,7 +64,7 @@ LoopMarker::Pointer LoopMarker::markerWithLabelStartEndPositionsAndIndex(String:
     return newMarker;
 }
 
-LoopMarker::Pointer LoopMarker::markerWith(LoopMarker::ConstPointer const& other)
+LoopMarker::Pointer LoopMarker::markerWith(LoopMarker::Pointer const& other)
 {
     return LoopMarker::markerWithLabelStartEndPositionsAndIndex(other->label(),
                                                                 other->startPositionInMilliseconds(),
@@ -95,12 +89,12 @@ uinteger16 LoopMarker::index(void) const
     return internal->index;
 }
 
-String::ConstPointer const& LoopMarker::label(void) const
+String::Pointer const& LoopMarker::label(void) const
 {
     return internal->label;
 }
 
-void LoopMarker::addId3TagTo(Blob::Pointer const& data) const
+void LoopMarker::addId3TagTo(Blob::Pointer& data) const
 {
     SeratoLoopTagStruct header;
 

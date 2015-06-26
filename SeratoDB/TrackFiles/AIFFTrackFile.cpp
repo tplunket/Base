@@ -15,24 +15,18 @@
 
 #include <aifffile.h>
 
+NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, AIFFTrackFile, ID3TrackFile);
+
 using namespace NxA;
 using namespace NxA::Serato;
 
-NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, AIFFTrackFile);
-
-#pragma mark Constructors & Destructors
-
-AIFFTrackFile::AIFFTrackFile(NxA::Internal::Object::Pointer const& initial_internal) :
-                             ID3TrackFile(initial_internal),
-                             internal(initial_internal) { }
-
 #pragma mark Factory Methods
 
-AIFFTrackFile::Pointer AIFFTrackFile::fileWithFileAt(String::ConstPointer const& path)
+AIFFTrackFile::Pointer AIFFTrackFile::fileWithFileAt(String::Pointer const& path)
 {
     auto file = Internal::TagLibFilePointer(std::make_shared<TagLib::RIFF::AIFF::File>(path->toUTF8()));
     auto internalObject = Internal::AIFFTrackFile::Pointer(std::make_shared<Internal::AIFFTrackFile>(path, file));
-    auto newFile = AIFFTrackFile::makeSharedWithInternal(internalObject);
+    auto newFile = AIFFTrackFile::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
 
     if (!file->isValid()) {
         newFile->internal->parsedFileTag = nullptr;

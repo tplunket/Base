@@ -18,21 +18,15 @@
 using namespace NxA;
 using namespace NxA::Serato;
 
-NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, WAVTrackFile);
-
-#pragma mark Constructors & Destructors
-
-WAVTrackFile::WAVTrackFile(NxA::Internal::Object::Pointer const& initial_internal) :
-                           ID3TrackFile(initial_internal),
-                           internal(initial_internal) { }
+NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, WAVTrackFile, ID3TrackFile);
 
 #pragma mark Factory Methods
 
-WAVTrackFile::Pointer WAVTrackFile::fileWithFileAt(String::ConstPointer const& path)
+WAVTrackFile::Pointer WAVTrackFile::fileWithFileAt(String::Pointer const& path)
 {
     auto file = Internal::TagLibFilePointer(std::make_shared<TagLib::RIFF::WAV::File>(path->toUTF8()));
     auto internalObject = Internal::WAVTrackFile::Pointer(std::make_shared<Internal::WAVTrackFile>(path, file));
-    auto newFile = WAVTrackFile::makeSharedWithInternal(internalObject);
+    auto newFile = WAVTrackFile::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
 
     if (!file->isValid()) {
         newFile->internal->parsedFileTag = nullptr;

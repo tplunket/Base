@@ -31,6 +31,6 @@ namespace NxA { namespace Serato { namespace Internal {
         NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, PathTag);
 
         #pragma mark Instance Variables
-        String::ConstPointer value;
+        String::Pointer value;
     };
 } } }

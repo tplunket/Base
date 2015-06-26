@@ -15,24 +15,18 @@
 
 #include <vorbisfile.h>
 
+NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, OGGTrackFile, ID3TrackFile);
+
 using namespace NxA;
 using namespace NxA::Serato;
 
-NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, OGGTrackFile);
-
-#pragma mark Constructors & Destructors
-
-OGGTrackFile::OGGTrackFile(NxA::Internal::Object::Pointer const& initial_internal) :
-                           ID3TrackFile(initial_internal),
-                           internal(initial_internal) { }
-
 #pragma mark Factory Methods
 
-OGGTrackFile::Pointer OGGTrackFile::fileWithFileAt(String::ConstPointer const& path)
+OGGTrackFile::Pointer OGGTrackFile::fileWithFileAt(String::Pointer const& path)
 {
     auto file = Internal::TagLibFilePointer(std::make_shared<TagLib::Vorbis::File>(path->toUTF8()));
     auto internalObject = Internal::OGGTrackFile::Pointer(std::make_shared<Internal::OGGTrackFile>(path, file));
-    auto newFile = OGGTrackFile::makeSharedWithInternal(internalObject);
+    auto newFile = OGGTrackFile::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
 
     if (!file->isValid()) {
         newFile->internal->parsedFileTag = nullptr;
@@ -117,32 +111,32 @@ Blob::Pointer OGGTrackFile::artwork(void) const
     return Blob::blob();
 }
 
-void OGGTrackFile::setKey(String::ConstPointer const& key)
+void OGGTrackFile::setKey(String::Pointer const& key)
 {
     // -- This is not supported by OGG files.
 }
 
-void OGGTrackFile::setGrouping(String::ConstPointer const& grouping)
+void OGGTrackFile::setGrouping(String::Pointer const& grouping)
 {
     internal->properties["GROUPING"] = TagLib::String(grouping->toUTF8());
 }
 
-void OGGTrackFile::setRecordLabel(String::ConstPointer const& recordLabel)
+void OGGTrackFile::setRecordLabel(String::Pointer const& recordLabel)
 {
     internal->properties["LABEL"] = TagLib::String(recordLabel->toUTF8());
 }
 
-void OGGTrackFile::setRemixer(String::ConstPointer const& remixer)
+void OGGTrackFile::setRemixer(String::Pointer const& remixer)
 {
     internal->properties["REMIXER"] = TagLib::String(remixer->toUTF8());
 }
 
-void OGGTrackFile::setYearReleased(String::ConstPointer const& year)
+void OGGTrackFile::setYearReleased(String::Pointer const& year)
 {
     internal->properties["YEAR"] = TagLib::String(year->toUTF8());
 }
 
-void OGGTrackFile::setArtwork(Blob::ConstPointer const& artwork)
+void OGGTrackFile::setArtwork(Blob::Pointer const& artwork)
 {
     // -- TODO: To be implemented.
 }

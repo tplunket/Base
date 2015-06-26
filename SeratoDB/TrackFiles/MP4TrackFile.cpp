@@ -15,24 +15,18 @@
 
 #include <mp4tag.h>
 
+NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, MP4TrackFile, TrackFile);
+
 using namespace NxA;
 using namespace NxA::Serato;
 
-NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, MP4TrackFile);
-
-#pragma mark Constructors & Destructors
-
-MP4TrackFile::MP4TrackFile(NxA::Internal::Object::Pointer const& initial_internal) :
-                           TrackFile(initial_internal),
-                           internal(initial_internal) { }
-
 #pragma mark Factory Methods
 
-MP4TrackFile::Pointer MP4TrackFile::fileWithFileAt(String::ConstPointer const& path)
+MP4TrackFile::Pointer MP4TrackFile::fileWithFileAt(String::Pointer const& path)
 {
     auto file = Internal::TagLibFilePointer(std::make_shared<TagLib::MP4::File>(path->toUTF8()));
     auto internalObject = Internal::MP4TrackFile::Pointer(std::make_shared<Internal::MP4TrackFile>(path, file));
-    auto newFile = MP4TrackFile::makeSharedWithInternal(internalObject);
+    auto newFile = MP4TrackFile::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
 
     if (!file->isValid()) {
         newFile->internal->itemListMap = nullptr;
@@ -129,7 +123,7 @@ Blob::Pointer MP4TrackFile::artwork(void) const
     return Blob::blob();
 }
 
-void MP4TrackFile::setKey(String::ConstPointer const& key)
+void MP4TrackFile::setKey(String::Pointer const& key)
 {
     TagLib::StringList newList;
     newList.append(TagLib::String(key->toUTF8()));
@@ -137,27 +131,27 @@ void MP4TrackFile::setKey(String::ConstPointer const& key)
     (*internal->itemListMap)["----:com.apple.iTunes:initialkey"] = newItem;
 }
 
-void MP4TrackFile::setGrouping(String::ConstPointer const& grouping)
+void MP4TrackFile::setGrouping(String::Pointer const& grouping)
 {
     internal->properties["GROUPING"] = TagLib::String(grouping->toUTF8());
 }
 
-void MP4TrackFile::setRecordLabel(String::ConstPointer const& recordLabel)
+void MP4TrackFile::setRecordLabel(String::Pointer const& recordLabel)
 {
     // -- This is not supported by MP4 files.
 }
 
-void MP4TrackFile::setRemixer(String::ConstPointer const& remixer)
+void MP4TrackFile::setRemixer(String::Pointer const& remixer)
 {
     // -- This is not supported by MP4 files.
 }
 
-void MP4TrackFile::setYearReleased(String::ConstPointer const& year)
+void MP4TrackFile::setYearReleased(String::Pointer const& year)
 {
     internal->properties["DATE"] = TagLib::String(year->toUTF8());
 }
 
-void MP4TrackFile::setArtwork(Blob::ConstPointer const& artwork)
+void MP4TrackFile::setArtwork(Blob::Pointer const& artwork)
 {
     TagLib::ByteVector data(*artwork->data(), artwork->size());
     TagLib::MP4::CoverArt newCoverArt(TagLib::MP4::CoverArt::Unknown, data);

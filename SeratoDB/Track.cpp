@@ -17,7 +17,7 @@
 #include "Tags/ObjectTag.hpp"
 #include "Tags/DatabaseV2Tags.hpp"
 
-NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, Track, Object);
+NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, Track, Object);
 
 using namespace NxA;
 using namespace NxA::Serato;

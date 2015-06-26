@@ -15,7 +15,7 @@
 
 #include <aifffile.h>
 
-NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, AIFFTrackFile, ID3TrackFile);
+NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, AIFFTrackFile, ID3TrackFile);
 
 using namespace NxA;
 using namespace NxA::Serato;

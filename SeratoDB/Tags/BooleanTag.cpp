@@ -13,7 +13,7 @@
 #include "Tags/BooleanTag.hpp"
 #include "Tags/Internal/BooleanTag.hpp"
 
-NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, BooleanTag, Tag);
+NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, BooleanTag, Tag);
 
 using namespace NxA;
 using namespace NxA::Serato;

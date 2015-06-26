@@ -15,7 +15,7 @@
 
 #include <mp4tag.h>
 
-NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, MP4TrackFile, TrackFile);
+NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, MP4TrackFile, TrackFile);
 
 using namespace NxA;
 using namespace NxA::Serato;

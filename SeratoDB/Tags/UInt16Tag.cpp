@@ -13,7 +13,7 @@
 #include "Tags/UInt16Tag.hpp"
 #include "Tags/Internal/UInt16Tag.hpp"
 
-NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, UInteger16Tag, Tag);
+NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, UInteger16Tag, Tag);
 
 using namespace NxA;
 using namespace NxA::Serato;

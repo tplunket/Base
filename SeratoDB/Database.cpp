@@ -18,7 +18,7 @@
 #include "Tags/TagFactory.hpp"
 #include "Tags/TextTag.hpp"
 
-NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, Database, Object);
+NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, Database, Object);
 
 using namespace NxA;
 using namespace NxA::Serato;

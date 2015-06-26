@@ -15,7 +15,7 @@
 #include "SeratoDB/Utility.hpp"
 #include "SeratoDB/Crate.hpp"
 
-NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, CrateOrderFile, Object);
+NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, CrateOrderFile, Object);
 
 using namespace NxA;
 using namespace NxA::Serato;

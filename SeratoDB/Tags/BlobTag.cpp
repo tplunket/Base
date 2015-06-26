@@ -13,7 +13,7 @@
 #include "Tags/BlobTag.hpp"
 #include "Tags/Internal/BlobTag.hpp"
 
-NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, BlobTag, Tag);
+NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, BlobTag, Tag);
 
 using namespace NxA;
 using namespace NxA::Serato;

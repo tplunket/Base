@@ -15,7 +15,7 @@
 
 #include <attachedpictureframe.h>
 
-NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, ID3TrackFile, TrackFile);
+NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, ID3TrackFile, TrackFile);
 
 using namespace NxA;
 using namespace NxA::Serato;

@@ -18,7 +18,7 @@
 using namespace NxA;
 using namespace NxA::Serato;
 
-NXA_GENERATED_IMPLEMENTATION_FOR(NxA::Serato, WAVTrackFile, ID3TrackFile);
+NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, WAVTrackFile, ID3TrackFile);
 
 #pragma mark Factory Methods
 

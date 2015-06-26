@@ -19,7 +19,7 @@
 namespace NxA { namespace Serato {
     NXA_GENERATED_FORWARD_DECLARATIONS_FOR(OGGTrackFile);
 
-    class OGGTrackFile : public ID3TrackFile, NXA_INHERITANCE_FOR(OGGTrackFile) {
+    class OGGTrackFile : public ID3TrackFile {
         NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, OGGTrackFile);
 
     public:

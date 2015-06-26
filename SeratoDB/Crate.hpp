@@ -21,7 +21,7 @@ namespace NxA { namespace Serato {
 
     class Database;
 
-    class Crate : public Object, NXA_INHERITANCE_FOR(Crate) {
+    class Crate : public Object {
         NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, Crate);
 
     public:

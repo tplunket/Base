@@ -21,7 +21,7 @@ namespace NxA { namespace Serato {
     class Track;
     class TrackEntry;
 
-    class Database : public Object, NXA_INHERITANCE_FOR(Database) {
+    class Database : public Object {
         NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, Database);
 
     public:

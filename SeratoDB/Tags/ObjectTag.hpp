@@ -19,7 +19,7 @@
 namespace NxA { namespace Serato {
     NXA_GENERATED_FORWARD_DECLARATIONS_FOR(ObjectTag);
 
-    class ObjectTag : public Tag, NXA_INHERITANCE_FOR(ObjectTag) {
+    class ObjectTag : public Tag {
         NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, ObjectTag);
         
     public:

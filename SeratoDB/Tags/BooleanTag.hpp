@@ -19,7 +19,7 @@
 namespace NxA { namespace Serato {
     NXA_GENERATED_FORWARD_DECLARATIONS_FOR(BooleanTag);
 
-    class BooleanTag : public Tag, NXA_INHERITANCE_FOR(BooleanTag) {
+    class BooleanTag : public Tag {
         NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, BooleanTag);
 
     public:

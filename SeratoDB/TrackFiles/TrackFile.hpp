@@ -21,7 +21,7 @@
 namespace NxA { namespace Serato {
     NXA_GENERATED_FORWARD_DECLARATIONS_FOR(TrackFile);
 
-    class TrackFile : public Object, NXA_INHERITANCE_FOR(TrackFile) {
+    class TrackFile : public Object {
         NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, TrackFile);
 
     public:

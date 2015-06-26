@@ -19,7 +19,7 @@
 namespace NxA { namespace Serato {
     NXA_GENERATED_FORWARD_DECLARATIONS_FOR(MP4TrackFile);
 
-    class MP4TrackFile : public TrackFile, NXA_INHERITANCE_FOR(MP4TrackFile) {
+    class MP4TrackFile : public TrackFile {
         NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, MP4TrackFile);
 
     public:

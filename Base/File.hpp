@@ -33,19 +33,19 @@ namespace NxA {
         File() = delete;
 
         #pragma mark Class Methods
-        static Blob::Pointer readFileAt(String::ConstPointer const& path);
-        static void writeBlobToFileAt(Blob::ConstPointer const& content,
-                                      String::ConstPointer const& path);
-        static void deleteFileAt(String::ConstPointer const& path);
+        static Blob::Pointer readFileAt(String::Pointer const& path);
+        static void writeBlobToFileAt(Blob::Pointer const& content,
+                                      String::Pointer const& path);
+        static void deleteFileAt(String::Pointer const& path);
 
-        static String::Pointer joinPaths(String::ConstPointer const& first,
-                                         String::ConstPointer const& second);
-        static String::Pointer removePrefixFromPath(String::ConstPointer const& prefix,
-                                                    String::ConstPointer const& path);
+        static String::Pointer joinPaths(String::Pointer const& first,
+                                         String::Pointer const& second);
+        static String::Pointer removePrefixFromPath(String::Pointer const& prefix,
+                                                    String::Pointer const& path);
 
-        static bool fileExistsAt(String::ConstPointer const& path);
-        static count sizeOfFileAt(String::ConstPointer const& path);
+        static bool fileExistsAt(String::Pointer const& path);
+        static count sizeOfFileAt(String::Pointer const& path);
 
-        static timestamp modificationDateInSecondsSince1970ForFile(String::ConstPointer const& path);
+        static timestamp modificationDateInSecondsSince1970ForFile(String::Pointer const& path);
     };
 }

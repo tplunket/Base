@@ -22,10 +22,8 @@
 #pragma once
 
 #include "Base/Types.hpp"
-#include "Base/ConstPointer.hpp"
 #include "Base/Pointer.hpp"
 #include "Base/WeakPointer.hpp"
-#include "Base/WeakConstPointer.hpp"
 
 #include <map>
 
@@ -38,10 +36,8 @@ namespace NxA {
         Map() { }
 
     public:
-        using ConstPointer = NxA::ConstPointer<Map>;
         using Pointer = NxA::Pointer<Map>;
         using WeakPointer = NxA::WeakPointer<Map>;
-        using WeakConstPointer = NxA::WeakConstPointer<Map>;
         using iterator = typename std::map<Tkey, typename Tvalue::Pointer>::iterator;
         using const_iterator = typename std::map<Tkey, typename Tvalue::Pointer>::const_iterator;
 
@@ -103,7 +99,7 @@ namespace NxA {
             return this->size();
         }
 
-        bool containsValueForKey(Tkey const& keyValue)
+        bool containsValueForKey(Tkey const& keyValue) const
         {
             return this->find(keyValue) != this->std::map<Tkey, typename Tvalue::Pointer>::end();
         }

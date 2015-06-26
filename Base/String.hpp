@@ -36,15 +36,15 @@ namespace NxA {
         #pragma mark Factory Methods
         static String::Pointer string(void);
         static String::Pointer stringWith(const character* format, ... );
-        static String::Pointer stringWith(String::ConstPointer const& other);
-        static String::Pointer stringWithUTF16(NxA::ConstPointer<NxA::Blob> const& other);
+        static String::Pointer stringWith(String::Pointer const& other);
+        static String::Pointer stringWithUTF16(NxA::Pointer<NxA::Blob> const& other);
 
         #pragma mark Operators
-        bool isEqualTo(String::ConstPointer const& other) const;
+        bool isEqualTo(String::Pointer const& other) const;
         bool isEqualTo(const char* other) const;
 
         #pragma mark Instance Methods
-        virtual String::ConstPointer description(void) const;
+        virtual String::Pointer description(void) const;
 
         count length(void) const;
         bool isEmpty(void) const
@@ -53,21 +53,21 @@ namespace NxA {
         };
 
         const character* toUTF8(void) const;
-        NxA::ConstPointer<NxA::Blob> toUTF16(void) const;
+        NxA::Pointer<NxA::Blob> toUTF16(void) const;
 
-        void append(String::ConstPointer const& other);
+        void append(String::Pointer const& other);
         void append(const character* other);
 
         String::Array::Pointer splitBySeperator(char seperator) const;
         String::Pointer subString(count start, count end = -1) const;
 
-        bool hasPrefix(String::ConstPointer const& prefix) const;
-        bool hasPostfix(String::ConstPointer const& postfix) const;
+        bool hasPrefix(String::Pointer const& prefix) const;
+        bool hasPostfix(String::Pointer const& postfix) const;
         bool hasPrefix(const character* prefix) const;
         bool hasPostfix(const character* postfix) const;
 
-        count indexOfFirstOccurenceOf(String::ConstPointer const& other) const;
-        count indexOfLastOccurenceOf(String::ConstPointer const& other) const;
+        count indexOfFirstOccurenceOf(String::Pointer const& other) const;
+        count indexOfLastOccurenceOf(String::Pointer const& other) const;
         count indexOfFirstOccurenceOf(const character* other) const;
         count indexOfLastOccurenceOf(const character* other) const;
     };

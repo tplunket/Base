@@ -40,7 +40,7 @@ Internal::String::String() : value("")
 const integer16* Internal::String::convertEndiannessOfUTF16Characters(const integer16* characters, count length)
 {
     count numberOfBytes = length * 2;
-    integer8* newCharacters = (integer8*)malloc(numberOfBytes);
+    integer8* newCharacters = new integer8[numberOfBytes];
 
     for (integer i = 0; i < numberOfBytes; i += 2) {
         newCharacters[i] = ((char*)characters)[i+1];

@@ -31,7 +31,7 @@ using namespace std;
 
 #pragma mark mark Class Methods
 
-Blob::Pointer File::readFileAt(String::ConstPointer const& path)
+Blob::Pointer File::readFileAt(String::Pointer const& path)
 {
     count fileSize = File::sizeOfFileAt(path);
     if (fileSize) {
@@ -51,20 +51,20 @@ Blob::Pointer File::readFileAt(String::ConstPointer const& path)
     return Blob::blob();
 }
 
-void File::writeBlobToFileAt(Blob::ConstPointer const& content, String::ConstPointer const& path)
+void File::writeBlobToFileAt(Blob::Pointer const& content, String::Pointer const& path)
 {
     fstream file(path->toUTF8(), ios::out | ios::binary);
     file.write(reinterpret_cast<const char *>(content->data()), content->size());
     file.close();
 }
 
-void File::deleteFileAt(String::ConstPointer const& path)
+void File::deleteFileAt(String::Pointer const& path)
 {
     ::remove(path->toUTF8());
 }
 
-String::Pointer File::joinPaths(String::ConstPointer const& first,
-                                String::ConstPointer const& second)
+String::Pointer File::joinPaths(String::Pointer const& first,
+                                String::Pointer const& second)
 {
     auto result = String::stringWith(first);
 
@@ -80,20 +80,20 @@ String::Pointer File::joinPaths(String::ConstPointer const& first,
     return result;
 }
 
-String::Pointer File::removePrefixFromPath(String::ConstPointer const& prefix,
-                                           String::ConstPointer const& path)
+String::Pointer File::removePrefixFromPath(String::Pointer const& prefix,
+                                           String::Pointer const& path)
 {
     count lengthToCrop = prefix->length();
     return path->subString(lengthToCrop);
 }
 
-bool File::fileExistsAt(String::ConstPointer const& path)
+bool File::fileExistsAt(String::Pointer const& path)
 {
     struct stat buf;
     return (::stat(path->toUTF8(), &buf) != -1);
 }
 
-NxA::count File::sizeOfFileAt(String::ConstPointer const& path)
+NxA::count File::sizeOfFileAt(String::Pointer const& path)
 {
     struct stat buf;
     if (::stat(path->toUTF8(), &buf) == -1) {
@@ -103,7 +103,7 @@ NxA::count File::sizeOfFileAt(String::ConstPointer const& path)
     return buf.st_size;
 }
 
-timestamp File::modificationDateInSecondsSince1970ForFile(String::ConstPointer const& path)
+timestamp File::modificationDateInSecondsSince1970ForFile(String::Pointer const& path)
 {
     struct stat buf;
     if (::stat(path->toUTF8(), &buf) == -1) {

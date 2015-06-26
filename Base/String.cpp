@@ -29,20 +29,9 @@
 #include <locale>
 #include <sstream>
 
-NXA_GENERATED_IMPLEMENTATION_FOR(NxA, String);
+NXA_GENERATED_IMPLEMENTATION_FOR(NxA, String, Object);
 
 using namespace NxA;
-
-#pragma mark mark Constructors & Destructors
-
-String::String(Internal::Object::Pointer const& initial_internal) :
-               Object(initial_internal),
-               internal(initial_internal)
-{
-#if NXA_DEBUG_OBJECT_LIFECYCLE
-    printf("Construct String at 0x%08lx.\n", (long)this);
-#endif
-}
 
 #pragma mark Factory Methods
 
@@ -70,7 +59,7 @@ String::Pointer String::stringWith(const character* format, ...)
     return newString;
 }
 
-String::Pointer String::stringWithUTF16(Blob::ConstPointer const& other)
+String::Pointer String::stringWithUTF16(Blob::Pointer const& other)
 {
     const integer16* characters = reinterpret_cast<const integer16*>(other->data());
     count length = other->size() / 2;
@@ -85,13 +74,13 @@ String::Pointer String::stringWithUTF16(Blob::ConstPointer const& other)
     newString->internal->value = convert.to_bytes(reinterpret_cast<const char16_t*>(characters), reinterpret_cast<const char16_t*>(characters + length));
 
     if (Platform::endianOrder == Platform::LitleEndian) {
-        free((void*)characters);
+        delete [] characters;
     }
 
     return newString;
 }
 
-String::Pointer String::stringWith(String::ConstPointer const& other)
+String::Pointer String::stringWith(String::Pointer const& other)
 {
     auto newString = String::makeShared();
     newString->internal->value = other->internal->value;
@@ -101,7 +90,7 @@ String::Pointer String::stringWith(String::ConstPointer const& other)
 
 #pragma mark Operators
 
-bool String::isEqualTo(String::ConstPointer const& other) const
+bool String::isEqualTo(String::Pointer const& other) const
 {
     return internal->value == other->internal->value;
 }
@@ -118,7 +107,7 @@ count String::length(void) const
     return internal->value.size();
 }
 
-String::ConstPointer String::description(void) const
+String::Pointer String::description(void) const
 {
     return String::stringWith(this->toUTF8());
 }
@@ -128,7 +117,7 @@ const character* String::toUTF8(void) const
     return internal->value.c_str();
 }
 
-Blob::ConstPointer String::toUTF16(void) const
+Blob::Pointer String::toUTF16(void) const
 {
     std::wstring_convert<std::codecvt_utf8_utf16<char16_t>,char16_t> convert;
     std::u16string u16 = convert.from_bytes(internal->value.c_str());
@@ -142,13 +131,13 @@ Blob::ConstPointer String::toUTF16(void) const
     auto newBlob = Blob::blobWithMemoryAndSize(reinterpret_cast<const byte*>(characters), length);
 
     if (Platform::endianOrder == Platform::LitleEndian) {
-        free((void*)characters);
+        delete [] characters;
     }
 
     return newBlob;
 }
 
-void String::append(String::ConstPointer const& other)
+void String::append(String::Pointer const& other)
 {
     internal->value.append(other->toUTF8());
 }
@@ -183,12 +172,12 @@ String::Pointer String::subString(count start, count end) const
     return newString;
 }
 
-bool String::hasPrefix(String::ConstPointer const& prefix) const
+bool String::hasPrefix(String::Pointer const& prefix) const
 {
     return this->hasPrefix(prefix->toUTF8());
 }
 
-bool String::hasPostfix(String::ConstPointer const& postfix) const
+bool String::hasPostfix(String::Pointer const& postfix) const
 {
     size_t pos = internal->value.rfind(postfix->toUTF8());
     if (pos == std::string::npos) {
@@ -214,12 +203,12 @@ bool String::hasPostfix(const character* postfix) const
     return pos == (this->length() - length);
 }
 
-count String::indexOfFirstOccurenceOf(String::ConstPointer const& other) const
+count String::indexOfFirstOccurenceOf(String::Pointer const& other) const
 {
     return this->indexOfFirstOccurenceOf(other->toUTF8());
 }
 
-count String::indexOfLastOccurenceOf(String::ConstPointer const& other) const
+count String::indexOfLastOccurenceOf(String::Pointer const& other) const
 {
     return this->indexOfLastOccurenceOf(other->toUTF8());
 }

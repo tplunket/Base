@@ -24,7 +24,6 @@
 #include "Base/Pointer.hpp"
 #include "Base/WeakPointer.hpp"
 #include "Base/Array.hpp"
-#include "Base/ConstArray.hpp"
 
 #include <memory>
 
@@ -54,7 +53,6 @@ namespace NxA {
             static NxA::Pointer<class_name> makeShared(void); \
         public: \
             using Pointer = NxA::Pointer<namespace_name::class_name>; \
-            using ConstPointer = NxA::ConstPointer<namespace_name::class_name>; \
             virtual ~class_name() \
             { \
                 printf("Destroying " NXA_STR_VALUE_FOR(namespace_name) "::" NXA_STR_VALUE_FOR(class_name) " at 0x%08lx.\n", (long)this); \
@@ -63,7 +61,6 @@ namespace NxA {
 #define NXA_GENERATED_SHARED_DECLARATIONS_FOR(namespace_name, class_name) \
         public: \
             using Pointer = NxA::Pointer<namespace_name::class_name>; \
-            using ConstPointer = NxA::ConstPointer<namespace_name::class_name>; \
             virtual ~class_name() = default;
 #endif
 
@@ -80,8 +77,7 @@ namespace NxA {
             explicit class_name(const class_name ## _constructor_access&, NxA::Pointer<NxA::Internal::Object> const& initial_internal) : class_name(initial_internal) { } \
             using WeakPointer = NxA::WeakPointer<namespace_name::class_name>; \
             using Array = NxA::Array<namespace_name::class_name>; \
-            using ConstArray = NxA::ConstArray<namespace_name::class_name>; \
-            virtual const NxA::ConstPointer<NxA::String> className(void) const; \
+            virtual NxA::Pointer<NxA::String> className(void) const; \
         protected: \
             NxA::Pointer<namespace_name::Internal::class_name> internal; \
             static NxA::Pointer<NxA::Internal::Object> makeInternal(void); \
@@ -103,7 +99,7 @@ namespace NxA {
             NXA_GENERATED_SHARED_DECLARATIONS_FOR(namespace_name::Internal, class_name)
 
 #define NXA_GENERATED_PURE_VIRTUAL_IMPLEMENTATION_FOR(namespace_name, class_name) \
-        const NxA::ConstPointer<NxA::String> namespace_name::class_name::className(void) const \
+        NxA::Pointer<NxA::String> namespace_name::class_name::className(void) const \
         { \
             return NxA::String::stringWith(NXA_STR_VALUE_FOR(namespace_name) "::" NXA_STR_VALUE_FOR(class_name)); \
         }
@@ -116,7 +112,7 @@ namespace NxA {
             return NxA::Pointer<namespace_name::Internal::class_name>(std::make_shared<namespace_name::Internal::class_name>(namespace_name::Internal::class_name::Internal_ ## class_name ## _constructor_access())); \
         }
 
-#define NXA_GENERATED_IMPLEMENTATION_FOR(namespace_name, class_name) \
+#define NXA_GENERATED_FACTORY_METHODS_FOR(namespace_name, class_name) \
         NXA_GENERATED_PURE_VIRTUAL_IMPLEMENTATION_FOR(namespace_name, class_name) \
         NxA::Pointer<namespace_name::class_name> namespace_name::class_name::makeShared(void) \
         { \
@@ -133,6 +129,11 @@ namespace NxA {
             printf("Calling makeInternal for " NXA_STR_VALUE_FOR(namespace_name) "::" NXA_STR_VALUE_FOR(class_name) "\n"); \
             return NxA::Pointer<NxA::Internal::Object>(namespace_name::Internal::class_name::makeShared()); \
         }
+
+#define NXA_GENERATED_CONSTRUCTORS_FOR(namespace_name, class_name, parent_class) \
+        namespace_name::class_name::class_name(NxA::Internal::Object::Pointer const& initial_internal) : \
+                                               parent_class(initial_internal), \
+                                               internal(namespace_name::Internal::class_name::Pointer::dynamicCastFrom(initial_internal.toStdSharedPointer())) { }
 #else
 #define NXA_GENERATED_INTERNAL_IMPLEMENTATION_FOR(namespace_name, class_name) \
         NxA::Pointer<namespace_name::Internal::class_name> namespace_name::Internal::class_name::makeShared(void) \
@@ -140,7 +141,7 @@ namespace NxA {
             return NxA::Pointer<namespace_name::Internal::class_name>(std::make_shared<namespace_name::Internal::class_name>(namespace_name::Internal::class_name::Internal_ ## class_name ## _constructor_access())); \
         }
 
-#define NXA_GENERATED_IMPLEMENTATION_FOR(namespace_name, class_name) \
+#define NXA_GENERATED_FACTORY_METHODS_FOR(namespace_name, class_name) \
         NXA_GENERATED_PURE_VIRTUAL_IMPLEMENTATION_FOR(namespace_name, class_name) \
         NxA::Pointer<namespace_name::class_name> namespace_name::class_name::makeShared(void) \
         { \
@@ -152,6 +153,15 @@ namespace NxA {
         } \
         NxA::Pointer<NxA::Internal::Object> namespace_name::class_name::makeInternal(void) \
         { \
-            return NxA::Pointer<NxA::Internal::Object>(namespace_name::Internal::class_name::makeShared()); \
-        }
+            return NxA::Internal::Object::Pointer::dynamicCastFrom(namespace_name::Internal::class_name::makeShared()); \
+        } 
+
+#define NXA_GENERATED_CONSTRUCTORS_FOR(namespace_name, class_name, parent_class) \
+        namespace_name::class_name::class_name(NxA::Internal::Object::Pointer const& initial_internal) : \
+                                               parent_class(initial_internal), \
+                                               internal(namespace_name::Internal::class_name::Pointer::dynamicCastFrom(initial_internal)) { }
 #endif
+
+#define NXA_GENERATED_IMPLEMENTATION_FOR(namespace_name, class_name, parent_class) \
+        NXA_GENERATED_FACTORY_METHODS_FOR(namespace_name, class_name) \
+        NXA_GENERATED_CONSTRUCTORS_FOR(namespace_name, class_name, parent_class)

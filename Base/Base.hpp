@@ -32,7 +32,5 @@
 #include "Base/String.hpp"
 #include "Base/Array.hpp"
 #include "Base/Map.hpp"
-#include "Base/ConstArray.hpp"
-#include "Base/ConstMap.hpp"
 #include "Base/Blob.hpp"
 #include "Base/File.hpp"

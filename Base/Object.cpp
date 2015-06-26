@@ -23,7 +23,7 @@
 #include "Base/String.hpp"
 #include "Base/Internal/Object.hpp"
 
-NXA_GENERATED_IMPLEMENTATION_FOR(NxA, Object);
+NXA_GENERATED_FACTORY_METHODS_FOR(NxA, Object);
 
 using namespace NxA;
 
@@ -38,7 +38,7 @@ Object::Object(Internal::Object::Pointer const& initial_internal) : internal(ini
 
 #pragma mark Instance Methods
 
-String::ConstPointer Object::description(void) const
+String::Pointer Object::description(void) const
 {
     return String::stringWith("<%s at 0x%08lx>", this->className()->toUTF8(), this);
 }

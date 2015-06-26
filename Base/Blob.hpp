@@ -35,7 +35,7 @@ namespace NxA {
         static Blob::Pointer blob(void);
         static Blob::Pointer blobWithCapacity(count size);
         static Blob::Pointer blobWithMemoryAndSize(const byte* other, count size);
-        static Blob::Pointer blobWith(Blob::ConstPointer const& other);
+        static Blob::Pointer blobWith(Blob::Pointer const& other);
 
         #pragma mark Operators
         const byte& operator[] (integer index) const;
@@ -53,11 +53,11 @@ namespace NxA {
             return const_cast<uinteger8*>(static_cast<const Blob&>(*this).data());
         }
 
-        bool isEqualTo(Blob::ConstPointer const& other) const;
+        bool isEqualTo(Blob::Pointer const& other) const;
 
         void clear(void);
 
-        void append(Blob::ConstPointer const& other);
+        void append(Blob::Pointer const& other);
         void append(const character* other);
         void append(const character other);
     };

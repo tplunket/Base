@@ -23,19 +23,9 @@
 #include "Base/String.hpp"
 #include "Base/Internal/Blob.hpp"
 
-NXA_GENERATED_IMPLEMENTATION_FOR(NxA, Blob);
+NXA_GENERATED_IMPLEMENTATION_FOR(NxA, Blob, Object);
 
 using namespace NxA;
-
-#pragma mark mark Constructors & Destructors
-
-Blob::Blob(Internal::Object::Pointer  const& initial_internal) :
-           Object(initial_internal), internal(initial_internal)
-{
-#if NXA_DEBUG_OBJECT_LIFECYCLE
-    printf("Construct Blob at 0x%08lx.\n", (long)this);
-#endif
-}
 
 #pragma mark mark Factory Methods
 
@@ -61,7 +51,7 @@ Blob::Pointer Blob::blobWithMemoryAndSize(const byte* other, count size)
     return newBlob;
 }
 
-Blob::Pointer Blob::blobWith(Blob::ConstPointer const& other)
+Blob::Pointer Blob::blobWith(Blob::Pointer const& other)
 {
     auto newBlob = Blob::makeShared();
     newBlob->internal->data = other->internal->data;
@@ -88,7 +78,7 @@ const byte* Blob::data(void) const
     return internal->data.data();
 }
 
-bool Blob::isEqualTo(Blob::ConstPointer const& other) const
+bool Blob::isEqualTo(Blob::Pointer const& other) const
 {
     return internal->data == other->internal->data;
 }
@@ -98,7 +88,7 @@ void Blob::clear(void)
     std::memset(this->data(), 0, this->size());
 }
 
-void Blob::append(Blob::ConstPointer const& other)
+void Blob::append(Blob::Pointer const& other)
 {
     internal->data.insert(internal->data.end(), other->internal->data.begin(), other->internal->data.end());
 }

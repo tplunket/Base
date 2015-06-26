@@ -21,27 +21,30 @@
 
 #pragma once
 
-#include "Base/ConstPointer.hpp"
-
 namespace NxA {
     template <class T> class WeakPointer;
 
-    template <class T> class Pointer : public ConstPointer<T> {
+    template <class T> class Pointer : protected std::shared_ptr<T> {
         friend class WeakPointer<T>;
 
     public:
         #pragma mark Constructors & Destructors
-        Pointer(std::shared_ptr<T> const& other) : ConstPointer<T>(other) { };
-        Pointer(Pointer<T> const& other) : ConstPointer<T>(other) { }
-        template <class From> Pointer(Pointer<From> const& other) :
-                                      ConstPointer<T>(std::dynamic_pointer_cast<T>(other.toStdSharedPointer()))
-        {
-            NXA_ASSERT_TRUE(this->get() != nullptr);
-        }
+        Pointer() = delete;
+        Pointer(std::shared_ptr<T> const& other) : std::shared_ptr<T>(other) { };
+        Pointer(Pointer<T> const& other) : std::shared_ptr<T>(other) { }
         ~Pointer() = default;
 
+        #pragma mark Class Methods
+        template <class Tfrom>
+        static Pointer<T> dynamicCastFrom(Pointer<Tfrom> const& other)
+        {
+            Pointer<T> result = Pointer(std::shared_ptr<T>(std::dynamic_pointer_cast<T>(other.toStdSharedPointer())));
+            NXA_ASSERT_TRUE(result.get() != nullptr);
+            return result;
+        }
+
         #pragma mark Operators
-        T* operator->() const
+        const T* operator->() const
         {
             return this->get();
         }
@@ -49,7 +52,7 @@ namespace NxA {
         {
             return const_cast<T*>(static_cast<const Pointer<T>>(*this).operator->());
         }
-        T& operator*() const
+        const T& operator*() const
         {
             return *this->get();
         }

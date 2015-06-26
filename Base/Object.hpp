@@ -34,6 +34,6 @@ namespace NxA {
 
     public:
         #pragma mark Instance Methods
-        virtual NxA::ConstPointer<NxA::String> description(void) const;
+        virtual NxA::Pointer<NxA::String> description(void) const;
     };
 }

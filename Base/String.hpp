@@ -29,7 +29,7 @@ namespace NxA {
     
     class Blob;
 
-    class String : public Object {
+    class String : public Object, NXA_INHERITANCE_FOR(String) {
         NXA_GENERATED_DECLARATIONS_FOR(NxA, String);
 
     public:

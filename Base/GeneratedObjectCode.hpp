@@ -165,3 +165,5 @@ namespace NxA {
 #define NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(namespace_name, class_name, parent_class) \
         NXA_GENERATED_FACTORY_METHODS_FOR(namespace_name, class_name) \
         NXA_GENERATED_CONSTRUCTORS_FOR(namespace_name, class_name, parent_class)
+
+#define NXA_INHERITANCE_FOR(class_name) public std::enable_shared_from_this<class_name>

@@ -29,7 +29,7 @@ namespace NxA {
 
     class String;
 
-    class Object : private Uncopyable {
+    class Object : private Uncopyable, NXA_INHERITANCE_FOR(Object) {
         NXA_GENERATED_DECLARATIONS_FOR(NxA, Object);
 
     public:

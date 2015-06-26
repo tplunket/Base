@@ -32,6 +32,7 @@ namespace NxA {
         Pointer() = delete;
         Pointer(std::shared_ptr<T> const& other) : std::shared_ptr<T>(other) { };
         Pointer(Pointer<T> const& other) : std::shared_ptr<T>(other) { }
+        Pointer(T* other) : std::shared_ptr<T>(other->std::template enable_shared_from_this<T>::shared_from_this()) { }
         ~Pointer() = default;
 
         #pragma mark Class Methods

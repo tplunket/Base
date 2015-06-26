@@ -24,15 +24,15 @@ using namespace NxA::Serato;
 #pragma mark Factory Methods
 
 TrackEntry::Pointer TrackEntry::entryWithTagOnVolume(NxA::Pointer<Tag> const& tag,
-                                                     String::Pointer const& volumePath)
+                                                     const String& volumePath)
 {
     auto internalObject = Internal::TrackEntry::Pointer(std::make_shared<Internal::TrackEntry>(tag, volumePath));
     auto newTrackEntry = TrackEntry::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
     return newTrackEntry;
 }
 
-TrackEntry::Pointer TrackEntry::entryWithTrackFileAtOnVolume(String::Pointer const& path,
-                                                             String::Pointer const& volumePath)
+TrackEntry::Pointer TrackEntry::entryWithTrackFileAtOnVolume(const String& path,
+                                                             const String& volumePath)
 {
     auto entryPath = File::removePrefixFromPath(volumePath, path);
 

@@ -28,5 +28,5 @@ using namespace NxA::Serato::Internal;
 
 #pragma mark Constructors & Destructors
 
-MPEGTrackFile::MPEGTrackFile(String::Pointer const& path, TagLibFilePointer const& newFile) :
+MPEGTrackFile::MPEGTrackFile(const String& path, TagLibFilePointer const& newFile) :
                              ID3TrackFile(path, newFile) { }

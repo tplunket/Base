@@ -22,9 +22,9 @@ using namespace NxA::Serato;
 
 #pragma mark Factory Methods
 
-MP4TrackFile::Pointer MP4TrackFile::fileWithFileAt(String::Pointer const& path)
+MP4TrackFile::Pointer MP4TrackFile::fileWithFileAt(const String& path)
 {
-    auto file = Internal::TagLibFilePointer(std::make_shared<TagLib::MP4::File>(path->toUTF8()));
+    auto file = Internal::TagLibFilePointer(std::make_shared<TagLib::MP4::File>(path.toUTF8()));
     auto internalObject = Internal::MP4TrackFile::Pointer(std::make_shared<Internal::MP4TrackFile>(path, file));
     auto newFile = MP4TrackFile::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
 
@@ -123,32 +123,32 @@ Blob::Pointer MP4TrackFile::artwork(void) const
     return Blob::blob();
 }
 
-void MP4TrackFile::setKey(String::Pointer const& key)
+void MP4TrackFile::setKey(const String& key)
 {
     TagLib::StringList newList;
-    newList.append(TagLib::String(key->toUTF8()));
+    newList.append(TagLib::String(key.toUTF8()));
     TagLib::MP4::Item newItem(newList);
     (*internal->itemListMap)["----:com.apple.iTunes:initialkey"] = newItem;
 }
 
-void MP4TrackFile::setGrouping(String::Pointer const& grouping)
+void MP4TrackFile::setGrouping(const String& grouping)
 {
-    internal->properties["GROUPING"] = TagLib::String(grouping->toUTF8());
+    internal->properties["GROUPING"] = TagLib::String(grouping.toUTF8());
 }
 
-void MP4TrackFile::setRecordLabel(String::Pointer const& recordLabel)
+void MP4TrackFile::setRecordLabel(const String& recordLabel)
 {
     // -- This is not supported by MP4 files.
 }
 
-void MP4TrackFile::setRemixer(String::Pointer const& remixer)
+void MP4TrackFile::setRemixer(const String& remixer)
 {
     // -- This is not supported by MP4 files.
 }
 
-void MP4TrackFile::setYearReleased(String::Pointer const& year)
+void MP4TrackFile::setYearReleased(const String& year)
 {
-    internal->properties["DATE"] = TagLib::String(year->toUTF8());
+    internal->properties["DATE"] = TagLib::String(year.toUTF8());
 }
 
 void MP4TrackFile::setArtwork(Blob::Pointer const& artwork)

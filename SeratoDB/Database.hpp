@@ -26,10 +26,10 @@ namespace NxA { namespace Serato {
 
     public:
         #pragma mark Factory Methods
-        static Database::Pointer databaseWithFileAt(String::Pointer const& seratoFolderPath);
+        static Database::Pointer databaseWithFileAt(const String& seratoFolderPath);
 
         #pragma mark Class Methods
-        static String::Pointer versionAsStringForDatabaseIn(String::Pointer const& seratoFolderPath);
+        static String::Pointer versionAsStringForDatabaseIn(const String& seratoFolderPath);
 
         #pragma mark Instance Methods
         timestamp databaseModificationDateInSecondsSince1970(void) const;

@@ -23,24 +23,24 @@ using namespace std;
 
 #pragma mark Class Methods
 
-TrackFile::Pointer TrackFileFactory::trackFileForPath(String::Pointer const& trackFilePath)
+TrackFile::Pointer TrackFileFactory::trackFileForPath(const String& trackFilePath)
 {
-    if (trackFilePath->hasPostfix(".aiff") || trackFilePath->hasPostfix(".aif")) {
+    if (trackFilePath.hasPostfix(".aiff") || trackFilePath.hasPostfix(".aif")) {
         return TrackFile::Pointer::dynamicCastFrom(AIFFTrackFile::fileWithFileAt(trackFilePath));
     }
-    else if (trackFilePath->hasPostfix(".mp3")) {
+    else if (trackFilePath.hasPostfix(".mp3")) {
         return TrackFile::Pointer::dynamicCastFrom(MPEGTrackFile::fileWithFileAt(trackFilePath));
     }
-    else if (trackFilePath->hasPostfix(".m4a")) {
+    else if (trackFilePath.hasPostfix(".m4a")) {
         return TrackFile::Pointer::dynamicCastFrom(MP4TrackFile::fileWithFileAt(trackFilePath));
     }
-    else if (trackFilePath->hasPostfix(".flac")) {
+    else if (trackFilePath.hasPostfix(".flac")) {
         return TrackFile::Pointer::dynamicCastFrom(FLACTrackFile::fileWithFileAt(trackFilePath));
     }
-    else if (trackFilePath->hasPostfix(".ogg")) {
+    else if (trackFilePath.hasPostfix(".ogg")) {
         return TrackFile::Pointer::dynamicCastFrom(OGGTrackFile::fileWithFileAt(trackFilePath));
     }
-    else if (trackFilePath->hasPostfix(".wav")) {
+    else if (trackFilePath.hasPostfix(".wav")) {
         return TrackFile::Pointer::dynamicCastFrom(WAVTrackFile::fileWithFileAt(trackFilePath));
     }
 

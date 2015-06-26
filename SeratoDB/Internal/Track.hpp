@@ -39,20 +39,20 @@ namespace NxA { namespace Serato { namespace Internal {
 
         #pragma mark Constructors & Destructors
         Track(Serato::Tag::Pointer const& tag,
-              String::Pointer const& rootFolderPath);
+              const String& rootFolderPath);
 
         #pragma mark Class Methods
 #if PRINT_DEBUG_INFO
-        static void debugPrint(String::Pointer const& text, String::Pointer const& name);
-        static void debugPrintUint(uinteger32 value, String::Pointer const& name);
-        static void debugPrintTimeFromMilliseconds(uinteger32 value, String::Pointer const& name);
-        static void debugPrintDate(timestamp value, String::Pointer const& name);
+        static void debugPrint(const String& text, const String& name);
+        static void debugPrintUint(uinteger32 value, const String& name);
+        static void debugPrintTimeFromMilliseconds(uinteger32 value, const String& name);
+        static void debugPrintDate(timestamp value, const String& name);
         static void debugPrintComparaison(Serato::Track::Pointer const& track, Serato::TrackFile::Pointer const& trackFile);
 #endif
 
         #pragma mark Instance Variables
         Serato::Tag::Pointer trackTag;
-        String::Pointer rootFolder;
+        String::PointerToConst rootFolder;
 
         bool wasModified;
 
@@ -61,12 +61,12 @@ namespace NxA { namespace Serato { namespace Internal {
         Serato::GridMarker::Array::Pointer gridMarkers;
 
         #pragma mark Instance Methods
-        String::Pointer const& stringForSubTagForIdentifier(uinteger32 identifier) const;
-        String::Pointer const& pathForSubTagForIdentifier(uinteger32 identifier) const;
+        const String& stringForSubTagForIdentifier(uinteger32 identifier) const;
+        const String& pathForSubTagForIdentifier(uinteger32 identifier) const;
         uinteger32 uint32ForSubTagForIdentifier(uinteger32 identifier) const;
 
-        void setStringForSubTagForIdentifier(String::Pointer const& value, uinteger32 identifier);
-        void setPathForSubTagForIdentifier(String::Pointer const& value, uinteger32 identifier);
+        void setStringForSubTagForIdentifier(const String& value, uinteger32 identifier);
+        void setPathForSubTagForIdentifier(const String& value, uinteger32 identifier);
         void setUInt32ForSubTagForIdentifier(uinteger32 value, uinteger32 identifier);
 
         void readMarkersFrom(Serato::TrackFile::Pointer const& trackFile);

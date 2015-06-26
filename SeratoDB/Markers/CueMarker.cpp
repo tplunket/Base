@@ -47,14 +47,14 @@ CueMarker::Pointer CueMarker::markerWithMemoryAt(const byte* id3TagStart)
                                                       Platform::bigEndianUInteger16ValueAt(tagStruct->index));
 }
 
-CueMarker::Pointer CueMarker::markerWithLabelPositionAndIndex(String::Pointer const& label,
+CueMarker::Pointer CueMarker::markerWithLabelPositionAndIndex(const String& label,
                                                               uinteger32 positionInMilliseconds,
                                                               uinteger16 index)
 {
     auto newMarker = CueMarker::makeShared();
     newMarker->internal->positionInMilliseconds = positionInMilliseconds;
     newMarker->internal->index = index;
-    newMarker->internal->label = label;
+    newMarker->internal->label = label.constPointer();
 
     return newMarker;
 }
@@ -76,7 +76,7 @@ uinteger16 CueMarker::index(void) const
     return internal->index;
 }
 
-String::Pointer const& CueMarker::label(void) const
+const String& CueMarker::label(void) const
 {
     return internal->label;
 }
@@ -86,7 +86,7 @@ void CueMarker::addId3TagTo(Blob::Pointer& data) const
     SeratoCueTagStruct header;
 
     memcpy(header.tag, "CUE", 4);
-    count size = sizeof(SeratoCueTagStruct) + this->label()->length() + 1 - sizeof(SeratoCueTagHeaderStruct);
+    count size = sizeof(SeratoCueTagStruct) + this->label().length() + 1 - sizeof(SeratoCueTagHeaderStruct);
     Platform::writeBigEndianUInteger32ValueAt(static_cast<uinteger32>(size), header.size);
     Platform::writeBigEndianUInteger16ValueAt(this->index(), header.index);
     Platform::writeBigEndianUInteger32ValueAt(this->positionInMilliseconds(), header.position);
@@ -96,5 +96,5 @@ void CueMarker::addId3TagTo(Blob::Pointer& data) const
 
     auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<const byte*>(&header), sizeof(SeratoCueTagStruct));
     data->append(headerData);
-    data->append(this->label()->toUTF8());
+    data->append(this->label().toUTF8());
 }

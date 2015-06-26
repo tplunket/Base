@@ -29,7 +29,7 @@ static const char* databaseFileCurrentVersionString = "2.0/Serato Scratch LIVE D
 
 #pragma mark Factory Methods
 
-Database::Pointer Database::databaseWithFileAt(String::Pointer const& seratoFolderPath)
+Database::Pointer Database::databaseWithFileAt(const String& seratoFolderPath)
 {
     auto crateOrderFile = CrateOrderFile::fileWithSeratoFolderInRootFolder(seratoFolderPath,
                                                                            String::string());
@@ -48,7 +48,7 @@ Database::Pointer Database::databaseWithFileAt(String::Pointer const& seratoFold
             }
             case databaseVersionTagIdentifier: {
                 auto& versionText = TextTag::Pointer::dynamicCastFrom(tag)->value();
-                if (!versionText->isEqualTo(databaseFileCurrentVersionString)) {
+                if (!versionText.isEqualTo(databaseFileCurrentVersionString)) {
                     newDatabase->internal->tracks->emptyAll();
                     newDatabase->internal->otherTags->emptyAll();
                     return newDatabase;
@@ -73,7 +73,7 @@ Database::Pointer Database::databaseWithFileAt(String::Pointer const& seratoFold
 
 #pragma mark Class Methods
 
-String::Pointer Database::versionAsStringForDatabaseIn(String::Pointer const& seratoFolderPath)
+String::Pointer Database::versionAsStringForDatabaseIn(const String& seratoFolderPath)
 {
     auto databaseFilePath = databaseFilePathForSeratoFolder(seratoFolderPath);
     auto databaseFile = File::readFileAt(databaseFilePath);
@@ -158,7 +158,7 @@ void Database::saveIfModified(void) const
             continue;
         }
 
-        printf("Saving modifications to Serato track '%s'.\n", track->title()->toUTF8());
+        printf("Saving modifications to Serato track '%s'.\n", track->title().toUTF8());
         track->saveToTrackFile();
         someTracksWereModified = true;
     }

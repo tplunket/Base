@@ -32,43 +32,43 @@ using namespace NxA::Serato::Internal;
 
 #pragma mark Constructors & Destructors
 
-CrateOrderFile::CrateOrderFile(String::Pointer const& path,
+CrateOrderFile::CrateOrderFile(const String& path,
                                Serato::Crate::Pointer const& root) :
-                               crateOrderFilePath(path),
+                               crateOrderFilePath(path.constPointer()),
                                rootCrate(root),
                                unknownCratesNames(String::Array::array()) { }
 
 #pragma mark Class Methods
 
-String::Pointer CrateOrderFile::crateNameIfValidCrateOrEmptyIfNot(String::Pointer const& name)
+String::Pointer CrateOrderFile::crateNameIfValidCrateOrEmptyIfNot(const String& name)
 {
     auto result = String::string();
 
-    if (name->hasPrefix("[crate]")) {
-        result = name->subString(7, name->length() - 7);
+    if (name.hasPrefix("[crate]")) {
+        result = name.subString(7, name.length() - 7);
     }
 
     return result;
 }
 
-bool CrateOrderFile::filenameIsAValidCrateName(String::Pointer const& fileName)
+bool CrateOrderFile::filenameIsAValidCrateName(const String& fileName)
 {
-    return !fileName->hasPrefix(".") && fileName->hasPostfix(".crate");
+    return !fileName.hasPrefix(".") && fileName.hasPostfix(".crate");
 }
 
-String::Pointer CrateOrderFile::crateNameFromFilename(String::Pointer const& fileName)
+String::Pointer CrateOrderFile::crateNameFromFilename(const String& fileName)
 {
-    return fileName->subString(0, fileName->length() - 6);
+    return fileName.subString(0, fileName.length() - 6);
 }
 
-String::Array::Pointer CrateOrderFile::cratesInSubCratesDirectory(String::Pointer const& directory)
+String::Array::Pointer CrateOrderFile::cratesInSubCratesDirectory(const String& directory)
 {
     auto crateNamesFound = String::Array::array();
 
     DIR *pdir;
     struct dirent *pent;
 
-    pdir = opendir(directory->toUTF8()); //"." refers to the current dir
+    pdir = opendir(directory.toUTF8()); //"." refers to the current dir
     if (pdir){
         errno = 0;
         while ((pent = readdir(pdir))){
@@ -86,7 +86,7 @@ String::Array::Pointer CrateOrderFile::cratesInSubCratesDirectory(String::Pointe
     return move(crateNamesFound);
 }
 
-String::Array::Pointer CrateOrderFile::readCratesNamesInCrateOrderFile(String::Pointer const& crateOrderFilePath)
+String::Array::Pointer CrateOrderFile::readCratesNamesInCrateOrderFile(const String& crateOrderFilePath)
 {
     auto cratesInOrder = String::Array::array();
 
@@ -131,17 +131,17 @@ void CrateOrderFile::addCratesNamesAtTheStartOfUnlessAlreadyThere(String::Array:
 
 #pragma mark Instance Methods
 
-Serato::Crate::Array::Pointer CrateOrderFile::childrenCratesOfCrateNamedUsingNameList(String::Pointer const& name,
+Serato::Crate::Array::Pointer CrateOrderFile::childrenCratesOfCrateNamedUsingNameList(const String& name,
                                                                                       String::Array::iterator& it,
                                                                                       const String::Array::iterator& end,
-                                                                                      String::Pointer const& seratoFolderPath,
-                                                                                      String::Pointer const& rootFolderPath)
+                                                                                      const String& seratoFolderPath,
+                                                                                      const String& rootFolderPath)
 {
     auto cratesFound = Serato::Crate::Array::array();
 
     while (it != end) {
         auto fullCrateName = *it;
-        if (name->length() && !fullCrateName->hasPrefix(name->toUTF8())) {
+        if (name.length() && !fullCrateName->hasPrefix(name.toUTF8())) {
             break;
         }
 

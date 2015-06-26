@@ -22,9 +22,9 @@ using namespace NxA::Serato;
 
 #pragma mark Factory Methods
 
-OGGTrackFile::Pointer OGGTrackFile::fileWithFileAt(String::Pointer const& path)
+OGGTrackFile::Pointer OGGTrackFile::fileWithFileAt(const String& path)
 {
-    auto file = Internal::TagLibFilePointer(std::make_shared<TagLib::Vorbis::File>(path->toUTF8()));
+    auto file = Internal::TagLibFilePointer(std::make_shared<TagLib::Vorbis::File>(path.toUTF8()));
     auto internalObject = Internal::OGGTrackFile::Pointer(std::make_shared<Internal::OGGTrackFile>(path, file));
     auto newFile = OGGTrackFile::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
 
@@ -111,29 +111,29 @@ Blob::Pointer OGGTrackFile::artwork(void) const
     return Blob::blob();
 }
 
-void OGGTrackFile::setKey(String::Pointer const& key)
+void OGGTrackFile::setKey(const String& key)
 {
     // -- This is not supported by OGG files.
 }
 
-void OGGTrackFile::setGrouping(String::Pointer const& grouping)
+void OGGTrackFile::setGrouping(const String& grouping)
 {
-    internal->properties["GROUPING"] = TagLib::String(grouping->toUTF8());
+    internal->properties["GROUPING"] = TagLib::String(grouping.toUTF8());
 }
 
-void OGGTrackFile::setRecordLabel(String::Pointer const& recordLabel)
+void OGGTrackFile::setRecordLabel(const String& recordLabel)
 {
-    internal->properties["LABEL"] = TagLib::String(recordLabel->toUTF8());
+    internal->properties["LABEL"] = TagLib::String(recordLabel.toUTF8());
 }
 
-void OGGTrackFile::setRemixer(String::Pointer const& remixer)
+void OGGTrackFile::setRemixer(const String& remixer)
 {
-    internal->properties["REMIXER"] = TagLib::String(remixer->toUTF8());
+    internal->properties["REMIXER"] = TagLib::String(remixer.toUTF8());
 }
 
-void OGGTrackFile::setYearReleased(String::Pointer const& year)
+void OGGTrackFile::setYearReleased(const String& year)
 {
-    internal->properties["YEAR"] = TagLib::String(year->toUTF8());
+    internal->properties["YEAR"] = TagLib::String(year.toUTF8());
 }
 
 void OGGTrackFile::setArtwork(Blob::Pointer const& artwork)

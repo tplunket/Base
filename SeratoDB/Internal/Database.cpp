@@ -27,9 +27,9 @@ using namespace NxA::Serato::Internal;
 
 #pragma mark Constructors & Destructors
 
-Database::Database(String::Pointer const& path,
+Database::Database(const String& path,
                    Serato::CrateOrderFile::Pointer usingCrateOrderFile) :
-                   databaseFilePath(path),
+                   databaseFilePath(path.constPointer()),
                    tracks(Serato::Track::Array::array()),
                    otherTags(Serato::Tag::Array::array()),
                    crateFilesToDelete(String::Array::array()),
@@ -40,16 +40,16 @@ Database::Database(String::Pointer const& path,
 
 #if PRINT_DEBUG_INFO
 void Database::debugListCrate(Serato::Crate::Pointer const& crate,
-                              String::Pointer const& spacing)
+                              const String& spacing)
 {
     auto& crates = crate->crates();
     for (auto& subCrate : *crates) {
         auto& crateName = subCrate->crateName();
-        printf("%sCrate '%s'\n", spacing->toUTF8(), crateName->toUTF8());
+        printf("%sCrate '%s'\n", spacing.toUTF8(), crateName.toUTF8());
 
         auto& crateTracks = subCrate->trackEntries();
         for (auto& trackEntry : *crateTracks) {
-            printf("%s   Track '%s'\n", spacing->toUTF8(), trackEntry->trackFilePath()->toUTF8());
+            printf("%s   Track '%s'\n", spacing.toUTF8(), trackEntry->trackFilePath()->toUTF8());
         }
 
         String::Pointer newSpacing = String::stringWith(spacing);

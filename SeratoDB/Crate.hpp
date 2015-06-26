@@ -26,21 +26,21 @@ namespace NxA { namespace Serato {
 
     public:
         #pragma mark Factory Methods
-        static Crate::Pointer crateWithNameInFolderOnVolume(String::Pointer const& crateFullName,
-                                                            String::Pointer const& seratoFolderPath,
-                                                            String::Pointer const& volumePath);
+        static Crate::Pointer crateWithNameInFolderOnVolume(const String& crateFullName,
+                                                            const String& seratoFolderPath,
+                                                            const String& volumePath);
 
         #pragma mark Class Methods
-        static bool isAValidCrateName(String::Pointer const& crateFullName,
-                                      String::Pointer const& seratoFolderPath);
-        static bool isASmartCrateName(String::Pointer const& crateFullName,
-                                      String::Pointer const& seratoFolderPath);
+        static bool isAValidCrateName(const String& crateFullName,
+                                      const String& seratoFolderPath);
+        static bool isASmartCrateName(const String& crateFullName,
+                                      const String& seratoFolderPath);
         static void addCrateAsChildOfCrate(Crate::Pointer& crate, Crate::Pointer& parentCrate);
         static void destroy(Crate::Pointer const& crate);
 
         #pragma mark Instance Methods
-        String::Pointer const& crateName(void) const;
-        String::Pointer const& crateFullName(void) const;
+        const String& crateName(void) const;
+        const String& crateFullName(void) const;
         void addFullCrateNameWithPrefixAndRecurseToChildren(String::Pointer& destination, const char* prefix) const;
 
         TrackEntry::Array::Pointer const& trackEntries(void) const;
@@ -51,7 +51,7 @@ namespace NxA { namespace Serato {
         bool hasParentCrate(void) const;
         Crate::Pointer parentCrate(void) const;
 
-        String::Pointer const& crateFilePath(void) const;
+        const String& crateFilePath(void) const;
 
         void resetModificationFlags();
 

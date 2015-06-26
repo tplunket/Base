@@ -39,8 +39,8 @@ namespace NxA { namespace Serato { namespace Internal {
 
 #pragma mark Constructors & Destructors
 
-TrackFile::TrackFile(String::Pointer const& path, TagLibFilePointer const& newFile) :
-                     trackFilePath(path),
+TrackFile::TrackFile(const String& path, TagLibFilePointer const& newFile) :
+                     trackFilePath(path.constPointer()),
                      file(newFile),
                      cueMarkers(Serato::CueMarker::Array::array()),
                      loopMarkers(Serato::LoopMarker::Array::array()),
@@ -49,10 +49,10 @@ TrackFile::TrackFile(String::Pointer const& path, TagLibFilePointer const& newFi
 
 #pragma mark Class Methods
 
-const byte* TrackFile::nextTagPositionAfterTagNamed(String::Pointer const& tagName, const byte* currentTagPosition)
+const byte* TrackFile::nextTagPositionAfterTagNamed(const String& tagName, const byte* currentTagPosition)
 {
     auto parserPosition = currentTagPosition;
-    parserPosition += tagName->length() + 1;
+    parserPosition += tagName.length() + 1;
 
     auto tagSize = Platform::bigEndianUInteger32ValueAt(parserPosition);
     parserPosition += 4 + tagSize;

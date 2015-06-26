@@ -29,9 +29,9 @@ static const character* crateFileCurrentVersionString = "1.0/Serato ScratchLive 
 
 #pragma mark Factory Methods
 
-Crate::Pointer Crate::crateWithNameInFolderOnVolume(String::Pointer const& crateFullName,
-                                                    String::Pointer const& seratoFolderPath,
-                                                    String::Pointer const& volumePath)
+Crate::Pointer Crate::crateWithNameInFolderOnVolume(const String& crateFullName,
+                                                    const String& seratoFolderPath,
+                                                    const String& volumePath)
 {
     auto internalObject = Internal::Crate::Pointer(std::make_shared<Internal::Crate>(crateFullName,
                                                                                      volumePath,
@@ -39,12 +39,12 @@ Crate::Pointer Crate::crateWithNameInFolderOnVolume(String::Pointer const& crate
                                                                                                                              seratoFolderPath)));
     auto newCrate = Crate::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
 
-    auto lastSeperatorIndex = crateFullName->indexOfLastOccurenceOf("%%");
-    if (lastSeperatorIndex != crateFullName->length()) {
-        newCrate->internal->crateName = crateFullName->subString(lastSeperatorIndex + 2);
+    auto lastSeperatorIndex = crateFullName.indexOfLastOccurenceOf("%%");
+    if (lastSeperatorIndex != crateFullName.length()) {
+        newCrate->internal->crateName = crateFullName.subString(lastSeperatorIndex + 2);
     }
     else {
-        newCrate->internal->crateName = crateFullName;
+        newCrate->internal->crateName = crateFullName.constPointer();
     }
 
     return newCrate;
@@ -52,15 +52,15 @@ Crate::Pointer Crate::crateWithNameInFolderOnVolume(String::Pointer const& crate
 
 #pragma mark Class Methods
 
-bool Crate::isAValidCrateName(String::Pointer const& crateFullName,
-                              String::Pointer const& seratoFolderPath)
+bool Crate::isAValidCrateName(const String& crateFullName,
+                              const String& seratoFolderPath)
 {
     auto crateFilePath = crateFilePathForCrateNameInSeratoFolder(crateFullName, seratoFolderPath);
     return File::fileExistsAt(crateFilePath);
 }
 
-bool Crate::isASmartCrateName(String::Pointer const& crateFullName,
-                              String::Pointer const& seratoFolderPath)
+bool Crate::isASmartCrateName(const String& crateFullName,
+                              const String& seratoFolderPath)
 {
     auto crateFilePath = crateFilePathForSmartCrateNameInSeratoFolder(crateFullName, seratoFolderPath);
     return File::fileExistsAt(crateFilePath);
@@ -89,12 +89,12 @@ void Crate::destroy(Crate::Pointer const& crate)
 
 #pragma mark Instance Methods
 
-String::Pointer const& Crate::crateName(void) const
+const String& Crate::crateName(void) const
 {
     return internal->crateName;
 }
 
-String::Pointer const& Crate::crateFullName(void) const
+const String& Crate::crateFullName(void) const
 {
     return internal->crateFullName;
 }
@@ -139,7 +139,7 @@ void Crate::loadFromFile(void)
         switch (tag->identifier()) {
             case crateVersionTagIdentifier: {
                 auto versionTag = TextTag::Pointer::dynamicCastFrom(tag);
-                if (!versionTag->value()->isEqualTo(crateFileCurrentVersionString)) {
+                if (!versionTag->value().isEqualTo(crateFileCurrentVersionString)) {
                     internal->otherTags->emptyAll();
                     internal->trackEntries->emptyAll();
                     return;
@@ -168,7 +168,7 @@ Crate::Pointer Crate::parentCrate(void) const
     return internal->parentCrate.toPointer();
 }
 
-String::Pointer const& Crate::crateFilePath(void) const
+const String& Crate::crateFilePath(void) const
 {
     return internal->crateFilePath;
 }

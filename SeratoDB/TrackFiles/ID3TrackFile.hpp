@@ -36,11 +36,11 @@ namespace NxA { namespace Serato {
 
         virtual Blob::Pointer artwork(void) const;
 
-        virtual void setKey(String::Pointer const& key);
-        virtual void setGrouping(String::Pointer const& grouping);
-        virtual void setRecordLabel(String::Pointer const& recordLabel);
-        virtual void setRemixer(String::Pointer const& remixer);
-        virtual void setYearReleased(String::Pointer const& year);
+        virtual void setKey(const String& key);
+        virtual void setGrouping(const String& grouping);
+        virtual void setRecordLabel(const String& recordLabel);
+        virtual void setRemixer(const String& remixer);
+        virtual void setYearReleased(const String& year);
 
         virtual void setArtwork(Blob::Pointer const& artwork);
     };

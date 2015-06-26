@@ -28,25 +28,25 @@ TextTag::Pointer TextTag::tagWithMemoryAt(const byte* tagAddress)
     return TextTag::tagWithIdentifierAndValue(Tag::identifierForTagAt(tagAddress), text);
 }
 
-TextTag::Pointer TextTag::tagWithIdentifierAndValue(uinteger32 identifier, String::Pointer const& value)
+TextTag::Pointer TextTag::tagWithIdentifierAndValue(uinteger32 identifier, const String& value)
 {
     auto newTag = TextTag::makeShared();
     newTag->internal->identifier = identifier;
-    newTag->internal->value = value;
+    newTag->internal->value = value.constPointer();
 
     return newTag;
 }
 
 #pragma mark Instance Methods
 
-String::Pointer const& TextTag::value(void) const
+const String& TextTag::value(void) const
 {
     return internal->value;
 }
 
-void TextTag::setValue(String::Pointer const& value)
+void TextTag::setValue(const String& value)
 {
-    internal->value = value;
+    internal->value = value.constPointer();
 }
 
 void TextTag::addTo(Blob::Pointer& destination) const

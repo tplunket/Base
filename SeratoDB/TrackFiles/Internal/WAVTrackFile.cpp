@@ -28,5 +28,5 @@ using namespace NxA::Serato::Internal;
 
 #pragma mark Constructors & Destructors
 
-WAVTrackFile::WAVTrackFile(String::Pointer const& path, TagLibFilePointer const& newFile) :
+WAVTrackFile::WAVTrackFile(const String& path, TagLibFilePointer const& newFile) :
                            ID3TrackFile(path, newFile) { }

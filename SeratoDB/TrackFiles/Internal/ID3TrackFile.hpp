@@ -34,12 +34,12 @@ namespace NxA { namespace Serato { namespace Internal {
         NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTOR_FOR(NxA::Serato, ID3TrackFile);
 
         #pragma mark Constructor & Destructors
-        ID3TrackFile(String::Pointer const& path, TagLibFilePointer const& newFile);
+        ID3TrackFile(const String& path, TagLibFilePointer const& newFile);
 
         #pragma mark Class Methods
         static bool isAValidGeobFrame(const TagLib::ID3v2::GeneralEncapsulatedObjectFrame* frame);
         static TagLib::ID3v2::FrameList::Iterator frameInListWithDescription(TagLib::ID3v2::FrameList& list,
-                                                                             String::Pointer const& description);
+                                                                             const String& description);
         
         #pragma mark Instance Methods
         void readMarkers(void);

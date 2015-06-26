@@ -28,28 +28,28 @@ namespace NxA { namespace Serato {
 
     public:
         #pragma mark Factory Methods
-        static Track::Pointer trackWithTagOnVolume(NxA::Pointer<Tag> const& trackTag, String::Pointer const& locatedOnVolumePath);
-        static Track::Pointer trackWithFileAtOnVolume(String::Pointer const& trackFilePath, String::Pointer const& locatedOnVolumePath);
+        static Track::Pointer trackWithTagOnVolume(NxA::Pointer<Tag> const& trackTag, const String& locatedOnVolumePath);
+        static Track::Pointer trackWithFileAtOnVolume(const String& trackFilePath, const String& locatedOnVolumePath);
 
         #pragma mark Instance Methods
         String::Pointer trackFilePath(void) const;
 
-        String::Pointer const& title(void) const;
-        String::Pointer const& artist(void) const;
-        String::Pointer const& album(void) const;
-        String::Pointer const& genre(void) const;
-        String::Pointer const& comments(void) const;
-        String::Pointer const& grouping(void) const;
-        String::Pointer const& remixer(void) const;
-        String::Pointer const& recordLabel(void) const;
-        String::Pointer const& composer(void) const;
-        String::Pointer const& key(void) const;
-        String::Pointer const& length(void) const;
+        const String& title(void) const;
+        const String& artist(void) const;
+        const String& album(void) const;
+        const String& genre(void) const;
+        const String& comments(void) const;
+        const String& grouping(void) const;
+        const String& remixer(void) const;
+        const String& recordLabel(void) const;
+        const String& composer(void) const;
+        const String& key(void) const;
+        const String& length(void) const;
         count size(void) const;
-        String::Pointer const& bitRate(void) const;
-        String::Pointer const& sampleRate(void) const;
-        String::Pointer const& bpm(void) const;
-        String::Pointer const& year(void) const;
+        const String& bitRate(void) const;
+        const String& sampleRate(void) const;
+        const String& bpm(void) const;
+        const String& year(void) const;
         count trackNumber(void) const;
         count discNumber(void) const;
         timestamp dateModifiedInSecondsSinceJanuary1st1970(void) const;
@@ -59,18 +59,18 @@ namespace NxA { namespace Serato {
         LoopMarker::Array::Pointer const& loopMarkers(void) const;
         GridMarker::Array::Pointer const& gridMarkers(void) const;
 
-        void setTitle(String::Pointer const& title);
-        void setArtist(String::Pointer const& artist);
-        void setAlbum(String::Pointer const& album);
-        void setGenre(String::Pointer const& genre);
-        void setComments(String::Pointer const& comments);
-        void setGrouping(String::Pointer const& grouping);
-        void setRemixer(String::Pointer const& remixer);
-        void setRecordLabel(String::Pointer const& recordLabel);
-        void setComposer(String::Pointer const& composer);
-        void setKey(String::Pointer const& key);
-        void setBpm(String::Pointer const& bpm);
-        void setYear(String::Pointer const& year);
+        void setTitle(const String& title);
+        void setArtist(const String& artist);
+        void setAlbum(const String& album);
+        void setGenre(const String& genre);
+        void setComments(const String& comments);
+        void setGrouping(const String& grouping);
+        void setRemixer(const String& remixer);
+        void setRecordLabel(const String& recordLabel);
+        void setComposer(const String& composer);
+        void setKey(const String& key);
+        void setBpm(const String& bpm);
+        void setYear(const String& year);
         void setTrackNumber(count trackNumber);
         void setDiscNumber(count discNumber);
         void setDateModifiedInSecondsSinceJanuary1st1970(timestamp dateModified);

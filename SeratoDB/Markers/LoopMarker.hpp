@@ -23,7 +23,7 @@ namespace NxA { namespace Serato {
     public:
         #pragma mark Factory Methods
         static LoopMarker::Pointer markerWithMemoryAt(const byte* id3TagStart);
-        static LoopMarker::Pointer markerWithLabelStartEndPositionsAndIndex(String::Pointer const& label,
+        static LoopMarker::Pointer markerWithLabelStartEndPositionsAndIndex(const String& label,
                                                                             uinteger32 startPositionInMilliseconds,
                                                                             uinteger32 endPositionInMilliseconds,
                                                                             uinteger16 index);
@@ -33,7 +33,7 @@ namespace NxA { namespace Serato {
         uinteger32 startPositionInMilliseconds(void) const;
         uinteger32 endPositionInMilliseconds(void) const;
         uinteger16 index(void) const;
-        String::Pointer const& label(void) const;
+        const String& label(void) const;
 
         void addId3TagTo(Blob::Pointer& data) const;
     };

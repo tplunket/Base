@@ -38,14 +38,14 @@ namespace NxA { namespace Serato { namespace Internal {
         NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTOR_FOR(NxA::Serato, TrackFile);
 
         #pragma mark Constructor & Destructors
-        TrackFile(String::Pointer const& path, TagLibFilePointer const& newFile);
+        TrackFile(const String& path, TagLibFilePointer const& newFile);
 
         #pragma mark Class Methods
-        static const byte* nextTagPositionAfterTagNamed(String::Pointer const& tagName, const byte* currentTagPosition);
+        static const byte* nextTagPositionAfterTagNamed(const String& tagName, const byte* currentTagPosition);
         static Blob::Pointer markerV2TagDataFrom(const byte* tagStart);
 
         #pragma mark Instance Variables
-        String::Pointer trackFilePath;
+        String::PointerToConst trackFilePath;
         TagLibFilePointer file;
         TagLib::Tag* parsedFileTag;
         TagLib::PropertyMap properties;

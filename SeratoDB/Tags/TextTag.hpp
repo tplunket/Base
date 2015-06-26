@@ -25,11 +25,11 @@ namespace NxA { namespace Serato {
     public:
         #pragma mark Factory Methods
         static TextTag::Pointer tagWithMemoryAt(const byte* tagAddress);
-        static TextTag::Pointer tagWithIdentifierAndValue(uinteger32 identifier, String::Pointer const& value);
+        static TextTag::Pointer tagWithIdentifierAndValue(uinteger32 identifier, const String& value);
 
         #pragma mark Instance Methods
-        String::Pointer const& value(void) const;
-        void setValue(String::Pointer const& value);
+        const String& value(void) const;
+        void setValue(const String& value);
 
         void addTo(Blob::Pointer& destination) const;
     };

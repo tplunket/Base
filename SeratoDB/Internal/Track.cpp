@@ -38,9 +38,9 @@ static String::Pointer emptyString = String::string();
 #pragma mark Constructors & Destructors
 
 Track::Track(Serato::Tag::Pointer const& tag,
-             String::Pointer const& rootFolderPath) :
+             const String& rootFolderPath) :
              trackTag(tag),
-             rootFolder(rootFolderPath),
+             rootFolder(rootFolderPath.constPointer()),
              wasModified(false),
              cueMarkers(Serato::CueMarker::Array::array()),
              loopMarkers(Serato::LoopMarker::Array::array()),
@@ -49,17 +49,17 @@ Track::Track(Serato::Tag::Pointer const& tag,
 #pragma mark Class Methods
 
 #if PRINT_DEBUG_INFO
-void Track::debugPrint(String::Pointer const& text, String::Pointer const& name)
+void Track::debugPrint(const String& text, const String& name)
 {
-    printf("%s '%s'\n", name->toUTF8(), text->toUTF8());
+    printf("%s '%s'\n", name.toUTF8(), text.toUTF8());
 }
 
-void Track::debugPrintUint(uinteger32 value, String::Pointer const& name)
+void Track::debugPrintUint(uinteger32 value, const String& name)
 {
-    printf("%s '%d'\n", name->toUTF8(), value);
+    printf("%s '%d'\n", name.toUTF8(), value);
 }
 
-void Track::debugPrintTimeFromMilliseconds(uinteger32 value, String::Pointer const& name)
+void Track::debugPrintTimeFromMilliseconds(uinteger32 value, const String& name)
 {
     uinteger32 minutes = value / 60000;
     uinteger32 milliseconds = value % 1000;
@@ -68,13 +68,13 @@ void Track::debugPrintTimeFromMilliseconds(uinteger32 value, String::Pointer con
     milliseconds *= 60;
     milliseconds /= 1000;
 
-    printf("%s '%02d:%02d.%02d'\n", name->toUTF8(), minutes, seconds, milliseconds);
+    printf("%s '%02d:%02d.%02d'\n", name.toUTF8(), minutes, seconds, milliseconds);
 }
 
-void Track::debugPrintDate(timestamp value, String::Pointer const& name)
+void Track::debugPrintDate(timestamp value, const String& name)
 {
     char* stringVersion = ctime(&value);
-    printf("%s %s", name->toUTF8(), stringVersion);
+    printf("%s %s", name.toUTF8(), stringVersion);
 }
 
 void Track::debugPrintComparaison(Serato::Track::Pointer const& track, Serato::TrackFile::Pointer const& trackFile)
@@ -144,7 +144,7 @@ void Track::debugPrintComparaison(Serato::Track::Pointer const& track, Serato::T
 
 #pragma mark Instance Methods
 
-String::Pointer const& Track::stringForSubTagForIdentifier(uinteger32 identifier) const
+const String& Track::stringForSubTagForIdentifier(uinteger32 identifier) const
 {
     auto trackObjectTag = Serato::ObjectTag::Pointer::dynamicCastFrom(this->trackTag);
     if (trackObjectTag->hasSubTagForIdentifier(identifier)) {
@@ -155,7 +155,7 @@ String::Pointer const& Track::stringForSubTagForIdentifier(uinteger32 identifier
     return emptyString;
 }
 
-String::Pointer const& Track::pathForSubTagForIdentifier(uinteger32 identifier) const
+const String& Track::pathForSubTagForIdentifier(uinteger32 identifier) const
 {
     auto trackObjectTag = Serato::ObjectTag::Pointer::dynamicCastFrom(this->trackTag);
     if (trackObjectTag->hasSubTagForIdentifier(identifier)) {
@@ -177,7 +177,7 @@ uinteger32 Track::uint32ForSubTagForIdentifier(uinteger32 identifier) const
     return 0;
 }
 
-void Track::setStringForSubTagForIdentifier(String::Pointer const& value, uinteger32 identifier)
+void Track::setStringForSubTagForIdentifier(const String& value, uinteger32 identifier)
 {
     auto trackObjectTag = Serato::ObjectTag::Pointer::dynamicCastFrom(this->trackTag);
     if (!trackObjectTag->hasSubTagForIdentifier(identifier)) {
@@ -191,7 +191,7 @@ void Track::setStringForSubTagForIdentifier(String::Pointer const& value, uinteg
     this->wasModified = true;
 }
 
-void Track::setPathForSubTagForIdentifier(String::Pointer const& value, uinteger32 identifier)
+void Track::setPathForSubTagForIdentifier(const String& value, uinteger32 identifier)
 {
     auto trackObjectTag = Serato::ObjectTag::Pointer::dynamicCastFrom(this->trackTag);
     if (!trackObjectTag->hasSubTagForIdentifier(identifier)) {

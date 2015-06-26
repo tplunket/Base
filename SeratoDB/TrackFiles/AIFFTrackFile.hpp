@@ -24,7 +24,7 @@ namespace NxA { namespace Serato {
 
     public:
         #pragma mark Factory Methods
-        static AIFFTrackFile::Pointer fileWithFileAt(String::Pointer const& path);
+        static AIFFTrackFile::Pointer fileWithFileAt(const String& path);
 
         #pragma mark Instance Methods
         virtual uinteger32 lengthInMilliseconds(void) const;

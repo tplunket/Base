@@ -50,7 +50,7 @@ LoopMarker::Pointer LoopMarker::markerWithMemoryAt(const byte* id3TagStart)
                                                                 Platform::bigEndianUInteger16ValueAt(tagStruct->index));
 }
 
-LoopMarker::Pointer LoopMarker::markerWithLabelStartEndPositionsAndIndex(String::Pointer const& label,
+LoopMarker::Pointer LoopMarker::markerWithLabelStartEndPositionsAndIndex(const String& label,
                                                                          uinteger32 startPositionInMilliseconds,
                                                                          uinteger32 endPositionInMilliseconds,
                                                                          uinteger16 index)
@@ -59,7 +59,7 @@ LoopMarker::Pointer LoopMarker::markerWithLabelStartEndPositionsAndIndex(String:
     newMarker->internal->startPositionInMilliseconds = startPositionInMilliseconds;
     newMarker->internal->endPositionInMilliseconds = endPositionInMilliseconds;
     newMarker->internal->index = index;
-    newMarker->internal->label = label;
+    newMarker->internal->label = label.constPointer();
 
     return newMarker;
 }
@@ -89,7 +89,7 @@ uinteger16 LoopMarker::index(void) const
     return internal->index;
 }
 
-String::Pointer const& LoopMarker::label(void) const
+const String& LoopMarker::label(void) const
 {
     return internal->label;
 }
@@ -99,7 +99,7 @@ void LoopMarker::addId3TagTo(Blob::Pointer& data) const
     SeratoLoopTagStruct header;
 
     memcpy(header.tag, "LOOP", 5);
-    size_t size = sizeof(SeratoLoopTagStruct) + this->label()->length() + 1 - sizeof(SeratoLoopTagHeaderStruct);
+    size_t size = sizeof(SeratoLoopTagStruct) + this->label().length() + 1 - sizeof(SeratoLoopTagHeaderStruct);
     Platform::writeBigEndianUInteger32ValueAt((uint32_t)size, header.size);
     Platform::writeBigEndianUInteger16ValueAt(this->index(), header.index);
     Platform::writeBigEndianUInteger32ValueAt(this->startPositionInMilliseconds(), header.position);
@@ -111,5 +111,5 @@ void LoopMarker::addId3TagTo(Blob::Pointer& data) const
 
     auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<const byte*>(&header), sizeof(SeratoLoopTagStruct));
     data->append(headerData);
-    data->append(this->label()->toUTF8());
+    data->append(this->label().toUTF8());
 }

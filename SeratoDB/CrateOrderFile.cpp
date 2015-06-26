@@ -22,8 +22,8 @@ using namespace NxA::Serato;
 
 #pragma mark Factory Methods
 
-CrateOrderFile::Pointer CrateOrderFile::fileWithSeratoFolderInRootFolder(String::Pointer const& seratoFolderPath,
-                                                                         String::Pointer const& rootFolderPath)
+CrateOrderFile::Pointer CrateOrderFile::fileWithSeratoFolderInRootFolder(const String& seratoFolderPath,
+                                                                         const String& rootFolderPath)
 {
     auto rootCrate = Crate::crateWithNameInFolderOnVolume(String::string(),
                                                           String::string(),

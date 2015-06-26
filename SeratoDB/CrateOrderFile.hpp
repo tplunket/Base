@@ -26,8 +26,8 @@ namespace NxA { namespace Serato {
 
     public:
         #pragma mark Factory Methods
-        static CrateOrderFile::Pointer fileWithSeratoFolderInRootFolder(String::Pointer const& seratoFolderPath,
-                                                                        String::Pointer const& rootFolderPath);
+        static CrateOrderFile::Pointer fileWithSeratoFolderInRootFolder(const String& seratoFolderPath,
+                                                                        const String& rootFolderPath);
 
         #pragma mark Instance Methods
         NxA::Pointer<Crate> const& rootCrate(void) const;

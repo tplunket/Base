@@ -23,6 +23,6 @@ namespace NxA { namespace Serato {
         TrackFileFactory() = delete;
 
         #pragma mark Class Methods
-        static NxA::Serato::TrackFile::Pointer trackFileForPath(String::Pointer const& trackFilePath);
+        static NxA::Serato::TrackFile::Pointer trackFileForPath(const String& trackFilePath);
     };
 } }

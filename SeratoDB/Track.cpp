@@ -24,7 +24,7 @@ using namespace NxA::Serato;
 
 #pragma mark Factory Methods
 
-Track::Pointer Track::trackWithTagOnVolume(Tag::Pointer const& trackTag, String::Pointer const& locatedOnVolumePath)
+Track::Pointer Track::trackWithTagOnVolume(Tag::Pointer const& trackTag, const String& locatedOnVolumePath)
 {
     auto internalObject = Internal::Track::Pointer(std::make_shared<Internal::Track>(trackTag, locatedOnVolumePath));
     auto newTrack = Track::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
@@ -41,7 +41,7 @@ Track::Pointer Track::trackWithTagOnVolume(Tag::Pointer const& trackTag, String:
     return newTrack;
 }
 
-Track::Pointer Track::trackWithFileAtOnVolume(String::Pointer const& trackFilePath, String::Pointer const& locatedOnVolumePath)
+Track::Pointer Track::trackWithFileAtOnVolume(const String& trackFilePath, const String& locatedOnVolumePath)
 {
     auto relativePath = File::removePrefixFromPath(String::stringWith(locatedOnVolumePath),
                                                    String::stringWith(trackFilePath));
@@ -72,61 +72,61 @@ Track::Pointer Track::trackWithFileAtOnVolume(String::Pointer const& trackFilePa
 
 String::Pointer Track::trackFilePath(void) const
 {
-    auto pathFromRootFolder = internal->pathForSubTagForIdentifier(trackFilePathTagIdentifier);
+    auto& pathFromRootFolder = internal->pathForSubTagForIdentifier(trackFilePathTagIdentifier);
     return File::joinPaths(internal->rootFolder, pathFromRootFolder);
 }
 
-String::Pointer const& Track::title(void) const
+const String& Track::title(void) const
 {
     return internal->stringForSubTagForIdentifier(trackTitleTagIdentifier);
 }
 
-String::Pointer const& Track::artist(void) const
+const String& Track::artist(void) const
 {
     return internal->stringForSubTagForIdentifier(trackArtistTagIdentifier);
 }
 
-String::Pointer const& Track::album(void) const
+const String& Track::album(void) const
 {
     return internal->stringForSubTagForIdentifier(trackAlbumTagIdentifier);
 }
 
-String::Pointer const& Track::genre(void) const
+const String& Track::genre(void) const
 {
     return internal->stringForSubTagForIdentifier(trackGenreTagIdentifier);
 }
 
-String::Pointer const& Track::comments(void) const
+const String& Track::comments(void) const
 {
     return internal->stringForSubTagForIdentifier(trackCommentsTagIdentifier);
 }
 
-String::Pointer const& Track::grouping(void) const
+const String& Track::grouping(void) const
 {
     return internal->stringForSubTagForIdentifier(trackGroupingTagIdentifier);
 }
 
-String::Pointer const& Track::remixer(void) const
+const String& Track::remixer(void) const
 {
     return internal->stringForSubTagForIdentifier(trackRemixerTagIdentifier);
 }
 
-String::Pointer const& Track::recordLabel(void) const
+const String& Track::recordLabel(void) const
 {
     return internal->stringForSubTagForIdentifier(trackLabelTagIdentifier);
 }
 
-String::Pointer const& Track::composer(void) const
+const String& Track::composer(void) const
 {
     return internal->stringForSubTagForIdentifier(trackComposerTagIdentifier);
 }
 
-String::Pointer const& Track::key(void) const
+const String& Track::key(void) const
 {
     return internal->stringForSubTagForIdentifier(trackKeyTagIdentifier);
 }
 
-String::Pointer const& Track::length(void) const
+const String& Track::length(void) const
 {
     return internal->stringForSubTagForIdentifier(trackLengthTagIdentifier);
 }
@@ -136,22 +136,22 @@ count Track::size(void) const
     return internal->uint32ForSubTagForIdentifier(trackSizeTagIdentifier);
 }
 
-String::Pointer const& Track::bitRate(void) const
+const String& Track::bitRate(void) const
 {
     return internal->stringForSubTagForIdentifier(trackBitrateTagIdentifier);
 }
 
-String::Pointer const& Track::sampleRate(void) const
+const String& Track::sampleRate(void) const
 {
     return internal->stringForSubTagForIdentifier(trackSampleRateTagIdentifier);
 }
 
-String::Pointer const& Track::bpm(void) const
+const String& Track::bpm(void) const
 {
     return internal->stringForSubTagForIdentifier(trackBpmTagIdentifier);
 }
 
-String::Pointer const& Track::year(void) const
+const String& Track::year(void) const
 {
     return internal->stringForSubTagForIdentifier(trackYearTagIdentifier);
 }
@@ -191,62 +191,62 @@ GridMarker::Array::Pointer const& Track::gridMarkers(void) const
     return internal->gridMarkers;
 }
 
-void Track::setTitle(String::Pointer const& title)
+void Track::setTitle(const String& title)
 {
     internal->setStringForSubTagForIdentifier(title, trackTitleTagIdentifier);
 }
 
-void Track::setArtist(String::Pointer const& artist)
+void Track::setArtist(const String& artist)
 {
     internal->setStringForSubTagForIdentifier(artist, trackArtistTagIdentifier);
 }
 
-void Track::setAlbum(String::Pointer const& album)
+void Track::setAlbum(const String& album)
 {
     internal->setStringForSubTagForIdentifier(album, trackAlbumTagIdentifier);
 }
 
-void Track::setGenre(String::Pointer const& genre)
+void Track::setGenre(const String& genre)
 {
     internal->setStringForSubTagForIdentifier(genre, trackGenreTagIdentifier);
 }
 
-void Track::setComments(String::Pointer const& comments)
+void Track::setComments(const String& comments)
 {
     internal->setStringForSubTagForIdentifier(comments, trackCommentsTagIdentifier);
 }
 
-void Track::setGrouping(String::Pointer const& grouping)
+void Track::setGrouping(const String& grouping)
 {
     internal->setStringForSubTagForIdentifier(grouping, trackGroupingTagIdentifier);
 }
 
-void Track::setRemixer(String::Pointer const& remixer)
+void Track::setRemixer(const String& remixer)
 {
     internal->setStringForSubTagForIdentifier(remixer, trackRemixerTagIdentifier);
 }
 
-void Track::setRecordLabel(String::Pointer const& recordLabel)
+void Track::setRecordLabel(const String& recordLabel)
 {
     internal->setStringForSubTagForIdentifier(recordLabel, trackLabelTagIdentifier);
 }
 
-void Track::setComposer(String::Pointer const& composer)
+void Track::setComposer(const String& composer)
 {
     internal->setStringForSubTagForIdentifier(composer, trackComposerTagIdentifier);
 }
 
-void Track::setKey(String::Pointer const& key)
+void Track::setKey(const String& key)
 {
     internal->setStringForSubTagForIdentifier(key, trackKeyTagIdentifier);
 }
 
-void Track::setBpm(String::Pointer const& bpm)
+void Track::setBpm(const String& bpm)
 {
     internal->setStringForSubTagForIdentifier(bpm, trackBpmTagIdentifier);
 }
 
-void Track::setYear(String::Pointer const& year)
+void Track::setYear(const String& year)
 {
     internal->setStringForSubTagForIdentifier(year, trackYearTagIdentifier);
 }

@@ -33,30 +33,30 @@ namespace NxA { namespace Serato { namespace Internal {
         NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTOR_FOR(NxA::Serato, CrateOrderFile);
 
         #pragma mark Constructors & Desctructors
-        CrateOrderFile(String::Pointer const& path,
+        CrateOrderFile(const String& path,
                        Serato::Crate::Pointer const& root);
 
         #pragma mark Class Methods
-        static String::Pointer crateNameIfValidCrateOrEmptyIfNot(String::Pointer const& name);
-        static bool filenameIsAValidCrateName(String::Pointer const& fileName);
-        static String::Pointer crateNameFromFilename(String::Pointer const& fileName);
-        static String::Array::Pointer cratesInSubCratesDirectory(String::Pointer const& directory);
-        static String::Array::Pointer readCratesNamesInCrateOrderFile(String::Pointer const& crateOrderFilePath);
+        static String::Pointer crateNameIfValidCrateOrEmptyIfNot(const String& name);
+        static bool filenameIsAValidCrateName(const String& fileName);
+        static String::Pointer crateNameFromFilename(const String& fileName);
+        static String::Array::Pointer cratesInSubCratesDirectory(const String& directory);
+        static String::Array::Pointer readCratesNamesInCrateOrderFile(const String& crateOrderFilePath);
         static void addCratesNamesAtTheStartOfUnlessAlreadyThere(String::Array::Pointer& cratesToAddTo,
                                                                  String::Array::Pointer const& cratesToAdd);
 
         #pragma mark Instance Variables
-        String::Pointer crateOrderFilePath;
+        String::PointerToConst crateOrderFilePath;
 
         Serato::Crate::Pointer rootCrate;
 
         String::Array::Pointer unknownCratesNames;
 
         #pragma mark Instance Methods
-        Serato::Crate::Array::Pointer childrenCratesOfCrateNamedUsingNameList(String::Pointer const& name,
+        Serato::Crate::Array::Pointer childrenCratesOfCrateNamedUsingNameList(const String& name,
                                                                               String::Array::iterator& it,
                                                                               const String::Array::iterator& end,
-                                                                              String::Pointer const& seratoFolderPath,
-                                                                              String::Pointer const& rootFolderPath);
+                                                                              const String& seratoFolderPath,
+                                                                              const String& rootFolderPath);
     };
 } } }

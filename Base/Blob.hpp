@@ -27,7 +27,7 @@
 namespace NxA {
     NXA_GENERATED_FORWARD_DECLARATIONS_FOR(Blob);
 
-    class Blob : public Object, NXA_INHERITANCE_FOR(Blob) {
+    class Blob : public Object {
         NXA_GENERATED_DECLARATIONS_FOR(NxA, Blob);
 
     public:

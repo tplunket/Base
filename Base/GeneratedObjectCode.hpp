@@ -162,6 +162,6 @@ namespace NxA {
                                                internal(namespace_name::Internal::class_name::Pointer::dynamicCastFrom(initial_internal)) { }
 #endif
 
-#define NXA_GENERATED_IMPLEMENTATION_FOR(namespace_name, class_name, parent_class) \
+#define NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(namespace_name, class_name, parent_class) \
         NXA_GENERATED_FACTORY_METHODS_FOR(namespace_name, class_name) \
         NXA_GENERATED_CONSTRUCTORS_FOR(namespace_name, class_name, parent_class)

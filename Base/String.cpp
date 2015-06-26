@@ -29,7 +29,7 @@
 #include <locale>
 #include <sstream>
 
-NXA_GENERATED_IMPLEMENTATION_FOR(NxA, String, Object);
+NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA, String, Object);
 
 using namespace NxA;
 

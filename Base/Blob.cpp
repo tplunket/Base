@@ -23,7 +23,7 @@
 #include "Base/String.hpp"
 #include "Base/Internal/Blob.hpp"
 
-NXA_GENERATED_IMPLEMENTATION_FOR(NxA, Blob, Object);
+NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA, Blob, Object);
 
 using namespace NxA;
 

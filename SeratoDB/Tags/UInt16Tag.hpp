@@ -19,7 +19,7 @@
 namespace NxA { namespace Serato {
     NXA_GENERATED_FORWARD_DECLARATIONS_FOR(UInteger16Tag);
 
-    class UInteger16Tag : public Tag {
+    class UInteger16Tag : public Tag, NXA_INHERITANCE_FOR(UInteger16Tag) {
         NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, UInteger16Tag);
 
     public:

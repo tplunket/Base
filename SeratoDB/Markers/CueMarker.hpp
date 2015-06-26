@@ -17,7 +17,7 @@
 namespace NxA { namespace Serato {
     NXA_GENERATED_FORWARD_DECLARATIONS_FOR(CueMarker);
 
-    class CueMarker : public NxA::Object {
+    class CueMarker : public Object, NXA_INHERITANCE_FOR(CueMarker) {
         NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, CueMarker);
 
     public:

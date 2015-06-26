@@ -23,7 +23,7 @@ namespace NxA { namespace Serato {
 
     class Tag;
 
-    class Track : public NxA::Object {
+    class Track : public Object, NXA_INHERITANCE_FOR(Track) {
         NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, Track);
 
     public:

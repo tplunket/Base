@@ -17,7 +17,7 @@
 namespace NxA { namespace Serato {
     NXA_GENERATED_FORWARD_DECLARATIONS_FOR(GridMarker);
 
-    class GridMarker : public NxA::Object {
+    class GridMarker : public Object, NXA_INHERITANCE_FOR(GridMarker) {
         NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, GridMarker);
 
     public:

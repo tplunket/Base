@@ -19,7 +19,7 @@
 namespace NxA { namespace Serato {
     NXA_GENERATED_FORWARD_DECLARATIONS_FOR(BlobTag);
 
-    class BlobTag : public Tag {
+    class BlobTag : public Tag, NXA_INHERITANCE_FOR(BlobTag) {
         NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, BlobTag);
 
     public:

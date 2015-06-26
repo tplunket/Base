@@ -19,7 +19,7 @@
 namespace NxA { namespace Serato {
     NXA_GENERATED_FORWARD_DECLARATIONS_FOR(PathTag);
 
-    class PathTag : public Tag {
+    class PathTag : public Tag, NXA_INHERITANCE_FOR(PathTag) {
         NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, PathTag);
 
     public:

@@ -19,7 +19,7 @@
 namespace NxA { namespace Serato {
     NXA_GENERATED_FORWARD_DECLARATIONS_FOR(FLACTrackFile);
 
-    class FLACTrackFile : public TrackFile {
+    class FLACTrackFile : public TrackFile, NXA_INHERITANCE_FOR(FLACTrackFile) {
         NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, FLACTrackFile);
 
     public:

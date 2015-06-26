@@ -19,7 +19,7 @@
 namespace NxA { namespace Serato {
     NXA_GENERATED_FORWARD_DECLARATIONS_FOR(WAVTrackFile);
 
-    class WAVTrackFile : public ID3TrackFile {
+    class WAVTrackFile : public ID3TrackFile, NXA_INHERITANCE_FOR(WAVTrackFile) {
         NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, WAVTrackFile);
 
     public:

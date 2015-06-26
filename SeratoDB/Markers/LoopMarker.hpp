@@ -17,7 +17,7 @@
 namespace NxA { namespace Serato {
     NXA_GENERATED_FORWARD_DECLARATIONS_FOR(LoopMarker);
 
-    class LoopMarker : public NxA::Object {
+    class LoopMarker : public Object, NXA_INHERITANCE_FOR(LoopMarker) {
         NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, LoopMarker);
         
     public:

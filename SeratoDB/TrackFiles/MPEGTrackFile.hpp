@@ -19,7 +19,7 @@
 namespace NxA { namespace Serato {
     NXA_GENERATED_FORWARD_DECLARATIONS_FOR(MPEGTrackFile);
 
-    class MPEGTrackFile : public ID3TrackFile {
+    class MPEGTrackFile : public ID3TrackFile, NXA_INHERITANCE_FOR(MPEGTrackFile) {
         NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, MPEGTrackFile);
 
     public:

@@ -21,7 +21,7 @@ namespace NxA { namespace Serato {
 
     class Crate;
 
-    class CrateOrderFile : public NxA::Object {
+    class CrateOrderFile : public Object, NXA_INHERITANCE_FOR(CrateOrderFile) {
         NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, CrateOrderFile);
 
     public:

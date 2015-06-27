@@ -36,7 +36,7 @@ CrateOrderFile::Pointer CrateOrderFile::fileWithSeratoFolderInRootFolder(const S
     auto subCratesFound = Internal::CrateOrderFile::cratesInSubCratesDirectory(subCratesDirectory);
     auto cratesInOrder = Internal::CrateOrderFile::readCratesNamesInCrateOrderFile(newCrateOrderFile->internal->crateOrderFilePath);
 
-    Internal::CrateOrderFile::addCratesNamesAtTheStartOfUnlessAlreadyThere(cratesInOrder, subCratesFound);
+    Internal::CrateOrderFile::addCratesNamesAtTheStartOfUnlessAlreadyThere(*cratesInOrder, *subCratesFound);
 
     auto it = cratesInOrder->begin();
     auto crates = newCrateOrderFile->internal->childrenCratesOfCrateNamedUsingNameList(String::string(),

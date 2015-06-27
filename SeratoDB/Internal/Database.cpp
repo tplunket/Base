@@ -31,7 +31,7 @@ Database::Database(const String& path,
                    Serato::CrateOrderFile::Pointer usingCrateOrderFile) :
                    databaseFilePath(path.constPointer()),
                    tracks(Serato::Track::Array::array()),
-                   otherTags(Serato::Tag::Array::array()),
+                   otherTags(Serato::Tag::ArrayOfConst::array()),
                    crateFilesToDelete(String::Array::array()),
                    crateOrderFile(usingCrateOrderFile),
                    databaseIsValid(false) { }
@@ -62,12 +62,12 @@ void Database::debugListCrate(Serato::Crate::Pointer const& crate,
 
 #pragma mark Instance Methods
 
-void Database::storeTrackTag(Serato::Tag::Pointer const& tag)
+void Database::storeTrackTag(Serato::Tag& tag)
 {
     this->tracks->append(Serato::Track::trackWithTagOnVolume(tag, String::stringWith("")));
 }
 
-void Database::storeOtherTag(Serato::Tag::Pointer const& tag)
+void Database::storeOtherTag(const Serato::Tag& tag)
 {
     this->otherTags->append(tag);
 }

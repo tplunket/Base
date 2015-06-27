@@ -24,7 +24,7 @@ namespace NxA { namespace Serato {
 
     public:
         #pragma mark Factory Methods
-        static TrackEntry::Pointer entryWithTagOnVolume(NxA::Pointer<Tag> const& tag,
+        static TrackEntry::Pointer entryWithTagOnVolume(const Tag& tag,
                                                         const String& volumePath);
         static TrackEntry::Pointer entryWithTrackFileAtOnVolume(const String& path,
                                                                 const String& volumePath);
@@ -32,7 +32,7 @@ namespace NxA { namespace Serato {
         #pragma mark Instance Methods
         String::Pointer trackFilePath(void) const;
 
-        NxA::Pointer<Tag> const& tagForEntry(void) const;
+        const Tag& tagForEntry(void) const;
 
         void destroy(void);
     };

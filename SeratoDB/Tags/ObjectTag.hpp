@@ -30,10 +30,10 @@ namespace NxA { namespace Serato {
         #pragma mark Instance Methods
         bool hasSubTagForIdentifier(uinteger32 identifier) const;
 
-        Tag::Pointer const& subTagForIdentifier(uinteger32 identifier) const;
-        Tag::Pointer& subTagForIdentifier(uinteger32 identifier);
+        const Tag& subTagForIdentifier(uinteger32 identifier) const;
+        Tag& subTagForIdentifier(uinteger32 identifier);
 
-        void addSubTag(Tag::Pointer const& tag);
+        void addSubTag(Tag& tag);
 
         void addTo(Blob::Pointer& destination) const;
     };

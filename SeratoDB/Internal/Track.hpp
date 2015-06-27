@@ -38,7 +38,7 @@ namespace NxA { namespace Serato { namespace Internal {
         NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTOR_FOR(NxA::Serato, Track);
 
         #pragma mark Constructors & Destructors
-        Track(Serato::Tag::Pointer const& tag,
+        Track(Serato::Tag& tag,
               const String& rootFolderPath);
 
         #pragma mark Class Methods

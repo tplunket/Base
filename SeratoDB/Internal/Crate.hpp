@@ -48,15 +48,15 @@ namespace NxA { namespace Serato { namespace Internal {
 
         Serato::Crate::WeakPointer parentCrate;
         Serato::Crate::Array::Pointer childrenCrates;
-        Serato::TrackEntry::Array::Pointer trackEntries;
+        Serato::TrackEntry::ArrayOfConst::Pointer trackEntries;
 
-        Serato::Tag::Array::Pointer otherTags;
+        Serato::Tag::ArrayOfConst::Pointer otherTags;
 
         #pragma mark Instance Methods
-        void addTrackEntry(Serato::TrackEntry::Pointer const& trackEntry);
+        void addTrackEntry(const Serato::TrackEntry& trackEntry);
 
-        void storeTrackTag(Serato::Tag::Pointer const& tag);
-        void storeOtherTag(Serato::Tag::Pointer const& tag);
+        void storeTrackTag(const Serato::Tag& tag);
+        void storeOtherTag(const Serato::Tag& tag);
 
         void markCratesAsModified(void);
     };

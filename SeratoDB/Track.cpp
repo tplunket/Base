@@ -24,7 +24,7 @@ using namespace NxA::Serato;
 
 #pragma mark Factory Methods
 
-Track::Pointer Track::trackWithTagOnVolume(Tag::Pointer const& trackTag, const String& locatedOnVolumePath)
+Track::Pointer Track::trackWithTagOnVolume(Tag& trackTag, const String& locatedOnVolumePath)
 {
     auto internalObject = Internal::Track::Pointer(std::make_shared<Internal::Track>(trackTag, locatedOnVolumePath));
     auto newTrack = Track::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));

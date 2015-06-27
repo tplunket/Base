@@ -40,22 +40,22 @@ namespace NxA { namespace Serato { namespace Internal {
         static String::Pointer crateNameIfValidCrateOrEmptyIfNot(const String& name);
         static bool filenameIsAValidCrateName(const String& fileName);
         static String::Pointer crateNameFromFilename(const String& fileName);
-        static String::Array::Pointer cratesInSubCratesDirectory(const String& directory);
-        static String::Array::Pointer readCratesNamesInCrateOrderFile(const String& crateOrderFilePath);
-        static void addCratesNamesAtTheStartOfUnlessAlreadyThere(String::Array::Pointer& cratesToAddTo,
-                                                                 String::Array::Pointer const& cratesToAdd);
+        static String::ArrayOfConst::Pointer cratesInSubCratesDirectory(const String& directory);
+        static String::ArrayOfConst::Pointer readCratesNamesInCrateOrderFile(const String& crateOrderFilePath);
+        static void addCratesNamesAtTheStartOfUnlessAlreadyThere(String::ArrayOfConst& cratesToAddTo,
+                                                                 const String::ArrayOfConst& cratesToAdd);
 
         #pragma mark Instance Variables
         String::PointerToConst crateOrderFilePath;
 
         Serato::Crate::Pointer rootCrate;
 
-        String::Array::Pointer unknownCratesNames;
+        String::ArrayOfConst::Pointer unknownCratesNames;
 
         #pragma mark Instance Methods
         Serato::Crate::Array::Pointer childrenCratesOfCrateNamedUsingNameList(const String& name,
-                                                                              String::Array::iterator& it,
-                                                                              const String::Array::iterator& end,
+                                                                              String::ArrayOfConst::iterator& it,
+                                                                              const String::ArrayOfConst::iterator& end,
                                                                               const String& seratoFolderPath,
                                                                               const String& rootFolderPath);
     };

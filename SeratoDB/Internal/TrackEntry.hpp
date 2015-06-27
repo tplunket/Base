@@ -32,11 +32,11 @@ namespace NxA { namespace Serato { namespace Internal {
         NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTOR_FOR(NxA::Serato, TrackEntry);
 
         #pragma mark Constructors & Destructors
-        TrackEntry(Serato::Tag::Pointer const& tag,
+        TrackEntry(const Serato::Tag& tag,
                    const String& locatedOnVolumePath);
 
         #pragma mark Instance Variable
-        Serato::Tag::Pointer trackEntryTag;
+        Serato::Tag::PointerToConst trackEntryTag;
         String::PointerToConst rootVolumePath;
     };
 } } }

@@ -49,7 +49,7 @@ namespace NxA { namespace Serato { namespace Internal {
         #pragma mark Instance Variables
         String::PointerToConst databaseFilePath;
         Serato::Track::Array::Pointer tracks;
-        Serato::Tag::Array::Pointer otherTags;
+        Serato::Tag::ArrayOfConst::Pointer otherTags;
 
         String::Array::Pointer crateFilesToDelete;
 
@@ -58,7 +58,7 @@ namespace NxA { namespace Serato { namespace Internal {
         bool databaseIsValid;
 
         #pragma mark Instance Methods
-        void storeTrackTag(Serato::Tag::Pointer const& tag);
-        void storeOtherTag(Serato::Tag::Pointer const& tag);
+        void storeTrackTag(Serato::Tag& tag);
+        void storeOtherTag(const Serato::Tag& tag);
     };
 } } }

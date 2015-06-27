@@ -38,7 +38,7 @@ ObjectTag::Pointer ObjectTag::tagWithIdentifierAndValue(uinteger32 identifier, T
     newTag->internal->identifier = identifier;
 
     for (auto& subTag : *content) {
-        newTag->addSubTag(subTag);
+        newTag->addSubTag(*subTag);
     }
 
     return newTag;
@@ -51,19 +51,19 @@ bool ObjectTag::hasSubTagForIdentifier(uinteger32 identifier) const
     return internal->subTagForIdentifier->containsValueForKey(identifier);
 }
 
-Tag::Pointer const& ObjectTag::subTagForIdentifier(uinteger32 identifier) const
+const Tag& ObjectTag::subTagForIdentifier(uinteger32 identifier) const
 {
     return (*internal->subTagForIdentifier)[identifier];
 }
 
-Tag::Pointer& ObjectTag::subTagForIdentifier(uinteger32 identifier)
+Tag& ObjectTag::subTagForIdentifier(uinteger32 identifier)
 {
     return (*internal->subTagForIdentifier)[identifier];
 }
 
-void ObjectTag::addSubTag(Tag::Pointer const& tag)
+void ObjectTag::addSubTag(Tag& tag)
 {
-    (*internal->subTagForIdentifier)[tag->identifier()] = tag;
+    (*internal->subTagForIdentifier)[tag.identifier()] = tag.pointer();
 }
 
 void ObjectTag::addTo(Blob::Pointer& destination) const

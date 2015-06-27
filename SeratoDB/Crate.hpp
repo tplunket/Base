@@ -41,9 +41,9 @@ namespace NxA { namespace Serato {
         #pragma mark Instance Methods
         const String& crateName(void) const;
         const String& crateFullName(void) const;
-        void addFullCrateNameWithPrefixAndRecurseToChildren(String::Pointer& destination, const char* prefix) const;
+        void addFullCrateNameWithPrefixAndRecurseToChildren(String& destination, const char* prefix) const;
 
-        TrackEntry::Array::Pointer const& trackEntries(void) const;
+        TrackEntry::ArrayOfConst::Pointer const& trackEntries(void) const;
         Crate::Array::Pointer const& crates(void) const;
 
         void addTrackEntry(Serato::TrackEntry::Pointer const& trackEntry);
@@ -60,7 +60,7 @@ namespace NxA { namespace Serato {
         bool childrenCratesWereModified(void) const;
 
         void removeChildrenCrate(Crate::Pointer const& crate);
-        TrackEntry::Array::Pointer removeAndReturnTrackEntries(void);
+        TrackEntry::ArrayOfConst::Pointer removeAndReturnTrackEntries(void);
         Crate::Array::Pointer removeAndReturnChildrenCrates(void);
     };
 } }

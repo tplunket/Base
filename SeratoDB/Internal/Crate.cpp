@@ -38,25 +38,25 @@ Crate::Crate(const String& fullName,
              tracksWereModified(true),
              cratesWereModified(false),
              childrenCrates(Serato::Crate::Array::array()),
-             trackEntries(Serato::TrackEntry::Array::array()),
-             otherTags(Serato::Tag::Array::array()) { }
+             trackEntries(Serato::TrackEntry::ArrayOfConst::array()),
+             otherTags(Serato::Tag::ArrayOfConst::array()) { }
 
 #pragma mark Instance Methods
 
-void Crate::addTrackEntry(Serato::TrackEntry::Pointer const& trackEntry)
+void Crate::addTrackEntry(const Serato::TrackEntry& trackEntry)
 {
     this->tracksWereModified = true;
     this->trackEntries->append(trackEntry);
 }
 
-void Crate::storeTrackTag(Serato::Tag::Pointer const& tag)
+void Crate::storeTrackTag(const Serato::Tag& tag)
 {
     this->addTrackEntry(Serato::TrackEntry::entryWithTagOnVolume(tag, this->rootVolumePath));
 }
 
-void Crate::storeOtherTag(Serato::Tag::Pointer const& tag)
+void Crate::storeOtherTag(const Serato::Tag& tag)
 {
-    this->otherTags->append(tag);
+    this->otherTags->append(tag.constPointer());
 }
 
 void Crate::markCratesAsModified(void)

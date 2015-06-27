@@ -36,7 +36,7 @@ CrateOrderFile::CrateOrderFile(const String& path,
                                Serato::Crate::Pointer const& root) :
                                crateOrderFilePath(path.constPointer()),
                                rootCrate(root),
-                               unknownCratesNames(String::Array::array()) { }
+                               unknownCratesNames(String::ArrayOfConst::array()) { }
 
 #pragma mark Class Methods
 
@@ -61,9 +61,9 @@ String::Pointer CrateOrderFile::crateNameFromFilename(const String& fileName)
     return fileName.subString(0, fileName.length() - 6);
 }
 
-String::Array::Pointer CrateOrderFile::cratesInSubCratesDirectory(const String& directory)
+String::ArrayOfConst::Pointer CrateOrderFile::cratesInSubCratesDirectory(const String& directory)
 {
-    auto crateNamesFound = String::Array::array();
+    auto crateNamesFound = String::ArrayOfConst::array();
 
     DIR *pdir;
     struct dirent *pent;
@@ -83,12 +83,12 @@ String::Array::Pointer CrateOrderFile::cratesInSubCratesDirectory(const String& 
         closedir(pdir);
     }
 
-    return move(crateNamesFound);
+    return crateNamesFound;
 }
 
-String::Array::Pointer CrateOrderFile::readCratesNamesInCrateOrderFile(const String& crateOrderFilePath)
+String::ArrayOfConst::Pointer CrateOrderFile::readCratesNamesInCrateOrderFile(const String& crateOrderFilePath)
 {
-    auto cratesInOrder = String::Array::array();
+    auto cratesInOrder = String::ArrayOfConst::array();
 
     auto crateOrderFile = File::readFileAt(crateOrderFilePath);
     if (crateOrderFile->size()) {
@@ -104,17 +104,17 @@ String::Array::Pointer CrateOrderFile::readCratesNamesInCrateOrderFile(const Str
         }
     }
 
-    return move(cratesInOrder);
+    return cratesInOrder;
 }
 
-void CrateOrderFile::addCratesNamesAtTheStartOfUnlessAlreadyThere(String::Array::Pointer& cratesToAddTo,
-                                                                  String::Array::Pointer const& cratesToAdd)
+void CrateOrderFile::addCratesNamesAtTheStartOfUnlessAlreadyThere(String::ArrayOfConst& cratesToAddTo,
+                                                                  const String::ArrayOfConst& cratesToAdd)
 {
-    auto insertionPosition = cratesToAddTo->begin();
-    for (auto& crateName : *cratesToAdd) {
+    auto insertionPosition = cratesToAddTo.begin();
+    for (auto& crateName : cratesToAdd) {
         bool alreadyHaveThisCrate = false;
 
-        for (auto& otherCrateName : *cratesToAddTo) {
+        for (auto& otherCrateName : cratesToAddTo) {
             if (crateName->isEqualTo(otherCrateName)) {
                 alreadyHaveThisCrate = true;
                 break;
@@ -123,7 +123,7 @@ void CrateOrderFile::addCratesNamesAtTheStartOfUnlessAlreadyThere(String::Array:
 
         if (!alreadyHaveThisCrate) {
             printf("added: %s\n", crateName->toUTF8());
-            cratesToAddTo->insertAt(crateName, insertionPosition);
+            cratesToAddTo.insertAt(*crateName, insertionPosition);
             insertionPosition += 1;
         }
     }
@@ -132,8 +132,8 @@ void CrateOrderFile::addCratesNamesAtTheStartOfUnlessAlreadyThere(String::Array:
 #pragma mark Instance Methods
 
 Serato::Crate::Array::Pointer CrateOrderFile::childrenCratesOfCrateNamedUsingNameList(const String& name,
-                                                                                      String::Array::iterator& it,
-                                                                                      const String::Array::iterator& end,
+                                                                                      String::ArrayOfConst::iterator& it,
+                                                                                      const String::ArrayOfConst::iterator& end,
                                                                                       const String& seratoFolderPath,
                                                                                       const String& rootFolderPath)
 {

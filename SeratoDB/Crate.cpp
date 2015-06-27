@@ -99,12 +99,12 @@ const String& Crate::crateFullName(void) const
     return internal->crateFullName;
 }
 
-void Crate::addFullCrateNameWithPrefixAndRecurseToChildren(String::Pointer& destination, const char* prefix) const
+void Crate::addFullCrateNameWithPrefixAndRecurseToChildren(String& destination, const char* prefix) const
 {
     if (internal->crateFullName->length()) {
-        destination->append(prefix);
-        destination->append(internal->crateFullName);
-        destination->append("\n");
+        destination.append(prefix);
+        destination.append(internal->crateFullName);
+        destination.append("\n");
     }
 
     for (auto& crate : *internal->childrenCrates) {
@@ -112,7 +112,7 @@ void Crate::addFullCrateNameWithPrefixAndRecurseToChildren(String::Pointer& dest
     }
 }
 
-TrackEntry::Array::Pointer const& Crate::trackEntries(void) const
+TrackEntry::ArrayOfConst::Pointer const& Crate::trackEntries(void) const
 {
     return internal->trackEntries;
 }
@@ -194,7 +194,7 @@ void Crate::saveIfModifiedAndRecurseToChildren(void) const
         versionTag->addTo(outputData);
 
         for (auto& trackEntry : *internal->trackEntries) {
-            trackEntry->tagForEntry()->addTo(outputData);
+            trackEntry->tagForEntry().addTo(outputData);
         }
 
         for (auto& tag : *internal->otherTags) {
@@ -221,11 +221,11 @@ void Crate::removeChildrenCrate(Crate::Pointer const& crate)
     internal->markCratesAsModified();
 }
 
-TrackEntry::Array::Pointer Crate::removeAndReturnTrackEntries(void)
+TrackEntry::ArrayOfConst::Pointer Crate::removeAndReturnTrackEntries(void)
 {
     auto currentEntries = internal->trackEntries;
 
-    internal->trackEntries = TrackEntry::Array::array();
+    internal->trackEntries = TrackEntry::ArrayOfConst::array();
     internal->tracksWereModified = true;
 
     return currentEntries;

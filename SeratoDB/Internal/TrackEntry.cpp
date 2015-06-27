@@ -27,7 +27,7 @@ using namespace NxA::Serato::Internal;
 
 #pragma mark Constructors & Destructors
 
-TrackEntry::TrackEntry(Serato::Tag::Pointer const& tag,
+TrackEntry::TrackEntry(const Serato::Tag& tag,
                        const String& locatedOnVolumePath) :
-                       trackEntryTag(tag),
+                       trackEntryTag(tag.constPointer()),
                        rootVolumePath(locatedOnVolumePath.constPointer()) { }

@@ -139,7 +139,10 @@ namespace NxA {
 #define NXA_GENERATED_CONSTRUCTORS_FOR(namespace_name, class_name, parent_class) \
         namespace_name::class_name::class_name(NxA::Pointer<Internal::Object> const& initial_internal) : \
                                                parent_class(initial_internal), \
-                                               internal(NxA::Pointer<namespace_name::Internal::class_name>::dynamicCastFrom(initial_internal)) { }
+                                               internal(NxA::Pointer<namespace_name::Internal::class_name>::dynamicCastFrom(initial_internal)) \
+        { \
+            printf("Constructing " NXA_STR_VALUE_FOR(namespace_name) "::" NXA_STR_VALUE_FOR(class_name) "\n"); \
+        }
 #else
 #define NXA_GENERATED_INTERNAL_IMPLEMENTATION_FOR(namespace_name, class_name) \
         NxA::Pointer<namespace_name::Internal::class_name> namespace_name::Internal::class_name::makeShared(void) \

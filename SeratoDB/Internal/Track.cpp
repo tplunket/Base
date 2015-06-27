@@ -40,7 +40,7 @@ static String::Pointer emptyString = String::string();
 Track::Track(Serato::Tag& tag,
              const String& rootFolderPath) :
              trackTag(tag.pointer()),
-             rootFolder(rootFolderPath.constPointer()),
+             rootFolder(rootFolderPath.pointerToConst()),
              wasModified(false),
              cueMarkers(Serato::CueMarker::Array::array()),
              loopMarkers(Serato::LoopMarker::Array::array()),

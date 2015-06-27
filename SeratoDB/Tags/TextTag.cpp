@@ -32,7 +32,7 @@ TextTag::Pointer TextTag::tagWithIdentifierAndValue(uinteger32 identifier, const
 {
     auto newTag = TextTag::makeShared();
     newTag->internal->identifier = identifier;
-    newTag->internal->value = value.constPointer();
+    newTag->internal->value = value.pointerToConst();
 
     return newTag;
 }
@@ -46,7 +46,7 @@ const String& TextTag::value(void) const
 
 void TextTag::setValue(const String& value)
 {
-    internal->value = value.constPointer();
+    internal->value = value.pointerToConst();
 }
 
 void TextTag::addTo(Blob::Pointer& destination) const

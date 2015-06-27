@@ -32,7 +32,7 @@ PathTag::Pointer PathTag::tagWithIdentifierAndValue(uinteger32 identifier, const
 {
     auto newTag = PathTag::makeShared();
     newTag->internal->identifier = identifier;
-    newTag->internal->value = value.constPointer();
+    newTag->internal->value = value.pointerToConst();
 
     return newTag;
 }
@@ -46,7 +46,7 @@ const String& PathTag::value(void) const
 
 void PathTag::setValue(const String& value)
 {
-    internal->value = value.constPointer();
+    internal->value = value.pointerToConst();
 }
 
 void PathTag::addTo(Blob::Pointer& destination) const

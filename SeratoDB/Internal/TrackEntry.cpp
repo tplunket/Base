@@ -29,5 +29,5 @@ using namespace NxA::Serato::Internal;
 
 TrackEntry::TrackEntry(const Serato::Tag& tag,
                        const String& locatedOnVolumePath) :
-                       trackEntryTag(tag.constPointer()),
-                       rootVolumePath(locatedOnVolumePath.constPointer()) { }
+                       trackEntryTag(tag.pointerToConst()),
+                       rootVolumePath(locatedOnVolumePath.pointerToConst()) { }

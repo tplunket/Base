@@ -29,7 +29,7 @@ using namespace NxA::Serato::Internal;
 
 Database::Database(const String& path,
                    Serato::CrateOrderFile::Pointer usingCrateOrderFile) :
-                   databaseFilePath(path.constPointer()),
+                   databaseFilePath(path.pointerToConst()),
                    tracks(Serato::Track::Array::array()),
                    otherTags(Serato::Tag::ArrayOfConst::array()),
                    crateFilesToDelete(String::Array::array()),

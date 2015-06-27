@@ -54,7 +54,7 @@ CueMarker::Pointer CueMarker::markerWithLabelPositionAndIndex(const String& labe
     auto newMarker = CueMarker::makeShared();
     newMarker->internal->positionInMilliseconds = positionInMilliseconds;
     newMarker->internal->index = index;
-    newMarker->internal->label = label.constPointer();
+    newMarker->internal->label = label.pointerToConst();
 
     return newMarker;
 }

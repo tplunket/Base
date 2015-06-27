@@ -108,6 +108,16 @@ namespace NxA {
         NxA::Pointer<NxA::String> namespace_name::class_name::className(void) const \
         { \
             return NxA::String::stringWith(NXA_STR_VALUE_FOR(namespace_name) "::" NXA_STR_VALUE_FOR(class_name)); \
+        } \
+        NxA::Pointer<namespace_name::class_name> namespace_name::class_name::pointer(void) { \
+            std::shared_ptr<namespace_name::class_name> result = std::dynamic_pointer_cast<namespace_name::class_name>(this->shared_from_this()); \
+            NXA_ASSERT_NOT_NULL(result.get()); \
+            return NxA::Pointer<namespace_name::class_name>(result); \
+        } \
+        NxA::Pointer<const namespace_name::class_name> namespace_name::class_name::constPointer(void) const { \
+            std::shared_ptr<const namespace_name::class_name> result = std::dynamic_pointer_cast<const namespace_name::class_name>(this->shared_from_this()); \
+            NXA_ASSERT_NOT_NULL(result.get()); \
+            return NxA::Pointer<const namespace_name::class_name>(result); \
         }
 
 #if NXA_DEBUG_OBJECT_LIFECYCLE
@@ -173,16 +183,6 @@ namespace NxA {
 
 #define NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(namespace_name, class_name, parent_class) \
         NXA_GENERATED_FACTORY_METHODS_FOR(namespace_name, class_name) \
-        NXA_GENERATED_CONSTRUCTORS_FOR(namespace_name, class_name, parent_class) \
-        NxA::Pointer<namespace_name::class_name> namespace_name::class_name::pointer(void) { \
-            std::shared_ptr<namespace_name::class_name> result = std::dynamic_pointer_cast<namespace_name::class_name>(this->shared_from_this()); \
-            NXA_ASSERT_NOT_NULL(result.get()); \
-            return NxA::Pointer<namespace_name::class_name>(result); \
-        } \
-        NxA::Pointer<const namespace_name::class_name> namespace_name::class_name::constPointer(void) const { \
-            std::shared_ptr<const namespace_name::class_name> result = std::dynamic_pointer_cast<const namespace_name::class_name>(this->shared_from_this()); \
-            NXA_ASSERT_NOT_NULL(result.get()); \
-            return NxA::Pointer<const namespace_name::class_name>(result); \
-        }
+        NXA_GENERATED_CONSTRUCTORS_FOR(namespace_name, class_name, parent_class)
 
 #define NXA_ENABLE_SHARED_FROM_THIS(class_name) std::enable_shared_from_this<class_name>

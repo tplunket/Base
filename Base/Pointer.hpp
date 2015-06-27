@@ -48,7 +48,7 @@ namespace NxA {
         {
             return Pointer<const T>(this->toStdSharedPointer());
         }
-        operator const T&() const
+        operator T&() const
         {
             return this->operator*();
         }
@@ -56,7 +56,7 @@ namespace NxA {
         {
             return this->operator*();
         }
-        const T* operator->() const
+        T* operator->() const
         {
             return this->get();
         }
@@ -64,7 +64,7 @@ namespace NxA {
         {
             return const_cast<T*>(static_cast<const Pointer<T>>(*this).operator->());
         }
-        const T& operator*() const
+        T& operator*() const
         {
             return *this->get();
         }

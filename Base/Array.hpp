@@ -29,18 +29,36 @@
 
 namespace NxA {
     template <class T> class Array : private std::vector<Pointer<T>> {
+    public:
+        using Pointer = NxA::Pointer<Array>;
+        using WeakPointer = NxA::WeakPointer<Array>;
+        using iterator = typename std::vector<NxA::Pointer<T>>::iterator;
+        using const_iterator = typename std::vector<NxA::Pointer<T>>::const_iterator;
+        
     protected:
         struct constructor_access { };
 
         #pragma mark Constructors & Destructors
         Array() { }
 
-    public:
-        using Pointer = NxA::Pointer<Array>;
-        using WeakPointer = NxA::WeakPointer<Array>;
-        using iterator = typename std::vector<typename T::Pointer>::iterator;
-        using const_iterator = typename std::vector<typename T::Pointer>::const_iterator;
+        void append(T& object, std::false_type)
+        {
+            this->push_back(object.pointer());
+        }
+        void append(T& object, std::true_type)
+        {
+            this->push_back(object.constPointer());
+        }
+        void insertAt(const T& object, const_iterator pos, std::false_type)
+        {
+            this->insert(pos, object.pointer());
+        }
+        void insertAt(const T& object, const_iterator pos, std::true_type)
+        {
+            this->insert(pos, object.constPointer());
+        }
 
+    public:
         #pragma mark Constructors & Destructors
         explicit Array(const constructor_access&) : Array() { };
 
@@ -103,30 +121,31 @@ namespace NxA {
             return this->clear();
         }
 
-        void append(typename T::Pointer const& object)
+        void append(T& object)
         {
-            this->push_back(object);
+            return this->append(object, std::is_const<T>());
         }
-        void insertAt(typename T::Pointer const& object, iterator pos)
+
+        void insertAt(T& object, const_iterator pos)
         {
-            this->insert(pos, object);
+            this->insertAt(object, pos, std::is_const<T>());
         }
-        iterator find(typename T::Pointer const& object)
+        const_iterator find(const T& object) const
         {
-            for (iterator it = this->begin(); it != this->end(); ++it) {
+            for (const_iterator it = this->begin(); it != this->end(); ++it) {
                 auto& other = *it;
-                if (other.toStdSharedPointer() == object.toStdSharedPointer()) {
+                if (&*other == &object) {
                     return it;
                 }
             }
 
             return this->end();
         }
-        void remove(iterator objectPosition)
+        void remove(const_iterator objectPosition)
         {
             this->erase(objectPosition);
         }
-        void remove(typename T::Pointer const& object)
+        void remove(const T& object)
         {
             this->std::vector<typename T::Pointer>::remove(this->find(object));
         }

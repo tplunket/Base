@@ -28,7 +28,7 @@
 #include <vector>
 
 namespace NxA {
-    template <class T> class Array : private std::vector<typename T::Pointer> {
+    template <class T> class Array : private std::vector<Pointer<T>> {
     protected:
         struct constructor_access { };
 
@@ -51,47 +51,47 @@ namespace NxA {
         }
 
         #pragma mark Operators
-        typename T::Pointer const& operator[] (integer index) const
+        const NxA::Pointer<T>& operator[] (integer index) const
         {
-            return this->std::vector<typename T::Pointer>::operator[](index);
+            return this->std::vector<NxA::Pointer<T>>::operator[](index);
         }
-        typename T::Pointer& operator[] (integer index)
+        NxA::Pointer<T>& operator[] (integer index)
         {
-            return const_cast<typename T::Pointer&>(static_cast<const Array<T>>(*this)[index]);
+            return const_cast<NxA::Pointer<T>&>(static_cast<const Array<T>>(*this)[index]);
         }
 
         #pragma mark Instance Methods
         iterator begin() noexcept
         {
-            return this->std::vector<typename T::Pointer>::begin();
+            return this->std::vector<NxA::Pointer<T>>::begin();
         }
         const_iterator begin() const noexcept
         {
-            return this->std::vector<typename T::Pointer>::begin();
+            return this->std::vector<NxA::Pointer<T>>::begin();
         }
         iterator end() noexcept
         {
-            return this->std::vector<typename T::Pointer>::end();
+            return this->std::vector<NxA::Pointer<T>>::end();
         }
         const_iterator end() const noexcept
         {
-            return this->std::vector<typename T::Pointer>::end();
+            return this->std::vector<NxA::Pointer<T>>::end();
         }
         iterator cbegin() noexcept
         {
-            return this->std::vector<typename T::Pointer>::cbegin();
+            return this->std::vector<NxA::Pointer<T>>::cbegin();
         }
         const_iterator cbegin() const noexcept
         {
-            return this->std::vector<typename T::Pointer>::cbegin();
+            return this->std::vector<NxA::Pointer<T>>::cbegin();
         }
         iterator cend() noexcept
         {
-            return this->std::vector<typename T::Pointer>::cend();
+            return this->std::vector<NxA::Pointer<T>>::cend();
         }
         const_iterator cend() const noexcept
         {
-            return this->std::vector<typename T::Pointer>::cend();
+            return this->std::vector<NxA::Pointer<T>>::cend();
         }
 
         count length(void) const

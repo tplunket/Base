@@ -47,7 +47,7 @@ namespace NxA {
         }
         void append(T& object, std::true_type)
         {
-            this->push_back(object.constPointer());
+            this->push_back(object.pointerToConst());
         }
         void insertAt(const T& object, const_iterator pos, std::false_type)
         {
@@ -55,7 +55,7 @@ namespace NxA {
         }
         void insertAt(const T& object, const_iterator pos, std::true_type)
         {
-            this->insert(pos, object.constPointer());
+            this->insert(pos, object.pointerToConst());
         }
 
     public:

@@ -71,12 +71,12 @@ namespace NxA {
         protected: \
             struct class_name ## _constructor_access { }; \
             explicit class_name() : class_name(namespace_name::class_name::makeInternal()) { } \
-            explicit class_name(NxA::Pointer<NxA::Internal::Object> const& initial_internal); \
+            explicit class_name(const NxA::Pointer<NxA::Internal::Object>& initial_internal); \
             static NxA::Pointer<class_name> makeShared(void); \
         NXA_GENERATED_SHARED_DECLARATIONS_FOR(namespace_name, class_name) \
         public: \
             explicit class_name(const class_name ## _constructor_access&) : class_name() { } \
-            explicit class_name(const class_name ## _constructor_access&, NxA::Pointer<NxA::Internal::Object> const& initial_internal) : class_name(initial_internal) { } \
+            explicit class_name(const class_name ## _constructor_access&, const NxA::Pointer<NxA::Internal::Object>& initial_internal) : class_name(initial_internal) { } \
             using WeakPointer = NxA::WeakPointer<namespace_name::class_name>; \
             using WeakPointerToConst = NxA::WeakPointer<namespace_name::class_name>; \
             using Array = NxA::Array<namespace_name::class_name>; \
@@ -87,7 +87,7 @@ namespace NxA {
         protected: \
             NxA::Pointer<namespace_name::Internal::class_name> internal; \
             static NxA::Pointer<NxA::Internal::Object> makeInternal(void); \
-            static NxA::Pointer<class_name> makeSharedWithInternal(NxA::Pointer<NxA::Internal::Object> const& initial_internal);
+            static NxA::Pointer<class_name> makeSharedWithInternal(const NxA::Pointer<NxA::Internal::Object>& initial_internal);
 
 #define NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(namespace_name, class_name) \
         friend class namespace_name::class_name; \
@@ -135,7 +135,7 @@ namespace NxA {
             printf("Calling makeShared for " NXA_STR_VALUE_FOR(namespace_name) "::" NXA_STR_VALUE_FOR(class_name) "\n"); \
             return NxA::Pointer<namespace_name::class_name>(std::make_shared<namespace_name::class_name>(namespace_name::class_name::class_name ## _constructor_access())); \
         } \
-        NxA::Pointer<namespace_name::class_name> namespace_name::class_name::makeSharedWithInternal(NxA::Pointer<NxA::Internal::Object> const& initial_internal); \
+        NxA::Pointer<namespace_name::class_name> namespace_name::class_name::makeSharedWithInternal(const NxA::Pointer<NxA::Internal::Object>& initial_internal); \
         { \
             printf("Calling makeShared for " NXA_STR_VALUE_FOR(namespace_name) "::" NXA_STR_VALUE_FOR(class_name) "\n"); \
             return NxA::Pointer<namespace_name::class_name>(std::make_shared<namespace_name::class_name>(namespace_name::class_name::class_name ## _constructor_access(), initial_internal)); \
@@ -147,7 +147,7 @@ namespace NxA {
         }
 
 #define NXA_GENERATED_CONSTRUCTORS_FOR(namespace_name, class_name, parent_class) \
-        namespace_name::class_name::class_name(NxA::Pointer<Internal::Object> const& initial_internal) : \
+        namespace_name::class_name::class_name(const NxA::Pointer<Internal::Object>& initial_internal) : \
                                                parent_class(initial_internal), \
                                                internal(NxA::Pointer<namespace_name::Internal::class_name>::dynamicCastFrom(initial_internal)) \
         { \
@@ -166,7 +166,7 @@ namespace NxA {
         { \
             return NxA::Pointer<namespace_name::class_name>(std::make_shared<namespace_name::class_name>(namespace_name::class_name::class_name ## _constructor_access())); \
         } \
-        NxA::Pointer<namespace_name::class_name> namespace_name::class_name::makeSharedWithInternal(NxA::Pointer<NxA::Internal::Object> const& initial_internal) \
+        NxA::Pointer<namespace_name::class_name> namespace_name::class_name::makeSharedWithInternal(const NxA::Pointer<NxA::Internal::Object>& initial_internal) \
         { \
             return NxA::Pointer<namespace_name::class_name>(std::make_shared<namespace_name::class_name>(namespace_name::class_name::class_name ## _constructor_access(), initial_internal)); \
         } \
@@ -176,7 +176,7 @@ namespace NxA {
         } 
 
 #define NXA_GENERATED_CONSTRUCTORS_FOR(namespace_name, class_name, parent_class) \
-        namespace_name::class_name::class_name(NxA::Pointer<NxA::Internal::Object> const& initial_internal) : \
+        namespace_name::class_name::class_name(const NxA::Pointer<NxA::Internal::Object>& initial_internal) : \
                                                parent_class(initial_internal), \
                                                internal(NxA::Pointer<namespace_name::Internal::class_name>::dynamicCastFrom(initial_internal)) { }
 #endif

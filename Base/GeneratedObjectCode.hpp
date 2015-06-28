@@ -49,6 +49,8 @@ namespace NxA {
 
 #if NXA_DEBUG_OBJECT_LIFECYCLE
 #define NXA_GENERATED_SHARED_DECLARATIONS_FOR(namespace_name, class_name) \
+        private: \
+            using super = class_name; \
         protected: \
             static NxA::Pointer<class_name> makeShared(void); \
         public: \

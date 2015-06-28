@@ -51,11 +51,11 @@ namespace NxA {
         }
 
         #pragma mark Operators
-        typename Tvalue::Pointer const& operator[] (Tkey const& key) const
+        const typename Tvalue::Pointer& operator[] (const Tkey& key) const
         {
             return this->std::map<Tkey, typename Tvalue::Pointer>::at(key);
         }
-        typename Tvalue::Pointer& operator[] (Tkey const& key)
+        typename Tvalue::Pointer& operator[] (const Tkey& key)
         {
             return const_cast<typename Tvalue::Pointer&>(static_cast<const Map<Tkey, Tvalue>>(*this)[key]);
         }
@@ -99,7 +99,7 @@ namespace NxA {
             return this->size();
         }
 
-        bool containsValueForKey(Tkey const& keyValue) const
+        bool containsValueForKey(const Tkey& keyValue) const
         {
             return this->find(keyValue) != this->std::map<Tkey, typename Tvalue::Pointer>::end();
         }

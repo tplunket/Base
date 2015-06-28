@@ -36,7 +36,7 @@ namespace NxA {
 
         #pragma mark Class Methods
         template <class Tfrom>
-        static Pointer<T> dynamicCastFrom(Pointer<Tfrom> const& other)
+        static Pointer<T> dynamicCastFrom(const Pointer<Tfrom>& other)
         {
             Pointer<T> result = Pointer(std::shared_ptr<T>(std::dynamic_pointer_cast<T>(other.toStdSharedPointer())));
             NXA_ASSERT_NOT_NULL(result.get());
@@ -74,7 +74,7 @@ namespace NxA {
         }
 
         #pragma mark Instance Methods
-        std::shared_ptr<T> const& toStdSharedPointer(void) const
+        const std::shared_ptr<T>& toStdSharedPointer(void) const
         {
             return *this;
         }

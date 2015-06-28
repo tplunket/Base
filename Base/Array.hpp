@@ -28,13 +28,23 @@
 #include <vector>
 
 namespace NxA {
-    template <class T> class Array : private std::vector<Pointer<T>> {
+    template <class T> class Array : private std::vector<Pointer<T>>, public std::enable_shared_from_this<Array<T>> {
     public:
         using Pointer = NxA::Pointer<Array>;
         using WeakPointer = NxA::WeakPointer<Array>;
         using iterator = typename std::vector<NxA::Pointer<T>>::iterator;
         using const_iterator = typename std::vector<NxA::Pointer<T>>::const_iterator;
-        
+        NxA::Pointer<Array<T>> pointer(void) {
+            std::shared_ptr<Array<T>> result = std::dynamic_pointer_cast<Array<T>>(this->shared_from_this());
+            NXA_ASSERT_NOT_NULL(result.get());
+            return NxA::Pointer<Array<T>>(result);
+        }
+        NxA::Pointer<const Array<T>> pointerToConst(void) const {
+            std::shared_ptr<const Array<T>> result = std::dynamic_pointer_cast<const Array<T>>(this->shared_from_this());
+            NXA_ASSERT_NOT_NULL(result.get());
+            return NxA::Pointer<const Array<T>>(result);
+        }
+
     protected:
         struct constructor_access { };
 

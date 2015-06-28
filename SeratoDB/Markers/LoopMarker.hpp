@@ -27,7 +27,7 @@ namespace NxA { namespace Serato {
                                                                             uinteger32 startPositionInMilliseconds,
                                                                             uinteger32 endPositionInMilliseconds,
                                                                             uinteger16 index);
-        static LoopMarker::Pointer markerWith(LoopMarker::Pointer const& other);
+        static LoopMarker::Pointer markerWith(const LoopMarker& other);
 
         #pragma mark Instance Methods
         uinteger32 startPositionInMilliseconds(void) const;
@@ -35,6 +35,6 @@ namespace NxA { namespace Serato {
         uinteger16 index(void) const;
         const String& label(void) const;
 
-        void addId3TagTo(Blob::Pointer& data) const;
+        void addId3TagTo(Blob& data) const;
     };
 } }

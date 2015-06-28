@@ -64,12 +64,12 @@ LoopMarker::Pointer LoopMarker::markerWithLabelStartEndPositionsAndIndex(const S
     return newMarker;
 }
 
-LoopMarker::Pointer LoopMarker::markerWith(LoopMarker::Pointer const& other)
+LoopMarker::Pointer LoopMarker::markerWith(const LoopMarker& other)
 {
-    return LoopMarker::markerWithLabelStartEndPositionsAndIndex(other->label(),
-                                                                other->startPositionInMilliseconds(),
-                                                                other->endPositionInMilliseconds(),
-                                                                other->index());
+    return LoopMarker::markerWithLabelStartEndPositionsAndIndex(other.label(),
+                                                                other.startPositionInMilliseconds(),
+                                                                other.endPositionInMilliseconds(),
+                                                                other.index());
 }
 
 #pragma mark Instance Methods
@@ -94,7 +94,7 @@ const String& LoopMarker::label(void) const
     return internal->label;
 }
 
-void LoopMarker::addId3TagTo(Blob::Pointer& data) const
+void LoopMarker::addId3TagTo(Blob& data) const
 {
     SeratoLoopTagStruct header;
 
@@ -110,6 +110,6 @@ void LoopMarker::addId3TagTo(Blob::Pointer& data) const
     header.loop_locked = 0;
 
     auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<const byte*>(&header), sizeof(SeratoLoopTagStruct));
-    data->append(headerData);
-    data->append(this->label().toUTF8());
+    data.append(headerData);
+    data.append(this->label().toUTF8());
 }

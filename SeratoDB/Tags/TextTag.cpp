@@ -49,7 +49,7 @@ void TextTag::setValue(const String& value)
     internal->value = value.pointerToConst();
 }
 
-void TextTag::addTo(Blob::Pointer& destination) const
+void TextTag::addTo(Blob& destination) const
 {
     auto memoryRepresentation = Blob::blobWithCapacity(Internal::Tag::memoryNeededForTagHeader());
     count dataSize = internal->value->length() * 2;
@@ -58,6 +58,6 @@ void TextTag::addTo(Blob::Pointer& destination) const
     Internal::Tag::setIdentifierForTagAt(this->identifier(), tagAddress);
     Internal::Tag::setDataSizeForTagAt(dataSize, tagAddress);
 
-    destination->append(memoryRepresentation);
-    destination->append(internal->value->toUTF16());
+    destination.append(memoryRepresentation);
+    destination.append(internal->value->toUTF16());
 }

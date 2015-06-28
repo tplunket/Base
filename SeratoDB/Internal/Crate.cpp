@@ -38,12 +38,12 @@ Crate::Crate(const String& fullName,
              tracksWereModified(true),
              cratesWereModified(false),
              childrenCrates(Serato::Crate::Array::array()),
-             trackEntries(Serato::TrackEntry::ArrayOfConst::array()),
+             trackEntries(Serato::TrackEntry::Array::array()),
              otherTags(Serato::Tag::ArrayOfConst::array()) { }
 
 #pragma mark Instance Methods
 
-void Crate::addTrackEntry(const Serato::TrackEntry& trackEntry)
+void Crate::addTrackEntry(Serato::TrackEntry& trackEntry)
 {
     this->tracksWereModified = true;
     this->trackEntries->append(trackEntry);

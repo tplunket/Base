@@ -43,7 +43,7 @@ namespace NxA { namespace Serato { namespace Internal {
 
 #pragma mark Constructors & Destructors
 
-MP4TrackFile::MP4TrackFile(const String& path, TagLibFilePointer const& newFile) :
+MP4TrackFile::MP4TrackFile(const String& path, const TagLibFilePointer& newFile) :
                            TrackFile(path, newFile) { }
 
 #pragma mark Instance Methods

@@ -176,17 +176,17 @@ timestamp Track::dateAddedInSecondsSinceJanuary1st1970(void) const
     return internal->uint32ForSubTagForIdentifier(trackDateAddedTagIdentifier);
 }
 
-CueMarker::Array::Pointer const& Track::cueMarkers(void) const
+const CueMarker::ArrayOfConst& Track::cueMarkers(void) const
 {
     return internal->cueMarkers;
 }
 
-LoopMarker::Array::Pointer const& Track::loopMarkers(void) const
+const LoopMarker::ArrayOfConst& Track::loopMarkers(void) const
 {
     return internal->loopMarkers;
 }
 
-GridMarker::Array::Pointer const& Track::gridMarkers(void) const
+const GridMarker::ArrayOfConst& Track::gridMarkers(void) const
 {
     return internal->gridMarkers;
 }
@@ -275,21 +275,21 @@ void Track::setDateAddedInSecondsSinceJanuary1st1970(timestamp dateAdded)
     internal->setUInt32ForSubTagForIdentifier(static_cast<uinteger32>(dateAdded), trackDateAddedTagIdentifier);
 }
 
-void Track::setCueMarkers(CueMarker::Array::Pointer const& markers)
+void Track::setCueMarkers(CueMarker::ArrayOfConst& markers)
 {
-    internal->cueMarkers = markers;
+    internal->cueMarkers = markers.pointer();
     internal->wasModified = true;
 }
 
-void Track::setLoopMarkers(LoopMarker::Array::Pointer const& markers)
+void Track::setLoopMarkers(LoopMarker::ArrayOfConst& markers)
 {
-    internal->loopMarkers = markers;
+    internal->loopMarkers = markers.pointer();
     internal->wasModified = true;
 }
 
-void Track::setGridMarkers(GridMarker::Array::Pointer const& markers)
+void Track::setGridMarkers(GridMarker::ArrayOfConst& markers)
 {
-    internal->gridMarkers = markers;
+    internal->gridMarkers = markers.pointer();
     internal->wasModified = true;
 }
 
@@ -298,7 +298,7 @@ bool Track::wasModified(void) const
     return internal->wasModified;
 }
 
-void Track::addTo(Blob::Pointer& destination) const
+void Track::addTo(Blob& destination) const
 {
     internal->trackTag->addTo(destination);
 }
@@ -322,21 +322,21 @@ void Track::saveToTrackFile(void) const
     trackFile->setTrackNumber(this->trackNumber());
 
     auto cueMarkers = CueMarker::Array::array();
-    for (auto& marker : *(this->cueMarkers())) {
+    for (auto& marker : this->cueMarkers()) {
         auto markerCopy = CueMarker::markerWith(marker);
         cueMarkers->append(markerCopy);
     }
     trackFile->setCueMarkers(cueMarkers);
 
     auto loopMarkers = LoopMarker::Array::array();
-    for (auto& marker : *(this->loopMarkers())) {
+    for (auto& marker : this->loopMarkers()) {
         auto markerCopy = LoopMarker::markerWith(marker);
         loopMarkers->append(markerCopy);
     }
     trackFile->setLoopMarkers(loopMarkers);
 
     auto gridMarkers = GridMarker::Array::array();
-    for (auto& marker : *(this->gridMarkers())) {
+    for (auto& marker : this->gridMarkers()) {
         auto markerCopy = GridMarker::markerWith(marker);
         gridMarkers->append(markerCopy);
     }

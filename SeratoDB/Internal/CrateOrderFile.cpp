@@ -33,9 +33,9 @@ using namespace NxA::Serato::Internal;
 #pragma mark Constructors & Destructors
 
 CrateOrderFile::CrateOrderFile(const String& path,
-                               Serato::Crate::Pointer const& root) :
+                               Serato::Crate& root) :
                                crateOrderFilePath(path.pointerToConst()),
-                               rootCrate(root),
+                               rootCrate(root.pointer()),
                                unknownCratesNames(String::ArrayOfConst::array()) { }
 
 #pragma mark Class Methods

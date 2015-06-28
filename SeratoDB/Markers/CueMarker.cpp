@@ -59,9 +59,9 @@ CueMarker::Pointer CueMarker::markerWithLabelPositionAndIndex(const String& labe
     return newMarker;
 }
 
-CueMarker::Pointer CueMarker::markerWith(CueMarker::Pointer const& other)
+CueMarker::Pointer CueMarker::markerWith(const CueMarker&other)
 {
-    return CueMarker::markerWithLabelPositionAndIndex(other->label(), other->positionInMilliseconds(), other->index());
+    return CueMarker::markerWithLabelPositionAndIndex(other.label(), other.positionInMilliseconds(), other.index());
 }
 
 #pragma mark Instance Methods
@@ -81,7 +81,7 @@ const String& CueMarker::label(void) const
     return internal->label;
 }
 
-void CueMarker::addId3TagTo(Blob::Pointer& data) const
+void CueMarker::addId3TagTo(Blob& data) const
 {
     SeratoCueTagStruct header;
 
@@ -95,6 +95,6 @@ void CueMarker::addId3TagTo(Blob::Pointer& data) const
     header.loop_locked = 0;
 
     auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<const byte*>(&header), sizeof(SeratoCueTagStruct));
-    data->append(headerData);
-    data->append(this->label().toUTF8());
+    data.append(headerData);
+    data.append(this->label().toUTF8());
 }

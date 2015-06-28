@@ -55,9 +55,9 @@ namespace NxA { namespace Serato {
         timestamp dateModifiedInSecondsSinceJanuary1st1970(void) const;
         timestamp dateAddedInSecondsSinceJanuary1st1970(void) const;
 
-        CueMarker::Array::Pointer const& cueMarkers(void) const;
-        LoopMarker::Array::Pointer const& loopMarkers(void) const;
-        GridMarker::Array::Pointer const& gridMarkers(void) const;
+        const CueMarker::ArrayOfConst& cueMarkers(void) const;
+        const LoopMarker::ArrayOfConst& loopMarkers(void) const;
+        const GridMarker::ArrayOfConst& gridMarkers(void) const;
 
         void setTitle(const String& title);
         void setArtist(const String& artist);
@@ -76,12 +76,12 @@ namespace NxA { namespace Serato {
         void setDateModifiedInSecondsSinceJanuary1st1970(timestamp dateModified);
         void setDateAddedInSecondsSinceJanuary1st1970(timestamp dateAdded);
 
-        void setCueMarkers(CueMarker::Array::Pointer const& markers);
-        void setLoopMarkers(LoopMarker::Array::Pointer const& markers);
-        void setGridMarkers(GridMarker::Array::Pointer const& markers);
+        void setCueMarkers(CueMarker::ArrayOfConst& markers);
+        void setLoopMarkers(LoopMarker::ArrayOfConst& markers);
+        void setGridMarkers(GridMarker::ArrayOfConst& markers);
 
         bool wasModified(void) const;
-        void addTo(Blob::Pointer& destination) const;
+        void addTo(Blob& destination) const;
         void saveToTrackFile(void) const;
 
         void destroy(void);

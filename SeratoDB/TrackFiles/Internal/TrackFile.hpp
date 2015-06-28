@@ -38,7 +38,7 @@ namespace NxA { namespace Serato { namespace Internal {
         NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTOR_FOR(NxA::Serato, TrackFile);
 
         #pragma mark Constructor & Destructors
-        TrackFile(const String& path, TagLibFilePointer const& newFile);
+        TrackFile(const String& path, const TagLibFilePointer& newFile);
 
         #pragma mark Class Methods
         static const byte* nextTagPositionAfterTagNamed(const String& tagName, const byte* currentTagPosition);
@@ -59,7 +59,7 @@ namespace NxA { namespace Serato { namespace Internal {
         #pragma mark Instance Methods
         void readMarkersV2FromBase64Data(const byte* markerV2Data, count totalSize);
         void readGridMarkersFrom(const byte* gridMarkerData, count totalSize);
-        void addGridMarker(Serato::GridMarker::Pointer const& gridMarker);
+        void addGridMarker(Serato::GridMarker& gridMarker);
         Blob::Pointer base64DataFromMarkersV2(void);
         Blob::Pointer gridMarkerDataFromGridMarkers(void);
         virtual void writeMarkers(void) = 0;

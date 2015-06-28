@@ -26,13 +26,13 @@ namespace NxA { namespace Serato {
         static CueMarker::Pointer markerWithLabelPositionAndIndex(const String& label,
                                                                   uinteger32 positionInMilliseconds,
                                                                   uinteger16 index);
-        static CueMarker::Pointer markerWith(CueMarker::Pointer const& other);
+        static CueMarker::Pointer markerWith(const CueMarker&other);
 
         #pragma mark Instance Methods
         uinteger32 positionInMilliseconds(void) const;
         uinteger16 index(void) const;
         const String& label(void) const;
 
-        void addId3TagTo(Blob::Pointer& data) const;
+        void addId3TagTo(Blob& data) const;
     };
 } }

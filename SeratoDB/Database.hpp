@@ -35,15 +35,15 @@ namespace NxA { namespace Serato {
         timestamp databaseModificationDateInSecondsSince1970(void) const;
         timestamp rootCrateModificationDateInSecondsSince1970(void) const;
 
-        NxA::Pointer<Crate> const& rootCrate(void) const;
-        NxA::Pointer<NxA::Array<Track>> const& tracks(void) const;
+        Crate& rootCrate(void) const;
+        const NxA::Array<Track>& tracks(void) const;
         NxA::Pointer<NxA::Array<Track>> removeAndReturnTracks(void);
 
-        void deleteTrackEntry(NxA::Pointer<TrackEntry>& crate);
-        void deleteCrate(NxA::Pointer<Crate>& crate);
+        void deleteTrackEntry(TrackEntry& trackEntry);
+        void deleteCrate(Crate& crate);
 
-        void addTrack(NxA::Pointer<Track> const& track);
-        void deleteTrack(NxA::Pointer<Track>& track);
+        void addTrack(Track& track);
+        void deleteTrack(Track& track);
 
         void saveIfModified(void) const;
     };

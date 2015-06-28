@@ -35,21 +35,21 @@ namespace NxA { namespace Serato {
                                       const String& seratoFolderPath);
         static bool isASmartCrateName(const String& crateFullName,
                                       const String& seratoFolderPath);
-        static void addCrateAsChildOfCrate(Crate::Pointer& crate, Crate::Pointer& parentCrate);
-        static void destroy(Crate::Pointer const& crate);
+        static void addCrateAsChildOfCrate(Crate& crate, Crate& parentCrate);
+        static void destroy(const Crate& crate);
 
         #pragma mark Instance Methods
         const String& crateName(void) const;
         const String& crateFullName(void) const;
         void addFullCrateNameWithPrefixAndRecurseToChildren(String& destination, const char* prefix) const;
 
-        TrackEntry::ArrayOfConst::Pointer const& trackEntries(void) const;
-        Crate::Array::Pointer const& crates(void) const;
+        TrackEntry::Array& trackEntries(void);
+        Crate::Array& crates(void);
 
-        void addTrackEntry(Serato::TrackEntry::Pointer const& trackEntry);
+        void addTrackEntry(Serato::TrackEntry& trackEntry);
 
         bool hasParentCrate(void) const;
-        Crate::Pointer parentCrate(void) const;
+        Crate& parentCrate(void) const;
 
         const String& crateFilePath(void) const;
 
@@ -59,8 +59,8 @@ namespace NxA { namespace Serato {
         void saveIfModifiedAndRecurseToChildren(void) const;
         bool childrenCratesWereModified(void) const;
 
-        void removeChildrenCrate(Crate::Pointer const& crate);
-        TrackEntry::ArrayOfConst::Pointer removeAndReturnTrackEntries(void);
+        void removeChildrenCrate(const Crate& crate);
+        TrackEntry::Array::Pointer removeAndReturnTrackEntries(void);
         Crate::Array::Pointer removeAndReturnChildrenCrates(void);
     };
 } }

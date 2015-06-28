@@ -48,7 +48,7 @@ namespace NxA { namespace Serato { namespace Internal {
 
 #pragma mark Constructors & Destructors
 
-ID3TrackFile::ID3TrackFile(const String& path, TagLibFilePointer const& newFile) :
+ID3TrackFile::ID3TrackFile(const String& path, const TagLibFilePointer& newFile) :
                            TrackFile(path, newFile) { }
 
 #pragma mark Class Methods

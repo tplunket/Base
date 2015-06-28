@@ -34,7 +34,7 @@ namespace NxA { namespace Serato { namespace Internal {
 
         #pragma mark Constructors & Desctructors
         CrateOrderFile(const String& path,
-                       Serato::Crate::Pointer const& root);
+                       Serato::Crate& root);
 
         #pragma mark Class Methods
         static String::Pointer crateNameIfValidCrateOrEmptyIfNot(const String& name);

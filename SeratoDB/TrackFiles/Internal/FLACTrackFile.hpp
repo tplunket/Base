@@ -31,7 +31,7 @@ namespace NxA { namespace Serato { namespace Internal {
         NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTOR_FOR(NxA::Serato, FLACTrackFile);
 
         #pragma mark Constructor & Destructors
-        FLACTrackFile(const String& path, TagLibFilePointer const& newFile);
+        FLACTrackFile(const String& path, const TagLibFilePointer& newFile);
 
         #pragma mark Instance Methods
         void readMarkers(void);

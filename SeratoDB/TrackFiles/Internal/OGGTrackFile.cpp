@@ -31,7 +31,7 @@ using namespace NxA::Serato::Internal;
 
 #pragma mark Constructors & Destructors
 
-OGGTrackFile::OGGTrackFile(const String& path, TagLibFilePointer const& newFile) :
+OGGTrackFile::OGGTrackFile(const String& path, const TagLibFilePointer& newFile) :
                            ID3TrackFile(path, newFile) { }
 
 #pragma mark Instance Methods

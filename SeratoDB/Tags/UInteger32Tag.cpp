@@ -49,7 +49,7 @@ void UInteger32Tag::setValue(uinteger32 value)
     this->internal->value = value;
 }
 
-void UInteger32Tag::addTo(Blob::Pointer& destination) const
+void UInteger32Tag::addTo(Blob& destination) const
 {
     size_t dataSize = 4;
     auto memoryRepresentation = Blob::blobWithCapacity(Internal::Tag::memoryNeededForTagHeader() + dataSize);
@@ -59,5 +59,5 @@ void UInteger32Tag::addTo(Blob::Pointer& destination) const
     Internal::Tag::setDataSizeForTagAt(dataSize, tagAddress);
     Platform::writeBigEndianUInteger32ValueAt(this->value(), Internal::Tag::dataForTagAt(tagAddress));
 
-    destination->append(memoryRepresentation);
+    destination.append(memoryRepresentation);
 }

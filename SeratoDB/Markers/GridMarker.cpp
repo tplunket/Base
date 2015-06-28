@@ -45,9 +45,9 @@ GridMarker::Pointer GridMarker::markerWithPositionAndBeatsPerMinute(decimal posi
     return newMarker;
 }
 
-GridMarker::Pointer GridMarker::markerWith(GridMarker::Pointer const& other)
+GridMarker::Pointer GridMarker::markerWith(const GridMarker& other)
 {
-    return GridMarker::markerWithPositionAndBeatsPerMinute(other->positionInSeconds(), other->beatsPerMinute());
+    return GridMarker::markerWithPositionAndBeatsPerMinute(other.positionInSeconds(), other.beatsPerMinute());
 }
 
 #pragma mark Class Methods
@@ -69,7 +69,7 @@ decimal GridMarker::beatsPerMinute(void) const
     return internal->beatsPerMinute;
 }
 
-void GridMarker::addDataTo(Blob::Pointer& data) const
+void GridMarker::addDataTo(Blob& data) const
 {
     GridMarkerStruct marker;
 
@@ -77,5 +77,5 @@ void GridMarker::addDataTo(Blob::Pointer& data) const
     Platform::writeBigEndianFloatValueAt(this->beatsPerMinute(), marker.beatsPerMinute);
 
     auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<const byte*>(&marker), sizeof(GridMarkerStruct));
-    data->append(headerData);
+    data.append(headerData);
 }

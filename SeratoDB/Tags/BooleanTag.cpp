@@ -49,7 +49,7 @@ void BooleanTag::setValue(bool newValue)
     internal->value = newValue;
 }
 
-void BooleanTag::addTo(Blob::Pointer& destination) const
+void BooleanTag::addTo(Blob& destination) const
 {
     count dataSize = 1;
     count totalSizeNeeded = Internal::Tag::memoryNeededForTagHeader() + dataSize;
@@ -61,5 +61,5 @@ void BooleanTag::addTo(Blob::Pointer& destination) const
     byte* tagData = Internal::Tag::dataForTagAt(tagAddress);
     *tagData = this->value() ? 1 : 0;
 
-    destination->append(memoryRepresentation);
+    destination.append(memoryRepresentation);
 }

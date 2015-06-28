@@ -66,23 +66,23 @@ bool Crate::isASmartCrateName(const String& crateFullName,
     return File::fileExistsAt(crateFilePath);
 }
 
-void Crate::addCrateAsChildOfCrate(Crate::Pointer& crate, Crate::Pointer& parentCrate)
+void Crate::addCrateAsChildOfCrate(Crate& crate, Crate& parentCrate)
 {
-    crate->internal->parentCrate = Crate::WeakPointer(parentCrate);
+    crate.internal->parentCrate = Crate::WeakPointer(parentCrate.pointer());
 
-    parentCrate->internal->markCratesAsModified();
+    parentCrate.internal->markCratesAsModified();
 
-    parentCrate->internal->childrenCrates->append(crate);
+    parentCrate.internal->childrenCrates->append(crate);
 }
 
-void Crate::destroy(Crate::Pointer const& crate)
+void Crate::destroy(const Crate& crate)
 {
-    for (auto &childrenCrate : *(crate->internal->childrenCrates)) {
+    for (auto &childrenCrate : *(crate.internal->childrenCrates)) {
         Crate::destroy(childrenCrate);
     }
 
-    if (crate->hasParentCrate()) {
-        auto parentCrate = crate->internal->parentCrate.toPointer();
+    if (crate.hasParentCrate()) {
+        auto parentCrate = crate.internal->parentCrate.toPointer();
         parentCrate->removeChildrenCrate(crate);
     }
 }
@@ -112,17 +112,17 @@ void Crate::addFullCrateNameWithPrefixAndRecurseToChildren(String& destination, 
     }
 }
 
-TrackEntry::ArrayOfConst::Pointer const& Crate::trackEntries(void) const
+TrackEntry::Array& Crate::trackEntries(void)
 {
-    return internal->trackEntries;
+    return *(internal->trackEntries);
 }
 
-Crate::Array::Pointer const& Crate::crates(void) const
+Crate::Array& Crate::crates(void)
 {
-    return internal->childrenCrates;
+    return *(internal->childrenCrates);
 }
 
-void Crate::addTrackEntry(Serato::TrackEntry::Pointer const& trackEntry)
+void Crate::addTrackEntry(Serato::TrackEntry& trackEntry)
 {
     internal->addTrackEntry(trackEntry);
 }
@@ -138,8 +138,8 @@ void Crate::loadFromFile(void)
     for (auto& tag : *(tags)) {
         switch (tag->identifier()) {
             case crateVersionTagIdentifier: {
-                auto versionTag = TextTag::Pointer::dynamicCastFrom(tag);
-                if (!versionTag->value().isEqualTo(crateFileCurrentVersionString)) {
+                auto& versionTag = dynamic_cast<TextTag&>(*tag);
+                if (!versionTag.value().isEqualTo(crateFileCurrentVersionString)) {
                     internal->otherTags->emptyAll();
                     internal->trackEntries->emptyAll();
                     return;
@@ -163,9 +163,9 @@ bool Crate::hasParentCrate(void) const
     return internal->parentCrate.isValid();
 }
 
-Crate::Pointer Crate::parentCrate(void) const
+Crate& Crate::parentCrate(void) const
 {
-    return internal->parentCrate.toPointer();
+    return *(internal->parentCrate.toPointer());
 }
 
 const String& Crate::crateFilePath(void) const
@@ -209,23 +209,23 @@ void Crate::saveIfModifiedAndRecurseToChildren(void) const
     }
 }
 
-void Crate::removeChildrenCrate(Crate::Pointer const& crate)
+void Crate::removeChildrenCrate(const Crate& crate)
 {
     auto position = internal->childrenCrates->find(crate);
     if (position == internal->childrenCrates->end()) {
         return;
     }
 
-    crate->internal->parentCrate.release();
+    crate.internal->parentCrate.release();
     internal->childrenCrates->remove(position);
     internal->markCratesAsModified();
 }
 
-TrackEntry::ArrayOfConst::Pointer Crate::removeAndReturnTrackEntries(void)
+TrackEntry::Array::Pointer Crate::removeAndReturnTrackEntries(void)
 {
     auto currentEntries = internal->trackEntries;
 
-    internal->trackEntries = TrackEntry::ArrayOfConst::array();
+    internal->trackEntries = TrackEntry::Array::array();
     internal->tracksWereModified = true;
 
     return currentEntries;

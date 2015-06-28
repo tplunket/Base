@@ -150,17 +150,17 @@ count TrackFile::trackNumber(void) const
     return 0;
 }
 
-CueMarker::Array::Pointer const& TrackFile::cueMarkers(void) const
+const CueMarker::Array& TrackFile::cueMarkers(void) const
 {
     return internal->cueMarkers;
 }
 
-LoopMarker::Array::Pointer const& TrackFile::loopMarkers(void) const
+const LoopMarker::Array& TrackFile::loopMarkers(void) const
 {
     return internal->loopMarkers;
 }
 
-GridMarker::Array::Pointer const& TrackFile::gridMarkers(void) const
+const GridMarker::Array& TrackFile::gridMarkers(void) const
 {
     return internal->gridMarkers;
 }
@@ -217,19 +217,19 @@ void TrackFile::setTrackNumber(count trackNumber)
     }
 }
 
-void TrackFile::setCueMarkers(CueMarker::Array::Pointer const& markers)
+void TrackFile::setCueMarkers(CueMarker::Array& markers)
 {
-    internal->cueMarkers = markers;
+    internal->cueMarkers = markers.pointer();
 }
 
-void TrackFile::setLoopMarkers(LoopMarker::Array::Pointer const& markers)
+void TrackFile::setLoopMarkers(LoopMarker::Array& markers)
 {
-    internal->loopMarkers = markers;
+    internal->loopMarkers = markers.pointer();
 }
 
-void TrackFile::setGridMarkers(GridMarker::Array::Pointer const& markers)
+void TrackFile::setGridMarkers(GridMarker::Array& markers)
 {
-    internal->gridMarkers = markers;
+    internal->gridMarkers = markers.pointer();
 }
 
 void TrackFile::saveChanges(void)

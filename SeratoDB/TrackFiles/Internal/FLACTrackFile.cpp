@@ -42,7 +42,7 @@ namespace NxA { namespace Serato { namespace Internal {
 
 #pragma mark Constructors & Destructors
 
-FLACTrackFile::FLACTrackFile(const String& path, TagLibFilePointer const& newFile) :
+FLACTrackFile::FLACTrackFile(const String& path, const TagLibFilePointer& newFile) :
                              TrackFile(path, newFile) { }
 
 #pragma mark Instance Methods

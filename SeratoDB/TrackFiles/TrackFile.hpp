@@ -54,9 +54,9 @@ namespace NxA { namespace Serato {
 
         virtual Blob::Pointer artwork(void) const = 0;
         
-        CueMarker::Array::Pointer const& cueMarkers(void) const;
-        LoopMarker::Array::Pointer const& loopMarkers(void) const;
-        GridMarker::Array::Pointer const& gridMarkers(void) const;
+        const CueMarker::Array& cueMarkers(void) const;
+        const LoopMarker::Array& loopMarkers(void) const;
+        const GridMarker::Array& gridMarkers(void) const;
 
         virtual void setTitle(const String& title);
         virtual void setArtist(const String& artist);
@@ -74,9 +74,9 @@ namespace NxA { namespace Serato {
 
         virtual void setArtwork(const Blob& artwork) = 0;
 
-        void setCueMarkers(CueMarker::Array::Pointer const& markers);
-        void setLoopMarkers(LoopMarker::Array::Pointer const& markers);
-        void setGridMarkers(GridMarker::Array::Pointer const& markers);
+        void setCueMarkers(CueMarker::Array& markers);
+        void setLoopMarkers(LoopMarker::Array& markers);
+        void setGridMarkers(GridMarker::Array& markers);
 
         void saveChanges(void);
     };

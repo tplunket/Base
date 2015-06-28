@@ -31,6 +31,6 @@ namespace NxA { namespace Serato { namespace Internal {
         NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTOR_FOR(NxA::Serato, MPEGTrackFile);
 
         #pragma mark Constructor & Destructors
-        MPEGTrackFile(const String& path, TagLibFilePointer const& newFile);
+        MPEGTrackFile(const String& path, const TagLibFilePointer& newFile);
     };
 } } }

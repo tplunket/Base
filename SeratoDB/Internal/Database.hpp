@@ -38,11 +38,11 @@ namespace NxA { namespace Serato { namespace Internal {
 
         #pragma mark Constructors & Destructors
         Database(const String& path,
-                 Serato::CrateOrderFile::Pointer usingCrateOrderFile);
+                 Serato::CrateOrderFile& usingCrateOrderFile);
 
         #pragma mark Class Methods
 #if PRINT_DEBUG_INFO
-        static void debugListCrate(Serato::Crate::Pointer const& crate,
+        static void debugListCrate(Serato::Crate& crate,
                                    const String& spacing);
 #endif
 

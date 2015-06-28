@@ -55,7 +55,7 @@ CrateOrderFile::Pointer CrateOrderFile::fileWithSeratoFolderInRootFolder(const S
 
 #pragma mark Instance Methods
 
-Crate::Pointer const& CrateOrderFile::rootCrate(void) const
+Crate& CrateOrderFile::rootCrate(void)
 {
     return internal->rootCrate;
 }

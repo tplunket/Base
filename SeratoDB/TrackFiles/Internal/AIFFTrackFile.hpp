@@ -31,6 +31,6 @@ namespace NxA { namespace Serato { namespace Internal {
         NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTOR_FOR(NxA::Serato, AIFFTrackFile);
 
         #pragma mark Constructors & Destuctors
-        AIFFTrackFile(const String& path, TagLibFilePointer const& newFile);
+        AIFFTrackFile(const String& path, const TagLibFilePointer& newFile);
     };
 } } }

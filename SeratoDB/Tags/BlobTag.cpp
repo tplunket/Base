@@ -48,7 +48,7 @@ void BlobTag::setValue(const Blob& newValue)
     internal->value = newValue.pointerToConst();
 }
 
-void BlobTag::addTo(Blob::Pointer& destination) const
+void BlobTag::addTo(Blob& destination) const
 {
     count dataSize = internal->value->size();
     count totalSizeNeeded = Internal::Tag::memoryNeededForTagHeader() + dataSize;
@@ -59,5 +59,5 @@ void BlobTag::addTo(Blob::Pointer& destination) const
     Internal::Tag::setDataSizeForTagAt(dataSize, tagAddress);
     memcpy(Internal::Tag::dataForTagAt(tagAddress), this->value().data(), this->value().size());
 
-    destination->append(memoryRepresentation);
+    destination.append(memoryRepresentation);
 }

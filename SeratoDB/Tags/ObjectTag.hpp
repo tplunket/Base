@@ -25,7 +25,7 @@ namespace NxA { namespace Serato {
     public:
         #pragma mark Factory Methods
         static ObjectTag::Pointer tagWithMemoryAt(const byte* tagAddress);
-        static ObjectTag::Pointer tagWithIdentifierAndValue(uinteger32 identifier, Tag::Array::Pointer const& content);
+        static ObjectTag::Pointer tagWithIdentifierAndValue(uinteger32 identifier, const Tag::Array& content);
 
         #pragma mark Instance Methods
         bool hasSubTagForIdentifier(uinteger32 identifier) const;
@@ -35,6 +35,6 @@ namespace NxA { namespace Serato {
 
         void addSubTag(Tag& tag);
 
-        void addTo(Blob::Pointer& destination) const;
+        void addTo(Blob& destination) const;
     };
 } }

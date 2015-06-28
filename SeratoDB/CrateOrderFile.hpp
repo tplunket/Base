@@ -30,7 +30,7 @@ namespace NxA { namespace Serato {
                                                                         const String& rootFolderPath);
 
         #pragma mark Instance Methods
-        NxA::Pointer<Crate> const& rootCrate(void) const;
+        Crate& rootCrate(void);
 
         timestamp modificationDateInSecondsSince1970(void) const;
 

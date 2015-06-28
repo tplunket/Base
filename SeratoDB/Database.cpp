@@ -47,7 +47,7 @@ Database::Pointer Database::databaseWithFileAt(const String& seratoFolderPath)
                 break;
             }
             case databaseVersionTagIdentifier: {
-                auto& versionText = TextTag::Pointer::dynamicCastFrom(tag)->value();
+                auto& versionText = dynamic_cast<TextTag&>(*tag).value();
                 if (!versionText.isEqualTo(databaseFileCurrentVersionString)) {
                     newDatabase->internal->tracks->emptyAll();
                     newDatabase->internal->otherTags->emptyAll();
@@ -81,8 +81,8 @@ String::Pointer Database::versionAsStringForDatabaseIn(const String& seratoFolde
     auto tags(TagFactory::parseTagsAt(databaseFile->data(), databaseFile->size()));
     for (auto& tag : *(tags)) {
         if (tag->identifier() == databaseVersionTagIdentifier) {
-            auto textTag = TextTag::Pointer::dynamicCastFrom(tag);
-            return String::stringWith(textTag->value());
+            auto& textTag = dynamic_cast<TextTag&>(*tag);
+            return String::stringWith(textTag.value());
         }
     }
 
@@ -101,12 +101,12 @@ timestamp Database::rootCrateModificationDateInSecondsSince1970(void) const
     return internal->crateOrderFile->modificationDateInSecondsSince1970();
 }
 
-Crate::Pointer const& Database::rootCrate(void) const
+Crate& Database::rootCrate(void) const
 {
     return internal->crateOrderFile->rootCrate();
 }
 
-Track::Array::Pointer const& Database::tracks(void) const
+const Track::Array& Database::tracks(void) const
 {
     return internal->tracks;
 }
@@ -119,25 +119,25 @@ Track::Array::Pointer Database::removeAndReturnTracks(void)
     return tracks;
 }
 
-void Database::deleteTrackEntry(TrackEntry::Pointer& entry)
+void Database::deleteTrackEntry(TrackEntry& trackEntry)
 {
-    entry->destroy();
+    trackEntry.destroy();
 }
 
-void Database::deleteCrate(Crate::Pointer& crate)
+void Database::deleteCrate(Crate& crate)
 {
-    internal->crateFilesToDelete->append(String::stringWith(crate->crateFilePath()));
+    internal->crateFilesToDelete->append(String::stringWith(crate.crateFilePath()));
     Crate::destroy(crate);
 }
 
-void Database::addTrack(Track::Pointer const& track)
+void Database::addTrack(Track& track)
 {
-    internal->tracks->append(track);
+    internal->tracks->append(track.pointer());
 }
 
-void Database::deleteTrack(Track::Pointer& track)
+void Database::deleteTrack(Track& track)
 {
-    track->destroy();
+    track.destroy();
 }
 
 void Database::saveIfModified(void) const

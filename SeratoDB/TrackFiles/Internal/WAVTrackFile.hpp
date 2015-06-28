@@ -31,6 +31,6 @@ namespace NxA { namespace Serato { namespace Internal {
         NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTOR_FOR(NxA::Serato, WAVTrackFile);
 
         #pragma mark Constructor & Destructors
-        WAVTrackFile(const String& path, TagLibFilePointer const& newFile);
+        WAVTrackFile(const String& path, const TagLibFilePointer& newFile);
     };
 } } }

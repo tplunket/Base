@@ -32,12 +32,12 @@ ObjectTag::Pointer ObjectTag::tagWithMemoryAt(const byte* tagAddress)
                                                 subTags);
 }
 
-ObjectTag::Pointer ObjectTag::tagWithIdentifierAndValue(uinteger32 identifier, Tag::Array::Pointer const& content)
+ObjectTag::Pointer ObjectTag::tagWithIdentifierAndValue(uinteger32 identifier, const Tag::Array& content)
 {
     auto newTag = ObjectTag::makeShared();
     newTag->internal->identifier = identifier;
 
-    for (auto& subTag : *content) {
+    for (auto& subTag : content) {
         newTag->addSubTag(*subTag);
     }
 
@@ -66,7 +66,7 @@ void ObjectTag::addSubTag(Tag& tag)
     (*internal->subTagForIdentifier)[tag.identifier()] = tag.pointer();
 }
 
-void ObjectTag::addTo(Blob::Pointer& destination) const
+void ObjectTag::addTo(Blob& destination) const
 {
     auto subTagsRepresentation = Blob::blob();
     for (auto& identifierAndTag : *(internal->subTagForIdentifier)) {
@@ -79,6 +79,6 @@ void ObjectTag::addTo(Blob::Pointer& destination) const
     Internal::Tag::setIdentifierForTagAt(this->identifier(), tagAddress);
     Internal::Tag::setDataSizeForTagAt(subTagsRepresentation->size(), tagAddress);
 
-    destination->append(headerRepresentation);
-    destination->append(subTagsRepresentation);
+    destination.append(headerRepresentation);
+    destination.append(subTagsRepresentation);
 }

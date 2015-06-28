@@ -31,7 +31,9 @@ namespace NxA {
     template <class T> class Array : private std::vector<Pointer<T>>, public std::enable_shared_from_this<Array<T>> {
     public:
         using Pointer = NxA::Pointer<Array>;
+        using PointerToConst = NxA::Pointer<const Array>;
         using WeakPointer = NxA::WeakPointer<Array>;
+        using WeakPointerToConst = NxA::WeakPointer<const Array>;
         using iterator = typename std::vector<NxA::Pointer<T>>::iterator;
         using const_iterator = typename std::vector<NxA::Pointer<T>>::const_iterator;
         NxA::Pointer<Array<T>> pointer(void) {

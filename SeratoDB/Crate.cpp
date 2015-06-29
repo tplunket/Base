@@ -82,7 +82,7 @@ void Crate::destroy(const Crate& crate)
     }
 
     if (crate.hasParentCrate()) {
-        auto parentCrate = crate.internal->parentCrate.toPointer();
+        auto parentCrate = crate.internal->parentCrate.pointer();
         parentCrate->removeChildrenCrate(crate);
     }
 }
@@ -165,7 +165,7 @@ boolean Crate::hasParentCrate(void) const
 
 Crate& Crate::parentCrate(void) const
 {
-    return *(internal->parentCrate.toPointer());
+    return *(internal->parentCrate.pointer());
 }
 
 const String& Crate::crateFilePath(void) const

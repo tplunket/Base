@@ -64,7 +64,7 @@ void Crate::markCratesAsModified(void)
     this->cratesWereModified = true;
 
     if (this->parentCrate.isValid()) {
-        auto parent = this->parentCrate.toPointer();
+        auto parent = this->parentCrate.pointer();
         parent->internal->markCratesAsModified();
     }
 }

@@ -119,7 +119,7 @@ count String::length(void) const
 
 String::Pointer String::description(void) const
 {
-    return String::stringWith(this->toUTF8());
+    return String::stringWith(*this);
 }
 
 const character* String::toUTF8(void) const
@@ -149,7 +149,7 @@ Blob::Pointer String::toUTF16(void) const
 
 void String::append(const String& other)
 {
-    internal->value.append(other.toUTF8());
+    internal->value.append(other);
 }
 
 void String::append(const character* other)
@@ -184,12 +184,12 @@ String::Pointer String::subString(count start, count end) const
 
 boolean String::hasPrefix(const String& prefix) const
 {
-    return this->hasPrefix(prefix.toUTF8());
+    return this->hasPrefix(prefix);
 }
 
 boolean String::hasPostfix(const String& postfix) const
 {
-    size_t pos = internal->value.rfind(postfix.toUTF8());
+    size_t pos = internal->value.rfind(postfix);
     if (pos == std::string::npos) {
         return false;
     }
@@ -215,12 +215,12 @@ boolean String::hasPostfix(const character* postfix) const
 
 count String::indexOfFirstOccurenceOf(const String& other) const
 {
-    return this->indexOfFirstOccurenceOf(other.toUTF8());
+    return this->indexOfFirstOccurenceOf(other);
 }
 
 count String::indexOfLastOccurenceOf(const String& other) const
 {
-    return this->indexOfLastOccurenceOf(other.toUTF8());
+    return this->indexOfLastOccurenceOf(other   );
 }
 
 count String::indexOfFirstOccurenceOf(const char* other) const

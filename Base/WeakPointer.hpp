@@ -43,10 +43,15 @@ namespace NxA {
             this->release();
         }
 
-        Pointer<T> toPointer(void) const
+        Pointer<T> pointer(void) const
         {
             NXA_ASSERT_TRUE(this->isValid());
             return Pointer<T>(std::shared_ptr<T>(*this));
+        }
+        Pointer<const T> pointerToConst(void) const
+        {
+            NXA_ASSERT_TRUE(this->isValid());
+            return Pointer<T>(std::shared_ptr<const T>(*this));
         }
     };
 }

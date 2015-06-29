@@ -90,6 +90,16 @@ String::Pointer String::stringWith(const String& other)
 
 #pragma mark Operators
 
+String::operator const character*() const
+{
+    return internal->value.c_str();
+}
+
+String::operator const character*()
+{
+    return internal->value.c_str();
+}
+
 boolean String::isEqualTo(const String& other) const
 {
     return internal->value == other.internal->value;

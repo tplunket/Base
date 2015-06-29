@@ -40,6 +40,8 @@ namespace NxA {
         static String::Pointer stringWithUTF16(const Blob& other);
 
         #pragma mark Operators
+        operator const character*() const;
+        operator const character*();
 
         #pragma mark Instance Methods
         virtual String::Pointer description(void) const;

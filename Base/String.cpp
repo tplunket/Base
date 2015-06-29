@@ -61,23 +61,20 @@ String::Pointer String::stringWith(const character* format, ...)
 
 String::Pointer String::stringWithUTF16(const Blob& other)
 {
-    const integer16* characters = reinterpret_cast<const integer16*>(other.data());
-    count length = other.size() / 2;
+    auto source = other.pointerToConst();
 
     if (Platform::endianOrder == Platform::LitleEndian) {
-        characters = Internal::String::convertEndiannessOfUTF16Characters(characters, length);
+        source = Platform::convertEndiannessOfUInteger16From(other);
     }
+
+    const integer16* characters = reinterpret_cast<const integer16*>(source->data());
+    count length = source->size() / 2;
 
     auto newString = String::makeShared();
 
     std::wstring_convert<std::codecvt_utf8_utf16<char16_t>,char16_t> convert;
     newString->internal->value = convert.to_bytes(reinterpret_cast<const char16_t*>(characters), reinterpret_cast<const char16_t*>(characters + length));
 
-    if (Platform::endianOrder == Platform::LitleEndian) {
-        delete [] characters;
-    }
-
-    return newString;
 }
 
 String::Pointer String::stringWith(const String& other)
@@ -132,16 +129,10 @@ Blob::Pointer String::toUTF16(void) const
     std::wstring_convert<std::codecvt_utf8_utf16<char16_t>,char16_t> convert;
     std::u16string u16 = convert.from_bytes(internal->value.c_str());
 
-    const integer16* characters = reinterpret_cast<const integer16*>(u16.c_str());
-    count length = u16.length();
+    auto newBlob = Blob::blobWithMemoryAndSize(reinterpret_cast<const byte*>(reinterpret_cast<const integer16*>(u16.c_str())),
+                                               u16.length() * 2);
     if (Platform::endianOrder == Platform::LitleEndian) {
-        characters = Internal::String::convertEndiannessOfUTF16Characters(characters, length);
-    }
-
-    auto newBlob = Blob::blobWithMemoryAndSize(reinterpret_cast<const byte*>(characters), length);
-
-    if (Platform::endianOrder == Platform::LitleEndian) {
-        delete [] characters;
+        newBlob = Platform::convertEndiannessOfUInteger16From(newBlob);
     }
 
     return newBlob;

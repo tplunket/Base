@@ -31,9 +31,6 @@ namespace NxA { namespace Internal {
     struct String : public Object {
         NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA, String);
 
-        #pragma mark Class Methods
-        static const integer16* convertEndiannessOfUTF16Characters(const integer16* characters, count length);
-
         #pragma mark Instance Variables
         std::string value;
     };

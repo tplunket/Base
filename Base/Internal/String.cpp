@@ -34,18 +34,3 @@ Internal::String::String() : value("")
     printf("Construct Internal String at 0x%08lx.\n", (long)this);
 #endif
 }
-
-#pragma mark Instance Methods
-
-const integer16* Internal::String::convertEndiannessOfUTF16Characters(const integer16* characters, count length)
-{
-    count numberOfBytes = length * 2;
-    integer8* newCharacters = new integer8[numberOfBytes];
-
-    for (integer i = 0; i < numberOfBytes; i += 2) {
-        newCharacters[i] = ((char*)characters)[i+1];
-        newCharacters[i+1] = ((char*)characters)[i];
-    }
-
-    return (integer16*)newCharacters;
-}

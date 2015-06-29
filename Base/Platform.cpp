@@ -76,3 +76,15 @@ void Platform::writeBigEndianUInteger16ValueAt(uinteger16 value, byte* ptr)
     charsPtr[0] = (value >> 8) & 0xff;
     charsPtr[1] = value & 0xff;
 }
+
+NxA::Blob::Pointer Platform::convertEndiannessOfUInteger16From(const NxA::Blob& other)
+{
+    auto copy = NxA::Blob::blobWith(other);
+    auto numberOfBytes = copy->size();
+
+    for (integer i = 0; i < numberOfBytes; i += 2) {
+        std::swap(copy->data()[i], copy->data()[i + 1]);
+    }
+
+    return copy;
+}

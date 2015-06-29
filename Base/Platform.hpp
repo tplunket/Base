@@ -22,6 +22,7 @@
 #pragma once
 
 #include "Base/Types.hpp"
+#include "Base/Blob.hpp"
 #include "Base/Uncopyable.hpp"
 
 namespace NxA {
@@ -76,5 +77,7 @@ namespace NxA {
         static void writeBigEndianFloatValueAt(float value, byte* ptr);
         static void writeBigEndianUInteger32ValueAt(uinteger32 value, byte* ptr);
         static void writeBigEndianUInteger16ValueAt(uinteger16 value, byte* ptr);
+
+        static Blob::Pointer convertEndiannessOfUInteger16From(const NxA::Blob& other);
     };
 }

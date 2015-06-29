@@ -22,7 +22,6 @@
 #pragma once
 
 #include "Base/Types.hpp"
-#include "Base/Platform.hpp"
 #include "Base/Exception.hpp"
 #include "Base/Assert.hpp"
 #include "Base/Pointer.hpp"
@@ -34,3 +33,4 @@
 #include "Base/Map.hpp"
 #include "Base/Blob.hpp"
 #include "Base/File.hpp"
+#include "Base/Platform.hpp"

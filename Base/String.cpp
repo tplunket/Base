@@ -43,7 +43,23 @@ String::Pointer String::string(void)
     return newString;
 }
 
-String::Pointer String::stringWith(const character* format, ...)
+String::Pointer String::stringWith(const character* other)
+{
+    auto newString = String::makeShared();
+    newString->internal->value = other;
+
+    return newString;
+}
+
+String::Pointer String::stringWith(const String& other)
+{
+    auto newString = String::makeShared();
+    newString->internal->value = other.internal->value;
+
+    return newString;
+}
+
+String::Pointer String::stringWithFormat(const character* format, ...)
 {
     constexpr count formatStringBufferSize = 256;
     char buffer[formatStringBufferSize];
@@ -74,13 +90,6 @@ String::Pointer String::stringWithUTF16(const Blob& other)
 
     std::wstring_convert<std::codecvt_utf8_utf16<char16_t>,char16_t> convert;
     newString->internal->value = convert.to_bytes(reinterpret_cast<const char16_t*>(characters), reinterpret_cast<const char16_t*>(characters + length));
-
-}
-
-String::Pointer String::stringWith(const String& other)
-{
-    auto newString = String::makeShared();
-    newString->internal->value = other.internal->value;
 
     return newString;
 }

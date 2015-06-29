@@ -35,8 +35,9 @@ namespace NxA {
     public:
         #pragma mark Factory Methods
         static String::Pointer string(void);
-        static String::Pointer stringWith(const character* format, ... );
+        static String::Pointer stringWith(const character* other);
         static String::Pointer stringWith(const String& other);
+        static String::Pointer stringWithFormat(const character* format, ...);
         static String::Pointer stringWithUTF16(const Blob& other);
 
         #pragma mark Operators

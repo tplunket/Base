@@ -99,7 +99,7 @@ namespace NxA {
             return this->size();
         }
 
-        bool containsValueForKey(const Tkey& keyValue) const
+        boolean containsValueForKey(const Tkey& keyValue) const
         {
             return this->find(keyValue) != this->std::map<Tkey, typename Tvalue::Pointer>::end();
         }

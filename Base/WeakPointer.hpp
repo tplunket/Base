@@ -35,7 +35,7 @@ namespace NxA {
         ~WeakPointer() = default;
 
         #pragma mark Instance Methods
-        bool isValid(void) const {
+        boolean isValid(void) const {
             return !this->expired();
         }
 

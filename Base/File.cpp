@@ -87,7 +87,7 @@ String::Pointer File::removePrefixFromPath(const String& prefix,
     return path.subString(lengthToCrop);
 }
 
-bool File::fileExistsAt(const String& path)
+boolean File::fileExistsAt(const String& path)
 {
     struct stat buf;
     return (::stat(path.toUTF8(), &buf) != -1);

@@ -43,7 +43,7 @@ namespace NxA {
         static String::Pointer removePrefixFromPath(const String& prefix,
                                                     const String& path);
 
-        static bool fileExistsAt(const String& path);
+        static boolean fileExistsAt(const String& path);
         static count sizeOfFileAt(const String& path);
 
         static timestamp modificationDateInSecondsSince1970ForFile(const String& path);

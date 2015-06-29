@@ -25,10 +25,10 @@ using namespace NxA;
 
 #pragma mark Class Methods
 
-bool Debugger::launch(void)
+boolean Debugger::launch(void)
 {
     // -- This is placeholder code which is only used to trigger a shared user breakpoint
-    bool condition = true;
+    boolean condition = true;
     if (condition) {
         // -- A shared user breakpoint should be present at the line below for this class to work as advertised.
         condition = false;

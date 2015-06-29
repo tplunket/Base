@@ -78,7 +78,7 @@ const byte* Blob::data(void) const
     return internal->data.data();
 }
 
-bool Blob::isEqualTo(const Blob& other) const
+boolean Blob::isEqualTo(const Blob& other) const
 {
     return internal->data == other.internal->data;
 }

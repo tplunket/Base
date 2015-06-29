@@ -90,12 +90,12 @@ String::Pointer String::stringWith(const String& other)
 
 #pragma mark Operators
 
-bool String::isEqualTo(const String& other) const
+boolean String::isEqualTo(const String& other) const
 {
     return internal->value == other.internal->value;
 }
 
-bool String::isEqualTo(const character* other) const
+boolean String::isEqualTo(const character* other) const
 {
     return internal->value == other;
 }
@@ -172,12 +172,12 @@ String::Pointer String::subString(count start, count end) const
     return newString;
 }
 
-bool String::hasPrefix(const String& prefix) const
+boolean String::hasPrefix(const String& prefix) const
 {
     return this->hasPrefix(prefix.toUTF8());
 }
 
-bool String::hasPostfix(const String& postfix) const
+boolean String::hasPostfix(const String& postfix) const
 {
     size_t pos = internal->value.rfind(postfix.toUTF8());
     if (pos == std::string::npos) {
@@ -187,12 +187,12 @@ bool String::hasPostfix(const String& postfix) const
     return pos == (this->length() - postfix.length());
 }
 
-bool String::hasPrefix(const character* prefix) const
+boolean String::hasPrefix(const character* prefix) const
 {
     return internal->value.find(prefix) == 0;
 }
 
-bool String::hasPostfix(const character* postfix) const
+boolean String::hasPostfix(const character* postfix) const
 {
     size_t pos = internal->value.rfind(postfix);
     if (pos == std::string::npos) {

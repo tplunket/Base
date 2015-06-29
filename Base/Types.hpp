@@ -25,6 +25,8 @@
 #include <memory>
 
 namespace NxA {
+    using boolean = bool;
+    
     using uinteger = uint32_t;
     using integer = int32_t;
 

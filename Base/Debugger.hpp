@@ -39,6 +39,6 @@ namespace NxA {
         Debugger() = delete;
 
         #pragma mark Class Methods
-        static bool launch(void);
+        static boolean launch(void);
     };
 }

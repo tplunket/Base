@@ -53,7 +53,7 @@ namespace NxA {
             return const_cast<uinteger8*>(static_cast<const Blob&>(*this).data());
         }
 
-        bool isEqualTo(const Blob& other) const;
+        boolean isEqualTo(const Blob& other) const;
 
         void clear(void);
 

@@ -40,14 +40,14 @@ namespace NxA {
         static String::Pointer stringWithUTF16(const Blob& other);
 
         #pragma mark Operators
-        bool isEqualTo(const String& other) const;
-        bool isEqualTo(const char* other) const;
+        boolean isEqualTo(const String& other) const;
+        boolean isEqualTo(const char* other) const;
 
         #pragma mark Instance Methods
         virtual String::Pointer description(void) const;
 
         count length(void) const;
-        bool isEmpty(void) const
+        boolean isEmpty(void) const
         {
             return this->length() == 0;
         };
@@ -61,10 +61,10 @@ namespace NxA {
         String::Array::Pointer splitBySeperator(char seperator) const;
         String::Pointer subString(count start, count end = -1) const;
 
-        bool hasPrefix(const String& prefix) const;
-        bool hasPostfix(const String& postfix) const;
-        bool hasPrefix(const character* prefix) const;
-        bool hasPostfix(const character* postfix) const;
+        boolean hasPrefix(const String& prefix) const;
+        boolean hasPostfix(const String& postfix) const;
+        boolean hasPrefix(const character* prefix) const;
+        boolean hasPostfix(const character* postfix) const;
 
         count indexOfFirstOccurenceOf(const String& other) const;
         count indexOfLastOccurenceOf(const String& other) const;

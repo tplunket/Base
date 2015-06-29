@@ -40,11 +40,12 @@ namespace NxA {
         static String::Pointer stringWithUTF16(const Blob& other);
 
         #pragma mark Operators
-        boolean isEqualTo(const String& other) const;
-        boolean isEqualTo(const char* other) const;
 
         #pragma mark Instance Methods
         virtual String::Pointer description(void) const;
+
+        boolean isEqualTo(const String& other) const;
+        boolean isEqualTo(const char* other) const;
 
         count length(void) const;
         boolean isEmpty(void) const

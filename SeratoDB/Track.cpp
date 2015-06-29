@@ -293,7 +293,7 @@ void Track::setGridMarkers(GridMarker::ArrayOfConst& markers)
     internal->wasModified = true;
 }
 
-bool Track::wasModified(void) const
+boolean Track::wasModified(void) const
 {
     return internal->wasModified;
 }

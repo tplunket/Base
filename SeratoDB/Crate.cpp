@@ -52,14 +52,14 @@ Crate::Pointer Crate::crateWithNameInFolderOnVolume(const String& crateFullName,
 
 #pragma mark Class Methods
 
-bool Crate::isAValidCrateName(const String& crateFullName,
+boolean Crate::isAValidCrateName(const String& crateFullName,
                               const String& seratoFolderPath)
 {
     auto crateFilePath = crateFilePathForCrateNameInSeratoFolder(crateFullName, seratoFolderPath);
     return File::fileExistsAt(crateFilePath);
 }
 
-bool Crate::isASmartCrateName(const String& crateFullName,
+boolean Crate::isASmartCrateName(const String& crateFullName,
                               const String& seratoFolderPath)
 {
     auto crateFilePath = crateFilePathForSmartCrateNameInSeratoFolder(crateFullName, seratoFolderPath);
@@ -158,7 +158,7 @@ void Crate::loadFromFile(void)
     }
 }
 
-bool Crate::hasParentCrate(void) const
+boolean Crate::hasParentCrate(void) const
 {
     return internal->parentCrate.isValid();
 }
@@ -179,7 +179,7 @@ void Crate::resetModificationFlags()
     internal->tracksWereModified = false;
 }
 
-bool Crate::childrenCratesWereModified(void) const
+boolean Crate::childrenCratesWereModified(void) const
 {
     return internal->cratesWereModified;
 }

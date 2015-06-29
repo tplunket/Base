@@ -31,9 +31,9 @@ namespace NxA { namespace Serato {
                                                             const String& volumePath);
 
         #pragma mark Class Methods
-        static bool isAValidCrateName(const String& crateFullName,
+        static boolean isAValidCrateName(const String& crateFullName,
                                       const String& seratoFolderPath);
-        static bool isASmartCrateName(const String& crateFullName,
+        static boolean isASmartCrateName(const String& crateFullName,
                                       const String& seratoFolderPath);
         static void addCrateAsChildOfCrate(Crate& crate, Crate& parentCrate);
         static void destroy(const Crate& crate);
@@ -48,7 +48,7 @@ namespace NxA { namespace Serato {
 
         void addTrackEntry(Serato::TrackEntry& trackEntry);
 
-        bool hasParentCrate(void) const;
+        boolean hasParentCrate(void) const;
         Crate& parentCrate(void) const;
 
         const String& crateFilePath(void) const;
@@ -57,7 +57,7 @@ namespace NxA { namespace Serato {
 
         void loadFromFile(void);
         void saveIfModifiedAndRecurseToChildren(void) const;
-        bool childrenCratesWereModified(void) const;
+        boolean childrenCratesWereModified(void) const;
 
         void removeChildrenCrate(const Crate& crate);
         TrackEntry::Array::Pointer removeAndReturnTrackEntries(void);

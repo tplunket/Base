@@ -46,7 +46,7 @@ ObjectTag::Pointer ObjectTag::tagWithIdentifierAndValue(uinteger32 identifier, c
 
 #pragma mark Instance Methods
 
-bool ObjectTag::hasSubTagForIdentifier(uinteger32 identifier) const
+boolean ObjectTag::hasSubTagForIdentifier(uinteger32 identifier) const
 {
     return internal->subTagForIdentifier->containsValueForKey(identifier);
 }

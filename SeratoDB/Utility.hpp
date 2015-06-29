@@ -38,5 +38,5 @@ namespace NxA { namespace Serato {
                                                                  const String& seratoFolderPath);
     String::Pointer crateFilePathForSmartCrateNameInSeratoFolder(const String& crateName,
                                                                       const String& seratoFolderPath);
-    bool containsAValidSeratoFolder(const String& folderPath);
+    boolean containsAValidSeratoFolder(const String& folderPath);
 } }

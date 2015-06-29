@@ -22,7 +22,7 @@ using namespace NxA::Serato;
 
 #pragma mark Instance Methods
 
-bool ID3TrackFile::hasKey(void) const
+boolean ID3TrackFile::hasKey(void) const
 {
     return true;
 }
@@ -47,7 +47,7 @@ String::Pointer ID3TrackFile::grouping(void) const
     return String::string();
 }
 
-bool ID3TrackFile::hasRecordLabel(void) const
+boolean ID3TrackFile::hasRecordLabel(void) const
 {
     return true;
 }
@@ -62,7 +62,7 @@ String::Pointer ID3TrackFile::recordLabel(void) const
     return String::string();
 }
 
-bool ID3TrackFile::hasRemixer(void) const
+boolean ID3TrackFile::hasRemixer(void) const
 {
     return true;
 }

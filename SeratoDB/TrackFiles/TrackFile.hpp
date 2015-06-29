@@ -29,7 +29,7 @@ namespace NxA { namespace Serato {
         virtual String::Pointer title(void) const;
         virtual String::Pointer artist(void) const;
         virtual String::Pointer genre(void) const;
-        virtual bool hasKey(void) const = 0;
+        virtual boolean hasKey(void) const = 0;
         virtual String::Pointer key(void) const = 0;
         virtual String::Pointer comments(void) const;
         virtual String::Pointer album(void) const;
@@ -46,9 +46,9 @@ namespace NxA { namespace Serato {
 
         // -- TODO: Look into adding discNumber and numberOfAlbumTracks if they are available.
 
-        virtual bool hasRecordLabel(void) const = 0;
+        virtual boolean hasRecordLabel(void) const = 0;
         virtual String::Pointer recordLabel(void) const = 0;
-        virtual bool hasRemixer(void) const = 0;
+        virtual boolean hasRemixer(void) const = 0;
         virtual String::Pointer remixer(void) const = 0;
         virtual String::Pointer yearReleased(void) const = 0;
 

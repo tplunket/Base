@@ -152,7 +152,7 @@ void Database::saveIfModified(void) const
 
     internal->crateOrderFile->saveIfModified();
 
-    bool someTracksWereModified = false;
+    boolean someTracksWereModified = false;
     for (auto& track : *(internal->tracks)) {
         if (!track->wasModified()) {
             continue;

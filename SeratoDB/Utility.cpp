@@ -79,7 +79,7 @@ String::Pointer NxA::Serato::crateFilePathForSmartCrateNameInSeratoFolder(const 
     return crateFilePartialPath;
 }
 
-bool NxA::Serato::containsAValidSeratoFolder(const String& folderPath)
+boolean NxA::Serato::containsAValidSeratoFolder(const String& folderPath)
 {
     auto seratoFolderPath = seratoFolderPathForFolder(folderPath);
     auto databaseFilePath = databaseFilePathForSeratoFolder(seratoFolderPath);

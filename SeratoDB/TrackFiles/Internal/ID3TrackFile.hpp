@@ -37,7 +37,7 @@ namespace NxA { namespace Serato { namespace Internal {
         ID3TrackFile(const String& path, const TagLibFilePointer& newFile);
 
         #pragma mark Class Methods
-        static bool isAValidGeobFrame(const TagLib::ID3v2::GeneralEncapsulatedObjectFrame* frame);
+        static boolean isAValidGeobFrame(const TagLib::ID3v2::GeneralEncapsulatedObjectFrame* frame);
         static TagLib::ID3v2::FrameList::Iterator frameInListWithDescription(TagLib::ID3v2::FrameList& list,
                                                                              const String& description);
         

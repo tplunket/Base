@@ -31,6 +31,6 @@ namespace NxA { namespace Serato { namespace Internal {
         NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, BooleanTag);
 
         #pragma mark Instance Variables
-        bool value;
+        boolean value;
     };
 } } }

@@ -51,7 +51,7 @@ String::Pointer CrateOrderFile::crateNameIfValidCrateOrEmptyIfNot(const String& 
     return result;
 }
 
-bool CrateOrderFile::filenameIsAValidCrateName(const String& fileName)
+boolean CrateOrderFile::filenameIsAValidCrateName(const String& fileName)
 {
     return !fileName.hasPrefix(".") && fileName.hasPostfix(".crate");
 }
@@ -112,7 +112,7 @@ void CrateOrderFile::addCratesNamesAtTheStartOfUnlessAlreadyThere(String::ArrayO
 {
     auto insertionPosition = cratesToAddTo.begin();
     for (auto& crateName : cratesToAdd) {
-        bool alreadyHaveThisCrate = false;
+        boolean alreadyHaveThisCrate = false;
 
         for (auto& otherCrateName : cratesToAddTo) {
             if (crateName->isEqualTo(otherCrateName)) {

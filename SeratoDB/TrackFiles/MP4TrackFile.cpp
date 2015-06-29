@@ -48,7 +48,7 @@ MP4TrackFile::Pointer MP4TrackFile::fileWithFileAt(const String& path)
 
 #pragma mark Instance Methods
 
-bool MP4TrackFile::hasKey(void) const
+boolean MP4TrackFile::hasKey(void) const
 {
     return true;
 }
@@ -76,7 +76,7 @@ String::Pointer MP4TrackFile::grouping(void) const
     return String::string();
 }
 
-bool MP4TrackFile::hasRecordLabel(void) const
+boolean MP4TrackFile::hasRecordLabel(void) const
 {
     return false;
 }
@@ -86,7 +86,7 @@ String::Pointer MP4TrackFile::recordLabel(void) const
     return String::string();
 }
 
-bool MP4TrackFile::hasRemixer(void) const
+boolean MP4TrackFile::hasRemixer(void) const
 {
     return false;
 }

@@ -45,7 +45,7 @@ FLACTrackFile::Pointer FLACTrackFile::fileWithFileAt(const String& path)
 
 #pragma mark Instance Methods
 
-bool FLACTrackFile::hasKey(void) const
+boolean FLACTrackFile::hasKey(void) const
 {
     return true;
 }
@@ -95,7 +95,7 @@ uinteger32 FLACTrackFile::bitDepthInBitsOrZeroIfNotApplicable(void) const
     return 0;
 }
 
-bool FLACTrackFile::hasRecordLabel(void) const
+boolean FLACTrackFile::hasRecordLabel(void) const
 {
     return false;
 }
@@ -105,7 +105,7 @@ String::Pointer FLACTrackFile::recordLabel(void) const
     return String::string();
 }
 
-bool FLACTrackFile::hasRemixer(void) const
+boolean FLACTrackFile::hasRemixer(void) const
 {
     return false;
 }

@@ -27,16 +27,16 @@ namespace NxA { namespace Serato {
         static FLACTrackFile::Pointer fileWithFileAt(const String& path);
 
         #pragma mark Instance Methods
-        virtual bool hasKey(void) const;
+        virtual boolean hasKey(void) const;
         virtual String::Pointer key(void) const;
         virtual String::Pointer grouping(void) const;
 
         virtual uinteger32 lengthInMilliseconds(void) const;
         uinteger32 bitDepthInBitsOrZeroIfNotApplicable(void) const;
 
-        virtual bool hasRecordLabel(void) const;
+        virtual boolean hasRecordLabel(void) const;
         virtual String::Pointer recordLabel(void) const;
-        virtual bool hasRemixer(void) const;
+        virtual boolean hasRemixer(void) const;
         virtual String::Pointer remixer(void) const;
         virtual String::Pointer yearReleased(void) const;
 

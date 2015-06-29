@@ -28,7 +28,7 @@ namespace NxA { namespace Serato {
         static ObjectTag::Pointer tagWithIdentifierAndValue(uinteger32 identifier, const Tag::Array& content);
 
         #pragma mark Instance Methods
-        bool hasSubTagForIdentifier(uinteger32 identifier) const;
+        boolean hasSubTagForIdentifier(uinteger32 identifier) const;
 
         const Tag& subTagForIdentifier(uinteger32 identifier) const;
         Tag& subTagForIdentifier(uinteger32 identifier);

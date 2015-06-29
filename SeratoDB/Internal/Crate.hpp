@@ -43,8 +43,8 @@ namespace NxA { namespace Serato { namespace Internal {
         String::PointerToConst rootVolumePath;
         String::PointerToConst crateFilePath;
 
-        bool tracksWereModified;
-        bool cratesWereModified;
+        boolean tracksWereModified;
+        boolean cratesWereModified;
 
         Serato::Crate::WeakPointer parentCrate;
         Serato::Crate::Array::Pointer childrenCrates;

@@ -45,7 +45,7 @@ OGGTrackFile::Pointer OGGTrackFile::fileWithFileAt(const String& path)
 
 #pragma mark Instance Methods
 
-bool OGGTrackFile::hasKey(void) const
+boolean OGGTrackFile::hasKey(void) const
 {
     return false;
 }
@@ -65,7 +65,7 @@ String::Pointer OGGTrackFile::grouping(void) const
     return String::string();
 }
 
-bool OGGTrackFile::hasRecordLabel(void) const
+boolean OGGTrackFile::hasRecordLabel(void) const
 {
     return true;
 }
@@ -80,7 +80,7 @@ String::Pointer OGGTrackFile::recordLabel(void) const
     return String::string();
 }
 
-bool OGGTrackFile::hasRemixer(void) const
+boolean OGGTrackFile::hasRemixer(void) const
 {
     return true;
 }

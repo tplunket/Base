@@ -28,7 +28,7 @@ BooleanTag::Pointer BooleanTag::tagWithMemoryAt(const byte* tagAddress)
                                                  (*tagData == 1) ? true : false);
 }
 
-BooleanTag::Pointer BooleanTag::tagWithIdentifierAndValue(uinteger32 identifier, bool value)
+BooleanTag::Pointer BooleanTag::tagWithIdentifierAndValue(uinteger32 identifier, boolean value)
 {
     auto newTag = BooleanTag::makeShared();
     newTag->internal->identifier = identifier;
@@ -39,12 +39,12 @@ BooleanTag::Pointer BooleanTag::tagWithIdentifierAndValue(uinteger32 identifier,
 
 #pragma mark Instance Methods
 
-bool BooleanTag::value(void) const
+boolean BooleanTag::value(void) const
 {
     return internal->value;
 }
 
-void BooleanTag::setValue(bool newValue)
+void BooleanTag::setValue(boolean newValue)
 {
     internal->value = newValue;
 }

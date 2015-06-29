@@ -55,7 +55,7 @@ namespace NxA { namespace Serato { namespace Internal {
 
         Serato::CrateOrderFile::Pointer crateOrderFile;
 
-        bool databaseIsValid;
+        boolean databaseIsValid;
 
         #pragma mark Instance Methods
         void storeTrackTag(Serato::Tag& tag);

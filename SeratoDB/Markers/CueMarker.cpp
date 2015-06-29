@@ -96,5 +96,5 @@ void CueMarker::addId3TagTo(Blob& data) const
 
     auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<const byte*>(&header), sizeof(SeratoCueTagStruct));
     data.append(headerData);
-    data.append(this->label().toUTF8());
+    data.append(this->label());
 }

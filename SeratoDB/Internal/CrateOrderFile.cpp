@@ -68,7 +68,7 @@ String::ArrayOfConst::Pointer CrateOrderFile::cratesInSubCratesDirectory(const S
     DIR *pdir;
     struct dirent *pent;
 
-    pdir = opendir(directory.toUTF8()); //"." refers to the current dir
+    pdir = opendir(directory); //"." refers to the current dir
     if (pdir){
         errno = 0;
         while ((pent = readdir(pdir))){
@@ -141,7 +141,7 @@ Serato::Crate::Array::Pointer CrateOrderFile::childrenCratesOfCrateNamedUsingNam
 
     while (it != end) {
         auto fullCrateName = *it;
-        if (name.length() && !fullCrateName->hasPrefix(name.toUTF8())) {
+        if (name.length() && !fullCrateName->hasPrefix(name)) {
             break;
         }
 

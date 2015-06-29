@@ -124,27 +124,27 @@ Blob::Pointer ID3TrackFile::artwork(void) const
 
 void ID3TrackFile::setKey(const String& key)
 {
-    internal->properties["INITIALKEY"] = TagLib::String(key.toUTF8());
+    internal->properties["INITIALKEY"] = TagLib::String(key);
 }
 
 void ID3TrackFile::setGrouping(const String& grouping)
 {
-    internal->properties["CONTENTGROUP"] = TagLib::String(grouping.toUTF8());
+    internal->properties["CONTENTGROUP"] = TagLib::String(grouping);
 }
 
 void ID3TrackFile::setRecordLabel(const String& recordLabel)
 {
-    internal->properties["RECORD"] = TagLib::String(recordLabel.toUTF8());
+    internal->properties["RECORD"] = TagLib::String(recordLabel);
 }
 
 void ID3TrackFile::setRemixer(const String& remixer)
 {
-    internal->properties["REMIXER"] = TagLib::String(remixer.toUTF8());
+    internal->properties["REMIXER"] = TagLib::String(remixer);
 }
 
 void ID3TrackFile::setYearReleased(const String& year)
 {
-    internal->properties["DATE"] = TagLib::String(year.toUTF8());
+    internal->properties["DATE"] = TagLib::String(year);
 }
 
 void ID3TrackFile::setArtwork(const Blob& artwork)

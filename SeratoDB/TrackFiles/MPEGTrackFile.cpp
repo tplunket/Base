@@ -25,7 +25,7 @@ using namespace NxA::Serato;
 
 MPEGTrackFile::Pointer MPEGTrackFile::fileWithFileAt(const String& path)
 {
-    auto file = Internal::TagLibFilePointer(std::make_shared<TagLib::MPEG::File>(path.toUTF8()));
+    auto file = Internal::TagLibFilePointer(std::make_shared<TagLib::MPEG::File>(path));
     auto internalObject = Internal::MPEGTrackFile::Pointer(std::make_shared<Internal::MPEGTrackFile>(path, file));
     auto newFile = MPEGTrackFile::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
 

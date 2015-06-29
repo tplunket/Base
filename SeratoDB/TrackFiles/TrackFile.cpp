@@ -106,7 +106,7 @@ String::Pointer TrackFile::bpm(void) const
 
 count TrackFile::size(void) const
 {
-    return File::sizeOfFileAt(String::stringWith(internal->trackFilePath->toUTF8()));
+    return File::sizeOfFileAt(internal->trackFilePath);
 }
 
 uinteger32 TrackFile::lengthInMilliseconds(void) const
@@ -168,46 +168,46 @@ const GridMarker::Array& TrackFile::gridMarkers(void) const
 void TrackFile::setTitle(const String& title)
 {
     if (internal->parsedFileTag) {
-        internal->parsedFileTag->setTitle(TagLib::String(title.toUTF8()));
+        internal->parsedFileTag->setTitle(TagLib::String(title));
     }
 }
 
 void TrackFile::setArtist(const String& artist)
 {
     if (internal->parsedFileTag) {
-        internal->parsedFileTag->setArtist(TagLib::String(artist.toUTF8()));
+        internal->parsedFileTag->setArtist(TagLib::String(artist));
     }
 }
 
 void TrackFile::setGenre(const String& genre)
 {
     if (internal->parsedFileTag) {
-        internal->parsedFileTag->setGenre(TagLib::String(genre.toUTF8()));
+        internal->parsedFileTag->setGenre(TagLib::String(genre));
     }
 }
 
 void TrackFile::setComments(const String& comments)
 {
     if (internal->parsedFileTag) {
-        internal->parsedFileTag->setComment(TagLib::String(comments.toUTF8()));
+        internal->parsedFileTag->setComment(TagLib::String(comments));
     }
 }
 
 void TrackFile::setAlbum(const String& album)
 {
     if (internal->parsedFileTag) {
-        internal->parsedFileTag->setAlbum(TagLib::String(album.toUTF8()));
+        internal->parsedFileTag->setAlbum(TagLib::String(album));
     }
 }
 
 void TrackFile::setComposer(const String& composer)
 {
-    internal->properties["COMPOSER"] = TagLib::String(composer.toUTF8());
+    internal->properties["COMPOSER"] = TagLib::String(composer);
 }
 
 void TrackFile::setBpm(const String& bpm)
 {
-    internal->properties["BPM"] = TagLib::String(bpm.toUTF8());
+    internal->properties["BPM"] = TagLib::String(bpm);
 }
 
 void TrackFile::setTrackNumber(count trackNumber)

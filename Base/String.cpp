@@ -172,13 +172,19 @@ String::Array::Pointer String::splitBySeperator(char seperator) const
 
 String::Pointer String::subString(count start, count end) const
 {
-    if (end == -1) {
+    NXA_ASSERT_TRUE(start <= end);
+
+    if ((end == -1) || (end > this->length())) {
         end = this->length();
     }
 
-    auto newString = String::makeShared();
-    newString->internal->value = internal->value.substr(start, end);
+    if (start >= this->length()) {
+        return String::string();
+    }
 
+    auto newString = String::makeShared();
+    newString->internal->value = internal->value.substr(start, end - start);
+    
     return newString;
 }
 

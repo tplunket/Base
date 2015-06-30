@@ -76,6 +76,7 @@ count Blob::size(void) const
 
 const byte* Blob::data(void) const
 {
+    NXA_ASSERT_TRUE(this->size() > 0);
     return internal->data.data();
 }
 

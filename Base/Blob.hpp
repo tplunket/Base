@@ -50,7 +50,7 @@ namespace NxA {
         const byte* data(void) const;
         byte* data(void)
         {
-            return const_cast<uinteger8*>(static_cast<const Blob&>(*this).data());
+            return const_cast<byte*>(static_cast<const Blob&>(*this).data());
         }
 
         boolean isEqualTo(const Blob& other) const;

@@ -88,7 +88,7 @@ namespace NxA {
         }
         T& operator[] (integer index)
         {
-            return *(const_cast<NxA::Pointer<T>&>(static_cast<const Array<T>>(*this)[index]));
+            return const_cast<T&>((static_cast<const Array<T>&>(*this))[index]);
         }
 
         #pragma mark Instance Methods

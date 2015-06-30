@@ -83,6 +83,7 @@ namespace NxA {
         #pragma mark Operators
         const T& operator[] (integer index) const
         {
+            NXA_ASSERT_TRUE(index >= 0 && index < this->length());
             return *(this->std::vector<NxA::Pointer<T>>::operator[](index));
         }
         T& operator[] (integer index)

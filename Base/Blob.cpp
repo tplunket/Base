@@ -38,7 +38,7 @@ Blob::Pointer Blob::blobWithCapacity(count size)
 {
     auto newBlob = Blob::makeShared();
     newBlob->internal->data = Internal::Blob::InternalVector(size);
-    newBlob->clear();
+    newBlob->fillWithZeros();
 
     return newBlob;
 }
@@ -83,7 +83,7 @@ boolean Blob::isEqualTo(const Blob& other) const
     return internal->data == other.internal->data;
 }
 
-void Blob::clear(void)
+void Blob::fillWithZeros(void)
 {
     std::memset(this->data(), 0, this->size());
 }

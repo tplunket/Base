@@ -55,7 +55,7 @@ namespace NxA {
 
         boolean isEqualTo(const Blob& other) const;
 
-        void clear(void);
+        void fillWithZeros(void);
 
         void append(const Blob& other);
         void append(const character* other);

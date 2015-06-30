@@ -184,7 +184,7 @@ String::Pointer String::subString(count start, count end) const
 
 boolean String::hasPrefix(const String& prefix) const
 {
-    return this->hasPrefix(prefix);
+    return this->hasPrefix(prefix.operator const char *());
 }
 
 boolean String::hasPostfix(const String& postfix) const
@@ -215,12 +215,12 @@ boolean String::hasPostfix(const character* postfix) const
 
 count String::indexOfFirstOccurenceOf(const String& other) const
 {
-    return this->indexOfFirstOccurenceOf(other);
+    return this->indexOfFirstOccurenceOf(other.operator const character *());
 }
 
 count String::indexOfLastOccurenceOf(const String& other) const
 {
-    return this->indexOfLastOccurenceOf(other   );
+    return this->indexOfLastOccurenceOf(other.operator const character *());
 }
 
 count String::indexOfFirstOccurenceOf(const char* other) const

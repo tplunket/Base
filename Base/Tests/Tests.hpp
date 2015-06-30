@@ -26,7 +26,9 @@
 // -- This forces the linker to link the object files where these tests
 // -- are defined. Otherwise they would get stripped out.
 NXA_USING_TEST_SUITE_NAMED(Base_String_Tests);
+NXA_USING_TEST_SUITE_NAMED(Base_Blob_Tests);
 
 NXA_USE_TEST_SUITES_FOR_MODULE(Base) {
-    Base_String_Tests
+    Base_String_Tests,
+    Base_Blob_Tests
 };

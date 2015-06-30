@@ -97,12 +97,7 @@ void Blob::append(const Blob& other)
 
 void Blob::append(const character* other)
 {
-    count length = ::strlen(other);
-    if (!length) {
-        return;
-    }
-
-    internal->data.insert(internal->data.end(), length + 1, *other);
+    internal->data.insert(internal->data.end(), other, other + ::strlen(other) + 1);
 }
 
 void Blob::append(const character other)

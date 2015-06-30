@@ -63,6 +63,7 @@ Blob::Pointer Blob::blobWith(const Blob& other)
 
 const byte& Blob::operator[] (integer index) const
 {
+    NXA_ASSERT_TRUE(index >= 0 && index < this->size());
     return internal->data[index];
 }
 

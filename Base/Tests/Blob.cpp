@@ -66,7 +66,7 @@ TEST(Base_Blob, BlobWithCapacity_BlobCreatedWithAGivenSize_BlobCreatedCorrectly)
 
     // -- Then.
     ASSERT_EQ(test->size(), testSize);
-    byte* data = test->data();
+    auto data = test->data();
     for (integer i = 0; i < testSize; ++i) {
         ASSERT_EQ(0, data[i]);
     }
@@ -198,7 +198,7 @@ TEST(Base_Blob, FillWithZeros_ABlobWithContent_FillsTheBlobWithZeros)
 
     // -- Then.
     ASSERT_EQ(test->size(), sizeof(testData));
-    byte* data = test->data();
+    auto data = test->data();
     for (integer i = 0; i < sizeof(testData); ++i) {
         ASSERT_EQ(0, data[i]);
     }
@@ -214,7 +214,7 @@ TEST(Base_Blob, Hash_ABlobWithContent_ReturnsTheCorrectHashValue)
 
     // -- Then.
     ASSERT_EQ(16, result->size());
-    byte* data = result->data();
+    auto data = result->data();
     ASSERT_EQ(0xD2, data[0]);
     ASSERT_EQ(0x76, data[1]);
     ASSERT_EQ(0xE4, data[2]);
@@ -299,7 +299,7 @@ TEST(Base_Blob, Append_AnEmptyBlobAndAString_AppendTheStringCorrectly)
 
     // -- Then.
     ASSERT_EQ(test->size(), 6);
-    byte* data = test->data();
+    auto data = test->data();
     ASSERT_EQ('H', data[0]);
     ASSERT_EQ('e', data[1]);
     ASSERT_EQ('l', data[2]);
@@ -318,7 +318,7 @@ TEST(Base_Blob, Append_AnEmptyBlobAndAnEmptyString_OnlyAppendsAStringTerminatorC
 
     // -- Then.
     ASSERT_EQ(test->size(), 1);
-    byte* data = test->data();
+    auto data = test->data();
     ASSERT_EQ(data[0], '\0');
 }
 
@@ -332,6 +332,6 @@ TEST(Base_Blob, Append_AnEmptyBlobAndACharacter_AppendsTheCharacter)
 
     // -- Then.
     ASSERT_EQ(test->size(), 1);
-    byte* data = test->data();
+    auto data = test->data();
     ASSERT_EQ(data[0], 'G');
 }

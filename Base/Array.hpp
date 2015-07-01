@@ -61,11 +61,11 @@ namespace NxA {
         {
             this->push_back(object.pointerToConst());
         }
-        void insertAt(const T& object, const_iterator pos, std::false_type)
+        void insertAt(T& object, const_iterator pos, std::false_type)
         {
             this->insert(pos, object.pointer());
         }
-        void insertAt(const T& object, const_iterator pos, std::true_type)
+        void insertAt(T& object, const_iterator pos, std::true_type)
         {
             this->insert(pos, object.pointerToConst());
         }

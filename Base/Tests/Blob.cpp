@@ -80,10 +80,7 @@ TEST(Base_Blob, BlobWithMemoryAndSize_BlobCreatedFromDataInMemory_BlobCreatedCor
 
     // -- Then.
     ASSERT_EQ(test->size(), sizeof(testData));
-    byte* data = test->data();
-    for (integer i = 0; i < sizeof(testData); ++i) {
-        ASSERT_EQ(data[i], testData[i]);
-    }
+    ASSERT_EQ(0, ::memcmp(test->data(), testData, sizeof(testData)));
 }
 
 TEST(Base_Blob, BlobWith_BlobCreatedFromAnotherBlob_BlobCreatedCorrectly)
@@ -96,10 +93,7 @@ TEST(Base_Blob, BlobWith_BlobCreatedFromAnotherBlob_BlobCreatedCorrectly)
 
     // -- Then.
     ASSERT_EQ(test->size(), sizeof(testData));
-    byte* data = test->data();
-    for (integer i = 0; i < sizeof(testData); ++i) {
-        ASSERT_EQ(data[i], testData[i]);
-    }
+    ASSERT_EQ(0, ::memcmp(test->data(), testData, sizeof(testData)));
 }
 
 TEST(Base_Blob, OperatorSquareBrackets_BlobWithDataInIt_ReturnsCorrectData)
@@ -222,11 +216,8 @@ TEST(Base_Blob, Append_AnEmptyBlobAndBlobWithContent_AppendTheContentCorrectly)
     test->append(test2);
 
     // -- Then.
-    ASSERT_EQ(test->size(), sizeof(testData));
-    byte* data = test->data();
-    for (integer i = 0; i < sizeof(testData); ++i) {
-        ASSERT_EQ(data[i], testData[i]);
-    }
+    ASSERT_EQ(sizeof(testData), test->size());
+    ASSERT_EQ(0, ::memcmp(test->data(), testData, sizeof(testData)));
 }
 
 TEST(Base_Blob, Append_TwoBlobsWithContent_AppendTheContentCorrectly)
@@ -239,12 +230,9 @@ TEST(Base_Blob, Append_TwoBlobsWithContent_AppendTheContentCorrectly)
     test->append(test2);
 
     // -- Then.
-    ASSERT_EQ(test->size(), 2 * sizeof(testData));
-    byte* data = test->data();
-    for (integer i = 0; i < sizeof(testData); ++i) {
-        ASSERT_EQ(data[i], testData[i]);
-        ASSERT_EQ(data[i + sizeof(testData)], testData[i]);
-    }
+    ASSERT_EQ(2 * sizeof(testData), test->size());
+    ASSERT_EQ(0, ::memcmp(test->data(), testData, sizeof(testData)));
+    ASSERT_EQ(0, ::memcmp(test->data() + sizeof(testData), testData, sizeof(testData)));
 }
 
 TEST(Base_Blob, Append_AnBlobWithContentAndEmptyBlob_AppendTheContentCorrectly)
@@ -257,11 +245,8 @@ TEST(Base_Blob, Append_AnBlobWithContentAndEmptyBlob_AppendTheContentCorrectly)
     test->append(test2);
 
     // -- Then.
-    ASSERT_EQ(test->size(), sizeof(testData));
-    byte* data = test->data();
-    for (integer i = 0; i < sizeof(testData); ++i) {
-        ASSERT_EQ(data[i], testData[i]);
-    }
+    ASSERT_EQ(sizeof(testData), test->size());
+    ASSERT_EQ(0, ::memcmp(test->data(), testData, sizeof(testData)));
 }
 
 TEST(Base_Blob, Append_TwoEmptyBlobs_LeavesTheBlobEmpty)

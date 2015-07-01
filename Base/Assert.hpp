@@ -44,9 +44,13 @@
 #define NXA_ASSERT_NULL(expression) do { if ((expression) != nullptr) { NXA_ALOG("%s is not nil.", #expression); } } while(0)
 #define NXA_ASSERT_TRUE(expression) do { if (!(expression)) { NXA_ALOG("%s is false.", #expression); } } while(0)
 #define NXA_ASSERT_FALSE(expression) do { if (expression) { NXA_ALOG("%s is true.", #expression); } } while(0)
+#define NXA_ASSERT_EQ(expression1, expression2) do { if ((expression1) != (expression2)) { NXA_ALOG("%s is not equal to %s.", #expression1, #expression2); } } while(0)
+#define NXA_ASSERT_NOT_EQ(expression1, expression2) do { if ((expression1) == (expression2)) { NXA_ALOG("%s is equal to %s.", #expression1, #expression2); } } while(0)
 
 // -- Replacements for assert which use NXA_ALOG() and, in non-DEBUG builds, only prints its message.
 #define NXA_ASSERT_NOT_NULL_DEBUG(expression) do { if ((expression) == nullptr) { NXA_ALOG_DEBUG("%s is nil.", #expression); } } while(0)
 #define NXA_ASSERT_NULL_DEBUG(expression) do { if ((expression) != nullptr) { NXA_ALOG_DEBUG("%s is not nil.", #expression); } } while(0)
 #define NXA_ASSERT_TRUE_DEBUG(expression) do { if (!(expression)) { NXA_ALOG_DEBUG("%s is false.", #expression); } } while(0)
 #define NXA_ASSERT_FALSE_DEBUG(expression) do { if (expression) { NXA_ALOG_DEBUG("%s is true.", #expression); } } while(0)
+#define NXA_ASSERT_EQ_DEBUG(expression1, expression2) do { if ((expression1) != (expression2)) { NXA_ALOG_DEBUG("%s is not equal to %s.", #expression1, #expression2); } } while(0)
+#define NXA_ASSERT_NOT_EQ_DEBUG(expression1, expression2) do { if ((expression1) == (expression2)) { NXA_ALOG_DEBUG("%s is equal to %s.", #expression1, #expression2); } } while(0)

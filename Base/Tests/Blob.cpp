@@ -204,6 +204,35 @@ TEST(Base_Blob, FillWithZeros_ABlobWithContent_FillsTheBlobWithZeros)
     }
 }
 
+TEST(Base_Blob, Hash_ABlobWithContent_ReturnsTheCorrectHashValue)
+{
+    // -- Given.
+    auto test = Blob::blobWithMemoryAndSize(testData, sizeof(testData));
+
+    // -- When.
+    auto result = test->hash();
+
+    // -- Then.
+    ASSERT_EQ(16, result->size());
+    byte* data = result->data();
+    ASSERT_EQ(0xD2, data[0]);
+    ASSERT_EQ(0x76, data[1]);
+    ASSERT_EQ(0xE4, data[2]);
+    ASSERT_EQ(0xEF, data[3]);
+    ASSERT_EQ(0x00, data[4]);
+    ASSERT_EQ(0xA8, data[5]);
+    ASSERT_EQ(0x28, data[6]);
+    ASSERT_EQ(0xA9, data[7]);
+    ASSERT_EQ(0xEA, data[8]);
+    ASSERT_EQ(0x51, data[9]);
+    ASSERT_EQ(0xB4, data[10]);
+    ASSERT_EQ(0x83, data[11]);
+    ASSERT_EQ(0xA4, data[12]);
+    ASSERT_EQ(0xB6, data[13]);
+    ASSERT_EQ(0xA8, data[14]);
+    ASSERT_EQ(0x32, data[15]);
+}
+
 TEST(Base_Blob, Append_AnEmptyBlobAndBlobWithContent_AppendTheContentCorrectly)
 {
     // -- Given.

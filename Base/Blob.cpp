@@ -20,7 +20,6 @@
 //
 
 #include "Base/Blob.hpp"
-#include "Base/String.hpp"
 #include "Base/Internal/Blob.hpp"
 
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA, Blob, Object);
@@ -59,6 +58,13 @@ Blob::Pointer Blob::blobWith(const Blob& other)
     return newBlob;
 }
 
+#pragma mark Class Methods
+
+Blob::Pointer Blob::hashFor(const byte* memory, count size)
+{
+    return Internal::Blob::hashFor(memory, size);
+}
+
 #pragma mark Operators
 
 const byte& Blob::operator[] (integer index) const
@@ -88,6 +94,11 @@ boolean Blob::isEqualTo(const Blob& other) const
 void Blob::fillWithZeros(void)
 {
     std::memset(this->data(), 0, this->size());
+}
+
+Blob::Pointer Blob::hash(void)
+{
+    return Internal::Blob::hashFor(this->data(), this->size());
 }
 
 void Blob::append(const Blob& other)

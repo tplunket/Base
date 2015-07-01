@@ -33,6 +33,9 @@ namespace NxA { namespace Internal {
 
         using InternalVector = std::vector<byte>;
 
+        #pragma mark Class Methods
+        static NxA::Blob::Pointer hashFor(const byte* memory, count size);
+
         #pragma mark Instance Variables
         InternalVector data;
     };

@@ -37,6 +37,9 @@ namespace NxA {
         static Blob::Pointer blobWithMemoryAndSize(const byte* other, count size);
         static Blob::Pointer blobWith(const Blob& other);
 
+        #pragma mark Class Methods
+        static Blob::Pointer hashFor(const byte* memory, count size);
+
         #pragma mark Operators
         const byte& operator[] (integer index) const;
         byte& operator[] (integer index)
@@ -56,6 +59,8 @@ namespace NxA {
         boolean isEqualTo(const Blob& other) const;
 
         void fillWithZeros(void);
+
+        Blob::Pointer hash(void);
 
         void append(const Blob& other);
         void append(const character* other);

@@ -30,7 +30,7 @@ TextTag::Pointer TextTag::tagWithMemoryAt(const byte* tagAddress)
 
 TextTag::Pointer TextTag::tagWithIdentifierAndValue(uinteger32 identifier, const String& value)
 {
-    NXA_ASSERT_EQ((identifier & 0xFF0000) >> 24, 't');
+    NXA_ASSERT_EQ((identifier & 0xFF000000) >> 24, 't');
 
     auto newTag = TextTag::makeShared();
     newTag->internal->identifier = identifier;

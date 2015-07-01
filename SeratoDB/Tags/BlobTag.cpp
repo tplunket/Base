@@ -29,7 +29,7 @@ BlobTag::Pointer BlobTag::tagWithMemoryAt(const byte* tagAddress)
 
 BlobTag::Pointer BlobTag::tagWithIdentifierAndValue(uinteger32 identifier, const Blob& value)
 {
-    NXA_ASSERT_EQ((identifier & 0xFF0000) >> 24, 'a');
+    NXA_ASSERT_EQ((identifier & 0xFF000000) >> 24, 'a');
 
     auto newTag = BlobTag::makeShared();
     newTag->internal->identifier = identifier;

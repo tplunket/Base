@@ -34,7 +34,7 @@ ObjectTag::Pointer ObjectTag::tagWithMemoryAt(const byte* tagAddress)
 
 ObjectTag::Pointer ObjectTag::tagWithIdentifierAndValue(uinteger32 identifier, const Tag::Array& content)
 {
-    NXA_ASSERT_EQ((identifier & 0xFF0000) >> 24, 'o');
+    NXA_ASSERT_EQ((identifier & 0xFF000000) >> 24, 'o');
 
     auto newTag = ObjectTag::makeShared();
     newTag->internal->identifier = identifier;

@@ -30,7 +30,7 @@ VersionTag::Pointer VersionTag::tagWithMemoryAt(const byte* tagAddress)
 
 VersionTag::Pointer VersionTag::tagWithIdentifierAndValue(uinteger32 identifier, const String& value)
 {
-    NXA_ASSERT_EQ((identifier & 0xFF0000) >> 24, 'v');
+    NXA_ASSERT_EQ((identifier & 0xFF000000) >> 24, 'v');
 
     auto newTag = VersionTag::makeShared();
     newTag->internal->identifier = identifier;

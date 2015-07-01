@@ -33,7 +33,7 @@ UInteger16Tag::Pointer UInteger16Tag::tagWithMemoryAt(const byte* tagAddress)
 
 UInteger16Tag::Pointer UInteger16Tag::tagWithIdentifierAndValue(uinteger32 identifier, uinteger16 value)
 {
-    NXA_ASSERT_EQ((identifier & 0xFF0000) >> 24, 's');
+    NXA_ASSERT_EQ((identifier & 0xFF000000) >> 24, 's');
 
     auto newTag = UInteger16Tag::makeShared();
     newTag->internal->identifier = identifier;

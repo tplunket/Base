@@ -33,7 +33,7 @@ UInteger32Tag::Pointer UInteger32Tag::tagWithMemoryAt(const byte* tagAddress)
 
 UInteger32Tag::Pointer UInteger32Tag::tagWithIdentifierAndValue(uinteger32 identifier, uinteger32 value)
 {
-    NXA_ASSERT_EQ((identifier & 0xFF0000) >> 24, 'u');
+    NXA_ASSERT_EQ((identifier & 0xFF000000) >> 24, 'u');
 
     auto newTag = UInteger32Tag::makeShared();
     newTag->internal->identifier = identifier;

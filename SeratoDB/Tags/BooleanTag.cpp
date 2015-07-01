@@ -31,7 +31,7 @@ BooleanTag::Pointer BooleanTag::tagWithMemoryAt(const byte* tagAddress)
 
 BooleanTag::Pointer BooleanTag::tagWithIdentifierAndValue(uinteger32 identifier, boolean value)
 {
-    NXA_ASSERT_EQ((identifier & 0xFF0000) >> 24, 'b');
+    NXA_ASSERT_EQ((identifier & 0xFF000000) >> 24, 'b');
 
     auto newTag = BooleanTag::makeShared();
     newTag->internal->identifier = identifier;

@@ -25,7 +25,7 @@ TEST(SeratoDB_UInteger32Tag, TagCreatedFromNormalConstructor_HasCorrectValue)
     auto tag = UInteger32Tag::tagWithIdentifierAndValue('vrsn', 0xDEADBEEF);
 
     // -- Then.
-    ASSERT_EQ(tag->value(), 0xDEADBEEF);
+    ASSERT_EQ(0xDEADBEEF, tag->value());
 }
 
 TEST(SeratoDB_UInteger32Tag, TagCreatedFromParsingConstructor_HasCorrectValue)
@@ -37,7 +37,7 @@ TEST(SeratoDB_UInteger32Tag, TagCreatedFromParsingConstructor_HasCorrectValue)
     auto tag = UInteger32Tag::tagWithMemoryAt(data);
 
     // -- Then.
-    ASSERT_EQ(tag->value(), 0x54CA84AB);
+    ASSERT_EQ(0x54CA84AB, tag->value());
 }
 
 TEST(SeratoDB_UInteger32Tag, TagWrittenToData_HasCorrectOutput)
@@ -53,6 +53,6 @@ TEST(SeratoDB_UInteger32Tag, TagWrittenToData_HasCorrectOutput)
     ASSERT_EQ(destination->size(), 12);
     constexpr uinteger8 expectedData[] = { 0x76, 0x72, 0x73, 0x6E, 0x00, 0x00, 0x00, 0x04, 0xDE, 0xAD, 0xBE, 0xEF };
     for (uint32_t index = 0; index < sizeof(expectedData); ++index) {
-        ASSERT_EQ((*destination)[index], expectedData[index]);
+        ASSERT_EQ(expectedData[index], (*destination)[index]);
     }
 }

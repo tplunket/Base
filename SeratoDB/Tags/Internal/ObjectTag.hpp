@@ -28,7 +28,7 @@
 
 namespace NxA { namespace Serato {
     #pragma mark Containers
-    typedef Map<uinteger32, const Tag> SeratoIdentifierToTagMap;
+    using IdentifierToTagMap = Map<uinteger32, const Tag>;
 } }
 
 namespace NxA { namespace Serato { namespace Internal {
@@ -36,6 +36,6 @@ namespace NxA { namespace Serato { namespace Internal {
         NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, ObjectTag);
 
         #pragma mark Instance Variables
-        SeratoIdentifierToTagMap::Pointer subTagForIdentifier;
+        Serato::IdentifierToTagMap::Pointer subTagForIdentifier;
     };
 } } }

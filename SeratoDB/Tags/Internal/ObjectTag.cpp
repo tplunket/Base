@@ -27,4 +27,4 @@ using namespace NxA::Serato::Internal;
 
 #pragma mark Constructors & Destructors
 
-ObjectTag::ObjectTag() : subTagForIdentifier(SeratoIdentifierToTagMap::map()) { }
+ObjectTag::ObjectTag() : subTagForIdentifier(Serato::IdentifierToTagMap::map()) { }

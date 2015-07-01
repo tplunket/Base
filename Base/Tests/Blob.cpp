@@ -103,9 +103,8 @@ TEST(Base_Blob, OperatorSquareBrackets_BlobWithDataInIt_ReturnsCorrectData)
     auto test = Blob::blobWithMemoryAndSize(testData, sizeof(testData));
 
     // -- Then.
-    byte* data = test->data();
     for (integer i = 0; i < sizeof(testData); ++i) {
-        ASSERT_EQ(data[i], (*test)[i]);
+        ASSERT_EQ(testData[i], (*test)[i]);
     }
 }
 
@@ -116,9 +115,8 @@ TEST(Base_Blob, OperatorSquareBrackets_ConstantBlobWithDataInIt_ReturnsCorrectDa
     auto test = Blob::PointerToConst(Blob::blobWithMemoryAndSize(testData, sizeof(testData)));
 
     // -- Then.
-    const byte* data = test->data();
     for (integer i = 0; i < sizeof(testData); ++i) {
-        ASSERT_EQ(data[i], (*test)[i]);
+        ASSERT_EQ(testData[i], (*test)[i]);
     }
 }
 

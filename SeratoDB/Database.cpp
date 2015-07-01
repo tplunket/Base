@@ -16,7 +16,7 @@
 #include "SeratoDB/Utility.hpp"
 #include "Tags/DatabaseV2Tags.hpp"
 #include "Tags/TagFactory.hpp"
-#include "Tags/TextTag.hpp"
+#include "Tags/VersionTag.hpp"
 
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, Database, Object);
 
@@ -47,7 +47,7 @@ Database::Pointer Database::databaseWithFileAt(const String& seratoFolderPath)
                 break;
             }
             case databaseVersionTagIdentifier: {
-                auto& versionText = dynamic_cast<TextTag&>(*tag).value();
+                auto& versionText = dynamic_cast<VersionTag&>(*tag).value();
                 if (!versionText.isEqualTo(databaseFileCurrentVersionString)) {
                     newDatabase->internal->tracks->emptyAll();
                     newDatabase->internal->otherTags->emptyAll();

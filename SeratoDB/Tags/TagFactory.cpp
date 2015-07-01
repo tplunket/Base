@@ -14,6 +14,7 @@
 #include "Tags/BooleanTag.hpp"
 #include "Tags/PathTag.hpp"
 #include "Tags/TextTag.hpp"
+#include "Tags/VersionTag.hpp"
 #include "Tags/BlobTag.hpp"
 #include "Tags/ObjectTag.hpp"
 #include "Tags/UInteger16Tag.hpp"
@@ -39,7 +40,9 @@ Tag::Pointer TagFactory::tagForTagAt(const byte* tagAddress)
         case 'u': {
             return Tag::Pointer::dynamicCastFrom(UInteger32Tag::tagWithMemoryAt(tagAddress));
         }
-        case 'v':
+        case 'v': {
+            return Tag::Pointer::dynamicCastFrom(VersionTag::tagWithMemoryAt(tagAddress));
+        }
         case 't': {
             return Tag::Pointer::dynamicCastFrom(TextTag::tagWithMemoryAt(tagAddress));
         }

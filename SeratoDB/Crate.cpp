@@ -14,7 +14,7 @@
 #include "Internal/Crate.hpp"
 #include "SeratoDB/Database.hpp"
 #include "Tags/CrateV1Tags.hpp"
-#include "Tags/TextTag.hpp"
+#include "Tags/VersionTag.hpp"
 #include "Tags/TagFactory.hpp"
 #include "Utility.hpp"
 
@@ -138,7 +138,7 @@ void Crate::loadFromFile(void)
     for (auto& tag : *(tags)) {
         switch (tag->identifier()) {
             case crateVersionTagIdentifier: {
-                auto& versionTag = dynamic_cast<TextTag&>(*tag);
+                auto& versionTag = dynamic_cast<VersionTag&>(*tag);
                 if (!versionTag.value().isEqualTo(crateFileCurrentVersionString)) {
                     internal->otherTags->emptyAll();
                     internal->trackEntries->emptyAll();

@@ -23,14 +23,11 @@
 
 #include <Base/Base.hpp>
 
-#include "Tags/Internal/Tag.hpp"
+#include "Tags/Internal/TextTag.hpp"
 #include "Tags/PathTag.hpp"
 
 namespace NxA { namespace Serato { namespace Internal {
-    struct PathTag : public Tag {
+    struct PathTag : public TextTag {
         NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, PathTag);
-
-        #pragma mark Instance Variables
-        String::PointerToConst value;
     };
 } } }

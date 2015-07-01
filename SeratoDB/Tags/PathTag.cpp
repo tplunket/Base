@@ -13,7 +13,7 @@
 #include "Tags/PathTag.hpp"
 #include "Tags/Internal/PathTag.hpp"
 
-NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, PathTag, Tag);
+NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, PathTag, TextTag);
 
 using namespace NxA;
 using namespace NxA::Serato;
@@ -37,29 +37,4 @@ PathTag::Pointer PathTag::tagWithIdentifierAndValue(uinteger32 identifier, const
     newTag->internal->value = value.pointerToConst();
 
     return newTag;
-}
-
-#pragma mark Instance Methods
-
-const String& PathTag::value(void) const
-{
-    return internal->value;
-}
-
-void PathTag::setValue(const String& value)
-{
-    internal->value = value.pointerToConst();
-}
-
-void PathTag::addTo(Blob& destination) const
-{
-    auto memoryRepresentation = Blob::blobWithCapacity(Internal::Tag::memoryNeededForTagHeader());
-    count dataSize = internal->value->length() * 2;
-
-    byte* tagAddress = memoryRepresentation->data();
-    Internal::Tag::setIdentifierForTagAt(this->identifier(), tagAddress);
-    Internal::Tag::setDataSizeForTagAt(dataSize, tagAddress);
-
-    destination.append(memoryRepresentation);
-    destination.append(internal->value->toUTF16());
 }

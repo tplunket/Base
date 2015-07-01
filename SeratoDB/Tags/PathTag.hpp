@@ -12,25 +12,19 @@
 
 #pragma once
 
-#include <SeratoDb/Tags/Tag.hpp>
+#include <SeratoDb/Tags/TextTag.hpp>
 
 #include <Base/Base.hpp>
 
 namespace NxA { namespace Serato {
     NXA_GENERATED_FORWARD_DECLARATIONS_FOR(PathTag);
 
-    class PathTag : public Tag {
+    class PathTag : public TextTag {
         NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, PathTag);
 
     public:
         #pragma mark Constructors
         static PathTag::Pointer tagWithMemoryAt(const byte* tagAddress);
         static PathTag::Pointer tagWithIdentifierAndValue(uinteger32 identifier, const String& value);
-
-        #pragma mark Instance Methods
-        const String& value(void) const;
-        void setValue(const String& value);
-
-        void addTo(Blob& destination) const;
     };
 } }

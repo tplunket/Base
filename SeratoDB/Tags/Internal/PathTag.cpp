@@ -27,4 +27,4 @@ using namespace NxA::Serato::Internal;
 
 #pragma mark Constructors & Destructors
 
-PathTag::PathTag() : value(String::string()) { }
+PathTag::PathTag() : TextTag() { }

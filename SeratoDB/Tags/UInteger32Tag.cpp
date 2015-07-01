@@ -13,6 +13,8 @@
 #include "Tags/UInteger32Tag.hpp"
 #include "Tags/Internal/UInteger32Tag.hpp"
 
+#include "Base/Base.hpp"
+
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, UInteger32Tag, Tag);
 
 using namespace NxA;
@@ -23,6 +25,7 @@ using namespace NxA::Serato;
 UInteger32Tag::Pointer UInteger32Tag::tagWithMemoryAt(const byte* tagAddress)
 {
     const byte* tagData = Internal::Tag::dataForTagAt(tagAddress);
+    NXA_ASSERT_EQ(Internal::Tag::dataSizeForTagAt(tagAddress), 4);
 
     return UInteger32Tag::tagWithIdentifierAndValue(Tag::identifierForTagAt(tagAddress),
                                                     Platform::bigEndianUInteger32ValueAt(tagData));
@@ -30,6 +33,8 @@ UInteger32Tag::Pointer UInteger32Tag::tagWithMemoryAt(const byte* tagAddress)
 
 UInteger32Tag::Pointer UInteger32Tag::tagWithIdentifierAndValue(uinteger32 identifier, uinteger32 value)
 {
+    NXA_ASSERT_EQ((identifier & 0xFF0000) >> 24, 'u');
+
     auto newTag = UInteger32Tag::makeShared();
     newTag->internal->identifier = identifier;
     newTag->internal->value = value;

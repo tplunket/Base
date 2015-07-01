@@ -30,6 +30,8 @@ PathTag::Pointer PathTag::tagWithMemoryAt(const byte* tagAddress)
 
 PathTag::Pointer PathTag::tagWithIdentifierAndValue(uinteger32 identifier, const String& value)
 {
+    NXA_ASSERT_EQ((identifier & 0xFF0000) >> 24, 'p');
+
     auto newTag = PathTag::makeShared();
     newTag->internal->identifier = identifier;
     newTag->internal->value = value.pointerToConst();

@@ -23,6 +23,7 @@ using namespace NxA::Serato;
 BooleanTag::Pointer BooleanTag::tagWithMemoryAt(const byte* tagAddress)
 {
     const byte* tagData = Internal::Tag::dataForTagAt(tagAddress);
+    NXA_ASSERT_EQ(Internal::Tag::dataSizeForTagAt(tagAddress), 1);
 
     return BooleanTag::tagWithIdentifierAndValue(Tag::identifierForTagAt(tagAddress),
                                                  (*tagData == 1) ? true : false);
@@ -30,6 +31,8 @@ BooleanTag::Pointer BooleanTag::tagWithMemoryAt(const byte* tagAddress)
 
 BooleanTag::Pointer BooleanTag::tagWithIdentifierAndValue(uinteger32 identifier, boolean value)
 {
+    NXA_ASSERT_EQ((identifier & 0xFF0000) >> 24, 'b');
+
     auto newTag = BooleanTag::makeShared();
     newTag->internal->identifier = identifier;
     newTag->internal->value = value;

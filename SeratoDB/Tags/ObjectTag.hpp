@@ -33,7 +33,7 @@ namespace NxA { namespace Serato {
         const Tag& subTagForIdentifier(uinteger32 identifier) const;
         Tag& subTagForIdentifier(uinteger32 identifier);
 
-        void addSubTag(Tag& tag);
+        void setSubTag(Tag& tag);
 
         void addTo(Blob& destination) const;
     };

@@ -182,7 +182,7 @@ void Track::setStringForSubTagForIdentifier(const String& value, uinteger32 iden
     auto& trackObjectTag = dynamic_cast<Serato::ObjectTag&>(*this->trackTag);
     if (!trackObjectTag.hasSubTagForIdentifier(identifier)) {
         auto textTag = Serato::TextTag::tagWithIdentifierAndValue(identifier, value);
-        trackObjectTag.addSubTag(*textTag);
+        trackObjectTag.setSubTag(*textTag);
     }
     else {
         auto& textTag = dynamic_cast<Serato::TextTag&>(trackObjectTag.subTagForIdentifier(identifier));
@@ -197,7 +197,7 @@ void Track::setPathForSubTagForIdentifier(const String& value, uinteger32 identi
     auto& trackObjectTag = dynamic_cast<Serato::ObjectTag&>(*this->trackTag);
     if (!trackObjectTag.hasSubTagForIdentifier(identifier)) {
         auto pathTag = Serato::PathTag::tagWithIdentifierAndValue(identifier, value);
-        trackObjectTag.addSubTag(*pathTag);
+        trackObjectTag.setSubTag(*pathTag);
     }
     else {
         auto& pathTag = dynamic_cast<Serato::PathTag&>(trackObjectTag.subTagForIdentifier(identifier));
@@ -212,7 +212,7 @@ void Track::setUInt32ForSubTagForIdentifier(uinteger32 value, uinteger32 identif
     auto& trackObjectTag = dynamic_cast<Serato::ObjectTag&>(*this->trackTag);
     if (!trackObjectTag.hasSubTagForIdentifier(identifier)) {
         auto uinteger32Tag = Serato::UInteger32Tag::tagWithIdentifierAndValue(identifier, value);
-        trackObjectTag.addSubTag(*uinteger32Tag);
+        trackObjectTag.setSubTag(*uinteger32Tag);
     }
     else {
         auto& uinteger32Tag = dynamic_cast<Serato::UInteger32Tag&>(trackObjectTag.subTagForIdentifier(identifier));

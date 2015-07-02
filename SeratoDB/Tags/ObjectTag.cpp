@@ -40,7 +40,7 @@ ObjectTag::Pointer ObjectTag::tagWithIdentifierAndValue(uinteger32 identifier, c
     newTag->internal->identifier = identifier;
 
     for (auto& subTag : content) {
-        newTag->addSubTag(*subTag);
+        newTag->setSubTag(*subTag);
     }
 
     return newTag;
@@ -63,7 +63,7 @@ Tag& ObjectTag::subTagForIdentifier(uinteger32 identifier)
     return internal->subTagForIdentifier->valueForKey(identifier);
 }
 
-void ObjectTag::addSubTag(Tag& tag)
+void ObjectTag::setSubTag(Tag& tag)
 {
     internal->subTagForIdentifier->setValueForKey(tag, tag.identifier());
 }

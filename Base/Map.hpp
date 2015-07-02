@@ -36,8 +36,9 @@ namespace NxA {
         Map() { }
 
     public:
-        using Pointer = NxA::Pointer<Map>;
-        using WeakPointer = NxA::WeakPointer<Map>;
+        using Pointer = NxA::Pointer<Map<Tkey, Tvalue>>;
+        using PointerToConst = NxA::Pointer<const Map<Tkey, Tvalue>>;
+        using WeakPointer = NxA::WeakPointer<Map<Tkey, Tvalue>>;
         using iterator = typename std::map<const Tkey, std::shared_ptr<Tvalue>>::iterator;
         using const_iterator = typename std::map<const Tkey, std::shared_ptr<Tvalue>>::const_iterator;
 

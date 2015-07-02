@@ -40,7 +40,7 @@ namespace NxA { namespace Serato { namespace Internal {
 #pragma mark Constructors & Destructors
 
 TrackFile::TrackFile(const String& path, const TagLibFilePointer& newFile) :
-                     trackFilePath(path.pointerToConst()),
+                     trackFilePath(path.pointer()),
                      file(newFile),
                      cueMarkers(Serato::CueMarker::Array::array()),
                      loopMarkers(Serato::LoopMarker::Array::array()),

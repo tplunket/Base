@@ -34,7 +34,7 @@ VersionTag::Pointer VersionTag::tagWithIdentifierAndValue(uinteger32 identifier,
 
     auto newTag = VersionTag::makeShared();
     newTag->internal->identifier = identifier;
-    newTag->internal->value = value.pointerToConst();
+    newTag->internal->value = value.pointer();
 
     return newTag;
 }

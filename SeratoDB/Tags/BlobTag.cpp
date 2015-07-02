@@ -33,7 +33,7 @@ BlobTag::Pointer BlobTag::tagWithIdentifierAndValue(uinteger32 identifier, const
 
     auto newTag = BlobTag::makeShared();
     newTag->internal->identifier = identifier;
-    newTag->internal->value = value.pointerToConst();
+    newTag->internal->value = value.pointer();
 
     return newTag;
 }
@@ -47,7 +47,7 @@ const Blob& BlobTag::value(void) const
 
 void BlobTag::setValue(const Blob& newValue)
 {
-    internal->value = newValue.pointerToConst();
+    internal->value = newValue.pointer();
 }
 
 void BlobTag::addTo(Blob& destination) const

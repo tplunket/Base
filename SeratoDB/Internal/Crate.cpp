@@ -32,9 +32,9 @@ Crate::Crate(const String& fullName,
              const String& volumePath,
              const String& filePath) :
              crateName(String::string()),
-             crateFullName(fullName.pointerToConst()),
-             rootVolumePath(volumePath.pointerToConst()),
-             crateFilePath(filePath.pointerToConst()),
+             crateFullName(fullName.pointer()),
+             rootVolumePath(volumePath.pointer()),
+             crateFilePath(filePath.pointer()),
              tracksWereModified(true),
              cratesWereModified(false),
              childrenCrates(Serato::Crate::Array::array()),
@@ -56,7 +56,7 @@ void Crate::storeTrackTag(const Serato::Tag& tag)
 
 void Crate::storeOtherTag(const Serato::Tag& tag)
 {
-    this->otherTags->append(tag.pointerToConst());
+    this->otherTags->append(tag.pointer());
 }
 
 void Crate::markCratesAsModified(void)

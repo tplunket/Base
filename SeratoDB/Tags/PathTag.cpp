@@ -34,7 +34,7 @@ PathTag::Pointer PathTag::tagWithIdentifierAndValue(uinteger32 identifier, const
 
     auto newTag = PathTag::makeShared();
     newTag->internal->identifier = identifier;
-    newTag->internal->value = value.pointerToConst();
+    newTag->internal->value = value.pointer();
 
     return newTag;
 }

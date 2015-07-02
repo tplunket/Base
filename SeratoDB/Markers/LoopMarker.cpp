@@ -59,7 +59,7 @@ LoopMarker::Pointer LoopMarker::markerWithLabelStartEndPositionsAndIndex(const S
     newMarker->internal->startPositionInMilliseconds = startPositionInMilliseconds;
     newMarker->internal->endPositionInMilliseconds = endPositionInMilliseconds;
     newMarker->internal->index = index;
-    newMarker->internal->label = label.pointerToConst();
+    newMarker->internal->label = label.pointer();
 
     return newMarker;
 }

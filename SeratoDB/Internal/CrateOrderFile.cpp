@@ -34,7 +34,7 @@ using namespace NxA::Serato::Internal;
 
 CrateOrderFile::CrateOrderFile(const String& path,
                                Serato::Crate& root) :
-                               crateOrderFilePath(path.pointerToConst()),
+                               crateOrderFilePath(path.pointer()),
                                rootCrate(root.pointer()),
                                unknownCratesNames(String::ArrayOfConst::array()) { }
 

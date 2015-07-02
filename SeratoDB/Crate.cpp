@@ -44,7 +44,7 @@ Crate::Pointer Crate::crateWithNameInFolderOnVolume(const String& crateFullName,
         newCrate->internal->crateName = crateFullName.subString(lastSeperatorIndex + 2);
     }
     else {
-        newCrate->internal->crateName = crateFullName.pointerToConst();
+        newCrate->internal->crateName = crateFullName.pointer();
     }
 
     return newCrate;

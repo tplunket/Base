@@ -68,6 +68,11 @@ void ObjectTag::setSubTag(Tag& tag)
     internal->subTagForIdentifier->setValueForKey(tag, tag.identifier());
 }
 
+count ObjectTag::numberOfSubTags(void)
+{
+    return internal->subTagForIdentifier->length();
+}
+
 void ObjectTag::addTo(Blob& destination) const
 {
     auto subTagsRepresentation = Blob::blob();

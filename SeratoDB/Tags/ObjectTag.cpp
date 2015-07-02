@@ -55,17 +55,17 @@ boolean ObjectTag::hasSubTagForIdentifier(uinteger32 identifier) const
 
 const Tag& ObjectTag::subTagForIdentifier(uinteger32 identifier) const
 {
-    return (*internal->subTagForIdentifier)[identifier];
+    return internal->subTagForIdentifier->valueForKey(identifier);
 }
 
 Tag& ObjectTag::subTagForIdentifier(uinteger32 identifier)
 {
-    return (*internal->subTagForIdentifier)[identifier];
+    return internal->subTagForIdentifier->valueForKey(identifier);
 }
 
 void ObjectTag::addSubTag(Tag& tag)
 {
-    (*internal->subTagForIdentifier)[tag.identifier()] = tag.pointer();
+    internal->subTagForIdentifier->setValueForKey(tag, tag.identifier());
 }
 
 void ObjectTag::addTo(Blob& destination) const

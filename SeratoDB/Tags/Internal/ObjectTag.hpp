@@ -28,7 +28,7 @@
 
 namespace NxA { namespace Serato {
     #pragma mark Containers
-    using IdentifierToTagMap = Map<uinteger32, const Tag>;
+    using IdentifierToTagMap = Map<uinteger32, Tag>;
 } }
 
 namespace NxA { namespace Serato { namespace Internal {

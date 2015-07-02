@@ -61,7 +61,7 @@ namespace NxA {
         }
         void setValueForKey(Tvalue& value, const Tkey& key)
         {
-            this->insert(std::pair<const Tkey,  std::shared_ptr<Tvalue>>(key, value.pointer().toStdSharedPointer()));
+            (*this)[key] = value.pointer().toStdSharedPointer();
         }
 
         iterator begin() noexcept

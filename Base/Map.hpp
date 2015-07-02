@@ -59,6 +59,10 @@ namespace NxA {
         {
             return const_cast<Tvalue&>(static_cast<const Map<Tkey, Tvalue>*>(this)->valueForKey(key));
         }
+        void setValueForKey(NxA::Pointer<Tvalue>& value, const Tkey& key)
+        {
+            (*this)[key] = value.toStdSharedPointer();
+        }
         void setValueForKey(Tvalue& value, const Tkey& key)
         {
             (*this)[key] = value.pointer().toStdSharedPointer();

@@ -143,7 +143,7 @@ namespace NxA {
         }
         void remove(const T& object)
         {
-            this->std::vector<typename T::Pointer>::erase(this->find(object));
+            this->std::vector<NxA::Pointer<T>>::erase(this->find(object));
         }
     };
 }

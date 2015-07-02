@@ -53,23 +53,6 @@ namespace NxA {
         #pragma mark Constructors & Destructors
         Array() { }
 
-        void append(T& object, std::false_type)
-        {
-            this->push_back(object.pointer());
-        }
-        void append(T& object, std::true_type)
-        {
-            this->push_back(object.pointerToConst());
-        }
-        void insertAt(T& object, const_iterator pos, std::false_type)
-        {
-            this->insert(pos, object.pointer());
-        }
-        void insertAt(T& object, const_iterator pos, std::true_type)
-        {
-            this->insert(pos, object.pointerToConst());
-        }
-
     public:
         #pragma mark Constructors & Destructors
         explicit Array(const constructor_access&) : Array() { };
@@ -136,12 +119,12 @@ namespace NxA {
 
         void append(T& object)
         {
-            return this->append(object, std::is_const<T>());
+            this->push_back(object.pointer());
         }
 
         void insertAt(T& object, const_iterator pos)
         {
-            this->insertAt(object, pos, std::is_const<T>());
+            this->insert(pos, object.pointer());
         }
         const_iterator find(const T& object) const
         {

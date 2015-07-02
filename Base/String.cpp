@@ -77,7 +77,7 @@ String::Pointer String::stringWithFormat(const character* format, ...)
 
 String::Pointer String::stringWithUTF16(const Blob& other)
 {
-    auto source = other.pointerToConst();
+    auto source = other.pointer();
 
     if (Platform::endianOrder == Platform::LitleEndian) {
         source = Platform::convertEndiannessOfUInteger16From(other);

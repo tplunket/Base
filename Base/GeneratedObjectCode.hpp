@@ -84,7 +84,7 @@ namespace NxA {
             using Array = NxA::Array<namespace_name::class_name>; \
             using ArrayOfConst = NxA::Array<const namespace_name::class_name>; \
             NxA::Pointer<namespace_name::class_name> pointer(void); \
-            NxA::Pointer<const namespace_name::class_name> pointerToConst(void) const; \
+            NxA::Pointer<const namespace_name::class_name> pointer(void) const; \
             virtual NxA::Pointer<NxA::String> className(void) const; \
         protected: \
             NxA::Pointer<namespace_name::Internal::class_name> internal; \
@@ -116,7 +116,7 @@ namespace NxA {
             NXA_ASSERT_NOT_NULL(result.get()); \
             return NxA::Pointer<namespace_name::class_name>(result); \
         } \
-        NxA::Pointer<const namespace_name::class_name> namespace_name::class_name::pointerToConst(void) const { \
+        NxA::Pointer<const namespace_name::class_name> namespace_name::class_name::pointer(void) const { \
             std::shared_ptr<const namespace_name::class_name> result = std::dynamic_pointer_cast<const namespace_name::class_name>(this->shared_from_this()); \
             NXA_ASSERT_NOT_NULL(result.get()); \
             return NxA::Pointer<const namespace_name::class_name>(result); \

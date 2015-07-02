@@ -91,6 +91,12 @@ String::Pointer Database::versionAsStringForDatabaseIn(const String& seratoFolde
 
 #pragma mark Instance Methods
 
+boolean Database::isEqualTo(const Database& other) const
+{
+    // TODO: This might want to be a better test.
+    return this == &other;
+}
+
 timestamp Database::databaseModificationDateInSecondsSince1970(void) const
 {
     return File::modificationDateInSecondsSince1970ForFile(internal->databaseFilePath);

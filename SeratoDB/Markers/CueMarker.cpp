@@ -66,6 +66,17 @@ CueMarker::Pointer CueMarker::markerWith(const CueMarker&other)
 
 #pragma mark Instance Methods
 
+boolean CueMarker::isEqualTo(const CueMarker& other) const
+{
+    if (this == &other) {
+        return true;
+    }
+
+    return (this->label().isEqualTo(other.label())) &&
+           (this->positionInMilliseconds() == other.positionInMilliseconds()) &&
+           (this->index() == other.index());
+}
+
 uinteger32 CueMarker::positionInMilliseconds(void) const
 {
     return internal->positionInMilliseconds;

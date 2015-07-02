@@ -89,6 +89,12 @@ void Crate::destroy(const Crate& crate)
 
 #pragma mark Instance Methods
 
+boolean Crate::isEqualTo(const Crate& other) const
+{
+    // TODO: This might want to be a better test.
+    return this == &other;
+}
+
 const String& Crate::crateName(void) const
 {
     return internal->crateName;

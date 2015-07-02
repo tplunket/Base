@@ -55,6 +55,12 @@ CrateOrderFile::Pointer CrateOrderFile::fileWithSeratoFolderInRootFolder(const S
 
 #pragma mark Instance Methods
 
+boolean CrateOrderFile::isEqualTo(const CrateOrderFile& other) const
+{
+    // TODO: This might want to be a better test.
+    return this == &other;
+}
+
 Crate& CrateOrderFile::rootCrate(void)
 {
     return internal->rootCrate;

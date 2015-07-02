@@ -59,6 +59,16 @@ const byte* GridMarker::nextGridMarkerAfter(const byte* markerData)
 
 #pragma mark Instance Methods
 
+boolean GridMarker::isEqualTo(const GridMarker& other) const
+{
+    if (this == &other) {
+        return true;
+    }
+
+    return (this->positionInSeconds() == other.positionInSeconds()) &&
+           (this->beatsPerMinute() == other.beatsPerMinute());
+}
+
 decimal GridMarker::positionInSeconds(void) const
 {
     return internal->positionInSeconds;

@@ -120,6 +120,45 @@ TEST(Base_Map, ValueForKey_LookingForAnUnknownKey_ThrowsException)
     ASSERT_THROW(test->valueForKey(0x23).toUTF8(), std::exception);
 }
 
+TEST(Base_Map, ValueForKey_ConstMapWithAGivenValue_ReturnsCorrectValue)
+{
+    // -- Given.
+    auto test = TestMapClass::map();
+    test->setValueForKey(testString, 0x2323);
+    test->setValueForKey(otherString, 0x2423);
+    TestMapClass::PointerToConst constTest = test;
+
+    // -- When.
+    // -- Then.
+    ASSERT_STREQ(testString->toUTF8(), constTest->valueForKey(0x2323).toUTF8());
+}
+
+TEST(Base_Map, ValueForKey_ConstMapWithAnotherValue_ReturnsCorrectValue)
+{
+    // -- Given.
+    auto test = TestMapClass::map();
+    test->setValueForKey(testString, 0x2323);
+    test->setValueForKey(otherString, 0x2423);
+    TestMapClass::PointerToConst constTest = test;
+
+    // -- When.
+    // -- Then.
+    ASSERT_STREQ(otherString->toUTF8(), constTest->valueForKey(0x2423).toUTF8());
+}
+
+TEST(Base_Map, ValueForKey_LookingForAnUnknownKeyInConstMap_ThrowsException)
+{
+    // -- Given.
+    auto test = TestMapClass::map();
+    test->setValueForKey(String::stringWith(testString), 0x2323);
+    test->setValueForKey(String::stringWith(otherString), 0x2423);
+    TestMapClass::PointerToConst constTest = test;
+
+    // -- When.
+    // -- Then.
+    ASSERT_THROW(constTest->valueForKey(0x23).toUTF8(), std::exception);
+}
+
 TEST(Base_Map, ContainsValueForKey_UnknownKey_ReturnsFalse)
 {
     // -- Given.

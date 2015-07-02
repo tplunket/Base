@@ -29,6 +29,14 @@ TEST(SeratoDB_UInteger32Tag, TagWithIdentifierAndValue_TagCreated_TagHasCorrectV
     ASSERT_EQ(0xDEADBEEF, tag->value());
 }
 
+TEST(SeratoDB_UInteger32Tag, TagWithIdentifierAndValue_IncorrectIdentifier_ThrowsException)
+{
+    // -- Given.
+    // -- When.
+    // -- Then.
+    ASSERT_THROW(UInteger32Tag::tagWithIdentifierAndValue('stst', 0xDEADBEEF), NxA::Exception);
+}
+
 TEST(SeratoDB_UInteger32Tag, TagWithMemoryAt_TagCreated_TagHasCorrectValue)
 {
     // -- Given.
@@ -40,6 +48,15 @@ TEST(SeratoDB_UInteger32Tag, TagWithMemoryAt_TagCreated_TagHasCorrectValue)
     // -- Then.
     ASSERT_EQ('utst', tag->identifier());
     ASSERT_EQ(0x54CA84AB, tag->value());
+}
+
+TEST(SeratoDB_UInteger32Tag, TagWithMemoryAt_IncorrectIdentifier_ThrowsException)
+{
+    // -- Given.
+    constexpr byte data[] = { 0x12, 0x74, 0x73, 0x74, 0x00, 0x00, 0x00, 0x04, 0x54, 0xCA, 0x84, 0xAB };
+
+    // -- When.
+    ASSERT_THROW(UInteger32Tag::tagWithMemoryAt(data), NxA::Exception);
 }
 
 TEST(SeratoDB_UInteger32Tag, TagWithMemoryAt_TagCreatedFromDataWithIncorrectSize_ThrowsException)

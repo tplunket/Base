@@ -56,8 +56,6 @@ namespace NxA {
             return const_cast<byte*>(static_cast<const Blob&>(*this).data());
         }
 
-        boolean isEqualTo(const Blob& other) const;
-
         void fillWithZeros(void);
 
         Blob::Pointer hash(void);

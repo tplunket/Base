@@ -46,8 +46,6 @@ namespace NxA {
 
         #pragma mark Instance Methods
         virtual String::Pointer description(void) const;
-
-        boolean isEqualTo(const String& other) const;
         boolean isEqualTo(const char* other) const;
 
         count length(void) const;

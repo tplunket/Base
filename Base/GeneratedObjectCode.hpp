@@ -86,6 +86,7 @@ namespace NxA {
             NxA::Pointer<namespace_name::class_name> pointer(void); \
             NxA::Pointer<const namespace_name::class_name> pointer(void) const; \
             virtual NxA::Pointer<NxA::String> className(void) const; \
+            boolean isEqualTo(const namespace_name::class_name& other) const; \
         protected: \
             NxA::Pointer<namespace_name::Internal::class_name> internal; \
             static NxA::Pointer<NxA::Internal::Object> makeInternal(void); \

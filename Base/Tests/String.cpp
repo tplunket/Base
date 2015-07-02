@@ -119,7 +119,20 @@ TEST(Base_String, IsEqual_TwoEqualStrings_ReturnsTrue)
     ASSERT_TRUE(test->isEqualTo(test2));
 }
 
-TEST(Base_String, IsEqualWithACharacterPointer_TwoEqualStrings_ReturnsTrue)
+TEST(Base_String, IsEqualTo_TwoUnequalStrings_ReturnsFalse)
+{
+    // -- Given.
+    auto test = String::stringWith(utf8String);
+
+    // -- When.
+    auto test2 = String::stringWith(utf8String);
+    test2->append("more");
+
+    // -- Then.
+    ASSERT_FALSE(test->isEqualTo(test2));
+}
+
+TEST(Base_String, IsEqualTo_AStringAndAnEqualCharacterPointer_ReturnsTrue)
 {
     // -- Given.
     // -- When.
@@ -127,6 +140,17 @@ TEST(Base_String, IsEqualWithACharacterPointer_TwoEqualStrings_ReturnsTrue)
 
     // -- Then.
     ASSERT_TRUE(test->isEqualTo(utf8String));
+}
+
+TEST(Base_String, IsEqualTo_AStringAndAnUnequalCharacterPointer_ReturnsFalse)
+{
+    // -- Given.
+    // -- When.
+    auto test = String::stringWith(utf8String);
+    test->append("more");
+
+    // -- Then.
+    ASSERT_FALSE(test->isEqualTo(utf8String));
 }
 
 TEST(Base_String, Length_StringWithAValue_ReturnsCorrectValue)

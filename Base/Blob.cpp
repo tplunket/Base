@@ -75,6 +75,15 @@ const byte& Blob::operator[] (integer index) const
 
 #pragma mark Instance Methods
 
+boolean Blob::isEqualTo(const Blob& other) const
+{
+    if (this == &other) {
+        return true;
+    }
+
+    return internal->data == other.internal->data;
+}
+
 count Blob::size(void) const
 {
     return internal->data.size();
@@ -84,11 +93,6 @@ const byte* Blob::data(void) const
 {
     NXA_ASSERT_TRUE(this->size() > 0);
     return internal->data.data();
-}
-
-boolean Blob::isEqualTo(const Blob& other) const
-{
-    return internal->data == other.internal->data;
 }
 
 void Blob::fillWithZeros(void)

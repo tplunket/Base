@@ -74,6 +74,10 @@ namespace NxA {
         }
 
         #pragma mark Instance Methods
+        boolean isEqualTo(const Pointer<T>& other) const
+        {
+            return this->get()->isEqualTo(*other);
+        }
         const std::shared_ptr<T>& toStdSharedPointer(void) const
         {
             return *this;

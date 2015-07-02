@@ -94,6 +94,36 @@ TEST(Base_Array, Append_AddingTwoObject_AddsObjectCorrectly)
     ASSERT_STREQ("Test2", (*test)[1].toUTF8());
 }
 
+TEST(Base_Array, isEqualTo_TwoDifferentArrays_ReturnFalse)
+{
+    // -- Given.
+    auto test = String::Array::array();
+    test->append(String::stringWith("Test"));
+    test->append(String::stringWith("Test2"));
+    auto test2 = String::Array::array();
+    test2->append(String::stringWith("Test"));
+    test2->append(String::stringWith("OtherTest2"));
+
+    // -- When.
+    // -- Then.
+    ASSERT_FALSE(test->isEqualTo(test2));
+}
+
+TEST(Base_Array, isEqualTo_TwoEqualArrays_ReturnTrue)
+{
+    // -- Given.
+    auto test = String::Array::array();
+    test->append(String::stringWith("Test"));
+    test->append(String::stringWith("Test2"));
+    auto test2 = String::Array::array();
+    test2->append(String::stringWith("Test"));
+    test2->append(String::stringWith("Test2"));
+
+    // -- When.
+    // -- Then.
+    ASSERT_TRUE(test->isEqualTo(test2));
+}
+
 TEST(Base_Array, Length_EmptyArray_LengthReturnsZero)
 {
     // -- Given.

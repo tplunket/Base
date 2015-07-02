@@ -108,6 +108,23 @@ namespace NxA {
             return this->std::vector<NxA::Pointer<T>>::cend();
         }
 
+        boolean isEqualTo(const Array<T>& other) const
+        {
+            if (this == &other) {
+                return true;
+            }
+            else if (this->length() != other.length()) {
+                return false;
+            }
+
+            for (integer i = 0; i < this->length(); ++i) {
+                if (!(*this)[i].isEqualTo(other[i])) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
         count length(void) const
         {
             return this->size();

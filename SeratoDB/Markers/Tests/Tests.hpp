@@ -22,5 +22,15 @@
 #pragma once
 
 #include "Base/Test.hpp"
-#include "Tags/Tests/Tests.hpp"
-#include "Markers/Tests/Tests.hpp"
+
+// -- This forces the linker to link the object files where these tests
+// -- are defined. Otherwise they would get stripped out.
+NXA_USING_TEST_SUITE_NAMED(SeratoDB_CueMarker_Tests);
+NXA_USING_TEST_SUITE_NAMED(SeratoDB_GridMarker_Tests);
+NXA_USING_TEST_SUITE_NAMED(SeratoDB_LoopMarker_Tests);
+
+NXA_USE_TEST_SUITES_FOR_MODULE(SeratoDB_Markers) {
+    SeratoDB_CueMarker_Tests,
+    SeratoDB_GridMarker_Tests,
+    SeratoDB_LoopMarker_Tests
+};

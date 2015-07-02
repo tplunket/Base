@@ -50,7 +50,7 @@ TEST(Base_String, StringContructorAndToUTF8_StringCreatedFromCharPointer_ToUTF8R
     auto test = String::stringWith(utf8String);
 
     // -- Then.
-    ASSERT_STREQ(test->toUTF8(), utf8String);
+    ASSERT_STREQ(utf8String, test->toUTF8());
 }
 
 TEST(Base_String, StringContructorAndToUTF8_StringCreatedFromOtherString_ToUTF8ReturnsContainsCorrectValue)
@@ -62,7 +62,7 @@ TEST(Base_String, StringContructorAndToUTF8_StringCreatedFromOtherString_ToUTF8R
     auto otherTest = String::stringWith(test);
 
     // -- Then.
-    ASSERT_STREQ(otherTest->toUTF8(), utf8String);
+    ASSERT_STREQ(utf8String, otherTest->toUTF8());
 }
 
 TEST(Base_String, StringWithUTF16_StringCreatedFromUTF16String_ContainsCorrectValue)
@@ -74,7 +74,7 @@ TEST(Base_String, StringWithUTF16_StringCreatedFromUTF16String_ContainsCorrectVa
     auto test = String::stringWithUTF16(blob);
     
     // -- Then.
-    ASSERT_STREQ(test->toUTF8(), utf8String);
+    ASSERT_STREQ(utf8String, test->toUTF8());
 }
 
 TEST(Base_String, CharPointerCast_StringFromUTF8_ReturnsCorrectValue)
@@ -84,7 +84,7 @@ TEST(Base_String, CharPointerCast_StringFromUTF8_ReturnsCorrectValue)
     auto test = String::stringWith(utf8String);
 
     // -- Then.
-    ASSERT_STREQ(test->operator const character*(), utf8String);
+    ASSERT_STREQ(utf8String, test->operator const character*());
 }
 
 TEST(Base_String, ConstCharPointerCast_StringFromUTF8_ReturnsCorrectValue)
@@ -94,7 +94,7 @@ TEST(Base_String, ConstCharPointerCast_StringFromUTF8_ReturnsCorrectValue)
     String::PointerToConst test = String::stringWith(utf8String);
 
     // -- Then.
-    ASSERT_STREQ(test->operator const character*(), utf8String);
+    ASSERT_STREQ(utf8String, test->operator const character*());
 }
 
 TEST(Base_String, Description_StringWithAValue_ReturnsCorrectValue)
@@ -104,7 +104,7 @@ TEST(Base_String, Description_StringWithAValue_ReturnsCorrectValue)
     auto test = String::stringWith(utf8String);
 
     // -- Then.
-    ASSERT_STREQ(test->description()->toUTF8(), utf8String);
+    ASSERT_STREQ(utf8String, test->description()->toUTF8());
 }
 
 TEST(Base_String, IsEqual_TwoEqualStrings_ReturnsTrue)
@@ -213,7 +213,7 @@ TEST(Base_String, Append_AStringToAString_ReturnsCorrectValue)
     test1->append(test2);
 
     // -- Then.
-    ASSERT_STREQ(test1->toUTF8(), "Hello This Is A Test.");
+    ASSERT_STREQ("Hello This Is A Test.", test1->toUTF8());
 }
 
 TEST(Base_String, Append_AStringToACharacterPointer_ReturnsCorrectValue)
@@ -225,7 +225,7 @@ TEST(Base_String, Append_AStringToACharacterPointer_ReturnsCorrectValue)
     test->append("Is A Test.");
 
     // -- Then.
-    ASSERT_STREQ(test->toUTF8(), "Hello This Is A Test.");
+    ASSERT_STREQ("Hello This Is A Test.", test->toUTF8());
 }
 
 TEST(Base_String, SplitBySeperator_StringSeperatedBySpacesSpaces_ReturnsCorrectValue)

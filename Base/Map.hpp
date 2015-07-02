@@ -28,7 +28,7 @@
 #include <map>
 
 namespace NxA {
-    template <class Tkey, class Tvalue> class Map : private std::map<Tkey, typename Tvalue::Pointer> {
+    template <class Tkey, class Tvalue> class Map : private std::map<const Tkey, std::shared_ptr<Tvalue>> {
     protected:
         struct constructor_access { };
 
@@ -38,8 +38,8 @@ namespace NxA {
     public:
         using Pointer = NxA::Pointer<Map>;
         using WeakPointer = NxA::WeakPointer<Map>;
-        using iterator = typename std::map<Tkey, typename Tvalue::Pointer>::iterator;
-        using const_iterator = typename std::map<Tkey, typename Tvalue::Pointer>::const_iterator;
+        using iterator = typename std::map<const Tkey, std::shared_ptr<Tvalue>>::iterator;
+        using const_iterator = typename std::map<const Tkey, std::shared_ptr<Tvalue>>::const_iterator;
 
         #pragma mark Constructors & Destructors
         explicit Map(const constructor_access&) : Map() { };
@@ -50,48 +50,51 @@ namespace NxA {
             return Map::Pointer(std::make_shared<Map>(Map::constructor_access()));
         }
 
-        #pragma mark Operators
-        const typename Tvalue::Pointer& operator[] (const Tkey& key) const
+        #pragma mark Instance Methods
+        const Tvalue& valueForKey(const Tkey& key) const
         {
-            return this->std::map<Tkey, typename Tvalue::Pointer>::at(key);
+            return *(this->std::map<const Tkey, std::shared_ptr<Tvalue>>::at(key));
         }
-        typename Tvalue::Pointer& operator[] (const Tkey& key)
+        Tvalue& valueForKey(const Tkey& key)
         {
-            return const_cast<typename Tvalue::Pointer&>(static_cast<const Map<Tkey, Tvalue>>(*this)[key]);
+            return const_cast<Tvalue&>(static_cast<const Map<Tkey, Tvalue>*>(this)->valueForKey(key));
+        }
+        void setValueForKey(Tvalue& value, const Tkey& key)
+        {
+            this->insert(std::pair<const Tkey,  std::shared_ptr<Tvalue>>(key, value.pointer().toStdSharedPointer()));
         }
 
-        #pragma mark Instance Methods
         iterator begin() noexcept
         {
-            return this->std::map<Tkey, typename Tvalue::Pointer>::begin();
+            return this->std::map<const Tkey, std::shared_ptr<Tvalue>>::begin();
         }
         const_iterator begin() const noexcept
         {
-            return this->std::map<Tkey, typename Tvalue::Pointer>::begin();
+            return this->std::map<const Tkey, std::shared_ptr<Tvalue>>::begin();
         }
         iterator end() noexcept
         {
-            return this->std::map<Tkey, typename Tvalue::Pointer>::end();
+            return this->std::map<const Tkey, std::shared_ptr<Tvalue>>::end();
         }
         const_iterator end() const noexcept
         {
-            return this->std::map<Tkey, typename Tvalue::Pointer>::end();
+            return this->std::map<const Tkey, std::shared_ptr<Tvalue>>::end();
         }
         iterator cbegin() noexcept
         {
-            return this->std::map<Tkey, typename Tvalue::Pointer>::cbegin();
+            return this->std::map<const Tkey, std::shared_ptr<Tvalue>>::cbegin();
         }
         const_iterator cbegin() const noexcept
         {
-            return this->std::map<Tkey, typename Tvalue::Pointer>::cbegin();
+            return this->std::map<const Tkey, std::shared_ptr<Tvalue>>::cbegin();
         }
         iterator cend() noexcept
         {
-            return this->std::map<Tkey, typename Tvalue::Pointer>::cend();
+            return this->std::map<const Tkey, std::shared_ptr<Tvalue>>::cend();
         }
         const_iterator cend() const noexcept
         {
-            return this->std::map<Tkey, typename Tvalue::Pointer>::cend();
+            return this->std::map<const Tkey, std::shared_ptr<Tvalue>>::cend();
         }
 
         count length(void) const
@@ -101,7 +104,7 @@ namespace NxA {
 
         boolean containsValueForKey(const Tkey& keyValue) const
         {
-            return this->find(keyValue) != this->std::map<Tkey, typename Tvalue::Pointer>::end();
+            return this->find(keyValue) != this->std::map<const Tkey, std::shared_ptr<Tvalue>>::end();
         }
     };
 }

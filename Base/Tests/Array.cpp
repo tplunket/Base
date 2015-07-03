@@ -199,7 +199,7 @@ TEST(Base_Array, InsertAt_InsertingObjectInTheMiddle_InsertsObjectCorrectly)
     ASSERT_STREQ("Test2", (*test)[2].toUTF8());
 }
 
-TEST(Base_Array, Find_ObjectInTheMiddle_ReturnsPositionCorrectly)
+TEST(Base_Array, Find_ObjectInTheMiddleWithSameValue_ReturnsPositionCorrectly)
 {
     // -- Given.
     auto test = String::Array::array();
@@ -211,11 +211,30 @@ TEST(Base_Array, Find_ObjectInTheMiddle_ReturnsPositionCorrectly)
     test->append(object3);
 
     // -- When.
-    auto position = test->find(object2);
+    auto position = test->find(String::stringWith("Test2"));
 
     // -- Then.
     ASSERT_TRUE(position != test->end());
     ASSERT_TRUE(position == test->begin() + 1);
+}
+
+TEST(Base_Array, Find_ObjectInEndWithSameObject_ReturnsPositionCorrectly)
+{
+    // -- Given.
+    auto test = String::Array::array();
+    auto object1 = String::stringWith("Test");
+    auto object2 = String::stringWith("Test2");
+    auto object3 = String::stringWith("Test3");
+    test->append(object1);
+    test->append(object2);
+    test->append(object3);
+
+    // -- When.
+    auto position = test->find(object3);
+
+    // -- Then.
+    ASSERT_TRUE(position != test->end());
+    ASSERT_TRUE(position == test->begin() + 2);
 }
 
 TEST(Base_Array, Remove_PositionOfObjectInTheMiddle_RemovesObjectCorrectly)

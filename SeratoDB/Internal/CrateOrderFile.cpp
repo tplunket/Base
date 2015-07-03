@@ -45,7 +45,7 @@ String::Pointer CrateOrderFile::crateNameIfValidCrateOrEmptyIfNot(const String& 
     auto result = String::string();
 
     if (name.hasPrefix("[crate]")) {
-        result = name.subString(7, name.length() - 7);
+        result = name.subString(7);
     }
 
     return result;

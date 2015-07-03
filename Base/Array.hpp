@@ -146,8 +146,7 @@ namespace NxA {
         const_iterator find(const T& object) const
         {
             for (const_iterator it = this->begin(); it != this->end(); ++it) {
-                auto& other = *it;
-                if (&*other == &object) {
+                if ((*it)->isEqualTo(object)) {
                     return it;
                 }
             }

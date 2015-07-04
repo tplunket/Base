@@ -27,6 +27,9 @@ namespace NxA { namespace Serato {
         static UInteger32Tag::Pointer tagWithMemoryAt(const byte* tagAddress);
         static UInteger32Tag::Pointer tagWithIdentifierAndValue(uinteger32 identifier, uinteger32 value);
 
+        #pragma mark Operators
+        bool operator==(const UInteger32Tag& other) const;
+
         #pragma mark Instance Methods
         uinteger32 value(void) const;
         void setValue(uinteger32 value);

@@ -27,6 +27,9 @@ namespace NxA { namespace Serato {
         static BlobTag::Pointer tagWithMemoryAt(const byte* tagAddress);
         static BlobTag::Pointer tagWithIdentifierAndValue(uint32_t identifier, const Blob& value);
 
+        #pragma mark Operators
+        bool operator==(const BlobTag& other) const;
+
         #pragma mark Instance Methods
         const Blob& value(void) const;
         void setValue(const Blob& newValue);

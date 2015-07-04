@@ -42,6 +42,17 @@ UInteger16Tag::Pointer UInteger16Tag::tagWithIdentifierAndValue(uinteger32 ident
     return newTag;
 }
 
+#pragma mark Operators
+
+bool UInteger16Tag::operator==(const UInteger16Tag& other) const
+{
+    if (this == &other) {
+        return true;
+    }
+
+    return this->value() == other.value();
+}
+
 #pragma mark Instance Methods
 
 uinteger16 UInteger16Tag::value(void) const

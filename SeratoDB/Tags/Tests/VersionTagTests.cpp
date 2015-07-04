@@ -67,6 +67,38 @@ TEST(SeratoDB_VersionTag, TagWithMemoryAt_IncorrectIdentifier_ThrowsException)
     ASSERT_THROW(VersionTag::tagWithMemoryAt(data), NxA::Exception);
 }
 
+TEST(SeratoDB_VersionTag, OperatorEqual_TwoEqualTags_ReturnsTrue)
+{
+    // -- Given.
+    auto tag = VersionTag::tagWithIdentifierAndValue('vtst', version);
+    auto otherTag = VersionTag::tagWithIdentifierAndValue('vtst', String::stringWith("Cool Version"));
+
+    // -- When.
+    // -- Then.
+    ASSERT_TRUE(*tag == *otherTag);
+}
+
+TEST(SeratoDB_VersionTag, OperatorEqual_TwoEqualTagsSameObject_ReturnsTrue)
+{
+    // -- Given.
+    auto tag = VersionTag::tagWithIdentifierAndValue('vtst', version);
+
+    // -- When.
+    // -- Then.
+    ASSERT_TRUE(*tag == *tag);
+}
+
+TEST(SeratoDB_VersionTag, OperatorEqual_TwoUnEqualTags_Returnsfalse)
+{
+    // -- Given.
+    auto tag = VersionTag::tagWithIdentifierAndValue('vtst', version);
+    auto otherTag = VersionTag::tagWithIdentifierAndValue('vtst', String::stringWith("Some Other Version"));
+
+    // -- When.
+    // -- Then.
+    ASSERT_FALSE(*tag == *otherTag);
+}
+
 TEST(SeratoDB_VersionTag, SetValue_TagWithAValue_SetsTheValueCorrectly)
 {
     // -- Given.

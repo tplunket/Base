@@ -96,10 +96,10 @@ void TrackFile::readMarkersV2FromBase64Data(const byte* markerV2Data, count tota
     while (tagStart < markerDataEnd) {
         auto tagName = String::stringWith(reinterpret_cast<const character*>(tagStart));
 
-        if (tagName->isEqualTo("CUE")) {
+        if (*tagName == "CUE") {
             this->cueMarkers->append(Serato::CueMarker::markerWithMemoryAt(tagStart));
         }
-        else if (tagName->isEqualTo("LOOP")) {
+        else if (*tagName == "LOOP") {
             this->loopMarkers->append(Serato::LoopMarker::markerWithMemoryAt(tagStart));
         }
         else {

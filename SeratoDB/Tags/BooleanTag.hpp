@@ -27,6 +27,9 @@ namespace NxA { namespace Serato {
         static BooleanTag::Pointer tagWithMemoryAt(const byte* tagAddress);
         static BooleanTag::Pointer tagWithIdentifierAndValue(uinteger32 identifier, boolean value);
 
+        #pragma mark Operators
+        virtual bool operator==(const BooleanTag& other) const;
+
         #pragma mark Instance Methods
         boolean value(void) const;
         void setValue(boolean newValue);

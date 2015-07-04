@@ -26,5 +26,8 @@ namespace NxA { namespace Serato {
         #pragma mark Constructors
         static PathTag::Pointer tagWithMemoryAt(const byte* tagAddress);
         static PathTag::Pointer tagWithIdentifierAndValue(uinteger32 identifier, const String& value);
+
+        #pragma mark Operators
+        bool operator==(const PathTag& other) const;
     };
 } }

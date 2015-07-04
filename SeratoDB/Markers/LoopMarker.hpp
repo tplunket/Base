@@ -29,6 +29,9 @@ namespace NxA { namespace Serato {
                                                                             uinteger16 index);
         static LoopMarker::Pointer markerWith(const LoopMarker& other);
 
+        #pragma mark Operators
+        bool operator==(const LoopMarker& other) const;
+
         #pragma mark Instance Methods
         uinteger32 startPositionInMilliseconds(void) const;
         uinteger32 endPositionInMilliseconds(void) const;

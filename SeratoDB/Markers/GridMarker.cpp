@@ -57,9 +57,9 @@ const byte* GridMarker::nextGridMarkerAfter(const byte* markerData)
     return markerData + sizeof(GridMarkerStruct);
 }
 
-#pragma mark Instance Methods
+#pragma mark Operators
 
-boolean GridMarker::isEqualTo(const GridMarker& other) const
+bool GridMarker::operator==(const GridMarker& other) const
 {
     if (this == &other) {
         return true;
@@ -68,6 +68,8 @@ boolean GridMarker::isEqualTo(const GridMarker& other) const
     return (this->positionInSeconds() == other.positionInSeconds()) &&
            (this->beatsPerMinute() == other.beatsPerMinute());
 }
+
+#pragma mark Instance Methods
 
 decimal GridMarker::positionInSeconds(void) const
 {

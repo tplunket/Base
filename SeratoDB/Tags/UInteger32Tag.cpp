@@ -42,6 +42,17 @@ UInteger32Tag::Pointer UInteger32Tag::tagWithIdentifierAndValue(uinteger32 ident
     return newTag;
 }
 
+#pragma mark Operators
+
+bool UInteger32Tag::operator==(const UInteger32Tag& other) const
+{
+    if (this == &other) {
+        return true;
+    }
+
+    return this->value() == other.value();
+}
+
 #pragma mark Instance Methods
 
 uinteger32 UInteger32Tag::value(void) const

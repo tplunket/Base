@@ -47,6 +47,34 @@ ObjectTag::Pointer ObjectTag::tagWithIdentifierAndValue(uinteger32 identifier, c
     return newTag;
 }
 
+#pragma mark Operators
+
+bool ObjectTag::operator==(const ObjectTag& other) const
+{
+    if (this == &other) {
+        return true;
+    }
+
+    if (internal->subTagForIdentifier->length() != other.internal->subTagForIdentifier->length()) {
+        return false;
+    }
+
+    for (auto& pair : *internal->subTagForIdentifier) {
+        auto& key = pair.first;
+
+        if (!other.hasSubTagForIdentifier(key)) {
+            return false;
+        }
+
+        auto& value = *(pair.second);
+        if (value != other.subTagForIdentifier(key)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 #pragma mark Instance Methods
 
 boolean ObjectTag::hasSubTagForIdentifier(uinteger32 identifier) const

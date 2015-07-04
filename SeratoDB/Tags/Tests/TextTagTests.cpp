@@ -67,6 +67,38 @@ TEST(SeratoDB_TextTag, TagWithMemoryAt_IncorrectIdentifier_ThrowsException)
     ASSERT_THROW(TextTag::tagWithMemoryAt(data), NxA::Exception);
 }
 
+TEST(SeratoDB_TextTag, OperatorEqual_TwoEqualTags_ReturnsTrue)
+{
+    // -- Given.
+    auto tag = TextTag::tagWithIdentifierAndValue('ttst', text);
+    auto otherTag = TextTag::tagWithIdentifierAndValue('ttst', String::stringWith("Some Text"));
+
+    // -- When.
+    // -- Then.
+    ASSERT_TRUE(*tag == *otherTag);
+}
+
+TEST(SeratoDB_TextTag, OperatorEqual_TwoEqualTagsSameObject_ReturnsTrue)
+{
+    // -- Given.
+    auto tag = TextTag::tagWithIdentifierAndValue('ttst', text);
+
+    // -- When.
+    // -- Then.
+    ASSERT_TRUE(*tag == *tag);
+}
+
+TEST(SeratoDB_TextTag, OperatorEqual_TwoUnEqualTags_Returnsfalse)
+{
+    // -- Given.
+    auto tag = TextTag::tagWithIdentifierAndValue('ttst', text);
+    auto otherTag = TextTag::tagWithIdentifierAndValue('ttst', String::stringWith("Some Other Text"));
+
+    // -- When.
+    // -- Then.
+    ASSERT_FALSE(*tag == *otherTag);
+}
+
 TEST(SeratoDB_TextTag, SetValue_TagWithAValue_SetsTheValueCorrectly)
 {
     // -- Given.

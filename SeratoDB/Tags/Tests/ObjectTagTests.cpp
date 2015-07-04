@@ -169,6 +169,95 @@ TEST(SeratoDB_ObjectTag, TagWithMemoryAt_IncorrectIdentifier_ThrowsException)
     ASSERT_THROW(ObjectTag::tagWithMemoryAt(data), NxA::Exception);
 }
 
+TEST(SeratoDB_ObjectTag, OperatorEqual_TwoEqualTags_ReturnsTrue)
+{
+    // -- Given.
+    auto tags = Tag::Array::array();
+    tags->append(BlobTag::tagWithIdentifierAndValue('atst', testBlob));
+    tags->append(BooleanTag::tagWithIdentifierAndValue('btst', true));
+    tags->append(PathTag::tagWithIdentifierAndValue('ptst', path));
+    auto tag = ObjectTag::tagWithIdentifierAndValue('otst', tags);
+    auto otherTags = Tag::Array::array();
+    otherTags->append(BlobTag::tagWithIdentifierAndValue('atst', testBlob));
+    otherTags->append(BooleanTag::tagWithIdentifierAndValue('btst', true));
+    otherTags->append(PathTag::tagWithIdentifierAndValue('ptst', path));
+    auto otherTag = ObjectTag::tagWithIdentifierAndValue('otst', otherTags);
+
+    // -- When.
+    // -- Then.
+    ASSERT_TRUE(*tag == *otherTag);
+}
+
+TEST(SeratoDB_ObjectTag, OperatorEqual_TwoEqualTagsSameObject_ReturnsTrue)
+{
+    // -- Given.
+    auto tags = Tag::Array::array();
+    tags->append(BlobTag::tagWithIdentifierAndValue('atst', testBlob));
+    tags->append(BooleanTag::tagWithIdentifierAndValue('btst', true));
+    tags->append(PathTag::tagWithIdentifierAndValue('ptst', path));
+    auto tag = ObjectTag::tagWithIdentifierAndValue('otst', tags);
+
+    // -- When.
+    // -- Then.
+    ASSERT_TRUE(*tag == *tag);
+}
+
+TEST(SeratoDB_ObjectTag, OperatorEqual_TwoUnEqualTagsDifferentNumberOfSubtags_Returnsfalse)
+{
+    // -- Given.
+    auto tags = Tag::Array::array();
+    tags->append(BlobTag::tagWithIdentifierAndValue('atst', testBlob));
+    tags->append(BooleanTag::tagWithIdentifierAndValue('btst', true));
+    tags->append(PathTag::tagWithIdentifierAndValue('ptst', path));
+    auto tag = ObjectTag::tagWithIdentifierAndValue('otst', tags);
+    auto otherTags = Tag::Array::array();
+    otherTags->append(BlobTag::tagWithIdentifierAndValue('atst', testBlob));
+    otherTags->append(BooleanTag::tagWithIdentifierAndValue('btst', true));
+    auto otherTag = ObjectTag::tagWithIdentifierAndValue('otst', otherTags);
+
+    // -- When.
+    // -- Then.
+    ASSERT_FALSE(*tag == *otherTag);
+}
+
+TEST(SeratoDB_ObjectTag, OperatorEqual_TwoUnEqualTagsDifferentSubtags_Returnsfalse)
+{
+    // -- Given.
+    auto tags = Tag::Array::array();
+    tags->append(BlobTag::tagWithIdentifierAndValue('atst', testBlob));
+    tags->append(BooleanTag::tagWithIdentifierAndValue('btst', true));
+    tags->append(PathTag::tagWithIdentifierAndValue('ptst', path));
+    auto tag = ObjectTag::tagWithIdentifierAndValue('otst', tags);
+    auto otherTags = Tag::Array::array();
+    otherTags->append(BlobTag::tagWithIdentifierAndValue('atst', testBlob));
+    otherTags->append(BooleanTag::tagWithIdentifierAndValue('btst', true));
+    tags->append(UInteger16Tag::tagWithIdentifierAndValue('stst', 0xBEEF));
+    auto otherTag = ObjectTag::tagWithIdentifierAndValue('otst', otherTags);
+
+    // -- When.
+    // -- Then.
+    ASSERT_FALSE(*tag == *otherTag);
+}
+
+TEST(SeratoDB_ObjectTag, OperatorEqual_TwoUnEqualTagsDifferentSubtagsValues_Returnsfalse)
+{
+    // -- Given.
+    auto tags = Tag::Array::array();
+    tags->append(BlobTag::tagWithIdentifierAndValue('atst', testBlob));
+    tags->append(BooleanTag::tagWithIdentifierAndValue('btst', true));
+    tags->append(PathTag::tagWithIdentifierAndValue('ptst', path));
+    auto tag = ObjectTag::tagWithIdentifierAndValue('otst', tags);
+    auto otherTags = Tag::Array::array();
+    otherTags->append(BlobTag::tagWithIdentifierAndValue('atst', testBlob));
+    otherTags->append(BooleanTag::tagWithIdentifierAndValue('btst', false));
+    otherTags->append(PathTag::tagWithIdentifierAndValue('ptst', path));
+    auto otherTag = ObjectTag::tagWithIdentifierAndValue('otst', otherTags);
+
+    // -- When.
+    // -- Then.
+    ASSERT_FALSE(*tag == *otherTag);
+}
+
 TEST(SeratoDB_ObjectTag, SetSubTag_TagWithExistingSubTagForThatIdentifier_SetsTheValueCorrectly)
 {
     // -- Given.

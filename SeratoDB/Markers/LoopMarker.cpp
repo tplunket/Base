@@ -72,19 +72,21 @@ LoopMarker::Pointer LoopMarker::markerWith(const LoopMarker& other)
                                                                 other.index());
 }
 
-#pragma mark Instance Methods
+#pragma mark Operators
 
-boolean LoopMarker::isEqualTo(const LoopMarker& other) const
+bool LoopMarker::operator==(const LoopMarker& other) const
 {
     if (this == &other) {
         return true;
     }
 
-    return (this->label().isEqualTo(other.label())) &&
+    return (this->label() == other.label()) &&
            (this->startPositionInMilliseconds() == other.startPositionInMilliseconds()) &&
            (this->endPositionInMilliseconds() == other.endPositionInMilliseconds()) &&
            (this->index() == other.index());
 }
+
+#pragma mark Instance Methods
 
 uinteger32 LoopMarker::startPositionInMilliseconds(void) const
 {

@@ -38,6 +38,17 @@ BlobTag::Pointer BlobTag::tagWithIdentifierAndValue(uinteger32 identifier, const
     return newTag;
 }
 
+#pragma mark Operators
+
+bool BlobTag::operator==(const BlobTag& other) const
+{
+    if (this == &other) {
+        return true;
+    }
+
+    return this->value() == other.value();
+}
+
 #pragma mark Instance Methods
 
 const Blob& BlobTag::value(void) const

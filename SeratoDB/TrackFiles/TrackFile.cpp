@@ -24,13 +24,6 @@ using namespace NxA::Serato;
 
 #pragma mark Instance Methods
 
-boolean TrackFile::isEqualTo(const TrackFile& other) const
-{
-    // TODO: This might want to be a better test.
-    return this == &other;
-}
-
-
 String::Pointer TrackFile::title(void) const
 {
     if (internal->parsedFileTag) {

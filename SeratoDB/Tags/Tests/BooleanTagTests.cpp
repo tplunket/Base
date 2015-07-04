@@ -80,6 +80,38 @@ TEST(SeratoDB_BooleanTag, TagWithMemoryAt_TagCreatedFromDataWithIncorrectSize_Th
     ASSERT_THROW(BooleanTag::tagWithMemoryAt(data), NxA::Exception);
 }
 
+TEST(SeratoDB_BooleanTag, OperatorEqual_TwoEqualTags_ReturnsTrue)
+{
+    // -- Given.
+    auto tag = BooleanTag::tagWithIdentifierAndValue('btst', true);
+    auto otherTag = BooleanTag::tagWithIdentifierAndValue('btst', true);
+
+    // -- When.
+    // -- Then.
+    ASSERT_TRUE(*tag == *otherTag);
+}
+
+TEST(SeratoDB_BooleanTag, OperatorEqual_TwoEqualTagsSameObject_ReturnsTrue)
+{
+    // -- Given.
+    auto tag = BooleanTag::tagWithIdentifierAndValue('btst', true);
+
+    // -- When.
+    // -- Then.
+    ASSERT_TRUE(*tag == *tag);
+}
+
+TEST(SeratoDB_BooleanTag, OperatorEqual_TwoUnEqualTags_Returnsfalse)
+{
+    // -- Given.
+    auto tag = BooleanTag::tagWithIdentifierAndValue('btst', true);
+    auto otherTag = BooleanTag::tagWithIdentifierAndValue('btst', false);
+
+    // -- When.
+    // -- Then.
+    ASSERT_FALSE(*tag == *otherTag);
+}
+
 TEST(SeratoDB_BooleanTag, SetValue_TagWithAValue_SetsTheValueCorrectly)
 {
     // -- Given.

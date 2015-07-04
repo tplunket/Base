@@ -38,3 +38,14 @@ PathTag::Pointer PathTag::tagWithIdentifierAndValue(uinteger32 identifier, const
 
     return newTag;
 }
+
+#pragma mark Operators
+
+bool PathTag::operator==(const PathTag& other) const
+{
+    if (this == &other) {
+        return true;
+    }
+
+    return this->value() == other.value();
+}

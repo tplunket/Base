@@ -46,12 +46,6 @@ TrackEntry::Pointer TrackEntry::entryWithTrackFileAtOnVolume(const String& path,
 
 #pragma mark Instance Methods
 
-boolean TrackEntry::isEqualTo(const TrackEntry& other) const
-{
-    // TODO: This might want to be a better test.
-    return this == &other;
-}
-
 String::Pointer TrackEntry::trackFilePath(void) const
 {
     auto& trackObjectTag = dynamic_cast<const ObjectTag&>(*internal->trackEntryTag);

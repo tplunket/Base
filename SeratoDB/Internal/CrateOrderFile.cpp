@@ -112,20 +112,14 @@ void CrateOrderFile::addCratesNamesAtTheStartOfUnlessAlreadyThere(String::ArrayO
 {
     auto insertionPosition = cratesToAddTo.begin();
     for (auto& crateName : cratesToAdd) {
-        boolean alreadyHaveThisCrate = false;
-
-        for (auto& otherCrateName : cratesToAddTo) {
-            if (crateName->isEqualTo(otherCrateName)) {
-                alreadyHaveThisCrate = true;
-                break;
-            }
+        boolean alreadyHaveThisCrate = cratesToAddTo.find(crateName) != cratesToAddTo.end();
+        if (alreadyHaveThisCrate) {
+            continue;
         }
 
-        if (!alreadyHaveThisCrate) {
-            printf("added: %s\n", crateName->toUTF8());
-            cratesToAddTo.insertAt(*crateName, insertionPosition);
-            insertionPosition += 1;
-        }
+        printf("added: %s\n", crateName->toUTF8());
+        cratesToAddTo.insertAt(*crateName, insertionPosition);
+        insertionPosition += 1;
     }
 }
 

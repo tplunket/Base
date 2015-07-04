@@ -69,6 +69,38 @@ TEST(SeratoDB_PathTag, TagWithMemoryAt_IncorrectIdentifier_ThrowsException)
     ASSERT_THROW(PathTag::tagWithMemoryAt(data), NxA::Exception);
 }
 
+TEST(SeratoDB_PathTag, OperatorEqual_TwoEqualTags_ReturnsTrue)
+{
+    // -- Given.
+    auto tag = PathTag::tagWithIdentifierAndValue('ptst', path);
+    auto otherTag = PathTag::tagWithIdentifierAndValue('ptst', String::stringWith("Some/Cool/path.mp3"));
+
+    // -- When.
+    // -- Then.
+    ASSERT_TRUE(*tag == *otherTag);
+}
+
+TEST(SeratoDB_PathTag, OperatorEqual_TwoEqualTagsSameObject_ReturnsTrue)
+{
+    // -- Given.
+    auto tag = PathTag::tagWithIdentifierAndValue('ptst', path);
+
+    // -- When.
+    // -- Then.
+    ASSERT_TRUE(*tag == *tag);
+}
+
+TEST(SeratoDB_ObjectTag, OperatorEqual_TwoUnEqualTags_Returnsfalse)
+{
+    // -- Given.
+    auto tag = PathTag::tagWithIdentifierAndValue('ptst', path);
+    auto otherTag = PathTag::tagWithIdentifierAndValue('ptst', String::stringWith("Some/Other/path.mp3"));
+
+    // -- When.
+    // -- Then.
+    ASSERT_FALSE(*tag == *otherTag);
+}
+
 TEST(SeratoDB_PathTag, SetValue_TagWithAValue_SetsTheValueCorrectly)
 {
     // -- Given.

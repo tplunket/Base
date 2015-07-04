@@ -64,18 +64,20 @@ CueMarker::Pointer CueMarker::markerWith(const CueMarker&other)
     return CueMarker::markerWithLabelPositionAndIndex(other.label(), other.positionInMilliseconds(), other.index());
 }
 
-#pragma mark Instance Methods
+#pragma mark Operators
 
-boolean CueMarker::isEqualTo(const CueMarker& other) const
+bool CueMarker::operator==(const CueMarker& other) const
 {
     if (this == &other) {
         return true;
     }
 
-    return (this->label().isEqualTo(other.label())) &&
+    return (this->label() == other.label()) &&
            (this->positionInMilliseconds() == other.positionInMilliseconds()) &&
            (this->index() == other.index());
 }
+
+#pragma mark Instance Methods
 
 uinteger32 CueMarker::positionInMilliseconds(void) const
 {

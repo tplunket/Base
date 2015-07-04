@@ -40,6 +40,17 @@ BooleanTag::Pointer BooleanTag::tagWithIdentifierAndValue(uinteger32 identifier,
     return newTag;
 }
 
+#pragma mark Operators
+
+bool BooleanTag::operator==(const BooleanTag& other) const
+{
+    if (this == &other) {
+        return true;
+    }
+
+    return this->value() == other.value();
+}
+
 #pragma mark Instance Methods
 
 boolean BooleanTag::value(void) const

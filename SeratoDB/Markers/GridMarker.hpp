@@ -30,6 +30,9 @@ namespace NxA { namespace Serato {
         #pragma mark Class Methods
         static const byte* nextGridMarkerAfter(const byte* markerData);
 
+        #pragma mark Operators
+        bool operator==(const GridMarker& other) const;
+
         #pragma mark Instance Methods
         decimal positionInSeconds(void) const;
         decimal beatsPerMinute(void) const;

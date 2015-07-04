@@ -68,43 +68,45 @@ Track::Pointer Track::trackWithFileAtOnVolume(const String& trackFilePath, const
     return newTrack;
 }
 
-#pragma mark Instance Methods
+#pragma mark Operators
 
-boolean Track::isEqualTo(const Track& other) const
+bool Track::operator==(const Track& other) const
 {
     if (this == &other) {
         return true;
     }
-    else if (!this->trackFilePath().isEqualTo(other.trackFilePath())) {
+    else if (*this->trackFilePath() != *other.trackFilePath()) {
         return false;
     }
 
-    NXA_ASSERT_TRUE(this->title().isEqualTo(other.title()) &&
-                    this->artist().isEqualTo(other.artist()) &&
-                    this->album().isEqualTo(other.album()) &&
-                    this->genre().isEqualTo(other.genre()) &&
-                    this->comments().isEqualTo(other.comments()) &&
-                    this->grouping().isEqualTo(other.grouping()) &&
-                    this->remixer().isEqualTo(other.remixer()) &&
-                    this->recordLabel().isEqualTo(other.recordLabel()) &&
-                    this->composer().isEqualTo(other.composer()) &&
-                    this->key().isEqualTo(other.key()) &&
-                    this->length().isEqualTo(other.length()) &&
-                    (this->size() == other.size()) &&
-                    this->bitRate().isEqualTo(other.bitRate()) &&
-                    this->sampleRate().isEqualTo(other.sampleRate()) &&
-                    this->bpm().isEqualTo(other.bpm()) &&
-                    this->year().isEqualTo(other.year()) &&
-                    (this->trackNumber() == other.trackNumber()) &&
-                    (this->discNumber() == other.discNumber()) &&
-                    (this->dateModifiedInSecondsSinceJanuary1st1970() == other.dateModifiedInSecondsSinceJanuary1st1970()) &&
-                    (this->dateAddedInSecondsSinceJanuary1st1970() == other.dateAddedInSecondsSinceJanuary1st1970()) &&
-                    this->cueMarkers().isEqualTo(other.cueMarkers()) &&
-                    this->gridMarkers().isEqualTo(other.gridMarkers()) &&
-                    this->loopMarkers().isEqualTo(other.loopMarkers()));
+    NXA_ASSERT_TRUE(this->title() == other.title() &&
+                    this->artist() == other.artist() &&
+                    this->album() == other.album() &&
+                    this->genre() == other.genre() &&
+                    this->comments() == other.comments() &&
+                    this->grouping() == other.grouping() &&
+                    this->remixer() == other.remixer() &&
+                    this->recordLabel() == other.recordLabel() &&
+                    this->composer() == other.composer() &&
+                    this->key() == other.key() &&
+                    this->length() == other.length() &&
+                    this->size() == other.size() &&
+                    this->bitRate() == other.bitRate() &&
+                    this->sampleRate() == other.sampleRate() &&
+                    this->bpm() == other.bpm() &&
+                    this->year() == other.year() &&
+                    this->trackNumber() == other.trackNumber() &&
+                    this->discNumber() == other.discNumber() &&
+                    this->dateModifiedInSecondsSinceJanuary1st1970() == other.dateModifiedInSecondsSinceJanuary1st1970() &&
+                    this->dateAddedInSecondsSinceJanuary1st1970() == other.dateAddedInSecondsSinceJanuary1st1970() &&
+                    this->cueMarkers() == other.cueMarkers() &&
+                    this->gridMarkers() == other.gridMarkers() &&
+                    this->loopMarkers() == other.loopMarkers());
 
     return true;
 }
+
+#pragma mark Instance Methods
 
 String::Pointer Track::trackFilePath(void) const
 {

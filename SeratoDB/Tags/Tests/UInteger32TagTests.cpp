@@ -69,6 +69,38 @@ TEST(SeratoDB_UInteger32Tag, TagWithMemoryAt_TagCreatedFromDataWithIncorrectSize
     ASSERT_THROW(UInteger32Tag::tagWithMemoryAt(data), NxA::Exception);
 }
 
+TEST(SeratoDB_UInteger32Tag, OperatorEqual_TwoEqualTags_ReturnsTrue)
+{
+    // -- Given.
+    auto tag = UInteger32Tag::tagWithIdentifierAndValue('utst', 0xDEADBEEF);
+    auto otherTag = UInteger32Tag::tagWithIdentifierAndValue('utst', 0xDEADBEEF);
+
+    // -- When.
+    // -- Then.
+    ASSERT_TRUE(*tag == *otherTag);
+}
+
+TEST(SeratoDB_UInteger32Tag, OperatorEqual_TwoEqualTagsSameObject_ReturnsTrue)
+{
+    // -- Given.
+    auto tag = UInteger32Tag::tagWithIdentifierAndValue('utst', 0xDEADBEEF);
+
+    // -- When.
+    // -- Then.
+    ASSERT_TRUE(*tag == *tag);
+}
+
+TEST(SeratoDB_UInteger32Tag, OperatorEqual_TwoUnEqualTags_Returnsfalse)
+{
+    // -- Given.
+    auto tag = UInteger32Tag::tagWithIdentifierAndValue('utst', 0xDEADBEEF);
+    auto otherTag = UInteger32Tag::tagWithIdentifierAndValue('utst', 0xDEADBEFF);
+
+    // -- When.
+    // -- Then.
+    ASSERT_FALSE(*tag == *otherTag);
+}
+
 TEST(SeratoDB_UInteger32Tag, SetValue_TagWithAValue_SetsTheValueCorrectly)
 {
     // -- Given.

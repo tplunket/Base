@@ -48,7 +48,7 @@ Database::Pointer Database::databaseWithFileAt(const String& seratoFolderPath)
             }
             case databaseVersionTagIdentifier: {
                 auto& versionText = dynamic_cast<VersionTag&>(*tag).value();
-                if (!versionText.isEqualTo(databaseFileCurrentVersionString)) {
+                if (versionText != databaseFileCurrentVersionString) {
                     newDatabase->internal->tracks->emptyAll();
                     newDatabase->internal->otherTags->emptyAll();
                     return newDatabase;
@@ -90,12 +90,6 @@ String::Pointer Database::versionAsStringForDatabaseIn(const String& seratoFolde
 }
 
 #pragma mark Instance Methods
-
-boolean Database::isEqualTo(const Database& other) const
-{
-    // TODO: This might want to be a better test.
-    return this == &other;
-}
 
 timestamp Database::databaseModificationDateInSecondsSince1970(void) const
 {

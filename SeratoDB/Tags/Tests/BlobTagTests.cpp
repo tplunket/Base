@@ -97,7 +97,71 @@ TEST(SeratoDB_BlobTag, TagWithMemoryAt_IncorrectIdentifier_ThrowsException)
     };
 
     // -- When.
+    // -- Then.
     ASSERT_THROW(BlobTag::tagWithMemoryAt(data), NxA::Exception);
+}
+
+TEST(SeratoDB_BlobTag, OperatorEqual_TwoEqualBlobs_ReturnsTrue)
+{
+    // -- Given.
+    auto tag = BlobTag::tagWithIdentifierAndValue('atst', testBlob);
+    auto otherTag = BlobTag::tagWithIdentifierAndValue('atst', testBlob);
+
+    // -- When.
+    // -- Then.
+    ASSERT_TRUE(*tag == *otherTag);
+}
+
+TEST(SeratoDB_BlobTag, OperatorEqual_TwoEqualBlobsSameObject_ReturnsTrue)
+{
+    // -- Given.
+    auto tag = BlobTag::tagWithIdentifierAndValue('atst', testBlob);
+
+    // -- When.
+    // -- Then.
+    ASSERT_TRUE(*tag == *tag);
+}
+
+TEST(SeratoDB_BlobTag, OperatorEqual_TwoUnEqualBlobsDifferentSize_ReturnsTrue)
+{
+    // -- Given.
+    static const byte otherData[] = {
+        0x74, 0x74, 0x73, 0x74, 0x00, 0x00, 0x00, 0x24, 0x00, 0x53, 0x00, 0x6F, 0x00, 0x6D, 0x00, 0x65, 0x00, 0x2F,
+        0x00, 0x43, 0x00, 0x6F, 0x00, 0x6F, 0x00, 0x6C, 0x00, 0x2F, 0x00, 0x70, 0x00, 0x61, 0x00, 0x74, 0x01, 0x68
+    };
+    static Blob::PointerToConst otherBlob = Blob::blobWithMemoryAndSize(otherData, sizeof(otherData));
+    auto tag = BlobTag::tagWithIdentifierAndValue('atst', testBlob);
+    static const byte moreData[] = {
+        0x74, 0x74, 0x73, 0x74, 0x00, 0x00, 0x00, 0x24, 0x00, 0x53, 0x00, 0x6F, 0x00, 0x6D, 0x00, 0x65, 0x00, 0x2F,
+        0x00, 0x43, 0x00, 0x6F, 0x00, 0x6F, 0x00, 0x6C, 0x00, 0x2F, 0x00, 0x70, 0x00, 0x61, 0x00, 0x74, 0x00
+    };
+    static Blob::PointerToConst moreBlob = Blob::blobWithMemoryAndSize(moreData, sizeof(moreData));
+    auto otherTag = BlobTag::tagWithIdentifierAndValue('atst', moreBlob);
+
+    // -- When.
+    // -- Then.
+    ASSERT_FALSE(*tag == *otherTag);
+}
+
+TEST(SeratoDB_BlobTag, OperatorEqual_TwoUnEqualBlobsSameSize_ReturnsTrue)
+{
+    // -- Given.
+    static const byte otherData[] = {
+        0x74, 0x74, 0x73, 0x74, 0x00, 0x00, 0x00, 0x24, 0x00, 0x53, 0x00, 0x6F, 0x00, 0x6D, 0x00, 0x65, 0x00, 0x2F,
+        0x00, 0x43, 0x00, 0x6F, 0x00, 0x6F, 0x00, 0x6C, 0x00, 0x2F, 0x00, 0x70, 0x00, 0x61, 0x00, 0x74, 0x01, 0x68
+    };
+    static Blob::PointerToConst otherBlob = Blob::blobWithMemoryAndSize(otherData, sizeof(otherData));
+    auto tag = BlobTag::tagWithIdentifierAndValue('atst', testBlob);
+    static const byte moreData[] = {
+        0x74, 0x74, 0x73, 0x74, 0x00, 0x00, 0x00, 0x24, 0x00, 0x53, 0x00, 0x6F, 0x00, 0x6D, 0x00, 0x65, 0x00, 0x2F,
+        0x00, 0x43, 0x00, 0x6F, 0x00, 0x6F, 0x00, 0x6C, 0x00, 0x2F, 0x00, 0x70, 0x00, 0x61, 0x00, 0x74, 0x00, 0x68
+    };
+    static Blob::PointerToConst moreBlob = Blob::blobWithMemoryAndSize(moreData, sizeof(moreData));
+    auto otherTag = BlobTag::tagWithIdentifierAndValue('atst', moreBlob);
+
+    // -- When.
+    // -- Then.
+    ASSERT_FALSE(*tag == *otherTag);
 }
 
 TEST(SeratoDB_BlobTag, SetValue_TagWithAValue_SetsTheValueCorrectly)

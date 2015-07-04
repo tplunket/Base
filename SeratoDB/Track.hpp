@@ -31,6 +31,9 @@ namespace NxA { namespace Serato {
         static Track::Pointer trackWithTagOnVolume(Tag& trackTag, const String& locatedOnVolumePath);
         static Track::Pointer trackWithFileAtOnVolume(const String& trackFilePath, const String& locatedOnVolumePath);
 
+        #pragma mark Operators
+        bool operator==(const Track& other) const;
+
         #pragma mark Instance Methods
         String::Pointer trackFilePath(void) const;
 

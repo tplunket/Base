@@ -89,12 +89,6 @@ void Crate::destroy(const Crate& crate)
 
 #pragma mark Instance Methods
 
-boolean Crate::isEqualTo(const Crate& other) const
-{
-    // TODO: This might want to be a better test.
-    return this == &other;
-}
-
 const String& Crate::crateName(void) const
 {
     return internal->crateName;
@@ -145,7 +139,7 @@ void Crate::loadFromFile(void)
         switch (tag->identifier()) {
             case crateVersionTagIdentifier: {
                 auto& versionTag = dynamic_cast<VersionTag&>(*tag);
-                if (!versionTag.value().isEqualTo(crateFileCurrentVersionString)) {
+                if (versionTag.value() != crateFileCurrentVersionString) {
                     internal->otherTags->emptyAll();
                     internal->trackEntries->emptyAll();
                     return;

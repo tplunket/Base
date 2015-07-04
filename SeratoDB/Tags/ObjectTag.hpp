@@ -27,6 +27,9 @@ namespace NxA { namespace Serato {
         static ObjectTag::Pointer tagWithMemoryAt(const byte* tagAddress);
         static ObjectTag::Pointer tagWithIdentifierAndValue(uinteger32 identifier, const Tag::Array& content);
 
+        #pragma mark Operators
+        bool operator==(const ObjectTag& other) const;
+
         #pragma mark Instance Methods
         boolean hasSubTagForIdentifier(uinteger32 identifier) const;
 

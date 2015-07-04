@@ -38,3 +38,14 @@ VersionTag::Pointer VersionTag::tagWithIdentifierAndValue(uinteger32 identifier,
 
     return newTag;
 }
+
+#pragma mark Operators
+
+bool VersionTag::operator==(const VersionTag& other) const
+{
+    if (this == &other) {
+        return true;
+    }
+
+    return this->value() == other.value();
+}

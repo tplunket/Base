@@ -39,6 +39,17 @@ TextTag::Pointer TextTag::tagWithIdentifierAndValue(uinteger32 identifier, const
     return newTag;
 }
 
+#pragma mark Operators
+
+bool TextTag::operator==(const TextTag& other) const
+{
+    if (this == &other) {
+        return true;
+    }
+
+    return this->value() == other.value();
+}
+
 #pragma mark Instance Methods
 
 const String& TextTag::value(void) const

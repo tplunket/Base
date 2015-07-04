@@ -28,6 +28,9 @@ namespace NxA { namespace Serato {
                                                                   uinteger16 index);
         static CueMarker::Pointer markerWith(const CueMarker&other);
 
+        #pragma mark Operators
+        bool operator==(const CueMarker& other) const;
+
         #pragma mark Instance Methods
         uinteger32 positionInMilliseconds(void) const;
         uinteger16 index(void) const;

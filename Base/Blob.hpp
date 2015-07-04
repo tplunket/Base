@@ -46,6 +46,7 @@ namespace NxA {
         {
             return const_cast<uinteger8&>(static_cast<const Blob&>(*this)[index]);
         }
+        bool operator==(const Blob& other) const;
 
         #pragma mark Instance Methods
         count size(void) const;

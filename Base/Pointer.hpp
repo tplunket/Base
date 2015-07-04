@@ -48,6 +48,14 @@ namespace NxA {
         {
             return Pointer<const T>(this->toStdSharedPointer());
         }
+        bool operator==(const Pointer<T>& other) const
+        {
+            return *(this->get()) == *other;
+        }
+        bool operator==(const T& other) const
+        {
+            return *(this->get()) == other;
+        }
         operator T&() const
         {
             return this->operator*();
@@ -74,10 +82,6 @@ namespace NxA {
         }
 
         #pragma mark Instance Methods
-        boolean isEqualTo(const Pointer<T>& other) const
-        {
-            return this->get()->isEqualTo(*other);
-        }
         const std::shared_ptr<T>& toStdSharedPointer(void) const
         {
             return *this;

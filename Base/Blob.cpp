@@ -73,9 +73,7 @@ const byte& Blob::operator[] (integer index) const
     return internal->data[index];
 }
 
-#pragma mark Instance Methods
-
-boolean Blob::isEqualTo(const Blob& other) const
+bool Blob::operator==(const Blob& other) const
 {
     if (this == &other) {
         return true;
@@ -83,6 +81,8 @@ boolean Blob::isEqualTo(const Blob& other) const
 
     return internal->data == other.internal->data;
 }
+
+#pragma mark Instance Methods
 
 count Blob::size(void) const
 {

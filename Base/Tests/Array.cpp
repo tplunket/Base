@@ -75,7 +75,7 @@ TEST(Base_Array, Append_AddingOneObject_AddsObjectCorrectly)
     test->append(String::stringWith("Test"));
 
     // -- Then.
-    ASSERT_EQ(test->length(), 1);
+    ASSERT_EQ(1, test->length());
     ASSERT_EQ(::strcmp((*test)[0].toUTF8(), "Test"), 0);
 }
 
@@ -89,12 +89,12 @@ TEST(Base_Array, Append_AddingTwoObject_AddsObjectCorrectly)
     test->append(String::stringWith("Test2"));
 
     // -- Then.
-    ASSERT_EQ(test->length(), 2);
+    ASSERT_EQ(2, test->length());
     ASSERT_STREQ("Test", (*test)[0].toUTF8());
     ASSERT_STREQ("Test2", (*test)[1].toUTF8());
 }
 
-TEST(Base_Array, isEqualTo_TwoDifferentArrays_ReturnFalse)
+TEST(Base_Array, OperatorEqual_TwoDifferentArrays_ReturnFalse)
 {
     // -- Given.
     auto test = String::Array::array();
@@ -106,10 +106,10 @@ TEST(Base_Array, isEqualTo_TwoDifferentArrays_ReturnFalse)
 
     // -- When.
     // -- Then.
-    ASSERT_FALSE(test->isEqualTo(test2));
+    ASSERT_FALSE(test == test2);
 }
 
-TEST(Base_Array, isEqualTo_TwoEqualArrays_ReturnTrue)
+TEST(Base_Array, OperatorEqual_TwoEqualArrays_ReturnTrue)
 {
     // -- Given.
     auto test = String::Array::array();
@@ -121,7 +121,7 @@ TEST(Base_Array, isEqualTo_TwoEqualArrays_ReturnTrue)
 
     // -- When.
     // -- Then.
-    ASSERT_TRUE(test->isEqualTo(test2));
+    ASSERT_TRUE(test == test2);
 }
 
 TEST(Base_Array, Length_EmptyArray_LengthReturnsZero)
@@ -131,7 +131,7 @@ TEST(Base_Array, Length_EmptyArray_LengthReturnsZero)
     auto test = String::Array::array();
 
     // -- Then.
-    ASSERT_EQ(test->length(), 0);
+    ASSERT_EQ(0, test->length());
 }
 
 TEST(Base_Array, emptyAll_ArrayWithTwoObject_RemovesAllObjects)
@@ -145,7 +145,7 @@ TEST(Base_Array, emptyAll_ArrayWithTwoObject_RemovesAllObjects)
     test->emptyAll();
 
     // -- Then.
-    ASSERT_EQ(test->length(), 0);
+    ASSERT_EQ(0, test->length());
 }
 
 TEST(Base_Array, InsertAt_InsertingObjectAtTheBeginng_InsertsObjectCorrectly)
@@ -159,7 +159,7 @@ TEST(Base_Array, InsertAt_InsertingObjectAtTheBeginng_InsertsObjectCorrectly)
     test->insertAt(String::stringWith("Test3"), test->begin());
 
     // -- Then.
-    ASSERT_EQ(test->length(), 3);
+    ASSERT_EQ(3, test->length());
     ASSERT_STREQ("Test3", (*test)[0].toUTF8());
     ASSERT_STREQ("Test", (*test)[1].toUTF8());
     ASSERT_STREQ("Test2", (*test)[2].toUTF8());
@@ -176,7 +176,7 @@ TEST(Base_Array, InsertAt_InsertingObjectAtTheEnd_InsertsObjectCorrectly)
     test->insertAt(String::stringWith("Test3"), test->end());
 
     // -- Then.
-    ASSERT_EQ(test->length(), 3);
+    ASSERT_EQ(3, test->length());
     ASSERT_STREQ("Test", (*test)[0].toUTF8());
     ASSERT_STREQ("Test2", (*test)[1].toUTF8());
     ASSERT_STREQ("Test3", (*test)[2].toUTF8());
@@ -193,7 +193,7 @@ TEST(Base_Array, InsertAt_InsertingObjectInTheMiddle_InsertsObjectCorrectly)
     test->insertAt(String::stringWith("Test3"), test->begin() + 1);
 
     // -- Then.
-    ASSERT_EQ(test->length(), 3);
+    ASSERT_EQ(3, test->length());
     ASSERT_STREQ("Test", (*test)[0].toUTF8());
     ASSERT_STREQ("Test3", (*test)[1].toUTF8());
     ASSERT_STREQ("Test2", (*test)[2].toUTF8());
@@ -252,7 +252,7 @@ TEST(Base_Array, Remove_PositionOfObjectInTheMiddle_RemovesObjectCorrectly)
     test->remove(test->begin() + 1);
 
     // -- Then.
-    ASSERT_EQ(test->length(), 2);
+    ASSERT_EQ(2, test->length());
     ASSERT_STREQ("Test", (*test)[0].toUTF8());
     ASSERT_STREQ("Test3", (*test)[1].toUTF8());
 }
@@ -272,7 +272,7 @@ TEST(Base_Array, Remove_ObjectInTheMiddle_RemovesObjectCorrectly)
     test->remove(object2);
 
     // -- Then.
-    ASSERT_EQ(test->length(), 2);
+    ASSERT_EQ(2, test->length());
     ASSERT_STREQ("Test", (*test)[0].toUTF8());
     ASSERT_STREQ("Test3", (*test)[1].toUTF8());
 }

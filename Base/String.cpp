@@ -106,14 +106,7 @@ String::operator const character*()
     return internal->value.c_str();
 }
 
-#pragma mark mark Instance Methods
-
-String::Pointer String::description(void) const
-{
-    return String::stringWith(*this);
-}
-
-boolean String::isEqualTo(const String& other) const
+bool String::operator==(const String& other) const
 {
     if (this == &other) {
         return true;
@@ -122,9 +115,16 @@ boolean String::isEqualTo(const String& other) const
     return internal->value == other.internal->value;
 }
 
-boolean String::isEqualTo(const character* other) const
+bool String::operator==(const char* other) const
 {
     return internal->value == other;
+}
+
+#pragma mark mark Instance Methods
+
+String::Pointer String::description(void) const
+{
+    return String::stringWith(*this);
 }
 
 count String::length(void) const

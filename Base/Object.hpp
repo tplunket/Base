@@ -30,9 +30,12 @@ namespace NxA {
     class String;
 
     class Object : private Uncopyable, public NXA_ENABLE_SHARED_FROM_THIS(Object) {
-        NXA_GENERATED_DECLARATIONS_FOR(NxA, Object);
+        NXA_GENERATED_DECLARATIONS_FOR_OBJECT(NxA, Object);
 
     public:
+        #pragma mark Operators
+        bool operator==(const Object& other) const;
+
         #pragma mark Instance Methods
         virtual NxA::Pointer<NxA::String> description(void) const;
     };

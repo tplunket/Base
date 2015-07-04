@@ -107,7 +107,7 @@ TEST(Base_String, Description_StringWithAValue_ReturnsCorrectValue)
     ASSERT_STREQ(utf8String, test->description()->toUTF8());
 }
 
-TEST(Base_String, IsEqual_TwoEqualStrings_ReturnsTrue)
+TEST(Base_String, OperatorEqual_TwoEqualStrings_ReturnsTrue)
 {
     // -- Given.
     auto test = String::stringWith(utf8String);
@@ -116,10 +116,10 @@ TEST(Base_String, IsEqual_TwoEqualStrings_ReturnsTrue)
     auto test2 = String::stringWith(utf8String);
 
     // -- Then.
-    ASSERT_TRUE(test->isEqualTo(test2));
+    ASSERT_TRUE(test == test2);
 }
 
-TEST(Base_String, IsEqualTo_TwoUnequalStrings_ReturnsFalse)
+TEST(Base_String, OperatorEqual_TwoUnequalStrings_ReturnsFalse)
 {
     // -- Given.
     auto test = String::stringWith(utf8String);
@@ -129,20 +129,20 @@ TEST(Base_String, IsEqualTo_TwoUnequalStrings_ReturnsFalse)
     test2->append("more");
 
     // -- Then.
-    ASSERT_FALSE(test->isEqualTo(test2));
+    ASSERT_FALSE(test == test2);
 }
 
-TEST(Base_String, IsEqualTo_AStringAndAnEqualCharacterPointer_ReturnsTrue)
+TEST(Base_String, OperatorEqual_AStringAndAnEqualCharacterPointer_ReturnsTrue)
 {
     // -- Given.
     // -- When.
     auto test = String::stringWith(utf8String);
 
     // -- Then.
-    ASSERT_TRUE(test->isEqualTo(utf8String));
+    ASSERT_TRUE(*test == utf8String);
 }
 
-TEST(Base_String, IsEqualTo_AStringAndAnUnequalCharacterPointer_ReturnsFalse)
+TEST(Base_String, OperatorEqual_AStringAndAnUnequalCharacterPointer_ReturnsFalse)
 {
     // -- Given.
     // -- When.
@@ -150,7 +150,7 @@ TEST(Base_String, IsEqualTo_AStringAndAnUnequalCharacterPointer_ReturnsFalse)
     test->append("more");
 
     // -- Then.
-    ASSERT_FALSE(test->isEqualTo(utf8String));
+    ASSERT_FALSE(*test == utf8String);
 }
 
 TEST(Base_String, Length_StringWithAValue_ReturnsCorrectValue)
@@ -262,11 +262,11 @@ TEST(Base_String, SplitBySeperator_StringSeperatedBySpacesSpaces_ReturnsCorrectV
 
     // -- Then.
     ASSERT_EQ(result->length(), 5);
-    ASSERT_TRUE((*result)[0].isEqualTo("Hello"));
-    ASSERT_TRUE((*result)[1].isEqualTo("This"));
-    ASSERT_TRUE((*result)[2].isEqualTo("Is"));
-    ASSERT_TRUE((*result)[3].isEqualTo("A"));
-    ASSERT_TRUE((*result)[4].isEqualTo("Test."));
+    ASSERT_EQ("Hello", (*result)[0]);
+    ASSERT_EQ("This", (*result)[1]);
+    ASSERT_EQ("Is", (*result)[2]);
+    ASSERT_EQ("A", (*result)[3]);
+    ASSERT_EQ("Test.", (*result)[4]);
 }
 
 TEST(Base_String, Substring_FromAnIndex_ReturnsCorrectValue)
@@ -278,7 +278,7 @@ TEST(Base_String, Substring_FromAnIndex_ReturnsCorrectValue)
     auto result = test->subString(6);
 
     // -- Then.
-    ASSERT_TRUE(result->isEqualTo("This Is A Test."));
+    ASSERT_EQ("This Is A Test.", *result);
 }
 
 TEST(Base_String, Substring_FromAnIndexAtTheEndOfTheString_ReturnsEmptyString)
@@ -290,7 +290,7 @@ TEST(Base_String, Substring_FromAnIndexAtTheEndOfTheString_ReturnsEmptyString)
     auto result = test->subString(21);
 
     // -- Then.
-    ASSERT_TRUE(result->isEqualTo(""));
+    ASSERT_EQ("", *result);
 }
 
 TEST(Base_String, Substring_FromAnIndexPastTheEndOfTheString_ReturnsEmptyString)
@@ -302,7 +302,7 @@ TEST(Base_String, Substring_FromAnIndexPastTheEndOfTheString_ReturnsEmptyString)
     auto result = test->subString(245);
 
     // -- Then.
-    ASSERT_TRUE(result->isEqualTo(""));
+    ASSERT_EQ("", *result);
 }
 
 TEST(Base_String, Substring_FromAnIndexToAnother_ReturnsCorrectValue)
@@ -314,7 +314,7 @@ TEST(Base_String, Substring_FromAnIndexToAnother_ReturnsCorrectValue)
     auto result = test->subString(6, 10);
 
     // -- Then.
-    ASSERT_TRUE(result->isEqualTo("This"));
+    ASSERT_EQ("This", *result);
 }
 
 TEST(Base_String, Substring_FromAnIndexToAnotherAtTheEndOfTheString_ReturnsCorrectValue)
@@ -326,7 +326,7 @@ TEST(Base_String, Substring_FromAnIndexToAnotherAtTheEndOfTheString_ReturnsCorre
     auto result = test->subString(6, 21);
 
     // -- Then.
-    ASSERT_TRUE(result->isEqualTo("This Is A Test."));
+    ASSERT_EQ("This Is A Test.", *result);
 }
 
 TEST(Base_String, Substring_FromAnIndexToAnotherPastTheEndOfTheString_ReturnsCorrectValue)
@@ -338,7 +338,7 @@ TEST(Base_String, Substring_FromAnIndexToAnotherPastTheEndOfTheString_ReturnsCor
     auto result = test->subString(6, 234);
 
     // -- Then.
-    ASSERT_TRUE(result->isEqualTo("This Is A Test."));
+    ASSERT_EQ("This Is A Test.", result);
 }
 
 TEST(Base_String, Substring_FromAnIndexAndToAnotherBothPastTheEndOfTheString_ReturnsEmptyString)
@@ -350,7 +350,7 @@ TEST(Base_String, Substring_FromAnIndexAndToAnotherBothPastTheEndOfTheString_Ret
     auto result = test->subString(245, 255);
 
     // -- Then.
-    ASSERT_TRUE(result->isEqualTo(""));
+    ASSERT_EQ("", *result);
 }
 
 TEST(Base_String, Substring_FromAnIndexAndToAnotherInInverserOrderTheEndOfTheString_ReturnsEmptyString)

@@ -36,6 +36,14 @@ Object::Object(const Internal::Object::Pointer& initial_internal) : internal(ini
 #endif
 }
 
+#pragma mark Operators
+
+bool Object::operator==(const Object& other) const
+{
+    // -- This should be overridden with a better test.
+    return this == &other;
+}
+
 #pragma mark Instance Methods
 
 String::Pointer Object::description(void) const

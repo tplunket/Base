@@ -164,7 +164,7 @@ TEST(Base_Blob, Data_ConstantBlobIsEmpty_ThrowsAnException)
     ASSERT_THROW(test->data(), NxA::Exception);
 }
 
-TEST(Base_Blob, IsEqualTo_TwoEqualBlobs_ReturnsTrue)
+TEST(Base_Blob, OperatorEqual_TwoEqualBlobs_ReturnsTrue)
 {
     // -- Given.
     auto source = Blob::blobWithMemoryAndSize(testData, sizeof(testData));
@@ -173,10 +173,10 @@ TEST(Base_Blob, IsEqualTo_TwoEqualBlobs_ReturnsTrue)
     auto test = Blob::blobWith(source);
 
     // -- Then.
-    ASSERT_TRUE(test->isEqualTo(source));
+    ASSERT_TRUE(source == test);
 }
 
-TEST(Base_Blob, IsEqualTo_TwoUnequalBlobs_ReturnsFalse)
+TEST(Base_Blob, OperatorEqual_TwoUnequalBlobs_ReturnsFalse)
 {
     // -- Given.
     auto source = Blob::blobWithMemoryAndSize(testData, sizeof(testData));
@@ -185,7 +185,7 @@ TEST(Base_Blob, IsEqualTo_TwoUnequalBlobs_ReturnsFalse)
     auto test = Blob::blob();
 
     // -- Then.
-    ASSERT_FALSE(test->isEqualTo(source));
+    ASSERT_FALSE(source == test);
 }
 
 TEST(Base_Blob, FillWithZeros_ABlobWithContent_FillsTheBlobWithZeros)

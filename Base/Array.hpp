@@ -26,6 +26,7 @@
 #include "Base/WeakPointer.hpp"
 
 #include <vector>
+#include <algorithm>
 
 namespace NxA {
     template <class T> class Array : private std::vector<Pointer<T>>, public std::enable_shared_from_this<Array<T>> {
@@ -73,6 +74,23 @@ namespace NxA {
         {
             return const_cast<T&>((static_cast<const Array<T>&>(*this))[index]);
         }
+        bool operator==(const Array<T>& other) const
+        {
+            if (this == &other) {
+                return true;
+            }
+            else if (this->length() != other.length()) {
+                return false;
+            }
+
+            for (integer i = 0; i < this->length(); ++i) {
+                if ((*this)[i] != other[i]) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
 
         #pragma mark Instance Methods
         iterator begin() noexcept
@@ -108,23 +126,6 @@ namespace NxA {
             return this->std::vector<NxA::Pointer<T>>::cend();
         }
 
-        boolean isEqualTo(const Array<T>& other) const
-        {
-            if (this == &other) {
-                return true;
-            }
-            else if (this->length() != other.length()) {
-                return false;
-            }
-
-            for (integer i = 0; i < this->length(); ++i) {
-                if (!(*this)[i].isEqualTo(other[i])) {
-                    return false;
-                }
-            }
-
-            return true;
-        }
         count length(void) const
         {
             return this->size();
@@ -145,13 +146,7 @@ namespace NxA {
         }
         const_iterator find(const T& object) const
         {
-            for (const_iterator it = this->begin(); it != this->end(); ++it) {
-                if ((*it)->isEqualTo(object)) {
-                    return it;
-                }
-            }
-
-            return this->end();
+            return std::find(this->begin(), this->end(), object);
         }
         void remove(const_iterator objectPosition)
         {

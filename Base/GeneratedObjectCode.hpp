@@ -68,7 +68,7 @@ namespace NxA {
             virtual ~class_name() = default;
 #endif
 
-#define NXA_GENERATED_DECLARATIONS_FOR(namespace_name, class_name) \
+#define NXA_GENERATED_DECLARATIONS_FOR_OBJECT(namespace_name, class_name) \
         friend namespace_name::Internal::class_name; \
         protected: \
             struct class_name ## _constructor_access { }; \
@@ -86,11 +86,22 @@ namespace NxA {
             NxA::Pointer<namespace_name::class_name> pointer(void); \
             NxA::Pointer<const namespace_name::class_name> pointer(void) const; \
             virtual NxA::Pointer<NxA::String> className(void) const; \
-            boolean isEqualTo(const namespace_name::class_name& other) const; \
+            virtual bool operator!=(const namespace_name::class_name& other) const \
+            { \
+                return !this->operator==(other); \
+            } \
         protected: \
             NxA::Pointer<namespace_name::Internal::class_name> internal; \
             static NxA::Pointer<NxA::Internal::Object> makeInternal(void); \
             static NxA::Pointer<class_name> makeSharedWithInternal(const NxA::Pointer<NxA::Internal::Object>& initial_internal);
+
+#define NXA_GENERATED_DECLARATIONS_FOR(namespace_name, class_name) \
+        public: \
+            virtual bool operator==(const NxA::Object& other) const \
+            { \
+                return this->operator==(dynamic_cast<const namespace_name::class_name&>(other)); \
+            } \
+        NXA_GENERATED_DECLARATIONS_FOR_OBJECT(namespace_name, class_name)
 
 #define NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(namespace_name, class_name) \
         friend class namespace_name::class_name; \

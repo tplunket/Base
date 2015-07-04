@@ -43,10 +43,12 @@ namespace NxA {
         #pragma mark Operators
         operator const character*() const;
         operator const character*();
+        bool operator==(const String& other) const;
+        bool operator==(const char* other) const;
+        friend bool operator==(const char* first, const String& second);
 
         #pragma mark Instance Methods
         virtual String::Pointer description(void) const;
-        boolean isEqualTo(const char* other) const;
 
         count length(void) const;
         boolean isEmpty(void) const
@@ -73,4 +75,9 @@ namespace NxA {
         count indexOfFirstOccurenceOf(const character* other) const;
         count indexOfLastOccurenceOf(const character* other) const;
     };
+
+    inline bool operator==(const char* first, const String& second)
+    {
+        return second == first;
+    }
 }

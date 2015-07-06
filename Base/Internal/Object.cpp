@@ -27,9 +27,4 @@ using namespace NxA::Internal;
 
 #pragma mark Constructors & Destructors
 
-Object::Object()
-{
-#if NXA_DEBUG_OBJECT_LIFECYCLE
-    printf("Construct Internal Object at 0x%08lx.\n", (long)this);
-#endif
-}
+Object::Object() { }

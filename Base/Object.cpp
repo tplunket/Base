@@ -29,12 +29,7 @@ using namespace NxA;
 
 #pragma mark Constructors & Destructors
 
-Object::Object(const Internal::Object::Pointer& initial_internal) : internal(initial_internal)
-{
-#if NXA_DEBUG_OBJECT_LIFECYCLE
-    printf("Construct Object at 0x%08lx.\n", (long)this);
-#endif
-}
+Object::Object(const Internal::Object::Pointer& initial_internal) : internal(initial_internal) { }
 
 #pragma mark Operators
 

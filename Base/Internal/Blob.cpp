@@ -159,12 +159,7 @@ using namespace NxA::Internal;
 
 #pragma mark Constructors & Destructors
 
-Internal::Blob::Blob()
-{
-#if NXA_DEBUG_OBJECT_LIFECYCLE
-    printf("Construct Internal Blob at 0x%08lx.\n", (long)this);
-#endif
-}
+Blob::Blob() { }
 
 #pragma mark Class Methods
 

@@ -24,6 +24,7 @@
 #include "Base/Pointer.hpp"
 #include "Base/WeakPointer.hpp"
 #include "Base/Array.hpp"
+#include "Base/Assert.hpp"
 
 #include <memory>
 
@@ -105,6 +106,7 @@ namespace NxA {
         public: \
             virtual bool operator==(const NxA::Object& other) const \
             { \
+                NXA_ASSERT_TRUE(this->className() == other.className()); \
                 return this->operator==(dynamic_cast<const namespace_name::class_name&>(other)); \
             }
 

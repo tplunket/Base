@@ -66,7 +66,7 @@ namespace NxA {
         }
         void setValueForKey(Tvalue& value, const Tkey& key)
         {
-            (*this)[key] = value.pointer().toStdSharedPointer();
+            (*this)[key] = std::shared_ptr<Tvalue>(&value);
         }
 
         iterator begin() noexcept
@@ -101,10 +101,14 @@ namespace NxA {
         {
             return this->std::map<const Tkey, std::shared_ptr<Tvalue>>::cend();
         }
+        void erase(iterator iter) noexcept
+        {
+            this->std::map<const Tkey, std::shared_ptr<Tvalue>>::erase(iter);
+        }
 
         count length(void) const
         {
-            return this->size();
+            return this->std::map<const Tkey, std::shared_ptr<Tvalue>>::size();
         }
 
         boolean containsValueForKey(const Tkey& keyValue) const

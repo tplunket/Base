@@ -29,7 +29,8 @@ using namespace NxA;
 
 #pragma mark Constructors & Destructors
 
-Object::Object(const Internal::Object::Pointer& initial_internal) : internal(initial_internal) { }
+Object::Object(const Internal::Object::Pointer& initial_internal) : internalImplementation(initial_internal),
+                                                                    internal(&(*initial_internal)) { }
 
 #pragma mark Operators
 

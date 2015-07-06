@@ -23,8 +23,6 @@
 
 #include "Base64.hpp"
 
-//NXA_GENERATED_INTERNAL_IMPLEMENTATION_FOR(NxA::Serato, TrackFile);
-
 using namespace NxA;
 using namespace NxA::Serato::Internal;
 

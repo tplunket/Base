@@ -66,7 +66,7 @@ namespace NxA {
         }
         void setValueForKey(Tvalue& value, const Tkey& key)
         {
-            (*this)[key] = std::shared_ptr<Tvalue>(&value);
+            (*this)[key] = value.pointer().toStdSharedPointer();
         }
 
         iterator begin() noexcept

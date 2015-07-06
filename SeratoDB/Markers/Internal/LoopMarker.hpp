@@ -21,10 +21,10 @@
 
 #pragma once
 
+#include "Markers/LoopMarker.hpp"
+
 #include <Base/Base.hpp>
 #include <Base/Internal/Object.hpp>
-
-#include "Markers/LoopMarker.hpp"
 
 namespace NxA { namespace Serato { namespace Internal {
     struct LoopMarker : public NxA::Internal::Object {

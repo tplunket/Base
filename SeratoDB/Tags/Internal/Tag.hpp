@@ -21,10 +21,10 @@
 
 #pragma once
 
+#include "Tags/Tag.hpp"
+
 #include <Base/Base.hpp>
 #include <Base/Internal/Object.hpp>
-
-#include "Tags/Tag.hpp"
 
 namespace NxA { namespace Serato {
     typedef struct {

@@ -21,10 +21,10 @@
 
 #pragma once
 
+#include "Markers/CueMarker.hpp"
+
 #include <Base/Base.hpp>
 #include <Base/Internal/Object.hpp>
-
-#include "Markers/CueMarker.hpp"
 
 namespace NxA { namespace Serato { namespace Internal {
     struct CueMarker : public NxA::Internal::Object {

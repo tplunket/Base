@@ -21,10 +21,10 @@
 
 #pragma once
 
+#include "Markers/GridMarker.hpp"
+
 #include <Base/Base.hpp>
 #include <Base/Internal/Object.hpp>
-
-#include "Markers/GridMarker.hpp"
 
 namespace NxA { namespace Serato { namespace Internal {
     struct GridMarker : public NxA::Internal::Object {

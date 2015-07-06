@@ -21,10 +21,10 @@
 
 #pragma once
 
-#include <Base/Base.hpp>
-
-#include "Tags/Internal/TextTag.hpp"
 #include "Tags/PathTag.hpp"
+#include "Tags/Internal/TextTag.hpp"
+
+#include <Base/Base.hpp>
 
 namespace NxA { namespace Serato { namespace Internal {
     struct PathTag : public TextTag {

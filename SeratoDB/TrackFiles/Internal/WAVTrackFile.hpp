@@ -21,10 +21,10 @@
 
 #pragma once
 
-#include <Base/Base.hpp>
-
 #include "TrackFiles/WAVTrackFile.hpp"
 #include "TrackFiles/Internal/ID3TrackFile.hpp"
+
+#include <Base/Base.hpp>
 
 namespace NxA { namespace Serato { namespace Internal {
     struct WAVTrackFile : public ID3TrackFile {

@@ -21,10 +21,11 @@
 
 #pragma once
 
-#include <Base/Base.hpp>
 #include <Base/Internal/Object.hpp>
 
 #include "TrackFiles/TrackFile.hpp"
+
+#include <Base/Base.hpp>
 
 #include <tag.h>
 #include <tfile.h>

@@ -21,10 +21,10 @@
 
 #pragma once
 
-#include <Base/Base.hpp>
-
-#include "Tags/Internal/Tag.hpp"
 #include "Tags/ObjectTag.hpp"
+#include "Tags/Internal/Tag.hpp"
+
+#include <Base/Base.hpp>
 
 namespace NxA { namespace Serato { namespace Internal {
     using IdentifierToTagMap = Map<uinteger32, Serato::Tag>;

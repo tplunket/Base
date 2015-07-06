@@ -44,5 +44,5 @@ bool Object::operator==(const Object& other) const
 
 String::Pointer Object::description(void) const
 {
-    return String::stringWithFormat("<%s at 0x%08lx>", this->className()->toUTF8(), this);
+    return String::stringWithFormat("<%s at 0x%08lx>", this->className().toUTF8(), this);
 }

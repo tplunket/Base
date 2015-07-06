@@ -89,7 +89,7 @@ namespace NxA {
             using ArrayOfConst = NxA::Array<const namespace_name::class_name>; \
             NxA::Pointer<namespace_name::class_name> pointer(void); \
             NxA::Pointer<const namespace_name::class_name> pointer(void) const; \
-            virtual NxA::Pointer<NxA::String> className(void) const; \
+            virtual const NxA::String& className(void) const; \
             virtual bool operator!=(const namespace_name::class_name& other) const \
             { \
                 return !this->operator==(other); \
@@ -124,9 +124,10 @@ namespace NxA {
             NXA_GENERATED_SHARED_DECLARATIONS_FOR(namespace_name::Internal, class_name)
 
 #define NXA_GENERATED_PURE_VIRTUAL_IMPLEMENTATION_FOR(namespace_name, class_name) \
-        NxA::Pointer<NxA::String> namespace_name::class_name::className(void) const \
+        const NxA::String& namespace_name::class_name::className(void) const \
         { \
-            return NxA::String::stringWith(NXA_STR_VALUE_FOR(namespace_name) "::" NXA_STR_VALUE_FOR(class_name)); \
+            static auto result = NxA::String::stringWith(NXA_STR_VALUE_FOR(namespace_name) "::" NXA_STR_VALUE_FOR(class_name)); \
+            return *result; \
         } \
         NxA::Pointer<namespace_name::class_name> namespace_name::class_name::pointer(void) { \
             std::shared_ptr<namespace_name::class_name> result = std::dynamic_pointer_cast<namespace_name::class_name>(this->shared_from_this()); \

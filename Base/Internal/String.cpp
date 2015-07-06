@@ -23,7 +23,6 @@
 
 NXA_GENERATED_INTERNAL_IMPLEMENTATION_FOR(NxA, String);
 
-using namespace NxA;
 using namespace NxA::Internal;
 
 #pragma mark Constructors & Destructors

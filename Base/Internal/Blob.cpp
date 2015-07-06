@@ -154,7 +154,6 @@ namespace NxA { namespace Internal {
 
 NXA_GENERATED_INTERNAL_IMPLEMENTATION_FOR(NxA, Blob);
 
-using namespace NxA;
 using namespace NxA::Internal;
 
 #pragma mark Constructors & Destructors
@@ -163,11 +162,11 @@ Blob::Blob() { }
 
 #pragma mark Class Methods
 
-NxA::Blob::Pointer Internal::Blob::hashFor(const byte* memory, count size)
+NxA::Blob::Pointer Blob::hashFor(const byte* memory, count size)
 {
     auto result = NxA::Blob::blobWithCapacity(16);
 
-    NxA::Internal::MurmurHash3_x64_128(memory, static_cast<int>(size), 0x23232323, result->data());
+    MurmurHash3_x64_128(memory, static_cast<int>(size), 0x23232323, result->data());
 
     return result;
 }

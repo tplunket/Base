@@ -24,7 +24,7 @@ using namespace NxA::Serato;
 
 OGGTrackFile::Pointer OGGTrackFile::fileWithFileAt(const String& path)
 {
-    auto file = Internal::TagLibFilePointer(std::make_shared<TagLib::Vorbis::File>(path));
+    auto file = Internal::TagLibFilePointer(std::make_shared<TagLib::Vorbis::File>(path.toUTF8()));
     auto internalObject = Internal::OGGTrackFile::Pointer(std::make_shared<Internal::OGGTrackFile>(path, file));
     auto newFile = OGGTrackFile::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
 
@@ -118,22 +118,22 @@ void OGGTrackFile::setKey(const String& key)
 
 void OGGTrackFile::setGrouping(const String& grouping)
 {
-    internal->properties["GROUPING"] = TagLib::String(grouping);
+    internal->properties["GROUPING"] = TagLib::String(grouping.toUTF8());
 }
 
 void OGGTrackFile::setRecordLabel(const String& recordLabel)
 {
-    internal->properties["LABEL"] = TagLib::String(recordLabel);
+    internal->properties["LABEL"] = TagLib::String(recordLabel.toUTF8());
 }
 
 void OGGTrackFile::setRemixer(const String& remixer)
 {
-    internal->properties["REMIXER"] = TagLib::String(remixer);
+    internal->properties["REMIXER"] = TagLib::String(remixer.toUTF8());
 }
 
 void OGGTrackFile::setYearReleased(const String& year)
 {
-    internal->properties["YEAR"] = TagLib::String(year);
+    internal->properties["YEAR"] = TagLib::String(year.toUTF8());
 }
 
 void OGGTrackFile::setArtwork(const Blob& artwork)

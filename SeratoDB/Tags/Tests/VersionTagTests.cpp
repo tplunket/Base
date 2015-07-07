@@ -28,7 +28,7 @@ TEST(SeratoDB_VersionTag, TagWithIdentifierAndValue_TagCreated_TagHasCorrectValu
 
     // -- Then.
     ASSERT_EQ('vtst', tag->identifier());
-    ASSERT_STREQ(*version, tag->value());
+    ASSERT_STREQ(version->toUTF8(), tag->value().toUTF8());
 }
 
 TEST(SeratoDB_VersionTag, TagWithIdentifierAndValue_IncorrectIdentifier_ThrowsException)
@@ -52,7 +52,7 @@ TEST(SeratoDB_VersionTag, TagWithMemoryAt_TagCreated_TagHasCorrectValue)
 
     // -- Then.
     ASSERT_EQ('vtst', tag->identifier());
-    ASSERT_STREQ(*version, tag->value());
+    ASSERT_STREQ(version->toUTF8(), tag->value().toUTF8());
 }
 
 TEST(SeratoDB_VersionTag, TagWithMemoryAt_IncorrectIdentifier_ThrowsException)
@@ -110,7 +110,7 @@ TEST(SeratoDB_VersionTag, SetValue_TagWithAValue_SetsTheValueCorrectly)
 
     // -- Then.
     ASSERT_EQ('vtst', tag->identifier());
-    ASSERT_STREQ(*other, tag->value());
+    ASSERT_STREQ(other->toUTF8(), tag->value().toUTF8());
 }
 
 TEST(SeratoDB_VersionTag, AddTo_TagWrittenToBlob_WriteCorrectData)

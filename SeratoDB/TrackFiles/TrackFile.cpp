@@ -168,46 +168,46 @@ const GridMarker::Array& TrackFile::gridMarkers(void) const
 void TrackFile::setTitle(const String& title)
 {
     if (internal->parsedFileTag) {
-        internal->parsedFileTag->setTitle(TagLib::String(title));
+        internal->parsedFileTag->setTitle(TagLib::String(title.toUTF8()));
     }
 }
 
 void TrackFile::setArtist(const String& artist)
 {
     if (internal->parsedFileTag) {
-        internal->parsedFileTag->setArtist(TagLib::String(artist));
+        internal->parsedFileTag->setArtist(TagLib::String(artist.toUTF8()));
     }
 }
 
 void TrackFile::setGenre(const String& genre)
 {
     if (internal->parsedFileTag) {
-        internal->parsedFileTag->setGenre(TagLib::String(genre));
+        internal->parsedFileTag->setGenre(TagLib::String(genre.toUTF8()));
     }
 }
 
 void TrackFile::setComments(const String& comments)
 {
     if (internal->parsedFileTag) {
-        internal->parsedFileTag->setComment(TagLib::String(comments));
+        internal->parsedFileTag->setComment(TagLib::String(comments.toUTF8()));
     }
 }
 
 void TrackFile::setAlbum(const String& album)
 {
     if (internal->parsedFileTag) {
-        internal->parsedFileTag->setAlbum(TagLib::String(album));
+        internal->parsedFileTag->setAlbum(TagLib::String(album.toUTF8()));
     }
 }
 
 void TrackFile::setComposer(const String& composer)
 {
-    internal->properties["COMPOSER"] = TagLib::String(composer);
+    internal->properties["COMPOSER"] = TagLib::String(composer.toUTF8());
 }
 
 void TrackFile::setBpm(const String& bpm)
 {
-    internal->properties["BPM"] = TagLib::String(bpm);
+    internal->properties["BPM"] = TagLib::String(bpm.toUTF8());
 }
 
 void TrackFile::setTrackNumber(count trackNumber)

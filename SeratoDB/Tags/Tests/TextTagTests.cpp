@@ -28,7 +28,7 @@ TEST(SeratoDB_TextTag, TagWithIdentifierAndValue_TagCreated_TagHasCorrectValue)
 
     // -- Then.
     ASSERT_EQ('ttst', tag->identifier());
-    ASSERT_STREQ(*text, tag->value());
+    ASSERT_STREQ(text->toUTF8(), tag->value().toUTF8());
 }
 
 TEST(SeratoDB_TextTag, TagWithIdentifierAndValue_IncorrectIdentifier_ThrowsException)
@@ -52,7 +52,7 @@ TEST(SeratoDB_TextTag, TagWithMemoryAt_TagCreated_TagHasCorrectValue)
 
     // -- Then.
     ASSERT_EQ('ttst', tag->identifier());
-    ASSERT_STREQ(*text, tag->value());
+    ASSERT_STREQ(text->toUTF8(), tag->value().toUTF8());
 }
 
 TEST(SeratoDB_TextTag, TagWithMemoryAt_IncorrectIdentifier_ThrowsException)
@@ -110,7 +110,7 @@ TEST(SeratoDB_TextTag, SetValue_TagWithAValue_SetsTheValueCorrectly)
 
     // -- Then.
     ASSERT_EQ('ttst', tag->identifier());
-    ASSERT_STREQ(*other, tag->value());
+    ASSERT_STREQ(other->toUTF8(), tag->value().toUTF8());
 }
 
 TEST(SeratoDB_TextTag, AddTo_TagWrittenToBlob_WriteCorrectData)

@@ -68,7 +68,7 @@ String::ArrayOfConst::Pointer CrateOrderFile::cratesInSubCratesDirectory(const S
     DIR *pdir;
     struct dirent *pent;
 
-    pdir = opendir(directory); //"." refers to the current dir
+    pdir = opendir(directory.toUTF8()); //"." refers to the current dir
     if (pdir){
         errno = 0;
         while ((pent = readdir(pdir))){

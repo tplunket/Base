@@ -24,7 +24,7 @@ using namespace NxA::Serato;
 
 AIFFTrackFile::Pointer AIFFTrackFile::fileWithFileAt(const String& path)
 {
-    auto file = Internal::TagLibFilePointer(std::make_shared<TagLib::RIFF::AIFF::File>(path));
+    auto file = Internal::TagLibFilePointer(std::make_shared<TagLib::RIFF::AIFF::File>(path.toUTF8()));
     auto internalObject = Internal::AIFFTrackFile::Pointer(std::make_shared<Internal::AIFFTrackFile>(path, file));
     auto newFile = AIFFTrackFile::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
 

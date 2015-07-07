@@ -24,7 +24,7 @@ using namespace NxA::Serato;
 
 FLACTrackFile::Pointer FLACTrackFile::fileWithFileAt(const String& path)
 {
-    auto file = Internal::TagLibFilePointer(std::make_shared<TagLib::FLAC::File>(path));
+    auto file = Internal::TagLibFilePointer(std::make_shared<TagLib::FLAC::File>(path.toUTF8()));
     auto internalObject = Internal::FLACTrackFile::Pointer(std::make_shared<Internal::FLACTrackFile>(path, file));
     auto newFile = FLACTrackFile::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
 
@@ -133,12 +133,12 @@ Blob::Pointer FLACTrackFile::artwork(void) const
 
 void FLACTrackFile::setKey(const String& key)
 {
-    internal->properties["INITIALKEY"] = TagLib::String(key);
+    internal->properties["INITIALKEY"] = TagLib::String(key.toUTF8());
 }
 
 void FLACTrackFile::setGrouping(const String& grouping)
 {
-    internal->properties["GROUPING"] = TagLib::String(grouping);
+    internal->properties["GROUPING"] = TagLib::String(grouping.toUTF8());
 }
 
 void FLACTrackFile::setRecordLabel(const String& recordLabel)
@@ -153,7 +153,7 @@ void FLACTrackFile::setRemixer(const String& remixer)
 
 void FLACTrackFile::setYearReleased(const String& year)
 {
-    internal->properties["DATE"] = TagLib::String(year);
+    internal->properties["DATE"] = TagLib::String(year.toUTF8());
 }
 
 void FLACTrackFile::setArtwork(const Blob& artwork)

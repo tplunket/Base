@@ -139,7 +139,8 @@ void Crate::loadFromFile(void)
         switch (tag->identifier()) {
             case crateVersionTagIdentifier: {
                 auto& versionTag = dynamic_cast<VersionTag&>(*tag);
-                if (versionTag.value() != crateFileCurrentVersionString) {
+                //if (versionTag.value() != crateFileCurrentVersionString) {
+                if (!(versionTag.value() == crateFileCurrentVersionString)) {
                     internal->otherTags->emptyAll();
                     internal->trackEntries->emptyAll();
                     return;

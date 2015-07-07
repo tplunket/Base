@@ -24,7 +24,7 @@ using namespace NxA::Serato;
 
 WAVTrackFile::Pointer WAVTrackFile::fileWithFileAt(const String& path)
 {
-    auto file = Internal::TagLibFilePointer(std::make_shared<TagLib::RIFF::WAV::File>(path));
+    auto file = Internal::TagLibFilePointer(std::make_shared<TagLib::RIFF::WAV::File>(path.toUTF8()));
     auto internalObject = Internal::WAVTrackFile::Pointer(std::make_shared<Internal::WAVTrackFile>(path, file));
     auto newFile = WAVTrackFile::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
 

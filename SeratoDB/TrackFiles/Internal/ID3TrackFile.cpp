@@ -73,7 +73,7 @@ TagLib::ID3v2::FrameList::Iterator ID3TrackFile::frameInListWithDescription(TagL
             continue;
         }
 
-        if (frame->description() == description) {
+        if (frame->description() == description.toUTF8()) {
             return it;
         }
     }

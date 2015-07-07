@@ -24,7 +24,7 @@ using namespace NxA::Serato;
 
 MP4TrackFile::Pointer MP4TrackFile::fileWithFileAt(const String& path)
 {
-    auto file = Internal::TagLibFilePointer(std::make_shared<TagLib::MP4::File>(path));
+    auto file = Internal::TagLibFilePointer(std::make_shared<TagLib::MP4::File>(path.toUTF8()));
     auto internalObject = Internal::MP4TrackFile::Pointer(std::make_shared<Internal::MP4TrackFile>(path, file));
     auto newFile = MP4TrackFile::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
 
@@ -126,14 +126,14 @@ Blob::Pointer MP4TrackFile::artwork(void) const
 void MP4TrackFile::setKey(const String& key)
 {
     TagLib::StringList newList;
-    newList.append(TagLib::String(key));
+    newList.append(TagLib::String(key.toUTF8()));
     TagLib::MP4::Item newItem(newList);
     (*internal->itemListMap)["----:com.apple.iTunes:initialkey"] = newItem;
 }
 
 void MP4TrackFile::setGrouping(const String& grouping)
 {
-    internal->properties["GROUPING"] = TagLib::String(grouping);
+    internal->properties["GROUPING"] = TagLib::String(grouping.toUTF8());
 }
 
 void MP4TrackFile::setRecordLabel(const String& recordLabel)
@@ -148,7 +148,7 @@ void MP4TrackFile::setRemixer(const String& remixer)
 
 void MP4TrackFile::setYearReleased(const String& year)
 {
-    internal->properties["DATE"] = TagLib::String(year);
+    internal->properties["DATE"] = TagLib::String(year.toUTF8());
 }
 
 void MP4TrackFile::setArtwork(const Blob& artwork)

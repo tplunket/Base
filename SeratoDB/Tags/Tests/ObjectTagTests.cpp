@@ -68,10 +68,10 @@ TEST(SeratoDB_ObjectTag, TagWithIdentifierAndValue_TagCreated_TagHasCorrectValue
     ASSERT_EQ(true, booleanTag.value());
     auto& pathTag = dynamic_cast<const PathTag&>(tag->subTagForIdentifier('ptst'));
     ASSERT_EQ('ptst', pathTag.identifier());
-    ASSERT_STREQ(*path, pathTag.value());
+    ASSERT_STREQ(path->toUTF8(), pathTag.value().toUTF8());
     auto& textTag = dynamic_cast<const TextTag&>(tag->subTagForIdentifier('ttst'));
     ASSERT_EQ('ttst', textTag.identifier());
-    ASSERT_STREQ(*text, textTag.value());
+    ASSERT_STREQ(text->toUTF8(), textTag.value().toUTF8());
     auto& uinteger16Tag = dynamic_cast<const UInteger16Tag&>(tag->subTagForIdentifier('stst'));
     ASSERT_EQ('stst', uinteger16Tag.identifier());
     ASSERT_EQ(0xBEEF, uinteger16Tag.value());
@@ -80,7 +80,7 @@ TEST(SeratoDB_ObjectTag, TagWithIdentifierAndValue_TagCreated_TagHasCorrectValue
     ASSERT_EQ(0xDEADBEEF, uinteger32Tag.value());
     auto& versionTag = dynamic_cast<const VersionTag&>(tag->subTagForIdentifier('vtst'));
     ASSERT_EQ('vtst', versionTag.identifier());
-    ASSERT_STREQ(*version, versionTag.value());
+    ASSERT_STREQ(version->toUTF8(), versionTag.value().toUTF8());
 }
 
 TEST(SeratoDB_ObjectTag, TagWithIdentifierAndValue_IncorrectIdentifier_ThrowsException)
@@ -141,10 +141,10 @@ TEST(SeratoDB_ObjectTag, TagWithMemoryAt_TagCreated_TagHasCorrectValue)
     ASSERT_EQ(true, booleanTag.value());
     auto& pathTag = dynamic_cast<const PathTag&>(tag->subTagForIdentifier('ptst'));
     ASSERT_EQ('ptst', pathTag.identifier());
-    ASSERT_STREQ(*path, pathTag.value());
+    ASSERT_STREQ(path->toUTF8(), pathTag.value().toUTF8());
     auto& textTag = dynamic_cast<const TextTag&>(tag->subTagForIdentifier('ttst'));
     ASSERT_EQ('ttst', textTag.identifier());
-    ASSERT_STREQ(*text, textTag.value());
+    ASSERT_STREQ(text->toUTF8(), textTag.value().toUTF8());
     auto& uinteger16Tag = dynamic_cast<const UInteger16Tag&>(tag->subTagForIdentifier('stst'));
     ASSERT_EQ('stst', uinteger16Tag.identifier());
     ASSERT_EQ(0xBEEF, uinteger16Tag.value());
@@ -153,7 +153,7 @@ TEST(SeratoDB_ObjectTag, TagWithMemoryAt_TagCreated_TagHasCorrectValue)
     ASSERT_EQ(0xDEADBEEF, uinteger32Tag.value());
     auto& versionTag = dynamic_cast<const VersionTag&>(tag->subTagForIdentifier('vtst'));
     ASSERT_EQ('vtst', versionTag.identifier());
-    ASSERT_STREQ(*version, versionTag.value());
+    ASSERT_STREQ(version->toUTF8(), versionTag.value().toUTF8());
 }
 
 TEST(SeratoDB_ObjectTag, TagWithMemoryAt_IncorrectIdentifier_ThrowsException)
@@ -286,7 +286,7 @@ TEST(SeratoDB_ObjectTag, SetSubTag_TagWithExistingSubTagForThatIdentifier_SetsTh
     ASSERT_EQ(false, booleanTag.value());
     auto& pathTag = dynamic_cast<const PathTag&>(tag->subTagForIdentifier('ptst'));
     ASSERT_EQ('ptst', pathTag.identifier());
-    ASSERT_STREQ(*path, pathTag.value());
+    ASSERT_STREQ(path->toUTF8(), pathTag.value().toUTF8());
 }
 
 TEST(SeratoDB_ObjectTag, SetSubTag_TagWithSubTagForANewIdentifier_SetsTheValueCorrectly)
@@ -316,7 +316,7 @@ TEST(SeratoDB_ObjectTag, SetSubTag_TagWithSubTagForANewIdentifier_SetsTheValueCo
     ASSERT_EQ(false, booleanTag.value());
     auto& pathTag = dynamic_cast<const PathTag&>(tag->subTagForIdentifier('ptst'));
     ASSERT_EQ('ptst', pathTag.identifier());
-    ASSERT_STREQ(*path, pathTag.value());
+    ASSERT_STREQ(path->toUTF8(), pathTag.value().toUTF8());
 }
 
 TEST(SeratoDB_ObjectTag, AddTo_TagWrittenToBlob_WriteCorrectData)

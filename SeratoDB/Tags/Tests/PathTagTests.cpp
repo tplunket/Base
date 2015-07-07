@@ -28,7 +28,7 @@ TEST(SeratoDB_PathTag, TagWithIdentifierAndValue_TagCreated_TagHasCorrectValue)
 
     // -- Then.
     ASSERT_EQ('ptst', tag->identifier());
-    ASSERT_STREQ(*path, tag->value());
+    ASSERT_STREQ(path->toUTF8(), tag->value().toUTF8());
 }
 
 TEST(SeratoDB_PathTag, TagWithIdentifierAndValue_IncorrectIdentifier_ThrowsException)
@@ -53,7 +53,7 @@ TEST(SeratoDB_PathTag, TagWithMemoryAt_TagCreated_TagHasCorrectValue)
 
     // -- Then.
     ASSERT_EQ('ptst', tag->identifier());
-    ASSERT_STREQ(*path, tag->value());
+    ASSERT_STREQ(path->toUTF8(), tag->value().toUTF8());
 }
 
 TEST(SeratoDB_PathTag, TagWithMemoryAt_IncorrectIdentifier_ThrowsException)
@@ -112,7 +112,7 @@ TEST(SeratoDB_PathTag, SetValue_TagWithAValue_SetsTheValueCorrectly)
 
     // -- Then.
     ASSERT_EQ('ptst', tag->identifier());
-    ASSERT_STREQ(*other, tag->value());
+    ASSERT_STREQ(other->toUTF8(), tag->value().toUTF8());
 }
 
 TEST(SeratoDB_PathTag, AddTo_TagWrittenToBlob_WriteCorrectData)

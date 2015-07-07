@@ -24,13 +24,18 @@
 #include "Base/Object.hpp"
 #include "Base/Types.hpp"
 
+#include <string>
+
 namespace NxA {
     NXA_GENERATED_FORWARD_DECLARATIONS_FOR(String);
     
     class Blob;
 
-    class String : public Object {
-        NXA_GENERATED_DECLARATIONS_FOR(NxA, String);
+    class String : public Object, private std::string {
+        explicit String() : std::string("") { }
+
+        NXA_GENERATED_SHARED_DECLARATIONS_FOR(NxA, String);
+        NXA_GENERATED_SHARED_DECLARATIONS_FOR_OBJECT2(NxA, String);
 
     public:
         #pragma mark Factory Methods
@@ -41,11 +46,9 @@ namespace NxA {
         static String::Pointer stringWithUTF16(const Blob& other);
 
         #pragma mark Operators
-        operator const character*() const;
-        operator const character*();
         bool operator==(const String& other) const;
         bool operator==(const char* other) const;
-        friend bool operator==(const char* first, const String& second);
+        //friend bool operator==(const char* first, const String& second);
 
         #pragma mark Instance Methods
         virtual String::Pointer description(void) const;

@@ -77,26 +77,6 @@ TEST(Base_String, StringWithUTF16_StringCreatedFromUTF16String_ContainsCorrectVa
     ASSERT_STREQ(utf8String, test->toUTF8());
 }
 
-TEST(Base_String, CharPointerCast_StringFromUTF8_ReturnsCorrectValue)
-{
-    // -- Given.
-    // -- When.
-    auto test = String::stringWith(utf8String);
-
-    // -- Then.
-    ASSERT_STREQ(utf8String, test->operator const character*());
-}
-
-TEST(Base_String, ConstCharPointerCast_StringFromUTF8_ReturnsCorrectValue)
-{
-    // -- Given.
-    // -- When.
-    String::PointerToConst test = String::stringWith(utf8String);
-
-    // -- Then.
-    ASSERT_STREQ(utf8String, test->operator const character*());
-}
-
 TEST(Base_String, Description_StringWithAValue_ReturnsCorrectValue)
 {
     // -- Given.

@@ -22,23 +22,27 @@
 #include "Base/String.hpp"
 #include "Base/Blob.hpp"
 #include "Base/Platform.hpp"
-#include "Base/Internal/String.hpp"
 
 #include <cstdio>
 #include <codecvt>
 #include <locale>
 #include <sstream>
 
-NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA, String, Object);
+NXA_GENERATED_PURE_VIRTUAL_IMPLEMENTATION_FOR(NxA, String);
 
 using namespace NxA;
+
+NxA::Pointer<NxA::String> NxA::String::makeShared(void)
+{
+    return NxA::Pointer<NxA::String>(std::make_shared<NxA::String>(NxA::String::String_constructor_access()));
+}
 
 #pragma mark Factory Methods
 
 String::Pointer String::string(void)
 {
     auto newString = String::makeShared();
-    newString->internal->value = "";
+    newString->std::string::operator=("");
 
     return newString;
 }
@@ -46,7 +50,7 @@ String::Pointer String::string(void)
 String::Pointer String::stringWith(const character* other)
 {
     auto newString = String::makeShared();
-    newString->internal->value = other;
+    newString->std::string::operator=(other);
 
     return newString;
 }
@@ -54,7 +58,7 @@ String::Pointer String::stringWith(const character* other)
 String::Pointer String::stringWith(const String& other)
 {
     auto newString = String::makeShared();
-    newString->internal->value = other.internal->value;
+    newString->std::string::operator=(other);
 
     return newString;
 }
@@ -70,7 +74,7 @@ String::Pointer String::stringWithFormat(const character* format, ...)
     va_end(args);
 
     auto newString = String::makeShared();
-    newString->internal->value = buffer;
+    newString->std::string::operator=(buffer);
 
     return newString;
 }
@@ -89,22 +93,12 @@ String::Pointer String::stringWithUTF16(const Blob& other)
     auto newString = String::makeShared();
 
     std::wstring_convert<std::codecvt_utf8_utf16<char16_t>,char16_t> convert;
-    newString->internal->value = convert.to_bytes(reinterpret_cast<const char16_t*>(characters), reinterpret_cast<const char16_t*>(characters + length));
+    newString->std::string::operator=(convert.to_bytes(reinterpret_cast<const char16_t*>(characters), reinterpret_cast<const char16_t*>(characters + length)));
 
     return newString;
 }
 
 #pragma mark Operators
-
-String::operator const character*() const
-{
-    return internal->value.c_str();
-}
-
-String::operator const character*()
-{
-    return internal->value.c_str();
-}
 
 bool String::operator==(const String& other) const
 {
@@ -112,12 +106,15 @@ bool String::operator==(const String& other) const
         return true;
     }
 
-    return internal->value == other.internal->value;
+    const std::string& stdStringThis = *this;
+    const std::string& stdStringOther = other;
+    return stdStringThis == stdStringOther;
 }
 
 bool String::operator==(const char* other) const
 {
-    return internal->value == other;
+    const std::string& stdStringThis = *this;
+    return stdStringThis == other;
 }
 
 #pragma mark mark Instance Methods
@@ -129,18 +126,18 @@ String::Pointer String::description(void) const
 
 count String::length(void) const
 {
-    return internal->value.size();
+    return this->size();
 }
 
 const character* String::toUTF8(void) const
 {
-    return internal->value.c_str();
+    return this->c_str();
 }
 
 Blob::Pointer String::toUTF16(void) const
 {
     std::wstring_convert<std::codecvt_utf8_utf16<char16_t>,char16_t> convert;
-    std::u16string u16 = convert.from_bytes(internal->value.c_str());
+    std::u16string u16 = convert.from_bytes(this->c_str());
 
     auto newBlob = Blob::blobWithMemoryAndSize(reinterpret_cast<const byte*>(reinterpret_cast<const integer16*>(u16.c_str())),
                                                u16.length() * 2);
@@ -153,12 +150,12 @@ Blob::Pointer String::toUTF16(void) const
 
 void String::append(const String& other)
 {
-    internal->value.append(other);
+    this->std::string::append(other);
 }
 
 void String::append(const character* other)
 {
-    internal->value.append(other);
+    this->std::string::append(other);
 }
 
 String::Array::Pointer String::splitBySeperator(char seperator) const
@@ -187,19 +184,19 @@ String::Pointer String::subString(count start, count end) const
     }
 
     auto newString = String::makeShared();
-    newString->internal->value = internal->value.substr(start, end - start);
+    newString->std::string::operator=(this->substr(start, end - start));
     
     return newString;
 }
 
 boolean String::hasPrefix(const String& prefix) const
 {
-    return this->hasPrefix(prefix.operator const char *());
+    return this->hasPrefix(prefix.toUTF8());
 }
 
 boolean String::hasPostfix(const String& postfix) const
 {
-    size_t pos = internal->value.rfind(postfix);
+    size_t pos = this->rfind(postfix);
     if (pos == std::string::npos) {
         return false;
     }
@@ -209,12 +206,12 @@ boolean String::hasPostfix(const String& postfix) const
 
 boolean String::hasPrefix(const character* prefix) const
 {
-    return internal->value.find(prefix) == 0;
+    return this->find(prefix) == 0;
 }
 
 boolean String::hasPostfix(const character* postfix) const
 {
-    size_t pos = internal->value.rfind(postfix);
+    size_t pos = this->rfind(postfix);
     if (pos == std::string::npos) {
         return false;
     }
@@ -225,17 +222,17 @@ boolean String::hasPostfix(const character* postfix) const
 
 count String::indexOfFirstOccurenceOf(const String& other) const
 {
-    return this->indexOfFirstOccurenceOf(other.operator const character *());
+    return this->indexOfFirstOccurenceOf(other.toUTF8());
 }
 
 count String::indexOfLastOccurenceOf(const String& other) const
 {
-    return this->indexOfLastOccurenceOf(other.operator const character *());
+    return this->indexOfLastOccurenceOf(other.toUTF8());
 }
 
 count String::indexOfFirstOccurenceOf(const char* other) const
 {
-    size_t pos = internal->value.find(other);
+    size_t pos = this->find(other);
     if (pos == std::string::npos) {
         return this->length();
     }
@@ -245,7 +242,7 @@ count String::indexOfFirstOccurenceOf(const char* other) const
 
 count String::indexOfLastOccurenceOf(const char*  other) const
 {
-    size_t pos = internal->value.rfind(other);
+    size_t pos = this->rfind(other);
     if (pos == std::string::npos) {
         return this->length();
     }

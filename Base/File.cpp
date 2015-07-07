@@ -37,7 +37,7 @@ Blob::Pointer File::readFileAt(const String& path)
     if (fileSize) {
         byte* fileData = new byte[fileSize];
         if (fileData) {
-            fstream file(path, ios::in | ios::binary);
+            fstream file(path.toUTF8(), ios::in | ios::binary);
             file.read(reinterpret_cast<char*>(fileData), fileSize);
             file.close();
 
@@ -53,14 +53,14 @@ Blob::Pointer File::readFileAt(const String& path)
 
 void File::writeBlobToFileAt(const Blob& content, const String& path)
 {
-    fstream file(path, ios::out | ios::binary);
+    fstream file(path.toUTF8(), ios::out | ios::binary);
     file.write(reinterpret_cast<const char *>(content.data()), content.size());
     file.close();
 }
 
 void File::deleteFileAt(const String& path)
 {
-    ::remove(path);
+    ::remove(path.toUTF8());
 }
 
 String::Pointer File::joinPaths(const String& first,
@@ -90,13 +90,13 @@ String::Pointer File::removePrefixFromPath(const String& prefix,
 boolean File::fileExistsAt(const String& path)
 {
     struct stat buf;
-    return (::stat(path, &buf) != -1);
+    return (::stat(path.toUTF8(), &buf) != -1);
 }
 
 NxA::count File::sizeOfFileAt(const String& path)
 {
     struct stat buf;
-    if (::stat(path, &buf) == -1) {
+    if (::stat(path.toUTF8(), &buf) == -1) {
         return 0;
     }
 
@@ -106,7 +106,7 @@ NxA::count File::sizeOfFileAt(const String& path)
 timestamp File::modificationDateInSecondsSince1970ForFile(const String& path)
 {
     struct stat buf;
-    if (::stat(path, &buf) == -1) {
+    if (::stat(path.toUTF8(), &buf) == -1) {
         return 0;
     }
 

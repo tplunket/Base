@@ -72,18 +72,23 @@ namespace NxA {
 #define NXA_GENERATED_SHARED_DECLARATIONS_FOR_OBJECT(namespace_name, class_name) \
         NXA_GENERATED_SHARED_DECLARATIONS_FOR(namespace_name, class_name) \
         friend namespace_name::Internal::class_name; \
-        private: \
-            namespace_name::Internal::class_name* internal; \
         protected: \
-            struct class_name ## _constructor_access { }; \
             explicit class_name() : class_name(namespace_name::class_name::makeInternal()) { } \
             explicit class_name(const NxA::Pointer<NxA::Internal::Object>& initial_internal); \
             static NxA::Pointer<NxA::Internal::Object> makeInternal(void); \
+        private: \
+            namespace_name::Internal::class_name* internal; \
+        NXA_GENERATED_SHARED_DECLARATIONS_FOR_OBJECT2(namespace_name, class_name) \
+        public: \
+            explicit class_name(const class_name ## _constructor_access&, const NxA::Pointer<NxA::Internal::Object>& initial_internal) : class_name(initial_internal) { } \
+
+#define NXA_GENERATED_SHARED_DECLARATIONS_FOR_OBJECT2(namespace_name, class_name) \
+        protected: \
+            struct class_name ## _constructor_access { }; \
             static NxA::Pointer<class_name> makeShared(void); \
             static NxA::Pointer<class_name> makeSharedWithInternal(const NxA::Pointer<NxA::Internal::Object>& initial_internal); \
         public: \
             explicit class_name(const class_name ## _constructor_access&) : class_name() { } \
-            explicit class_name(const class_name ## _constructor_access&, const NxA::Pointer<NxA::Internal::Object>& initial_internal) : class_name(initial_internal) { } \
             using WeakPointer = NxA::WeakPointer<namespace_name::class_name>; \
             using WeakPointerToConst = NxA::WeakPointer<namespace_name::class_name>; \
             using Array = NxA::Array<namespace_name::class_name>; \

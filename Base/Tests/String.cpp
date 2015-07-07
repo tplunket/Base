@@ -80,9 +80,9 @@ TEST(Base_String, StringWithUTF16_StringCreatedFromUTF16String_ContainsCorrectVa
 TEST(Base_String, Description_StringWithAValue_ReturnsCorrectValue)
 {
     // -- Given.
-    // -- When.
     auto test = String::stringWith(utf8String);
 
+    // -- When.
     // -- Then.
     ASSERT_STREQ(utf8String, test->description()->toUTF8());
 }
@@ -91,23 +91,44 @@ TEST(Base_String, OperatorEqual_TwoEqualStrings_ReturnsTrue)
 {
     // -- Given.
     auto test = String::stringWith(utf8String);
-
-    // -- When.
     auto test2 = String::stringWith(utf8String);
 
+    // -- When.
     // -- Then.
     ASSERT_TRUE(test == test2);
+}
+
+TEST(Base_String, OperatorNotEqual_TwoUnequalStrings_ReturnsTrue)
+{
+    // -- Given.
+    auto test = String::stringWith(utf8String);
+    auto test2 = String::stringWith(utf8String);
+    test2->append("more");
+
+    // -- When.
+    // -- Then.
+    ASSERT_TRUE(test != test2);
+}
+
+TEST(Base_String, OperatorNotEqual_TwoEqualStrings_ReturnsFalse)
+{
+    // -- Given.
+    auto test = String::stringWith(utf8String);
+    auto test2 = String::stringWith(utf8String);
+
+    // -- When.
+    // -- Then.
+    ASSERT_FALSE(test != test2);
 }
 
 TEST(Base_String, OperatorEqual_TwoUnequalStrings_ReturnsFalse)
 {
     // -- Given.
     auto test = String::stringWith(utf8String);
-
-    // -- When.
     auto test2 = String::stringWith(utf8String);
     test2->append("more");
 
+    // -- When.
     // -- Then.
     ASSERT_FALSE(test == test2);
 }
@@ -115,9 +136,9 @@ TEST(Base_String, OperatorEqual_TwoUnequalStrings_ReturnsFalse)
 TEST(Base_String, OperatorEqual_AStringAndAnEqualCharacterPointer_ReturnsTrue)
 {
     // -- Given.
-    // -- When.
     auto test = String::stringWith(utf8String);
 
+    // -- When.
     // -- Then.
     ASSERT_TRUE(*test == utf8String);
 }
@@ -125,12 +146,75 @@ TEST(Base_String, OperatorEqual_AStringAndAnEqualCharacterPointer_ReturnsTrue)
 TEST(Base_String, OperatorEqual_AStringAndAnUnequalCharacterPointer_ReturnsFalse)
 {
     // -- Given.
-    // -- When.
     auto test = String::stringWith(utf8String);
     test->append("more");
 
+    // -- When.
     // -- Then.
     ASSERT_FALSE(*test == utf8String);
+}
+
+TEST(Base_String, OperatorNotEqual_AStringAndAnEqualCharacterPointer_ReturnsFalse)
+{
+    // -- Given.
+    auto test = String::stringWith(utf8String);
+
+    // -- When.
+    // -- Then.
+    ASSERT_FALSE(*test != utf8String);
+}
+
+TEST(Base_String, OperatorNotEqual_AStringAndAnUnequalCharacterPointer_ReturnsTrue)
+{
+    // -- Given.
+    auto test = String::stringWith(utf8String);
+    test->append("more");
+
+    // -- When.
+    // -- Then.
+    ASSERT_TRUE(*test != utf8String);
+}
+
+TEST(Base_String, OperatorEqual_ACharacterPointerAndAnEqualString_ReturnsTrue)
+{
+    // -- Given.
+    auto test = String::stringWith(utf8String);
+
+    // -- When.
+    // -- Then.
+    ASSERT_TRUE(utf8String == *test);
+}
+
+TEST(Base_String, OperatorEqual_ACharacterPointerAndAnUnequalString_ReturnsFalse)
+{
+    // -- Given.
+    auto test = String::stringWith(utf8String);
+    test->append("more");
+
+    // -- When.
+    // -- Then.
+    ASSERT_FALSE(utf8String == *test);
+}
+
+TEST(Base_String, OperatorNotEqual_ACharacterPointerAndAnEqualString_ReturnsFalse)
+{
+    // -- Given.
+    auto test = String::stringWith(utf8String);
+
+    // -- When.
+    // -- Then.
+    ASSERT_FALSE(utf8String != *test);
+}
+
+TEST(Base_String, OperatorNotEqual_ACharacterPointerAndAnUnequalString_ReturnsTrue)
+{
+    // -- Given.
+    auto test = String::stringWith(utf8String);
+    test->append("more");
+
+    // -- When.
+    // -- Then.
+    ASSERT_TRUE(utf8String != *test);
 }
 
 TEST(Base_String, Length_StringWithAValue_ReturnsCorrectValue)

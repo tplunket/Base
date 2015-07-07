@@ -48,7 +48,7 @@ namespace NxA {
         #pragma mark Operators
         bool operator==(const String& other) const;
         bool operator==(const char* other) const;
-        //friend bool operator==(const char* first, const String& second);
+        bool operator!=(const char* other) const;
 
         #pragma mark Instance Methods
         virtual String::Pointer description(void) const;
@@ -82,5 +82,9 @@ namespace NxA {
     inline bool operator==(const char* first, const String& second)
     {
         return second == first;
+    }
+    inline bool operator!=(const char* first, const String& second)
+    {
+        return second != first;
     }
 }

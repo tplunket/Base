@@ -56,6 +56,14 @@ namespace NxA {
         {
             return *(this->get()) == other;
         }
+        bool operator!=(const Pointer<T>& other) const
+        {
+            return *(this->get()) != *other;
+        }
+        bool operator!=(const T& other) const
+        {
+            return *(this->get()) != other;
+        }
         operator T&() const
         {
             return this->operator*();

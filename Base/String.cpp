@@ -116,6 +116,11 @@ bool String::operator==(const char* other) const
     const std::string& stdStringThis = *this;
     return stdStringThis == other;
 }
+bool String::operator!=(const char* other) const
+{
+    const std::string& stdStringThis = *this;
+    return stdStringThis != other;
+}
 
 #pragma mark mark Instance Methods
 

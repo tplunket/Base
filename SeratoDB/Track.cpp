@@ -34,8 +34,6 @@ Track::Pointer Track::trackWithTagOnVolume(Tag& trackTag, const String& locatedO
 
 #if PRINT_DEBUG_INFO
     Internal::Track::debugPrintComparaison(newTrack, trackFile);
-    Internal::Track::debugPrint(newTrack->internal->stringForSubTagForIdentifier(trackSizeTagIdentifier),
-                                String::stringWith("stringsize"));
 #endif
 
     return newTrack;

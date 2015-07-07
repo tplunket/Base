@@ -48,8 +48,7 @@ Database::Pointer Database::databaseWithFileAt(const String& seratoFolderPath)
             }
             case databaseVersionTagIdentifier: {
                 auto& versionText = dynamic_cast<VersionTag&>(*tag).value();
-                //if (versionText != databaseFileCurrentVersionString) {
-                if (!(versionText == databaseFileCurrentVersionString)) {
+                if (versionText != databaseFileCurrentVersionString) {
                     newDatabase->internal->tracks->emptyAll();
                     newDatabase->internal->otherTags->emptyAll();
                     return newDatabase;

@@ -31,7 +31,7 @@ TrackFile::Pointer TrackFileFactory::trackFileForPath(const String& trackFilePat
     else if (trackFilePath.hasPostfix(".mp3")) {
         return TrackFile::Pointer::dynamicCastFrom(MPEGTrackFile::fileWithFileAt(trackFilePath));
     }
-    else if (trackFilePath.hasPostfix(".m4a")) {
+    else if (trackFilePath.hasPostfix(".m4a") || trackFilePath.hasPostfix(".mp4")) {
         return TrackFile::Pointer::dynamicCastFrom(MP4TrackFile::fileWithFileAt(trackFilePath));
     }
     else if (trackFilePath.hasPostfix(".flac")) {

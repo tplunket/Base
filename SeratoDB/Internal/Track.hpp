@@ -31,7 +31,7 @@
 #include <Base/Base.hpp>
 #include <Base/Internal/Object.hpp>
 
-#define PRINT_DEBUG_INFO        1
+#define PRINT_DEBUG_INFO        0
 
 namespace NxA { namespace Serato { namespace Internal {
     struct Track : public NxA::Internal::Object {

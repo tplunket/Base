@@ -262,7 +262,7 @@ TEST(Base_Blob, Append_TwoBlobsWithContent_AppendTheContentCorrectly)
     ASSERT_EQ(0, ::memcmp(test->data() + sizeof(testData), testData, sizeof(testData)));
 }
 
-TEST(Base_Blob, Append_AnBlobWithContentAndEmptyBlob_AppendTheContentCorrectly)
+TEST(Base_Blob, Append_ABlobWithContentAndEmptyBlob_AppendTheContentCorrectly)
 {
     // -- Given.
     auto test = Blob::blobWithMemoryAndSize(testData, sizeof(testData));

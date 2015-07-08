@@ -17,10 +17,10 @@
 #include <Base/Base.hpp>
 
 namespace NxA { namespace Serato {
-    NXA_GENERATED_FORWARD_DECLARATIONS_FOR(PathTag);
+    NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(PathTag);
 
     class PathTag : public TextTag {
-        NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, PathTag);
+        NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_CLASS(NxA::Serato, PathTag);
 
     public:
         #pragma mark Constructors

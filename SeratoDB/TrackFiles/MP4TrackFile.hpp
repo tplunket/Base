@@ -17,10 +17,10 @@
 #include <Base/Base.hpp>
 
 namespace NxA { namespace Serato {
-    NXA_GENERATED_FORWARD_DECLARATIONS_FOR(MP4TrackFile);
+    NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(MP4TrackFile);
 
     class MP4TrackFile : public TrackFile {
-        NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, MP4TrackFile);
+        NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_CLASS(NxA::Serato, MP4TrackFile);
 
     public:
         #pragma mark Factory Methods

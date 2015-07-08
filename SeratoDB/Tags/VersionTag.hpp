@@ -17,10 +17,10 @@
 #include <Base/Base.hpp>
 
 namespace NxA { namespace Serato {
-    NXA_GENERATED_FORWARD_DECLARATIONS_FOR(VersionTag);
+    NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(VersionTag);
 
     class VersionTag : public TextTag {
-        NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, VersionTag);
+        NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_CLASS(NxA::Serato, VersionTag);
 
     public:
         #pragma mark Factory Methods

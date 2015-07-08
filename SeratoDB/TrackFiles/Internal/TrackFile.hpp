@@ -36,7 +36,7 @@ namespace NxA { namespace Serato { namespace Internal {
     using TagLibFilePointer = NxA::Pointer<TagLib::File>;
 
     struct TrackFile : public NxA::Internal::Object {
-        NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTOR_FOR(NxA::Serato, TrackFile);
+        NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTORS_FOR(NxA::Serato, TrackFile);
 
         #pragma mark Constructor & Destructors
         TrackFile(const String& path, const TagLibFilePointer& newFile);

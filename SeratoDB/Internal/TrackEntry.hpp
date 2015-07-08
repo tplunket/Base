@@ -29,7 +29,7 @@
 
 namespace NxA { namespace Serato { namespace Internal {
     struct TrackEntry : public NxA::Internal::Object {
-        NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTOR_FOR(NxA::Serato, TrackEntry);
+        NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTORS_FOR(NxA::Serato, TrackEntry);
 
         #pragma mark Constructors & Destructors
         TrackEntry(const Serato::Tag& tag,

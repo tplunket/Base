@@ -15,10 +15,10 @@
 #include <Base/Base.hpp>
 
 namespace NxA { namespace Serato {
-    NXA_GENERATED_FORWARD_DECLARATIONS_FOR(CueMarker);
+    NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(CueMarker);
 
     class CueMarker : public Object {
-        NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, CueMarker);
+        NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_CLASS(NxA::Serato, CueMarker);
 
     public:
         #pragma mark Factory Methods

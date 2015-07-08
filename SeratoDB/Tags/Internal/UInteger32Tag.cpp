@@ -21,8 +21,6 @@
 
 #include "Tags/Internal/UInteger32Tag.hpp"
 
-NXA_GENERATED_INTERNAL_IMPLEMENTATION_FOR(NxA::Serato, UInteger32Tag);
-
 using namespace NxA::Serato::Internal;
 
 #pragma mark Constructors & Destructors

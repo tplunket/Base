@@ -15,10 +15,10 @@
 #include <Base/Base.hpp>
 
 namespace NxA { namespace Serato {
-    NXA_GENERATED_FORWARD_DECLARATIONS_FOR(Tag);
+    NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(Tag);
 
     class Tag : public Object {
-        NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, Tag);
+        NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_PURE_VIRTUAL_CLASS(NxA::Serato, Tag);
 
     public:
         #pragma mark Class Methods

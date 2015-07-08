@@ -21,8 +21,6 @@
 
 #include "Tags/Internal/ObjectTag.hpp"
 
-NXA_GENERATED_INTERNAL_IMPLEMENTATION_FOR(NxA::Serato, ObjectTag);
-
 using namespace NxA::Serato::Internal;
 
 #pragma mark Constructors & Destructors

@@ -30,7 +30,7 @@
 
 namespace NxA { namespace Serato { namespace Internal {
     struct Crate : public NxA::Internal::Object {
-        NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTOR_FOR(NxA::Serato, Crate);
+        NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTORS_FOR(NxA::Serato, Crate);
 
         #pragma mark Constructors & Destructors
         Crate(const String& fullName,

@@ -17,12 +17,12 @@
 #include <Base/Base.hpp>
 
 namespace NxA { namespace Serato {
-    NXA_GENERATED_FORWARD_DECLARATIONS_FOR(CrateOrderFile);
+    NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(CrateOrderFile);
 
     class Crate;
 
     class CrateOrderFile : public Object {
-        NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, CrateOrderFile);
+        NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_CLASS(NxA::Serato, CrateOrderFile);
 
     public:
         #pragma mark Factory Methods

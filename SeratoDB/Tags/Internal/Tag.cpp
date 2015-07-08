@@ -21,8 +21,6 @@
 
 #include "Tags/Internal/Tag.hpp"
 
-NXA_GENERATED_INTERNAL_IMPLEMENTATION_FOR(NxA::Serato, Tag);
-
 using namespace NxA;
 using namespace NxA::Serato::Internal;
 

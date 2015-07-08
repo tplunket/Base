@@ -21,8 +21,6 @@
 
 #include "Tags/Internal/TextTag.hpp"
 
-NXA_GENERATED_INTERNAL_IMPLEMENTATION_FOR(NxA::Serato, TextTag);
-
 using namespace NxA::Serato::Internal;
 
 #pragma mark Constructors & Destructors

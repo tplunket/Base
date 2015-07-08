@@ -17,10 +17,10 @@
 #include <Base/Base.hpp>
 
 namespace NxA { namespace Serato {
-    NXA_GENERATED_FORWARD_DECLARATIONS_FOR(AIFFTrackFile);
+    NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(AIFFTrackFile);
 
     class AIFFTrackFile : public ID3TrackFile {
-        NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, AIFFTrackFile);
+        NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_CLASS(NxA::Serato, AIFFTrackFile);
 
     public:
         #pragma mark Factory Methods

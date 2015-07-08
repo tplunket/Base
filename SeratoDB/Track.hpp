@@ -19,12 +19,12 @@
 #include <Base/Base.hpp>
 
 namespace NxA { namespace Serato {
-    NXA_GENERATED_FORWARD_DECLARATIONS_FOR(Track);
+    NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(Track);
 
     class Tag;
 
     class Track : public Object {
-        NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, Track);
+        NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_CLASS(NxA::Serato, Track);
 
     public:
         #pragma mark Factory Methods

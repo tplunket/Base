@@ -31,11 +31,11 @@
 #include <Base/Base.hpp>
 #include <Base/Internal/Object.hpp>
 
-#define PRINT_DEBUG_INFO        0
+#define PRINT_DEBUG_INFO        1
 
 namespace NxA { namespace Serato { namespace Internal {
     struct Track : public NxA::Internal::Object {
-        NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTOR_FOR(NxA::Serato, Track);
+        NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTORS_FOR(NxA::Serato, Track);
 
         #pragma mark Constructors & Destructors
         Track(Serato::Tag& tag,

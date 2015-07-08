@@ -21,8 +21,6 @@
 
 #include "Markers/Internal/LoopMarker.hpp"
 
-NXA_GENERATED_INTERNAL_IMPLEMENTATION_FOR(NxA::Serato, LoopMarker);
-
 using namespace NxA::Serato::Internal;
 
 #pragma mark Constructors & Destructors

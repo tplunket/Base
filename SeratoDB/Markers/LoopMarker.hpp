@@ -15,10 +15,10 @@
 #include <Base/Base.hpp>
 
 namespace NxA { namespace Serato {
-    NXA_GENERATED_FORWARD_DECLARATIONS_FOR(LoopMarker);
+    NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(LoopMarker);
 
     class LoopMarker : public Object {
-        NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, LoopMarker);
+        NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_CLASS(NxA::Serato, LoopMarker);
         
     public:
         #pragma mark Factory Methods

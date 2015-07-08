@@ -21,8 +21,6 @@
 
 #include "Markers/Internal/GridMarker.hpp"
 
-NXA_GENERATED_INTERNAL_IMPLEMENTATION_FOR(NxA::Serato, GridMarker);
-
 using namespace NxA::Serato::Internal;
 
 #pragma mark Constructors & Destructors

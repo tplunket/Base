@@ -17,10 +17,10 @@
 #include <Base/Base.hpp>
 
 namespace NxA { namespace Serato {
-    NXA_GENERATED_FORWARD_DECLARATIONS_FOR(OGGTrackFile);
+    NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(OGGTrackFile);
 
     class OGGTrackFile : public ID3TrackFile {
-        NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, OGGTrackFile);
+        NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_CLASS(NxA::Serato, OGGTrackFile);
 
     public:
         #pragma mark Factory Methods

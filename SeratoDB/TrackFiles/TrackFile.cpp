@@ -16,8 +16,7 @@
 #include <tpropertymap.h>
 #include <generalencapsulatedobjectframe.h>
 
-NXA_GENERATED_PURE_VIRTUAL_IMPLEMENTATION_FOR(NxA::Serato, TrackFile);
-NXA_GENERATED_CONSTRUCTORS_FOR(NxA::Serato, TrackFile, Object);
+NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_PURE_VIRTUAL_CLASS_WITH_PARENT(NxA::Serato, TrackFile, Object);
 
 using namespace NxA;
 using namespace NxA::Serato;

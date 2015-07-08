@@ -13,11 +13,10 @@
 #include "Tags/Tag.hpp"
 #include "Tags/Internal/BlobTag.hpp"
 
+NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_PURE_VIRTUAL_CLASS_WITH_PARENT(NxA::Serato, Tag, Object);
+
 using namespace NxA;
 using namespace NxA::Serato;
-
-NXA_GENERATED_PURE_VIRTUAL_IMPLEMENTATION_FOR(NxA::Serato, Tag);
-NXA_GENERATED_CONSTRUCTORS_FOR(NxA::Serato, Tag, Object);
 
 #pragma mark Class Methods
 

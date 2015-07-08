@@ -33,7 +33,7 @@
 
 namespace NxA { namespace Serato { namespace Internal {
     struct MP4TrackFile : public TrackFile {
-        NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTOR_FOR(NxA::Serato, MP4TrackFile);
+        NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTORS_FOR(NxA::Serato, MP4TrackFile);
 
         #pragma mark Constructor & Destructors
         MP4TrackFile(const String& path, const TagLibFilePointer& newFile);

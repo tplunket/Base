@@ -15,14 +15,14 @@
 #include <Base/Base.hpp>
 
 namespace NxA { namespace Serato {
-    NXA_GENERATED_FORWARD_DECLARATIONS_FOR(Database);
+    NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(Database);
 
     class Crate;
     class Track;
     class TrackEntry;
 
     class Database : public Object {
-        NXA_GENERATED_DECLARATIONS_FOR(NxA::Serato, Database);
+        NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_CLASS(NxA::Serato, Database);
 
     public:
         #pragma mark Factory Methods
@@ -36,8 +36,8 @@ namespace NxA { namespace Serato {
         timestamp rootCrateModificationDateInSecondsSince1970(void) const;
 
         Crate& rootCrate(void) const;
-        const NxA::Array<Track>& tracks(void) const;
-        NxA::Pointer<NxA::Array<Track>> removeAndReturnTracks(void);
+        const NxA::ArrayContainer<Track>& tracks(void) const;
+        NxA::Pointer<NxA::ArrayContainer<Track>> removeAndReturnTracks(void);
 
         void deleteTrackEntry(TrackEntry& trackEntry);
         void deleteCrate(Crate& crate);

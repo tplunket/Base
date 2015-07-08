@@ -21,47 +21,23 @@
 
 #pragma once
 
-#include "Base/Types.hpp"
-#include "Base/Pointer.hpp"
-#include "Base/WeakPointer.hpp"
+#include "Base/Object.hpp"
 
 #include <vector>
 #include <algorithm>
 
 namespace NxA {
-    template <class T> class Array : private std::vector<Pointer<T>>, public std::enable_shared_from_this<Array<T>> {
+    template <class T> class ArrayContainer : public Object, private std::vector<Pointer<T>> {
+        NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_BASE_CLASS(NxA, ArrayContainer<T>);
+
     public:
-        using Pointer = NxA::Pointer<Array>;
-        using PointerToConst = NxA::Pointer<const Array>;
-        using WeakPointer = NxA::WeakPointer<Array>;
-        using WeakPointerToConst = NxA::WeakPointer<const Array>;
         using iterator = typename std::vector<NxA::Pointer<T>>::iterator;
         using const_iterator = typename std::vector<NxA::Pointer<T>>::const_iterator;
-        NxA::Pointer<Array<T>> pointer(void) {
-            std::shared_ptr<Array<T>> result = std::dynamic_pointer_cast<Array<T>>(this->shared_from_this());
-            NXA_ASSERT_NOT_NULL(result.get());
-            return NxA::Pointer<Array<T>>(result);
-        }
-        NxA::Pointer<const Array<T>> pointerToConst(void) const {
-            std::shared_ptr<const Array<T>> result = std::dynamic_pointer_cast<const Array<T>>(this->shared_from_this());
-            NXA_ASSERT_NOT_NULL(result.get());
-            return NxA::Pointer<const Array<T>>(result);
-        }
-
-    protected:
-        struct constructor_access { };
-
-        #pragma mark Constructors & Destructors
-        Array() { }
-
-    public:
-        #pragma mark Constructors & Destructors
-        explicit Array(const constructor_access&) : Array() { };
 
         #pragma mark Factory Methods
-        static Array::Pointer array(void)
+        static ArrayContainer::Pointer array(void)
         {
-            return Array::Pointer(std::make_shared<Array>(Array::constructor_access()));
+            return ArrayContainer<T>::makeShared();
         }
 
         #pragma mark Operators
@@ -72,9 +48,9 @@ namespace NxA {
         }
         T& operator[] (integer index)
         {
-            return const_cast<T&>((static_cast<const Array<T>&>(*this))[index]);
+            return const_cast<T&>((static_cast<const ArrayContainer<T>&>(*this))[index]);
         }
-        bool operator==(const Array<T>& other) const
+        bool operator==(const ArrayContainer<T>& other) const
         {
             if (this == &other) {
                 return true;

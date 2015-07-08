@@ -25,8 +25,6 @@
 #include "Base/Object.hpp"
 
 namespace NxA { namespace Internal {
-    NXA_GENERATED_FORWARD_DECLARATIONS_FOR(Object);
-
     struct Object : private Uncopyable {
         NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA, Object);
     };

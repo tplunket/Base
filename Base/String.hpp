@@ -23,19 +23,15 @@
 
 #include "Base/Object.hpp"
 #include "Base/Types.hpp"
+#include "Base/ArrayContainer.hpp"
 
 #include <string>
 
 namespace NxA {
-    NXA_GENERATED_FORWARD_DECLARATIONS_FOR(String);
-    
     class Blob;
 
     class String : public Object, private std::string {
-        explicit String() : std::string("") { }
-
-        NXA_GENERATED_SHARED_DECLARATIONS_FOR(NxA, String);
-        NXA_GENERATED_SHARED_DECLARATIONS_FOR_OBJECT2(NxA, String);
+        NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_BASE_CLASS(NxA, String);
 
     public:
         #pragma mark Factory Methods

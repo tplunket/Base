@@ -23,14 +23,9 @@
 #include "Base/String.hpp"
 #include "Base/Internal/Object.hpp"
 
-NXA_GENERATED_FACTORY_METHODS_FOR(NxA, Object);
+NXA_GENERATED_OBJECT_IMPLEMENTATION_FOR(NxA, Object);
 
 using namespace NxA;
-
-#pragma mark Constructors & Destructors
-
-Object::Object(const Internal::Object::Pointer& initial_internal) : internalImplementation(initial_internal),
-                                                                    internal(&(*initial_internal)) { }
 
 #pragma mark Operators
 
@@ -44,5 +39,5 @@ bool Object::operator==(const Object& other) const
 
 String::Pointer Object::description(void) const
 {
-    return String::stringWithFormat("<%s at 0x%08lx>", this->className().toUTF8(), this);
+    return String::stringWithFormat("<%s at 0x%08lx>", this->className(), this);
 }

@@ -29,7 +29,7 @@
 #include "Base/Uncopyable.hpp"
 #include "Base/Object.hpp"
 #include "Base/String.hpp"
-#include "Base/Array.hpp"
+#include "Base/ArrayContainer.hpp"
 #include "Base/Map.hpp"
 #include "Base/Blob.hpp"
 #include "Base/File.hpp"

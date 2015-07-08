@@ -25,10 +25,8 @@
 #include "Base/Object.hpp"
 
 namespace NxA {
-    NXA_GENERATED_FORWARD_DECLARATIONS_FOR(Blob);
-
-    class Blob : public Object {
-        NXA_GENERATED_DECLARATIONS_FOR(NxA, Blob);
+    class Blob : public Object, private std::vector<byte> {
+        NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_BASE_CLASS(NxA, Blob);
 
     public:
         #pragma mark Factory Methods

@@ -28,25 +28,15 @@
 #include <map>
 
 namespace NxA {
-    template <class Tkey, class Tvalue> class Map : private std::map<const Tkey, std::shared_ptr<Tvalue>> {
-    protected:
-        struct constructor_access { };
-
-        #pragma mark Constructors & Destructors
-        Map() { }
+    template <class Tkey, class Tvalue> class Map : public Object, private std::map<const Tkey, std::shared_ptr<Tvalue>> {
+        NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_BASE_CLASS(NxA, Map<Tkey, Tvalue>);
 
     public:
-        using Pointer = NxA::Pointer<Map<Tkey, Tvalue>>;
-        using PointerToConst = NxA::Pointer<const Map<Tkey, Tvalue>>;
-        using WeakPointer = NxA::WeakPointer<Map<Tkey, Tvalue>>;
         using iterator = typename std::map<const Tkey, std::shared_ptr<Tvalue>>::iterator;
         using const_iterator = typename std::map<const Tkey, std::shared_ptr<Tvalue>>::const_iterator;
-
-        #pragma mark Constructors & Destructors
-        explicit Map(const constructor_access&) : Map() { };
-
+        
         #pragma mark Factory Methods
-        static Map::Pointer map(void)
+        static NxA::Pointer<Map<Tkey, Tvalue>>  map(void)
         {
             return Map::Pointer(std::make_shared<Map>(Map::constructor_access()));
         }

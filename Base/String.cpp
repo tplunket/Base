@@ -28,14 +28,7 @@
 #include <locale>
 #include <sstream>
 
-NXA_GENERATED_PURE_VIRTUAL_IMPLEMENTATION_FOR(NxA, String);
-
 using namespace NxA;
-
-NxA::Pointer<NxA::String> NxA::String::makeShared(void)
-{
-    return NxA::Pointer<NxA::String>(std::make_shared<NxA::String>(NxA::String::String_constructor_access()));
-}
 
 #pragma mark Factory Methods
 

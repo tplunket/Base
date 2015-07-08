@@ -21,8 +21,6 @@
 
 #include "Base/Internal/Object.hpp"
 
-NXA_GENERATED_INTERNAL_IMPLEMENTATION_FOR(NxA, Object);
-
 using namespace NxA::Internal;
 
 #pragma mark Constructors & Destructors

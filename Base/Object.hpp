@@ -25,12 +25,12 @@
 #include "Base/GeneratedObjectCode.hpp"
 
 namespace NxA {
-    NXA_GENERATED_FORWARD_DECLARATIONS_FOR(Object);
+    NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(Object);
 
     class String;
 
     class Object : private Uncopyable, public NXA_ENABLE_SHARED_FROM_THIS(Object) {
-        NXA_GENERATED_DECLARATIONS_FOR_OBJECT(NxA, Object);
+        NXA_GENERATED_OBJECT_DECLARATIONS_FOR(NxA, Object);
 
     public:
         #pragma mark Operators

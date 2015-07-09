@@ -38,6 +38,8 @@ namespace NxA {
     using integer16 = int16_t;
     using uinteger32 = uint32_t;
     using integer32 = int32_t;
+    using uinteger64 = uint64_t;
+    using integer64 = int64_t;
 
     using byte = uint8_t;
     using character = char;
@@ -76,6 +78,8 @@ namespace NxA {
     NXA_SPECIALIZE_TYPENAME_FOR_TYPE(integer16);
     NXA_SPECIALIZE_TYPENAME_FOR_TYPE(uinteger32);
     NXA_SPECIALIZE_TYPENAME_FOR_TYPE(integer32);
+    NXA_SPECIALIZE_TYPENAME_FOR_TYPE(uinteger64);
+    NXA_SPECIALIZE_TYPENAME_FOR_TYPE(integer64);
 
     NXA_SPECIALIZE_TYPENAME_FOR_TYPE(byte);
     NXA_SPECIALIZE_TYPENAME_FOR_TYPE(character);

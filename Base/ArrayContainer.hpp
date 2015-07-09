@@ -25,6 +25,8 @@
 
 #include <vector>
 #include <algorithm>
+#include <memory>
+#include <mutex>
 
 namespace NxA {
     template <class T> class ArrayContainer : public Object, private std::vector<Pointer<T>> {
@@ -38,6 +40,26 @@ namespace NxA {
         static ArrayContainer::Pointer array(void)
         {
             return ArrayContainer<T>::makeShared();
+        }
+
+        #pragma mark Class Methods
+        static const character* nameOfClass(void)
+        {
+            static std::mutex m;
+            static std::unique_ptr<character[]> buffer;
+
+            m.lock();
+
+            if (!buffer.get()) {
+                const character *format = "NxA::Array<%s>";
+                count needed = snprintf(NULL, 0, format, T::nameOfClass()) + 1;
+                buffer = std::make_unique<character[]>(needed);
+                snprintf(buffer.get(), needed, format, T::nameOfClass());
+            }
+
+            m.unlock();
+
+            return buffer.get();
         }
 
         #pragma mark Operators

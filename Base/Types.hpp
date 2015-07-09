@@ -23,8 +23,10 @@
 
 #include <cstdint>
 #include <memory>
+#include <typeinfo>
 
 namespace NxA {
+    // -- Types used by the codebase.
     using boolean = bool;
     
     using uinteger = uint32_t;
@@ -45,4 +47,42 @@ namespace NxA {
     using timestamp = time_t;
 
     using decimal = double;
+
+    // -- Template used by default to produce the name of unknown types.
+    template <typename T> struct TypeName
+    {
+        static const character* get()
+        {
+            return typeid(T).name();
+        }
+    };
+
+    // -- Specialization for each type we support.
+    #define NXA_STR_VALUE_FOR_TYPE(arg...) #arg
+
+    #define NXA_SPECIALIZE_TYPENAME_FOR_TYPE(name) \
+        template <> struct TypeName<name> \
+        { \
+            static const character* get() \
+            { \
+                return NXA_STR_VALUE_FOR_TYPE(name); \
+            } \
+        };
+
+    NXA_SPECIALIZE_TYPENAME_FOR_TYPE(boolean);
+
+    NXA_SPECIALIZE_TYPENAME_FOR_TYPE(integer8);
+    NXA_SPECIALIZE_TYPENAME_FOR_TYPE(uinteger16);
+    NXA_SPECIALIZE_TYPENAME_FOR_TYPE(integer16);
+    NXA_SPECIALIZE_TYPENAME_FOR_TYPE(uinteger32);
+    NXA_SPECIALIZE_TYPENAME_FOR_TYPE(integer32);
+
+    NXA_SPECIALIZE_TYPENAME_FOR_TYPE(byte);
+    NXA_SPECIALIZE_TYPENAME_FOR_TYPE(character);
+
+    NXA_SPECIALIZE_TYPENAME_FOR_TYPE(count);
+
+    NXA_SPECIALIZE_TYPENAME_FOR_TYPE(timestamp);
+
+    NXA_SPECIALIZE_TYPENAME_FOR_TYPE(decimal);
 }

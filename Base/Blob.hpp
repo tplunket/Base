@@ -36,6 +36,11 @@ namespace NxA {
         static Blob::Pointer blobWith(const Blob& other);
 
         #pragma mark Class Methods
+        static const character* nameOfClass(void)
+        {
+            return "NxA::Blob";
+        }
+
         static Blob::Pointer hashFor(const byte* memory, count size);
 
         #pragma mark Operators

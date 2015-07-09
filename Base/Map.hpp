@@ -26,6 +26,7 @@
 #include "Base/WeakPointer.hpp"
 
 #include <map>
+#include <mutex>
 
 namespace NxA {
     template <class Tkey, class Tvalue> class Map : public Object, private std::map<const Tkey, std::shared_ptr<Tvalue>> {
@@ -39,6 +40,26 @@ namespace NxA {
         static NxA::Pointer<Map<Tkey, Tvalue>>  map(void)
         {
             return Map::Pointer(std::make_shared<Map>(Map::constructor_access()));
+        }
+
+        #pragma mark Class Methods
+        static const character* nameOfClass(void)
+        {
+            static std::mutex m;
+            static std::unique_ptr<character[]> buffer;
+
+            m.lock();
+
+            if (!buffer.get()) {
+                const character *format = "NxA::Map<%s, %s>";
+                count needed = snprintf(NULL, 0, format, TypeName<Tkey>::get(), Tvalue::nameOfClass()) + 1;
+                buffer = std::make_unique<character[]>(needed);
+                snprintf(buffer.get(), needed, format, TypeName<Tkey>::get(), Tvalue::nameOfClass());
+            }
+
+            m.unlock();
+
+            return buffer.get();
         }
 
         #pragma mark Instance Methods

@@ -34,6 +34,12 @@ namespace NxA {
 
     public:
         #pragma mark Operators
+        static const character* nameOfClass(void)
+        {
+            return "NxA::Object";
+        }
+
+        #pragma mark Operators
         bool operator==(const Object& other) const;
 
         #pragma mark Instance Methods

@@ -41,6 +41,12 @@ namespace NxA {
         static String::Pointer stringWithFormat(const character* format, ...);
         static String::Pointer stringWithUTF16(const Blob& other);
 
+        #pragma mark Class Methods
+        static const character* nameOfClass(void)
+        {
+            return "NxA::String";
+        }
+        
         #pragma mark Operators
         bool operator==(const String& other) const;
         bool operator==(const char* other) const;

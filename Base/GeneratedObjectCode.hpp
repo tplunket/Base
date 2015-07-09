@@ -118,7 +118,7 @@ namespace NxA {
             } \
             virtual const character* className(void) const \
             { \
-                return NXA_STR_VALUE_FOR(namespace_name) "::" NXA_STR_VALUE_FOR(class_name); \
+                return namespace_name::class_name::nameOfClass(); \
             } \
             bool operator!=(const namespace_name::class_name& other) const \
             { \
@@ -161,6 +161,10 @@ namespace NxA {
         NXA_GENERATED_SHARED_OBJECT_CONSTRUCTORS_DECLARATION_FOR(namespace_name, class_name) \
         public: \
             friend namespace_name::Internal::class_name; \
+            static const character* nameOfClass(void) \
+            { \
+                return NXA_STR_VALUE_FOR(namespace_name) "::" NXA_STR_VALUE_FOR(class_name); \
+            } \
         protected: \
             static NxA::Pointer<NxA::Internal::Object> makeInternal(void); \
         private: \

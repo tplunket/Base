@@ -87,8 +87,8 @@ namespace NxA {
         public: \
             virtual bool operator==(const NxA::Object& other) const \
             { \
-                NXA_ASSERT_EQ(this->className(), other.className()); \
-                return this->operator==(dynamic_cast<const namespace_name::class_name&>(other)); \
+                return (this->className() == other.className()) && \
+                       this->operator==(dynamic_cast<const namespace_name::class_name&>(other)); \
             } \
             bool operator!=(const NxA::Object& other) const \
             { \

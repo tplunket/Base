@@ -43,6 +43,32 @@ static const byte utf16String[] = {
 
 static const character *utf8String = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
 
+TEST(Base_String, ClassName_AString_ClassNameIsReturnedCorrectly)
+{
+    // -- Given.
+    auto test = String::string();
+
+    // -- When.
+    auto name = test->className();
+
+    // -- Then.
+    ASSERT_STREQ("NxA::String", name);
+}
+
+TEST(Base_String, ClassName_TwoStrings_ClassNameIsActuallyTheSamePointer)
+{
+    // -- Given.
+    auto test = String::string();
+    auto other = String::string();
+
+    // -- When.
+    auto name = test->className();
+    auto otherName = other->className();
+
+    // -- Then.
+    ASSERT_EQ(otherName, name);
+}
+
 TEST(Base_String, StringContructorAndToUTF8_StringCreatedFromCharPointer_ToUTF8ReturnsCorrectValue)
 {
     // -- Given.

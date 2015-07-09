@@ -32,6 +32,32 @@ using TestMapClass = Map<uinteger32, String>;
 static const auto testString = String::stringWith("Test String");
 static const auto otherString = String::stringWith("Other String");
 
+TEST(Base_Map, ClassName_MapOfUInteger32AndMapOfBytesAndArrayOfStrings_ClassNameIsReturnedCorrectly)
+{
+    // -- Given.
+    auto test = Map<uinteger32, Map<byte, String::Array>>::map();
+
+    // -- When.
+    auto name = test->className();
+
+    // -- Then.
+    ASSERT_STREQ("NxA::Map<uinteger32, NxA::Map<byte, NxA::Array<NxA::String>>>", name);
+}
+
+TEST(Base_Map, ClassName_TwoMapsOfUInteger32AndMapOfBytesAndArrayOfStrings_ClassNameIsActuallyTheSamePointer)
+{
+    // -- Given.
+    auto test = Map<uinteger32, Map<byte, String::Array>>::map();
+    auto other = Map<uinteger32, Map<byte, String::Array>>::map();
+
+    // -- When.
+    auto name = test->className();
+    auto otherName = other->className();
+
+    // -- Then.
+    ASSERT_EQ(otherName, name);
+}
+
 TEST(Base_Map, SetValueForKey_ValueFromAPointer_SetsCorrectValue)
 {
     // -- Given.

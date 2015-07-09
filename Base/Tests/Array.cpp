@@ -27,6 +27,32 @@ using namespace NxA;
 
 NXA_CONTAINS_TEST_SUITE_NAMED(Base_Array_Tests);
 
+TEST(Base_Array, ClassName_ArrayOfStrings_ClassNameIsReturnedCorrectly)
+{
+    // -- Given.
+    auto test = String::Array::array();
+
+    // -- When.
+    auto name = test->className();
+
+    // -- Then.
+    ASSERT_STREQ("NxA::Array<NxA::String>", name);
+}
+
+TEST(Base_Array, ClassName_TwoArraysOfStrings_ClassNameIsActuallyTheSamePointer)
+{
+    // -- Given.
+    auto test = String::Array::array();
+    auto other = String::Array::array();
+
+    // -- When.
+    auto name = test->className();
+    auto otherName = other->className();
+
+    // -- Then.
+    ASSERT_EQ(otherName, name);
+}
+
 TEST(Base_Array, OperatorSquareBrackets_AccessOnConstantArray_ReturnsCorrectValue)
 {
     // -- Given.

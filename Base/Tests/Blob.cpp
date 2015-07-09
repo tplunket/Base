@@ -46,6 +46,32 @@ static const byte testData[] = {
 
 NXA_CONTAINS_TEST_SUITE_NAMED(Base_Blob_Tests);
 
+TEST(Base_Blob, ClassName_ABlob_ClassNameIsReturnedCorrectly)
+{
+    // -- Given.
+    auto test = Blob::blob();
+
+    // -- When.
+    auto name = test->className();
+
+    // -- Then.
+    ASSERT_STREQ("NxA::Blob", name);
+}
+
+TEST(Base_Blob, ClassName_TwoBlobs_ClassNameIsActuallyTheSamePointer)
+{
+    // -- Given.
+    auto test = Blob::blob();
+    auto other = Blob::blob();
+
+    // -- When.
+    auto name = test->className();
+    auto otherName = other->className();
+
+    // -- Then.
+    ASSERT_EQ(otherName, name);
+}
+
 TEST(Base_Blob, Blob_BlobCreatedEmpty_BlobCreatedCorrectly)
 {
     // -- Given.

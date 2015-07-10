@@ -29,8 +29,8 @@ namespace NxA {
     // -- Types used by the codebase.
     using boolean = bool;
     
-    using uinteger = uint32_t;
-    using integer = int32_t;
+    using uinteger = unsigned int;
+    using integer = int;
 
     using uinteger8 = uint8_t;
     using integer8 = int8_t;
@@ -72,6 +72,9 @@ namespace NxA {
         };
 
     NXA_SPECIALIZE_TYPENAME_FOR_TYPE(boolean);
+
+    // -- Placeholder for NXA_SPECIALIZE_TYPENAME_FOR_TYPE(uinteger) which is the same specialization as uinteger32 on OSX;
+    // -- Placeholder for NXA_SPECIALIZE_TYPENAME_FOR_TYPE(integer) which is the same specialization as uinteger32 on OSX;
 
     NXA_SPECIALIZE_TYPENAME_FOR_TYPE(integer8);
     NXA_SPECIALIZE_TYPENAME_FOR_TYPE(uinteger16);

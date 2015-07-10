@@ -120,7 +120,7 @@ void LoopMarker::addId3TagTo(Blob& data) const
     Platform::writeBigEndianUInteger16ValueAt(this->index(), header.index);
     Platform::writeBigEndianUInteger32ValueAt(this->startPositionInMilliseconds(), header.position);
     Platform::writeBigEndianUInteger32ValueAt(this->endPositionInMilliseconds(), header.loopPosition);
-    Platform::writeBigEndianUInteger32ValueAt(0, header.loopIterations);
+    Platform::writeBigEndianUInteger32ValueAt(0xFFFFFFFF, header.loopIterations);
     Platform::writeBigEndianUInteger32ValueAt(0, header.color);
     header.loop_enabled = 0;
     header.loop_locked = 0;

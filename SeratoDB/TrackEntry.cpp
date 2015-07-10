@@ -31,8 +31,7 @@ TrackEntry::Pointer TrackEntry::entryWithTagOnVolume(const Tag& tag,
     return newTrackEntry;
 }
 
-TrackEntry::Pointer TrackEntry::entryWithTrackFileAtOnVolume(const String& path,
-                                                             const String& volumePath)
+TrackEntry::Pointer TrackEntry::entryWithTrackFileAtOnVolume(const String& path, const String& volumePath)
 {
     auto entryPath = File::removePrefixFromPath(volumePath, path);
 

@@ -33,9 +33,7 @@ namespace NxA { namespace Serato { namespace Internal {
         NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTORS_FOR(NxA::Serato, Crate);
 
         #pragma mark Constructors & Destructors
-        Crate(const String& fullName,
-              const String& volumePath,
-              const String& filePath);
+        Crate(const String& fullName, const String& volumePath, const String& filePath);
 
         #pragma mark Instance Variables
         String::PointerToConst crateName;

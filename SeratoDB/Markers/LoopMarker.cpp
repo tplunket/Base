@@ -44,6 +44,8 @@ LoopMarker::Pointer LoopMarker::markerWithMemoryAt(const byte* id3TagStart)
 {
     const SeratoLoopTagStruct* tagStruct = reinterpret_cast<const SeratoLoopTagStruct*>(id3TagStart);
 
+    NXA_ASSERT_TRUE(*String::stringWith(reinterpret_cast<const character*>(tagStruct->tag)) == "LOOP");
+
     return LoopMarker::markerWithLabelStartEndPositionsAndIndex(String::stringWith(reinterpret_cast<const character*>(tagStruct->label)),
                                                                 Platform::bigEndianUInteger32ValueAt(tagStruct->position),
                                                                 Platform::bigEndianUInteger32ValueAt(tagStruct->loopPosition),

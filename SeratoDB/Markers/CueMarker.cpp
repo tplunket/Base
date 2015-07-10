@@ -42,6 +42,8 @@ CueMarker::Pointer CueMarker::markerWithMemoryAt(const byte* id3TagStart)
 {
     auto tagStruct = reinterpret_cast<const SeratoCueTagStruct*>(id3TagStart);
 
+    NXA_ASSERT_TRUE(*String::stringWith(reinterpret_cast<const character*>(tagStruct->tag)) == "CUE");
+
     return CueMarker::markerWithLabelPositionAndIndex(String::stringWith(reinterpret_cast<const character*>(tagStruct->label)),
                                                       Platform::bigEndianUInteger32ValueAt(tagStruct->position),
                                                       Platform::bigEndianUInteger16ValueAt(tagStruct->index));

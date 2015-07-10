@@ -18,16 +18,6 @@
 #include <vector>
 
 namespace NxA { namespace Serato {
-    #pragma mark Containers
-    typedef std::unique_ptr<const std::string> ConstStringPtr;
-    typedef std::unique_ptr<std::string> StringPtr;
-    typedef std::vector<StringPtr> StringVector;
-    typedef std::unique_ptr<StringVector> StringVectorPtr;
-    typedef std::vector<char> CharVector;
-    typedef std::unique_ptr<CharVector> CharVectorPtr;
-    typedef std::unique_ptr<const CharVector> ConstCharVectorPtr;
-    typedef std::vector<CharVectorPtr> CharVectorPtrVector;
-
     #pragma mark Utility Functions
     String::Pointer seratoFolderPathForFolder(const String& folderPath);
     String::Pointer databaseFilePathForSeratoFolder(const String& seratoFolderPath);

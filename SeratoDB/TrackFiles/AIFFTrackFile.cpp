@@ -60,12 +60,13 @@ uinteger32 AIFFTrackFile::lengthInMilliseconds(void) const
     return 0;
 }
 
-uinteger32 AIFFTrackFile::bitDepthInBitsOrZeroIfNotApplicable(void) const
+boolean AIFFTrackFile::hasBitDepth(void) const
 {
-    if (internal->audioProperties) {
-        auto audioProperties = reinterpret_cast<const TagLib::RIFF::AIFF::Properties*>(internal->audioProperties);
-        return audioProperties->sampleWidth();
-    }
-    
-    return 0;
+    return internal->audioProperties ? true : false;
+}
+
+uinteger32 AIFFTrackFile::bitDepthInBits(void) const
+{
+    auto audioProperties = reinterpret_cast<const TagLib::RIFF::AIFF::Properties*>(internal->audioProperties);
+    return audioProperties->sampleWidth();
 }

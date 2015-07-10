@@ -126,7 +126,12 @@ uinteger32 TrackFile::bitRateInKiloBitsPerSecond(void) const
     return 0;
 }
 
-uinteger32 TrackFile::bitDepthInBitsOrZeroIfNotApplicable(void) const
+boolean TrackFile::hasBitDepth(void) const
+{
+    return false;
+}
+
+uinteger32 TrackFile::bitDepthInBits(void) const
 {
     return 0;
 }

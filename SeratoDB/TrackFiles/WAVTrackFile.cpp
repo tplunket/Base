@@ -60,12 +60,13 @@ uinteger32 WAVTrackFile::lengthInMilliseconds(void) const
     return 0;
 }
 
-uinteger32 WAVTrackFile::bitDepthInBitsOrZeroIfNotApplicable(void) const
+boolean WAVTrackFile::hasBitDepth(void) const
 {
-    if (internal->audioProperties) {
-        auto audioProperties = reinterpret_cast<const TagLib::RIFF::WAV::Properties*>(internal->audioProperties);
-        return audioProperties->sampleWidth();
-    }
+    return internal->audioProperties ? true : false;
+}
 
-    return 0;
+uinteger32 WAVTrackFile::bitDepthInBits(void) const
+{
+    auto audioProperties = reinterpret_cast<const TagLib::RIFF::WAV::Properties*>(internal->audioProperties);
+    return audioProperties->sampleWidth();
 }

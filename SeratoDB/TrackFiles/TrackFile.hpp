@@ -40,7 +40,8 @@ namespace NxA { namespace Serato {
         virtual count size(void) const;
         virtual uinteger32 lengthInMilliseconds(void) const;
         virtual uinteger32 bitRateInKiloBitsPerSecond(void) const;
-        virtual uinteger32 bitDepthInBitsOrZeroIfNotApplicable(void) const;
+        virtual boolean hasBitDepth(void) const;
+        virtual uinteger32 bitDepthInBits(void) const;
         virtual uinteger32 sampleRateInSamplesPerSecond(void) const;
         virtual count trackNumber(void) const;
 

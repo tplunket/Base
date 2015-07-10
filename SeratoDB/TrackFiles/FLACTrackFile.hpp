@@ -32,7 +32,8 @@ namespace NxA { namespace Serato {
         virtual String::Pointer grouping(void) const;
 
         virtual uinteger32 lengthInMilliseconds(void) const;
-        uinteger32 bitDepthInBitsOrZeroIfNotApplicable(void) const;
+        virtual boolean hasBitDepth(void) const;
+        virtual uinteger32 bitDepthInBits(void) const;
 
         virtual boolean hasRecordLabel(void) const;
         virtual String::Pointer recordLabel(void) const;

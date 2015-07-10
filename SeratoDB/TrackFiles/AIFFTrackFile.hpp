@@ -28,6 +28,7 @@ namespace NxA { namespace Serato {
 
         #pragma mark Instance Methods
         virtual uinteger32 lengthInMilliseconds(void) const;
-        uinteger32 bitDepthInBitsOrZeroIfNotApplicable(void) const;
+        virtual boolean hasBitDepth(void) const;
+        virtual uinteger32 bitDepthInBits(void) const;
     };
 } }

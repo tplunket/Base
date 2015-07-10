@@ -85,14 +85,15 @@ uinteger32 FLACTrackFile::lengthInMilliseconds(void) const
     return 0;
 }
 
-uinteger32 FLACTrackFile::bitDepthInBitsOrZeroIfNotApplicable(void) const
+boolean FLACTrackFile::hasBitDepth(void) const
 {
-    if (internal->audioProperties) {
-        auto audioProperties = reinterpret_cast<const TagLib::FLAC::Properties*>(internal->audioProperties);
-        return audioProperties->sampleWidth();
-    }
+    return internal->audioProperties ? true : false;
+}
 
-    return 0;
+uinteger32 FLACTrackFile::bitDepthInBits(void) const
+{
+    auto audioProperties = reinterpret_cast<const TagLib::FLAC::Properties*>(internal->audioProperties);
+    return audioProperties->sampleWidth();
 }
 
 boolean FLACTrackFile::hasRecordLabel(void) const

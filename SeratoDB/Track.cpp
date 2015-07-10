@@ -14,7 +14,6 @@
 #include "SeratoDB/Internal/Track.hpp"
 #include "TrackFiles/TrackFileFactory.hpp"
 #include "Tags/PathTag.hpp"
-#include "Tags/ObjectTag.hpp"
 #include "Tags/DatabaseV2Tags.hpp"
 
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, Track, Object);
@@ -24,7 +23,7 @@ using namespace NxA::Serato;
 
 #pragma mark Factory Methods
 
-Track::Pointer Track::trackWithTagOnVolume(Tag& trackTag, const String& locatedOnVolumePath)
+Track::Pointer Track::trackWithTagOnVolume(ObjectTag& trackTag, const String& locatedOnVolumePath)
 {
     auto internalObject = Internal::Track::Pointer(std::make_shared<Internal::Track>(trackTag, locatedOnVolumePath));
     auto newTrack = Track::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
@@ -46,7 +45,7 @@ Track::Pointer Track::trackWithFileAtOnVolume(const String& trackFilePath, const
     auto tags = Tag::Array::array();
     tags->append(Tag::Pointer::dynamicCastFrom(PathTag::tagWithIdentifierAndValue(trackFilePathTagIdentifier, relativePath)));
 
-    auto trackTag = Tag::Pointer::dynamicCastFrom(ObjectTag::tagWithIdentifierAndValue(trackObjectTagIdentifier, tags));
+    auto trackTag = ObjectTag::tagWithIdentifierAndValue(trackObjectTagIdentifier, tags);
     auto internalObject = Internal::Track::Pointer(std::make_shared<Internal::Track>(trackTag, locatedOnVolumePath));
     auto newTrack = Track::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
     newTrack->internal->wasModified = true;

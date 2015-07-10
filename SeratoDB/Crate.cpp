@@ -147,7 +147,7 @@ void Crate::loadFromFile(void)
                 break;
             }
             case trackEntryTagIdentifier: {
-                internal->storeTrackTag(tag);
+                internal->storeTrackTag(dynamic_cast<ObjectTag&>(*tag));
                 break;
             }
             default: {

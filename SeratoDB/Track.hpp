@@ -16,6 +16,8 @@
 #include "Markers/LoopMarker.hpp"
 #include "Markers/GridMarker.hpp"
 
+#include "Tags/ObjectTag.hpp"
+
 #include <Base/Base.hpp>
 
 #define PRINT_DEBUG_INFO        1
@@ -30,7 +32,7 @@ namespace NxA { namespace Serato {
 
     public:
         #pragma mark Factory Methods
-        static Track::Pointer trackWithTagOnVolume(Tag& trackTag, const String& locatedOnVolumePath);
+        static Track::Pointer trackWithTagOnVolume(ObjectTag& trackTag, const String& locatedOnVolumePath);
         static Track::Pointer trackWithFileAtOnVolume(const String& trackFilePath, const String& locatedOnVolumePath);
 
         #pragma mark Operators

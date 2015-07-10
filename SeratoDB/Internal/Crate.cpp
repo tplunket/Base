@@ -49,7 +49,7 @@ void Crate::addTrackEntry(Serato::TrackEntry& trackEntry)
     this->trackEntries->append(trackEntry);
 }
 
-void Crate::storeTrackTag(const Serato::Tag& tag)
+void Crate::storeTrackTag(const Serato::ObjectTag& tag)
 {
     this->addTrackEntry(Serato::TrackEntry::entryWithTagOnVolume(tag, this->rootVolumePath));
 }

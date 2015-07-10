@@ -26,6 +26,7 @@
 #include "SeratoDB/Crate.hpp"
 #include "SeratoDB/CrateOrderFile.hpp"
 #include "Tags/Tag.hpp"
+#include "Tags/ObjectTag.hpp"
 
 #include <Base/Base.hpp>
 #include <Base/Internal/Object.hpp>
@@ -56,7 +57,7 @@ namespace NxA { namespace Serato { namespace Internal {
         boolean databaseIsValid;
 
         #pragma mark Instance Methods
-        void storeTrackTag(Serato::Tag& tag);
+        void storeTrackTag(Serato::ObjectTag& tag);
         void storeOtherTag(const Serato::Tag& tag);
     };
 } } }

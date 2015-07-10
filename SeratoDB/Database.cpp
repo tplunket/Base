@@ -43,7 +43,7 @@ Database::Pointer Database::databaseWithFileAt(const String& seratoFolderPath)
     for (auto& tag : *tags) {
         switch (tag->identifier()) {
             case trackObjectTagIdentifier: {
-                newDatabase->internal->storeTrackTag(tag);
+                newDatabase->internal->storeTrackTag(dynamic_cast<ObjectTag&>(*tag));
                 break;
             }
             case databaseVersionTagIdentifier: {

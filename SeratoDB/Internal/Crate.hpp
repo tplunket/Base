@@ -24,6 +24,7 @@
 #include "SeratoDB/Crate.hpp"
 #include "SeratoDB/TrackEntry.hpp"
 #include "Tags/Tag.hpp"
+#include "Tags/ObjectTag.hpp"
 
 #include <Base/Base.hpp>
 #include <Base/Internal/Object.hpp>
@@ -53,7 +54,7 @@ namespace NxA { namespace Serato { namespace Internal {
         #pragma mark Instance Methods
         void addTrackEntry(Serato::TrackEntry& trackEntry);
 
-        void storeTrackTag(const Serato::Tag& tag);
+        void storeTrackTag(const Serato::ObjectTag& tag);
         void storeOtherTag(const Serato::Tag& tag);
 
         void markCratesAsModified(void);

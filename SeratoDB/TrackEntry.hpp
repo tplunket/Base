@@ -12,6 +12,8 @@
 
 #pragma once
 
+#include <Tags/ObjectTag.hpp>
+
 #include <Base/Base.hpp>
 
 namespace NxA { namespace Serato {
@@ -24,8 +26,7 @@ namespace NxA { namespace Serato {
 
     public:
         #pragma mark Factory Methods
-        static TrackEntry::Pointer entryWithTagOnVolume(const Tag& tag,
-                                                        const String& volumePath);
+        static TrackEntry::Pointer entryWithTagOnVolume(const ObjectTag& tag, const String& volumePath);
         static TrackEntry::Pointer entryWithTrackFileAtOnVolume(const String& path, const String& volumePath);
 
         #pragma mark Instance Methods

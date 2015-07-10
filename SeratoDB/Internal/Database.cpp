@@ -62,7 +62,7 @@ void Database::debugListCrate(Serato::Crate& crate,
 
 #pragma mark Instance Methods
 
-void Database::storeTrackTag(Serato::Tag& tag)
+void Database::storeTrackTag(Serato::ObjectTag& tag)
 {
     this->tracks->append(Serato::Track::trackWithTagOnVolume(tag, String::stringWith("")));
 }

@@ -23,8 +23,7 @@ using namespace NxA::Serato;
 
 #pragma mark Factory Methods
 
-TrackEntry::Pointer TrackEntry::entryWithTagOnVolume(const Tag& tag,
-                                                     const String& volumePath)
+TrackEntry::Pointer TrackEntry::entryWithTagOnVolume(const ObjectTag& tag, const String& volumePath)
 {
     auto internalObject = Internal::TrackEntry::Pointer(std::make_shared<Internal::TrackEntry>(tag, volumePath));
     auto newTrackEntry = TrackEntry::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
@@ -39,8 +38,7 @@ TrackEntry::Pointer TrackEntry::entryWithTrackFileAtOnVolume(const String& path,
     tags->append(Serato::Tag::Pointer::dynamicCastFrom(PathTag::tagWithIdentifierAndValue(trackEntryPathTagIdentifier, entryPath)));
 
     auto trackEntryTag = ObjectTag::tagWithIdentifierAndValue(trackEntryTagIdentifier, tags);
-
-    return TrackEntry::entryWithTagOnVolume(Serato::Tag::Pointer::dynamicCastFrom(trackEntryTag), volumePath);
+    return TrackEntry::entryWithTagOnVolume(trackEntryTag, volumePath);
 }
 
 #pragma mark Instance Methods

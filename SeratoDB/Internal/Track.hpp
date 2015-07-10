@@ -22,7 +22,7 @@
 #pragma once
 
 #include <SeratoDB/Track.hpp>
-#include <Tags/Tag.hpp>
+#include <Tags/ObjectTag.hpp>
 #include <TrackFiles/TrackFile.hpp>
 #include <Markers/CueMarker.hpp>
 #include <Markers/LoopMarker.hpp>
@@ -36,8 +36,7 @@ namespace NxA { namespace Serato { namespace Internal {
         NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTORS_FOR(NxA::Serato, Track);
 
         #pragma mark Constructors & Destructors
-        Track(Serato::Tag& tag,
-              const String& rootFolderPath);
+        Track(Serato::ObjectTag& tag, const String& rootFolderPath);
 
         #pragma mark Class Methods
 #if PRINT_DEBUG_INFO
@@ -49,7 +48,7 @@ namespace NxA { namespace Serato { namespace Internal {
 #endif
 
         #pragma mark Instance Variables
-        Serato::Tag::Pointer trackTag;
+        Serato::ObjectTag::Pointer trackTag;
         String::PointerToConst rootFolder;
 
         boolean wasModified;

@@ -18,6 +18,8 @@
 
 #include <Base/Base.hpp>
 
+#define PRINT_DEBUG_INFO        1
+
 namespace NxA { namespace Serato {
     NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(Track);
 

@@ -30,8 +30,6 @@
 #include <Base/Base.hpp>
 #include <Base/Internal/Object.hpp>
 
-#define PRINT_DEBUG_INFO        1
-
 namespace NxA { namespace Serato { namespace Internal {
     struct Database : public NxA::Internal::Object {
         NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTORS_FOR(NxA::Serato, Database);

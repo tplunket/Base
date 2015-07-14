@@ -35,7 +35,6 @@ namespace NxA { namespace Serato {
                                       const String& seratoFolderPath);
         static boolean isASmartCrateName(const String& crateFullName,
                                       const String& seratoFolderPath);
-        static void destroy(const Crate& crate);
 
         #pragma mark Instance Methods
         const String& crateName(void) const;
@@ -45,11 +44,15 @@ namespace NxA { namespace Serato {
         TrackEntry::Array& trackEntries(void);
         Crate::Array& crates(void);
 
-        void addTrackEntry(Serato::TrackEntry& trackEntry);
         void addCrate(Crate& crate);
+        void removeCrate(Crate& crate);
+
+        void addTrackEntry(TrackEntry& trackEntry);
+        void removeTrackEntry(TrackEntry& trackEntry);
 
         boolean hasParentCrate(void) const;
-        Crate& parentCrate(void) const;
+        Crate& parentCrate(void);
+        void removeFromParentCrate(void);
 
         const String& crateFilePath(void) const;
 
@@ -59,7 +62,6 @@ namespace NxA { namespace Serato {
         void saveIfModifiedAndRecurseToChildren(void) const;
         boolean childrenCratesWereModified(void) const;
 
-        void removeChildrenCrate(const Crate& crate);
         TrackEntry::Array::Pointer removeAndReturnTrackEntries(void);
         Crate::Array::Pointer removeAndReturnChildrenCrates(void);
     };

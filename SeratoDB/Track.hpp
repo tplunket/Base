@@ -90,7 +90,5 @@ namespace NxA { namespace Serato {
         boolean wasModified(void) const;
         void addTo(Blob& destination) const;
         void saveToTrackFile(void) const;
-
-        void destroy(void);
     };
 } }

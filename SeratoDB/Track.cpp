@@ -379,8 +379,3 @@ void Track::saveToTrackFile(void) const
 
     trackFile->saveChanges();
 }
-
-void Track::destroy(void)
-{
-    delete this;
-}

@@ -12,6 +12,7 @@
 
 #include "SeratoDB/TrackEntry.hpp"
 #include "SeratoDB/Internal/TrackEntry.hpp"
+#include "SeratoDB/Crate.hpp"
 #include "Tags/PathTag.hpp"
 #include "Tags/ObjectTag.hpp"
 #include "Tags/CrateV1Tags.hpp"
@@ -57,12 +58,37 @@ String::Pointer TrackEntry::trackFilePath(void) const
     return String::string();
 }
 
+boolean TrackEntry::hasParentCrate(void) const
+{
+    return internal->parentCrate.isValid();
+}
+
+Crate& TrackEntry::parentCrate(void)
+{
+    return *(internal->parentCrate.pointer());
+}
+
+void TrackEntry::setParentCrate(Crate& crate)
+{
+    NXA_ASSERT_FALSE(this->hasParentCrate());
+
+    internal->parentCrate = Crate::WeakPointer(crate.pointer());
+
+    crate.addTrackEntry(*this);
+}
+
+void TrackEntry::removeFromParentCrate(void)
+{
+    NXA_ASSERT_TRUE(this->hasParentCrate());
+
+    Crate::Pointer parentCrate = this->parentCrate().pointer();
+
+    internal->parentCrate.release();
+
+    this->parentCrate().removeTrackEntry(*this);
+}
+
 const Tag& TrackEntry::tagForEntry(void) const
 {
     return internal->trackEntryTag;
-}
-
-void TrackEntry::destroy(void)
-{
-    delete this;
 }

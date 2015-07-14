@@ -39,11 +39,11 @@ namespace NxA { namespace Serato {
         const NxA::ArrayContainer<Track>& tracks(void) const;
         NxA::Pointer<NxA::ArrayContainer<Track>> removeAndReturnTracks(void);
 
-        void deleteTrackEntry(TrackEntry& trackEntry);
-        void deleteCrate(Crate& crate);
+        void removeTrackEntry(TrackEntry& trackEntry);
+        void removeCrate(Crate& crate);
 
         void addTrack(Track& track);
-        void deleteTrack(Track& track);
+        void removeTrack(Track& track);
 
         void saveIfModified(void) const;
     };

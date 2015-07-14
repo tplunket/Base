@@ -20,6 +20,7 @@ namespace NxA { namespace Serato {
     NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(TrackEntry);
 
     class Tag;
+    class Crate;
 
     class TrackEntry : public Object {
         NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_CLASS(NxA::Serato, TrackEntry);
@@ -32,8 +33,12 @@ namespace NxA { namespace Serato {
         #pragma mark Instance Methods
         String::Pointer trackFilePath(void) const;
 
-        const Tag& tagForEntry(void) const;
+        boolean hasParentCrate(void) const;
+        Crate& parentCrate(void);
+        
+        void setParentCrate(Crate& crate);
+        void removeFromParentCrate(void);
 
-        void destroy(void);
+        const Tag& tagForEntry(void) const;
     };
 } }

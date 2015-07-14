@@ -21,6 +21,7 @@
 
 #pragma once
 
+#include "SeratoDB/Crate.hpp"
 #include "SeratoDB/TrackEntry.hpp"
 #include "Tags/Tag.hpp"
 
@@ -36,6 +37,8 @@ namespace NxA { namespace Serato { namespace Internal {
                    const String& locatedOnVolumePath);
 
         #pragma mark Instance Variable
+        Serato::Crate::WeakPointer parentCrate;
+
         Serato::Tag::PointerToConst trackEntryTag;
         String::PointerToConst rootVolumePath;
     };

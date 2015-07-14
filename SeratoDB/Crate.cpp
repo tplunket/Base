@@ -64,18 +64,6 @@ boolean Crate::isASmartCrateName(const String& crateFullName, const String& sera
     return File::fileExistsAt(crateFilePath);
 }
 
-void Crate::destroy(const Crate& crate)
-{
-    for (auto &childrenCrate : *(crate.internal->childrenCrates)) {
-        Crate::destroy(childrenCrate);
-    }
-
-    if (crate.hasParentCrate()) {
-        auto parentCrate = crate.internal->parentCrate.pointer();
-        parentCrate->removeChildrenCrate(crate);
-    }
-}
-
 #pragma mark Instance Methods
 
 const String& Crate::crateName(void) const
@@ -121,11 +109,38 @@ void Crate::addCrate(Crate& crate)
     internal->markCratesAsModified();
 }
 
+void Crate::removeCrate(Crate& crate)
+{
+    NXA_ASSERT_TRUE(crate.hasParentCrate() && &(crate.parentCrate()) == this);
+
+    crate.internal->parentCrate.release();
+    internal->childrenCrates->remove(crate);
+
+    internal->markCratesAsModified();
+}
+
 void Crate::addTrackEntry(Serato::TrackEntry& trackEntry)
 {
+    NXA_ASSERT_FALSE(trackEntry.hasParentCrate());
+
+    trackEntry.setParentCrate(*this);
     internal->trackEntries->append(trackEntry);
 
     internal->tracksWereModified = true;
+}
+
+void Crate::removeTrackEntry(TrackEntry& trackEntry)
+{
+    auto position = internal->trackEntries->find(trackEntry);
+    if (position != internal->trackEntries->end()) {
+        internal->trackEntries->removeObjectAt(position);
+        internal->tracksWereModified = true;
+    }
+
+    if (trackEntry.hasParentCrate()) {
+        NXA_ASSERT_TRUE(&trackEntry.parentCrate() == this);
+        trackEntry.removeFromParentCrate();
+    }
 }
 
 void Crate::loadFromFile(void)
@@ -165,9 +180,14 @@ boolean Crate::hasParentCrate(void) const
     return internal->parentCrate.isValid();
 }
 
-Crate& Crate::parentCrate(void) const
+Crate& Crate::parentCrate(void)
 {
     return *(internal->parentCrate.pointer());
+}
+
+void Crate::removeFromParentCrate(void)
+{
+    this->parentCrate().removeCrate(*this);
 }
 
 const String& Crate::crateFilePath(void) const
@@ -209,18 +229,6 @@ void Crate::saveIfModifiedAndRecurseToChildren(void) const
     for (auto& crate : *internal->childrenCrates) {
         crate->saveIfModifiedAndRecurseToChildren();
     }
-}
-
-void Crate::removeChildrenCrate(const Crate& crate)
-{
-    auto position = internal->childrenCrates->find(crate);
-    if (position == internal->childrenCrates->end()) {
-        return;
-    }
-
-    crate.internal->parentCrate.release();
-    internal->childrenCrates->remove(position);
-    internal->markCratesAsModified();
 }
 
 TrackEntry::Array::Pointer Crate::removeAndReturnTrackEntries(void)

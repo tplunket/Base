@@ -119,25 +119,32 @@ Track::Array::Pointer Database::removeAndReturnTracks(void)
     return tracks;
 }
 
-void Database::deleteTrackEntry(TrackEntry& trackEntry)
+void Database::removeTrackEntry(TrackEntry& trackEntry)
 {
-    trackEntry.destroy();
+    trackEntry.removeFromParentCrate();
 }
 
-void Database::deleteCrate(Crate& crate)
+void Database::removeCrate(Crate& crate)
 {
     internal->crateFilesToDelete->append(String::stringWith(crate.crateFilePath()));
-    Crate::destroy(crate);
+
+    if (crate.hasParentCrate()) {
+        crate.removeFromParentCrate();
+    }
+
+    for (auto& childrenCrate : crate.crates()) {
+        this->removeCrate(childrenCrate);
+    }
 }
 
 void Database::addTrack(Track& track)
 {
-    internal->tracks->append(track.pointer());
+    internal->tracks->append(track);
 }
 
-void Database::deleteTrack(Track& track)
+void Database::removeTrack(Track& track)
 {
-    track.destroy();
+    internal->tracks->remove(track);
 }
 
 void Database::saveIfModified(void) const

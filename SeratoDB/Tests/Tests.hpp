@@ -24,3 +24,11 @@
 #include "Base/Test.hpp"
 #include "Tags/Tests/Tests.hpp"
 #include "Markers/Tests/Tests.hpp"
+
+// -- This forces the linker to link the object files where these tests
+// -- are defined. Otherwise they would get stripped out.
+NXA_USING_TEST_SUITE_NAMED(SeratoDB_Crate_Tests);
+
+NXA_USE_TEST_SUITES_FOR_MODULE(SeratoDB) {
+    SeratoDB_Crate_Tests,
+};

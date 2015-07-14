@@ -164,7 +164,7 @@ Serato::Crate::Array::Pointer CrateOrderFile::childrenCratesOfCrateNamedUsingNam
                                                                                    seratoFolderPath,
                                                                                    rootFolderPath);
         for (auto& crate : *childCrates) {
-            Serato::Crate::addCrateAsChildOfCrate(crate, newCrate);
+            newCrate->addCrate(crate);
         }
 
         newCrate->resetModificationFlags();

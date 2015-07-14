@@ -45,7 +45,7 @@ CrateOrderFile::Pointer CrateOrderFile::fileWithSeratoFolderInRootFolder(const S
                                                                                        seratoFolderPath,
                                                                                        rootFolderPath);
     for (auto& crate : *crates) {
-        Crate::addCrateAsChildOfCrate(crate, newCrateOrderFile->internal->rootCrate);
+        newCrateOrderFile->internal->rootCrate->addCrate(crate);
     }
 
     newCrateOrderFile->internal->rootCrate->resetModificationFlags();

@@ -66,15 +66,6 @@ boolean Crate::isASmartCrateName(const String& crateFullName,
     return File::fileExistsAt(crateFilePath);
 }
 
-void Crate::addCrateAsChildOfCrate(Crate& crate, Crate& parentCrate)
-{
-    crate.internal->parentCrate = Crate::WeakPointer(parentCrate.pointer());
-
-    parentCrate.internal->markCratesAsModified();
-
-    parentCrate.internal->childrenCrates->append(crate);
-}
-
 void Crate::destroy(const Crate& crate)
 {
     for (auto &childrenCrate : *(crate.internal->childrenCrates)) {
@@ -120,6 +111,16 @@ TrackEntry::Array& Crate::trackEntries(void)
 Crate::Array& Crate::crates(void)
 {
     return *(internal->childrenCrates);
+}
+
+void Crate::addCrate(Crate& crate)
+{
+    NXA_ASSERT_FALSE(crate.hasParentCrate());
+
+    crate.internal->parentCrate = Crate::WeakPointer(this->pointer());
+    internal->childrenCrates->append(crate);
+
+    internal->markCratesAsModified();
 }
 
 void Crate::addTrackEntry(Serato::TrackEntry& trackEntry)

@@ -35,7 +35,6 @@ namespace NxA { namespace Serato {
                                       const String& seratoFolderPath);
         static boolean isASmartCrateName(const String& crateFullName,
                                       const String& seratoFolderPath);
-        static void addCrateAsChildOfCrate(Crate& crate, Crate& parentCrate);
         static void destroy(const Crate& crate);
 
         #pragma mark Instance Methods
@@ -47,6 +46,7 @@ namespace NxA { namespace Serato {
         Crate::Array& crates(void);
 
         void addTrackEntry(Serato::TrackEntry& trackEntry);
+        void addCrate(Crate& crate);
 
         boolean hasParentCrate(void) const;
         Crate& parentCrate(void) const;

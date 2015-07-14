@@ -142,6 +142,10 @@ namespace NxA {
         {
             this->insert(pos, object.pointer());
         }
+        boolean contains(const T& object) const
+        {
+            return this->find(object) != this->end();
+        }
         const_iterator find(const T& object) const
         {
             return std::find(this->begin(), this->end(), object);

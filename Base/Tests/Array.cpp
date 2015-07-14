@@ -263,7 +263,7 @@ TEST(Base_Array, Find_ObjectInEndWithSameObject_ReturnsPositionCorrectly)
     ASSERT_TRUE(position == test->begin() + 2);
 }
 
-TEST(Base_Array, Remove_PositionOfObjectInTheMiddle_RemovesObjectCorrectly)
+TEST(Base_Array, RemoveObjectAt_PositionOfObjectInTheMiddle_RemovesObjectCorrectly)
 {
     // -- Given.
     auto test = String::Array::array();
@@ -275,7 +275,7 @@ TEST(Base_Array, Remove_PositionOfObjectInTheMiddle_RemovesObjectCorrectly)
     test->append(object3);
 
     // -- When.
-    test->remove(test->begin() + 1);
+    test->removeObjectAt(test->begin() + 1);
 
     // -- Then.
     ASSERT_EQ(2, test->length());

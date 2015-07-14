@@ -150,7 +150,7 @@ namespace NxA {
         {
             return std::find(this->begin(), this->end(), object);
         }
-        void remove(const_iterator objectPosition)
+        void removeObjectAt(const_iterator objectPosition)
         {
             this->erase(objectPosition);
         }

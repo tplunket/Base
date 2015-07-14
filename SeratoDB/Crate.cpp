@@ -52,15 +52,13 @@ Crate::Pointer Crate::crateWithNameInFolderOnVolume(const String& crateFullName,
 
 #pragma mark Class Methods
 
-boolean Crate::isAValidCrateName(const String& crateFullName,
-                                 const String& seratoFolderPath)
+boolean Crate::isAValidCrateName(const String& crateFullName, const String& seratoFolderPath)
 {
     auto crateFilePath = crateFilePathForCrateNameInSeratoFolder(crateFullName, seratoFolderPath);
     return File::fileExistsAt(crateFilePath);
 }
 
-boolean Crate::isASmartCrateName(const String& crateFullName,
-                                 const String& seratoFolderPath)
+boolean Crate::isASmartCrateName(const String& crateFullName, const String& seratoFolderPath)
 {
     auto crateFilePath = crateFilePathForSmartCrateNameInSeratoFolder(crateFullName, seratoFolderPath);
     return File::fileExistsAt(crateFilePath);

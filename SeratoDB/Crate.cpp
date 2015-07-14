@@ -123,7 +123,9 @@ void Crate::addCrate(Crate& crate)
 
 void Crate::addTrackEntry(Serato::TrackEntry& trackEntry)
 {
-    internal->addTrackEntry(trackEntry);
+    internal->trackEntries->append(trackEntry);
+
+    internal->tracksWereModified = true;
 }
 
 void Crate::loadFromFile(void)
@@ -146,11 +148,12 @@ void Crate::loadFromFile(void)
                 break;
             }
             case trackEntryTagIdentifier: {
-                internal->storeTrackTag(dynamic_cast<ObjectTag&>(*tag));
+                this->addTrackEntry(Serato::TrackEntry::entryWithTagOnVolume(dynamic_cast<ObjectTag&>(*tag),
+                                                                             internal->rootVolumePath));
                 break;
             }
             default: {
-                internal->storeOtherTag(tag);
+                internal->otherTags->append(tag);
                 break;
             }
         }

@@ -52,11 +52,6 @@ namespace NxA { namespace Serato { namespace Internal {
         Serato::Tag::ArrayOfConst::Pointer otherTags;
 
         #pragma mark Instance Methods
-        void addTrackEntry(Serato::TrackEntry& trackEntry);
-
-        void storeTrackTag(const Serato::ObjectTag& tag);
-        void storeOtherTag(const Serato::Tag& tag);
-
         void markCratesAsModified(void);
     };
 } } }

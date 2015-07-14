@@ -43,22 +43,6 @@ Crate::Crate(const String& fullName,
 
 #pragma mark Instance Methods
 
-void Crate::addTrackEntry(Serato::TrackEntry& trackEntry)
-{
-    this->tracksWereModified = true;
-    this->trackEntries->append(trackEntry);
-}
-
-void Crate::storeTrackTag(const Serato::ObjectTag& tag)
-{
-    this->addTrackEntry(Serato::TrackEntry::entryWithTagOnVolume(tag, this->rootVolumePath));
-}
-
-void Crate::storeOtherTag(const Serato::Tag& tag)
-{
-    this->otherTags->append(tag.pointer());
-}
-
 void Crate::markCratesAsModified(void)
 {
     this->cratesWereModified = true;

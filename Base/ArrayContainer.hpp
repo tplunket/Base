@@ -37,7 +37,7 @@ namespace NxA {
         using const_iterator = typename std::vector<NxA::Pointer<T>>::const_iterator;
 
         #pragma mark Factory Methods
-        static ArrayContainer::Pointer array(void)
+        static ArrayContainer<T>::Pointer array(void)
         {
             return ArrayContainer<T>::makeShared();
         }

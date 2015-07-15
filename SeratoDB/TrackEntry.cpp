@@ -85,7 +85,7 @@ void TrackEntry::removeFromParentCrate(void)
 
     internal->parentCrate.release();
 
-    this->parentCrate().removeTrackEntry(*this);
+    parentCrate->removeTrackEntry(*this);
 }
 
 const Tag& TrackEntry::tagForEntry(void) const

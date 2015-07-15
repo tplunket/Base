@@ -233,24 +233,26 @@ void Crate::saveIfModifiedAndRecurseToChildren(void) const
 
 TrackEntry::Array::Pointer Crate::removeAndReturnTrackEntries(void)
 {
-    auto currentEntries = internal->trackEntries;
+    auto result = TrackEntry::Array::arrayWith(this->trackEntries());
 
-    internal->trackEntries = TrackEntry::Array::array();
+    for (auto& entry : *result) {
+        entry->removeFromParentCrate();
+    }
+
     internal->tracksWereModified = true;
 
-    return currentEntries;
+    return result;
 }
 
 Crate::Array::Pointer Crate::removeAndReturnChildrenCrates(void)
 {
-    auto currentChildrenCrates = internal->childrenCrates;
+    auto result = Crate::Array::arrayWith(this->crates());
 
-    internal->childrenCrates = Crate::Array::array();
-    internal->markCratesAsModified();
-
-    for (auto& crate : *currentChildrenCrates) {
-        crate->internal->parentCrate.release();
+    for (auto& crate : *result) {
+        crate->removeFromParentCrate();
     }
 
-    return currentChildrenCrates;
+    internal->markCratesAsModified();
+
+    return result;
 }

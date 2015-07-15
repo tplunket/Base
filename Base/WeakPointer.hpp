@@ -39,8 +39,8 @@ namespace NxA {
             return !this->expired();
         }
 
-        void release(void) const {
-            this->release();
+        void release(void) {
+            this->std::weak_ptr<T>::reset();
         }
 
         Pointer<T> pointer(void) const

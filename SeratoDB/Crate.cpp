@@ -121,7 +121,10 @@ void Crate::removeCrate(Crate& crate)
 
 void Crate::addTrackEntry(Serato::TrackEntry& trackEntry)
 {
-    NXA_ASSERT_FALSE(trackEntry.hasParentCrate());
+    if (trackEntry.hasParentCrate()) {
+        NXA_ASSERT_TRUE(&trackEntry.parentCrate() == this);
+        return;
+    }
 
     trackEntry.setParentCrate(*this);
     internal->trackEntries->append(trackEntry);

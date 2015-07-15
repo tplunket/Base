@@ -38,7 +38,7 @@ namespace NxA { namespace Serato {
 
         void setSubTag(Tag& tag);
 
-        count numberOfSubTags(void);
+        count numberOfSubTags(void) const;
 
         void addTo(Blob& destination) const;
     };

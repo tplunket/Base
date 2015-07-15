@@ -97,7 +97,7 @@ void ObjectTag::setSubTag(Tag& tag)
     internal->subTagForIdentifier->setValueForKey(tag, tag.identifier());
 }
 
-count ObjectTag::numberOfSubTags(void)
+count ObjectTag::numberOfSubTags(void) const
 {
     return internal->subTagForIdentifier->length();
 }

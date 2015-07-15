@@ -144,8 +144,6 @@ TEST(SeratoDB_TrackEntry, RemoveFromParentCrate_AnEntryWithAParentCrate_RemovesT
 TEST(SeratoDB_TrackEntry, RemoveFromParentCrate_AnEntryWithoutAParentCrate_ThrowsException)
 {
     // -- Given.
-    auto crate = Crate::crateWithNameInFolderOnVolume(String::stringWith("MyFolder%%MyCrate1"),
-                                                      String::stringWith(""), String::stringWith(""));
     auto entry = TrackEntry::entryWithTrackFileAtOnVolume(String::stringWith("Users/didier/Music/Gigs/02 Money On My Mind (MK Remix).m4a"), String::stringWith(""));
 
     // -- When.

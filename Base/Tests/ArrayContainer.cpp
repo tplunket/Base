@@ -90,6 +90,7 @@ TEST(Base_ArrayContainer, OperatorSquareBrackets_AccessOnConstantArray_ReturnsCo
     auto constTest = String::Array::PointerToConst(test);
 
     // -- Then.
+    ASSERT_EQ(1, test->length());
     ASSERT_STREQ("Test", (*constTest)[0].toUTF8());
 }
 

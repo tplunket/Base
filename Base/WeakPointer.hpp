@@ -40,6 +40,7 @@ namespace NxA {
         }
 
         void release(void) {
+            NXA_ASSERT_TRUE(this->isValid());
             this->std::weak_ptr<T>::reset();
         }
 

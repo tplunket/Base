@@ -79,8 +79,6 @@ void TrackEntry::setParentCrate(Crate& crate)
 
 void TrackEntry::removeFromParentCrate(void)
 {
-    NXA_ASSERT_TRUE(this->hasParentCrate());
-
     Crate::Pointer parentCrate = this->parentCrate().pointer();
 
     internal->parentCrate.release();

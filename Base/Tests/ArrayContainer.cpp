@@ -27,6 +27,34 @@ using namespace NxA;
 
 NXA_CONTAINS_TEST_SUITE_NAMED(Base_ArrayContainer_Tests);
 
+TEST(Base_ArrayContainer, ArrayWith_AnArrayWithStrings_ReturnsAnArrayWithTheSameObjectsAsTheSource)
+{
+    // -- Given.
+    auto test = String::Array::array();
+    test->append(String::stringWith("Test"));
+    test->append(String::stringWith("Test2"));
+
+    // -- When.
+    auto result = String::Array::arrayWith(test);
+
+    // -- Then.
+    ASSERT_EQ(2, result->length());
+    ASSERT_EQ(&(*test)[0], &(*result)[0]);
+    ASSERT_EQ(&(*test)[1], &(*result)[1]);
+}
+
+TEST(Base_ArrayContainer, ArrayWith_AnEmptyArray_ReturnsAnEmptyArray)
+{
+    // -- Given.
+    auto test = String::Array::array();
+
+    // -- When.
+    auto result = String::Array::arrayWith(test);
+
+    // -- Then.
+    ASSERT_EQ(0, result->length());
+}
+
 TEST(Base_ArrayContainer, ClassName_ArrayContainerOfStrings_ClassNameIsReturnedCorrectly)
 {
     // -- Given.

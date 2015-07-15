@@ -41,6 +41,14 @@ namespace NxA {
         {
             return ArrayContainer<T>::makeShared();
         }
+        static ArrayContainer<T>::Pointer arrayWith(const ArrayContainer& other)
+        {
+            auto result = ArrayContainer<T>::array();
+            for (auto& object : other) {
+                result->append(object);
+            }
+            return result;
+        }
 
         #pragma mark Class Methods
         static const character* nameOfClass(void)

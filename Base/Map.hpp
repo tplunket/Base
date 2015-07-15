@@ -30,6 +30,7 @@
 
 namespace NxA {
     template <class Tkey, class Tvalue> class Map : public Object, private std::map<const Tkey, std::shared_ptr<Tvalue>> {
+        NXA_GENERATED_OPERATOR_EQUAL_DECLARATION_IN_NAMESPACE_FOR_CLASS(NxA, Map<Tkey, Tvalue>);
         NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_BASE_CLASS(NxA, Map<Tkey, Tvalue>);
 
     public:

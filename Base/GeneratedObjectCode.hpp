@@ -217,6 +217,13 @@ namespace NxA {
         protected: \
             static NxA::Pointer<class_name> makeSharedWithInternal(const NxA::Pointer<NxA::Internal::Object>& initial_internal);
 
+#define NXA_GENERATED_OPERATOR_EQUAL_DECLARATION_IN_NAMESPACE_FOR_CLASS(namespace_name, class_name...) \
+        public: \
+            bool operator==(const namespace_name::class_name& other) const \
+        { \
+            return this == &other; \
+        }
+
 #define NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_PURE_VIRTUAL_CLASS_WITH_PARENT(namespace_name, class_name, parent_class) \
         namespace_name::class_name::class_name(const NxA::Pointer<NxA::Internal::Object>& initial_internal) : \
                         parent_class(initial_internal), \

@@ -18,7 +18,7 @@ using namespace NxA::Serato;
 
 NXA_CONTAINS_TEST_SUITE_NAMED(SeratoDB_Crate_Tests);
 
-TEST(SeratoDB_Crate, CrateWithNameInFolderOnVolume_CrateInitialValuesName_ReturnsAValidCrate)
+TEST(SeratoDB_Crate, CrateWithNameInFolderOnVolume_CrateInitialValues_ReturnsAValidCrate)
 {
     // -- Given.
     auto crateName = String::stringWith("MyFolder%%MyCrate");

@@ -189,7 +189,7 @@ TEST(Base_ArrayContainer, Length_EmptyArray_LengthReturnsZero)
     ASSERT_EQ(0, test->length());
 }
 
-TEST(Base_ArrayContainer, emptyAll_ArrayContainerWithTwoObject_RemovesAllObjects)
+TEST(Base_ArrayContainer, EmptyAll_ArrayContainerWithTwoObject_RemovesAllObjects)
 {
     // -- Given.
     auto test = String::Array::array();

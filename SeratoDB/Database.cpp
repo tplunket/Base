@@ -81,7 +81,7 @@ String::Pointer Database::versionAsStringForDatabaseIn(const String& seratoFolde
     auto tags(TagFactory::parseTagsAt(databaseFile->data(), databaseFile->size()));
     for (auto& tag : *(tags)) {
         if (tag->identifier() == databaseVersionTagIdentifier) {
-            auto& textTag = dynamic_cast<TextTag&>(*tag);
+            auto& textTag = dynamic_cast<VersionTag&>(*tag);
             return String::stringWith(textTag.value());
         }
     }
@@ -173,8 +173,8 @@ void Database::saveIfModified(void) const
     if (someTracksWereModified) {
         auto outputData = Blob::blob();
 
-        auto versionTag = TextTag::tagWithIdentifierAndValue(databaseVersionTagIdentifier,
-                                                             String::stringWith(databaseFileCurrentVersionString));
+        auto versionTag = VersionTag::tagWithIdentifierAndValue(databaseVersionTagIdentifier,
+                                                                String::stringWith(databaseFileCurrentVersionString));
         versionTag->addTo(outputData);
 
         for (auto& track : *(internal->tracks)) {

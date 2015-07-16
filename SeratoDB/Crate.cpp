@@ -214,8 +214,8 @@ void Crate::saveIfModifiedAndRecurseToChildren(void) const
     if (internal->rootVolumePath->length() && internal->tracksWereModified) {
         auto outputData = Blob::blob();
 
-        auto versionTag = TextTag::tagWithIdentifierAndValue(crateVersionTagIdentifier,
-                                                             String::stringWith(crateFileCurrentVersionString));
+        auto versionTag = VersionTag::tagWithIdentifierAndValue(crateVersionTagIdentifier,
+                                                                String::stringWith(crateFileCurrentVersionString));
         versionTag->addTo(outputData);
 
         for (auto& trackEntry : *internal->trackEntries) {

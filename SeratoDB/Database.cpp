@@ -121,7 +121,9 @@ Track::Array::Pointer Database::removeAndReturnTracks(void)
 
 void Database::removeTrackEntry(TrackEntry& trackEntry)
 {
-    trackEntry.removeFromParentCrate();
+    if (trackEntry.hasParentCrate()) {
+        trackEntry.removeFromParentCrate();
+    }
 }
 
 void Database::removeCrate(Crate& crate)

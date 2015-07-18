@@ -27,10 +27,23 @@ using namespace NxA;
 
 NXA_CONTAINS_TEST_SUITE_NAMED(Base_Map_Tests);
 
-using TestMapClass = Map<uinteger32, String>;
+using TestMapUInteger32ToString = Map<uinteger32, String>;
+using TestMapUInteger32ToUInteger32 = Map<uinteger32, uinteger32>;
 
 static const auto testString = String::stringWith("Test String");
 static const auto otherString = String::stringWith("Other String");
+
+TEST(Base_Map, ClassName_MapOfUInteger32AndUInteger32_ClassNameIsReturnedCorrectly)
+{
+    // -- Given.
+    auto test = Map<uinteger32, uinteger32>::map();
+
+    // -- When.
+    auto name = test->className();
+
+    // -- Then.
+    ASSERT_STREQ("NxA::Map<uinteger32, uinteger32>", name);
+}
 
 TEST(Base_Map, ClassName_MapOfUInteger32AndMapOfBytesAndArrayOfStrings_ClassNameIsReturnedCorrectly)
 {
@@ -58,11 +71,24 @@ TEST(Base_Map, ClassName_TwoMapsOfUInteger32AndMapOfBytesAndArrayOfStrings_Class
     ASSERT_EQ(otherName, name);
 }
 
+TEST(Base_Map, SetValueForKey_IntegerValue_SetsCorrectValue)
+{
+    // -- Given.
+    static const uinteger32 integerValue = 72;
+    auto test = TestMapUInteger32ToUInteger32::map();
+
+    // -- When.
+    test->setValueForKey(integerValue, 0);
+
+    // -- Then.
+    ASSERT_EQ(integerValue, test->valueForKey(0));
+}
+
 TEST(Base_Map, SetValueForKey_ValueFromAPointer_SetsCorrectValue)
 {
     // -- Given.
     static const character* otherTestString = "testString";
-    auto test = TestMapClass::map();
+    auto test = TestMapUInteger32ToString::map();
 
     // -- When.
     test->setValueForKey(String::stringWith(otherTestString), 0);
@@ -74,7 +100,7 @@ TEST(Base_Map, SetValueForKey_ValueFromAPointer_SetsCorrectValue)
 TEST(Base_Map, SetValueForKey_ValueFromAReference_SetsCorrectValue)
 {
     // -- Given.
-    auto test = TestMapClass::map();
+    auto test = TestMapUInteger32ToString::map();
 
     // -- When.
     test->setValueForKey(testString, 0);
@@ -83,11 +109,11 @@ TEST(Base_Map, SetValueForKey_ValueFromAReference_SetsCorrectValue)
     ASSERT_STREQ(testString->toUTF8(), test->valueForKey(0).toUTF8());
 }
 
-TEST(Base_Map, SetValueForKey_ValueFromAPointerOverAnExistinValue_SetsCorrectValue)
+TEST(Base_Map, SetValueForKey_ValueFromAPointerOverAnExistingValue_SetsCorrectValue)
 {
     // -- Given.
     static const character* otherTestString = "testString";
-    auto test = TestMapClass::map();
+    auto test = TestMapUInteger32ToString::map();
     test->setValueForKey(String::stringWith("Initial String"), 44);
 
     // -- When.
@@ -97,10 +123,10 @@ TEST(Base_Map, SetValueForKey_ValueFromAPointerOverAnExistinValue_SetsCorrectVal
     ASSERT_STREQ(otherTestString, test->valueForKey(44).toUTF8());
 }
 
-TEST(Base_Map, SetValueForKey_ValueFromAReferenceOverAnExistinValue_SetsCorrectValue)
+TEST(Base_Map, SetValueForKey_ValueFromAReferenceOverAnExistingValue_SetsCorrectValue)
 {
     // -- Given.
-    auto test = TestMapClass::map();
+    auto test = TestMapUInteger32ToString::map();
     test->setValueForKey(testString, 44);
 
     // -- When.
@@ -113,7 +139,7 @@ TEST(Base_Map, SetValueForKey_ValueFromAReferenceOverAnExistinValue_SetsCorrectV
 TEST(Base_Map, ValueForKey_MapWithAGivenValue_ReturnsCorrectValue)
 {
     // -- Given.
-    auto test = TestMapClass::map();
+    auto test = TestMapUInteger32ToString::map();
     test->setValueForKey(testString, 0x2323);
     test->setValueForKey(otherString, 0x2423);
 
@@ -125,7 +151,7 @@ TEST(Base_Map, ValueForKey_MapWithAGivenValue_ReturnsCorrectValue)
 TEST(Base_Map, ValueForKey_MapWithAnotherValue_ReturnsCorrectValue)
 {
     // -- Given.
-    auto test = TestMapClass::map();
+    auto test = TestMapUInteger32ToString::map();
     test->setValueForKey(testString, 0x2323);
     test->setValueForKey(otherString, 0x2423);
 
@@ -137,7 +163,7 @@ TEST(Base_Map, ValueForKey_MapWithAnotherValue_ReturnsCorrectValue)
 TEST(Base_Map, ValueForKey_LookingForAnUnknownKey_ThrowsException)
 {
     // -- Given.
-    auto test = TestMapClass::map();
+    auto test = TestMapUInteger32ToString::map();
     test->setValueForKey(String::stringWith(testString), 0x2323);
     test->setValueForKey(String::stringWith(otherString), 0x2423);
 
@@ -149,10 +175,10 @@ TEST(Base_Map, ValueForKey_LookingForAnUnknownKey_ThrowsException)
 TEST(Base_Map, ValueForKey_ConstMapWithAGivenValue_ReturnsCorrectValue)
 {
     // -- Given.
-    auto test = TestMapClass::map();
+    auto test = TestMapUInteger32ToString::map();
     test->setValueForKey(testString, 0x2323);
     test->setValueForKey(otherString, 0x2423);
-    TestMapClass::PointerToConst constTest = test;
+    TestMapUInteger32ToString::PointerToConst constTest = test;
 
     // -- When.
     // -- Then.
@@ -162,10 +188,10 @@ TEST(Base_Map, ValueForKey_ConstMapWithAGivenValue_ReturnsCorrectValue)
 TEST(Base_Map, ValueForKey_ConstMapWithAnotherValue_ReturnsCorrectValue)
 {
     // -- Given.
-    auto test = TestMapClass::map();
+    auto test = TestMapUInteger32ToString::map();
     test->setValueForKey(testString, 0x2323);
     test->setValueForKey(otherString, 0x2423);
-    TestMapClass::PointerToConst constTest = test;
+    TestMapUInteger32ToString::PointerToConst constTest = test;
 
     // -- When.
     // -- Then.
@@ -175,10 +201,10 @@ TEST(Base_Map, ValueForKey_ConstMapWithAnotherValue_ReturnsCorrectValue)
 TEST(Base_Map, ValueForKey_LookingForAnUnknownKeyInConstMap_ThrowsException)
 {
     // -- Given.
-    auto test = TestMapClass::map();
+    auto test = TestMapUInteger32ToString::map();
     test->setValueForKey(String::stringWith(testString), 0x2323);
     test->setValueForKey(String::stringWith(otherString), 0x2423);
-    TestMapClass::PointerToConst constTest = test;
+    TestMapUInteger32ToString::PointerToConst constTest = test;
 
     // -- When.
     // -- Then.
@@ -188,7 +214,7 @@ TEST(Base_Map, ValueForKey_LookingForAnUnknownKeyInConstMap_ThrowsException)
 TEST(Base_Map, ContainsValueForKey_UnknownKey_ReturnsFalse)
 {
     // -- Given.
-    auto test = TestMapClass::map();
+    auto test = TestMapUInteger32ToString::map();
     test->setValueForKey(String::stringWith(testString), 0x2323);
     test->setValueForKey(String::stringWith(otherString), 0x2423);
 
@@ -200,7 +226,7 @@ TEST(Base_Map, ContainsValueForKey_UnknownKey_ReturnsFalse)
 TEST(Base_Map, ContainsValueForKey_KnownKey_ReturnsTrue)
 {
     // -- Given.
-    auto test = TestMapClass::map();
+    auto test = TestMapUInteger32ToString::map();
     test->setValueForKey(String::stringWith(testString), 0x2323);
     test->setValueForKey(String::stringWith(otherString), 0x2423);
 
@@ -212,7 +238,7 @@ TEST(Base_Map, ContainsValueForKey_KnownKey_ReturnsTrue)
 TEST(Base_Map, Length_MapWithKeys_ReturnsCorrectValue)
 {
     // -- Given.
-    auto test = TestMapClass::map();
+    auto test = TestMapUInteger32ToString::map();
     test->setValueForKey(String::stringWith(testString), 0x2323);
     test->setValueForKey(String::stringWith(otherString), 0x2423);
 
@@ -224,7 +250,7 @@ TEST(Base_Map, Length_MapWithKeys_ReturnsCorrectValue)
 TEST(Base_Map, Length_MapWithNoKeys_ReturnsCorrectValue)
 {
     // -- Given.
-    auto test = TestMapClass::map();
+    auto test = TestMapUInteger32ToString::map();
 
     // -- When.
     // -- Then.

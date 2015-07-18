@@ -139,6 +139,12 @@ namespace NxA {
         public: \
             explicit class_name(const namespace_name::class_name::constructor_access&) : Object(NxA::Object::constructor_access()) { }
 
+#define NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_SPECIALIZED_BASE_CLASS(namespace_name, class_name...) \
+        NXA_GENERATED_SHARED_BASE_DECLARATIONS_FOR(namespace_name, class_name) \
+        NXA_GENERATED_SHARED_BASE_OPERATOR_EQUAL_WITH_OBJECT_DECLARATIONS_FOR(namespace_name, class_name) \
+        public: \
+            explicit class_name(const typename namespace_name::class_name::constructor_access&) : Object(NxA::Object::constructor_access()) { }
+
 // -- Generated declarations and implementations for the Object class.
 // -- This should only be directly used by the NxA::Object class.
 

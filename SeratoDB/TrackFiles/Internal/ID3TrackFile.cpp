@@ -137,7 +137,8 @@ void ID3TrackFile::writeMarkersV2Frame(void)
 
     TagLib::ByteVector newData((char*)encodedData->data(), encodedData->size());
 
-    auto newFrame = new TagLib::ID3v2::GeneralEncapsulatedObjectFrame(newData);
+    auto newFrame = new TagLib::ID3v2::GeneralEncapsulatedObjectFrame();
+    newFrame->setObject(newData);
     newFrame->setTextEncoding(TagLib::String::Latin1);
     newFrame->setMimeType("application/octet-stream");
     newFrame->setFileName("");
@@ -167,7 +168,8 @@ void ID3TrackFile::writeGridMarkersFrame(void)
 
     TagLib::ByteVector newData((char*)data->data(), data->size());
 
-    auto newFrame = new TagLib::ID3v2::GeneralEncapsulatedObjectFrame(newData);
+    auto newFrame = new TagLib::ID3v2::GeneralEncapsulatedObjectFrame();
+    newFrame->setObject(newData);
     newFrame->setTextEncoding(TagLib::String::Latin1);
     newFrame->setMimeType("application/octet-stream");
     newFrame->setFileName("");

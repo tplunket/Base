@@ -102,6 +102,48 @@ count ObjectTag::numberOfSubTags(void) const
     return internal->subTagForIdentifier->length();
 }
 
+void ObjectTag::addInSeratoTrackOrderTo(Blob& destination) const
+{
+    std::vector<uinteger32> identifierOrder = {
+        'ttyp', 'pfil', 'tsng', 'tart', 'talb', 'tgen', 'tlen', 'tsiz', 'tbit', 'tsmp', 'tbpm', 'tcom', 'tgrp',
+        'trmx', 'tlbl', 'tcmp', 'ttyr', 'tadd', 'tkey', 'uadd', 'utkn', 'ulbl', 'utme', 'ufsb', 'udsc', 'sbav',
+        'bhrt', 'bmis', 'bply', 'blop', 'bitu', 'bovc', 'bcrt', 'biro', 'bwlb', 'bwll', 'buns', 'bbgl', 'bkrk'
+    };
+
+    std::vector<uinteger32> identifiersToOutput;
+    for (auto& identifierAndTag : *(internal->subTagForIdentifier)) {
+        identifiersToOutput.push_back(identifierAndTag.first);
+    }
+
+    auto subTagsRepresentation = Blob::blob();
+    for (auto& identifier : identifierOrder) {
+        if (this->hasSubTagForIdentifier(identifier)) {
+            if (identifier == 'sbav') {
+                printf("hello");
+            }
+            
+            auto& tag = this->subTagForIdentifier(identifier);
+            tag.addTo(subTagsRepresentation);
+            identifiersToOutput.erase(std::find(identifiersToOutput.begin(), identifiersToOutput.end(), identifier));
+        }
+    }
+
+    for (auto& identifier : identifiersToOutput) {
+        NXA_ASSERT_TRUE(this->hasSubTagForIdentifier(identifier));
+        auto& tag = this->subTagForIdentifier(identifier);
+        tag.addTo(subTagsRepresentation);
+    }
+
+    auto sizeNeededForHeader = Internal::Tag::memoryNeededForTagHeader();
+    auto headerRepresentation = Blob::blobWithCapacity(sizeNeededForHeader);
+    auto tagAddress = headerRepresentation->data();
+    Internal::Tag::setIdentifierForTagAt(this->identifier(), tagAddress);
+    Internal::Tag::setDataSizeForTagAt(subTagsRepresentation->size(), tagAddress);
+
+    destination.append(headerRepresentation);
+    destination.append(subTagsRepresentation);
+}
+
 void ObjectTag::addTo(Blob& destination) const
 {
     auto subTagsRepresentation = Blob::blob();

@@ -40,6 +40,7 @@ namespace NxA { namespace Serato {
 
         count numberOfSubTags(void) const;
 
+        void addInSeratoTrackOrderTo(Blob& destination) const;
         void addTo(Blob& destination) const;
     };
 } }

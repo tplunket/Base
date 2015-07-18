@@ -335,7 +335,7 @@ boolean Track::wasModified(void) const
 
 void Track::addTo(Blob& destination) const
 {
-    internal->trackTag->addTo(destination);
+    internal->trackTag->addInSeratoTrackOrderTo(destination);
 }
 
 void Track::saveToTrackFile(void) const

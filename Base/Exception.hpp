@@ -21,21 +21,37 @@
 
 #pragma once
 
-#include <exception>
+#include "Base/Types.hpp"
+
+#include <stdexcept>
 
 namespace NxA {
-    class Exception : public std::exception {
+    class String;
+    template <class T> class Pointer;
+
+    class Exception : public std::runtime_error {
     public:
         #pragma mark Constructors & Destructors
         Exception() = delete;
-        Exception(const char* format, ...);
-        ~Exception();
-
-        #pragma mark Instance Methods
-        virtual const char* what() const throw();
-
-    private:
-        #pragma mark Instance Variables
-        const char* p_reason;
+        explicit Exception(const character* reason) : std::runtime_error(reason) { };
+        virtual ~Exception() { }
     };
 }
+
+#define NXA_EXCEPTION_NAMED_WITH_PARENT(exception_name, parent_class_name) \
+        class exception_name : public parent_class_name { \
+        public: \
+            explicit exception_name(const character* reason) : parent_class_name(reason) { } \
+            explicit exception_name(const Exception& other) : parent_class_name(other.what()) { } \
+            virtual ~exception_name() { }; \
+            static exception_name exceptionWith(const character* format, ...) \
+            { \
+                constexpr size_t formatStringBufferSize = 256; \
+                char buffer[formatStringBufferSize]; \
+                va_list args; \
+                va_start(args, format); \
+                vsnprintf(buffer, formatStringBufferSize, format, args); \
+                va_end(args); \
+                return exception_name(buffer); \
+            } \
+        };

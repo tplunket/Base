@@ -21,6 +21,8 @@
 
 #pragma once
 
+#include "Base/Assert.hpp"
+
 namespace NxA {
     template <class T> class WeakPointer;
 

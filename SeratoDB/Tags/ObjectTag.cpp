@@ -118,10 +118,6 @@ void ObjectTag::addInSeratoTrackOrderTo(Blob& destination) const
     auto subTagsRepresentation = Blob::blob();
     for (auto& identifier : identifierOrder) {
         if (this->hasSubTagForIdentifier(identifier)) {
-            if (identifier == 'sbav') {
-                printf("hello");
-            }
-            
             auto& tag = this->subTagForIdentifier(identifier);
             tag.addTo(subTagsRepresentation);
             identifiersToOutput.erase(std::find(identifiersToOutput.begin(), identifiersToOutput.end(), identifier));

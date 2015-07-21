@@ -28,6 +28,10 @@ Track::Pointer Track::trackWithTagOnVolume(ObjectTag& trackTag, const String& lo
     auto internalObject = Internal::Track::Pointer(std::make_shared<Internal::Track>(trackTag, locatedOnVolumePath));
     auto newTrack = Track::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
 
+#if PRINT_DEBUG_INFO
+    printf("----------------------------------------\n");
+#endif
+
     auto trackFile = TrackFileFactory::trackFileForPath(newTrack->trackFilePath());
     newTrack->internal->readMarkersFrom(trackFile);
 

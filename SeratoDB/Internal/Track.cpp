@@ -78,7 +78,6 @@ void Track::debugPrintDate(timestamp value, const String& name)
 
 void Track::debugPrintComparaison(const Serato::Track& track, const Serato::TrackFile& trackFile)
 {
-    printf("----------------------------------------\n");
     Track::debugPrintUint(static_cast<uinteger32>(track.size()), String::stringWith("size"));
     Track::debugPrintUint((uint32_t)trackFile.size(), String::stringWith("size"));
     Track::debugPrintDate(track.dateModifiedInSecondsSinceJanuary1st1970(), String::stringWith("datemodified"));
@@ -225,16 +224,25 @@ void Track::readMarkersFrom(const Serato::TrackFile& trackFile)
 {
     auto& allCueMarkers = trackFile.cueMarkers();
     for (auto& marker : allCueMarkers) {
+#if PRINT_DEBUG_INFO
+        printf("Found cue marker at %f and index %d.\n", (float)marker->positionInMilliseconds()/1000, marker->index());
+#endif
         this->cueMarkers->append(Serato::CueMarker::markerWith(marker));
     }
 
     auto& allLoopMarkers = trackFile.loopMarkers();
     for (auto& marker : allLoopMarkers) {
+#if PRINT_DEBUG_INFO
+        printf("Found loop marker at %f and index %d.\n", (float)marker->startPositionInMilliseconds()/1000, marker->index());
+#endif
         this->loopMarkers->append(Serato::LoopMarker::markerWith(marker));
     }
 
     auto& allGridMarkers = trackFile.gridMarkers();
     for (auto& marker : allGridMarkers) {
+#if PRINT_DEBUG_INFO
+        printf("Found grid marker at %f and bpm %f.\n", marker->positionInSeconds(), marker->beatsPerMinute());
+#endif
         this->gridMarkers->append(Serato::GridMarker::markerWith(marker));
     }
 }

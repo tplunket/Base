@@ -19,6 +19,8 @@
 #include <Base/Base.hpp>
 
 namespace NxA { namespace Serato {
+    NXA_EXCEPTION_NAMED_WITH_PARENT(TrackFileError, NxA::Exception);
+
     NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(TrackFile);
 
     class TrackFile : public Object {

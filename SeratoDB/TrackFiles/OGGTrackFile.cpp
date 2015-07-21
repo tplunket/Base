@@ -25,16 +25,18 @@ using namespace NxA::Serato;
 OGGTrackFile::Pointer OGGTrackFile::fileWithFileAt(const String& path)
 {
     auto file = Internal::TagLibFilePointer(std::make_shared<TagLib::Vorbis::File>(path.toUTF8()));
+    if (!file->isValid()) {
+        throw TrackFileError::exceptionWith("Error loading track file '%s'.", path.toUTF8());
+    }
+
     auto internalObject = Internal::OGGTrackFile::Pointer(std::make_shared<Internal::OGGTrackFile>(path, file));
     auto newFile = OGGTrackFile::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
 
-    if (!file->isValid()) {
-        newFile->internal->parsedFileTag = nullptr;
-        newFile->internal->audioProperties = nullptr;
-        return newFile;
+    newFile->internal->parsedFileTag = file->tag();
+    if (!newFile->internal->parsedFileTag) {
+        throw TrackFileError::exceptionWith("Error reading tags from track file '%s'.", path.toUTF8());
     }
 
-    newFile->internal->parsedFileTag = file->tag();
     newFile->internal->audioProperties = file->audioProperties();
     newFile->internal->properties = file->properties();
 

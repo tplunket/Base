@@ -25,16 +25,18 @@ using namespace NxA::Serato;
 FLACTrackFile::Pointer FLACTrackFile::fileWithFileAt(const String& path)
 {
     auto file = Internal::TagLibFilePointer(std::make_shared<TagLib::FLAC::File>(path.toUTF8()));
+    if (!file->isValid()) {
+        throw TrackFileError::exceptionWith("Error loading track file '%s'.", path.toUTF8());
+    }
+
     auto internalObject = Internal::FLACTrackFile::Pointer(std::make_shared<Internal::FLACTrackFile>(path, file));
     auto newFile = FLACTrackFile::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
 
-    if (!file->isValid()) {
-        newFile->internal->parsedFileTag = nullptr;
-        newFile->internal->audioProperties = nullptr;
-        return newFile;
+    newFile->internal->parsedFileTag = file->tag();
+    if (!newFile->internal->parsedFileTag) {
+        throw TrackFileError::exceptionWith("Error reading tags from track file '%s'.", path.toUTF8());
     }
 
-    newFile->internal->parsedFileTag = file->tag();
     newFile->internal->audioProperties = file->audioProperties();
     newFile->internal->properties = file->properties();
 
@@ -72,22 +74,18 @@ String::Pointer FLACTrackFile::grouping(void) const
 
 uinteger32 FLACTrackFile::lengthInMilliseconds(void) const
 {
-    if (internal->audioProperties) {
-        auto audioProperties = reinterpret_cast<const TagLib::FLAC::Properties*>(internal->audioProperties);
+    auto audioProperties = reinterpret_cast<const TagLib::FLAC::Properties*>(internal->audioProperties);
 
-        auto numberOfFrames = audioProperties->sampleFrames();
-        auto sampleRate = audioProperties->sampleRate();
+    auto numberOfFrames = audioProperties->sampleFrames();
+    auto sampleRate = audioProperties->sampleRate();
 
-        uinteger32 numberOfMilliseconds = (static_cast<double>(numberOfFrames) * 1000.0) / static_cast<double>(sampleRate);
-        return numberOfMilliseconds;
-    }
-
-    return 0;
+    uinteger32 numberOfMilliseconds = (static_cast<double>(numberOfFrames) * 1000.0) / static_cast<double>(sampleRate);
+    return numberOfMilliseconds;
 }
 
 boolean FLACTrackFile::hasBitDepth(void) const
 {
-    return internal->audioProperties ? true : false;
+    return true;
 }
 
 uinteger32 FLACTrackFile::bitDepthInBits(void) const

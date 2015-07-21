@@ -25,16 +25,18 @@ using namespace NxA::Serato;
 WAVTrackFile::Pointer WAVTrackFile::fileWithFileAt(const String& path)
 {
     auto file = Internal::TagLibFilePointer(std::make_shared<TagLib::RIFF::WAV::File>(path.toUTF8()));
+    if (!file->isValid()) {
+        throw TrackFileError::exceptionWith("Error loading track file '%s'.", path.toUTF8());
+    }
+
     auto internalObject = Internal::WAVTrackFile::Pointer(std::make_shared<Internal::WAVTrackFile>(path, file));
     auto newFile = WAVTrackFile::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
 
-    if (!file->isValid()) {
-        newFile->internal->parsedFileTag = nullptr;
-        newFile->internal->audioProperties = nullptr;
-        return newFile;
+    newFile->internal->parsedFileTag = file->tag();
+    if (!newFile->internal->parsedFileTag) {
+        throw TrackFileError::exceptionWith("Error reading tags from track file '%s'.", path.toUTF8());
     }
 
-    newFile->internal->parsedFileTag = file->tag();
     newFile->internal->audioProperties = file->audioProperties();
     newFile->internal->properties = file->properties();
 
@@ -47,22 +49,18 @@ WAVTrackFile::Pointer WAVTrackFile::fileWithFileAt(const String& path)
 
 uinteger32 WAVTrackFile::lengthInMilliseconds(void) const
 {
-    if (internal->audioProperties) {
-        auto audioProperties = reinterpret_cast<const TagLib::RIFF::WAV::Properties*>(internal->audioProperties);
+    auto audioProperties = reinterpret_cast<const TagLib::RIFF::WAV::Properties*>(internal->audioProperties);
 
-        auto numberOfFrames = audioProperties->sampleFrames();
-        auto sampleRate = audioProperties->sampleRate();
+    auto numberOfFrames = audioProperties->sampleFrames();
+    auto sampleRate = audioProperties->sampleRate();
 
-        uinteger32 numberOfMilliseconds = (static_cast<double>(numberOfFrames) * 1000.0) / static_cast<double>(sampleRate);
-        return numberOfMilliseconds;
-    }
-
-    return 0;
+    uinteger32 numberOfMilliseconds = (static_cast<double>(numberOfFrames) * 1000.0) / static_cast<double>(sampleRate);
+    return numberOfMilliseconds;
 }
 
 boolean WAVTrackFile::hasBitDepth(void) const
 {
-    return internal->audioProperties ? true : false;
+    return true;
 }
 
 uinteger32 WAVTrackFile::bitDepthInBits(void) const

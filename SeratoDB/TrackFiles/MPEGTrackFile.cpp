@@ -26,17 +26,19 @@ using namespace NxA::Serato;
 MPEGTrackFile::Pointer MPEGTrackFile::fileWithFileAt(const String& path)
 {
     auto file = Internal::TagLibFilePointer(std::make_shared<TagLib::MPEG::File>(path.toUTF8()));
+    if (!file->isValid()) {
+        throw TrackFileError::exceptionWith("Error loading track file '%s'.", path.toUTF8());
+    }
+
     auto internalObject = Internal::MPEGTrackFile::Pointer(std::make_shared<Internal::MPEGTrackFile>(path, file));
     auto newFile = MPEGTrackFile::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
 
-    if (!file->isValid()) {
-        newFile->internal->parsedFileTag = nullptr;
-        newFile->internal->audioProperties = nullptr;
-        return newFile;
-    }
-
     auto mpegFile = dynamic_cast<TagLib::MPEG::File*>(&(*file));
     newFile->internal->parsedFileTag = dynamic_cast<TagLib::Tag*>(mpegFile->ID3v2Tag());
+    if (!newFile->internal->parsedFileTag) {
+        throw TrackFileError::exceptionWith("Error reading tags from track file '%s'.", path.toUTF8());
+    }
+
     newFile->internal->audioProperties = file->audioProperties();
     newFile->internal->properties = file->properties();
 

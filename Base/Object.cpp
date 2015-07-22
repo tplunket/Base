@@ -27,6 +27,14 @@ NXA_GENERATED_OBJECT_IMPLEMENTATION_FOR(NxA, Object);
 
 using namespace NxA;
 
+#pragma mark Static Methods
+
+uinteger32 Object::hashOfClassName(void)
+{
+    static uinteger32 hash = String::hashFor(nameOfClass());
+    return hash;
+}
+
 #pragma mark Operators
 
 bool Object::operator==(const Object& other) const

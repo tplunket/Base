@@ -32,6 +32,7 @@ namespace NxA {
 
     class String : public Object, private std::string {
         NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_BASE_CLASS(NxA, String);
+        NXA_GENERATED_CLASS_IDENTIFIER_METHODS_FOR(NxA, String);
 
     public:
         #pragma mark Factory Methods
@@ -42,15 +43,20 @@ namespace NxA {
         static String::Pointer stringWithUTF16(const Blob& other);
 
         #pragma mark Class Methods
-        static const character* nameOfClass(void)
-        {
-            return "NxA::String";
-        }
+        static uinteger32 hashFor(String::Pointer str);
+        static uinteger32 hashFor(const character* str);
+        static count lengthOf(const character* str);
         
         #pragma mark Operators
         bool operator==(const String& other) const;
         bool operator==(const char* other) const;
         bool operator!=(const char* other) const;
+
+        integer32 compareTo(const String& other) const {
+            return 0;
+        }
+        bool operator<(const String& other) const { return compareTo(other) < 0; }
+        bool operator>(const String& other) const { return compareTo(other) > 0; }
 
         #pragma mark Instance Methods
         virtual String::Pointer description(void) const;
@@ -60,6 +66,8 @@ namespace NxA {
         {
             return this->length() == 0;
         };
+
+        uinteger32 hash(void) const;
 
         const character* toUTF8(void) const;
         NxA::Pointer<NxA::Blob> toUTF16(void) const;

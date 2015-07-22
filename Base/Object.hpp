@@ -33,11 +33,12 @@ namespace NxA {
         NXA_GENERATED_OBJECT_DECLARATIONS_FOR(NxA, Object);
 
     public:
-        #pragma mark Operators
+        #pragma mark Static Methods
         static const character* nameOfClass(void)
         {
             return "NxA::Object";
         }
+        static uinteger32 hashOfClassName(void);
 
         #pragma mark Operators
         bool operator==(const Object& other) const;

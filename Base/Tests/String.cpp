@@ -619,3 +619,43 @@ TEST(Base_String, IndexOfLastOccurenceOf_StringWithAGivenSubStringAndCharacterPo
     // -- Then.
     ASSERT_EQ(test->indexOfLastOccurenceOf("This"), 16);
 }
+
+TEST(Base_String, LengthOf_ConstCharacterPointer_ReturnsCorrectLength)
+{
+    // -- Given.
+    auto test = "123456789";
+
+    // -- When.
+    // -- Then.
+    ASSERT_EQ(String::lengthOf(test), 9);
+}
+
+TEST(Base_String, HashFor_ConstCharacterPointerAndStringPointer_AreEqual)
+{
+    // -- Given.
+    auto testStr = String::stringWith("Hello");
+    auto testPtr = "Hello";
+
+    // -- When.
+    // -- Then.
+    ASSERT_EQ(String::hashFor(testPtr), testStr->hash());
+}
+
+TEST(Base_String, HashOfClassName_AString_ReturnsExpectedValue)
+{
+    // -- Given.
+    // -- When.
+    // -- Then.
+    ASSERT_EQ(String::hashOfClassName(), String::hashFor("NxA::String"));
+}
+
+TEST(Base_String, ClassHash_AString_ReturnsExpectedValue)
+{
+    // -- Given.
+    auto test = String::stringWith("Hello");
+
+    // -- When.
+    // -- Then.
+    ASSERT_EQ(test->classHash(), String::hashOfClassName());
+}
+

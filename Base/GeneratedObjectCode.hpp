@@ -120,6 +120,10 @@ namespace NxA {
             { \
                 return namespace_name::class_name::nameOfClass(); \
             } \
+            virtual uinteger classHash(void) const \
+            { \
+                return hashOfClassName(); \
+            } \
             bool operator!=(const namespace_name::class_name& other) const \
             { \
                 return !this->operator==(other); \
@@ -162,15 +166,24 @@ namespace NxA {
         private: \
             namespace_name::Internal::class_name* internal;
 
-#define NXA_GENERATED_SHARED_OBJECT_DECLARATION_FOR(namespace_name, class_name...) \
-        NXA_GENERATED_SHARED_BASE_DECLARATIONS_FOR(namespace_name, class_name) \
-        NXA_GENERATED_SHARED_OBJECT_CONSTRUCTORS_DECLARATION_FOR(namespace_name, class_name) \
+#define NXA_GENERATED_CLASS_IDENTIFIER_METHODS_FOR(namespace_name, class_name) \
         public: \
-            friend namespace_name::Internal::class_name; \
             static const character* nameOfClass(void) \
             { \
                 return NXA_STR_VALUE_FOR(namespace_name) "::" NXA_STR_VALUE_FOR(class_name); \
             } \
+            static const uinteger32 hashOfClassName(void) \
+            { \
+                static uinteger32 result = NxA::String::hashFor(nameOfClass()); \
+                return result; \
+            }
+
+#define NXA_GENERATED_SHARED_OBJECT_DECLARATION_FOR(namespace_name, class_name...) \
+        NXA_GENERATED_SHARED_BASE_DECLARATIONS_FOR(namespace_name, class_name) \
+        NXA_GENERATED_SHARED_OBJECT_CONSTRUCTORS_DECLARATION_FOR(namespace_name, class_name) \
+        NXA_GENERATED_CLASS_IDENTIFIER_METHODS_FOR(namespace_name, class_name) \
+        public: \
+            friend namespace_name::Internal::class_name; \
         protected: \
             static NxA::Pointer<NxA::Internal::Object> makeInternal(void); \
         private: \

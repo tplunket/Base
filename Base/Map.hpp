@@ -43,13 +43,13 @@ namespace NxA {
         using iterator = typename std::map<const Tkey, Tvalue>::iterator;
         using const_iterator = typename std::map<const Tkey, Tvalue>::const_iterator;
         
-#pragma mark Factory Methods
+        #pragma mark Factory Methods
         static NxA::Pointer<Map<Tkey, Tvalue>>  map(void)
         {
             return Map::Pointer(std::make_shared<Map>(Map::constructor_access()));
         }
         
-#pragma mark Class Methods
+        #pragma mark Class Methods
         static const character* nameOfClass(void)
         {
             static std::mutex m;
@@ -69,7 +69,7 @@ namespace NxA {
             return buffer.get();
         }
         
-#pragma mark Instance Methods
+        #pragma mark Instance Methods
         const Tvalue& valueForKey(const Tkey& key) const
         {
             return this->std::map<const Tkey, Tvalue>::at(key);

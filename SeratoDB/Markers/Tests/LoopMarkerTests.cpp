@@ -46,7 +46,7 @@ TEST(SeratoDB_LoopMarker, markerWithMemoryAt_ASeratoMarkerTagWithAnInvalidTagNam
 
     // -- When.
     // -- Then.
-    ASSERT_THROW(LoopMarker::markerWithMemoryAt(data), NxA::Exception);
+    ASSERT_THROW(LoopMarker::markerWithMemoryAt(data), NxA::AssertionFailed);
 }
 
 TEST(SeratoDB_LoopMarker, markerWithLabelStartEndPositionsAndIndex_AMarkerWithInitialValues_ReturnsACorrectMarker)

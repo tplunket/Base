@@ -22,19 +22,40 @@
 #pragma once
 
 #include "TrackFiles/OGGTrackFile.hpp"
-#include "TrackFiles/Internal/ID3TrackFile.hpp"
+#include "TrackFiles/Internal/TrackFile.hpp"
 
 #include <Base/Base.hpp>
 
+#include <xiphcomment.h>
+
 namespace NxA { namespace Serato { namespace Internal {
-    struct OGGTrackFile : public ID3TrackFile {
+    #pragma mark Constants
+    static const character* oggComposerFieldName = "COMPOSER";
+    static const character* oggGroupingFieldName = "GROUPING";
+    static const character* oggBpmFieldName = "BPM";
+    static const character* oggRecordLabelFieldName = "LABEL";
+    static const character* oggRemixerFieldName = "REMIXER";
+
+    struct OGGTrackFile : public TrackFile {
         NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTORS_FOR(NxA::Serato, OGGTrackFile);
 
         #pragma mark Constructor & Destructors
         OGGTrackFile(const String& path, const TagLibFilePointer& newFile);
 
+        #pragma mark Class Methods
+        static String::Pointer stringValueForFieldNamedInComment(const character* name, const TagLib::Ogg::XiphComment* oggComment);
+        static void setStringValueForFieldNamedInComment(const String& value, const character* name, TagLib::Ogg::XiphComment* oggComment);
+
+        #pragma mark Instance Variables
+        TagLib::Ogg::XiphComment* oggComment;
+
         #pragma mark Instance Methods
+        String::Pointer stringValueForFieldNamed(const character* name) const;
+        void setStringValueForFieldNamed(const String& value, const character* name);
+
         void readMarkers(void);
+        void replaceGridMarkersField(void);
+        void replaceMarkersV2Field(void);
         void writeMarkers(void);
     };
 } } }

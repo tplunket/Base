@@ -21,20 +21,17 @@
 
 #include "TrackFiles/Internal/TrackFile.hpp"
 
-#include "Base64.hpp"
-
-using namespace NxA;
-using namespace NxA::Serato::Internal;
-
-#pragma mark Structures
-
 namespace NxA { namespace Serato { namespace Internal {
+    #pragma mark Structures
     typedef struct {
         unsigned char majorVersion;
         unsigned char minorVersion;
         unsigned char data[0];
     } MarkerHeaderStruct;
 } } }
+
+using namespace NxA;
+using namespace NxA::Serato::Internal;
 
 #pragma mark Constructors & Destructors
 
@@ -73,28 +70,11 @@ Blob::Pointer TrackFile::markerV2TagDataFrom(const byte* tagStart)
 
 #pragma mark Instance Methods
 
-void TrackFile::readMarkersV2FromBase64Data(const byte* markerV2Data, count totalSize)
+const byte* TrackFile::readMarkerAtAndAdvanceToNextTag(const byte* tagStart)
 {
-    if (!totalSize) {
-        return;
-    }
+    auto tagName = String::stringWith(reinterpret_cast<const character*>(tagStart));
 
-    auto decodedData = Base64::decodeBlock(markerV2Data, totalSize);
-
-    auto markerStruct = reinterpret_cast<MarkerHeaderStruct*>(decodedData->data());
-    if ((markerStruct->majorVersion != 1) || (markerStruct->minorVersion != 1)) {
-        return;
-    }
-
-    // -- FIXME: The data written by Serato sometimes contains an extra byte at the end.
-    // -- This might be a bug in the decode method but since marker data is always more
-    // -- than one byte long, we substract one here to make sure we don't go over the end.
-    const byte* markerDataEnd = (const byte*)markerStruct + decodedData->size() - 1;
-    const byte* tagStart = (const byte*)markerStruct->data;
-
-    while (tagStart < markerDataEnd) {
-        auto tagName = String::stringWith(reinterpret_cast<const character*>(tagStart));
-
+    try {
         if (*tagName == "CUE") {
             this->cueMarkers->append(Serato::CueMarker::markerWithMemoryAt(tagStart));
         }
@@ -104,8 +84,34 @@ void TrackFile::readMarkersV2FromBase64Data(const byte* markerV2Data, count tota
         else {
             this->otherTags->append(markerV2TagDataFrom(tagStart));
         }
+    }
+    catch (LoopMarkerError exception) {
+        // TODO: This should be a logging call instead.
+        printf("%s\n", exception.what());
+    }
 
-        tagStart = nextTagPositionAfterTagNamed(tagName, tagStart);
+    return nextTagPositionAfterTagNamed(tagName, tagStart);
+}
+
+void TrackFile::readMarkersV2FromBase64String(const byte* markerV2Data, count totalSize)
+{
+    if (!totalSize) {
+        return;
+    }
+
+    auto decodedData = Blob::blobWithBase64String(String::stringWith(reinterpret_cast<const character*>(markerV2Data),
+                                                                     totalSize));
+
+    auto markerStruct = reinterpret_cast<MarkerHeaderStruct*>(decodedData->data());
+    if ((markerStruct->majorVersion != 1) || (markerStruct->minorVersion != 1)) {
+        return;
+    }
+
+    auto markerDataEnd = (const byte*)markerStruct + decodedData->size();
+    auto tagStart = (const byte*)markerStruct->data;
+
+    while (*tagStart && (tagStart < markerDataEnd)) {
+        tagStart = this->readMarkerAtAndAdvanceToNextTag(tagStart);
     }
 }
 
@@ -114,12 +120,8 @@ void TrackFile::addGridMarker(Serato::GridMarker& gridMarker)
     this->gridMarkers->append(gridMarker.pointer());
 }
 
-void TrackFile::readGridMarkersFrom(const byte* gridMarkerData, size_t totalSize)
+void TrackFile::readGridMarkersFrom(const byte* gridMarkerData)
 {
-    if (!totalSize) {
-        return;
-    }
-
     auto numberOfMarkers = Platform::bigEndianUInteger32ValueAt(gridMarkerData);
     gridMarkerData += 4;
 
@@ -130,7 +132,7 @@ void TrackFile::readGridMarkersFrom(const byte* gridMarkerData, size_t totalSize
     }
 }
 
-Blob::Pointer TrackFile::base64DataFromMarkersV2(void)
+String::Pointer TrackFile::base64StringFromMarkersV2(void)
 {
     auto decodedData = Blob::blob();
 
@@ -153,7 +155,10 @@ Blob::Pointer TrackFile::base64DataFromMarkersV2(void)
         decodedData->append(tagData);
     }
 
-    auto encodedData = Base64::encodeBlock(decodedData->data(), decodedData->size());
+    // -- This marks the end of tags.
+    decodedData->append('\0');
+
+    auto encodedData = Blob::base64StringFor(decodedData->data(), decodedData->size());
     return encodedData;
 }
 

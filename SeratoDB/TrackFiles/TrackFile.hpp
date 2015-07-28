@@ -36,9 +36,9 @@ namespace NxA { namespace Serato {
         virtual String::Pointer key(void) const = 0;
         virtual String::Pointer comments(void) const;
         virtual String::Pointer album(void) const;
-        virtual String::Pointer composer(void) const;
+        virtual String::Pointer composer(void) const = 0;
         virtual String::Pointer grouping(void) const = 0;
-        virtual String::Pointer bpm(void) const;
+        virtual String::Pointer bpm(void) const = 0;
 
         virtual count size(void) const;
         virtual uinteger32 lengthInMilliseconds(void) const;
@@ -54,7 +54,7 @@ namespace NxA { namespace Serato {
         virtual String::Pointer recordLabel(void) const = 0;
         virtual boolean hasRemixer(void) const = 0;
         virtual String::Pointer remixer(void) const = 0;
-        virtual String::Pointer yearReleased(void) const = 0;
+        virtual String::Pointer yearReleased(void) const;
 
         virtual Blob::Pointer artwork(void) const = 0;
         
@@ -68,13 +68,13 @@ namespace NxA { namespace Serato {
         virtual void setKey(const String& key) = 0;
         virtual void setComments(const String& comments);
         virtual void setAlbum(const String& album);
-        virtual void setComposer(const String& composer);
+        virtual void setComposer(const String& composer) = 0;
         virtual void setGrouping(const String& grouping) = 0;
-        virtual void setBpm(const String& bpm);
+        virtual void setBpm(const String& bpm) = 0;
         virtual void setTrackNumber(count trackNumber);
         virtual void setRecordLabel(const String& recordLabel) = 0;
         virtual void setRemixer(const String& remixer) = 0;
-        virtual void setYearReleased(const String& year) = 0;
+        virtual void setYearReleased(const String& year);
 
         virtual void setArtwork(const Blob& artwork) = 0;
 

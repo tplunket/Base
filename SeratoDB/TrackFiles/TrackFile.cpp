@@ -15,6 +15,7 @@
 
 #include <tpropertymap.h>
 #include <generalencapsulatedobjectframe.h>
+#include <audioproperties.h>
 
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_PURE_VIRTUAL_CLASS_WITH_PARENT(NxA::Serato, TrackFile, Object);
 
@@ -25,72 +26,27 @@ using namespace NxA::Serato;
 
 String::Pointer TrackFile::title(void) const
 {
-    auto text = internal->parsedFileTag->title();
-    if (text != TagLib::String::null) {
-        return String::stringWith(text.toCString());
-    }
-
-    return String::string();
+    return String::stringWith(internal->tag->title().toCString());
 }
 
 String::Pointer TrackFile::artist(void) const
 {
-    auto text = internal->parsedFileTag->artist();
-    if (text != TagLib::String::null) {
-        return String::stringWith(text.toCString());
-    }
-
-    return String::string();
+    return String::stringWith(internal->tag->artist().toCString());
 }
 
 String::Pointer TrackFile::genre(void) const
 {
-    auto text = internal->parsedFileTag->genre();
-    if (text != TagLib::String::null) {
-        return String::stringWith(text.toCString());
-    }
-
-    return String::string();
+    return String::stringWith(internal->tag->genre().toCString());
 }
 
 String::Pointer TrackFile::comments(void) const
 {
-    auto text = internal->parsedFileTag->comment();
-    if (text != TagLib::String::null) {
-        return String::stringWith(text.toCString());
-    }
-
-    return String::string();
+    return String::stringWith(internal->tag->comment().toCString());
 }
 
 String::Pointer TrackFile::album(void) const
 {
-    auto text = internal->parsedFileTag->album();
-    if (text != TagLib::String::null) {
-        return String::stringWith(text.toCString());
-    }
-
-    return String::string();
-}
-
-String::Pointer TrackFile::composer(void) const
-{
-    auto text = internal->properties["COMPOSER"].toString();
-    if (text != TagLib::String::null) {
-        return String::stringWith(text.toCString());
-    }
-
-    return String::string();
-}
-
-String::Pointer TrackFile::bpm(void) const
-{
-    auto text = internal->properties["BPM"].toString();
-    if (text != TagLib::String::null) {
-        return String::stringWith(text.toCString());
-    }
-
-    return String::string();
+    return String::stringWith(internal->tag->album().toCString());
 }
 
 count TrackFile::size(void) const
@@ -100,12 +56,18 @@ count TrackFile::size(void) const
 
 uinteger32 TrackFile::lengthInMilliseconds(void) const
 {
-    return internal->audioProperties->length() * 1000;
+    auto audioProperties = internal->file->audioProperties();
+    NXA_ASSERT_NOT_NULL(audioProperties);
+
+    return audioProperties->length() * 1000;
 }
 
 uinteger32 TrackFile::bitRateInKiloBitsPerSecond(void) const
 {
-    return internal->audioProperties->bitrate();
+    auto audioProperties = internal->file->audioProperties();
+    NXA_ASSERT_NOT_NULL(audioProperties);
+
+    return audioProperties->bitrate();
 }
 
 boolean TrackFile::hasBitDepth(void) const
@@ -120,12 +82,20 @@ uinteger32 TrackFile::bitDepthInBits(void) const
 
 uinteger32 TrackFile::sampleRateInSamplesPerSecond(void) const
 {
-    return internal->audioProperties->sampleRate();
+    TagLib::AudioProperties* audioProperties = internal->file->audioProperties();
+    NXA_ASSERT_NOT_NULL(audioProperties);
+
+    return audioProperties->sampleRate();
 }
 
 count TrackFile::trackNumber(void) const
 {
-    return internal->parsedFileTag->track();
+    return internal->tag->track();
+}
+
+String::Pointer TrackFile::yearReleased(void) const
+{
+    return String::stringWithFormat("%04d", internal->file->tag()->year());
 }
 
 const CueMarker::Array& TrackFile::cueMarkers(void) const
@@ -145,42 +115,37 @@ const GridMarker::Array& TrackFile::gridMarkers(void) const
 
 void TrackFile::setTitle(const String& title)
 {
-    internal->parsedFileTag->setTitle(TagLib::String(title.toUTF8()));
+    internal->tag->setTitle(TagLib::String(title.toUTF8()));
 }
 
 void TrackFile::setArtist(const String& artist)
 {
-    internal->parsedFileTag->setArtist(TagLib::String(artist.toUTF8()));
+    internal->tag->setArtist(TagLib::String(artist.toUTF8()));
 }
 
 void TrackFile::setGenre(const String& genre)
 {
-    internal->parsedFileTag->setGenre(TagLib::String(genre.toUTF8()));
+    internal->tag->setGenre(TagLib::String(genre.toUTF8()));
 }
 
 void TrackFile::setComments(const String& comments)
 {
-    internal->parsedFileTag->setComment(TagLib::String(comments.toUTF8()));
+    internal->tag->setComment(TagLib::String(comments.toUTF8()));
 }
 
 void TrackFile::setAlbum(const String& album)
 {
-    internal->parsedFileTag->setAlbum(TagLib::String(album.toUTF8()));
-}
-
-void TrackFile::setComposer(const String& composer)
-{
-    internal->properties["COMPOSER"] = TagLib::String(composer.toUTF8());
-}
-
-void TrackFile::setBpm(const String& bpm)
-{
-    internal->properties["BPM"] = TagLib::String(bpm.toUTF8());
+    internal->tag->setAlbum(TagLib::String(album.toUTF8()));
 }
 
 void TrackFile::setTrackNumber(count trackNumber)
 {
-    internal->parsedFileTag->setTrack(trackNumber);
+    internal->tag->setTrack(trackNumber);
+}
+
+void TrackFile::setYearReleased(const String& year)
+{
+    internal->tag->setYear(::atoi(year.toUTF8()));
 }
 
 void TrackFile::setCueMarkers(CueMarker::Array& markers)
@@ -201,6 +166,5 @@ void TrackFile::setGridMarkers(GridMarker::Array& markers)
 void TrackFile::saveChanges(void)
 {
     internal->writeMarkers();
-    internal->file->setProperties(internal->properties);
     internal->file->save();
 }

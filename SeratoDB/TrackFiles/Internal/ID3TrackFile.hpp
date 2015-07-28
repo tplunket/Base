@@ -30,6 +30,16 @@
 #include <generalencapsulatedobjectframe.h>
 
 namespace NxA { namespace Serato { namespace Internal {
+    #pragma mark Constants
+    constexpr const character* id3KeyFrameName = "TKEY";
+    constexpr const character* id3ComposerFrameName = "TCOM";
+    constexpr const character* id3GroupingFrameName = "TIT1";
+    constexpr const character* id3BpmFrameName = "TBPM";
+    constexpr const character* id3RecordLabelFrameName = "TPUB";
+    constexpr const character* id3RemixerFrameName = "TPE4";
+    //constexpr const character* id3DateFrameName = "TDRC";
+    constexpr const character* id3ArtworkFrameName = "APIC";
+
     struct ID3TrackFile : public TrackFile {
         NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTORS_FOR(NxA::Serato, ID3TrackFile);
 
@@ -40,11 +50,22 @@ namespace NxA { namespace Serato { namespace Internal {
         static boolean isAValidGeobFrame(const TagLib::ID3v2::GeneralEncapsulatedObjectFrame* frame);
         static TagLib::ID3v2::FrameList::Iterator frameInListWithDescription(TagLib::ID3v2::FrameList& list,
                                                                              const String& description);
-        
+        static String::Pointer stringValueForFrameNamedInTag(const character* name, const TagLib::ID3v2::Tag* id3v2Tag);
+        static void setStringValueForFrameNamedInTag(const String& value, const character* name, TagLib::ID3v2::Tag* id3v2Tag);
+
+        #pragma mark Instance Variables
+        TagLib::ID3v2::Tag* id3v2Tag;
+
         #pragma mark Instance Methods
+        String::Pointer stringValueForFrameNamed(const character* name) const;
+        void setStringValueForFrameNamed(const String& value, const character* name);
+
+        void removeArtwork(void);
+        void removeGEOBFrameNamed(const String& name);
+
         void readMarkers(void);
+        void replaceMarkersV2Frame(void);
+        void replaceGridMarkersFrame(void);
         void writeMarkers(void);
-        void writeMarkersV2Frame(void);
-        void writeGridMarkersFrame(void);
     };
 } } }

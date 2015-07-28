@@ -30,17 +30,14 @@ MPEGTrackFile::Pointer MPEGTrackFile::fileWithFileAt(const String& path)
         throw TrackFileError::exceptionWith("Error loading track file '%s'.", path.toUTF8());
     }
 
+    auto mpegFile = dynamic_cast<TagLib::MPEG::File*>(&(*file));
+
     auto internalObject = Internal::MPEGTrackFile::Pointer(std::make_shared<Internal::MPEGTrackFile>(path, file));
     auto newFile = MPEGTrackFile::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
-
-    auto mpegFile = dynamic_cast<TagLib::MPEG::File*>(&(*file));
-    newFile->internal->parsedFileTag = dynamic_cast<TagLib::Tag*>(mpegFile->ID3v2Tag());
-    if (!newFile->internal->parsedFileTag) {
+    newFile->internal->tag = newFile->internal->id3v2Tag = mpegFile->ID3v2Tag();
+    if (!newFile->internal->tag) {
         throw TrackFileError::exceptionWith("Error reading tags from track file '%s'.", path.toUTF8());
     }
-
-    newFile->internal->audioProperties = file->audioProperties();
-    newFile->internal->properties = file->properties();
 
     newFile->internal->readMarkers();
 

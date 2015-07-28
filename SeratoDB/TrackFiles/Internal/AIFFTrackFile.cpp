@@ -28,5 +28,4 @@ using namespace NxA::Serato::Internal;
 
 #pragma mark Constructors & Destructors
 
-AIFFTrackFile::AIFFTrackFile(const String& path, const TagLibFilePointer& newFile) :
-                             ID3TrackFile(path, newFile) { }
+AIFFTrackFile::AIFFTrackFile(const String& path, const TagLibFilePointer& newFile) : ID3TrackFile(path, newFile) { }

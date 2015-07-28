@@ -30,7 +30,9 @@ namespace NxA { namespace Serato {
         #pragma mark Instance Methods
         virtual boolean hasKey(void) const;
         virtual String::Pointer key(void) const;
+        virtual String::Pointer composer(void) const;
         virtual String::Pointer grouping(void) const;
+        virtual String::Pointer bpm(void) const;
 
         virtual uinteger32 lengthInMilliseconds(void) const;
         virtual boolean hasBitDepth(void) const;
@@ -40,15 +42,15 @@ namespace NxA { namespace Serato {
         virtual String::Pointer recordLabel(void) const;
         virtual boolean hasRemixer(void) const;
         virtual String::Pointer remixer(void) const;
-        virtual String::Pointer yearReleased(void) const;
 
         virtual Blob::Pointer artwork(void) const;
 
         virtual void setKey(const String& key);
+        virtual void setComposer(const String& composer);
         virtual void setGrouping(const String& grouping);
+        virtual void setBpm(const String& bpm);
         virtual void setRecordLabel(const String& recordLabel);
         virtual void setRemixer(const String& remixer);
-        virtual void setYearReleased(const String& year);
 
         virtual void setArtwork(const Blob& artwork);
     };

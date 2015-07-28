@@ -15,7 +15,7 @@
 
 #include <vorbisfile.h>
 
-NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, OGGTrackFile, ID3TrackFile);
+NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, OGGTrackFile, TrackFile);
 
 using namespace NxA;
 using namespace NxA::Serato;
@@ -29,16 +29,14 @@ OGGTrackFile::Pointer OGGTrackFile::fileWithFileAt(const String& path)
         throw TrackFileError::exceptionWith("Error loading track file '%s'.", path.toUTF8());
     }
 
+    auto oggFile = dynamic_cast<TagLib::Vorbis::File*>(&(*file));
+
     auto internalObject = Internal::OGGTrackFile::Pointer(std::make_shared<Internal::OGGTrackFile>(path, file));
     auto newFile = OGGTrackFile::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
-
-    newFile->internal->parsedFileTag = file->tag();
-    if (!newFile->internal->parsedFileTag) {
+    newFile->internal->tag = newFile->internal->oggComment = oggFile->tag();
+    if (!newFile->internal->tag) {
         throw TrackFileError::exceptionWith("Error reading tags from track file '%s'.", path.toUTF8());
     }
-
-    newFile->internal->audioProperties = file->audioProperties();
-    newFile->internal->properties = file->properties();
 
     newFile->internal->readMarkers();
 
@@ -57,14 +55,19 @@ String::Pointer OGGTrackFile::key(void) const
     return String::string();
 }
 
+String::Pointer OGGTrackFile::composer(void) const
+{
+    return internal->stringValueForFieldNamed(Internal::oggComposerFieldName);
+}
+
 String::Pointer OGGTrackFile::grouping(void) const
 {
-    auto text = internal->properties["GROUPING"].toString();
-    if (text != TagLib::String::null) {
-        return String::stringWith(text.toCString());
-    }
+    return internal->stringValueForFieldNamed(Internal::oggGroupingFieldName);
+}
 
-    return String::string();
+String::Pointer OGGTrackFile::bpm(void) const
+{
+    return internal->stringValueForFieldNamed(Internal::oggBpmFieldName);
 }
 
 boolean OGGTrackFile::hasRecordLabel(void) const
@@ -74,12 +77,7 @@ boolean OGGTrackFile::hasRecordLabel(void) const
 
 String::Pointer OGGTrackFile::recordLabel(void) const
 {
-    auto text = internal->properties["LABEL"].toString();
-    if (text != TagLib::String::null) {
-        return String::stringWith(text.toCString());
-    }
-
-    return String::string();
+    return internal->stringValueForFieldNamed(Internal::oggRecordLabelFieldName);
 }
 
 boolean OGGTrackFile::hasRemixer(void) const
@@ -89,22 +87,7 @@ boolean OGGTrackFile::hasRemixer(void) const
 
 String::Pointer OGGTrackFile::remixer(void) const
 {
-    auto text = internal->properties["REMIXER"].toString();
-    if (text != TagLib::String::null) {
-        return String::stringWith(text.toCString());
-    }
-
-    return String::string();
-}
-
-String::Pointer OGGTrackFile::yearReleased(void) const
-{
-    auto text = internal->properties["YEAR"].toString();
-    if (text != TagLib::String::null) {
-        return String::stringWith(text.toCString());
-    }
-
-    return String::string();
+    return internal->stringValueForFieldNamed(Internal::oggRemixerFieldName);
 }
 
 Blob::Pointer OGGTrackFile::artwork(void) const
@@ -118,24 +101,29 @@ void OGGTrackFile::setKey(const String& key)
     // -- This is not supported by OGG files.
 }
 
+void OGGTrackFile::setComposer(const String& composer)
+{
+    internal->setStringValueForFieldNamed(composer, Internal::oggComposerFieldName);
+}
+
 void OGGTrackFile::setGrouping(const String& grouping)
 {
-    internal->properties["GROUPING"] = TagLib::String(grouping.toUTF8());
+    internal->setStringValueForFieldNamed(grouping, Internal::oggGroupingFieldName);
+}
+
+void OGGTrackFile::setBpm(const String& bpm)
+{
+    internal->setStringValueForFieldNamed(bpm, Internal::oggBpmFieldName);
 }
 
 void OGGTrackFile::setRecordLabel(const String& recordLabel)
 {
-    internal->properties["LABEL"] = TagLib::String(recordLabel.toUTF8());
+    internal->setStringValueForFieldNamed(recordLabel, Internal::oggRecordLabelFieldName);
 }
 
 void OGGTrackFile::setRemixer(const String& remixer)
 {
-    internal->properties["REMIXER"] = TagLib::String(remixer.toUTF8());
-}
-
-void OGGTrackFile::setYearReleased(const String& year)
-{
-    internal->properties["YEAR"] = TagLib::String(year.toUTF8());
+    internal->setStringValueForFieldNamed(remixer, Internal::oggRemixerFieldName);
 }
 
 void OGGTrackFile::setArtwork(const Blob& artwork)

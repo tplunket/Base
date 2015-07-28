@@ -20,16 +20,11 @@
 //
 
 #include "TrackFiles/Internal/FLACTrackFile.hpp"
-#include "Base64.hpp"
 
 // -- Generated internal implementation ommitted because this class does not use the default contructor.
 
-using namespace NxA;
-using namespace NxA::Serato::Internal;
-
-#pragma mark Structures
-
 namespace NxA { namespace Serato { namespace Internal {
+    #pragma mark Structures
     typedef struct {
         unsigned char mimeType[25];
         unsigned char filename[1];
@@ -38,93 +33,110 @@ namespace NxA { namespace Serato { namespace Internal {
         unsigned char minorVersion;
         unsigned char data[0];
     } FLACMarkersHeaderStruct;
+
+    #pragma mark Constants
+    constexpr const character* flacMarkersItemName = "SERATO_MARKERS";
+    constexpr const character* flacMarkersV2ItemName = "SERATO_MARKERS_V2";
+    constexpr const character* flacBeatgridItemName = "SERATO_BEATGRID";
 } } }
+
+using namespace NxA;
+using namespace NxA::Serato::Internal;
 
 #pragma mark Constructors & Destructors
 
-FLACTrackFile::FLACTrackFile(const String& path, const TagLibFilePointer& newFile) :
-                             TrackFile(path, newFile) { }
+FLACTrackFile::FLACTrackFile(const String& path, const TagLibFilePointer& newFile) : TrackFile(path, newFile) { }
 
 #pragma mark Instance Methods
 
 void FLACTrackFile::readMarkers(void)
 {
-    auto markersEncodedData = this->properties["SERATO_MARKERS_V2"].toString();
+    auto& fieldListMap = this->oggComment->fieldListMap();
+
+    auto markersEncodedData = fieldListMap[flacMarkersV2ItemName].toString();
     auto encodedDataSize = markersEncodedData.size();
     if (encodedDataSize) {
-        auto decodedMarkersData = Base64::decodeBlock(reinterpret_cast<const char*>(markersEncodedData.data(TagLib::String::UTF8).data()),
-                                                      encodedDataSize);
+        auto decodedMarkersData = Blob::blobWithBase64String(String::stringWith(markersEncodedData.data(TagLib::String::UTF8).data(),
+                                                                                encodedDataSize));
 
         auto headerStruct = reinterpret_cast<const FLACMarkersHeaderStruct*>(decodedMarkersData->data());
-        this->readMarkersV2FromBase64Data(headerStruct->data, decodedMarkersData->size() - sizeof(FLACMarkersHeaderStruct));
+        if ((headerStruct->majorVersion == 1) && (headerStruct->minorVersion == 1)) {
+            this->readMarkersV2FromBase64String(headerStruct->data, decodedMarkersData->size() - sizeof(FLACMarkersHeaderStruct));
+        }
     }
 
-    auto beatGridEncodedData = this->properties["SERATO_BEATGRID"].toString();
+    auto beatGridEncodedData = fieldListMap[flacBeatgridItemName].toString();
     auto encodedBeatGridDataSize = beatGridEncodedData.size();
     if (encodedBeatGridDataSize) {
-        auto decodedGridMarkersData = Base64::decodeBlock(reinterpret_cast<const char*>(beatGridEncodedData.data(TagLib::String::UTF8).data()),
-                                                          encodedBeatGridDataSize);
+        auto decodedGridMarkersData = Blob::blobWithBase64String(String::stringWith(beatGridEncodedData.data(TagLib::String::UTF8).data(),
+                                                                                    encodedBeatGridDataSize));
         auto headerStruct = reinterpret_cast<const FLACMarkersHeaderStruct*>(decodedGridMarkersData->data());
         if ((headerStruct->majorVersion == 1) && (headerStruct->minorVersion == 0)) {
-            this->readGridMarkersFrom(headerStruct->data, decodedGridMarkersData->size() - sizeof(FLACMarkersHeaderStruct));
+            if ((decodedGridMarkersData->size() - sizeof(FLACMarkersHeaderStruct)) > 0) {
+                this->readGridMarkersFrom(headerStruct->data);
+            }
         }
     }
 }
 
-void FLACTrackFile::writeMarkers(void)
+void FLACTrackFile::writeMarkersV2Item(void)
 {
-    if (this->cueMarkers->length() || this->loopMarkers->length()) {
-        auto decodedData = Blob::blob();
+    this->oggComment->removeField(flacMarkersV2ItemName);
 
-        FLACMarkersHeaderStruct header;
-        memcpy(header.mimeType, "application/octet-stream", 25);
-        header.filename[0] = 0;
-        memcpy(header.description, "Serato Markers2", 16);
-        header.majorVersion = 1;
-        header.minorVersion = 1;
-
-        auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<const byte*>(&header), sizeof(header));
-        decodedData->append(headerData);
-
-        auto base64Data = this->base64DataFromMarkersV2();
-        decodedData->append(base64Data);
-
-        auto encodedData = Base64::encodeBlock(decodedData->data(), decodedData->size());
-        encodedData->append(static_cast<character>(0));
-
-        TagLib::StringList newList;
-        newList.append(TagLib::String(reinterpret_cast<character*>(encodedData->data())));
-        this->properties["SERATO_MARKERS_V2"] = newList;
-    }
-    else {
-        this->properties.erase("SERATO_MARKERS_V2");
+    if (!this->cueMarkers->length() && !this->loopMarkers->length()) {
+        return;
     }
 
-    if (this->gridMarkers->length()) {
-        auto decodedData = Blob::blob();
+    auto decodedData = Blob::blob();
 
-        FLACMarkersHeaderStruct header;
-        memcpy(header.mimeType, "application/octet-stream", 25);
-        header.filename[0] = 0;
-        memcpy(header.description, "Serato Beatgrid", 16);
-        header.majorVersion = 1;
-        header.minorVersion = 0;
+    FLACMarkersHeaderStruct header;
+    memcpy(header.mimeType, "application/octet-stream", 25);
+    header.filename[0] = 0;
+    memcpy(header.description, flacMarkersV2ItemName, 16);
+    header.majorVersion = 1;
+    header.minorVersion = 1;
 
-        auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<const byte*>(&header), sizeof(header));
-        decodedData->append(headerData);
+    auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<const byte*>(&header), sizeof(header));
+    decodedData->append(headerData);
 
-        auto base64Data = this->gridMarkerDataFromGridMarkers();
-        decodedData->append(base64Data);
+    auto base64String = this->base64StringFromMarkersV2();
+    decodedData->appendWithoutStringTermination(base64String->toUTF8());
 
-        auto encodedData = Base64::encodeBlock(decodedData->data(), decodedData->size());
-        encodedData->append(static_cast<character>(0));
-
-        TagLib::StringList newList;
-        newList.append(TagLib::String(reinterpret_cast<character*>(encodedData->data())));
-        this->properties["SERATO_BEATGRID"] = newList;
-    }
-    else {
-        this->properties.erase("SERATO_BEATGRID");
-    }
+    auto encodedData = Blob::base64StringFor(decodedData->data(), decodedData->size());
+    this->oggComment->addField(flacMarkersV2ItemName, TagLib::String(encodedData->toUTF8()));
 }
 
+void FLACTrackFile::writeGridMarkersItem(void)
+{
+    this->oggComment->removeField(flacBeatgridItemName);
+
+    if (!this->gridMarkers->length()) {
+        return;
+    }
+
+    auto decodedData = Blob::blob();
+
+    FLACMarkersHeaderStruct header;
+    memcpy(header.mimeType, "application/octet-stream", 25);
+    header.filename[0] = 0;
+    memcpy(header.description, flacBeatgridItemName, 16);
+    header.majorVersion = 1;
+    header.minorVersion = 0;
+
+    auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<const byte*>(&header), sizeof(header));
+    decodedData->append(headerData);
+
+    auto gridMarkerData = this->gridMarkerDataFromGridMarkers();
+    decodedData->append(gridMarkerData);
+
+    auto encodedData = Blob::base64StringFor(decodedData->data(), decodedData->size());
+    this->oggComment->addField(flacBeatgridItemName, TagLib::String(encodedData->toUTF8()));
+}
+
+void FLACTrackFile::writeMarkers(void)
+{
+    this->oggComment->removeField(flacMarkersItemName);
+
+    this->writeMarkersV2Item();
+    this->writeGridMarkersItem();
+}

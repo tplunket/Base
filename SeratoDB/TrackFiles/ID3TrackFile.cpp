@@ -29,22 +29,22 @@ boolean ID3TrackFile::hasKey(void) const
 
 String::Pointer ID3TrackFile::key(void) const
 {
-    auto text = internal->properties["INITIALKEY"].toString();
-    if (text != TagLib::String::null) {
-        return String::stringWith(text.toCString());
-    }
+    return internal->stringValueForFrameNamed(Internal::id3KeyFrameName);
+}
 
-    return String::string();
+String::Pointer ID3TrackFile::composer(void) const
+{
+    return internal->stringValueForFrameNamed(Internal::id3ComposerFrameName);
 }
 
 String::Pointer ID3TrackFile::grouping(void) const
 {
-    auto text = internal->properties["CONTENTGROUP"].toString();
-    if (text != TagLib::String::null) {
-        return String::stringWith(text.toCString());
-    }
+    return internal->stringValueForFrameNamed(Internal::id3GroupingFrameName);
+}
 
-    return String::string();
+String::Pointer ID3TrackFile::bpm(void) const
+{
+    return internal->stringValueForFrameNamed(Internal::id3BpmFrameName);
 }
 
 boolean ID3TrackFile::hasRecordLabel(void) const
@@ -54,12 +54,7 @@ boolean ID3TrackFile::hasRecordLabel(void) const
 
 String::Pointer ID3TrackFile::recordLabel(void) const
 {
-    auto text = internal->properties["LABEL"].toString();
-    if (text != TagLib::String::null) {
-        return String::stringWith(text.toCString());
-    }
-
-    return String::string();
+    return internal->stringValueForFrameNamed(Internal::id3RecordLabelFrameName);
 }
 
 boolean ID3TrackFile::hasRemixer(void) const
@@ -69,53 +64,33 @@ boolean ID3TrackFile::hasRemixer(void) const
 
 String::Pointer ID3TrackFile::remixer(void) const
 {
-    auto text = internal->properties["REMIXER"].toString();
-    if (text != TagLib::String::null) {
-        return String::stringWith(text.toCString());
-    }
-
-    return String::string();
-}
-
-String::Pointer ID3TrackFile::yearReleased(void) const
-{
-    auto text = internal->properties["DATE"].toString();
-    if (text != TagLib::String::null) {
-        return String::stringWith(text.toCString());
-    }
-
-    return String::string();
+    return internal->stringValueForFrameNamed(Internal::id3RemixerFrameName);
 }
 
 Blob::Pointer ID3TrackFile::artwork(void) const
 {
-    auto tag = dynamic_cast<TagLib::ID3v2::Tag*>(internal->parsedFileTag);
-    if(!tag) {
-        return Blob::blob();
-    }
+    auto frameList = internal->id3v2Tag->frameList(Internal::id3ArtworkFrameName);
+    if (frameList.size()) {
+        const TagLib::ID3v2::AttachedPictureFrame* artworkFrame = nullptr;
 
-    auto frameListMap = tag->frameListMap();
-    auto frameList = frameListMap["APIC"];
-
-    const TagLib::ID3v2::AttachedPictureFrame* artworkFrame = nullptr;
-
-    for (const TagLib::ID3v2::Frame* frame : frameList) {
-        auto pic = dynamic_cast<const TagLib::ID3v2::AttachedPictureFrame*>(frame);
-        if (pic->type() == TagLib::ID3v2::AttachedPictureFrame::FrontCover) {
-            artworkFrame = pic;
-            break;
+        for (const TagLib::ID3v2::Frame* frame : frameList) {
+            auto pic = dynamic_cast<const TagLib::ID3v2::AttachedPictureFrame*>(frame);
+            if (pic->type() == TagLib::ID3v2::AttachedPictureFrame::FrontCover) {
+                artworkFrame = pic;
+                break;
+            }
+            else if (pic->type() == TagLib::ID3v2::AttachedPictureFrame::Other) {
+                artworkFrame = pic;
+            }
         }
-        else if (pic->type() == TagLib::ID3v2::AttachedPictureFrame::Other) {
-            artworkFrame = pic;
-        }
-    }
 
-    if (artworkFrame) {
-        auto picture = artworkFrame->picture();
-        auto size = picture.size();
-        if (size) {
-            auto data = picture.data();
-            return Blob::blobWithMemoryAndSize(reinterpret_cast<byte *>(data), size);
+        if (artworkFrame) {
+            auto picture = artworkFrame->picture();
+            auto size = picture.size();
+            if (size) {
+                auto data = picture.data();
+                return Blob::blobWithMemoryAndSize(reinterpret_cast<byte *>(data), size);
+            }
         }
     }
 
@@ -124,58 +99,45 @@ Blob::Pointer ID3TrackFile::artwork(void) const
 
 void ID3TrackFile::setKey(const String& key)
 {
-    internal->properties["INITIALKEY"] = TagLib::String(key.toUTF8());
+    internal->setStringValueForFrameNamed(key, Internal::id3KeyFrameName);
+}
+
+void ID3TrackFile::setComposer(const String& composer)
+{
+    internal->setStringValueForFrameNamed(composer, Internal::id3ComposerFrameName);
 }
 
 void ID3TrackFile::setGrouping(const String& grouping)
 {
-    internal->properties["CONTENTGROUP"] = TagLib::String(grouping.toUTF8());
+    internal->setStringValueForFrameNamed(grouping, Internal::id3GroupingFrameName);
+}
+
+void ID3TrackFile::setBpm(const String& bpm)
+{
+    internal->setStringValueForFrameNamed(bpm, Internal::id3BpmFrameName);
 }
 
 void ID3TrackFile::setRecordLabel(const String& recordLabel)
 {
-    internal->properties["RECORD"] = TagLib::String(recordLabel.toUTF8());
+    internal->setStringValueForFrameNamed(recordLabel, Internal::id3RecordLabelFrameName);
 }
 
 void ID3TrackFile::setRemixer(const String& remixer)
 {
-    internal->properties["REMIXER"] = TagLib::String(remixer.toUTF8());
-}
-
-void ID3TrackFile::setYearReleased(const String& year)
-{
-    internal->properties["DATE"] = TagLib::String(year.toUTF8());
+    internal->setStringValueForFrameNamed(remixer, Internal::id3RemixerFrameName);
 }
 
 void ID3TrackFile::setArtwork(const Blob& artwork)
 {
-    auto tag = reinterpret_cast<TagLib::ID3v2::Tag*>(internal->parsedFileTag);
-    if(tag) {
-        auto frameListMap = tag->frameListMap();
-        auto frameList = frameListMap["APIC"];
+    internal->removeArtwork();
 
-        auto frameToRemove = frameList.end();
-        for (auto it = frameList.begin(); it != frameList.end(); ++it) {
-            auto* pic = dynamic_cast<TagLib::ID3v2::AttachedPictureFrame*>(*it);
+    TagLib::ByteVector data(*artwork.data(), artwork.size());
 
-            if (pic->type() == TagLib::ID3v2::AttachedPictureFrame::FrontCover) {
-                frameToRemove = it;
-                break;
-            }
-            else if (pic->type() == TagLib::ID3v2::AttachedPictureFrame::Other) {
-                frameToRemove = it;
-            }
-        }
+    auto* newFrame = new TagLib::ID3v2::AttachedPictureFrame;
+    newFrame->setData(data);
+    newFrame->setType(TagLib::ID3v2::AttachedPictureFrame::FrontCover);
+    newFrame->setDescription("");
+    newFrame->setTextEncoding(TagLib::String::Latin1);
 
-        frameList.erase(frameToRemove);
-
-        TagLib::ByteVector data(*artwork.data(), artwork.size());
-
-        auto* newFrame = new TagLib::ID3v2::AttachedPictureFrame;
-        newFrame->setData(data);
-        newFrame->setType(TagLib::ID3v2::AttachedPictureFrame::FrontCover);
-        newFrame->setDescription("");
-        newFrame->setTextEncoding(TagLib::String::Latin1);
-        frameList.append(newFrame);
-    }
+    internal->id3v2Tag->addFrame(newFrame);
 }

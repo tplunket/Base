@@ -29,16 +29,14 @@ WAVTrackFile::Pointer WAVTrackFile::fileWithFileAt(const String& path)
         throw TrackFileError::exceptionWith("Error loading track file '%s'.", path.toUTF8());
     }
 
+    auto wavFile = dynamic_cast<TagLib::RIFF::WAV::File*>(&(*file));
+
     auto internalObject = Internal::WAVTrackFile::Pointer(std::make_shared<Internal::WAVTrackFile>(path, file));
     auto newFile = WAVTrackFile::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
-
-    newFile->internal->parsedFileTag = file->tag();
-    if (!newFile->internal->parsedFileTag) {
+    newFile->internal->tag = newFile->internal->id3v2Tag = wavFile->ID3v2Tag();
+    if (!newFile->internal->tag) {
         throw TrackFileError::exceptionWith("Error reading tags from track file '%s'.", path.toUTF8());
     }
-
-    newFile->internal->audioProperties = file->audioProperties();
-    newFile->internal->properties = file->properties();
 
     newFile->internal->readMarkers();
 
@@ -49,7 +47,8 @@ WAVTrackFile::Pointer WAVTrackFile::fileWithFileAt(const String& path)
 
 uinteger32 WAVTrackFile::lengthInMilliseconds(void) const
 {
-    auto audioProperties = reinterpret_cast<const TagLib::RIFF::WAV::Properties*>(internal->audioProperties);
+    auto audioProperties = dynamic_cast<const TagLib::RIFF::WAV::Properties*>(internal->file->audioProperties());
+    NXA_ASSERT_NOT_NULL(audioProperties);
 
     auto numberOfFrames = audioProperties->sampleFrames();
     auto sampleRate = audioProperties->sampleRate();
@@ -65,6 +64,8 @@ boolean WAVTrackFile::hasBitDepth(void) const
 
 uinteger32 WAVTrackFile::bitDepthInBits(void) const
 {
-    auto audioProperties = reinterpret_cast<const TagLib::RIFF::WAV::Properties*>(internal->audioProperties);
+    auto audioProperties = dynamic_cast<const TagLib::RIFF::WAV::Properties*>(internal->file->audioProperties());
+    NXA_ASSERT_NOT_NULL(audioProperties);
+
     return audioProperties->sampleWidth();
 }

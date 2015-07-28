@@ -26,10 +26,7 @@
 
 #include <Base/Base.hpp>
 
-#include <mp4file.h>
 #include <mp4tag.h>
-#include <tpropertymap.h>
-#include <audioproperties.h>
 
 namespace NxA { namespace Serato { namespace Internal {
     struct MP4TrackFile : public TrackFile {
@@ -38,11 +35,18 @@ namespace NxA { namespace Serato { namespace Internal {
         #pragma mark Constructor & Destructors
         MP4TrackFile(const String& path, const TagLibFilePointer& newFile);
 
-        #pragma mark Private Instance Variables
-        TagLib::MP4::ItemListMap* itemListMap;
+        #pragma mark Instance Variables
+        TagLib::MP4::Tag* mp4Tag;
 
-        #pragma mark Private Instance Methods
+        #pragma mark Instance Methods
+        integer integerValueForItemNamed(const character* name) const;
+        String::Pointer stringValueForItemNamed(const character* name) const;
+        void setIntegerValueForItemNamed(integer value, const character* name);
+        void setStringValueForItemNamed(const String& value, const character* name);
+
         void readMarkers(void);
+        void replaceMarkersV2Item(void);
+        void replaceGridMarkersItem(void);
         void writeMarkers(void);
     };
 } } }

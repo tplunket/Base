@@ -29,16 +29,14 @@ AIFFTrackFile::Pointer AIFFTrackFile::fileWithFileAt(const String& path)
         throw TrackFileError::exceptionWith("Error loading track file '%s'.", path.toUTF8());
     }
 
+    auto aiffFile = dynamic_cast<TagLib::RIFF::AIFF::File*>(&(*file));
+
     auto internalObject = Internal::AIFFTrackFile::Pointer(std::make_shared<Internal::AIFFTrackFile>(path, file));
     auto newFile = AIFFTrackFile::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
-
-    newFile->internal->parsedFileTag = file->tag();
-    if (!newFile->internal->parsedFileTag) {
+    newFile->internal->tag = newFile->internal->id3v2Tag = aiffFile->tag();
+    if (!newFile->internal->tag) {
         throw TrackFileError::exceptionWith("Error reading tags from track file '%s'.", path.toUTF8());
     }
-
-    newFile->internal->audioProperties = file->audioProperties();
-    newFile->internal->properties = file->properties();
 
     newFile->internal->readMarkers();
 
@@ -49,7 +47,8 @@ AIFFTrackFile::Pointer AIFFTrackFile::fileWithFileAt(const String& path)
 
 uinteger32 AIFFTrackFile::lengthInMilliseconds(void) const
 {
-    auto audioProperties = reinterpret_cast<const TagLib::RIFF::AIFF::Properties*>(internal->audioProperties);
+    auto audioProperties = dynamic_cast<const TagLib::RIFF::AIFF::Properties*>(internal->file->audioProperties());
+    NXA_ASSERT_NOT_NULL(audioProperties);
 
     auto numberOfFrames = audioProperties->sampleFrames();
     auto sampleRate = audioProperties->sampleRate();
@@ -65,6 +64,8 @@ boolean AIFFTrackFile::hasBitDepth(void) const
 
 uinteger32 AIFFTrackFile::bitDepthInBits(void) const
 {
-    auto audioProperties = reinterpret_cast<const TagLib::RIFF::AIFF::Properties*>(internal->audioProperties);
+    auto audioProperties = dynamic_cast<const TagLib::RIFF::AIFF::Properties*>(internal->file->audioProperties());
+    NXA_ASSERT_NOT_NULL(audioProperties);
+
     return audioProperties->sampleWidth();
 }

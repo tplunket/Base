@@ -26,26 +26,62 @@
 
 // -- Generated internal implementation ommitted because this class does not use the default contructor.
 
+namespace NxA { namespace Serato { namespace Internal {
+    #pragma mark Constants
+    constexpr const character* oggMarkersItemName = "SERATO_MARKERS";
+    constexpr const character* oggMarkersV2ItemName = "SERATO_MARKERS2";
+    constexpr const character* oggBeatgridItemName = "SERATO_BEATGRID";
+} } }
+
 using namespace NxA;
 using namespace NxA::Serato::Internal;
 
 #pragma mark Constructors & Destructors
 
-OGGTrackFile::OGGTrackFile(const String& path, const TagLibFilePointer& newFile) :
-                           ID3TrackFile(path, newFile) { }
+OGGTrackFile::OGGTrackFile(const String& path, const TagLibFilePointer& newFile) : TrackFile(path, newFile) { }
+
+#pragma mark Class Methods
+
+String::Pointer OGGTrackFile::stringValueForFieldNamedInComment(const character* name, const TagLib::Ogg::XiphComment* oggComment)
+{
+    auto& stringList = oggComment->fieldListMap()[name];
+    if (stringList.size() == 0) {
+        return String::string();
+    }
+
+    NXA_ASSERT_EQ(stringList.size(), 1);
+    return String::stringWith(stringList.front().toCString());
+}
+
+void OGGTrackFile::setStringValueForFieldNamedInComment(const String& value, const character* name, TagLib::Ogg::XiphComment* oggComment)
+{
+    oggComment->addField(name, TagLib::String(value.toUTF8()));
+}
 
 #pragma mark Instance Methods
 
+String::Pointer OGGTrackFile::stringValueForFieldNamed(const character* name) const
+{
+    return OGGTrackFile::stringValueForFieldNamedInComment(name, this->oggComment);
+}
+
+void OGGTrackFile::setStringValueForFieldNamed(const String& value, const character* name)
+{
+    OGGTrackFile::setStringValueForFieldNamedInComment(value, name, this->oggComment);
+}
+
 void OGGTrackFile::readMarkers(void)
 {
-    auto markersEncodedData = this->properties["SERATO_MARKERS2"].toString();
+    auto& fieldListMap = this->oggComment->fieldListMap();
+
+    auto markersEncodedData = fieldListMap[oggMarkersV2ItemName].toString();
     auto encodedDataSize = markersEncodedData.size();
     if (encodedDataSize) {
-        this->readMarkersV2FromBase64Data(reinterpret_cast<const byte*>(markersEncodedData.data(TagLib::String::UTF8).data()),
-                                          encodedDataSize);
+        this->readMarkersV2FromBase64String(reinterpret_cast<const byte*>(markersEncodedData.data(TagLib::String::UTF8).data()),
+                                            encodedDataSize);
     }
 
-    auto beatGridEncodedData = this->properties["SERATO_BEATGRID"].toString();
+    auto beatGridEncodedData = fieldListMap[oggBeatgridItemName].toString();
     auto encodedBeatGridDataSize = beatGridEncodedData.size();
     if (encodedBeatGridDataSize) {
         auto majorVersion = beatGridEncodedData.substr(0, 8).toInt();
@@ -66,41 +102,49 @@ void OGGTrackFile::readMarkers(void)
     }
 }
 
+void OGGTrackFile::replaceMarkersV2Field(void)
+{
+    this->oggComment->removeField(oggMarkersV2ItemName);
+
+    if (!this->cueMarkers->length() && !this->loopMarkers->length()) {
+        return;
+    }
+
+    auto decodedData = Blob::blob();
+
+    auto base64String = this->base64StringFromMarkersV2();
+    this->oggComment->addField(oggMarkersV2ItemName, TagLib::String(base64String->toUTF8()));
+}
+
+void OGGTrackFile::replaceGridMarkersField(void)
+{
+    this->oggComment->removeField(oggBeatgridItemName);
+
+    if (!this->gridMarkers->length()) {
+        return;
+    }
+
+    TagLib::String propertyString;
+    char buffer[32];
+
+    propertyString.append("00000001");
+    propertyString.append("00000000");
+    ::snprintf(buffer, sizeof(buffer), "%08ld", this->gridMarkers->length());
+    propertyString.append(buffer);
+
+    for (auto& marker : *(this->gridMarkers)) {
+        //::snprintf(buffer, sizeof(buffer), "(%0.6f,%0.6f)", marker->positionInSeconds(), marker->beatsPerMinute());
+        ::snprintf(buffer, sizeof(buffer), "(%0.6f,%0.6f)", marker->positionInSeconds(), marker->beatsPerMinute() + 1.0f);
+        propertyString.append(buffer);
+    }
+
+    this->oggComment->addField(oggBeatgridItemName, propertyString);
+}
+
 void OGGTrackFile::writeMarkers(void)
 {
-    if (this->cueMarkers->length() || this->loopMarkers->length()) {
-        auto decodedData = Blob::blob();
+    this->oggComment->removeField(oggMarkersItemName);
 
-        auto base64Data = this->base64DataFromMarkersV2();
-        base64Data->append(static_cast<character>(0));
-
-        TagLib::StringList newList;
-        newList.append(TagLib::String((char*)base64Data->data()));
-        this->properties["SERATO_MARKERS2"] = newList;
-    }
-    else {
-        this->properties.erase("SERATO_MARKERS2");
-    }
-
-    if (this->gridMarkers->length()) {
-        TagLib::String propertyString;
-        char buffer[32];
-
-        propertyString.append("00000001");
-        propertyString.append("00000000");
-        ::snprintf(buffer, sizeof(buffer), "%08ld", this->gridMarkers->length());
-        propertyString.append(buffer);
-
-        for (auto& marker : *(this->gridMarkers)) {
-            ::snprintf(buffer, sizeof(buffer), "(%0.6f,%0.6f)", marker->positionInSeconds(), marker->beatsPerMinute());
-            propertyString.append(buffer);
-        }
-
-        TagLib::StringList newList;
-        newList.append(propertyString);
-        this->properties["SERATO_BEATGRID"] = newList;
-    }
-    else {
-        this->properties.erase("SERATO_BEATGRID");
-    }
+    this->replaceMarkersV2Field();
+    this->replaceGridMarkersField();
 }

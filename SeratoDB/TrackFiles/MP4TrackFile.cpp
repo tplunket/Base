@@ -14,8 +14,18 @@
 #include "TrackFiles/Internal/MP4TrackFile.hpp"
 
 #include <mp4tag.h>
+#include <mp4file.h>
 
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, MP4TrackFile, TrackFile);
+
+namespace NxA { namespace Serato { namespace Internal {
+    #pragma mark Constants
+    constexpr const character* mp4KeyItemName = "----:com.apple.iTunes:initialkey";
+    constexpr const character* mp4ComposerItemName = "\251wrt";
+    constexpr const character* mp4GroupingItemName = "\251grp";
+    constexpr const character* mp4BpmItemName = "tmpo";
+    constexpr const character* mp4ArtworkItemName = "covr";
+} } }
 
 using namespace NxA;
 using namespace NxA::Serato;
@@ -29,18 +39,14 @@ MP4TrackFile::Pointer MP4TrackFile::fileWithFileAt(const String& path)
         throw TrackFileError::exceptionWith("Error loading track file '%s'.", path.toUTF8());
     }
 
+    auto mp4File = dynamic_cast<TagLib::MP4::File*>(&(*file));
+
     auto internalObject = Internal::MP4TrackFile::Pointer(std::make_shared<Internal::MP4TrackFile>(path, file));
     auto newFile = MP4TrackFile::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
-
-    auto tag = reinterpret_cast<TagLib::MP4::Tag*>(file->tag());
-    if (!tag) {
+    newFile->internal->tag = newFile->internal->mp4Tag = mp4File->tag();
+    if (!newFile->internal->tag) {
         throw TrackFileError::exceptionWith("Error reading tags from track file '%s'.", path.toUTF8());
     }
-
-    newFile->internal->parsedFileTag = tag;
-    newFile->internal->itemListMap = &(tag->itemListMap());
-    newFile->internal->audioProperties = file->audioProperties();
-    newFile->internal->properties = file->properties();
 
     newFile->internal->readMarkers();
 
@@ -56,25 +62,22 @@ boolean MP4TrackFile::hasKey(void) const
 
 String::Pointer MP4TrackFile::key(void) const
 {
-    auto item = (*internal->itemListMap)["----:com.apple.iTunes:initialkey"];
-    if (item.isValid()) {
-        auto text = item.toStringList().front();
-        if (text != TagLib::String::null) {
-            return String::stringWith(text.toCString());
-        }
-    }
+    return internal->stringValueForItemNamed(Internal::mp4KeyItemName);
+}
 
-    return String::string();
+String::Pointer MP4TrackFile::composer(void) const
+{
+    return internal->stringValueForItemNamed(Internal::mp4ComposerItemName);
 }
 
 String::Pointer MP4TrackFile::grouping(void) const
 {
-    auto text = internal->properties["GROUPING"].toString();
-    if (text != TagLib::String::null) {
-        return String::stringWith(text.toCString());
-    }
+    return internal->stringValueForItemNamed(Internal::mp4GroupingItemName);
+}
 
-    return String::string();
+String::Pointer MP4TrackFile::bpm(void) const
+{
+    return String::stringWithFormat("%d", internal->integerValueForItemNamed(Internal::mp4BpmItemName));
 }
 
 boolean MP4TrackFile::hasRecordLabel(void) const
@@ -97,19 +100,9 @@ String::Pointer MP4TrackFile::remixer(void) const
     return String::string();
 }
 
-String::Pointer MP4TrackFile::yearReleased(void) const
-{
-    auto text = internal->properties["DATE"].toString();
-    if (text != TagLib::String::null) {
-        return String::stringWith(text.toCString());
-    }
-
-    return String::string();
-}
-
 Blob::Pointer MP4TrackFile::artwork(void) const
 {
-    TagLib::MP4::Item item = (*internal->itemListMap)["covr"];
+    auto item = internal->mp4Tag->item(Internal::mp4ArtworkItemName);
     if (item.isValid()) {
         auto coverArtList = item.toCoverArtList();
         auto coverArt = coverArtList.front();
@@ -126,15 +119,22 @@ Blob::Pointer MP4TrackFile::artwork(void) const
 
 void MP4TrackFile::setKey(const String& key)
 {
-    TagLib::StringList newList;
-    newList.append(TagLib::String(key.toUTF8()));
-    TagLib::MP4::Item newItem(newList);
-    (*internal->itemListMap)["----:com.apple.iTunes:initialkey"] = newItem;
+    internal->setStringValueForItemNamed(key, Internal::mp4KeyItemName);
+}
+
+void MP4TrackFile::setComposer(const String& composer)
+{
+    internal->setStringValueForItemNamed(composer, Internal::mp4ComposerItemName);
 }
 
 void MP4TrackFile::setGrouping(const String& grouping)
 {
-    internal->properties["GROUPING"] = TagLib::String(grouping.toUTF8());
+    internal->setStringValueForItemNamed(grouping, Internal::mp4GroupingItemName);
+}
+
+void MP4TrackFile::setBpm(const String& bpm)
+{
+    internal->setIntegerValueForItemNamed(::atoi(bpm.toUTF8()), Internal::mp4BpmItemName);
 }
 
 void MP4TrackFile::setRecordLabel(const String& recordLabel)
@@ -147,11 +147,6 @@ void MP4TrackFile::setRemixer(const String& remixer)
     // -- This is not supported by MP4 files.
 }
 
-void MP4TrackFile::setYearReleased(const String& year)
-{
-    internal->properties["DATE"] = TagLib::String(year.toUTF8());
-}
-
 void MP4TrackFile::setArtwork(const Blob& artwork)
 {
     TagLib::ByteVector data(*artwork.data(), artwork.size());
@@ -160,5 +155,8 @@ void MP4TrackFile::setArtwork(const Blob& artwork)
     newCoverArtList.append(newCoverArt);
 
     TagLib::MP4::Item newItem(newCoverArtList);
-    (*internal->itemListMap)["covr"] = newItem;
+    // -- TODO: This needs to be set to the correct type.
+    newItem.setAtomDataType(TagLib::MP4::AtomDataType::TypePNG);
+
+    internal->mp4Tag->setItem(Internal::mp4ArtworkItemName, newItem);
 }

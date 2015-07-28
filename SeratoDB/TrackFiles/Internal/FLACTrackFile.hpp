@@ -26,6 +26,9 @@
 
 #include <Base/Base.hpp>
 
+#include <id3v2tag.h>
+#include <xiphcomment.h>
+
 namespace NxA { namespace Serato { namespace Internal {
     struct FLACTrackFile : public TrackFile {
         NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTORS_FOR(NxA::Serato, FLACTrackFile);
@@ -33,8 +36,14 @@ namespace NxA { namespace Serato { namespace Internal {
         #pragma mark Constructor & Destructors
         FLACTrackFile(const String& path, const TagLibFilePointer& newFile);
 
+        #pragma mark Instance Variables
+        TagLib::ID3v2::Tag* id3v2Tag;
+        TagLib::Ogg::XiphComment* oggComment;
+
         #pragma mark Instance Methods
         void readMarkers(void);
+        void writeMarkersV2Item(void);
+        void writeGridMarkersItem(void);
         void writeMarkers(void);
     };
 } } }

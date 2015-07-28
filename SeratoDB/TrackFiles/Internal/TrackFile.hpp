@@ -27,10 +27,8 @@
 
 #include <Base/Base.hpp>
 
-#include <tag.h>
 #include <tfile.h>
 #include <tpropertymap.h>
-#include <audioproperties.h>
 
 namespace NxA { namespace Serato { namespace Internal {
     using TagLibFilePointer = NxA::Pointer<TagLib::File>;
@@ -48,9 +46,7 @@ namespace NxA { namespace Serato { namespace Internal {
         #pragma mark Instance Variables
         String::PointerToConst trackFilePath;
         TagLibFilePointer file;
-        TagLib::Tag* parsedFileTag;
-        TagLib::PropertyMap properties;
-        TagLib::AudioProperties* audioProperties;
+        TagLib::Tag* tag;
 
         Serato::CueMarker::Array::Pointer cueMarkers;
         Serato::LoopMarker::Array::Pointer loopMarkers;
@@ -58,10 +54,11 @@ namespace NxA { namespace Serato { namespace Internal {
         Blob::Array::Pointer otherTags;
 
         #pragma mark Instance Methods
-        void readMarkersV2FromBase64Data(const byte* markerV2Data, count totalSize);
-        void readGridMarkersFrom(const byte* gridMarkerData, count totalSize);
+        const byte* readMarkerAtAndAdvanceToNextTag(const byte* tagStart);
+        void readMarkersV2FromBase64String(const byte* markerV2Data, count totalSize);
+        void readGridMarkersFrom(const byte* gridMarkerData);
         void addGridMarker(Serato::GridMarker& gridMarker);
-        Blob::Pointer base64DataFromMarkersV2(void);
+        String::Pointer base64StringFromMarkersV2();
         Blob::Pointer gridMarkerDataFromGridMarkers(void);
         virtual void writeMarkers(void) = 0;
     };

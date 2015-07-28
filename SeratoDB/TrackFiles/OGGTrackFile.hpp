@@ -12,14 +12,14 @@
 
 #pragma once
 
-#include <SeratoDb/TrackFiles/ID3TrackFile.hpp>
+#include <SeratoDb/TrackFiles/TrackFile.hpp>
 
 #include <Base/Base.hpp>
 
 namespace NxA { namespace Serato {
     NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(OGGTrackFile);
 
-    class OGGTrackFile : public ID3TrackFile {
+    class OGGTrackFile : public TrackFile {
         NXA_GENERATED_OPERATOR_EQUAL_DECLARATION_IN_NAMESPACE_FOR_CLASS(NxA::Serato, OGGTrackFile);
         NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_CLASS(NxA::Serato, OGGTrackFile);
 
@@ -30,21 +30,23 @@ namespace NxA { namespace Serato {
         #pragma mark Instance Methods
         virtual boolean hasKey(void) const;
         virtual String::Pointer key(void) const;
+        virtual String::Pointer composer(void) const;
         virtual String::Pointer grouping(void) const;
+        virtual String::Pointer bpm(void) const;
 
         virtual boolean hasRecordLabel(void) const;
         virtual String::Pointer recordLabel(void) const;
         virtual boolean hasRemixer(void) const;
         virtual String::Pointer remixer(void) const;
-        virtual String::Pointer yearReleased(void) const;
 
         virtual Blob::Pointer artwork(void) const;
 
         virtual void setKey(const String& key);
+        virtual void setComposer(const String& composer);
         virtual void setGrouping(const String& grouping);
+        virtual void setBpm(const String& bpm);
         virtual void setRecordLabel(const String& recordLabel);
         virtual void setRemixer(const String& remixer);
-        virtual void setYearReleased(const String& year);
 
         virtual void setArtwork(const Blob& artwork);
     };

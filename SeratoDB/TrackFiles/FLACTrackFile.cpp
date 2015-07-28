@@ -12,6 +12,8 @@
 
 #include "TrackFiles/FLACTrackFile.hpp"
 #include "TrackFiles/Internal/FLACTrackFile.hpp"
+#include "TrackFiles/Internal/OGGTrackFile.hpp"
+#include "TrackFiles/Internal/ID3TrackFile.hpp"
 
 #include <flacfile.h>
 
@@ -29,16 +31,22 @@ FLACTrackFile::Pointer FLACTrackFile::fileWithFileAt(const String& path)
         throw TrackFileError::exceptionWith("Error loading track file '%s'.", path.toUTF8());
     }
 
+    auto flacFile = dynamic_cast<TagLib::FLAC::File*>(&(*file));
+
     auto internalObject = Internal::FLACTrackFile::Pointer(std::make_shared<Internal::FLACTrackFile>(path, file));
     auto newFile = FLACTrackFile::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
-
-    newFile->internal->parsedFileTag = file->tag();
-    if (!newFile->internal->parsedFileTag) {
+    newFile->internal->tag = nullptr;
+    newFile->internal->id3v2Tag = flacFile->hasID3v2Tag() ? flacFile->ID3v2Tag() : nullptr;
+    newFile->internal->oggComment = flacFile->hasXiphComment() ? flacFile->xiphComment() : nullptr;
+    if (newFile->internal->oggComment) {
+        newFile->internal->tag = newFile->internal->oggComment;
+    }
+    else if (newFile->internal->id3v2Tag) {
+        newFile->internal->tag = newFile->internal->id3v2Tag;
+    }
+    else {
         throw TrackFileError::exceptionWith("Error reading tags from track file '%s'.", path.toUTF8());
     }
-
-    newFile->internal->audioProperties = file->audioProperties();
-    newFile->internal->properties = file->properties();
 
     newFile->internal->readMarkers();
 
@@ -49,32 +57,52 @@ FLACTrackFile::Pointer FLACTrackFile::fileWithFileAt(const String& path)
 
 boolean FLACTrackFile::hasKey(void) const
 {
-    return true;
+    return internal->id3v2Tag != nullptr;
 }
 
 String::Pointer FLACTrackFile::key(void) const
 {
-    auto text = internal->properties["INITIALKEY"].toString();
-    if (text != TagLib::String::null) {
-        return String::stringWith(text.toCString());
+    if (internal->id3v2Tag) {
+        return Internal::ID3TrackFile::stringValueForFrameNamedInTag(Internal::id3KeyFrameName, internal->id3v2Tag);
     }
 
     return String::string();
+}
+
+String::Pointer FLACTrackFile::composer(void) const
+{
+    if (internal->oggComment) {
+        return Internal::OGGTrackFile::stringValueForFieldNamedInComment(Internal::oggComposerFieldName, internal->oggComment);
+    }
+    else {
+        return Internal::ID3TrackFile::stringValueForFrameNamedInTag(Internal::id3ComposerFrameName, internal->id3v2Tag);
+    }
 }
 
 String::Pointer FLACTrackFile::grouping(void) const
 {
-    auto text = internal->properties["GROUPING"].toString();
-    if (text != TagLib::String::null) {
-        return String::stringWith(text.toCString());
+    if (internal->oggComment) {
+        return Internal::OGGTrackFile::stringValueForFieldNamedInComment(Internal::oggGroupingFieldName, internal->oggComment);
     }
+    else {
+        return Internal::ID3TrackFile::stringValueForFrameNamedInTag(Internal::id3GroupingFrameName, internal->id3v2Tag);
+    }
+}
 
-    return String::string();
+String::Pointer FLACTrackFile::bpm(void) const
+{
+    if (internal->oggComment) {
+        return Internal::OGGTrackFile::stringValueForFieldNamedInComment(Internal::oggBpmFieldName, internal->oggComment);
+    }
+    else {
+        return Internal::ID3TrackFile::stringValueForFrameNamedInTag(Internal::id3BpmFrameName, internal->id3v2Tag);
+    }
 }
 
 uinteger32 FLACTrackFile::lengthInMilliseconds(void) const
 {
-    auto audioProperties = reinterpret_cast<const TagLib::FLAC::Properties*>(internal->audioProperties);
+    auto audioProperties = dynamic_cast<const TagLib::FLAC::Properties*>(internal->file->audioProperties());
+    NXA_ASSERT_NOT_NULL(audioProperties);
 
     auto numberOfFrames = audioProperties->sampleFrames();
     auto sampleRate = audioProperties->sampleRate();
@@ -90,7 +118,9 @@ boolean FLACTrackFile::hasBitDepth(void) const
 
 uinteger32 FLACTrackFile::bitDepthInBits(void) const
 {
-    auto audioProperties = reinterpret_cast<const TagLib::FLAC::Properties*>(internal->audioProperties);
+    auto audioProperties = dynamic_cast<const TagLib::FLAC::Properties*>(internal->file->audioProperties());
+    NXA_ASSERT_NOT_NULL(audioProperties);
+    
     return audioProperties->sampleWidth();
 }
 
@@ -114,16 +144,6 @@ String::Pointer FLACTrackFile::remixer(void) const
     return String::string();
 }
 
-String::Pointer FLACTrackFile::yearReleased(void) const
-{
-    auto text = internal->properties["DATE"].toString();
-    if (text != TagLib::String::null) {
-        return String::stringWith(text.toCString());
-    }
-
-    return String::string();
-}
-
 Blob::Pointer FLACTrackFile::artwork(void) const
 {
     // -- TODO: To be implemented.
@@ -132,12 +152,39 @@ Blob::Pointer FLACTrackFile::artwork(void) const
 
 void FLACTrackFile::setKey(const String& key)
 {
-    internal->properties["INITIALKEY"] = TagLib::String(key.toUTF8());
+    if (internal->id3v2Tag) {
+        return Internal::ID3TrackFile::setStringValueForFrameNamedInTag(key, Internal::id3KeyFrameName, internal->id3v2Tag);
+    }
+}
+
+void FLACTrackFile::setComposer(const String& composer)
+{
+    if (internal->oggComment) {
+        return Internal::OGGTrackFile::setStringValueForFieldNamedInComment(composer, Internal::oggComposerFieldName, internal->oggComment);
+    }
+    else {
+        return Internal::ID3TrackFile::setStringValueForFrameNamedInTag(composer, Internal::id3ComposerFrameName, internal->id3v2Tag);
+    }
 }
 
 void FLACTrackFile::setGrouping(const String& grouping)
 {
-    internal->properties["GROUPING"] = TagLib::String(grouping.toUTF8());
+    if (internal->oggComment) {
+        return Internal::OGGTrackFile::setStringValueForFieldNamedInComment(grouping, Internal::oggGroupingFieldName, internal->oggComment);
+    }
+    else {
+        return Internal::ID3TrackFile::setStringValueForFrameNamedInTag(grouping, Internal::id3GroupingFrameName, internal->id3v2Tag);
+    }
+}
+
+void FLACTrackFile::setBpm(const String& bpm)
+{
+    if (internal->oggComment) {
+        return Internal::OGGTrackFile::setStringValueForFieldNamedInComment(bpm, Internal::oggBpmFieldName, internal->oggComment);
+    }
+    else {
+        return Internal::ID3TrackFile::setStringValueForFrameNamedInTag(bpm, Internal::id3BpmFrameName, internal->id3v2Tag);
+    }
 }
 
 void FLACTrackFile::setRecordLabel(const String& recordLabel)
@@ -148,11 +195,6 @@ void FLACTrackFile::setRecordLabel(const String& recordLabel)
 void FLACTrackFile::setRemixer(const String& remixer)
 {
     // -- This is not supported by FLAC files.
-}
-
-void FLACTrackFile::setYearReleased(const String& year)
-{
-    internal->properties["DATE"] = TagLib::String(year.toUTF8());
 }
 
 void FLACTrackFile::setArtwork(const Blob& artwork)

@@ -44,6 +44,33 @@ static const byte testData[] = {
     0xF0, 0xF1, 0xF2, 0xF3, 0xF4, 0xF5, 0xF6, 0xF7, 0xF8, 0xF9, 0xFA, 0xFB, 0xFC, 0xFD, 0xFE, 0xFF
 };
 
+static const byte testHash[] = {
+    0xD2, 0x76, 0xE4, 0xEF, 0x00, 0xA8, 0x28, 0xA9, 0xEA, 0x51, 0xB4, 0x83, 0xA4, 0xB6, 0xA8, 0x32
+};
+
+static const auto testBase64String = String::stringWith("YXBwbGljYXRpb24vb2N0ZXQtc3RyZWFtAABTZXJhdG8gTWFya2VyczIAAQFBUUZEVDB4UFVn\nQUFBQUFFQVAvLy8wTlZSUUFBQUFBTkFBQUFBQUFJQU13QUFBQUFBRU5WUlFBQUFBQU5BQUVB\nQXQxbUFNeUkKQUFBQUFFeFBUMUFBQUFBQUZRQUFBQUlpUndBQ01XYi8vLy8vQUNlcTRRQUFB\nRUpRVFV4UFEwc0FBQUFBQVFBQQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAA==\n");
+
+static const byte testBinarySourceData[] = {
+    0x61, 0x70, 0x70, 0x6C, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6F, 0x6E, 0x2F, 0x6F, 0x63, 0x74, 0x65, 0x74, 0x2D, 0x73, 0x74, 0x72, 0x65, 0x61, 0x6D, 0x00, 0x00, 0x53, 0x65, 0x72, 0x61, 0x74, 0x6F,
+    0x20, 0x4D, 0x61, 0x72, 0x6B, 0x65, 0x72, 0x73, 0x32, 0x00, 0x01, 0x01, 0x41, 0x51, 0x46, 0x44, 0x54, 0x30, 0x78, 0x50, 0x55, 0x67, 0x41, 0x41, 0x41, 0x41, 0x41, 0x45, 0x41, 0x50, 0x2F, 0x2F,
+    0x2F, 0x30, 0x4E, 0x56, 0x52, 0x51, 0x41, 0x41, 0x41, 0x41, 0x41, 0x4E, 0x41, 0x41, 0x41, 0x41, 0x41, 0x41, 0x41, 0x49, 0x41, 0x4D, 0x77, 0x41, 0x41, 0x41, 0x41, 0x41, 0x41, 0x45, 0x4E, 0x56,
+    0x52, 0x51, 0x41, 0x41, 0x41, 0x41, 0x41, 0x4E, 0x41, 0x41, 0x45, 0x41, 0x41, 0x74, 0x31, 0x6D, 0x41, 0x4D, 0x79, 0x49, 0x0A, 0x41, 0x41, 0x41, 0x41, 0x41, 0x45, 0x78, 0x50, 0x54, 0x31, 0x41,
+    0x41, 0x41, 0x41, 0x41, 0x41, 0x46, 0x51, 0x41, 0x41, 0x41, 0x41, 0x49, 0x69, 0x52, 0x77, 0x41, 0x43, 0x4D, 0x57, 0x62, 0x2F, 0x2F, 0x2F, 0x2F, 0x2F, 0x41, 0x43, 0x65, 0x71, 0x34, 0x51, 0x41,
+    0x41, 0x41, 0x45, 0x4A, 0x51, 0x54, 0x55, 0x78, 0x50, 0x51, 0x30, 0x73, 0x41, 0x41, 0x41, 0x41, 0x41, 0x41, 0x51, 0x41, 0x41, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+};
+
 NXA_CONTAINS_TEST_SUITE_NAMED(Base_Blob_Tests);
 
 TEST(Base_Blob, ClassName_ABlob_ClassNameIsReturnedCorrectly)
@@ -72,7 +99,7 @@ TEST(Base_Blob, ClassName_TwoBlobs_ClassNameIsActuallyTheSamePointer)
     ASSERT_EQ(otherName, name);
 }
 
-TEST(Base_Blob, Blob_BlobCreatedEmpty_BlobCreatedCorrectly)
+TEST(Base_Blob, Blob_CallConstructor_BlobCreatedCorrectly)
 {
     // -- Given.
     // -- When.
@@ -82,7 +109,7 @@ TEST(Base_Blob, Blob_BlobCreatedEmpty_BlobCreatedCorrectly)
     ASSERT_EQ(0, test->size());
 }
 
-TEST(Base_Blob, BlobWithCapacity_BlobCreatedWithAGivenSize_BlobCreatedCorrectly)
+TEST(Base_Blob, BlobWithCapacity_AGivenSize_BlobCreatedCorrectly)
 {
     // -- Given.
     constexpr count testSize = 32;
@@ -91,22 +118,33 @@ TEST(Base_Blob, BlobWithCapacity_BlobCreatedWithAGivenSize_BlobCreatedCorrectly)
     auto test = Blob::blobWithCapacity(testSize);
 
     // -- Then.
-    ASSERT_EQ(test->size(), testSize);
+    ASSERT_EQ(testSize, test->size());
     auto data = test->data();
     for (integer i = 0; i < testSize; ++i) {
         ASSERT_EQ(0, data[i]);
     }
 }
 
-TEST(Base_Blob, BlobWithMemoryAndSize_BlobCreatedFromDataInMemory_BlobCreatedCorrectly)
+TEST(Base_Blob, BlobWithMemoryAndSize_SomeDataInMemory_BlobCreatedCorrectly)
 {
     // -- Given.
     // -- When.
     auto test = Blob::blobWithMemoryAndSize(testData, sizeof(testData));
 
     // -- Then.
-    ASSERT_EQ(test->size(), sizeof(testData));
+    ASSERT_EQ(sizeof(testData), test->size());
     ASSERT_EQ(0, ::memcmp(test->data(), testData, sizeof(testData)));
+}
+
+TEST(Base_Blob, blobWithBase64String_ABase64String_BlobCreatedCorrectly)
+{
+    // -- Given.
+    // -- When.
+    auto test = Blob::blobWithBase64String(testBase64String);
+
+    // -- Then.
+    ASSERT_EQ(sizeof(testBinarySourceData), test->size());
+    ASSERT_EQ(0, ::memcmp(test->data(), testBinarySourceData, sizeof(testBinarySourceData)));
 }
 
 TEST(Base_Blob, BlobWith_BlobCreatedFromAnotherBlob_BlobCreatedCorrectly)
@@ -118,8 +156,30 @@ TEST(Base_Blob, BlobWith_BlobCreatedFromAnotherBlob_BlobCreatedCorrectly)
     auto test = Blob::blobWith(source);
 
     // -- Then.
-    ASSERT_EQ(test->size(), sizeof(testData));
+    ASSERT_EQ(sizeof(testData), test->size());
     ASSERT_EQ(0, ::memcmp(test->data(), testData, sizeof(testData)));
+}
+
+TEST(Base_Blob, base64String_hashFor_ReturnsTheCorrectHash)
+{
+    // -- Given.
+    // -- When.
+    auto result = Blob::hashFor(testData, sizeof(testData));
+
+    // -- Then.
+    ASSERT_EQ(sizeof(testHash), result->size());
+    ASSERT_EQ(0, ::memcmp(result->data(), testHash, sizeof(testHash)));
+}
+
+TEST(Base_Blob, base64String_base64StringFor_ReturnsTheCorrectBase64String)
+{
+    // -- Given.
+    // -- When.
+    auto result = Blob::base64StringFor(testBinarySourceData, sizeof(testBinarySourceData));
+
+    // -- Then.
+    ASSERT_EQ(testBase64String->length(), result->length());
+    ASSERT_EQ(testBase64String, result);
 }
 
 TEST(Base_Blob, OperatorSquareBrackets_BlobWithDataInIt_ReturnsCorrectData)
@@ -129,9 +189,8 @@ TEST(Base_Blob, OperatorSquareBrackets_BlobWithDataInIt_ReturnsCorrectData)
     auto test = Blob::blobWithMemoryAndSize(testData, sizeof(testData));
 
     // -- Then.
-    for (integer i = 0; i < sizeof(testData); ++i) {
-        ASSERT_EQ(testData[i], (*test)[i]);
-    }
+    ASSERT_EQ(sizeof(testData), test->size());
+    ASSERT_EQ(0, ::memcmp(test->data(), testData, sizeof(testData)));
 }
 
 TEST(Base_Blob, OperatorSquareBrackets_ConstantBlobWithDataInIt_ReturnsCorrectData)
@@ -141,9 +200,8 @@ TEST(Base_Blob, OperatorSquareBrackets_ConstantBlobWithDataInIt_ReturnsCorrectDa
     auto test = Blob::PointerToConst(Blob::blobWithMemoryAndSize(testData, sizeof(testData)));
 
     // -- Then.
-    for (integer i = 0; i < sizeof(testData); ++i) {
-        ASSERT_EQ(testData[i], (*test)[i]);
-    }
+    ASSERT_EQ(sizeof(testData), test->size());
+    ASSERT_EQ(0, ::memcmp(test->data(), testData, sizeof(testData)));
 }
 
 TEST(Base_Blob, OperatorSquareBrackets_OutOfBoundsAccess_ThrowsAnException)
@@ -223,7 +281,7 @@ TEST(Base_Blob, FillWithZeros_ABlobWithContent_FillsTheBlobWithZeros)
     test->fillWithZeros();
 
     // -- Then.
-    ASSERT_EQ(test->size(), sizeof(testData));
+    ASSERT_EQ(sizeof(testData), test->size());
     auto data = test->data();
     for (integer i = 0; i < sizeof(testData); ++i) {
         ASSERT_EQ(0, data[i]);
@@ -239,24 +297,21 @@ TEST(Base_Blob, Hash_ABlobWithContent_ReturnsTheCorrectHashValue)
     auto result = test->hash();
 
     // -- Then.
-    ASSERT_EQ(16, result->size());
-    auto data = result->data();
-    ASSERT_EQ(0xD2, data[0]);
-    ASSERT_EQ(0x76, data[1]);
-    ASSERT_EQ(0xE4, data[2]);
-    ASSERT_EQ(0xEF, data[3]);
-    ASSERT_EQ(0x00, data[4]);
-    ASSERT_EQ(0xA8, data[5]);
-    ASSERT_EQ(0x28, data[6]);
-    ASSERT_EQ(0xA9, data[7]);
-    ASSERT_EQ(0xEA, data[8]);
-    ASSERT_EQ(0x51, data[9]);
-    ASSERT_EQ(0xB4, data[10]);
-    ASSERT_EQ(0x83, data[11]);
-    ASSERT_EQ(0xA4, data[12]);
-    ASSERT_EQ(0xB6, data[13]);
-    ASSERT_EQ(0xA8, data[14]);
-    ASSERT_EQ(0x32, data[15]);
+    ASSERT_EQ(sizeof(testHash), result->size());
+    ASSERT_EQ(0, ::memcmp(result->data(), testHash, sizeof(testHash)));
+}
+
+TEST(Base_Blob, base64String_ABlobWithBinaryData_ReturnsTheCorrectBase64String)
+{
+    // -- Given.
+    auto test = Blob::blobWithMemoryAndSize(testBinarySourceData, sizeof(testBinarySourceData));
+
+    // -- When.
+    auto result = test->base64String();
+
+    // -- Then.
+    ASSERT_EQ(testBase64String->length(), result->length());
+    ASSERT_EQ(testBase64String, result);
 }
 
 TEST(Base_Blob, Append_AnEmptyBlobAndBlobWithContent_AppendTheContentCorrectly)
@@ -315,16 +370,16 @@ TEST(Base_Blob, Append_TwoEmptyBlobs_LeavesTheBlobEmpty)
     ASSERT_EQ(0, test->size());
 }
 
-TEST(Base_Blob, Append_AnEmptyBlobAndAString_AppendTheStringCorrectly)
+TEST(Base_Blob, AppendWithStringTermination_AnEmptyBlobAndAString_AppendTheStringCorrectly)
 {
     // -- Given.
     auto test = Blob::blob();
 
     // -- When.
-    test->append("Hello");
+    test->appendWithStringTermination("Hello");
 
     // -- Then.
-    ASSERT_EQ(test->size(), 6);
+    ASSERT_EQ(6, test->size());
     auto data = test->data();
     ASSERT_EQ('H', data[0]);
     ASSERT_EQ('e', data[1]);
@@ -334,18 +389,48 @@ TEST(Base_Blob, Append_AnEmptyBlobAndAString_AppendTheStringCorrectly)
     ASSERT_EQ(0, data[5]);
 }
 
-TEST(Base_Blob, Append_AnEmptyBlobAndAnEmptyString_OnlyAppendsAStringTerminatorCharacter)
+TEST(Base_Blob, AppendWithoutStringTermination_AnEmptyBlobAndAString_AppendTheStringCorrectly)
 {
     // -- Given.
     auto test = Blob::blob();
 
     // -- When.
-    test->append("");
+    test->appendWithoutStringTermination("Hello");
 
     // -- Then.
-    ASSERT_EQ(test->size(), 1);
+    ASSERT_EQ(5, test->size());
+    auto data = test->data();
+    ASSERT_EQ('H', data[0]);
+    ASSERT_EQ('e', data[1]);
+    ASSERT_EQ('l', data[2]);
+    ASSERT_EQ('l', data[3]);
+    ASSERT_EQ('o', data[4]);
+}
+
+TEST(Base_Blob, AppendWithStringTermination_AnEmptyBlobAndAnEmptyString_OnlyAppendsAStringTerminatorCharacter)
+{
+    // -- Given.
+    auto test = Blob::blob();
+
+    // -- When.
+    test->appendWithStringTermination("");
+
+    // -- Then.
+    ASSERT_EQ(1, test->size());
     auto data = test->data();
     ASSERT_EQ(data[0], '\0');
+}
+
+TEST(Base_Blob, AppendWithoutStringTermination_AnEmptyBlobAndAnEmptyString_OnlyAppendsAStringTerminatorCharacter)
+{
+    // -- Given.
+    auto test = Blob::blob();
+
+    // -- When.
+    test->appendWithoutStringTermination("");
+
+    // -- Then.
+    ASSERT_EQ(0, test->size());
 }
 
 TEST(Base_Blob, Append_AnEmptyBlobAndACharacter_AppendsTheCharacter)
@@ -357,7 +442,7 @@ TEST(Base_Blob, Append_AnEmptyBlobAndACharacter_AppendsTheCharacter)
     test->append('G');
 
     // -- Then.
-    ASSERT_EQ(test->size(), 1);
+    ASSERT_EQ(1, test->size());
     auto data = test->data();
     ASSERT_EQ(data[0], 'G');
 }

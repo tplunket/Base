@@ -25,6 +25,8 @@
 #include "Base/Object.hpp"
 
 namespace NxA {
+    class String;
+
     class Blob : public Object, private std::vector<byte> {
         NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_BASE_CLASS(NxA, Blob);
 
@@ -33,6 +35,7 @@ namespace NxA {
         static Blob::Pointer blob(void);
         static Blob::Pointer blobWithCapacity(count size);
         static Blob::Pointer blobWithMemoryAndSize(const byte* other, count size);
+        static Blob::Pointer blobWithBase64String(const String& str);
         static Blob::Pointer blobWith(const Blob& other);
 
         #pragma mark Class Methods
@@ -42,6 +45,7 @@ namespace NxA {
         }
 
         static Blob::Pointer hashFor(const byte* memory, count size);
+        static NxA::Pointer<NxA::String> base64StringFor(const byte* memory, count size);
 
         #pragma mark Operators
         const byte& operator[] (integer index) const;
@@ -63,6 +67,7 @@ namespace NxA {
         void fillWithZeros(void);
 
         Blob::Pointer hash(void);
+        NxA::Pointer<NxA::String> base64String(void);
 
         void append(const Blob& other);
         void appendWithStringTermination(const character* other);

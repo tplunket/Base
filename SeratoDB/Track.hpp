@@ -21,6 +21,7 @@
 #include <Base/Base.hpp>
 
 #define NXA_PRINT_DEBUG_INFO                0
+#define NXA_OUTPUT_DEBUG_METADATA           0
 
 namespace NxA { namespace Serato {
     NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(Track);

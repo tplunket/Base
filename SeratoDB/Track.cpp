@@ -16,6 +16,8 @@
 #include "Tags/PathTag.hpp"
 #include "Tags/DatabaseV2Tags.hpp"
 
+#include <cstdlib>
+
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, Track, Object);
 
 using namespace NxA;
@@ -346,6 +348,21 @@ void Track::saveToTrackFile(void) const
 {
     auto trackFile = TrackFileFactory::trackFileForPath(this->trackFilePath());
 
+#if NXA_OUTPUT_DEBUG_METADATA
+    trackFile->setTitle(String::stringWithFormat("!%s", this->title().toUTF8()));
+    trackFile->setArtist(String::stringWithFormat("!%s", this->artist().toUTF8()));
+    trackFile->setAlbum(String::stringWithFormat("!%s", this->album().toUTF8()));
+    trackFile->setGenre(String::stringWithFormat("!%s", this->genre().toUTF8()));
+    trackFile->setComments(String::stringWithFormat("!%s", this->comments().toUTF8()));
+    trackFile->setGrouping(String::stringWithFormat("!%s", this->grouping().toUTF8()));
+    trackFile->setRemixer(String::stringWithFormat("!%s", this->remixer().toUTF8()));
+    trackFile->setRecordLabel(String::stringWithFormat("!%s", this->recordLabel().toUTF8()));
+    trackFile->setComposer(String::stringWithFormat("!%s", this->composer().toUTF8()));
+    trackFile->setKey(String::stringWithFormat("!%s", this->key().toUTF8()));
+    trackFile->setBpm(String::stringWithFormat("!%.2f", ::atof(this->bpm().toUTF8()) +  1.0f));
+    trackFile->setYearReleased(String::stringWithFormat("%4d", ::atoi(this->year().toUTF8()) + 1));
+    trackFile->setTrackNumber(this->trackNumber() + 10);
+#else
     trackFile->setTitle(this->title());
     trackFile->setArtist(this->artist());
     trackFile->setAlbum(this->album());
@@ -359,24 +376,43 @@ void Track::saveToTrackFile(void) const
     trackFile->setBpm(this->bpm());
     trackFile->setYearReleased(this->year());
     trackFile->setTrackNumber(this->trackNumber());
+#endif
 
     auto cueMarkers = CueMarker::Array::array();
     for (auto& marker : this->cueMarkers()) {
+#if NXA_OUTPUT_DEBUG_METADATA
+        auto markerCopy = CueMarker::markerWithLabelPositionAndIndex(marker->label(),
+                                                                     marker->positionInMilliseconds() + 1000,
+                                                                     marker->index());
+#else
         auto markerCopy = CueMarker::markerWith(marker);
+#endif
         cueMarkers->append(markerCopy);
     }
     trackFile->setCueMarkers(cueMarkers);
 
     auto loopMarkers = LoopMarker::Array::array();
     for (auto& marker : this->loopMarkers()) {
+#if NXA_OUTPUT_DEBUG_METADATA
+        auto markerCopy = LoopMarker::markerWithLabelStartEndPositionsAndIndex(marker->label(),
+                                                                               marker->startPositionInMilliseconds() + 1000,
+                                                                               marker->endPositionInMilliseconds() + 1000,
+                                                                               marker->index());
+#else
         auto markerCopy = LoopMarker::markerWith(marker);
+#endif
         loopMarkers->append(markerCopy);
     }
     trackFile->setLoopMarkers(loopMarkers);
 
     auto gridMarkers = GridMarker::Array::array();
     for (auto& marker : this->gridMarkers()) {
+#if NXA_OUTPUT_DEBUG_METADATA
+        auto markerCopy = GridMarker::markerWithPositionAndBeatsPerMinute(marker->positionInSeconds() + 0.2f,
+                                                                          marker->beatsPerMinute() + 1.0f);
+#else
         auto markerCopy = GridMarker::markerWith(marker);
+#endif
         gridMarkers->append(markerCopy);
     }
     trackFile->setGridMarkers(gridMarkers);

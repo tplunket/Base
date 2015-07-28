@@ -31,7 +31,8 @@
 using namespace NxA;
 
 #pragma mark SBox Hash Implementation
-    // SBox Hashing algorithm; source: http://floodyberry.com/noncryptohashzoo/SBox.html
+
+// SBox Hashing algorithm; source: http://floodyberry.com/noncryptohashzoo/SBox.html
 
 const uinteger32 SBoxTable[256] = {
     0x4660c395, 0x3baba6c5, 0x27ec605b, 0xdfc1d81a, 0xaaac4406, 0x3783e9b8, 0xa4e87c68, 0x62dc1b2a,

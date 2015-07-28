@@ -62,7 +62,7 @@ Database::Pointer Database::databaseWithFileAt(const String& seratoFolderPath)
         }
     }
 
-#if PRINT_DEBUG_INFO
+#if NXA_PRINT_DEBUG_INFO
     Internal::Database::debugListCrate(newDatabase->rootCrate(), String::string());
 #endif
 

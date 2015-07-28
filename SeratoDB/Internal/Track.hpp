@@ -39,7 +39,7 @@ namespace NxA { namespace Serato { namespace Internal {
         Track(Serato::ObjectTag& tag, const String& rootFolderPath);
 
         #pragma mark Class Methods
-#if PRINT_DEBUG_INFO
+#if NXA_PRINT_DEBUG_INFO
         static void debugPrint(const String& text, const String& name);
         static void debugPrintUint(uinteger32 value, const String& name);
         static void debugPrintTimeFromMilliseconds(uinteger32 value, const String& name);

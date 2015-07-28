@@ -40,7 +40,7 @@ namespace NxA { namespace Serato { namespace Internal {
                  Serato::CrateOrderFile& usingCrateOrderFile);
 
         #pragma mark Class Methods
-#if PRINT_DEBUG_INFO
+#if NXA_PRINT_DEBUG_INFO
         static void debugListCrate(Serato::Crate& crate,
                                    const String& spacing);
 #endif

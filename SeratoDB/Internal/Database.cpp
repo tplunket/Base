@@ -40,7 +40,7 @@ Database::Database(const String& path,
 
 #pragma mark Class Methods
 
-#if PRINT_DEBUG_INFO
+#if NXA_PRINT_DEBUG_INFO
 void Database::debugListCrate(Serato::Crate& crate,
                               const String& spacing)
 {

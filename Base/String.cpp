@@ -96,6 +96,14 @@ String::Pointer String::stringWith(const character* other)
     return newString;
 }
 
+String::Pointer String::stringWith(const character* other, count length)
+{
+    auto newString = String::makeShared();
+    newString->std::string::operator=(std::string(other, length));
+
+    return newString;
+}
+
 String::Pointer String::stringWith(const String& other)
 {
     auto newString = String::makeShared();

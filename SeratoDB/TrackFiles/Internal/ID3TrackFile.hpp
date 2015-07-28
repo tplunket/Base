@@ -51,6 +51,9 @@ namespace NxA { namespace Serato { namespace Internal {
                                                                              const String& description);
         static String::Pointer stringValueForFrameNamedInTag(const character* name, const TagLib::ID3v2::Tag* id3v2Tag);
         static void setStringValueForFrameNamedInTag(const String& value, const character* name, TagLib::ID3v2::Tag* id3v2Tag);
+        static void removeGEOBFrameNamedInTag(const String& name, TagLib::ID3v2::Tag* id3v2Tag);
+        static void replaceMarkersV2FrameInTagWith(TagLib::ID3v2::Tag* id3v2Tag, const String& base64MarkersData);
+        static void replaceGridMarkersFrameInTagWith(TagLib::ID3v2::Tag* id3v2Tag, const Blob& gridMarkersData);
 
         #pragma mark Instance Variables
         TagLib::ID3v2::Tag* id3v2Tag;
@@ -60,11 +63,8 @@ namespace NxA { namespace Serato { namespace Internal {
         void setStringValueForFrameNamed(const String& value, const character* name);
 
         void removeArtwork(void);
-        void removeGEOBFrameNamed(const String& name);
 
         void readMarkers(void);
-        void replaceMarkersV2Frame(void);
-        void replaceGridMarkersFrame(void);
         void writeMarkers(void);
     };
 } } }

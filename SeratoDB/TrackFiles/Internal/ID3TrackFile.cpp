@@ -138,16 +138,16 @@ void ID3TrackFile::removeArtwork(void)
     }
 }
 
-void ID3TrackFile::removeGEOBFrameNamed(const String& name)
+void ID3TrackFile::removeGEOBFrameNamedInTag(const String& name, TagLib::ID3v2::Tag* id3v2Tag)
 {
-    auto framesList = this->id3v2Tag->frameList("GEOB");
+    auto framesList = id3v2Tag->frameList("GEOB");
     if (!framesList.size()) {
         return;
     }
 
     auto frameToDelete = ID3TrackFile::frameInListWithDescription(framesList, name);
     if (frameToDelete != framesList.end()) {
-        this->id3v2Tag->removeFrame(*frameToDelete);
+        id3v2Tag->removeFrame(*frameToDelete);
     }
 }
 
@@ -185,11 +185,11 @@ void ID3TrackFile::readMarkers(void)
     }
 }
 
-void ID3TrackFile::replaceMarkersV2Frame(void)
+void ID3TrackFile::replaceMarkersV2FrameInTagWith(TagLib::ID3v2::Tag* id3v2Tag, const String& base64MarkersData)
 {
-    this->removeGEOBFrameNamed(String::stringWith(id3MarkersV2FrameDescription));
+    ID3TrackFile::removeGEOBFrameNamedInTag(String::stringWith(id3MarkersV2FrameDescription), id3v2Tag);
 
-    if (!this->cueMarkers->length() && !this->loopMarkers->length()) {
+    if (!base64MarkersData.length()) {
         return;
     }
 
@@ -200,7 +200,7 @@ void ID3TrackFile::replaceMarkersV2Frame(void)
     header.minorVersion = 1;
     auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<const byte*>(&header), sizeof(header));
     objectData->append(headerData);
-    objectData->appendWithoutStringTermination(this->base64StringFromMarkersV2()->toUTF8());
+    objectData->appendWithoutStringTermination(base64MarkersData.toUTF8());
 
     TagLib::ByteVector newData((char*)objectData->data(), objectData->size());
 
@@ -211,14 +211,14 @@ void ID3TrackFile::replaceMarkersV2Frame(void)
     newFrame->setFileName("");
     newFrame->setDescription(id3MarkersV2FrameDescription);
 
-    this->id3v2Tag->addFrame(newFrame);
+    id3v2Tag->addFrame(newFrame);
 }
 
-void ID3TrackFile::replaceGridMarkersFrame(void)
+void ID3TrackFile::replaceGridMarkersFrameInTagWith(TagLib::ID3v2::Tag* id3v2Tag, const Blob& gridMarkersData)
 {
-    this->removeGEOBFrameNamed(String::stringWith(id3BeatgridFrameDescription));
+    ID3TrackFile::removeGEOBFrameNamedInTag(String::stringWith(id3BeatgridFrameDescription), id3v2Tag);
 
-    if (!this->gridMarkers->length()) {
+    if (!gridMarkersData.size()) {
         return;
     }
 
@@ -229,7 +229,7 @@ void ID3TrackFile::replaceGridMarkersFrame(void)
     header.minorVersion = 0;
     auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<const byte*>(&header), sizeof(header));
     data->append(headerData);
-    data->append(this->gridMarkerDataFromGridMarkers());
+    data->append(gridMarkersData);
 
     TagLib::ByteVector newData((char*)data->data(), data->size());
 
@@ -240,13 +240,13 @@ void ID3TrackFile::replaceGridMarkersFrame(void)
     newFrame->setFileName("");
     newFrame->setDescription(id3BeatgridFrameDescription);
 
-    this->id3v2Tag->addFrame(newFrame);
+    id3v2Tag->addFrame(newFrame);
 }
 
 void ID3TrackFile::writeMarkers(void)
 {
-    this->removeGEOBFrameNamed(String::stringWith(id3MarkersFrameDescription));
+    ID3TrackFile::removeGEOBFrameNamedInTag(String::stringWith(id3MarkersFrameDescription), this->id3v2Tag);
 
-    this->replaceMarkersV2Frame();
-    this->replaceGridMarkersFrame();
+    ID3TrackFile::replaceMarkersV2FrameInTagWith(this->id3v2Tag, this->base64StringFromMarkersV2());
+    ID3TrackFile::replaceGridMarkersFrameInTagWith(this->id3v2Tag, this->gridMarkerDataFromGridMarkers());
 }

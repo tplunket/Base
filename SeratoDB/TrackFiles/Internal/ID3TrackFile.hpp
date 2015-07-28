@@ -37,7 +37,6 @@ namespace NxA { namespace Serato { namespace Internal {
     constexpr const character* id3BpmFrameName = "TBPM";
     constexpr const character* id3RecordLabelFrameName = "TPUB";
     constexpr const character* id3RemixerFrameName = "TPE4";
-    //constexpr const character* id3DateFrameName = "TDRC";
     constexpr const character* id3ArtworkFrameName = "APIC";
 
     struct ID3TrackFile : public TrackFile {

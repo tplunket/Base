@@ -58,6 +58,10 @@ LoopMarker::Pointer LoopMarker::markerWithLabelStartEndPositionsAndIndex(const S
                                                                          uinteger32 endPositionInMilliseconds,
                                                                          uinteger16 index)
 {
+    if (startPositionInMilliseconds >= endPositionInMilliseconds) {
+        throw LoopMarkerError::exceptionWith("Invalid loop maker start/end positions (%d and %d ms).", startPositionInMilliseconds, endPositionInMilliseconds);
+    }
+
     auto newMarker = LoopMarker::makeShared();
     newMarker->internal->startPositionInMilliseconds = startPositionInMilliseconds;
     newMarker->internal->endPositionInMilliseconds = endPositionInMilliseconds;

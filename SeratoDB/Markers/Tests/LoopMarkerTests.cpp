@@ -62,6 +62,14 @@ TEST(SeratoDB_LoopMarker, markerWithLabelStartEndPositionsAndIndex_AMarkerWithIn
     ASSERT_STREQ("TEST", test->label().toUTF8());
 }
 
+TEST(SeratoDB_LoopMarker, markerWithLabelStartEndPositionsAndIndex_AMarkerWithInvalidStartEndValues_ThrowAnException)
+{
+    // -- Given.
+    // -- When.
+    // -- Then.
+    ASSERT_THROW(LoopMarker::markerWithLabelStartEndPositionsAndIndex(String::stringWith("TEST"), 159847, 143718, 0), NxA::Serato::LoopMarkerError);
+}
+
 TEST(SeratoDB_LoopMarker, markerWith_AMarkerAsSource_ReturnsACorrectMarker)
 {
     // -- Given.
@@ -125,7 +133,7 @@ TEST(SeratoDB_LoopMarker, OperatorEqual_TwoUnequalMarkersDifferentEnd_ReturnsFal
 {
     // -- Given.
     auto test = LoopMarker::markerWithLabelStartEndPositionsAndIndex(String::stringWith("TEST"), 139847, 143718, 0);
-    auto other = LoopMarker::markerWithLabelStartEndPositionsAndIndex(String::stringWith("TEST"), 139847, 14318, 0);
+    auto other = LoopMarker::markerWithLabelStartEndPositionsAndIndex(String::stringWith("TEST"), 139847, 143720, 0);
 
     // -- When.
     // -- Then.

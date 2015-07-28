@@ -134,6 +134,10 @@ void TrackFile::readGridMarkersFrom(const byte* gridMarkerData)
 
 String::Pointer TrackFile::base64StringFromMarkersV2(void)
 {
+    if (!this->cueMarkers->length() && !this->loopMarkers->length() && !this->otherTags->length()) {
+        return String::string();
+    }
+
     auto decodedData = Blob::blob();
 
     MarkerHeaderStruct markersHeader;
@@ -165,6 +169,9 @@ String::Pointer TrackFile::base64StringFromMarkersV2(void)
 Blob::Pointer TrackFile::gridMarkerDataFromGridMarkers(void)
 {
     auto data = Blob::blob();
+    if (!this->gridMarkers->length()) {
+        return data;
+    }
 
     uinteger32 numberOfMarkers;
     Platform::writeBigEndianUInteger32ValueAt(this->gridMarkers->length(), reinterpret_cast<byte*>(&numberOfMarkers));

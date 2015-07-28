@@ -65,7 +65,8 @@ namespace NxA {
         Blob::Pointer hash(void);
 
         void append(const Blob& other);
-        void append(const character* other);
+        void appendWithStringTermination(const character* other);
+        void appendWithoutStringTermination(const character* other);
         void append(const character other);
     };
 }

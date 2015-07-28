@@ -247,9 +247,14 @@ void Blob::append(const Blob& other)
     this->insert(this->end(), other.begin(), other.end());
 }
 
-void Blob::append(const character* other)
+void Blob::appendWithStringTermination(const character* other)
 {
     this->insert(this->end(), other, other + ::strlen(other) + 1);
+}
+
+void Blob::appendWithoutStringTermination(const character* other)
+{
+    this->insert(this->end(), other, other + ::strlen(other));
 }
 
 void Blob::append(const character other)

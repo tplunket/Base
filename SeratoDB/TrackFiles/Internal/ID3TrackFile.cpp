@@ -45,7 +45,6 @@ namespace NxA { namespace Serato { namespace Internal {
     } GeobObjectStruct;
 
     #pragma mark Constants
-    constexpr const character* id3MarkersFrameDescription = "Serato Markers_";
     constexpr const character* id3MarkersV2FrameDescription = "Serato Markers2";
     constexpr const character* id3BeatgridFrameDescription = "Serato BeatGrid";
 } } }

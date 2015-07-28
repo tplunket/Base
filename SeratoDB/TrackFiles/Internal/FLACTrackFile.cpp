@@ -20,6 +20,7 @@
 //
 
 #include "TrackFiles/Internal/FLACTrackFile.hpp"
+#include "TrackFiles/Internal/ID3TrackFile.hpp"
 
 // -- Generated internal implementation ommitted because this class does not use the default contructor.
 
@@ -134,8 +135,16 @@ void FLACTrackFile::writeGridMarkersItem(void)
 
 void FLACTrackFile::writeMarkers(void)
 {
-    this->oggComment->removeField(flacMarkersItemName);
+    if (this->id3v2Tag) {
+        ID3TrackFile::removeGEOBFrameNamedInTag(String::stringWith(id3MarkersFrameDescription), this->id3v2Tag);
 
-    this->writeMarkersV2Item();
-    this->writeGridMarkersItem();
+        ID3TrackFile::replaceMarkersV2FrameInTagWith(this->id3v2Tag, this->base64StringFromMarkersV2());
+        ID3TrackFile::replaceGridMarkersFrameInTagWith(this->id3v2Tag, this->gridMarkerDataFromGridMarkers());
+    }
+    else {
+        this->oggComment->removeField(flacMarkersItemName);
+
+        this->writeMarkersV2Item();
+        this->writeGridMarkersItem();
+    }
 }

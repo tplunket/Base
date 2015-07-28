@@ -39,6 +39,8 @@ namespace NxA { namespace Serato { namespace Internal {
     constexpr const character* id3RemixerFrameName = "TPE4";
     constexpr const character* id3ArtworkFrameName = "APIC";
 
+    constexpr const character* id3MarkersFrameDescription = "Serato Markers_";
+
     struct ID3TrackFile : public TrackFile {
         NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTORS_FOR(NxA::Serato, ID3TrackFile);
 

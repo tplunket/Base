@@ -106,13 +106,13 @@ void OGGTrackFile::replaceMarkersV2Field(void)
 {
     this->oggComment->removeField(oggMarkersV2ItemName);
 
-    if (!this->cueMarkers->length() && !this->loopMarkers->length()) {
+    auto base64String = this->base64StringFromMarkersV2();
+    if (!base64String->length()) {
         return;
     }
 
     auto decodedData = Blob::blob();
 
-    auto base64String = this->base64StringFromMarkersV2();
     this->oggComment->addField(oggMarkersV2ItemName, TagLib::String(base64String->toUTF8()));
 }
 

@@ -127,7 +127,8 @@ void MP4TrackFile::replaceMarkersV2Item(void)
 {
     this->mp4Tag->removeItem(mp4MarkersV2ItemName);
 
-    if (!this->cueMarkers->length() && !this->loopMarkers->length()) {
+    auto base64String = this->base64StringFromMarkersV2();
+    if (!base64String->length()) {
         return;
     }
 
@@ -143,7 +144,6 @@ void MP4TrackFile::replaceMarkersV2Item(void)
     auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<byte*>(&header), sizeof(header));
     decodedData->append(headerData);
 
-    auto base64String = this->base64StringFromMarkersV2();
     decodedData->appendWithoutStringTermination(base64String->toUTF8());
 
     constexpr integer paddingMulptipleOf = 256;
@@ -165,7 +165,8 @@ void MP4TrackFile::replaceGridMarkersItem(void)
 {
     this->mp4Tag->removeItem(mp4BeatgridItemName);
 
-    if (!this->gridMarkers->length()) {
+    auto gridMarkerData = this->gridMarkerDataFromGridMarkers();
+    if (!gridMarkerData->size()) {
         return;
     }
 
@@ -180,7 +181,7 @@ void MP4TrackFile::replaceGridMarkersItem(void)
 
     auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<byte*>(&header), sizeof(header));
     decodedData->append(headerData);
-    decodedData->append(this->gridMarkerDataFromGridMarkers());
+    decodedData->append(gridMarkerData);
 
     auto encodedData = Blob::base64StringFor(decodedData->data(), decodedData->size());
     TagLib::String newString(encodedData->toUTF8(), TagLib::String::UTF8);

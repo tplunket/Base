@@ -83,7 +83,8 @@ void FLACTrackFile::writeMarkersV2Item(void)
 {
     this->oggComment->removeField(flacMarkersV2ItemName);
 
-    if (!this->cueMarkers->length() && !this->loopMarkers->length()) {
+    auto base64String = this->base64StringFromMarkersV2();
+    if (!base64String->length()) {
         return;
     }
 
@@ -99,7 +100,6 @@ void FLACTrackFile::writeMarkersV2Item(void)
     auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<const byte*>(&header), sizeof(header));
     decodedData->append(headerData);
 
-    auto base64String = this->base64StringFromMarkersV2();
     decodedData->appendWithoutStringTermination(base64String->toUTF8());
 
     auto encodedData = Blob::base64StringFor(decodedData->data(), decodedData->size());
@@ -110,7 +110,8 @@ void FLACTrackFile::writeGridMarkersItem(void)
 {
     this->oggComment->removeField(flacBeatgridItemName);
 
-    if (!this->gridMarkers->length()) {
+    auto gridMarkerData = this->gridMarkerDataFromGridMarkers();
+    if (!gridMarkerData->size()) {
         return;
     }
 
@@ -125,8 +126,6 @@ void FLACTrackFile::writeGridMarkersItem(void)
 
     auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<const byte*>(&header), sizeof(header));
     decodedData->append(headerData);
-
-    auto gridMarkerData = this->gridMarkerDataFromGridMarkers();
     decodedData->append(gridMarkerData);
 
     auto encodedData = Blob::base64StringFor(decodedData->data(), decodedData->size());

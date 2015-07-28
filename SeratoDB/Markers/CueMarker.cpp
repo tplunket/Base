@@ -15,26 +15,27 @@
 
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, CueMarker, Object);
 
+namespace NxA { namespace Serato {
+    #pragma mark Structures
+    typedef struct {
+        byte tag[4];
+        byte size[4];
+    } SeratoCueTagHeaderStruct;
+
+    typedef struct {
+        byte tag[4];
+        byte size[4];
+        byte index[2];
+        byte position[4];
+        byte color[4];
+        byte loop_enabled;
+        byte loop_locked;
+        byte label[0];
+    } SeratoCueTagStruct;
+} }
+
 using namespace NxA;
 using namespace NxA::Serato;
-
-#pragma mark Structures
-
-typedef struct {
-    byte tag[4];
-    byte size[4];
-} SeratoCueTagHeaderStruct;
-
-typedef struct {
-    byte tag[4];
-    byte size[4];
-    byte index[2];
-    byte position[4];
-    byte color[4];
-    byte loop_enabled;
-    byte loop_locked;
-    byte label[0];
-} SeratoCueTagStruct;
 
 #pragma mark Factory Methods
 

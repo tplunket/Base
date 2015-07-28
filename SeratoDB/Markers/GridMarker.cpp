@@ -15,16 +15,17 @@
 
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, GridMarker, Object);
 
+namespace NxA { namespace Serato {
+    #pragma mark Structures
+    typedef struct {
+        byte positionInSeconds[4];
+        byte beatsPerMinute[4];
+        byte endOfStruct[0];
+    } GridMarkerStruct;
+} }
+
 using namespace NxA;
 using namespace NxA::Serato;
-
-#pragma mark Structures
-
-typedef struct {
-    byte positionInSeconds[4];
-    byte beatsPerMinute[4];
-    byte endOfStruct[0];
-} GridMarkerStruct;
 
 #pragma mark Factory Methods
 

@@ -359,7 +359,7 @@ void Track::saveToTrackFile(void) const
     trackFile->setRecordLabel(String::stringWithFormat("!%s", this->recordLabel().toUTF8()));
     trackFile->setComposer(String::stringWithFormat("!%s", this->composer().toUTF8()));
     trackFile->setKey(String::stringWithFormat("!%s", this->key().toUTF8()));
-    trackFile->setBpm(String::stringWithFormat("!%.2f", ::atof(this->bpm().toUTF8()) +  1.0f));
+    trackFile->setBpm(String::stringWithFormat("%.2f", ::atof(this->bpm().toUTF8()) +  1.0f));
     trackFile->setYearReleased(String::stringWithFormat("%4d", ::atoi(this->year().toUTF8()) + 1));
     trackFile->setTrackNumber(this->trackNumber() + 10);
 #else

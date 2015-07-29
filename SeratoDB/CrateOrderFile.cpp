@@ -25,12 +25,14 @@ using namespace NxA::Serato;
 CrateOrderFile::Pointer CrateOrderFile::fileWithSeratoFolderInRootFolder(const String& seratoFolderPath,
                                                                          const String& rootFolderPath)
 {
-    auto rootCrate = Crate::crateWithNameInFolderOnVolume(String::string(),
-                                                          String::string(),
-                                                          String::string());
-    auto internalObject = Internal::CrateOrderFile::Pointer(std::make_shared<Internal::CrateOrderFile>(crateOrderFilePathForSeratoFolder(seratoFolderPath),
-                                                                                                       rootCrate));
+    auto rootCrate = Crate::crateWithNameInFolderOnVolume(String::string(), String::string(), String::string());
+    auto crateOrderFilePath = crateOrderFilePathForSeratoFolder(seratoFolderPath);
+    auto internalObject = Internal::CrateOrderFile::Pointer(std::make_shared<Internal::CrateOrderFile>(crateOrderFilePath, rootCrate));
     auto newCrateOrderFile = CrateOrderFile::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
+
+    if (!File::fileExistsAt(crateOrderFilePath)) {
+        return newCrateOrderFile;
+    }
 
     auto subCratesDirectory = subCratesDirectoryPathInSeratoFolder(seratoFolderPath);
     auto subCratesFound = Internal::CrateOrderFile::cratesInSubCratesDirectory(subCratesDirectory);

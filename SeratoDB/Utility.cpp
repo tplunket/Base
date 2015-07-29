@@ -83,6 +83,5 @@ boolean NxA::Serato::containsAValidSeratoFolder(const String& folderPath)
 {
     auto seratoFolderPath = seratoFolderPathForFolder(folderPath);
     auto databaseFilePath = databaseFilePathForSeratoFolder(seratoFolderPath);
-    auto crateOrderFilePath = crateOrderFilePathForSeratoFolder(seratoFolderPath);
-    return File::fileExistsAt(databaseFilePath) && File::fileExistsAt(crateOrderFilePath);
+    return File::fileExistsAt(databaseFilePath);
 }

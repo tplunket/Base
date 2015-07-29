@@ -13,7 +13,6 @@
 #include "SeratoDB/Database.hpp"
 #include "SeratoDb/Internal/Database.hpp"
 #include "SeratoDB/CrateOrderFile.hpp"
-#include "SeratoDB/Utility.hpp"
 #include "Tags/DatabaseV2Tags.hpp"
 #include "Tags/TagFactory.hpp"
 #include "Tags/VersionTag.hpp"
@@ -87,6 +86,25 @@ String::Pointer Database::versionAsStringForDatabaseIn(const String& seratoFolde
     }
 
     return String::string();
+}
+
+String::Pointer Database::seratoFolderPathForFolder(const String& folderPath)
+{
+    auto joinedPath = File::joinPaths(folderPath, String::stringWith("_Serato_"));
+    return joinedPath;
+}
+
+String::Pointer Database::databaseFilePathForSeratoFolder(const String& seratoFolderPath)
+{
+    auto joinedPath = File::joinPaths(seratoFolderPath, String::stringWith("database V2"));
+    return joinedPath;
+}
+
+boolean Database::containsAValidSeratoFolder(const String& folderPath)
+{
+    auto seratoFolderPath = seratoFolderPathForFolder(folderPath);
+    auto databaseFilePath = databaseFilePathForSeratoFolder(seratoFolderPath);
+    return File::fileExistsAt(databaseFilePath);
 }
 
 #pragma mark Instance Methods

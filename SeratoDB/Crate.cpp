@@ -16,7 +16,6 @@
 #include "Tags/CrateV1Tags.hpp"
 #include "Tags/VersionTag.hpp"
 #include "Tags/TagFactory.hpp"
-#include "Utility.hpp"
 
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, Crate, Object);
 
@@ -51,6 +50,38 @@ Crate::Pointer Crate::crateWithNameInFolderOnVolume(const String& crateFullName,
 }
 
 #pragma mark Class Methods
+
+String::Pointer Crate::subCratesDirectoryPathInSeratoFolder(const String& seratoFolderPath)
+{
+    auto joinedPath = File::joinPaths(seratoFolderPath, String::stringWith("Subcrates"));
+    return joinedPath;
+}
+
+String::Pointer Crate::smartCratesDirectoryPathInSeratoFolder(const String& seratoFolderPath)
+{
+    auto joinedPath = File::joinPaths(seratoFolderPath, String::stringWith("SmartCrates"));
+    return joinedPath;
+}
+
+String::Pointer Crate::crateFilePathForCrateNameInSeratoFolder(const String& crateName,
+                                                               const String& seratoFolderPath)
+{
+    auto cratesFolderPath = subCratesDirectoryPathInSeratoFolder(seratoFolderPath);
+    auto crateFilePartialPath = File::joinPaths(cratesFolderPath, crateName);
+    crateFilePartialPath->append(".crate");
+
+    return crateFilePartialPath;
+}
+
+String::Pointer Crate::crateFilePathForSmartCrateNameInSeratoFolder(const String& crateName,
+                                                                    const String& seratoFolderPath)
+{
+    auto cratesFolderPath = subCratesDirectoryPathInSeratoFolder(seratoFolderPath);
+    auto crateFilePartialPath = File::joinPaths(cratesFolderPath, crateName);
+    crateFilePartialPath->append(".scrate");
+
+    return crateFilePartialPath;
+}
 
 boolean Crate::isAValidCrateName(const String& crateFullName, const String& seratoFolderPath)
 {

@@ -12,7 +12,6 @@
 
 #include "SeratoDB/CrateOrderFile.hpp"
 #include "SeratoDB/Internal/CrateOrderFile.hpp"
-#include "SeratoDB/Utility.hpp"
 #include "SeratoDB/Crate.hpp"
 
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, CrateOrderFile, Object);
@@ -26,7 +25,7 @@ CrateOrderFile::Pointer CrateOrderFile::fileWithSeratoFolderInRootFolder(const S
                                                                          const String& rootFolderPath)
 {
     auto rootCrate = Crate::crateWithNameInFolderOnVolume(String::string(), String::string(), String::string());
-    auto crateOrderFilePath = crateOrderFilePathForSeratoFolder(seratoFolderPath);
+    auto crateOrderFilePath = CrateOrderFile::pathForFileInSeratoFolder(seratoFolderPath);
     auto internalObject = Internal::CrateOrderFile::Pointer(std::make_shared<Internal::CrateOrderFile>(crateOrderFilePath, rootCrate));
     auto newCrateOrderFile = CrateOrderFile::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
 
@@ -34,7 +33,7 @@ CrateOrderFile::Pointer CrateOrderFile::fileWithSeratoFolderInRootFolder(const S
         return newCrateOrderFile;
     }
 
-    auto subCratesDirectory = subCratesDirectoryPathInSeratoFolder(seratoFolderPath);
+    auto subCratesDirectory = Crate::subCratesDirectoryPathInSeratoFolder(seratoFolderPath);
     auto subCratesFound = Internal::CrateOrderFile::cratesInSubCratesDirectory(subCratesDirectory);
     auto cratesInOrder = Internal::CrateOrderFile::readCratesNamesInCrateOrderFile(newCrateOrderFile->internal->crateOrderFilePath);
 
@@ -53,6 +52,14 @@ CrateOrderFile::Pointer CrateOrderFile::fileWithSeratoFolderInRootFolder(const S
     newCrateOrderFile->internal->rootCrate->resetModificationFlags();
 
     return newCrateOrderFile;
+}
+
+#pragma mark Class Methods
+
+String::Pointer CrateOrderFile::pathForFileInSeratoFolder(const String& seratoFolderPath)
+{
+    auto joinedPath = File::joinPaths(seratoFolderPath, String::stringWith("neworder.pref"));
+    return joinedPath;
 }
 
 #pragma mark Instance Methods

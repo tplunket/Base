@@ -31,6 +31,9 @@ namespace NxA { namespace Serato {
 
         #pragma mark Class Methods
         static String::Pointer versionAsStringForDatabaseIn(const String& seratoFolderPath);
+        static String::Pointer seratoFolderPathForFolder(const String& folderPath);
+        static String::Pointer databaseFilePathForSeratoFolder(const String& seratoFolderPath);
+        static boolean containsAValidSeratoFolder(const String& folderPath);
 
         #pragma mark Instance Methods
         timestamp databaseModificationDateInSecondsSince1970(void) const;

@@ -97,7 +97,7 @@ void ID3TrackFile::setStringValueForFrameNamedInTag(const String& value, const c
 {
     id3v2Tag->removeFrames(name);
 
-    auto frame = new TagLib::ID3v2::TextIdentificationFrame(name, TagLib::String::UTF8);
+    auto frame = new TagLib::ID3v2::TextIdentificationFrame(name, TagLib::String::Latin1);
     frame->setText(TagLib::StringList(TagLib::String(value.toUTF8())));
     id3v2Tag->addFrame(frame);
 }

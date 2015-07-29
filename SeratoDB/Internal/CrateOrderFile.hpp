@@ -33,8 +33,7 @@ namespace NxA { namespace Serato { namespace Internal {
         NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTORS_FOR(NxA::Serato, CrateOrderFile);
 
         #pragma mark Constructors & Desctructors
-        CrateOrderFile(const String& path,
-                       Serato::Crate& root);
+        CrateOrderFile(const String& path, Serato::Crate& root);
 
         #pragma mark Class Methods
         static String::Pointer crateNameIfValidCrateOrEmptyIfNot(const String& name);

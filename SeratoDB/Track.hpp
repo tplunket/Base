@@ -88,7 +88,9 @@ namespace NxA { namespace Serato {
         void setLoopMarkers(LoopMarker::ArrayOfConst& markers);
         void setGridMarkers(GridMarker::ArrayOfConst& markers);
 
-        boolean wasModified(void) const;
+        boolean needsToUpdateTrackFile(void) const;
+        boolean needsToUpdateDatabaseFile(void) const;
+
         void addTo(Blob& destination) const;
         void saveToTrackFile(void) const;
     };

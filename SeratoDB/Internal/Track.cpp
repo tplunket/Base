@@ -40,7 +40,8 @@ static String::Pointer emptyString = String::string();
 Track::Track(Serato::ObjectTag& tag, const String& rootFolderPath) :
              trackTag(tag.pointer()),
              rootFolder(rootFolderPath.pointer()),
-             wasModified(false),
+             needsToUpdateTrackFile(false),
+             needsToUpdateDatabaseFile(false),
              cueMarkers(Serato::CueMarker::ArrayOfConst::array()),
              loopMarkers(Serato::LoopMarker::ArrayOfConst::array()),
              gridMarkers(Serato::GridMarker::ArrayOfConst::array()) { }
@@ -187,7 +188,7 @@ void Track::setStringForSubTagForIdentifier(const String& value, uinteger32 iden
         textTag.setValue(value);
     }
 
-    this->wasModified = true;
+    this->needsToUpdateDatabaseFile = true;
 }
 
 void Track::setPathForSubTagForIdentifier(const String& value, uinteger32 identifier)
@@ -202,7 +203,7 @@ void Track::setPathForSubTagForIdentifier(const String& value, uinteger32 identi
         pathTag.setValue(value);
     }
 
-    this->wasModified = true;
+    this->needsToUpdateDatabaseFile = true;
 }
 
 void Track::setUInt32ForSubTagForIdentifier(uinteger32 value, uinteger32 identifier)
@@ -217,7 +218,7 @@ void Track::setUInt32ForSubTagForIdentifier(uinteger32 value, uinteger32 identif
         uinteger32Tag.setValue(value);
     }
 
-    this->wasModified = true;
+    this->needsToUpdateDatabaseFile = true;
 }
 
 void Track::readMarkersFrom(const Serato::TrackFile& trackFile)

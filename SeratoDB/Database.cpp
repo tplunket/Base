@@ -179,18 +179,21 @@ void Database::saveIfModified(void) const
 
     internal->crateOrderFile->saveIfModified();
 
-    boolean someTracksWereModified = false;
+    boolean needsToUpdateDatabaseFile = false;
     for (auto& track : *(internal->tracks)) {
-        if (!track->wasModified()) {
-            continue;
+        if (track->needsToUpdateDatabaseFile()) {
+            needsToUpdateDatabaseFile = true;
         }
 
-        printf("Saving modifications to Serato track '%s'.\n", track->title().toUTF8());
-        track->saveToTrackFile();
-        someTracksWereModified = true;
+        if (track->needsToUpdateTrackFile()) {
+            printf("Saving modifications to Serato track '%s'.\n", track->title().toUTF8());
+            track->saveToTrackFile();
+        }
     }
 
-    if (someTracksWereModified) {
+    if (needsToUpdateDatabaseFile) {
+        printf("Saving modifications to Serato database file at '%s'.\n", internal->databaseFilePath->toUTF8());
+
         auto outputData = Blob::blob();
 
         auto versionTag = VersionTag::tagWithIdentifierAndValue(databaseVersionTagIdentifier,

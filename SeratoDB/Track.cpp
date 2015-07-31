@@ -54,7 +54,8 @@ Track::Pointer Track::trackWithFileAtOnVolume(const String& trackFilePath, const
     auto trackTag = ObjectTag::tagWithIdentifierAndValue(trackObjectTagIdentifier, tags);
     auto internalObject = Internal::Track::Pointer(std::make_shared<Internal::Track>(trackTag, locatedOnVolumePath));
     auto newTrack = Track::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
-    newTrack->internal->wasModified = true;
+    newTrack->internal->needsToUpdateTrackFile = true;
+    newTrack->internal->needsToUpdateDatabaseFile = true;
 
     // TODO: Output correct values:
     // '06:20.16'
@@ -235,73 +236,87 @@ const GridMarker::ArrayOfConst& Track::gridMarkers(void) const
 void Track::setTitle(const String& title)
 {
     internal->setStringForSubTagForIdentifier(title, trackTitleTagIdentifier);
+    internal->needsToUpdateTrackFile = true;
 }
 
 void Track::setArtist(const String& artist)
 {
     internal->setStringForSubTagForIdentifier(artist, trackArtistTagIdentifier);
+    internal->needsToUpdateTrackFile = true;
 }
 
 void Track::setAlbum(const String& album)
 {
     internal->setStringForSubTagForIdentifier(album, trackAlbumTagIdentifier);
+    internal->needsToUpdateTrackFile = true;
 }
 
 void Track::setGenre(const String& genre)
 {
     internal->setStringForSubTagForIdentifier(genre, trackGenreTagIdentifier);
+    internal->needsToUpdateTrackFile = true;
 }
 
 void Track::setComments(const String& comments)
 {
     internal->setStringForSubTagForIdentifier(comments, trackCommentsTagIdentifier);
+    internal->needsToUpdateTrackFile = true;
 }
 
 void Track::setGrouping(const String& grouping)
 {
     internal->setStringForSubTagForIdentifier(grouping, trackGroupingTagIdentifier);
+    internal->needsToUpdateTrackFile = true;
 }
 
 void Track::setRemixer(const String& remixer)
 {
     internal->setStringForSubTagForIdentifier(remixer, trackRemixerTagIdentifier);
+    internal->needsToUpdateTrackFile = true;
 }
 
 void Track::setRecordLabel(const String& recordLabel)
 {
     internal->setStringForSubTagForIdentifier(recordLabel, trackLabelTagIdentifier);
+    internal->needsToUpdateTrackFile = true;
 }
 
 void Track::setComposer(const String& composer)
 {
     internal->setStringForSubTagForIdentifier(composer, trackComposerTagIdentifier);
+    internal->needsToUpdateTrackFile = true;
 }
 
 void Track::setKey(const String& key)
 {
     internal->setStringForSubTagForIdentifier(key, trackKeyTagIdentifier);
+    internal->needsToUpdateTrackFile = true;
 }
 
 void Track::setBpm(const String& bpm)
 {
     internal->setStringForSubTagForIdentifier(bpm, trackBpmTagIdentifier);
+    internal->needsToUpdateTrackFile = true;
 }
 
 void Track::setYear(const String& year)
 {
     internal->setStringForSubTagForIdentifier(year, trackYearTagIdentifier);
+    internal->needsToUpdateTrackFile = true;
 }
 
 void Track::setTrackNumber(count trackNumber)
 {
     // TODO: Should make sure the cast doesn't chop off anything.
     internal->setUInt32ForSubTagForIdentifier(static_cast<uinteger32>(trackNumber), trackNumberTagIdentifier);
+    internal->needsToUpdateTrackFile = true;
 }
 
 void Track::setDiscNumber(count discNumber)
 {
     // TODO: Should make sure the cast doesn't chop off anything.
     internal->setUInt32ForSubTagForIdentifier(static_cast<uinteger32>(discNumber), trackDiscNumberTagIdentifier);
+    internal->needsToUpdateTrackFile = true;
 }
 
 void Track::setDateModifiedInSecondsSinceJanuary1st1970(timestamp dateModified)
@@ -319,24 +334,29 @@ void Track::setDateAddedInSecondsSinceJanuary1st1970(timestamp dateAdded)
 void Track::setCueMarkers(CueMarker::ArrayOfConst& markers)
 {
     internal->cueMarkers = markers.pointer();
-    internal->wasModified = true;
+    internal->needsToUpdateTrackFile = true;
 }
 
 void Track::setLoopMarkers(LoopMarker::ArrayOfConst& markers)
 {
     internal->loopMarkers = markers.pointer();
-    internal->wasModified = true;
+    internal->needsToUpdateTrackFile = true;
 }
 
 void Track::setGridMarkers(GridMarker::ArrayOfConst& markers)
 {
     internal->gridMarkers = markers.pointer();
-    internal->wasModified = true;
+    internal->needsToUpdateTrackFile = true;
 }
 
-boolean Track::wasModified(void) const
+boolean Track::needsToUpdateTrackFile(void) const
 {
-    return internal->wasModified;
+    return internal->needsToUpdateTrackFile;
+}
+
+boolean Track::needsToUpdateDatabaseFile(void) const
+{
+    return internal->needsToUpdateDatabaseFile;
 }
 
 void Track::addTo(Blob& destination) const

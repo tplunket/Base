@@ -26,6 +26,8 @@
 #include <memory>
 #include <typeinfo>
 
+#include "Base/Internal/decimal.h"
+
 namespace NxA {
     // -- Types used by the codebase.
     using boolean = bool;
@@ -50,6 +52,8 @@ namespace NxA {
     using timestamp = std::time_t;
 
     using decimal = double;
+
+    using decimal2 = dec::decimal<2>;
 
     // -- Template used by default to produce the name of unknown types.
     template <typename T> struct TypeName

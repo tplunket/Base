@@ -1,3 +1,0 @@
-language: objective-c
-xcode_project: GoogleMock.xcodeproj
-xcode_scheme: GoogleMock

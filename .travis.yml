@@ -1,14 +1,3 @@
-language:
-    objective-c
-
-osx_image:
-    xcode6.4
-
-env:
-    - SCHEME_NAME="Rekord Buddy" SDK_NAME="macosx10.9"
-    - SCHEME_NAME="Rekord Buddy" SDK_NAME="macosx10.10"
-    - SCHEME_NAME="Rekord Buddy Beta" SDK_NAME="macosx10.9"
-    - SCHEME_NAME="Rekord Buddy Beta" SDK_NAME="macosx10.10"
-
-script:
-    xcodebuild -workspace "OS X/Rekord Buddy.xcworkspace" -sdk "$SDK_NAME" -scheme "$SCHEME_NAME" test
+language: objective-c
+xcode_project: GoogleMock.xcodeproj
+xcode_scheme: GoogleMock

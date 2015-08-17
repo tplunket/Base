@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="1" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="7701" systemVersion="14E46" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="Artist" representedClassName="NxAArtist" syncable="YES">
+        <attribute name="p_name" optional="YES" attributeType="String" minValueString="1" indexed="YES" syncable="YES"/>
+        <relationship name="p_artwork" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Artwork" inverseName="p_artists" inverseEntity="Artwork" syncable="YES"/>
+        <relationship name="p_productions" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TrackProducerCredit" inverseName="p_artist" inverseEntity="TrackProducerCredit" syncable="YES"/>
+        <relationship name="p_remixes" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TrackRemixerCredit" inverseName="p_artist" inverseEntity="TrackRemixerCredit" syncable="YES"/>
+        <relationship name="p_tracks" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TrackArtistCredit" inverseName="p_artist" inverseEntity="TrackArtistCredit" syncable="YES"/>
+    </entity>
+    <entity name="Artwork" representedClassName="NxAArtwork" syncable="YES">
+        <attribute name="p_hash" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="p_image" optional="YES" attributeType="Transformable" valueTransformerName="NxAImageToDataTansformer" allowsExternalBinaryDataStorage="YES" storedInTruthFile="YES" syncable="YES"/>
+        <relationship name="p_artists" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Artist" inverseName="p_artwork" inverseEntity="Artist" syncable="YES"/>
+        <relationship name="p_recordLabels" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TrackRecordLabel" inverseName="p_artwork" inverseEntity="TrackRecordLabel" syncable="YES"/>
+        <relationship name="p_tracks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ArtworkProperty" inverseName="p_value" inverseEntity="ArtworkProperty" syncable="YES"/>
+    </entity>
+    <entity name="ArtworkProperty" representedClassName="NxAArtworkProperty" parentEntity="Tag" syncable="YES">
+        <relationship name="p_value" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Artwork" inverseName="p_tracks" inverseEntity="Artwork" syncable="YES"/>
+    </entity>
+    <entity name="AudioFile" representedClassName="NxAAudioFile" isAbstract="YES" syncable="YES">
+        <attribute name="p_deviceID" attributeType="String" minValueString="1" indexed="YES" syncable="YES"/>
+        <relationship name="p_parentTrack" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Track" inverseName="p_files" inverseEntity="Track" syncable="YES"/>
+    </entity>
+    <entity name="Crate" representedClassName="NxACrate" parentEntity="TaggedObject" syncable="YES">
+        <attribute name="p_name" attributeType="String" minValueString="1" indexed="YES" syncable="YES"/>
+        <attribute name="p_sortingBuckets" optional="YES" transient="YES" syncable="YES"/>
+        <attribute name="p_type" attributeType="Integer 32" minValueString="1" maxValueString="5" syncable="YES"/>
+        <relationship name="p_clones" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CrateClone" inverseName="p_cloneOf" inverseEntity="CrateClone" syncable="YES"/>
+        <relationship name="p_parentCrateProperty" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CrateProperty" inverseName="p_value" inverseEntity="CrateProperty" syncable="YES"/>
+        <relationship name="p_sortedBy" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="SortingCriteria" inverseName="p_parentCrate" inverseEntity="SortingCriteria" syncable="YES"/>
+    </entity>
+    <entity name="CrateClone" representedClassName="NxACrateClone" parentEntity="Crate" syncable="YES">
+        <relationship name="p_cloneOf" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Crate" inverseName="p_clones" inverseEntity="Crate" syncable="YES"/>
+    </entity>
+    <entity name="CrateProperty" representedClassName="NxACrateProperty" parentEntity="Tag" syncable="YES">
+        <relationship name="p_value" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Crate" inverseName="p_parentCrateProperty" inverseEntity="Crate" syncable="YES"/>
+    </entity>
+    <entity name="CueMarkerProperty" representedClassName="NxACueMarkerProperty" parentEntity="MarkerProperty" syncable="YES">
+        <attribute name="p_bpm" optional="YES" attributeType="Decimal" minValueString="1" maxValueString="300" syncable="YES"/>
+        <attribute name="p_hotCue" optional="YES" attributeType="Integer 16" minValueString="0" maxValueString="15" syncable="YES"/>
+        <attribute name="p_name" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="DateProperty" representedClassName="NxADateProperty" parentEntity="Tag" syncable="YES">
+        <attribute name="p_value" optional="YES" attributeType="Date" syncable="YES"/>
+    </entity>
+    <entity name="DecimalProperty" representedClassName="NxADecimalProperty" parentEntity="Tag" syncable="YES">
+        <attribute name="p_value" optional="YES" attributeType="Decimal" syncable="YES"/>
+    </entity>
+    <entity name="FilterPlaylist" representedClassName="NxAFilterPlaylist" parentEntity="SmartPlaylist" syncable="YES"/>
+    <entity name="GridMarkerProperty" representedClassName="NxAGridMarkerProperty" parentEntity="MarkerProperty" syncable="YES">
+        <attribute name="p_bpm" optional="YES" attributeType="Decimal" minValueString="1" maxValueString="300" syncable="YES"/>
+    </entity>
+    <entity name="IntegerProperty" representedClassName="NxAIntegerProperty" parentEntity="Tag" syncable="YES">
+        <attribute name="p_value" optional="YES" attributeType="Integer 32" syncable="YES"/>
+    </entity>
+    <entity name="LoopMarkerProperty" representedClassName="NxALoopMarkerProperty" parentEntity="CueMarkerProperty" syncable="YES">
+        <attribute name="p_length" optional="YES" attributeType="Decimal" minValueString="0" syncable="YES"/>
+    </entity>
+    <entity name="MarkerProperty" representedClassName="NxAMarkerProperty" isAbstract="YES" parentEntity="Tag" syncable="YES">
+        <attribute name="p_customFlagStrings" optional="YES" attributeType="Transformable" syncable="YES"/>
+        <attribute name="p_pos" optional="YES" attributeType="Decimal" minValueString="0" syncable="YES"/>
+    </entity>
+    <entity name="OSXAacAudioFile" representedClassName="NxAOSXAacAudioFile" parentEntity="OSXAudioFile" syncable="YES"/>
+    <entity name="OSXAiffAudioFile" representedClassName="NxAOSXAiffAudioFile" parentEntity="OSXAudioFile" syncable="YES"/>
+    <entity name="OSXAudioFile" representedClassName="NxAOSXAudioFile" isAbstract="YES" parentEntity="AudioFile" syncable="YES">
+        <attribute name="p_bookmark" attributeType="Binary" syncable="YES"/>
+        <attribute name="p_path" attributeType="String" minValueString="1" indexed="YES" syncable="YES"/>
+    </entity>
+    <entity name="OSXMp3AudioFile" representedClassName="NxAOSXMp3AudioFile" parentEntity="OSXAudioFile" syncable="YES"/>
+    <entity name="OSXWavAudioFile" representedClassName="NxAOSXWavAudioFile" parentEntity="OSXAudioFile" syncable="YES"/>
+    <entity name="OtherTracksPlaylist" representedClassName="NxAOtherTracksPlaylist" parentEntity="Crate" syncable="YES"/>
+    <entity name="RatingProperty" representedClassName="NxARatingProperty" parentEntity="IntegerProperty" syncable="YES"/>
+    <entity name="SmartPlaylist" representedClassName="NxASmartPlaylist" parentEntity="Crate" syncable="YES">
+        <attribute name="p_predicate" optional="YES" attributeType="String" minValueString="1" syncable="YES"/>
+    </entity>
+    <entity name="SortingCriteria" representedClassName="NxASortingCriteria" syncable="YES">
+        <attribute name="p_ascending" attributeType="Boolean" defaultValueString="YES" syncable="YES"/>
+        <attribute name="p_sortTagClassName" attributeType="String" minValueString="1" syncable="YES"/>
+        <attribute name="p_sortTagDescription" attributeType="String" minValueString="1" syncable="YES"/>
+        <relationship name="p_parentCrate" maxCount="1" deletionRule="Nullify" destinationEntity="Crate" inverseName="p_sortedBy" inverseEntity="Crate" syncable="YES"/>
+    </entity>
+    <entity name="StringProperty" representedClassName="NxAStringProperty" parentEntity="Tag" syncable="YES">
+        <attribute name="p_value" optional="YES" attributeType="String" minValueString="1" syncable="YES"/>
+    </entity>
+    <entity name="Tag" representedClassName="NxATag" isAbstract="YES" syncable="YES">
+        <attribute name="p_tagName" optional="YES" attributeType="String" minValueString="1" indexed="YES" syncable="YES"/>
+        <relationship name="p_parentTagEntries" optional="YES" toMany="YES" minCount="1" deletionRule="Nullify" destinationEntity="TagEntry" inverseName="p_tag" inverseEntity="TagEntry" syncable="YES"/>
+    </entity>
+    <entity name="TagDescription" representedClassName="NxATagDescription" syncable="YES">
+        <attribute name="p_comparisonValue" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="p_identifier" attributeType="String" minValueString="1" syncable="YES"/>
+        <relationship name="p_parentObject" maxCount="1" deletionRule="Nullify" destinationEntity="TaggedObject" inverseName="p_savedTagValues" inverseEntity="TaggedObject" syncable="YES"/>
+    </entity>
+    <entity name="TagEntry" representedClassName="NxATagEntry" syncable="YES">
+        <attribute name="p_dateModified" attributeType="Date" syncable="YES"/>
+        <relationship name="p_parent" maxCount="1" deletionRule="Nullify" destinationEntity="TaggedObject" inverseName="p_tagEntries" inverseEntity="TaggedObject" syncable="YES"/>
+        <relationship name="p_tag" maxCount="1" deletionRule="Nullify" destinationEntity="Tag" inverseName="p_parentTagEntries" inverseEntity="Tag" syncable="YES"/>
+    </entity>
+    <entity name="TaggedObject" representedClassName="NxATaggedObject" syncable="YES">
+        <relationship name="p_savedTagValues" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="TagDescription" inverseName="p_parentObject" inverseEntity="TagDescription" syncable="YES"/>
+        <relationship name="p_tagEntries" optional="YES" toMany="YES" minCount="1" deletionRule="Nullify" ordered="YES" destinationEntity="TagEntry" inverseName="p_parent" inverseEntity="TagEntry" syncable="YES"/>
+    </entity>
+    <entity name="Track" representedClassName="NxATrack" parentEntity="TaggedObject" syncable="YES">
+        <attribute name="p_audioData" optional="YES" transient="YES" syncable="YES"/>
+        <relationship name="p_files" toMany="YES" minCount="1" deletionRule="Nullify" destinationEntity="AudioFile" inverseName="p_parentTrack" inverseEntity="AudioFile" syncable="YES"/>
+        <relationship name="p_parentTrackProperties" optional="YES" toMany="YES" minCount="1" deletionRule="Nullify" destinationEntity="TrackProperty" inverseName="p_value" inverseEntity="TrackProperty" syncable="YES"/>
+    </entity>
+    <entity name="TrackAlbum" representedClassName="NxATrackAlbum" parentEntity="StringProperty" syncable="YES">
+        <attribute name="p_numberOfTracks" optional="YES" attributeType="Integer 16" minValueString="1" syncable="YES"/>
+    </entity>
+    <entity name="TrackArtistCredit" representedClassName="NxATrackArtistCredit" parentEntity="TrackCredit" syncable="YES">
+        <relationship name="p_artist" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Artist" inverseName="p_tracks" inverseEntity="Artist" syncable="YES"/>
+    </entity>
+    <entity name="TrackBitDepth" representedClassName="NxATrackBitDepth" parentEntity="IntegerProperty" syncable="YES"/>
+    <entity name="TrackBitRate" representedClassName="NxATrackBitRate" parentEntity="IntegerProperty" syncable="YES"/>
+    <entity name="TrackBooleanTag" representedClassName="NxATrackBooleanTag" parentEntity="TrackTag" syncable="YES"/>
+    <entity name="TrackComments" representedClassName="NxATrackComments" parentEntity="StringProperty" syncable="YES"/>
+    <entity name="TrackCredit" representedClassName="NxATrackCredit" parentEntity="StringProperty" syncable="YES"/>
+    <entity name="TrackDateAdded" representedClassName="NxATrackDateAdded" parentEntity="DateProperty" syncable="YES"/>
+    <entity name="TrackDateModified" representedClassName="NxATrackDateModified" parentEntity="DateProperty" syncable="YES"/>
+    <entity name="TrackDateReleased" representedClassName="NxATrackDateReleased" parentEntity="DateProperty" syncable="YES"/>
+    <entity name="TrackGenre" representedClassName="NxATrackGenre" parentEntity="StringProperty" syncable="YES"/>
+    <entity name="TrackKey" representedClassName="NxATrackKey" parentEntity="IntegerProperty" syncable="YES"/>
+    <entity name="TrackLength" representedClassName="NxATrackLength" parentEntity="IntegerProperty" syncable="YES"/>
+    <entity name="TrackMixName" representedClassName="NxATrackMixName" parentEntity="StringProperty" syncable="YES"/>
+    <entity name="TrackNumber" representedClassName="NxATrackNumber" parentEntity="IntegerProperty" syncable="YES"/>
+    <entity name="TrackPlayCount" representedClassName="NxATrackPlayCount" parentEntity="IntegerProperty" syncable="YES"/>
+    <entity name="TrackProducerCredit" representedClassName="NxATrackProducerCredit" parentEntity="TrackCredit" syncable="YES">
+        <relationship name="p_artist" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Artist" inverseName="p_productions" inverseEntity="Artist" syncable="YES"/>
+    </entity>
+    <entity name="TrackProperty" representedClassName="NxATrackProperty" parentEntity="Tag" syncable="YES">
+        <relationship name="p_value" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Track" inverseName="p_parentTrackProperties" inverseEntity="Track" syncable="YES"/>
+    </entity>
+    <entity name="TrackRating" representedClassName="NxATrackRating" parentEntity="RatingProperty" syncable="YES"/>
+    <entity name="TrackRecordLabel" representedClassName="NxATrackRecordLabel" parentEntity="StringProperty" syncable="YES">
+        <relationship name="p_artwork" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Artwork" inverseName="p_recordLabels" inverseEntity="Artwork" syncable="YES"/>
+    </entity>
+    <entity name="TrackRemixerCredit" representedClassName="NxATrackRemixerCredit" parentEntity="TrackCredit" syncable="YES">
+        <relationship name="p_artist" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Artist" inverseName="p_remixes" inverseEntity="Artist" syncable="YES"/>
+    </entity>
+    <entity name="TrackSampleRate" representedClassName="NxATrackSampleRate" parentEntity="IntegerProperty" syncable="YES"/>
+    <entity name="TrackSize" representedClassName="NxATrackSize" parentEntity="IntegerProperty" syncable="YES"/>
+    <entity name="TrackTag" representedClassName="NxATrackTag" parentEntity="StringProperty" syncable="YES"/>
+    <entity name="TrackTitle" representedClassName="NxATrackTitle" parentEntity="StringProperty" syncable="YES"/>
+    <fetchRequest name="ArtistsWithNameBeginningBy" entity="Artist" predicateString="p_value != nil AND p_name BEGINSWITH[cd] $TEXT" fetchLimit="50"/>
+    <fetchRequest name="ArtistWithName" entity="Artist" predicateString="p_name ==[c] $NAME"/>
+    <fetchRequest name="ArtworkWithHash" entity="Artwork" predicateString="p_hash == $HASH"/>
+    <fetchRequest name="CrateWithName" entity="Crate" predicateString="p_name ==[c] $NAME"/>
+    <fetchRequest name="CrateWithParentAndName" entity="Crate" predicateString="$PARENT IN p_parentCrates AND p_name ==[c] $NAME"/>
+    <fetchRequest name="DatePropertyWithNameAndValue" entity="DateProperty" predicateString="p_tagName ==[c] $NAME AND p_value == $VALUE"/>
+    <fetchRequest name="DecimalPropertyWithNameAndValue" entity="DecimalProperty" predicateString="p_tagName ==[c] $NAME AND p_value == $VALUE"/>
+    <fetchRequest name="FileOnDeviceWithPath" entity="OSXAudioFile" predicateString="p_path ==[c] $PATH AND p_deviceID == $DEVICEID"/>
+    <fetchRequest name="GenresWithNameBeginningBy" entity="TrackGenre" predicateString="p_value != nil AND p_value BEGINSWITH[cd] $TEXT" fetchLimit="50"/>
+    <fetchRequest name="IntegerPropertyWithNameAndValue" entity="IntegerProperty" predicateString="p_tagName ==[c] $NAME AND p_value == $VALUE"/>
+    <fetchRequest name="KeysWithNameBeginningBy" entity="TrackKey" predicateString="p_value != nil AND p_tagName BEGINSWITH[cd] $TEXT" fetchLimit="50"/>
+    <fetchRequest name="RecordLabelsWithNameBeginningBy" entity="TrackRecordLabel" predicateString="p_value != nil AND p_tagName BEGINSWITH[cd] $TEXT" fetchLimit="50"/>
+    <fetchRequest name="StringPropertyWithNameAndValue" entity="StringProperty" predicateString="p_tagName ==[c] $NAME AND p_value == $VALUE"/>
+    <fetchRequest name="TagEntriesWithNoParent" entity="TagEntry" predicateString="p_parent == nil"/>
+    <fetchRequest name="TrackAlbumWithValue" entity="TrackAlbum" predicateString="p_value ==[c] $VALUE AND p_tagName == nil"/>
+    <fetchRequest name="TrackArtistCreditWithValue" entity="TrackArtistCredit" predicateString="p_value ==[c] $VALUE AND p_tagName == nil"/>
+    <fetchRequest name="TrackBitDepthWithValue" entity="TrackBitDepth" predicateString="p_value == $VALUE AND p_tagName == nil"/>
+    <fetchRequest name="TrackBitRateWithValue" entity="TrackBitRate" predicateString="p_value == $VALUE AND p_tagName == nil"/>
+    <fetchRequest name="TrackBooleanTagsWithNameBeginningBy" entity="TrackBooleanTag" predicateString="p_value BEGINSWITH[cd] $TEXT" fetchLimit="50"/>
+    <fetchRequest name="TrackBooleanTagWithValue" entity="TrackBooleanTag" predicateString="p_value == $VALUE AND p_tagName == nil"/>
+    <fetchRequest name="TrackCommentsWithValue" entity="TrackComments" predicateString="p_value == $VALUE AND p_tagName == nil"/>
+    <fetchRequest name="TrackDateAddedWithValue" entity="TrackDateAdded" predicateString="p_value == $VALUE AND p_tagName == nil"/>
+    <fetchRequest name="TrackDateModifiedWithValue" entity="TrackDateModified" predicateString="p_value == $VALUE AND p_tagName == nil"/>
+    <fetchRequest name="TrackDateReleasedWithValue" entity="TrackDateReleased" predicateString="p_value == $VALUE AND p_tagName == nil"/>
+    <fetchRequest name="TrackGenreWithValue" entity="TrackGenre" predicateString="p_value == $VALUE AND p_tagName == nil"/>
+    <fetchRequest name="TrackInCrateWithTagName" entity="Track" predicateString="ANY p_parentEntries.parentCrate.p_name ==[c] $CRATENAME AND ANY p_tags.p_name ==[c] $TAGNAME" includeSubentities="YES"/>
+    <fetchRequest name="TrackKeyWithNameAndValue" entity="TrackKey" predicateString="p_tagName == $NAME AND p_value == $VALUE"/>
+    <fetchRequest name="TrackKeyWithValue" entity="TrackKey" predicateString="p_tagName == nil AND p_value == $VALUE"/>
+    <fetchRequest name="TrackLengthWithValue" entity="TrackLength" predicateString="p_value == $VALUE AND p_tagName == nil"/>
+    <fetchRequest name="TrackMixNameWithValue" entity="TrackMixName" predicateString="p_value == $VALUE AND p_tagName == nil"/>
+    <fetchRequest name="TrackNumberWithValue" entity="TrackNumber" predicateString="p_value == $VALUE AND p_tagName == nil"/>
+    <fetchRequest name="TrackPlayCountWithValue" entity="TrackPlayCount" predicateString="p_value == $VALUE AND p_tagName == nil"/>
+    <fetchRequest name="TrackProducerCreditWithValue" entity="TrackProducerCredit" predicateString="p_value ==[c] $VALUE AND p_tagName == nil"/>
+    <fetchRequest name="TrackRatingWithValue" entity="TrackRating" predicateString="p_value == $VALUE AND p_tagName == nil"/>
+    <fetchRequest name="TrackRecordLabelWithValue" entity="TrackRecordLabel" predicateString="p_value == $VALUE AND p_tagName == nil"/>
+    <fetchRequest name="TrackRemixerCreditWithValue" entity="TrackRemixerCredit" predicateString="p_value ==[c] $VALUE AND p_tagName == nil"/>
+    <fetchRequest name="TrackSampleRateWithValue" entity="TrackSampleRate" predicateString="p_value == $VALUE AND p_tagName == nil"/>
+    <fetchRequest name="TrackSizeWithValue" entity="TrackSize" predicateString="p_value == $VALUE AND p_tagName == nil"/>
+    <fetchRequest name="TrackTagsWithNameBeginningBy" entity="TrackTag" predicateString="p_value != nil AND p_tagName BEGINSWITH[cd] $TEXT" fetchLimit="50"/>
+    <fetchRequest name="TrackTagWithNameAndValue" entity="TrackTag" predicateString="p_tagName ==[c] $NAME AND p_value == $VALUE" includeSubentities="YES"/>
+    <fetchRequest name="TrackTagWithValue" entity="TrackTag" predicateString="p_value ==[c] $VALUE AND p_tagName == nil"/>
+    <fetchRequest name="TrackTitleWithValue" entity="TrackTitle" predicateString="p_value == $VALUE AND p_tagName == nil"/>
+    <elements>
+        <element name="Artist" positionX="0" positionY="0" width="128" height="120"/>
+        <element name="Artwork" positionX="0" positionY="0" width="128" height="120"/>
+        <element name="ArtworkProperty" positionX="0" positionY="0" width="128" height="60"/>
+        <element name="AudioFile" positionX="0" positionY="0" width="128" height="75"/>
+        <element name="Crate" positionX="0" positionY="0" width="128" height="135"/>
+        <element name="CrateClone" positionX="0" positionY="0" width="128" height="60"/>
+        <element name="CrateProperty" positionX="0" positionY="0" width="128" height="60"/>
+        <element name="DateProperty" positionX="0" positionY="0" width="128" height="60"/>
+        <element name="DecimalProperty" positionX="0" positionY="0" width="128" height="60"/>
+        <element name="FilterPlaylist" positionX="0" positionY="0" width="128" height="45"/>
+        <element name="GridMarkerProperty" positionX="0" positionY="0" width="128" height="60"/>
+        <element name="IntegerProperty" positionX="0" positionY="0" width="128" height="60"/>
+        <element name="LoopMarkerProperty" positionX="0" positionY="0" width="128" height="60"/>
+        <element name="MarkerProperty" positionX="0" positionY="0" width="128" height="75"/>
+        <element name="OSXAacAudioFile" positionX="0" positionY="0" width="128" height="45"/>
+        <element name="OSXAiffAudioFile" positionX="0" positionY="0" width="128" height="45"/>
+        <element name="OSXAudioFile" positionX="0" positionY="0" width="128" height="75"/>
+        <element name="OSXMp3AudioFile" positionX="0" positionY="0" width="128" height="45"/>
+        <element name="OSXWavAudioFile" positionX="0" positionY="0" width="128" height="45"/>
+        <element name="OtherTracksPlaylist" positionX="0" positionY="0" width="128" height="45"/>
+        <element name="RatingProperty" positionX="0" positionY="0" width="128" height="45"/>
+        <element name="SmartPlaylist" positionX="0" positionY="0" width="128" height="60"/>
+        <element name="SortingCriteria" positionX="0" positionY="0" width="128" height="105"/>
+        <element name="StringProperty" positionX="0" positionY="0" width="128" height="60"/>
+        <element name="Tag" positionX="0" positionY="0" width="128" height="75"/>
+        <element name="TagDescription" positionX="0" positionY="0" width="128" height="90"/>
+        <element name="TagEntry" positionX="0" positionY="0" width="128" height="90"/>
+        <element name="TaggedObject" positionX="0" positionY="0" width="128" height="75"/>
+        <element name="Track" positionX="0" positionY="0" width="128" height="90"/>
+        <element name="TrackAlbum" positionX="0" positionY="0" width="128" height="60"/>
+        <element name="TrackArtistCredit" positionX="0" positionY="0" width="128" height="60"/>
+        <element name="TrackBitDepth" positionX="0" positionY="0" width="128" height="45"/>
+        <element name="TrackBitRate" positionX="0" positionY="0" width="128" height="45"/>
+        <element name="TrackBooleanTag" positionX="0" positionY="0" width="128" height="45"/>
+        <element name="TrackComments" positionX="0" positionY="0" width="128" height="45"/>
+        <element name="TrackCredit" positionX="0" positionY="0" width="128" height="45"/>
+        <element name="TrackDateAdded" positionX="0" positionY="0" width="128" height="45"/>
+        <element name="TrackDateModified" positionX="0" positionY="0" width="128" height="45"/>
+        <element name="TrackDateReleased" positionX="0" positionY="0" width="128" height="45"/>
+        <element name="TrackGenre" positionX="0" positionY="0" width="128" height="45"/>
+        <element name="TrackKey" positionX="0" positionY="0" width="128" height="45"/>
+        <element name="TrackLength" positionX="0" positionY="0" width="128" height="45"/>
+        <element name="TrackMixName" positionX="0" positionY="0" width="128" height="45"/>
+        <element name="TrackNumber" positionX="0" positionY="0" width="128" height="45"/>
+        <element name="TrackPlayCount" positionX="0" positionY="0" width="128" height="45"/>
+        <element name="TrackProducerCredit" positionX="0" positionY="0" width="128" height="60"/>
+        <element name="TrackProperty" positionX="0" positionY="0" width="128" height="60"/>
+        <element name="TrackRating" positionX="0" positionY="0" width="128" height="45"/>
+        <element name="TrackRecordLabel" positionX="0" positionY="0" width="128" height="60"/>
+        <element name="TrackRemixerCredit" positionX="0" positionY="0" width="128" height="60"/>
+        <element name="TrackSampleRate" positionX="0" positionY="0" width="128" height="45"/>
+        <element name="TrackSize" positionX="0" positionY="0" width="128" height="45"/>
+        <element name="TrackTag" positionX="0" positionY="0" width="128" height="45"/>
+        <element name="TrackTitle" positionX="0" positionY="0" width="128" height="45"/>
+        <element name="CueMarkerProperty" positionX="9" positionY="54" width="128" height="90"/>
+    </elements>
+</model>

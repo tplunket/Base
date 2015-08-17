@@ -1,0 +1,55 @@
+//
+// Prefix header for all source files of the 'Rekord Buddy' target in the 'Rekord Buddy' project
+//
+
+#ifdef __OBJC__
+    #import "Cocoa/Cocoa.h"
+
+    #import "Availability.h"
+
+    #import "NxADebuggerLauncher.h"
+    #import "NxAException.h"
+
+    #ifdef DEBUG
+        // -- Replacement for NSLog, but only prints its message in DEBUG builds. Otherwise it compiles down to a NO-OP.
+        #define DLog(...) NSLog(@"%s(%p) %@", __PRETTY_FUNCTION__, self, [NSString stringWithFormat:__VA_ARGS__])
+
+        // -- Prints a message in all builds but also breaks into the debugger and then triggers an Assertion in DEBUG builds.
+        #define ALog(...) { NSLog(@"%s(%p) %@", __PRETTY_FUNCTION__, self, [NSString stringWithFormat:__VA_ARGS__]);[NxADebuggerLauncher launch];[[NSAssertionHandler currentHandler] handleFailureInFunction:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding] file:[NSString stringWithCString:__FILE__ encoding:NSUTF8StringEncoding] lineNumber:__LINE__ description:__VA_ARGS__]; }
+
+        // -- ALogDebug does the same thing as ALog in DEBUG builds.
+        #define ALogDebug ALog
+    #else
+        // -- Make sure assertions are turned off in non-DEBUG builds.
+        #ifndef NS_BLOCK_ASSERTIONS
+            #define NS_BLOCK_ASSERTIONS
+        #endif
+
+        // -- Turn off DLog() in non-DEBUG builds.
+        #define DLog(...) do { } while (0)
+
+        // -- Throws an special exception that will display a fatal error and exit the app.
+        #define ALog(...) [[NxAException exceptionWithName:@"InternalAsssertion" reason:[NSString stringWithFormat:@"%s:%d: %@", __PRETTY_FUNCTION__, __LINE__, [NSString stringWithFormat:__VA_ARGS__]] userInfo:nil] raise]
+
+        // -- ALogDebug only prints its message in non-DEBUG builds.
+        #define ALogDebug(...) NSLog(@"%s(%p) %@", __PRETTY_FUNCTION__, self, [NSString stringWithFormat:__VA_ARGS__])
+    #endif
+
+    // -- Replacements for NSAssert which use ALog().
+    #define NxAAssertNotNil(expression) do { if ((expression) == nil) { ALog(@"%s is nil.", #expression); } } while(0)
+    #define NxAAssertNil(expression) do { if ((expression) != nil) { ALog(@"%s is not nil.", #expression); } } while(0)
+    #define NxAAssertTrue(expression) do { if (!(expression)) { ALog(@"%s is false.", #expression); } } while(0)
+    #define NxAAssertFalse(expression) do { if (expression) { ALog(@"%s is true.", #expression); } } while(0)
+
+    // -- Replacements for NSAssert which use ALog() and, in non-DEBUG builds, only prints its message.
+    #define NxAAssertNotNilDebug(expression) do { if ((expression) == nil) { ALogDebug(@"%s is nil.", #expression); } } while(0)
+    #define NxAAssertNilDebug(expression) do { if ((expression) != nil) { ALogDebug(@"%s is not nil.", #expression); } } while(0)
+    #define NxAAssertTrueDebug(expression) do { if (!(expression)) { ALogDebug(@"%s is false.", #expression); } } while(0)
+    #define NxAAssertFalseDebug(expression) do { if (expression) { ALogDebug(@"%s is true.", #expression); } } while(0)
+#endif
+
+#ifdef __cplusplus
+    #include "Base/Base.hpp"
+    #include "Persistence/Persistence.hpp"
+    #include "Collection/Collection.hpp"
+#endif

@@ -1,24 +1,18 @@
-# Mac Finder
+# Exclude temp nibs and swap files
+*~.nib
+*.sw[a-z]
+ 
+# Exclude OS X folder attributes
 .DS_Store
-.Trashes
-Icon?
-
-# Thumbnails
-._*
-
-# Files that might appear on external disk
-.Spotlight-V100
-.Trashes
-
-# Xcode
-*.pbxuser
+ 
+# Exclude user-specific XCode 3 and 4 files
+*.mode1
 *.mode1v3
 *.mode2v3
+*.perspective
 *.perspectivev3
-*.xccheckout
-!default.pbxuser
-!default.mode1v3
-!default.mode2v3
-!default.perspectivev3
+*.pbxuser
+
+# Exclude user’s data
 xcuserdata
-default.profraw
+Build

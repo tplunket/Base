@@ -164,7 +164,10 @@ void ID3TrackFile::readMarkers(void)
             auto frameObject = frame->object();
             auto headerStruct = reinterpret_cast<GeobObjectStruct*>(frameObject.data());
             if ((headerStruct->majorVersion == 1) && (headerStruct->minorVersion == 1)) {
-                this->readMarkersV2FromBase64String(headerStruct->data, frameObject.size() - sizeof(GeobBodyHeaderStruct));
+                count size = frameObject.size() - sizeof(GeobObjectStruct);
+                if (size) {
+                    this->readMarkersV2FromBase64String(headerStruct->data, size);
+                }
             }
         }
     }
@@ -176,7 +179,8 @@ void ID3TrackFile::readMarkers(void)
             auto frameObject = frame->object();
             auto headerStruct = reinterpret_cast<GeobObjectStruct*>(frameObject.data());
             if ((headerStruct->majorVersion == 1) && (headerStruct->minorVersion == 0)) {
-                if ((frame->size() - sizeof(GeobBodyHeaderStruct)) > 0) {
+                count size = frame->size() - sizeof(GeobObjectStruct);
+                if (size) {
                     this->readGridMarkersFrom(headerStruct->data);
                 }
             }

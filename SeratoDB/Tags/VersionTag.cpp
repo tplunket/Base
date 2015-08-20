@@ -22,7 +22,7 @@ using namespace NxA::Serato;
 
 VersionTag::Pointer VersionTag::tagWithMemoryAt(const byte* tagAddress)
 {
-    count size = Internal::Tag::dataSizeForTagAt(tagAddress);
+    count size = Tag::dataSizeForTagAt(tagAddress);
     auto text = String::stringWithUTF16(Blob::blobWithMemoryAndSize(Internal::Tag::dataForTagAt(tagAddress), size));
 
     return VersionTag::tagWithIdentifierAndValue(Tag::identifierForTagAt(tagAddress), text);

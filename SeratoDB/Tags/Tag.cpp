@@ -29,7 +29,14 @@ uint32_t Tag::identifierForTagAt(const byte* tagAddress)
 
 const byte* Tag::nextTagAfterTagAt(const byte* tagAddress)
 {
-    return tagAddress + Internal::Tag::dataSizeForTagAt(tagAddress) + sizeof(TagStruct);
+    return tagAddress + Tag::dataSizeForTagAt(tagAddress) + sizeof(TagStruct);
+}
+
+count Tag::dataSizeForTagAt(const byte* tagAddress)
+{
+    const TagStruct* tagStructPtr = reinterpret_cast<const TagStruct*>(tagAddress);
+    unsigned long dataSize = Platform::bigEndianUInteger32ValueAt(tagStructPtr->length);
+    return dataSize;
 }
 
 #pragma mark Instance Methods

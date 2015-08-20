@@ -24,7 +24,7 @@ using namespace NxA::Serato;
 
 ObjectTag::Pointer ObjectTag::tagWithMemoryAt(const byte* tagAddress)
 {
-    auto dataSize = Internal::Tag::dataSizeForTagAt(tagAddress);
+    auto dataSize = Tag::dataSizeForTagAt(tagAddress);
     auto tagData = Internal::Tag::dataForTagAt(tagAddress);
     auto subTags = TagFactory::parseTagsAt(tagData, dataSize);
 

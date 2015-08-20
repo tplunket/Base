@@ -69,10 +69,14 @@ String::Pointer File::joinPaths(const String& first,
     auto result = String::stringWith(first);
 
     if (Platform::platform == Platform::Windows) {
-        result->append("\\");
+        if (!result->hasPostfix("\\")) {
+            result->append("\\");
+        }
     }
     else {
-        result->append("/");
+        if (!result->hasPostfix("/")) {
+            result->append("/");
+        }
     }
 
     result->append(second);

@@ -36,13 +36,6 @@ void Tag::setIdentifierForTagAt(uinteger32 identifier, byte* tagAddress)
     Platform::writeBigEndianUInteger32ValueAt(identifier, tagStructPtr->identifier);
 }
 
-count Tag::dataSizeForTagAt(const byte* tagAddress)
-{
-    const TagStruct* tagStructPtr = reinterpret_cast<const TagStruct*>(tagAddress);
-    unsigned long dataSize = Platform::bigEndianUInteger32ValueAt(tagStructPtr->length);
-    return dataSize;
-}
-
 void Tag::setDataSizeForTagAt(count dataSize, byte* tagAddress)
 {
     TagStruct* tagStructPtr = reinterpret_cast<TagStruct*>(tagAddress);

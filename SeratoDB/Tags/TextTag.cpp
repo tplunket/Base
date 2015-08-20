@@ -22,8 +22,8 @@ using namespace NxA::Serato;
 
 TextTag::Pointer TextTag::tagWithMemoryAt(const byte* tagAddress)
 {
-    count size = Internal::Tag::dataSizeForTagAt(tagAddress);
-    auto text = String::stringWithUTF16(Blob::blobWithMemoryAndSize(Internal::Tag::dataForTagAt(tagAddress), size));
+    count size = Tag::dataSizeForTagAt(tagAddress);
+    auto text = size ? String::stringWithUTF16(Blob::blobWithMemoryAndSize(Internal::Tag::dataForTagAt(tagAddress), size)) : String::string();
 
     return TextTag::tagWithIdentifierAndValue(Tag::identifierForTagAt(tagAddress), text);
 }

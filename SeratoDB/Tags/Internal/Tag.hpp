@@ -40,7 +40,6 @@ namespace NxA { namespace Serato { namespace Internal {
 
         #pragma mark Class Methods
         static void setIdentifierForTagAt(uinteger32 identifier, byte* tagAddress);
-        static count dataSizeForTagAt(const byte* tagAddress);
         static void setDataSizeForTagAt(count dataSize, byte* tagAddress);
         static const byte* dataForTagAt(const byte* tagAddress);
         static byte* dataForTagAt(byte* tagAddress);

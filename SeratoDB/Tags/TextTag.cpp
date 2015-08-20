@@ -64,13 +64,14 @@ void TextTag::setValue(const String& value)
 
 void TextTag::addTo(Blob& destination) const
 {
+    auto utf16Value = internal->value->toUTF16();
+    count dataSize = utf16Value->size();
     auto memoryRepresentation = Blob::blobWithCapacity(Internal::Tag::memoryNeededForTagHeader());
-    count dataSize = internal->value->length() * 2;
 
     byte* tagAddress = memoryRepresentation->data();
     Internal::Tag::setIdentifierForTagAt(this->identifier(), tagAddress);
     Internal::Tag::setDataSizeForTagAt(dataSize, tagAddress);
 
     destination.append(memoryRepresentation);
-    destination.append(internal->value->toUTF16());
+    destination.append(utf16Value);
 }

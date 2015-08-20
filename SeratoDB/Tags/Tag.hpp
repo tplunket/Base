@@ -24,6 +24,7 @@ namespace NxA { namespace Serato {
         #pragma mark Class Methods
         static uinteger32 identifierForTagAt(const byte* tagAddress);
         static const byte* nextTagAfterTagAt(const byte* tagAddress);
+        static count dataSizeForTagAt(const byte* tagAddress);
 
         #pragma mark Instance Methods
         uinteger32 identifier(void) const;

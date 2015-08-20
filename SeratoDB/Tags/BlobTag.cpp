@@ -24,7 +24,7 @@ BlobTag::Pointer BlobTag::tagWithMemoryAt(const byte* tagAddress)
 {
     return BlobTag::tagWithIdentifierAndValue(Tag::identifierForTagAt(tagAddress),
                                               Blob::blobWithMemoryAndSize(Internal::Tag::dataForTagAt(tagAddress),
-                                                                          Internal::Tag::dataSizeForTagAt(tagAddress)));
+                                                                          Tag::dataSizeForTagAt(tagAddress)));
 }
 
 BlobTag::Pointer BlobTag::tagWithIdentifierAndValue(uinteger32 identifier, const Blob& value)

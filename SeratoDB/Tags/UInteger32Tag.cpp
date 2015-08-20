@@ -25,7 +25,7 @@ using namespace NxA::Serato;
 UInteger32Tag::Pointer UInteger32Tag::tagWithMemoryAt(const byte* tagAddress)
 {
     const byte* tagData = Internal::Tag::dataForTagAt(tagAddress);
-    NXA_ASSERT_EQ(Internal::Tag::dataSizeForTagAt(tagAddress), 4);
+    NXA_ASSERT_EQ(Tag::dataSizeForTagAt(tagAddress), 4);
 
     return UInteger32Tag::tagWithIdentifierAndValue(Tag::identifierForTagAt(tagAddress),
                                                     Platform::bigEndianUInteger32ValueAt(tagData));

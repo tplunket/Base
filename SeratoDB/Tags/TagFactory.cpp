@@ -68,8 +68,10 @@ Tag::Array::Pointer TagFactory::parseTagsAt(const byte* firstTagAddress, count s
     auto newTags = Tag::Array::array();
 
     while (tagAddress < endOfTagsAddress) {
-        auto tag = TagFactory::tagForTagAt(tagAddress);
-        newTags->append(tag);
+        if (Tag::dataSizeForTagAt(tagAddress) > 0) {
+            auto tag = TagFactory::tagForTagAt(tagAddress);
+            newTags->append(tag);
+        }
 
         tagAddress = Tag::nextTagAfterTagAt(tagAddress);
     }

@@ -18,31 +18,70 @@
 #include "TrackFiles/OGGTrackFile.hpp"
 #include "TrackFiles/FLACTrackFile.hpp"
 
+#include "mp4file.h"
+
 using namespace NxA::Serato;
-using namespace std;
 
 #pragma mark Class Methods
 
-TrackFile::Pointer TrackFileFactory::trackFileForPath(const String& trackFilePath)
+TrackFileFactory::AudioFileType TrackFileFactory::audioFileTypeForPath(const String& trackFilePath)
 {
     if (trackFilePath.hasPostfix(".aiff") || trackFilePath.hasPostfix(".aif")) {
-        return TrackFile::Pointer::dynamicCastFrom(AIFFTrackFile::fileWithFileAt(trackFilePath));
+        return AudioFileType::AIFF;
     }
     else if (trackFilePath.hasPostfix(".mp3")) {
-        return TrackFile::Pointer::dynamicCastFrom(MPEGTrackFile::fileWithFileAt(trackFilePath));
+        return AudioFileType::MP3;
     }
     else if (trackFilePath.hasPostfix(".m4a") || trackFilePath.hasPostfix(".mp4")) {
-        return TrackFile::Pointer::dynamicCastFrom(MP4TrackFile::fileWithFileAt(trackFilePath));
+        auto file = std::make_shared<TagLib::MP4::File>(trackFilePath.toUTF8());
+        if (!file->isValid()) {
+            return AudioFileType::Unknown;
+        }
+
+        return file->audioProperties()->codec() == TagLib::MP4::Properties::Codec::ALAC ? AudioFileType::ALAC : AudioFileType::AAC;
     }
     else if (trackFilePath.hasPostfix(".flac")) {
-        return TrackFile::Pointer::dynamicCastFrom(FLACTrackFile::fileWithFileAt(trackFilePath));
+        return AudioFileType::FLAC;
     }
     else if (trackFilePath.hasPostfix(".ogg")) {
-        return TrackFile::Pointer::dynamicCastFrom(OGGTrackFile::fileWithFileAt(trackFilePath));
+        return AudioFileType::OGG;
     }
     else if (trackFilePath.hasPostfix(".wav")) {
-        return TrackFile::Pointer::dynamicCastFrom(WAVTrackFile::fileWithFileAt(trackFilePath));
+        return AudioFileType::WAV;
     }
-
-    NXA_ALOG("Unknown file extension.");
+    else if (trackFilePath.hasPostfix(".wma")) {
+        return AudioFileType::WMA;
+    }
+    else {
+        return AudioFileType::Unknown;
+    }
 }
+
+TrackFile::Pointer TrackFileFactory::trackFileForPath(const String& trackFilePath)
+{
+    switch (TrackFileFactory::audioFileTypeForPath(trackFilePath)) {
+        case AudioFileType::AIFF: {
+            return TrackFile::Pointer::dynamicCastFrom(AIFFTrackFile::fileWithFileAt(trackFilePath));
+        }
+        case AudioFileType::MP3: {
+            return TrackFile::Pointer::dynamicCastFrom(MPEGTrackFile::fileWithFileAt(trackFilePath));
+        }
+        case AudioFileType::ALAC:
+        case AudioFileType::AAC: {
+            return TrackFile::Pointer::dynamicCastFrom(MP4TrackFile::fileWithFileAt(trackFilePath));
+        }
+        case AudioFileType::FLAC: {
+            return TrackFile::Pointer::dynamicCastFrom(FLACTrackFile::fileWithFileAt(trackFilePath));
+        }
+        case AudioFileType::OGG: {
+            return TrackFile::Pointer::dynamicCastFrom(OGGTrackFile::fileWithFileAt(trackFilePath));
+        }
+        case AudioFileType::WAV: {
+            return TrackFile::Pointer::dynamicCastFrom(WAVTrackFile::fileWithFileAt(trackFilePath));
+        }
+        default: {
+            NXA_ALOG("Unknown file extension.");
+        }
+    }
+}
+

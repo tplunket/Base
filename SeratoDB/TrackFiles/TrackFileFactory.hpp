@@ -19,10 +19,25 @@ namespace NxA { namespace Serato {
     class TrackFileFactory : public Uncopyable
     {
     public:
+        #pragma mark Constants
+        enum AudioFileType {
+            Unknown,
+            AIFF,
+            MP3,
+            WAV,
+            OGG,
+            AAC,
+            FLAC,
+            ALAC,
+            WMA,
+        };
+        
         #pragma mark Constructors & Destructors
         TrackFileFactory() = delete;
 
         #pragma mark Class Methods
+        static AudioFileType audioFileTypeForPath(const String& trackFilePath);
+
         static NxA::Serato::TrackFile::Pointer trackFileForPath(const String& trackFilePath);
     };
 } }

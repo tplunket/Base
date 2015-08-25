@@ -41,6 +41,7 @@ namespace NxA { namespace Serato {
 
         #pragma mark Instance Methods
         String::Pointer trackFilePath(void) const;
+        timestamp trackFileModificationDateInSecondsSince1970(void) const;
 
         const String& title(void) const;
         const String& artist(void) const;
@@ -52,10 +53,11 @@ namespace NxA { namespace Serato {
         const String& recordLabel(void) const;
         const String& composer(void) const;
         const String& key(void) const;
+        const String& size(void) const;
         const String& length(void) const;
-        count size(void) const;
         const String& bitRate(void) const;
         const String& sampleRate(void) const;
+
         const String& bpm(void) const;
         const String& year(void) const;
         count trackNumber(void) const;
@@ -83,6 +85,12 @@ namespace NxA { namespace Serato {
         void setDiscNumber(count discNumber);
         void setDateModifiedInSecondsSinceJanuary1st1970(timestamp dateModified);
         void setDateAddedInSecondsSinceJanuary1st1970(timestamp dateAdded);
+
+        void setSizeInBytes(count size);
+        void setLengthInMilliseconds(uinteger32 length);
+        void setBitRateInKiloBitsPerSecond(uinteger32 bitRate);
+        void setSampleRateInSamplesPerSecond(uinteger32 sampleRate);
+        void setArtwork(const Blob& artwork);
 
         void setCueMarkers(CueMarker::ArrayOfConst& markers);
         void setLoopMarkers(LoopMarker::ArrayOfConst& markers);

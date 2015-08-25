@@ -47,6 +47,7 @@ namespace NxA { namespace Serato { namespace Internal {
         String::PointerToConst trackFilePath;
         TagLibFilePointer file;
         TagLib::Tag* tag;
+        bool markersWereIgnored;
 
         Serato::CueMarker::Array::Pointer cueMarkers;
         Serato::LoopMarker::Array::Pointer loopMarkers;

@@ -31,13 +31,13 @@ namespace NxA { namespace Serato {
             ALAC,
             WMA,
         };
-        
+
         #pragma mark Constructors & Destructors
         TrackFileFactory() = delete;
 
         #pragma mark Class Methods
         static AudioFileType audioFileTypeForPath(const String& trackFilePath);
 
-        static NxA::Serato::TrackFile::Pointer trackFileForPath(const String& trackFilePath);
+        static NxA::Serato::TrackFile::Pointer trackFileForPath(const String& trackFilePath, TrackFile::Flags flags = TrackFile::Flags::NoFlag);
     };
 } }

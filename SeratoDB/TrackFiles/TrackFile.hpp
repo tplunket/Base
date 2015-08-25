@@ -28,6 +28,12 @@ namespace NxA { namespace Serato {
         NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_PURE_VIRTUAL_CLASS(NxA::Serato, TrackFile);
 
     public:
+        #pragma mark Constants
+        enum Flags {
+            NoFlag          = 0x0,
+            IgnoreMarkers   = 0x1<<0
+        };
+
         #pragma mark Instance Methods
         virtual String::Pointer title(void) const;
         virtual String::Pointer artist(void) const;

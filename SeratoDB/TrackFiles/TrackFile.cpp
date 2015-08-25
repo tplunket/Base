@@ -150,21 +150,30 @@ void TrackFile::setYearReleased(const String& year)
 
 void TrackFile::setCueMarkers(CueMarker::Array& markers)
 {
+    NXA_ASSERT_FALSE(internal->markersWereIgnored);
+
     internal->cueMarkers = markers.pointer();
 }
 
 void TrackFile::setLoopMarkers(LoopMarker::Array& markers)
 {
+    NXA_ASSERT_FALSE(internal->markersWereIgnored);
+
     internal->loopMarkers = markers.pointer();
 }
 
 void TrackFile::setGridMarkers(GridMarker::Array& markers)
 {
+    NXA_ASSERT_FALSE(internal->markersWereIgnored);
+    
     internal->gridMarkers = markers.pointer();
 }
 
 void TrackFile::saveChanges(void)
 {
-    internal->writeMarkers();
+    if (!internal->markersWereIgnored) {
+        internal->writeMarkers();
+    }
+
     internal->file->save();
 }

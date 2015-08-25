@@ -25,6 +25,6 @@ namespace NxA { namespace Serato {
 
     public:
         #pragma mark Factory Methods
-        static MPEGTrackFile::Pointer fileWithFileAt(const String& path);
+        static MPEGTrackFile::Pointer fileWithFileAt(const String& path, TrackFile::Flags flags);
     };
 } }

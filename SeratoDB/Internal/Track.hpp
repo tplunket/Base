@@ -40,11 +40,11 @@ namespace NxA { namespace Serato { namespace Internal {
 
         #pragma mark Class Methods
 #if NXA_PRINT_DEBUG_INFO
-        static void debugPrint(const String& text, const String& name);
+        static void debugPrintString(const String& text, const String& name);
         static void debugPrintUint(uinteger32 value, const String& name);
         static void debugPrintTimeFromMilliseconds(uinteger32 value, const String& name);
         static void debugPrintDate(timestamp value, const String& name);
-        static void debugPrintComparaison(const Serato::Track& track, const Serato::TrackFile& trackFile);
+        static void debugPrint(const Serato::Track& track, const Serato::TrackFile& trackFile);
 #endif
 
         #pragma mark Instance Variables
@@ -53,6 +53,7 @@ namespace NxA { namespace Serato { namespace Internal {
 
         boolean needsToUpdateTrackFile;
         boolean needsToUpdateDatabaseFile;
+        boolean trackFileWasRead;
 
         Serato::CueMarker::ArrayOfConst::Pointer cueMarkers;
         Serato::LoopMarker::ArrayOfConst::Pointer loopMarkers;
@@ -67,6 +68,8 @@ namespace NxA { namespace Serato { namespace Internal {
         void setPathForSubTagForIdentifier(const String& value, uinteger32 identifier);
         void setUInt32ForSubTagForIdentifier(uinteger32 value, uinteger32 identifier);
 
+        String::Pointer trackFilePath(void) const;
+        void readTrackFile(void);
         void readMarkersFrom(const Serato::TrackFile& trackFile);
     };
 } } }

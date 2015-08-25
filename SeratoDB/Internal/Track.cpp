@@ -25,6 +25,7 @@
 #include "Tags/TextTag.hpp"
 #include "Tags/PathTag.hpp"
 #include "Tags/UInteger32Tag.hpp"
+#include "Tags/DatabaseV2Tags.hpp"
 
 // -- Generated internal implementation ommitted because this class does not use the default contructor.
 
@@ -42,14 +43,17 @@ Track::Track(Serato::ObjectTag& tag, const String& rootFolderPath) :
              rootFolder(rootFolderPath.pointer()),
              needsToUpdateTrackFile(false),
              needsToUpdateDatabaseFile(false),
+             trackFileWasRead(false),
              cueMarkers(Serato::CueMarker::ArrayOfConst::array()),
              loopMarkers(Serato::LoopMarker::ArrayOfConst::array()),
-             gridMarkers(Serato::GridMarker::ArrayOfConst::array()) { }
+             gridMarkers(Serato::GridMarker::ArrayOfConst::array())
+{
+}
 
 #pragma mark Class Methods
 
 #if NXA_PRINT_DEBUG_INFO
-void Track::debugPrint(const String& text, const String& name)
+void Track::debugPrintString(const String& text, const String& name)
 {
     printf("%s '%s'\n", name.toUTF8(), text.toUTF8());
 }
@@ -59,79 +63,34 @@ void Track::debugPrintUint(uinteger32 value, const String& name)
     printf("%s '%d'\n", name.toUTF8(), value);
 }
 
-void Track::debugPrintTimeFromMilliseconds(uinteger32 value, const String& name)
-{
-    uinteger32 minutes = value / 60000;
-    uinteger32 milliseconds = value % 1000;
-    uinteger32 seconds = (value - milliseconds - (minutes * 60000)) / 1000;
-
-    milliseconds *= 60;
-    milliseconds /= 1000;
-
-    printf("%s '%02d:%02d.%02d'\n", name.toUTF8(), minutes, seconds, milliseconds);
-}
-
 void Track::debugPrintDate(timestamp value, const String& name)
 {
     char* stringVersion = ctime(&value);
     printf("%s %s", name.toUTF8(), stringVersion);
 }
 
-void Track::debugPrintComparaison(const Serato::Track& track, const Serato::TrackFile& trackFile)
+void Track::debugPrint(const Serato::Track& track, const Serato::TrackFile& trackFile)
 {
-    Track::debugPrintUint(static_cast<uinteger32>(track.size()), String::stringWith("size"));
-    Track::debugPrintUint((uint32_t)trackFile.size(), String::stringWith("size"));
+    Track::debugPrintString(track.size(), String::stringWith("size"));
     Track::debugPrintDate(track.dateModifiedInSecondsSinceJanuary1st1970(), String::stringWith("datemodified"));
     Track::debugPrintDate(track.dateAddedInSecondsSinceJanuary1st1970(), String::stringWith("dateadded"));
 
-    Track::debugPrint(track.title(), String::stringWith("title"));
-    Track::debugPrint(trackFile.title(), String::stringWith("title"));
-    Track::debugPrint(track.artist(), String::stringWith("artist"));
-    Track::debugPrint(trackFile.artist(), String::stringWith("artist"));
-    Track::debugPrint(track.album(), String::stringWith("album"));
-    Track::debugPrint(trackFile.album(), String::stringWith("album"));
-    Track::debugPrint(track.comments(), String::stringWith("comments"));
-    Track::debugPrint(trackFile.comments(), String::stringWith("comments"));
-    Track::debugPrint(track.genre(), String::stringWith("genre"));
-    Track::debugPrint(trackFile.genre(), String::stringWith("genre"));
-    Track::debugPrint(track.grouping(), String::stringWith("grouping"));
-    Track::debugPrint(trackFile.grouping(), String::stringWith("grouping"));
-    Track::debugPrint(track.recordLabel(), String::stringWith("recordlabel"));
-    if (trackFile.hasRecordLabel()) {
-        Track::debugPrint(trackFile.recordLabel(), String::stringWith("recordLabel"));
-    }
-    else {
-        printf("No record label.\n");
-    }
-    Track::debugPrint(track.remixer(), String::stringWith("remixer"));
-    if (trackFile.hasRecordLabel()) {
-        Track::debugPrint(trackFile.remixer(), String::stringWith("remixer"));
-    }
-    else {
-        printf("No remixer.\n");
-    }
-    Track::debugPrint(track.composer(), String::stringWith("composer"));
-    Track::debugPrint(trackFile.composer(), String::stringWith("composer"));
-    Track::debugPrint(track.key(), String::stringWith("key"));
-    if (trackFile.hasKey()) {
-        Track::debugPrint(trackFile.key(), String::stringWith("key"));
-    }
-    else {
-        printf("No key.\n");
-    }
-    Track::debugPrint(track.year(), String::stringWith("year"));
-    Track::debugPrint(trackFile.yearReleased(), String::stringWith("year"));
-    Track::debugPrint(track.length(), String::stringWith("length"));
-    Track::debugPrintTimeFromMilliseconds(trackFile.lengthInMilliseconds(), String::stringWith("length"));
-    Track::debugPrint(track.bitRate(), String::stringWith("bitrate"));
-    Track::debugPrintUint(trackFile.bitRateInKiloBitsPerSecond(), String::stringWith("bitrate"));
-    Track::debugPrint(track.sampleRate(), String::stringWith("samplerate"));
-    Track::debugPrintUint(trackFile.sampleRateInSamplesPerSecond(), String::stringWith("samplerate"));
-    Track::debugPrint(track.bpm(), String::stringWith("bpm"));
-    Track::debugPrint(trackFile.bpm(), String::stringWith("bpm"));
+    Track::debugPrintString(track.title(), String::stringWith("title"));
+    Track::debugPrintString(track.artist(), String::stringWith("artist"));
+    Track::debugPrintString(track.album(), String::stringWith("album"));
+    Track::debugPrintString(track.comments(), String::stringWith("comments"));
+    Track::debugPrintString(track.genre(), String::stringWith("genre"));
+    Track::debugPrintString(track.grouping(), String::stringWith("grouping"));
+    Track::debugPrintString(track.recordLabel(), String::stringWith("recordlabel"));
+    Track::debugPrintString(track.remixer(), String::stringWith("remixer"));
+    Track::debugPrintString(track.composer(), String::stringWith("composer"));
+    Track::debugPrintString(track.key(), String::stringWith("key"));
+    Track::debugPrintString(track.year(), String::stringWith("year"));
+    Track::debugPrintString(track.length(), String::stringWith("length"));
+    Track::debugPrintString(track.bitRate(), String::stringWith("bitrate"));
+    Track::debugPrintString(track.sampleRate(), String::stringWith("samplerate"));
+    Track::debugPrintString(track.bpm(), String::stringWith("bpm"));
     Track::debugPrintUint((uinteger32)track.trackNumber(), String::stringWith("tracknumber"));
-    Track::debugPrintUint((uinteger32)trackFile.trackNumber(), String::stringWith("tracknumber"));
-
     Track::debugPrintUint((uinteger32)track.discNumber(), String::stringWith("discnumber"));
 
     printf("Found %ld cue markers, %ld grid markers and %ld loop markers.\n",
@@ -219,6 +178,20 @@ void Track::setUInt32ForSubTagForIdentifier(uinteger32 value, uinteger32 identif
     }
 
     this->needsToUpdateDatabaseFile = true;
+}
+
+String::Pointer Track::trackFilePath(void) const
+{
+    auto& pathFromRootFolder = this->pathForSubTagForIdentifier(trackFilePathTagIdentifier);
+    return File::joinPaths(this->rootFolder, pathFromRootFolder);
+}
+
+void Track::readTrackFile(void)
+{
+    auto trackFile = TrackFileFactory::trackFileForPath(this->trackFilePath());
+    this->readMarkersFrom(trackFile);
+
+    this->trackFileWasRead = true;
 }
 
 void Track::readMarkersFrom(const Serato::TrackFile& trackFile)

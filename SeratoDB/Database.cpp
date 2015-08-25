@@ -77,12 +77,18 @@ String::Pointer Database::versionAsStringForDatabaseIn(const String& seratoFolde
     auto databaseFilePath = databaseFilePathForSeratoFolder(seratoFolderPath);
     auto databaseFile = File::readFileAt(databaseFilePath);
 
-    auto tags(TagFactory::parseTagsAt(databaseFile->data(), databaseFile->size()));
-    for (auto& tag : *(tags)) {
-        if (tag->identifier() == databaseVersionTagIdentifier) {
+    const byte* tagAddress = databaseFile->data();
+    const byte* endOfTagsAddress = databaseFile->data() + databaseFile->size();
+
+    while (tagAddress < endOfTagsAddress) {
+        if ((Tag::dataSizeForTagAt(tagAddress) > 0) &&
+            (Tag::identifierForTagAt(tagAddress) == databaseVersionTagIdentifier)) {
+            auto tag = TagFactory::tagForTagAt(tagAddress);
             auto& textTag = dynamic_cast<VersionTag&>(*tag);
             return String::stringWith(textTag.value());
         }
+
+        tagAddress = Tag::nextTagAfterTagAt(tagAddress);
     }
 
     return String::string();

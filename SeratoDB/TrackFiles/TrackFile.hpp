@@ -39,6 +39,7 @@ namespace NxA { namespace Serato {
         virtual String::Pointer composer(void) const = 0;
         virtual String::Pointer grouping(void) const = 0;
         virtual String::Pointer bpm(void) const = 0;
+        virtual count trackNumber(void) const;
 
         virtual count size(void) const;
         virtual uinteger32 lengthInMilliseconds(void) const;
@@ -46,7 +47,7 @@ namespace NxA { namespace Serato {
         virtual boolean hasBitDepth(void) const;
         virtual uinteger32 bitDepthInBits(void) const;
         virtual uinteger32 sampleRateInSamplesPerSecond(void) const;
-        virtual count trackNumber(void) const;
+        virtual Blob::Pointer artwork(void) const = 0;
 
         // -- TODO: Look into adding discNumber and numberOfAlbumTracks if they are available.
 
@@ -56,8 +57,6 @@ namespace NxA { namespace Serato {
         virtual String::Pointer remixer(void) const = 0;
         virtual String::Pointer yearReleased(void) const;
 
-        virtual Blob::Pointer artwork(void) const = 0;
-        
         const CueMarker::Array& cueMarkers(void) const;
         const LoopMarker::Array& loopMarkers(void) const;
         const GridMarker::Array& gridMarkers(void) const;

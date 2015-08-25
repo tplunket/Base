@@ -24,7 +24,7 @@ using namespace NxA::Serato;
 
 #pragma mark Factory Methods
 
-FLACTrackFile::Pointer FLACTrackFile::fileWithFileAt(const String& path)
+FLACTrackFile::Pointer FLACTrackFile::fileWithFileAt(const String& path, TrackFile::Flags flags)
 {
     auto file = Internal::TagLibFilePointer(std::make_shared<TagLib::FLAC::File>(path.toUTF8()));
     if (!file->isValid()) {
@@ -48,7 +48,12 @@ FLACTrackFile::Pointer FLACTrackFile::fileWithFileAt(const String& path)
         throw TrackFileError::exceptionWith("Error reading tags from track file '%s'.", path.toUTF8());
     }
 
-    newFile->internal->readMarkers();
+    if (flags & TrackFile::Flags::IgnoreMarkers) {
+        newFile->internal->markersWereIgnored = true;
+    }
+    else {
+        newFile->internal->readMarkers();
+    }
 
     return newFile;
 }

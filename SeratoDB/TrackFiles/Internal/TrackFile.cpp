@@ -38,6 +38,7 @@ using namespace NxA::Serato::Internal;
 TrackFile::TrackFile(const String& path, const TagLibFilePointer& newFile) :
                      trackFilePath(path.pointer()),
                      file(newFile),
+                     markersWereIgnored(false),
                      cueMarkers(Serato::CueMarker::Array::array()),
                      loopMarkers(Serato::LoopMarker::Array::array()),
                      gridMarkers(Serato::GridMarker::Array::array()),
@@ -72,6 +73,8 @@ Blob::Pointer TrackFile::markerV2TagDataFrom(const byte* tagStart)
 
 const byte* TrackFile::readMarkerAtAndAdvanceToNextTag(const byte* tagStart)
 {
+    NXA_ASSERT_FALSE(this->markersWereIgnored);
+
     auto tagName = String::stringWith(reinterpret_cast<const character*>(tagStart));
 
     try {
@@ -95,6 +98,8 @@ const byte* TrackFile::readMarkerAtAndAdvanceToNextTag(const byte* tagStart)
 
 void TrackFile::readMarkersV2FromBase64String(const byte* markerV2Data, count totalSize)
 {
+    NXA_ASSERT_FALSE(this->markersWereIgnored);
+
     if (!totalSize) {
         return;
     }
@@ -122,6 +127,8 @@ void TrackFile::addGridMarker(Serato::GridMarker& gridMarker)
 
 void TrackFile::readGridMarkersFrom(const byte* gridMarkerData)
 {
+    NXA_ASSERT_FALSE(this->markersWereIgnored);
+
     auto numberOfMarkers = Platform::bigEndianUInteger32ValueAt(gridMarkerData);
     gridMarkerData += 4;
 
@@ -134,6 +141,8 @@ void TrackFile::readGridMarkersFrom(const byte* gridMarkerData)
 
 String::Pointer TrackFile::base64StringFromMarkersV2(void)
 {
+    NXA_ASSERT_FALSE(this->markersWereIgnored);
+
     if (!this->cueMarkers->length() && !this->loopMarkers->length() && !this->otherTags->length()) {
         return String::string();
     }
@@ -168,6 +177,8 @@ String::Pointer TrackFile::base64StringFromMarkersV2(void)
 
 Blob::Pointer TrackFile::gridMarkerDataFromGridMarkers(void)
 {
+    NXA_ASSERT_FALSE(this->markersWereIgnored);
+
     auto data = Blob::blob();
     if (!this->gridMarkers->length()) {
         return data;

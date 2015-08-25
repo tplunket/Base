@@ -23,7 +23,7 @@ using namespace NxA::Serato;
 
 #pragma mark Factory Methods
 
-MPEGTrackFile::Pointer MPEGTrackFile::fileWithFileAt(const String& path)
+MPEGTrackFile::Pointer MPEGTrackFile::fileWithFileAt(const String& path, TrackFile::Flags flags)
 {
     auto file = Internal::TagLibFilePointer(std::make_shared<TagLib::MPEG::File>(path.toUTF8()));
     if (!file->isValid()) {
@@ -39,7 +39,12 @@ MPEGTrackFile::Pointer MPEGTrackFile::fileWithFileAt(const String& path)
         throw TrackFileError::exceptionWith("Error reading tags from track file '%s'.", path.toUTF8());
     }
 
-    newFile->internal->readMarkers();
+    if (flags & TrackFile::Flags::IgnoreMarkers) {
+        newFile->internal->markersWereIgnored = true;
+    }
+    else {
+        newFile->internal->readMarkers();
+    }
 
     return newFile;
 }

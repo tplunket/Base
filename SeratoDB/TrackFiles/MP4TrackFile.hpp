@@ -25,7 +25,7 @@ namespace NxA { namespace Serato {
 
     public:
         #pragma mark Factory Methods
-        static MP4TrackFile::Pointer fileWithFileAt(const String& path);
+        static MP4TrackFile::Pointer fileWithFileAt(const String& path, TrackFile::Flags flags);
 
         #pragma mark Instance Methods
         virtual boolean hasKey(void) const;

@@ -57,27 +57,27 @@ TrackFileFactory::AudioFileType TrackFileFactory::audioFileTypeForPath(const Str
     }
 }
 
-TrackFile::Pointer TrackFileFactory::trackFileForPath(const String& trackFilePath)
+TrackFile::Pointer TrackFileFactory::trackFileForPath(const String& trackFilePath, TrackFile::Flags flags)
 {
     switch (TrackFileFactory::audioFileTypeForPath(trackFilePath)) {
         case AudioFileType::AIFF: {
-            return TrackFile::Pointer::dynamicCastFrom(AIFFTrackFile::fileWithFileAt(trackFilePath));
+            return TrackFile::Pointer::dynamicCastFrom(AIFFTrackFile::fileWithFileAt(trackFilePath, flags));
         }
         case AudioFileType::MP3: {
-            return TrackFile::Pointer::dynamicCastFrom(MPEGTrackFile::fileWithFileAt(trackFilePath));
+            return TrackFile::Pointer::dynamicCastFrom(MPEGTrackFile::fileWithFileAt(trackFilePath, flags));
         }
         case AudioFileType::ALAC:
         case AudioFileType::AAC: {
-            return TrackFile::Pointer::dynamicCastFrom(MP4TrackFile::fileWithFileAt(trackFilePath));
+            return TrackFile::Pointer::dynamicCastFrom(MP4TrackFile::fileWithFileAt(trackFilePath, flags));
         }
         case AudioFileType::FLAC: {
-            return TrackFile::Pointer::dynamicCastFrom(FLACTrackFile::fileWithFileAt(trackFilePath));
+            return TrackFile::Pointer::dynamicCastFrom(FLACTrackFile::fileWithFileAt(trackFilePath, flags));
         }
         case AudioFileType::OGG: {
-            return TrackFile::Pointer::dynamicCastFrom(OGGTrackFile::fileWithFileAt(trackFilePath));
+            return TrackFile::Pointer::dynamicCastFrom(OGGTrackFile::fileWithFileAt(trackFilePath, flags));
         }
         case AudioFileType::WAV: {
-            return TrackFile::Pointer::dynamicCastFrom(WAVTrackFile::fileWithFileAt(trackFilePath));
+            return TrackFile::Pointer::dynamicCastFrom(WAVTrackFile::fileWithFileAt(trackFilePath, flags));
         }
         default: {
             NXA_ALOG("Unknown file extension.");

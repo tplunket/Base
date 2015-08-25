@@ -49,6 +49,11 @@ String::Pointer TrackFile::album(void) const
     return String::stringWith(internal->tag->album().toCString());
 }
 
+count TrackFile::trackNumber(void) const
+{
+    return internal->tag->track();
+}
+
 count TrackFile::size(void) const
 {
     return File::sizeOfFileAt(internal->trackFilePath);
@@ -86,11 +91,6 @@ uinteger32 TrackFile::sampleRateInSamplesPerSecond(void) const
     NXA_ASSERT_NOT_NULL(audioProperties);
 
     return audioProperties->sampleRate();
-}
-
-count TrackFile::trackNumber(void) const
-{
-    return internal->tag->track();
 }
 
 String::Pointer TrackFile::yearReleased(void) const

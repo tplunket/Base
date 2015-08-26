@@ -21,81 +21,89 @@
 
 #pragma once
 
-#include "Base/Assert.hpp"
+#include "Base/Pointer.hpp"
 
 namespace NxA {
-    template <class T> class WeakPointer;
-
-    template <class T> class Pointer : protected std::shared_ptr<T> {
-        friend class WeakPointer<T>;
-
+    // -- NOTE: This pointer type should only be used internally inside internal classes or inside methods.
+    // --       It should NEVER be used as argument types to methods. It should be used as little as possible
+    // --       and the regular Pointer should always be prefered to this solution.
+    template <class T> class NullablePointer : public Pointer<T> {
     public:
         #pragma mark Constructors & Destructors
-        Pointer(const std::shared_ptr<T>& other) : std::shared_ptr<T>(other) { };
-        Pointer(const Pointer<T>& other) : std::shared_ptr<T>(other) { }
-        ~Pointer() = default;
+        NullablePointer() { };
+        NullablePointer(const Pointer<T>& other) : Pointer<T>(other) { };
+        ~NullablePointer() = default;
 
-        #pragma mark Class Methods
-        template <class Tfrom>
-        static Pointer<T> dynamicCastFrom(const Pointer<Tfrom>& other)
-        {
-            Pointer<T> result = Pointer(std::shared_ptr<T>(std::dynamic_pointer_cast<T>(other.toStdSharedPointer())));
-            NXA_ASSERT_NOT_NULL(result.get());
-            return result;
-        }
-
-        #pragma mark Operators
         operator Pointer<const T>() const
         {
-            return Pointer<const T>(this->toStdSharedPointer());
+            NXA_ASSERT_FALSE(this->isNull());
+            return Pointer<T>::operator Pointer<const T>();
         }
         bool operator==(const Pointer<T>& other) const
         {
-            return *(this->get()) == *other;
+            NXA_ASSERT_FALSE(this->isNull());
+            return Pointer<T>::operator==(other);
         }
         bool operator==(const T& other) const
         {
-            return *(this->get()) == other;
+            NXA_ASSERT_FALSE(this->isNull());
+            return Pointer<T>::operator==(other);
         }
         bool operator!=(const Pointer<T>& other) const
         {
-            return *(this->get()) != *other;
+            NXA_ASSERT_FALSE(this->isNull());
+            return Pointer<T>::operator!=(other);
         }
         bool operator!=(const T& other) const
         {
-            return *(this->get()) != other;
+            NXA_ASSERT_FALSE(this->isNull());
+            return Pointer<T>::operator!=(other);
         }
         operator T&() const
         {
-            return this->operator*();
+            NXA_ASSERT_FALSE(this->isNull());
+            return Pointer<T>::operator T&();
         }
         operator T&()
         {
-            return this->operator*();
+            NXA_ASSERT_FALSE(this->isNull());
+            return Pointer<T>::operator T&();
         }
         T* operator->() const
         {
-            return this->get();
+            NXA_ASSERT_FALSE(this->isNull());
+            return Pointer<T>::operator->();
         }
         T* operator->()
         {
-            return const_cast<T*>(static_cast<const Pointer<T>>(*this).operator->());
+            NXA_ASSERT_FALSE(this->isNull());
+            return Pointer<T>::operator->();
         }
         T& operator*() const
         {
-            return *this->get();
+            NXA_ASSERT_FALSE(this->isNull());
+            return Pointer<T>::operator*();
         }
         T& operator*()
         {
-            return const_cast<T&>(static_cast<const Pointer<T>>(*this).operator*());
+            NXA_ASSERT_FALSE(this->isNull());
+            return Pointer<T>::operator*();
         }
 
         #pragma mark Instance Methods
+        boolean isNull(void) const
+        {
+            return this->get() == nullptr;
+        }
+        void setToNull(void)
+        {
+            this->std::shared_ptr<T>::reset();
+        }
+
         const std::shared_ptr<T>& toStdSharedPointer(void) const
         {
-            return *this;
+            NXA_ASSERT_FALSE(this->isNull());
+            return Pointer<T>::toStdSharedPointer();
         }
-    protected:
-        Pointer() = default;
     };
 }

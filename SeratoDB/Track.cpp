@@ -513,29 +513,8 @@ void Track::addTo(Blob& destination) const
 
 void Track::saveToTrackFile(void) const
 {
-    auto trackFile = TrackFileFactory::trackFileForPath(this->trackFilePath());
     NXA_ASSERT_TRUE(internal->lastMarkersModificationDate != 0);
 
-    auto cueMarkers = CueMarker::Array::array();
-    for (auto& marker : this->cueMarkers()) {
-        auto markerCopy = CueMarker::markerWith(marker);
-        cueMarkers->append(markerCopy);
-    }
-    trackFile->setCueMarkers(cueMarkers);
+    internal->saveToTrackFile();
 
-    auto loopMarkers = LoopMarker::Array::array();
-    for (auto& marker : this->loopMarkers()) {
-        auto markerCopy = LoopMarker::markerWith(marker);
-        loopMarkers->append(markerCopy);
-    }
-    trackFile->setLoopMarkers(loopMarkers);
-
-    auto gridMarkers = GridMarker::Array::array();
-    for (auto& marker : this->gridMarkers()) {
-        auto markerCopy = GridMarker::markerWith(marker);
-        gridMarkers->append(markerCopy);
-    }
-    trackFile->setGridMarkers(gridMarkers);
-
-    trackFile->saveChanges();
 }

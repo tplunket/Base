@@ -222,4 +222,31 @@ void Track::readMarkersFrom(const Serato::TrackFile& trackFile)
     }
 
     this->lastMarkersModificationDate = File::modificationDateInSecondsSince1970ForFile(this->trackFilePath());
+void Track::saveToTrackFile(void) const
+{
+    auto trackFile = TrackFileFactory::trackFileForPath(this->trackFilePath());
+
+    auto newCueMarkers = Serato::CueMarker::Array::array();
+    for (auto& marker : *(this->cueMarkers)) {
+        auto markerCopy = Serato::CueMarker::markerWith(marker);
+        newCueMarkers->append(markerCopy);
+    }
+    trackFile->setCueMarkers(newCueMarkers);
+
+    auto newLoopMarkers = Serato::LoopMarker::Array::array();
+    for (auto& marker : *(this->loopMarkers)) {
+        auto markerCopy = Serato::LoopMarker::markerWith(marker);
+        newLoopMarkers->append(markerCopy);
+    }
+    trackFile->setLoopMarkers(newLoopMarkers);
+
+    auto newGridMarkers = Serato::GridMarker::Array::array();
+    for (auto& marker : *(this->gridMarkers)) {
+        auto markerCopy = Serato::GridMarker::markerWith(marker);
+        newGridMarkers->append(markerCopy);
+    }
+    trackFile->setGridMarkers(newGridMarkers);
+
+    trackFile->saveChanges();
 }
+

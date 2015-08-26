@@ -189,13 +189,8 @@ String::Pointer Track::trackFilePath(void) const
 void Track::readMarkers(void)
 {
     auto trackFile = TrackFileFactory::trackFileForPath(this->trackFilePath());
-    this->readMarkersFrom(trackFile);
 
-}
-
-void Track::readMarkersFrom(const Serato::TrackFile& trackFile)
-{
-    auto& allCueMarkers = trackFile.cueMarkers();
+    auto& allCueMarkers = trackFile->cueMarkers();
     for (auto& marker : allCueMarkers) {
 #if NXA_PRINT_DEBUG_INFO
         printf("Found cue marker at %f and index %d.\n", (float)marker->positionInMilliseconds()/1000, marker->index());
@@ -203,7 +198,7 @@ void Track::readMarkersFrom(const Serato::TrackFile& trackFile)
         this->cueMarkers->append(Serato::CueMarker::markerWith(marker));
     }
 
-    auto& allLoopMarkers = trackFile.loopMarkers();
+    auto& allLoopMarkers = trackFile->loopMarkers();
     for (auto& marker : allLoopMarkers) {
 #if NXA_PRINT_DEBUG_INFO
         printf("Found loop marker at %f and index %d.\n", (float)marker->startPositionInMilliseconds()/1000, marker->index());
@@ -211,7 +206,7 @@ void Track::readMarkersFrom(const Serato::TrackFile& trackFile)
         this->loopMarkers->append(Serato::LoopMarker::markerWith(marker));
     }
 
-    auto& allGridMarkers = trackFile.gridMarkers();
+    auto& allGridMarkers = trackFile->gridMarkers();
     for (auto& marker : allGridMarkers) {
 #if NXA_PRINT_DEBUG_INFO
         printf("Found grid marker at %f and bpm %f.\n", marker->positionInSeconds(), marker->beatsPerMinute());

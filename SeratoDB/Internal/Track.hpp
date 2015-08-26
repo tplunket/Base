@@ -51,9 +51,8 @@ namespace NxA { namespace Serato { namespace Internal {
         Serato::ObjectTag::Pointer trackTag;
         String::PointerToConst rootFolder;
 
-        boolean needsToUpdateTrackFile;
         boolean needsToUpdateDatabaseFile;
-        boolean trackFileWasRead;
+        boolean trackFilemarkersWereRead;
 
         Serato::CueMarker::ArrayOfConst::Pointer cueMarkers;
         Serato::LoopMarker::ArrayOfConst::Pointer loopMarkers;

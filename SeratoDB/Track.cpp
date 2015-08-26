@@ -49,7 +49,6 @@ Track::Pointer Track::trackWithFileAtOnVolume(const String& trackFilePath, const
     auto trackTag = ObjectTag::tagWithIdentifierAndValue(trackObjectTagIdentifier, tags);
     auto internalObject = Internal::Track::Pointer(std::make_shared<Internal::Track>(trackTag, locatedOnVolumePath));
     auto newTrack = Track::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
-    newTrack->internal->needsToUpdateTrackFile = true;
     newTrack->internal->lastMarkersModificationDate = lastModificationDateInSecondsSince1970;
     newTrack->internal->needsToUpdateDatabaseFile = true;
 
@@ -209,7 +208,7 @@ timestamp Track::dateAddedInSecondsSinceJanuary1st1970(void) const
 
 const CueMarker::ArrayOfConst& Track::cueMarkers(void) const
 {
-    if (!internal->trackFileWasRead) {
+    if (!internal->trackFilemarkersWereRead) {
         internal->readMarkers();
     }
 
@@ -218,7 +217,7 @@ const CueMarker::ArrayOfConst& Track::cueMarkers(void) const
 
 const LoopMarker::ArrayOfConst& Track::loopMarkers(void) const
 {
-    if (!internal->trackFileWasRead) {
+    if (!internal->trackFilemarkersWereRead) {
         internal->readMarkers();
     }
 
@@ -227,7 +226,7 @@ const LoopMarker::ArrayOfConst& Track::loopMarkers(void) const
 
 const GridMarker::ArrayOfConst& Track::gridMarkers(void) const
 {
-    if (!internal->trackFileWasRead) {
+    if (!internal->trackFilemarkersWereRead) {
         internal->readMarkers();
     }
 
@@ -447,7 +446,6 @@ void Track::setCueMarkersWhichWereModifiedOn(CueMarker::ArrayOfConst& markers, t
 #else
     internal->cueMarkers = markers.pointer();
 #endif
-    internal->needsToUpdateTrackFile = true;
 
     if (internal->lastMarkersModificationDate < modificationDateInSecondsSince1970) {
         internal->lastMarkersModificationDate = modificationDateInSecondsSince1970;
@@ -469,7 +467,6 @@ void Track::setLoopMarkersWhichWereModifiedOn(LoopMarker::ArrayOfConst& markers,
 #else
     internal->loopMarkers = markers.pointer();
 #endif
-    internal->needsToUpdateTrackFile = true;
 
     if (internal->lastMarkersModificationDate < modificationDateInSecondsSince1970) {
         internal->lastMarkersModificationDate = modificationDateInSecondsSince1970;
@@ -489,7 +486,6 @@ void Track::setGridMarkersWhichWereModifiedOn(GridMarker::ArrayOfConst& markers,
 #else
     internal->gridMarkers = markers.pointer();
 #endif
-    internal->needsToUpdateTrackFile = true;
 
     if (internal->lastMarkersModificationDate < modificationDateInSecondsSince1970) {
         internal->lastMarkersModificationDate = modificationDateInSecondsSince1970;
@@ -498,7 +494,7 @@ void Track::setGridMarkersWhichWereModifiedOn(GridMarker::ArrayOfConst& markers,
 
 boolean Track::needsToUpdateTrackFile(void) const
 {
-    return internal->needsToUpdateTrackFile;
+    return internal->lastMarkersModificationDate != 0;
 }
 
 boolean Track::needsToUpdateDatabaseFile(void) const

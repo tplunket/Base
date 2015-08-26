@@ -41,9 +41,8 @@ static String::Pointer emptyString = String::string();
 Track::Track(Serato::ObjectTag& tag, const String& rootFolderPath) :
              trackTag(tag.pointer()),
              rootFolder(rootFolderPath.pointer()),
-             needsToUpdateTrackFile(false),
              needsToUpdateDatabaseFile(false),
-             trackFileWasRead(false),
+             trackFilemarkersWereRead(false),
              cueMarkers(Serato::CueMarker::ArrayOfConst::array()),
              loopMarkers(Serato::LoopMarker::ArrayOfConst::array()),
              gridMarkers(Serato::GridMarker::ArrayOfConst::array()),
@@ -192,7 +191,6 @@ void Track::readMarkers(void)
     auto trackFile = TrackFileFactory::trackFileForPath(this->trackFilePath());
     this->readMarkersFrom(trackFile);
 
-    this->trackFileWasRead = true;
 }
 
 void Track::readMarkersFrom(const Serato::TrackFile& trackFile)
@@ -222,6 +220,10 @@ void Track::readMarkersFrom(const Serato::TrackFile& trackFile)
     }
 
     this->lastMarkersModificationDate = File::modificationDateInSecondsSince1970ForFile(this->trackFilePath());
+
+    this->trackFilemarkersWereRead = true;
+}
+
 void Track::saveToTrackFile(void) const
 {
     auto trackFile = TrackFileFactory::trackFileForPath(this->trackFilePath());

@@ -49,7 +49,6 @@ Track::Pointer Track::trackWithFileAtOnVolume(const String& trackFilePath, const
     auto trackTag = ObjectTag::tagWithIdentifierAndValue(trackObjectTagIdentifier, tags);
     auto internalObject = Internal::Track::Pointer(std::make_shared<Internal::Track>(trackTag, locatedOnVolumePath));
     auto newTrack = Track::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
-    newTrack->internal->lastMarkersModificationDate = lastModificationDateInSecondsSince1970;
     newTrack->internal->needsToUpdateDatabaseFile = true;
 
     return newTrack;

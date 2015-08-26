@@ -27,7 +27,7 @@ namespace NxA {
     // -- NOTE: This pointer type should only be used internally inside internal classes or inside methods.
     // --       It should NEVER be used as argument types to methods. It should be used as little as possible
     // --       and the regular Pointer should always be prefered to this solution.
-    template <class T> class NullablePointer : public Pointer<T> {
+    template <class T> class NullablePointer : protected Pointer<T> {
     public:
         #pragma mark Constructors & Destructors
         NullablePointer() { };

@@ -69,7 +69,6 @@ namespace NxA { namespace Serato { namespace Internal {
         void setUInt32ForSubTagForIdentifier(uinteger32 value, uinteger32 identifier);
 
         String::Pointer trackFilePath(void) const;
-        void readMarkersFrom(const Serato::TrackFile& trackFile);
         void readMarkers(void);
         void saveToTrackFile(void) const;
     };

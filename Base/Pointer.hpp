@@ -95,6 +95,7 @@ namespace NxA {
         {
             return *this;
         }
+
     protected:
         Pointer() = default;
     };

@@ -92,9 +92,9 @@ namespace NxA { namespace Serato {
         void setSampleRateInSamplesPerSecond(uinteger32 sampleRate);
         void setArtwork(const Blob& artwork);
 
-        void setCueMarkers(CueMarker::ArrayOfConst& markers);
-        void setLoopMarkers(LoopMarker::ArrayOfConst& markers);
-        void setGridMarkers(GridMarker::ArrayOfConst& markers);
+        void setCueMarkersWhichWereModifiedOn(CueMarker::ArrayOfConst& markers, timestamp modificationDateInSecondsSince1970);
+        void setLoopMarkersWhichWereModifiedOn(LoopMarker::ArrayOfConst& markers, timestamp modificationDateInSecondsSince1970);
+        void setGridMarkersWhichWereModifiedOn(GridMarker::ArrayOfConst& markers, timestamp modificationDateInSecondsSince1970);
 
         boolean needsToUpdateTrackFile(void) const;
         boolean needsToUpdateDatabaseFile(void) const;

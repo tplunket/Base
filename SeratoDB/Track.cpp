@@ -50,6 +50,7 @@ Track::Pointer Track::trackWithFileAtOnVolume(const String& trackFilePath, const
     auto internalObject = Internal::Track::Pointer(std::make_shared<Internal::Track>(trackTag, locatedOnVolumePath));
     auto newTrack = Track::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
     newTrack->internal->needsToUpdateTrackFile = true;
+    newTrack->internal->lastMarkersModificationDate = lastModificationDateInSecondsSince1970;
     newTrack->internal->needsToUpdateDatabaseFile = true;
 
     return newTrack;
@@ -432,7 +433,7 @@ void Track::setDateAddedInSecondsSinceJanuary1st1970(timestamp dateAdded)
     internal->needsToUpdateDatabaseFile = true;
 }
 
-void Track::setCueMarkers(CueMarker::ArrayOfConst& markers)
+void Track::setCueMarkersWhichWereModifiedOn(CueMarker::ArrayOfConst& markers, timestamp modificationDateInSecondsSince1970)
 {
 #if NXA_OUTPUT_DEBUG_METADATA
     auto cueMarkers = CueMarker::ArrayOfConst::array();
@@ -447,9 +448,13 @@ void Track::setCueMarkers(CueMarker::ArrayOfConst& markers)
     internal->cueMarkers = markers.pointer();
 #endif
     internal->needsToUpdateTrackFile = true;
+
+    if (internal->lastMarkersModificationDate < modificationDateInSecondsSince1970) {
+        internal->lastMarkersModificationDate = modificationDateInSecondsSince1970;
+    }
 }
 
-void Track::setLoopMarkers(LoopMarker::ArrayOfConst& markers)
+void Track::setLoopMarkersWhichWereModifiedOn(LoopMarker::ArrayOfConst& markers, timestamp modificationDateInSecondsSince1970)
 {
 #if NXA_OUTPUT_DEBUG_METADATA
     auto loopMarkers = LoopMarker::ArrayOfConst::array();
@@ -465,9 +470,13 @@ void Track::setLoopMarkers(LoopMarker::ArrayOfConst& markers)
     internal->loopMarkers = markers.pointer();
 #endif
     internal->needsToUpdateTrackFile = true;
+
+    if (internal->lastMarkersModificationDate < modificationDateInSecondsSince1970) {
+        internal->lastMarkersModificationDate = modificationDateInSecondsSince1970;
+    }
 }
 
-void Track::setGridMarkers(GridMarker::ArrayOfConst& markers)
+void Track::setGridMarkersWhichWereModifiedOn(GridMarker::ArrayOfConst& markers, timestamp modificationDateInSecondsSince1970)
 {
 #if NXA_OUTPUT_DEBUG_METADATA
     auto gridMarkers = GridMarker::ArrayOfConst::array();
@@ -481,6 +490,10 @@ void Track::setGridMarkers(GridMarker::ArrayOfConst& markers)
     internal->gridMarkers = markers.pointer();
 #endif
     internal->needsToUpdateTrackFile = true;
+
+    if (internal->lastMarkersModificationDate < modificationDateInSecondsSince1970) {
+        internal->lastMarkersModificationDate = modificationDateInSecondsSince1970;
+    }
 }
 
 boolean Track::needsToUpdateTrackFile(void) const
@@ -501,6 +514,7 @@ void Track::addTo(Blob& destination) const
 void Track::saveToTrackFile(void) const
 {
     auto trackFile = TrackFileFactory::trackFileForPath(this->trackFilePath());
+    NXA_ASSERT_TRUE(internal->lastMarkersModificationDate != 0);
 
     auto cueMarkers = CueMarker::Array::array();
     for (auto& marker : this->cueMarkers()) {

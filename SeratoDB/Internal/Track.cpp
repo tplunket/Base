@@ -46,7 +46,8 @@ Track::Track(Serato::ObjectTag& tag, const String& rootFolderPath) :
              trackFileWasRead(false),
              cueMarkers(Serato::CueMarker::ArrayOfConst::array()),
              loopMarkers(Serato::LoopMarker::ArrayOfConst::array()),
-             gridMarkers(Serato::GridMarker::ArrayOfConst::array())
+             gridMarkers(Serato::GridMarker::ArrayOfConst::array()),
+             lastMarkersModificationDate(0)
 {
 }
 
@@ -219,4 +220,6 @@ void Track::readMarkersFrom(const Serato::TrackFile& trackFile)
 #endif
         this->gridMarkers->append(Serato::GridMarker::markerWith(marker));
     }
+
+    this->lastMarkersModificationDate = File::modificationDateInSecondsSince1970ForFile(this->trackFilePath());
 }

@@ -58,6 +58,7 @@ namespace NxA { namespace Serato { namespace Internal {
         Serato::CueMarker::ArrayOfConst::Pointer cueMarkers;
         Serato::LoopMarker::ArrayOfConst::Pointer loopMarkers;
         Serato::GridMarker::ArrayOfConst::Pointer gridMarkers;
+        timestamp lastMarkersModificationDate;
 
         #pragma mark Instance Methods
         const String& stringForSubTagForIdentifier(uinteger32 identifier) const;

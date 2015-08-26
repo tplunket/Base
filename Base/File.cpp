@@ -22,6 +22,8 @@
 #include "Base/File.hpp"
 #include "Base/Platform.hpp"
 
+#include <boost/filesystem.hpp>
+
 #include <sys/stat.h>
 #include <iostream>
 #include <fstream>
@@ -115,4 +117,12 @@ timestamp File::modificationDateInSecondsSince1970ForFile(const String& path)
     }
 
     return buf.st_mtimespec.tv_sec;
+}
+
+void File::setModificationDateInSecondsSince1970ForFile(timestamp modificationDateInSeconds, const String& path)
+{
+    boost::filesystem::path boostPath(path.toUTF8());
+    NXA_ASSERT_TRUE(boost::filesystem::exists(boostPath));
+
+    boost::filesystem::last_write_time(boostPath, modificationDateInSeconds);
 }

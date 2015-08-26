@@ -512,4 +512,6 @@ void Track::saveToTrackFile(void) const
 
     internal->saveToTrackFile();
 
+    File::setModificationDateInSecondsSince1970ForFile(internal->lastMarkersModificationDate,
+                                                       internal->trackFilePath());
 }

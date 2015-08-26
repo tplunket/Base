@@ -210,7 +210,7 @@ timestamp Track::dateAddedInSecondsSinceJanuary1st1970(void) const
 const CueMarker::ArrayOfConst& Track::cueMarkers(void) const
 {
     if (!internal->trackFileWasRead) {
-        internal->readTrackFile();
+        internal->readMarkers();
     }
 
     return internal->cueMarkers;
@@ -219,7 +219,7 @@ const CueMarker::ArrayOfConst& Track::cueMarkers(void) const
 const LoopMarker::ArrayOfConst& Track::loopMarkers(void) const
 {
     if (!internal->trackFileWasRead) {
-        internal->readTrackFile();
+        internal->readMarkers();
     }
 
     return internal->loopMarkers;
@@ -228,7 +228,7 @@ const LoopMarker::ArrayOfConst& Track::loopMarkers(void) const
 const GridMarker::ArrayOfConst& Track::gridMarkers(void) const
 {
     if (!internal->trackFileWasRead) {
-        internal->readTrackFile();
+        internal->readMarkers();
     }
 
     return internal->gridMarkers;

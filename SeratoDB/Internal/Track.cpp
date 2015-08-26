@@ -187,7 +187,7 @@ String::Pointer Track::trackFilePath(void) const
     return File::joinPaths(this->rootFolder, pathFromRootFolder);
 }
 
-void Track::readTrackFile(void)
+void Track::readMarkers(void)
 {
     auto trackFile = TrackFileFactory::trackFileForPath(this->trackFilePath());
     this->readMarkersFrom(trackFile);

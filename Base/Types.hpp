@@ -22,6 +22,7 @@
 #pragma once
 
 #include <cstdint>
+#include <ctime>
 #include <memory>
 #include <typeinfo>
 
@@ -44,9 +45,9 @@ namespace NxA {
     using byte = uint8_t;
     using character = char;
 
-    using count = size_t;
+    using count = std::size_t;
 
-    using timestamp = time_t;
+    using timestamp = std::time_t;
 
     using decimal = double;
 

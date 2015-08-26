@@ -31,7 +31,7 @@ namespace NxA {
 
     public:
         #pragma mark Constructors & Destructors
-        Pointer(const std::shared_ptr<T>& other) : std::shared_ptr<T>(other) { };
+        Pointer(const std::shared_ptr<T>& other) : std::shared_ptr<T>(other) { }
         Pointer(const Pointer<T>& other) : std::shared_ptr<T>(other) { }
         ~Pointer() = default;
 

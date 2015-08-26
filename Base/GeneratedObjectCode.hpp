@@ -22,6 +22,7 @@
 #pragma once
 
 #include "Base/Pointer.hpp"
+#include "Base/NullablePointer.hpp"
 #include "Base/WeakPointer.hpp"
 #include "Base/Assert.hpp"
 
@@ -100,6 +101,8 @@ namespace NxA {
         public: \
             using Pointer = NxA::Pointer<namespace_name::class_name>; \
             using PointerToConst = NxA::Pointer<const namespace_name::class_name>; \
+            using NullablePointer = NxA::NullablePointer<namespace_name::class_name>; \
+            using NullablePointerToConst = NxA::NullablePointer<const namespace_name::class_name>; \
             using WeakPointer = NxA::WeakPointer<namespace_name::class_name>; \
             using WeakPointerToConst = NxA::WeakPointer<namespace_name::class_name>; \
             using Array = NxA::ArrayContainer<namespace_name::class_name>; \

@@ -47,5 +47,6 @@ namespace NxA {
         static count sizeOfFileAt(const String& path);
 
         static timestamp modificationDateInSecondsSince1970ForFile(const String& path);
+        static void setModificationDateInSecondsSince1970ForFile(timestamp modificationDateInSeconds, const String& path);
     };
 }

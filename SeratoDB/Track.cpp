@@ -336,7 +336,7 @@ void Track::setSizeInBytes(count size)
 {
     internal->setUInt32ForSubTagForIdentifier(static_cast<uinteger32>(size), trackSizeTagIdentifier);
 
-    decimal sizeInMb = static_cast<decimal>(size) / 1024.0f;
+    decimal sizeInMb = static_cast<decimal>(size) / (1024.0f * 1024.0f);
     auto sizeString = String::stringWithFormat("%.1fMB", sizeInMb);
     internal->setStringForSubTagForIdentifier(sizeString, trackSizeStringTagIdentifier);
 

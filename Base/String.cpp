@@ -149,6 +149,7 @@ String::Pointer String::stringWithUTF16(const Blob& other)
 }
 
 #pragma mark Class Methods
+
 uinteger32 String::hashFor(String::Pointer str)
 {
     return SBox((const byte*)str->toUTF8(), str->length(), uinteger32(-1));
@@ -209,6 +210,11 @@ count String::length(void) const
 uinteger32 String::hash(void) const
 {
     return String::hashFor(this->toUTF8());
+}
+
+integer String::integerValue(void) const
+{
+    return ::atoi(this->c_str());
 }
 
 const character* String::toUTF8(void) const

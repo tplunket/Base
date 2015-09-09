@@ -659,3 +659,42 @@ TEST(Base_String, ClassHash_AString_ReturnsExpectedValue)
     ASSERT_EQ(test->classHash(), String::hashOfClassName());
 }
 
+TEST(Base_String, IntegerValue_AStringWithAnInteger_ReturnsCorrectValue)
+{
+    // -- Given.
+    auto testStr = String::stringWith("1345");
+
+    // -- When.
+    // -- Then.
+    ASSERT_EQ(testStr->integerValue(), 1345);
+}
+
+TEST(Base_String, IntegerValue_AStringWithANegativeInteger_ReturnsCorrectValue)
+{
+    // -- Given.
+    auto testStr = String::stringWith("-341345");
+
+    // -- When.
+    // -- Then.
+    ASSERT_EQ(testStr->integerValue(), -341345);
+}
+
+TEST(Base_String, IntegerValue_AStringWithAInvalidInteger_ReturnsPartOfTheNumber)
+{
+    // -- Given.
+    auto testStr = String::stringWith("-341d345");
+
+    // -- When.
+    // -- Then.
+    ASSERT_EQ(testStr->integerValue(), -341);
+}
+
+TEST(Base_String, IntegerValue_AStringWithAInvalidString_ReturnsZero)
+{
+    // -- Given.
+    auto testStr = String::stringWith("d-341d345");
+
+    // -- When.
+    // -- Then.
+    ASSERT_EQ(testStr->integerValue(), 0);
+}

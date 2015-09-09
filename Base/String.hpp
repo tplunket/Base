@@ -69,6 +69,7 @@ namespace NxA {
         };
 
         uinteger32 hash(void) const;
+        integer integerValue(void) const;
 
         const character* toUTF8(void) const;
         NxA::Pointer<NxA::Blob> toUTF16(void) const;

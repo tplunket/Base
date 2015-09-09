@@ -37,6 +37,7 @@ namespace NxA { namespace Serato { namespace Internal {
     constexpr const character* id3BpmFrameName = "TBPM";
     constexpr const character* id3RecordLabelFrameName = "TPUB";
     constexpr const character* id3RemixerFrameName = "TPE4";
+    constexpr const character* id3RatingFrameName = "POPM";
     constexpr const character* id3ArtworkFrameName = "APIC";
 
     constexpr const character* id3MarkersFrameDescription = "Serato Markers_";
@@ -52,7 +53,9 @@ namespace NxA { namespace Serato { namespace Internal {
         static TagLib::ID3v2::FrameList::Iterator frameInListWithDescription(TagLib::ID3v2::FrameList& list,
                                                                              const String& description);
         static String::Pointer stringValueForFrameNamedInTag(const character* name, const TagLib::ID3v2::Tag* id3v2Tag);
+        static integer integerValueForFrameNamedInTag(const character* name, const TagLib::ID3v2::Tag* id3v2Tag);
         static void setStringValueForFrameNamedInTag(const String& value, const character* name, TagLib::ID3v2::Tag* id3v2Tag);
+        static void setIntegerValueForFrameNamedInTag(integer value, const character* name, TagLib::ID3v2::Tag* id3v2Tag);
         static void removeGEOBFrameNamedInTag(const String& name, TagLib::ID3v2::Tag* id3v2Tag);
         static void replaceMarkersV2FrameInTagWith(TagLib::ID3v2::Tag* id3v2Tag, const String& base64MarkersData);
         static void replaceGridMarkersFrameInTagWith(TagLib::ID3v2::Tag* id3v2Tag, const Blob& gridMarkersData);
@@ -62,7 +65,9 @@ namespace NxA { namespace Serato { namespace Internal {
 
         #pragma mark Instance Methods
         String::Pointer stringValueForFrameNamed(const character* name) const;
+        integer integerValueForFrameNamed(const character* name) const;
         void setStringValueForFrameNamed(const String& value, const character* name);
+        void setIntegerValueForFrameNamed(integer value, const character* name);
 
         void removeArtwork(void);
 

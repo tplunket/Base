@@ -93,6 +93,11 @@ String::Pointer ID3TrackFile::stringValueForFrameNamedInTag(const character* nam
     return String::stringWith(frameList.front()->toString().toCString());
 }
 
+integer ID3TrackFile::integerValueForFrameNamedInTag(const character* name, const TagLib::ID3v2::Tag* id3v2Tag)
+{
+    return ID3TrackFile::stringValueForFrameNamedInTag(name, id3v2Tag)->integerValue();
+}
+
 void ID3TrackFile::setStringValueForFrameNamedInTag(const String& value, const character* name, TagLib::ID3v2::Tag* id3v2Tag)
 {
     id3v2Tag->removeFrames(name);
@@ -102,6 +107,11 @@ void ID3TrackFile::setStringValueForFrameNamedInTag(const String& value, const c
     id3v2Tag->addFrame(frame);
 }
 
+void ID3TrackFile::setIntegerValueForFrameNamedInTag(integer value, const character* name, TagLib::ID3v2::Tag* id3v2Tag)
+{
+    ID3TrackFile::setStringValueForFrameNamedInTag(String::stringWithFormat("%ld", value), name, id3v2Tag);
+}
+
 #pragma mark Instance Methods
 
 String::Pointer ID3TrackFile::stringValueForFrameNamed(const character* name) const
@@ -109,9 +119,19 @@ String::Pointer ID3TrackFile::stringValueForFrameNamed(const character* name) co
     return ID3TrackFile::stringValueForFrameNamedInTag(name, this->id3v2Tag);
 }
 
+integer ID3TrackFile::integerValueForFrameNamed(const character* name) const
+{
+    return ID3TrackFile::integerValueForFrameNamedInTag(name, this->id3v2Tag);
+}
+
 void ID3TrackFile::setStringValueForFrameNamed(const String& value, const character* name)
 {
     ID3TrackFile::setStringValueForFrameNamedInTag(value, name, this->id3v2Tag);
+}
+
+void ID3TrackFile::setIntegerValueForFrameNamed(integer value, const character* name)
+{
+    ID3TrackFile::setIntegerValueForFrameNamedInTag(value, name, this->id3v2Tag);
 }
 
 void ID3TrackFile::removeArtwork(void)

@@ -24,6 +24,7 @@ namespace NxA { namespace Serato { namespace Internal {
     constexpr const character* mp4ComposerItemName = "\251wrt";
     constexpr const character* mp4GroupingItemName = "\251grp";
     constexpr const character* mp4BpmItemName = "tmpo";
+    constexpr const character* mp4RatingItemName = "popm";
     constexpr const character* mp4ArtworkItemName = "covr";
 } } }
 
@@ -105,6 +106,16 @@ String::Pointer MP4TrackFile::remixer(void) const
     return String::string();
 }
 
+boolean MP4TrackFile::hasRating(void) const
+{
+    return true;
+}
+
+integer MP4TrackFile::rating(void) const
+{
+    return internal->integerValueForItemNamed(Internal::mp4RatingItemName);
+}
+
 Blob::Pointer MP4TrackFile::artwork(void) const
 {
     auto item = internal->mp4Tag->item(Internal::mp4ArtworkItemName);
@@ -139,7 +150,7 @@ void MP4TrackFile::setGrouping(const String& grouping)
 
 void MP4TrackFile::setBpm(const String& bpm)
 {
-    internal->setIntegerValueForItemNamed(::atoi(bpm.toUTF8()), Internal::mp4BpmItemName);
+    internal->setIntegerValueForItemNamed(bpm.integerValue(), Internal::mp4BpmItemName);
 }
 
 void MP4TrackFile::setRecordLabel(const String& recordLabel)
@@ -150,6 +161,11 @@ void MP4TrackFile::setRecordLabel(const String& recordLabel)
 void MP4TrackFile::setRemixer(const String& remixer)
 {
     // -- This is not supported by MP4 files.
+}
+
+void MP4TrackFile::setRating(integer rating)
+{
+    return internal->setIntegerValueForItemNamed(rating, Internal::mp4RatingItemName);
 }
 
 void MP4TrackFile::setArtwork(const Blob& artwork)

@@ -61,6 +61,8 @@ namespace NxA { namespace Serato {
         virtual String::Pointer recordLabel(void) const = 0;
         virtual boolean hasRemixer(void) const = 0;
         virtual String::Pointer remixer(void) const = 0;
+        virtual boolean hasRating(void) const = 0;
+        virtual integer rating(void) const = 0;
         virtual String::Pointer yearReleased(void) const;
 
         const CueMarker::Array& cueMarkers(void) const;
@@ -79,6 +81,7 @@ namespace NxA { namespace Serato {
         virtual void setTrackNumber(count trackNumber);
         virtual void setRecordLabel(const String& recordLabel) = 0;
         virtual void setRemixer(const String& remixer) = 0;
+        virtual void setRating(integer rating) = 0;
         virtual void setYearReleased(const String& year);
 
         virtual void setArtwork(const Blob& artwork) = 0;

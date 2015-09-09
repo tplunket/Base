@@ -95,6 +95,16 @@ String::Pointer OGGTrackFile::remixer(void) const
     return internal->stringValueForFieldNamed(Internal::oggRemixerFieldName);
 }
 
+boolean OGGTrackFile::hasRating(void) const
+{
+    return false;
+}
+
+integer OGGTrackFile::rating(void) const
+{
+    return 0;
+}
+
 Blob::Pointer OGGTrackFile::artwork(void) const
 {
     // -- TODO: To be implemented.
@@ -129,6 +139,11 @@ void OGGTrackFile::setRecordLabel(const String& recordLabel)
 void OGGTrackFile::setRemixer(const String& remixer)
 {
     internal->setStringValueForFieldNamed(remixer, Internal::oggRemixerFieldName);
+}
+
+void OGGTrackFile::setRating(integer rating)
+{
+
 }
 
 void OGGTrackFile::setArtwork(const Blob& artwork)

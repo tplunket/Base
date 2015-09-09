@@ -67,6 +67,16 @@ String::Pointer ID3TrackFile::remixer(void) const
     return internal->stringValueForFrameNamed(Internal::id3RemixerFrameName);
 }
 
+boolean ID3TrackFile::hasRating(void) const
+{
+    return true;
+}
+
+integer ID3TrackFile::rating(void) const
+{
+    return internal->integerValueForFrameNamed(Internal::id3RatingFrameName);
+}
+
 Blob::Pointer ID3TrackFile::artwork(void) const
 {
     auto frameList = internal->id3v2Tag->frameList(Internal::id3ArtworkFrameName);
@@ -125,6 +135,11 @@ void ID3TrackFile::setRecordLabel(const String& recordLabel)
 void ID3TrackFile::setRemixer(const String& remixer)
 {
     internal->setStringValueForFrameNamed(remixer, Internal::id3RemixerFrameName);
+}
+
+void ID3TrackFile::setRating(integer rating)
+{
+    internal->setIntegerValueForFrameNamed(rating, Internal::id3RatingFrameName);
 }
 
 void ID3TrackFile::setArtwork(const Blob& artwork)

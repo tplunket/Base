@@ -149,6 +149,27 @@ String::Pointer FLACTrackFile::remixer(void) const
     return String::string();
 }
 
+boolean FLACTrackFile::hasRating(void) const
+{
+    if (internal->oggComment) {
+        return false;
+    }
+    else {
+        return true;
+    }
+}
+
+integer FLACTrackFile::rating(void) const
+{
+    if (internal->oggComment) {
+        // -- TODO: To be implemented.
+        return 0;
+    }
+    else {
+        return Internal::ID3TrackFile::integerValueForFrameNamedInTag(Internal::id3RatingFrameName, internal->id3v2Tag);
+    }
+}
+
 Blob::Pointer FLACTrackFile::artwork(void) const
 {
     // -- TODO: To be implemented.
@@ -158,37 +179,37 @@ Blob::Pointer FLACTrackFile::artwork(void) const
 void FLACTrackFile::setKey(const String& key)
 {
     if (internal->id3v2Tag) {
-        return Internal::ID3TrackFile::setStringValueForFrameNamedInTag(key, Internal::id3KeyFrameName, internal->id3v2Tag);
+        Internal::ID3TrackFile::setStringValueForFrameNamedInTag(key, Internal::id3KeyFrameName, internal->id3v2Tag);
     }
 }
 
 void FLACTrackFile::setComposer(const String& composer)
 {
     if (internal->oggComment) {
-        return Internal::OGGTrackFile::setStringValueForFieldNamedInComment(composer, Internal::oggComposerFieldName, internal->oggComment);
+        Internal::OGGTrackFile::setStringValueForFieldNamedInComment(composer, Internal::oggComposerFieldName, internal->oggComment);
     }
     else {
-        return Internal::ID3TrackFile::setStringValueForFrameNamedInTag(composer, Internal::id3ComposerFrameName, internal->id3v2Tag);
+        Internal::ID3TrackFile::setStringValueForFrameNamedInTag(composer, Internal::id3ComposerFrameName, internal->id3v2Tag);
     }
 }
 
 void FLACTrackFile::setGrouping(const String& grouping)
 {
     if (internal->oggComment) {
-        return Internal::OGGTrackFile::setStringValueForFieldNamedInComment(grouping, Internal::oggGroupingFieldName, internal->oggComment);
+        Internal::OGGTrackFile::setStringValueForFieldNamedInComment(grouping, Internal::oggGroupingFieldName, internal->oggComment);
     }
     else {
-        return Internal::ID3TrackFile::setStringValueForFrameNamedInTag(grouping, Internal::id3GroupingFrameName, internal->id3v2Tag);
+        Internal::ID3TrackFile::setStringValueForFrameNamedInTag(grouping, Internal::id3GroupingFrameName, internal->id3v2Tag);
     }
 }
 
 void FLACTrackFile::setBpm(const String& bpm)
 {
     if (internal->oggComment) {
-        return Internal::OGGTrackFile::setStringValueForFieldNamedInComment(bpm, Internal::oggBpmFieldName, internal->oggComment);
+        Internal::OGGTrackFile::setStringValueForFieldNamedInComment(bpm, Internal::oggBpmFieldName, internal->oggComment);
     }
     else {
-        return Internal::ID3TrackFile::setStringValueForFrameNamedInTag(bpm, Internal::id3BpmFrameName, internal->id3v2Tag);
+        Internal::ID3TrackFile::setStringValueForFrameNamedInTag(bpm, Internal::id3BpmFrameName, internal->id3v2Tag);
     }
 }
 
@@ -200,6 +221,16 @@ void FLACTrackFile::setRecordLabel(const String& recordLabel)
 void FLACTrackFile::setRemixer(const String& remixer)
 {
     // -- This is not supported by FLAC files.
+}
+
+void FLACTrackFile::setRating(integer rating)
+{
+    if (internal->oggComment) {
+        // -- TODO: To be implemented.
+    }
+    else {
+        Internal::ID3TrackFile::setIntegerValueForFrameNamedInTag(rating, Internal::id3RatingFrameName, internal->id3v2Tag);
+    }
 }
 
 void FLACTrackFile::setArtwork(const Blob& artwork)

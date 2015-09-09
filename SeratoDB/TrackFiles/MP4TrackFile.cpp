@@ -24,7 +24,6 @@ namespace NxA { namespace Serato { namespace Internal {
     constexpr const character* mp4ComposerItemName = "\251wrt";
     constexpr const character* mp4GroupingItemName = "\251grp";
     constexpr const character* mp4BpmItemName = "tmpo";
-    constexpr const character* mp4RatingItemName = "popm";
     constexpr const character* mp4ArtworkItemName = "covr";
 } } }
 
@@ -108,12 +107,12 @@ String::Pointer MP4TrackFile::remixer(void) const
 
 boolean MP4TrackFile::hasRating(void) const
 {
-    return true;
+    return false;
 }
 
 integer MP4TrackFile::rating(void) const
 {
-    return internal->integerValueForItemNamed(Internal::mp4RatingItemName);
+    return 0;
 }
 
 Blob::Pointer MP4TrackFile::artwork(void) const
@@ -165,7 +164,7 @@ void MP4TrackFile::setRemixer(const String& remixer)
 
 void MP4TrackFile::setRating(integer rating)
 {
-    return internal->setIntegerValueForItemNamed(rating, Internal::mp4RatingItemName);
+    // -- This is not supported by MP4 files.
 }
 
 void MP4TrackFile::setArtwork(const Blob& artwork)

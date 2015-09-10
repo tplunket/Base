@@ -35,6 +35,8 @@ namespace NxA { namespace Serato {
         };
 
         #pragma mark Instance Methods
+        String::PointerToConst filePath(void) const;
+
         virtual String::Pointer title(void) const;
         virtual String::Pointer artist(void) const;
         virtual String::Pointer genre(void) const;

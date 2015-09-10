@@ -24,6 +24,11 @@ using namespace NxA::Serato;
 
 #pragma mark Instance Methods
 
+String::PointerToConst TrackFile::filePath(void) const
+{
+    return internal->trackFilePath;
+}
+
 String::Pointer TrackFile::title(void) const
 {
     return String::stringWith(internal->tag->title().toCString());

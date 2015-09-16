@@ -27,4 +27,7 @@ using namespace NxA::Serato::Internal;
 
 CueMarker::CueMarker() : positionInMilliseconds(0),
                          index(0),
-                         label(String::string()) { }
+                         label(String::string()),
+                         colorRedComponent(0),
+                         colorGreenComponent(0),
+                         colorBlueComponent(0) { }

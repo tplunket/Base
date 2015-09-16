@@ -149,6 +149,11 @@ void ID3TrackFile::setRating(integer rating)
     internal->metadataWasModified = true;
 }
 
+void ID3TrackFile::setRating(integer rating)
+{
+    internal->setIntegerValueForFrameNamed(rating, Internal::id3RatingFrameName);
+}
+
 void ID3TrackFile::setArtwork(const Blob& artwork)
 {
     internal->removeArtwork();

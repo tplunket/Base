@@ -151,6 +151,11 @@ void OGGTrackFile::setRating(integer rating)
     // -- TODO: To be implemented.
 }
 
+void OGGTrackFile::setRating(integer rating)
+{
+
+}
+
 void OGGTrackFile::setArtwork(const Blob& artwork)
 {
     // -- TODO: To be implemented.

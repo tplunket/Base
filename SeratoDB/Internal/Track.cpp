@@ -244,6 +244,6 @@ void Track::saveToTrackFile(void) const
     }
     trackFile->setGridMarkers(newGridMarkers);
 
-    trackFile->saveChanges();
+    trackFile->saveChangesIfAny();
 }
 

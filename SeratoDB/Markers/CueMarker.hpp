@@ -38,6 +38,9 @@ namespace NxA { namespace Serato {
         uinteger32 positionInMilliseconds(void) const;
         uinteger16 index(void) const;
         const String& label(void) const;
+        byte colorRedComponent(void) const;
+        byte colorGreenComponent(void) const;
+        byte colorBlueComponent(void) const;
 
         void addId3TagTo(Blob& data) const;
     };

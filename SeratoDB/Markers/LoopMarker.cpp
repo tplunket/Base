@@ -87,9 +87,9 @@ LoopMarker::Pointer LoopMarker::markerWith(const LoopMarker& other)
                                                                      other.startPositionInMilliseconds(),
                                                                      other.endPositionInMilliseconds(),
                                                                      other.index(),
-                                                                     0,
-                                                                     0,
-                                                                     0);
+                                                                     other.colorRedComponent(),
+                                                                     other.colorGreenComponent(),
+                                                                     other.colorBlueComponent());
 }
 
 #pragma mark Operators
@@ -103,7 +103,10 @@ bool LoopMarker::operator==(const LoopMarker& other) const
     return (this->label() == other.label()) &&
            (this->startPositionInMilliseconds() == other.startPositionInMilliseconds()) &&
            (this->endPositionInMilliseconds() == other.endPositionInMilliseconds()) &&
-           (this->index() == other.index());
+           (this->index() == other.index() &&
+           (this->colorRedComponent() == other.colorRedComponent()) &&
+           (this->colorGreenComponent() == other.colorGreenComponent()) &&
+           (this->colorBlueComponent() == other.colorBlueComponent()));
 }
 
 #pragma mark Instance Methods
@@ -128,6 +131,21 @@ const String& LoopMarker::label(void) const
     return internal->label;
 }
 
+byte LoopMarker::colorRedComponent(void) const
+{
+    return internal->colorRedComponent;
+}
+
+byte LoopMarker::colorGreenComponent(void) const
+{
+    return internal->colorGreenComponent;
+}
+
+byte LoopMarker::colorBlueComponent(void) const
+{
+    return internal->colorBlueComponent;
+}
+
 void LoopMarker::addId3TagTo(Blob& data) const
 {
     SeratoLoopTagStruct header;
@@ -140,9 +158,9 @@ void LoopMarker::addId3TagTo(Blob& data) const
     Platform::writeBigEndianUInteger32ValueAt(this->endPositionInMilliseconds(), header.loopPosition);
     Platform::writeBigEndianUInteger32ValueAt(0xFFFFFFFF, header.loopIterations);
     header.color[0] = 0;
-    header.color[1] = internal->colorRedComponent;
-    header.color[2] = internal->colorGreenComponent;
-    header.color[3] = internal->colorBlueComponent;
+    header.color[1] = this->colorRedComponent();
+    header.color[2] = this->colorGreenComponent();
+    header.color[3] = this->colorBlueComponent();
     header.loop_enabled = 0;
     header.loop_locked = 0;
 

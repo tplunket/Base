@@ -73,7 +73,12 @@ CueMarker::Pointer CueMarker::markerWithLabelPositionIndexAndColor(const String&
 
 CueMarker::Pointer CueMarker::markerWith(const CueMarker&other)
 {
-    return CueMarker::markerWithLabelPositionIndexAndColor(other.label(), other.positionInMilliseconds(), other.index(), 0, 0, 0);
+    return CueMarker::markerWithLabelPositionIndexAndColor(other.label(),
+                                                           other.positionInMilliseconds(),
+                                                           other.index(),
+                                                           other.colorRedComponent(),
+                                                           other.colorGreenComponent(),
+                                                           other.colorBlueComponent());
 }
 
 #pragma mark Operators
@@ -86,7 +91,10 @@ bool CueMarker::operator==(const CueMarker& other) const
 
     return (this->label() == other.label()) &&
            (this->positionInMilliseconds() == other.positionInMilliseconds()) &&
-           (this->index() == other.index());
+           (this->index() == other.index() &&
+           (this->colorRedComponent() == other.colorRedComponent()) &&
+           (this->colorGreenComponent() == other.colorGreenComponent()) &&
+           (this->colorBlueComponent() == other.colorBlueComponent()));
 }
 
 #pragma mark Instance Methods
@@ -106,6 +114,21 @@ const String& CueMarker::label(void) const
     return internal->label;
 }
 
+byte CueMarker::colorRedComponent(void) const
+{
+    return internal->colorRedComponent;
+}
+
+byte CueMarker::colorGreenComponent(void) const
+{
+    return internal->colorGreenComponent;
+}
+
+byte CueMarker::colorBlueComponent(void) const
+{
+    return internal->colorBlueComponent;
+}
+
 void CueMarker::addId3TagTo(Blob& data) const
 {
     SeratoCueTagStruct header;
@@ -116,9 +139,9 @@ void CueMarker::addId3TagTo(Blob& data) const
     Platform::writeBigEndianUInteger16ValueAt(this->index(), header.index);
     Platform::writeBigEndianUInteger32ValueAt(this->positionInMilliseconds(), header.position);
     header.color[0] = 0;
-    header.color[1] = internal->colorRedComponent;
-    header.color[2] = internal->colorGreenComponent;
-    header.color[3] = internal->colorBlueComponent;
+    header.color[1] = this->colorRedComponent();
+    header.color[2] = this->colorGreenComponent();
+    header.color[3] = this->colorBlueComponent();
     header.loop_enabled = 0;
     header.loop_locked = 0;
 

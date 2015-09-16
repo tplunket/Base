@@ -92,6 +92,6 @@ namespace NxA { namespace Serato {
         void setLoopMarkers(LoopMarker::Array& markers);
         void setGridMarkers(GridMarker::Array& markers);
 
-        void saveChanges(void);
+        void saveChangesIfAny(void);
     };
 } }

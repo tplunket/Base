@@ -135,21 +135,25 @@ Blob::Pointer MP4TrackFile::artwork(void) const
 void MP4TrackFile::setKey(const String& key)
 {
     internal->setStringValueForItemNamed(key, Internal::mp4KeyItemName);
+    internal->metadataWasModified = true;
 }
 
 void MP4TrackFile::setComposer(const String& composer)
 {
     internal->setStringValueForItemNamed(composer, Internal::mp4ComposerItemName);
+    internal->metadataWasModified = true;
 }
 
 void MP4TrackFile::setGrouping(const String& grouping)
 {
     internal->setStringValueForItemNamed(grouping, Internal::mp4GroupingItemName);
+    internal->metadataWasModified = true;
 }
 
 void MP4TrackFile::setBpm(const String& bpm)
 {
     internal->setIntegerValueForItemNamed(bpm.integerValue(), Internal::mp4BpmItemName);
+    internal->metadataWasModified = true;
 }
 
 void MP4TrackFile::setRecordLabel(const String& recordLabel)
@@ -179,4 +183,5 @@ void MP4TrackFile::setArtwork(const Blob& artwork)
     newItem.setAtomDataType(TagLib::MP4::AtomDataType::TypePNG);
 
     internal->mp4Tag->setItem(Internal::mp4ArtworkItemName, newItem);
+    internal->metadataWasModified = true;
 }

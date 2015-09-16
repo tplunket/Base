@@ -110,36 +110,43 @@ Blob::Pointer ID3TrackFile::artwork(void) const
 void ID3TrackFile::setKey(const String& key)
 {
     internal->setStringValueForFrameNamed(key, Internal::id3KeyFrameName);
+    internal->metadataWasModified = true;
 }
 
 void ID3TrackFile::setComposer(const String& composer)
 {
     internal->setStringValueForFrameNamed(composer, Internal::id3ComposerFrameName);
+    internal->metadataWasModified = true;
 }
 
 void ID3TrackFile::setGrouping(const String& grouping)
 {
     internal->setStringValueForFrameNamed(grouping, Internal::id3GroupingFrameName);
+    internal->metadataWasModified = true;
 }
 
 void ID3TrackFile::setBpm(const String& bpm)
 {
     internal->setStringValueForFrameNamed(bpm, Internal::id3BpmFrameName);
+    internal->metadataWasModified = true;
 }
 
 void ID3TrackFile::setRecordLabel(const String& recordLabel)
 {
     internal->setStringValueForFrameNamed(recordLabel, Internal::id3RecordLabelFrameName);
+    internal->metadataWasModified = true;
 }
 
 void ID3TrackFile::setRemixer(const String& remixer)
 {
     internal->setStringValueForFrameNamed(remixer, Internal::id3RemixerFrameName);
+    internal->metadataWasModified = true;
 }
 
 void ID3TrackFile::setRating(integer rating)
 {
     internal->setIntegerValueForFrameNamed(rating, Internal::id3RatingFrameName);
+    internal->metadataWasModified = true;
 }
 
 void ID3TrackFile::setArtwork(const Blob& artwork)
@@ -155,4 +162,5 @@ void ID3TrackFile::setArtwork(const Blob& artwork)
     newFrame->setTextEncoding(TagLib::String::Latin1);
 
     internal->id3v2Tag->addFrame(newFrame);
+    internal->metadataWasModified = true;
 }

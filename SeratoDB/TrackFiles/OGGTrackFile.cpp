@@ -119,26 +119,31 @@ void OGGTrackFile::setKey(const String& key)
 void OGGTrackFile::setComposer(const String& composer)
 {
     internal->setStringValueForFieldNamed(composer, Internal::oggComposerFieldName);
+    internal->metadataWasModified = true;
 }
 
 void OGGTrackFile::setGrouping(const String& grouping)
 {
     internal->setStringValueForFieldNamed(grouping, Internal::oggGroupingFieldName);
+    internal->metadataWasModified = true;
 }
 
 void OGGTrackFile::setBpm(const String& bpm)
 {
     internal->setStringValueForFieldNamed(bpm, Internal::oggBpmFieldName);
+    internal->metadataWasModified = true;
 }
 
 void OGGTrackFile::setRecordLabel(const String& recordLabel)
 {
     internal->setStringValueForFieldNamed(recordLabel, Internal::oggRecordLabelFieldName);
+    internal->metadataWasModified = true;
 }
 
 void OGGTrackFile::setRemixer(const String& remixer)
 {
     internal->setStringValueForFieldNamed(remixer, Internal::oggRemixerFieldName);
+    internal->metadataWasModified = true;
 }
 
 void OGGTrackFile::setRating(integer rating)

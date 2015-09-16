@@ -48,6 +48,8 @@ namespace NxA { namespace Serato { namespace Internal {
         TagLibFilePointer file;
         TagLib::Tag* tag;
         boolean markersWereIgnored;
+        boolean markersWereModified;
+        boolean metadataWasModified;
 
         Serato::CueMarker::Array::Pointer cueMarkers;
         Serato::LoopMarker::Array::Pointer loopMarkers;

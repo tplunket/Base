@@ -148,7 +148,7 @@ void OGGTrackFile::setRemixer(const String& remixer)
 
 void OGGTrackFile::setRating(integer rating)
 {
-
+    // -- TODO: To be implemented.
 }
 
 void OGGTrackFile::setArtwork(const Blob& artwork)

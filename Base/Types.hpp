@@ -97,4 +97,30 @@ namespace NxA {
     NXA_SPECIALIZE_TYPENAME_FOR_TYPE(timestamp);
 
     NXA_SPECIALIZE_TYPENAME_FOR_TYPE(decimal);
+
+    // Utility macros for declaring typed enums
+    //
+    // Usage:
+    //  typedef NXA_OPTIONS(Typename, integer32) {
+    //      Option1 = 1,
+    //      Option2 = 2,
+    //      ...
+    //  }
+    //
+    #define NXA_OPTIONS(TStorage, T) \
+        enum T : TStorage T; \
+        enum T : TStorage
+
+    // Similar to NXA_OPTIONS above, but with overloaded bitwise operators for flags usage
+    #define NXA_FLAGS(TStorage, T) \
+        enum T : TStorage T; \
+        inline T  operator | (T x, T y)   { return static_cast<T>(static_cast<TStorage>(x) | static_cast<TStorage>(y)); }; \
+        inline T  operator & (T x, T y)   { return static_cast<T>(static_cast<TStorage>(x) & static_cast<TStorage>(y)); }; \
+        inline T  operator ^ (T x, T y)   { return static_cast<T>(static_cast<TStorage>(x) ^ static_cast<TStorage>(y)); }; \
+        inline T  operator ~ (T x)        { return static_cast<T>(~static_cast<TStorage>(x)); }; \
+        inline T& operator |= (T& x, T y) { x = x | y; return x; }; \
+        inline T& operator &= (T& x, T y) { x = x & y; return x; }; \
+        inline T& operator ^= (T& x, T y) { x = x ^ y; return x; }; \
+        enum T : TStorage
+
 }

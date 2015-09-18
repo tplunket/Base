@@ -121,36 +121,43 @@ const GridMarker::Array& TrackFile::gridMarkers(void) const
 void TrackFile::setTitle(const String& title)
 {
     internal->tag->setTitle(TagLib::String(title.toUTF8()));
+    internal->metadataWasModified = true;
 }
 
 void TrackFile::setArtist(const String& artist)
 {
     internal->tag->setArtist(TagLib::String(artist.toUTF8()));
+    internal->metadataWasModified = true;
 }
 
 void TrackFile::setGenre(const String& genre)
 {
     internal->tag->setGenre(TagLib::String(genre.toUTF8()));
+    internal->metadataWasModified = true;
 }
 
 void TrackFile::setComments(const String& comments)
 {
     internal->tag->setComment(TagLib::String(comments.toUTF8()));
+    internal->metadataWasModified = true;
 }
 
 void TrackFile::setAlbum(const String& album)
 {
     internal->tag->setAlbum(TagLib::String(album.toUTF8()));
+    internal->metadataWasModified = true;
 }
 
 void TrackFile::setTrackNumber(count trackNumber)
 {
     internal->tag->setTrack(trackNumber);
+    internal->metadataWasModified = true;
 }
 
 void TrackFile::setYearReleased(const String& year)
 {
     internal->tag->setYear(::atoi(year.toUTF8()));
+    internal->metadataWasModified = true;
 }
 
 void TrackFile::setCueMarkers(CueMarker::Array& markers)
@@ -158,6 +165,7 @@ void TrackFile::setCueMarkers(CueMarker::Array& markers)
     NXA_ASSERT_FALSE(internal->markersWereIgnored);
 
     internal->cueMarkers = markers.pointer();
+    internal->markersWereModified = true;
 }
 
 void TrackFile::setLoopMarkers(LoopMarker::Array& markers)
@@ -165,6 +173,7 @@ void TrackFile::setLoopMarkers(LoopMarker::Array& markers)
     NXA_ASSERT_FALSE(internal->markersWereIgnored);
 
     internal->loopMarkers = markers.pointer();
+    internal->markersWereModified = true;
 }
 
 void TrackFile::setGridMarkers(GridMarker::Array& markers)
@@ -172,13 +181,19 @@ void TrackFile::setGridMarkers(GridMarker::Array& markers)
     NXA_ASSERT_FALSE(internal->markersWereIgnored);
     
     internal->gridMarkers = markers.pointer();
+    internal->markersWereModified = true;
 }
 
-void TrackFile::saveChanges(void)
+void TrackFile::saveChangesIfAny(void)
 {
-    if (!internal->markersWereIgnored) {
+    if (internal->markersWereModified) {
         internal->writeMarkers();
     }
 
-    internal->file->save();
+    if (internal->metadataWasModified || internal->markersWereModified) {
+        internal->file->save();
+
+        internal->metadataWasModified = false;
+        internal->markersWereModified = false;
+    }
 }

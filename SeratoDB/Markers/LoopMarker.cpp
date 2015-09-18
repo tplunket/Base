@@ -47,16 +47,23 @@ LoopMarker::Pointer LoopMarker::markerWithMemoryAt(const byte* id3TagStart)
 
     NXA_ASSERT_TRUE(*String::stringWith(reinterpret_cast<const character*>(tagStruct->tag)) == "LOOP");
 
-    return LoopMarker::markerWithLabelStartEndPositionsAndIndex(String::stringWith(reinterpret_cast<const character*>(tagStruct->label)),
+    return LoopMarker::markerWithLabelStartEndPositionsIndexAndColor(String::stringWith(reinterpret_cast<const character*>(tagStruct->label)),
                                                                 Platform::bigEndianUInteger32ValueAt(tagStruct->position),
                                                                 Platform::bigEndianUInteger32ValueAt(tagStruct->loopPosition),
-                                                                Platform::bigEndianUInteger16ValueAt(tagStruct->index));
+                                                                Platform::bigEndianUInteger16ValueAt(tagStruct->index),
+                                                                     tagStruct->color[1],
+                                                                     tagStruct->color[2],
+                                                                     tagStruct->color[3]);
 }
 
-LoopMarker::Pointer LoopMarker::markerWithLabelStartEndPositionsAndIndex(const String& label,
-                                                                         uinteger32 startPositionInMilliseconds,
-                                                                         uinteger32 endPositionInMilliseconds,
-                                                                         uinteger16 index)
+LoopMarker::Pointer LoopMarker::markerWithLabelStartEndPositionsIndexAndColor(const String& label,
+                                                                              uinteger32 startPositionInMilliseconds,
+                                                                              uinteger32 endPositionInMilliseconds,
+                                                                              uinteger16 index,
+                                                                              byte colorRedComponent,
+                                                                              byte colorGreenComponent,
+                                                                              byte colorBlueComponent)
+
 {
     if (startPositionInMilliseconds >= endPositionInMilliseconds) {
         throw LoopMarkerError::exceptionWith("Invalid loop maker start/end positions (%d and %d ms).", startPositionInMilliseconds, endPositionInMilliseconds);
@@ -67,16 +74,22 @@ LoopMarker::Pointer LoopMarker::markerWithLabelStartEndPositionsAndIndex(const S
     newMarker->internal->endPositionInMilliseconds = endPositionInMilliseconds;
     newMarker->internal->index = index;
     newMarker->internal->label = label.pointer();
+    newMarker->internal->colorRedComponent = colorRedComponent;
+    newMarker->internal->colorGreenComponent = colorGreenComponent;
+    newMarker->internal->colorBlueComponent = colorBlueComponent;
 
     return newMarker;
 }
 
 LoopMarker::Pointer LoopMarker::markerWith(const LoopMarker& other)
 {
-    return LoopMarker::markerWithLabelStartEndPositionsAndIndex(other.label(),
-                                                                other.startPositionInMilliseconds(),
-                                                                other.endPositionInMilliseconds(),
-                                                                other.index());
+    return LoopMarker::markerWithLabelStartEndPositionsIndexAndColor(other.label(),
+                                                                     other.startPositionInMilliseconds(),
+                                                                     other.endPositionInMilliseconds(),
+                                                                     other.index(),
+                                                                     other.colorRedComponent(),
+                                                                     other.colorGreenComponent(),
+                                                                     other.colorBlueComponent());
 }
 
 #pragma mark Operators
@@ -90,7 +103,10 @@ bool LoopMarker::operator==(const LoopMarker& other) const
     return (this->label() == other.label()) &&
            (this->startPositionInMilliseconds() == other.startPositionInMilliseconds()) &&
            (this->endPositionInMilliseconds() == other.endPositionInMilliseconds()) &&
-           (this->index() == other.index());
+           (this->index() == other.index() &&
+           (this->colorRedComponent() == other.colorRedComponent()) &&
+           (this->colorGreenComponent() == other.colorGreenComponent()) &&
+           (this->colorBlueComponent() == other.colorBlueComponent()));
 }
 
 #pragma mark Instance Methods
@@ -115,6 +131,21 @@ const String& LoopMarker::label(void) const
     return internal->label;
 }
 
+byte LoopMarker::colorRedComponent(void) const
+{
+    return internal->colorRedComponent;
+}
+
+byte LoopMarker::colorGreenComponent(void) const
+{
+    return internal->colorGreenComponent;
+}
+
+byte LoopMarker::colorBlueComponent(void) const
+{
+    return internal->colorBlueComponent;
+}
+
 void LoopMarker::addId3TagTo(Blob& data) const
 {
     SeratoLoopTagStruct header;
@@ -126,7 +157,10 @@ void LoopMarker::addId3TagTo(Blob& data) const
     Platform::writeBigEndianUInteger32ValueAt(this->startPositionInMilliseconds(), header.position);
     Platform::writeBigEndianUInteger32ValueAt(this->endPositionInMilliseconds(), header.loopPosition);
     Platform::writeBigEndianUInteger32ValueAt(0xFFFFFFFF, header.loopIterations);
-    Platform::writeBigEndianUInteger32ValueAt(0, header.color);
+    header.color[0] = 0;
+    header.color[1] = this->colorRedComponent();
+    header.color[2] = this->colorGreenComponent();
+    header.color[3] = this->colorBlueComponent();
     header.loop_enabled = 0;
     header.loop_locked = 0;
 

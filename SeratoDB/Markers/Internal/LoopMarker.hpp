@@ -37,5 +37,9 @@ namespace NxA { namespace Serato { namespace Internal {
         uinteger16 index;
 
         String::PointerToConst label;
+
+        byte colorRedComponent;
+        byte colorGreenComponent;
+        byte colorBlueComponent;
     };
 } } }

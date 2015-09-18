@@ -157,7 +157,7 @@ const String& Track::key(void) const
 
 const String& Track::size(void) const
 {
-    return internal->stringForSubTagForIdentifier(trackSizeTagIdentifier);
+    return String::stringWithFormat("%ld", internal->uint32ForSubTagForIdentifier(trackSizeTagIdentifier));
 }
 
 const String& Track::length(void) const

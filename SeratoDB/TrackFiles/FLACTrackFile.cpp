@@ -180,6 +180,7 @@ void FLACTrackFile::setKey(const String& key)
 {
     if (internal->id3v2Tag) {
         Internal::ID3TrackFile::setStringValueForFrameNamedInTag(key, Internal::id3KeyFrameName, internal->id3v2Tag);
+        internal->metadataWasModified = true;
     }
 }
 
@@ -191,6 +192,8 @@ void FLACTrackFile::setComposer(const String& composer)
     else {
         Internal::ID3TrackFile::setStringValueForFrameNamedInTag(composer, Internal::id3ComposerFrameName, internal->id3v2Tag);
     }
+
+    internal->metadataWasModified = true;
 }
 
 void FLACTrackFile::setGrouping(const String& grouping)
@@ -201,6 +204,8 @@ void FLACTrackFile::setGrouping(const String& grouping)
     else {
         Internal::ID3TrackFile::setStringValueForFrameNamedInTag(grouping, Internal::id3GroupingFrameName, internal->id3v2Tag);
     }
+
+    internal->metadataWasModified = true;
 }
 
 void FLACTrackFile::setBpm(const String& bpm)
@@ -211,6 +216,8 @@ void FLACTrackFile::setBpm(const String& bpm)
     else {
         Internal::ID3TrackFile::setStringValueForFrameNamedInTag(bpm, Internal::id3BpmFrameName, internal->id3v2Tag);
     }
+
+    internal->metadataWasModified = true;
 }
 
 void FLACTrackFile::setRecordLabel(const String& recordLabel)
@@ -230,6 +237,7 @@ void FLACTrackFile::setRating(integer rating)
     }
     else {
         Internal::ID3TrackFile::setIntegerValueForFrameNamedInTag(rating, Internal::id3RatingFrameName, internal->id3v2Tag);
+        internal->metadataWasModified = true;
     }
 }
 

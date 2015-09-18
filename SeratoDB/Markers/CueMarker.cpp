@@ -45,26 +45,40 @@ CueMarker::Pointer CueMarker::markerWithMemoryAt(const byte* id3TagStart)
 
     NXA_ASSERT_TRUE(*String::stringWith(reinterpret_cast<const character*>(tagStruct->tag)) == "CUE");
 
-    return CueMarker::markerWithLabelPositionAndIndex(String::stringWith(reinterpret_cast<const character*>(tagStruct->label)),
-                                                      Platform::bigEndianUInteger32ValueAt(tagStruct->position),
-                                                      Platform::bigEndianUInteger16ValueAt(tagStruct->index));
+    return CueMarker::markerWithLabelPositionIndexAndColor(String::stringWith(reinterpret_cast<const character*>(tagStruct->label)),
+                                                           Platform::bigEndianUInteger32ValueAt(tagStruct->position),
+                                                           Platform::bigEndianUInteger16ValueAt(tagStruct->index),
+                                                           tagStruct->color[1],
+                                                           tagStruct->color[2],
+                                                           tagStruct->color[3]);
 }
 
-CueMarker::Pointer CueMarker::markerWithLabelPositionAndIndex(const String& label,
-                                                              uinteger32 positionInMilliseconds,
-                                                              uinteger16 index)
+CueMarker::Pointer CueMarker::markerWithLabelPositionIndexAndColor(const String& label,
+                                                                   uinteger32 positionInMilliseconds,
+                                                                   uinteger16 index,
+                                                                   byte colorRedComponent,
+                                                                   byte colorGreenComponent,
+                                                                   byte colorBlueComponent)
 {
     auto newMarker = CueMarker::makeShared();
     newMarker->internal->positionInMilliseconds = positionInMilliseconds;
     newMarker->internal->index = index;
     newMarker->internal->label = label.pointer();
+    newMarker->internal->colorRedComponent = colorRedComponent;
+    newMarker->internal->colorGreenComponent = colorGreenComponent;
+    newMarker->internal->colorBlueComponent = colorBlueComponent;
 
     return newMarker;
 }
 
 CueMarker::Pointer CueMarker::markerWith(const CueMarker&other)
 {
-    return CueMarker::markerWithLabelPositionAndIndex(other.label(), other.positionInMilliseconds(), other.index());
+    return CueMarker::markerWithLabelPositionIndexAndColor(other.label(),
+                                                           other.positionInMilliseconds(),
+                                                           other.index(),
+                                                           other.colorRedComponent(),
+                                                           other.colorGreenComponent(),
+                                                           other.colorBlueComponent());
 }
 
 #pragma mark Operators
@@ -77,7 +91,10 @@ bool CueMarker::operator==(const CueMarker& other) const
 
     return (this->label() == other.label()) &&
            (this->positionInMilliseconds() == other.positionInMilliseconds()) &&
-           (this->index() == other.index());
+           (this->index() == other.index() &&
+           (this->colorRedComponent() == other.colorRedComponent()) &&
+           (this->colorGreenComponent() == other.colorGreenComponent()) &&
+           (this->colorBlueComponent() == other.colorBlueComponent()));
 }
 
 #pragma mark Instance Methods
@@ -97,6 +114,21 @@ const String& CueMarker::label(void) const
     return internal->label;
 }
 
+byte CueMarker::colorRedComponent(void) const
+{
+    return internal->colorRedComponent;
+}
+
+byte CueMarker::colorGreenComponent(void) const
+{
+    return internal->colorGreenComponent;
+}
+
+byte CueMarker::colorBlueComponent(void) const
+{
+    return internal->colorBlueComponent;
+}
+
 void CueMarker::addId3TagTo(Blob& data) const
 {
     SeratoCueTagStruct header;
@@ -106,7 +138,10 @@ void CueMarker::addId3TagTo(Blob& data) const
     Platform::writeBigEndianUInteger32ValueAt(static_cast<uinteger32>(size), header.size);
     Platform::writeBigEndianUInteger16ValueAt(this->index(), header.index);
     Platform::writeBigEndianUInteger32ValueAt(this->positionInMilliseconds(), header.position);
-    Platform::writeBigEndianUInteger32ValueAt(0, header.color);
+    header.color[0] = 0;
+    header.color[1] = this->colorRedComponent();
+    header.color[2] = this->colorGreenComponent();
+    header.color[3] = this->colorBlueComponent();
     header.loop_enabled = 0;
     header.loop_locked = 0;
 

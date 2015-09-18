@@ -39,6 +39,8 @@ TrackFile::TrackFile(const String& path, const TagLibFilePointer& newFile) :
                      trackFilePath(path.pointer()),
                      file(newFile),
                      markersWereIgnored(false),
+                     markersWereModified(false),
+                     metadataWasModified(false),
                      cueMarkers(Serato::CueMarker::Array::array()),
                      loopMarkers(Serato::LoopMarker::Array::array()),
                      gridMarkers(Serato::GridMarker::Array::array()),
@@ -123,6 +125,7 @@ void TrackFile::readMarkersV2FromBase64String(const byte* markerV2Data, count to
 void TrackFile::addGridMarker(Serato::GridMarker& gridMarker)
 {
     this->gridMarkers->append(gridMarker.pointer());
+    this->markersWereModified = true;
 }
 
 void TrackFile::readGridMarkersFrom(const byte* gridMarkerData)

@@ -28,4 +28,7 @@ using namespace NxA::Serato::Internal;
 LoopMarker::LoopMarker() : startPositionInMilliseconds(0),
                            endPositionInMilliseconds(0),
                            index(0),
-                           label(String::string()) { }
+                           label(String::string()),
+                           colorRedComponent(0),
+                           colorGreenComponent(0),
+                           colorBlueComponent(0) { }

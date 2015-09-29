@@ -29,7 +29,9 @@
 
 // -- Generated internal implementation ommitted because this class does not use the default contructor.
 
-using namespace NxA;
+using NxA::String;
+using NxA::uinteger32;
+
 using namespace NxA::Serato::Internal;
 
 #pragma mark Constants

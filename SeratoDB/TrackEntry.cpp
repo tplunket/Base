@@ -63,7 +63,7 @@ boolean TrackEntry::hasParentCrate(void) const
     return internal->parentCrate.isValid();
 }
 
-Crate& TrackEntry::parentCrate(void)
+NxA::Serato::Crate& TrackEntry::parentCrate(void)
 {
     return *(internal->parentCrate.pointer());
 }

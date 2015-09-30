@@ -19,8 +19,11 @@
 #include "Tags/VersionTag.hpp"
 #include "Base/Test.hpp"
 
+using NxA::byte;
+using NxA::Blob;
+using NxA::String;
+
 using namespace testing;
-using namespace NxA;
 using namespace NxA::Serato;
 
 NXA_CONTAINS_TEST_SUITE_NAMED(SeratoDB_ObjectTag_Tests);

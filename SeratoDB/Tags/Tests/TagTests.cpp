@@ -12,8 +12,9 @@
 #include "Tags/Tag.hpp"
 #include "Base/Test.hpp"
 
+using NxA::byte;
+
 using namespace testing;
-using namespace NxA;
 using namespace NxA::Serato;
 
 NXA_CONTAINS_TEST_SUITE_NAMED(SeratoDB_Tag_Tests);

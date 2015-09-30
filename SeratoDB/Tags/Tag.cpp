@@ -15,7 +15,10 @@
 
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_PURE_VIRTUAL_CLASS_WITH_PARENT(NxA::Serato, Tag, Object);
 
-using namespace NxA;
+using NxA::byte;
+using NxA::count;
+using NxA::uinteger32;
+
 using namespace NxA::Serato;
 
 #pragma mark Class Methods

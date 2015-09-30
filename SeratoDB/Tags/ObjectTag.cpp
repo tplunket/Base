@@ -17,7 +17,10 @@
 
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, ObjectTag, Tag);
 
-using namespace NxA;
+using NxA::String;
+using NxA::boolean;
+using NxA::count;
+
 using namespace NxA::Serato;
 
 #pragma mark Factory Methods

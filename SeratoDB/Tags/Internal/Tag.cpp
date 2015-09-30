@@ -21,7 +21,9 @@
 
 #include "Tags/Internal/Tag.hpp"
 
-using namespace NxA;
+using NxA::count;
+using NxA::byte;
+
 using namespace NxA::Serato::Internal;
 
 #pragma mark Constructors & Destructors

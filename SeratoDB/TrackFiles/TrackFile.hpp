@@ -49,7 +49,7 @@ namespace NxA { namespace Serato {
         virtual String::Pointer bpm(void) const = 0;
         virtual count trackNumber(void) const;
 
-        virtual count size(void) const;
+        virtual count audioDataSizeInBytes(void) const;
         virtual uinteger32 lengthInMilliseconds(void) const;
         virtual uinteger32 bitRateInKiloBitsPerSecond(void) const;
         virtual boolean hasBitDepth(void) const;

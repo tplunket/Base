@@ -146,6 +146,25 @@ namespace NxA {
             this->push_back(object.pointer());
         }
 
+        const T& firstObject(void) const
+        {
+            NXA_ASSERT_TRUE(this->length() != 0);
+            return *(this->std::vector<NxA::Pointer<T>>::operator[](0));
+        }
+        T& firstObject(void)
+        {
+            return const_cast<T&>((static_cast<const ArrayContainer<T>&>(*this)).firstObject());
+        }
+        const T& lastObject(void) const
+        {
+            count length = this->length();
+            NXA_ASSERT_TRUE(length != 0);
+            return *(this->std::vector<NxA::Pointer<T>>::operator[](length - 1));
+        }
+        T& lastObject(void)
+        {
+            return const_cast<T&>((static_cast<const ArrayContainer<T>&>(*this)).lastObject());
+        }
         void insertAt(T& object, const_iterator pos)
         {
             this->insert(pos, object.pointer());

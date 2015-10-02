@@ -59,9 +59,9 @@ count TrackFile::trackNumber(void) const
     return internal->tag->track();
 }
 
-count TrackFile::size(void) const
+count TrackFile::audioDataSizeInBytes(void) const
 {
-    return File::sizeOfFileAt(internal->trackFilePath);
+    return ((uinteger64)this->lengthInMilliseconds() * (uinteger64)this->bitRateInKiloBitsPerSecond() * 1024) / 8 / 1000;
 }
 
 uinteger32 TrackFile::lengthInMilliseconds(void) const

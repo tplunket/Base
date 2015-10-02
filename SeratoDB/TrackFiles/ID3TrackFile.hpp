@@ -25,6 +25,7 @@ namespace NxA { namespace Serato {
 
     public:
         #pragma mark Instance Methods
+        virtual String::Pointer releaseDate(void) const;
         virtual boolean hasKey(void) const;
         virtual String::Pointer key(void) const;
         virtual String::Pointer composer(void) const;
@@ -40,6 +41,7 @@ namespace NxA { namespace Serato {
 
         virtual Blob::Pointer artwork(void) const;
 
+        virtual void setReleaseDate(const String& date);
         virtual void setKey(const String& key);
         virtual void setComposer(const String& composer);
         virtual void setGrouping(const String& grouping);

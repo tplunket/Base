@@ -39,6 +39,9 @@ namespace NxA { namespace Serato { namespace Internal {
     constexpr const character* id3RemixerFrameName = "TPE4";
     constexpr const character* id3RatingFrameName = "POPM";
     constexpr const character* id3ArtworkFrameName = "APIC";
+    constexpr const character* id3OriginalReleaseTimeFrameName = "TDOR";
+    constexpr const character* id3RecordingTimeFrameName = "TDRC";
+    constexpr const character* id3ReleaseTimeFrameName = "TDRL";
 
     constexpr const character* id3MarkersFrameDescription = "Serato Markers_";
 

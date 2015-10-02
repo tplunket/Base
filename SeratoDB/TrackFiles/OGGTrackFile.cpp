@@ -50,6 +50,11 @@ OGGTrackFile::Pointer OGGTrackFile::fileWithFileAt(const String& path, TrackFile
 
 #pragma mark Instance Methods
 
+String::Pointer OGGTrackFile::releaseDate(void) const
+{
+    return internal->stringValueForFieldNamed(Internal::oggDateFieldName);
+}
+
 boolean OGGTrackFile::hasKey(void) const
 {
     return false;
@@ -109,6 +114,12 @@ Blob::Pointer OGGTrackFile::artwork(void) const
 {
     // -- TODO: To be implemented.
     return Blob::blob();
+}
+
+void OGGTrackFile::setReleaseDate(const String& date)
+{
+    internal->setStringValueForFieldNamed(date, Internal::oggDateFieldName);
+    internal->metadataWasModified = true;
 }
 
 void OGGTrackFile::setKey(const String& key)

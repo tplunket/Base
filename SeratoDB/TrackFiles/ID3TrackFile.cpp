@@ -22,6 +22,26 @@ using namespace NxA::Serato;
 
 #pragma mark Instance Methods
 
+String::Pointer ID3TrackFile::releaseDate(void) const
+{
+    auto date = internal->stringValueForFrameNamed(Internal::id3ReleaseTimeFrameName);
+    if (!date->length()) {
+        date = internal->stringValueForFrameNamed(Internal::id3OriginalReleaseTimeFrameName);
+        if (!date->length()) {
+            date = internal->stringValueForFrameNamed(Internal::id3RecordingTimeFrameName);
+            if (!date->length()) {
+                date = this->TrackFile::releaseDate();
+            }
+        }
+    }
+
+    if (date->length() == 4) {
+        date = String::stringWithFormat("%s-01-01", date->toUTF8());
+    }
+
+    return date;
+}
+
 boolean ID3TrackFile::hasKey(void) const
 {
     return true;
@@ -105,6 +125,14 @@ Blob::Pointer ID3TrackFile::artwork(void) const
     }
 
     return Blob::blob();
+}
+
+void ID3TrackFile::setReleaseDate(const String& date)
+{
+    internal->setStringValueForFrameNamed(date, Internal::id3OriginalReleaseTimeFrameName);
+    internal->setStringValueForFrameNamed(date, Internal::id3RecordingTimeFrameName);
+    internal->setStringValueForFrameNamed(date, Internal::id3ReleaseTimeFrameName);
+    internal->metadataWasModified = true;
 }
 
 void ID3TrackFile::setKey(const String& key)

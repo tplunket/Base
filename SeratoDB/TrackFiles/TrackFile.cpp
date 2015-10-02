@@ -98,9 +98,9 @@ uinteger32 TrackFile::sampleRateInSamplesPerSecond(void) const
     return audioProperties->sampleRate();
 }
 
-String::Pointer TrackFile::yearReleased(void) const
+String::Pointer TrackFile::releaseDate(void) const
 {
-    return String::stringWithFormat("%04d", internal->file->tag()->year());
+    return String::stringWithFormat("%04d-01-01", internal->file->tag()->year());
 }
 
 const CueMarker::Array& TrackFile::cueMarkers(void) const
@@ -154,9 +154,10 @@ void TrackFile::setTrackNumber(count trackNumber)
     internal->metadataWasModified = true;
 }
 
-void TrackFile::setYearReleased(const String& year)
+void TrackFile::setReleaseDate(const String& date)
 {
-    internal->tag->setYear(::atoi(year.toUTF8()));
+    auto components = date.splitBySeperator('-');
+    internal->tag->setYear(::atoi(components->firstObject().toUTF8()));
     internal->metadataWasModified = true;
 }
 

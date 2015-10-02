@@ -60,6 +60,31 @@ FLACTrackFile::Pointer FLACTrackFile::fileWithFileAt(const String& path, TrackFi
 
 #pragma mark Instance Methods
 
+String::Pointer FLACTrackFile::releaseDate(void) const
+{
+    if (internal->oggComment) {
+        return Internal::OGGTrackFile::stringValueForFieldNamedInComment(Internal::oggDateFieldName, internal->oggComment);
+    }
+    else {
+        auto date = Internal::ID3TrackFile::stringValueForFrameNamedInTag(Internal::id3ReleaseTimeFrameName, internal->id3v2Tag);
+        if (!date->length()) {
+            date = Internal::ID3TrackFile::stringValueForFrameNamedInTag(Internal::id3OriginalReleaseTimeFrameName, internal->id3v2Tag);
+            if (!date->length()) {
+                date = Internal::ID3TrackFile::stringValueForFrameNamedInTag(Internal::id3RecordingTimeFrameName, internal->id3v2Tag);
+                if (!date->length()) {
+                    date = this->TrackFile::releaseDate();
+                }
+            }
+        }
+
+        if (date->length() == 4) {
+            date = String::stringWithFormat("%s-01-01", date->toUTF8());
+        }
+        
+        return date;
+    }
+}
+
 boolean FLACTrackFile::hasKey(void) const
 {
     return internal->id3v2Tag != nullptr;
@@ -174,6 +199,20 @@ Blob::Pointer FLACTrackFile::artwork(void) const
 {
     // -- TODO: To be implemented.
     return Blob::blob();
+}
+
+void FLACTrackFile::setReleaseDate(const String& date)
+{
+    if (internal->oggComment) {
+        Internal::OGGTrackFile::setStringValueForFieldNamedInComment(date, Internal::oggDateFieldName, internal->oggComment);
+    }
+    else {
+        Internal::ID3TrackFile::setStringValueForFrameNamedInTag(date, Internal::id3OriginalReleaseTimeFrameName, internal->id3v2Tag);
+        Internal::ID3TrackFile::setStringValueForFrameNamedInTag(date, Internal::id3RecordingTimeFrameName, internal->id3v2Tag);
+        Internal::ID3TrackFile::setStringValueForFrameNamedInTag(date, Internal::id3ReleaseTimeFrameName, internal->id3v2Tag);
+    }
+
+    internal->metadataWasModified = true;
 }
 
 void FLACTrackFile::setKey(const String& key)

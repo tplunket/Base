@@ -35,6 +35,7 @@ namespace NxA { namespace Serato { namespace Internal {
     static const character* oggBpmFieldName = "BPM";
     static const character* oggRecordLabelFieldName = "LABEL";
     static const character* oggRemixerFieldName = "REMIXER";
+    static const character* oggDateFieldName = "DATE";
 
     struct OGGTrackFile : public TrackFile {
         NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTORS_FOR(NxA::Serato, OGGTrackFile);

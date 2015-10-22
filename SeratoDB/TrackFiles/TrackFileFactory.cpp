@@ -32,7 +32,7 @@ TrackFileFactory::AudioFileType TrackFileFactory::audioFileTypeForPath(const Str
     else if (trackFilePath.hasPostfix(".mp3")) {
         return AudioFileType::MP3;
     }
-    else if (trackFilePath.hasPostfix(".m4a") || trackFilePath.hasPostfix(".mp4")) {
+    else if (trackFilePath.hasPostfix(".m4a") || trackFilePath.hasPostfix(".mp4") || trackFilePath.hasPostfix("m4v")) {
         auto file = std::make_shared<TagLib::MP4::File>(trackFilePath.toUTF8());
         if (!file->isValid()) {
             return AudioFileType::Unknown;

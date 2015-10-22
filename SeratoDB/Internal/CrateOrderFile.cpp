@@ -25,7 +25,7 @@
 #include <errno.h>
 #include <dirent.h>
 
-// -- Generated internal implementation ommitted because this class does not use the default contructor.
+// -- Generated internal implementation omitted because this class does not use the default contructor.
 
 using namespace NxA;
 using namespace NxA::Serato::Internal;

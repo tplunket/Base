@@ -37,6 +37,7 @@ namespace NxA { namespace Serato { namespace Internal {
 
         #pragma mark Constructors & Destructors
         Database(const String& path,
+                 const String& volume,
                  Serato::CrateOrderFile& usingCrateOrderFile);
 
         #pragma mark Class Methods
@@ -47,6 +48,7 @@ namespace NxA { namespace Serato { namespace Internal {
 
         #pragma mark Instance Variables
         String::PointerToConst databaseFilePath;
+        String::PointerToConst databaseVolume;
         Serato::Track::Array::Pointer tracks;
         Serato::Tag::ArrayOfConst::Pointer otherTags;
 

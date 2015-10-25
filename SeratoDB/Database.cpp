@@ -28,12 +28,11 @@ static const char* databaseFileCurrentVersionString = "2.0/Serato Scratch LIVE D
 
 #pragma mark Factory Methods
 
-Database::Pointer Database::databaseWithFileAt(const String& seratoFolderPath)
+Database::Pointer Database::databaseWithFileAndVolume(const String& seratoFolderPath, const String& volume)
 {
     auto crateOrderFile = CrateOrderFile::fileWithSeratoFolderInRootFolder(seratoFolderPath,
                                                                            String::string());
-    auto internalObject = Internal::Database::Pointer(std::make_shared<Internal::Database>(databaseFilePathForSeratoFolder(seratoFolderPath),
-                                                                                           crateOrderFile));
+    auto internalObject = Internal::Database::Pointer(std::make_shared<Internal::Database>(databaseFilePathForSeratoFolder(seratoFolderPath), volume, crateOrderFile));
     auto newDatabase = Database::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
 
     auto databaseFile = File::readFileAt(newDatabase->internal->databaseFilePath);
@@ -141,6 +140,11 @@ Track::Array::Pointer Database::removeAndReturnTracks(void)
     internal->tracks = Track::Array::array();
 
     return tracks;
+}
+
+NxA::String::PointerToConst Database::volume(void) const
+{
+    return internal->databaseVolume;
 }
 
 void Database::removeTrackEntry(TrackEntry& trackEntry)

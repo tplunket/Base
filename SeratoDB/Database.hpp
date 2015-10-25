@@ -27,7 +27,8 @@ namespace NxA { namespace Serato {
 
     public:
         #pragma mark Factory Methods
-        static Database::Pointer databaseWithFileAt(const String& seratoFolderPath);
+        static Database::Pointer databaseWithFileAndVolume(const String& seratoFolderPath,
+                                                           const String& volume);
 
         #pragma mark Class Methods
         static String::Pointer versionAsStringForDatabaseIn(const String& seratoFolderPath);
@@ -42,6 +43,7 @@ namespace NxA { namespace Serato {
         Crate& rootCrate(void) const;
         const NxA::ArrayContainer<Track>& tracks(void) const;
         NxA::Pointer<NxA::ArrayContainer<Track>> removeAndReturnTracks(void);
+        NxA::String::PointerToConst volume(void) const;
 
         void removeTrackEntry(TrackEntry& trackEntry);
         void removeCrate(Crate& crate);

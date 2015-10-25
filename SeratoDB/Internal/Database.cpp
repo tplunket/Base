@@ -27,9 +27,10 @@ using namespace NxA::Serato::Internal;
 
 #pragma mark Constructors & Destructors
 
-Database::Database(const String& path,
+Database::Database(const String& path, const String& volume,
                    Serato::CrateOrderFile& usingCrateOrderFile) :
                    databaseFilePath(path.pointer()),
+                   databaseVolume(volume.pointer()),
                    tracks(Serato::Track::Array::array()),
                    otherTags(Serato::Tag::ArrayOfConst::array()),
                    crateFilesToDelete(String::Array::array()),
@@ -64,7 +65,7 @@ void Database::debugListCrate(Serato::Crate& crate,
 
 void Database::storeTrackTag(Serato::ObjectTag& tag)
 {
-    this->tracks->append(Serato::Track::trackWithTagOnVolume(tag, String::stringWith("")));
+    this->tracks->append(Serato::Track::trackWithTagOnVolume(tag, databaseVolume));
 }
 
 void Database::storeOtherTag(const Serato::Tag& tag)

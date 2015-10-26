@@ -46,6 +46,9 @@ namespace NxA { namespace Serato { namespace Internal {
                                    const String& spacing);
 #endif
 
+        #pragma mark Constants
+        static const char* databaseFileCurrentVersionString;
+
         #pragma mark Instance Variables
         String::PointerToConst databaseFilePath;
         String::PointerToConst databaseVolume;
@@ -59,6 +62,7 @@ namespace NxA { namespace Serato { namespace Internal {
         boolean databaseIsValid;
 
         #pragma mark Instance Methods
+        void parseDatabaseFile(void);
         void storeTrackTag(Serato::ObjectTag& tag);
         void storeOtherTag(const Serato::Tag& tag);
     };

@@ -29,6 +29,9 @@ namespace NxA { namespace Serato {
         #pragma mark Factory Methods
         static Database::Pointer databaseWithFileAndVolume(const String& seratoFolderPath,
                                                            const String& volume);
+        static Database::Pointer databaseWithFileVolumeAndRootCrate(const String& seratoFolderPath,
+                                                                    const String& volume,
+                                                                    Crate& rootCrate);
 
         #pragma mark Class Methods
         static String::Pointer versionAsStringForDatabaseIn(const String& seratoFolderPath);

@@ -69,7 +69,7 @@ uinteger32 TrackFile::lengthInMilliseconds(void) const
     auto audioProperties = internal->file->audioProperties();
     NXA_ASSERT_NOT_NULL(audioProperties);
 
-    return audioProperties->length() * 1000;
+    return audioProperties->lengthInMilliseconds();
 }
 
 uinteger32 TrackFile::bitRateInKiloBitsPerSecond(void) const

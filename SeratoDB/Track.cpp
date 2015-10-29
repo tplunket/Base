@@ -47,7 +47,57 @@ Track::Pointer Track::trackWithFileAtOnVolume(const String& trackFilePath, const
 
     auto trackTag = ObjectTag::tagWithIdentifierAndValue(trackObjectTagIdentifier, tags);
     auto internalObject = Internal::Track::Pointer(std::make_shared<Internal::Track>(trackTag, locatedOnVolumePath));
+
     auto newTrack = Track::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
+    newTrack->internal->setBooleanForSubTagForIdentifier(false, trackBeatGridIsLockedTagIdentifier);
+    newTrack->internal->setBooleanForSubTagForIdentifier(false, trackIsCorruptedTagIdentifier);
+    newTrack->internal->setBooleanForSubTagForIdentifier(true, trackMetadataWasReadTagIdentifier);
+    newTrack->internal->setBooleanForSubTagForIdentifier(false, trackIsReadOnlyTagIdentifier);
+    newTrack->internal->setBooleanForSubTagForIdentifier(false, trackIsFromItunesTagIdentifier);
+    newTrack->internal->setBooleanForSubTagForIdentifier(false, trackLoopingTagIdentifier);
+    newTrack->internal->setBooleanForSubTagForIdentifier(false, trackFileIsMissingTagIdentifier);
+    newTrack->internal->setBooleanForSubTagForIdentifier(false, trackWasRecentlyPlayedTagIdentifier);
+    newTrack->internal->setBooleanForSubTagForIdentifier(false, trackFileTypeIsUnsuportedTagIdentifier);
+    newTrack->internal->setBooleanForSubTagForIdentifier(false, trackIsWhiteLabelTagIdentifier);
+    newTrack->internal->setBooleanForSubTagForIdentifier(false, trackIsAccessControlledWhiteLabelTagIdentifier);
+    newTrack->internal->setUInt32ForSubTagForIdentifier(0, trackLabelColorTagIdentifier);
+
+    const character *fileTypeString = nullptr;
+
+    auto fileType = TrackFileFactory::audioFileTypeForPath(trackFilePath);
+    switch (fileType) {
+        case TrackFileFactory::AIFF: {
+            fileTypeString = "aiff";
+            break;
+        }
+        case TrackFileFactory::MP3: {
+            fileTypeString = "mp3";
+            break;
+        }
+        case TrackFileFactory::WAV: {
+            fileTypeString = "wave";
+            break;
+        }
+        case TrackFileFactory::OGG: {
+            fileTypeString = "oggvorbis";
+            break;
+        }
+        case TrackFileFactory::AAC:
+        case TrackFileFactory::ALAC: {
+            fileTypeString = "quicktime";
+            break;
+        }
+        case TrackFileFactory::FLAC: {
+            fileTypeString = "flac";
+            break;
+        }
+        default: {
+            fileTypeString = "unknown";
+        }
+    }
+
+    newTrack->internal->setStringForSubTagForIdentifier(String::stringWith(fileTypeString), trackFileTypeTagIdentifier);
+
     newTrack->internal->needsToUpdateDatabaseFile = true;
 
     return newTrack;

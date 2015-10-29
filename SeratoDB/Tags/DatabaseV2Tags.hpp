@@ -23,7 +23,7 @@ namespace NxA { namespace Serato {
     constexpr uinteger32 trackFilePathTagIdentifier                     = 'pfil';
     constexpr uinteger32 databaseDirectoryPathTagIdentifier             = 'pdir';
     constexpr uinteger32 databaseVideoFilePathTagIdentifier             = 'pvid';
-    constexpr uinteger32 databaseFileTypeTagIdentifier                  = 'ttyp';
+    constexpr uinteger32 trackFileTypeTagIdentifier                     = 'ttyp';
     constexpr uinteger32 trackTitleTagIdentifier                        = 'tsng';
     constexpr uinteger32 trackArtistTagIdentifier                       = 'tart';
     constexpr uinteger32 trackAlbumTagIdentifier                        = 'talb';
@@ -53,7 +53,7 @@ namespace NxA { namespace Serato {
     constexpr uinteger32 trackSizeTagIdentifier                         = 'ufsb';
     constexpr uinteger32 trackLastAnalyzedVersionTagIdentifier          = 'sbav';
     constexpr uinteger32 trackMetadataWasReadTagIdentifier              = 'bhrt';
-    constexpr uinteger32 trackIsMissingTagIdentifier                    = 'bmis';
+    constexpr uinteger32 trackFileIsMissingTagIdentifier                = 'bmis';
     constexpr uinteger32 trackWasRecentlyPlayedTagIdentifier            = 'bply';
     constexpr uinteger32 trackLoopingTagIdentifier                      = 'blop';
     constexpr uinteger32 trackIsFromItunesTagIdentifier                 = 'bitu';
@@ -62,6 +62,6 @@ namespace NxA { namespace Serato {
     constexpr uinteger32 trackIsCorruptedTagIdentifier                  = 'bcrt';
     constexpr uinteger32 trackIsWhiteLabelTagIdentifier                 = 'bwlb';
     constexpr uinteger32 trackIsAccessControlledWhiteLabelTagIdentifier = 'bwll';
-    constexpr uinteger32 trackIsUnsuportedTagIdentifier                 = 'buns';
+    constexpr uinteger32 trackFileTypeIsUnsuportedTagIdentifier         = 'buns';
     constexpr uinteger32 trackBeatGridIsLockedTagIdentifier             = 'bbgl';
 } }

@@ -312,7 +312,7 @@ void Track::setLengthInMilliseconds(uinteger32 length)
     milliseconds *= 60;
     milliseconds /= 1000;
 
-    auto lengthString = String::stringWithFormat("%02d:%02d.%02d'\n", minutes, seconds, milliseconds);
+    auto lengthString = String::stringWithFormat("%02d:%02d.%02d", minutes, seconds, milliseconds);
     internal->setStringForSubTagForIdentifier(lengthString, trackLengthTagIdentifier);
 
     internal->needsToUpdateDatabaseFile = true;

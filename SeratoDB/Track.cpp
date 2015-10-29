@@ -31,9 +31,8 @@ Track::Pointer Track::trackWithTagOnVolume(ObjectTag& trackTag, const String& lo
     auto newTrack = Track::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
 
 #if NXA_PRINT_DEBUG_INFO
-    printf("----------------------------------------\n");
-    auto trackFile = TrackFileFactory::trackFileForPath(newTrack->internal->trackFilePath());
-    Internal::Track::debugPrint(*newTrack, *trackFile);
+    printf("Reading track ----------------------------------------\n");
+    Track::debugPrint(*newTrack);
 #endif
 
     return newTrack;
@@ -53,6 +52,58 @@ Track::Pointer Track::trackWithFileAtOnVolume(const String& trackFilePath, const
 
     return newTrack;
 }
+
+#pragma mark Class Methods
+
+#if NXA_PRINT_DEBUG_INFO
+void Track::debugPrintString(const String& text, const String& name)
+{
+    printf("%s '%s'\n", name.toUTF8(), text.toUTF8());
+}
+
+void Track::debugPrintUint(uinteger32 value, const String& name)
+{
+    printf("%s '%d'\n", name.toUTF8(), value);
+}
+
+void Track::debugPrintDate(timestamp value, const String& name)
+{
+    char* stringVersion = ctime(&value);
+    printf("%s %s", name.toUTF8(), stringVersion);
+}
+
+void Track::debugPrint(const Serato::Track& track)
+{
+    track.internal->trackTag->debugPrint();
+
+    Track::debugPrintUint(static_cast<uinteger32>(track.size()), String::stringWith("size"));
+    Track::debugPrintDate(track.dateModifiedInSecondsSinceJanuary1st1970(), String::stringWith("datemodified"));
+    Track::debugPrintDate(track.dateAddedInSecondsSinceJanuary1st1970(), String::stringWith("dateadded"));
+
+    Track::debugPrintString(track.title(), String::stringWith("title"));
+    Track::debugPrintString(track.artist(), String::stringWith("artist"));
+    Track::debugPrintString(track.album(), String::stringWith("album"));
+    Track::debugPrintString(track.comments(), String::stringWith("comments"));
+    Track::debugPrintString(track.genre(), String::stringWith("genre"));
+    Track::debugPrintString(track.grouping(), String::stringWith("grouping"));
+    Track::debugPrintString(track.recordLabel(), String::stringWith("recordlabel"));
+    Track::debugPrintString(track.remixer(), String::stringWith("remixer"));
+    Track::debugPrintString(track.composer(), String::stringWith("composer"));
+    Track::debugPrintString(track.key(), String::stringWith("key"));
+    Track::debugPrintString(track.year(), String::stringWith("year"));
+    Track::debugPrintString(track.length(), String::stringWith("length"));
+    Track::debugPrintString(track.bitRate(), String::stringWith("bitrate"));
+    Track::debugPrintString(track.sampleRate(), String::stringWith("samplerate"));
+    Track::debugPrintString(track.bpm(), String::stringWith("bpm"));
+    Track::debugPrintUint((uinteger32)track.trackNumber(), String::stringWith("tracknumber"));
+    Track::debugPrintUint((uinteger32)track.discNumber(), String::stringWith("discnumber"));
+
+    printf("Found %ld cue markers, %ld grid markers and %ld loop markers.\n",
+           track.cueMarkers().length(),
+           track.gridMarkers().length(),
+           track.loopMarkers().length());
+}
+#endif
 
 #pragma mark Operators
 

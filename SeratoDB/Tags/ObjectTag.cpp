@@ -28,8 +28,14 @@ ObjectTag::Pointer ObjectTag::tagWithMemoryAt(const byte* tagAddress)
     auto tagData = Internal::Tag::dataForTagAt(tagAddress);
     auto subTags = TagFactory::parseTagsAt(tagData, dataSize);
 
-    return ObjectTag::tagWithIdentifierAndValue(Tag::identifierForTagAt(tagAddress),
-                                                subTags);
+    auto result = ObjectTag::tagWithIdentifierAndValue(Tag::identifierForTagAt(tagAddress),
+                                                       subTags);
+
+#if NXA_PRINT_DEBUG_INFO
+    result->debugPrint();
+#endif
+
+    return result;
 }
 
 ObjectTag::Pointer ObjectTag::tagWithIdentifierAndValue(uinteger32 identifier, const Tag::Array& content)
@@ -76,6 +82,21 @@ bool ObjectTag::operator==(const ObjectTag& other) const
 }
 
 #pragma mark Instance Methods
+
+#if NXA_PRINT_DEBUG_INFO
+void ObjectTag::debugPrint(void) const
+{
+    printf("Found identifiers:\n");
+    for (auto& identifierAndTag : *(internal->subTagForIdentifier)) {
+        uinteger32 identifier = identifierAndTag.first;
+        printf("   %c%c%c%c\n",
+               (identifier & 0xFF000000) >> 24,
+               (identifier & 0x00FF0000) >> 16,
+               (identifier & 0x0000FF00) >> 8,
+               (identifier & 0x000000FF));
+    }
+}
+#endif
 
 boolean ObjectTag::hasSubTagForIdentifier(uinteger32 identifier) const
 {

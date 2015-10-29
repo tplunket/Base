@@ -188,10 +188,16 @@ void TrackFile::setGridMarkers(GridMarker::Array& markers)
 void TrackFile::saveChangesIfAny(void)
 {
     if (internal->markersWereModified) {
+#if NXA_PRINT_DEBUG_INFO
+        printf("Writing markers for track file '%s'.\n", this->filePath()->toUTF8());
+#endif
         internal->writeMarkers();
     }
 
     if (internal->metadataWasModified || internal->markersWereModified) {
+#if NXA_PRINT_DEBUG_INFO
+        printf("Saving track file '%s'.\n", this->filePath()->toUTF8());
+#endif
         internal->file->save();
 
         internal->metadataWasModified = false;

@@ -51,56 +51,6 @@ Track::Track(Serato::ObjectTag& tag, const String& rootFolderPath) :
 {
 }
 
-#pragma mark Class Methods
-
-#if NXA_PRINT_DEBUG_INFO
-void Track::debugPrintString(const String& text, const String& name)
-{
-    printf("%s '%s'\n", name.toUTF8(), text.toUTF8());
-}
-
-void Track::debugPrintUint(uinteger32 value, const String& name)
-{
-    printf("%s '%d'\n", name.toUTF8(), value);
-}
-
-void Track::debugPrintDate(timestamp value, const String& name)
-{
-    char* stringVersion = ctime(&value);
-    printf("%s %s", name.toUTF8(), stringVersion);
-}
-
-void Track::debugPrint(const Serato::Track& track, const Serato::TrackFile& trackFile)
-{
-    Track::debugPrintUint(static_cast<uinteger32>(track.size()), String::stringWith("size"));
-    Track::debugPrintDate(track.dateModifiedInSecondsSinceJanuary1st1970(), String::stringWith("datemodified"));
-    Track::debugPrintDate(track.dateAddedInSecondsSinceJanuary1st1970(), String::stringWith("dateadded"));
-
-    Track::debugPrintString(track.title(), String::stringWith("title"));
-    Track::debugPrintString(track.artist(), String::stringWith("artist"));
-    Track::debugPrintString(track.album(), String::stringWith("album"));
-    Track::debugPrintString(track.comments(), String::stringWith("comments"));
-    Track::debugPrintString(track.genre(), String::stringWith("genre"));
-    Track::debugPrintString(track.grouping(), String::stringWith("grouping"));
-    Track::debugPrintString(track.recordLabel(), String::stringWith("recordlabel"));
-    Track::debugPrintString(track.remixer(), String::stringWith("remixer"));
-    Track::debugPrintString(track.composer(), String::stringWith("composer"));
-    Track::debugPrintString(track.key(), String::stringWith("key"));
-    Track::debugPrintString(track.year(), String::stringWith("year"));
-    Track::debugPrintString(track.length(), String::stringWith("length"));
-    Track::debugPrintString(track.bitRate(), String::stringWith("bitrate"));
-    Track::debugPrintString(track.sampleRate(), String::stringWith("samplerate"));
-    Track::debugPrintString(track.bpm(), String::stringWith("bpm"));
-    Track::debugPrintUint((uinteger32)track.trackNumber(), String::stringWith("tracknumber"));
-    Track::debugPrintUint((uinteger32)track.discNumber(), String::stringWith("discnumber"));
-
-    printf("Found %ld cue markers, %ld grid markers and %ld loop markers.\n",
-           trackFile.cueMarkers().length(),
-           trackFile.gridMarkers().length(),
-           trackFile.loopMarkers().length());
-}
-#endif
-
 #pragma mark Instance Methods
 
 const String& Track::stringForSubTagForIdentifier(uinteger32 identifier) const
@@ -261,5 +211,15 @@ void Track::saveToTrackFile(void) const
     trackFile->setGridMarkers(newGridMarkers);
 
     trackFile->saveChangesIfAny();
-}
 
+#if NXA_PRINT_DEBUG_INFO
+    {
+        printf("After saving to track file for '%s' ----------\n", this->trackFilePath()->toUTF8());
+        auto debugtrackFile = TrackFileFactory::trackFileForPath(this->trackFilePath());
+        printf("    Found %ld cue markers, %ld grid markers and %ld loop markers.\n",
+               debugtrackFile->cueMarkers().length(),
+               debugtrackFile->gridMarkers().length(),
+               debugtrackFile->loopMarkers().length());
+    }
+#endif
+}

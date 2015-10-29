@@ -20,8 +20,6 @@
 
 #include <Base/Base.hpp>
 
-#define NXA_PRINT_DEBUG_INFO                0
-
 namespace NxA { namespace Serato {
     NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(Track);
 
@@ -34,6 +32,15 @@ namespace NxA { namespace Serato {
         #pragma mark Factory Methods
         static Track::Pointer trackWithTagOnVolume(ObjectTag& trackTag, const String& locatedOnVolumePath);
         static Track::Pointer trackWithFileAtOnVolume(const String& trackFilePath, const String& locatedOnVolumePath);
+
+        #pragma mark Class Methods
+#if NXA_PRINT_DEBUG_INFO
+        static void debugPrintString(const String& text, const String& name);
+        static void debugPrintUint(uinteger32 value, const String& name);
+        static void debugPrintTimeFromMilliseconds(uinteger32 value, const String& name);
+        static void debugPrintDate(timestamp value, const String& name);
+        static void debugPrint(const Serato::Track& track);
+#endif
 
         #pragma mark Operators
         bool operator==(const Track& other) const;

@@ -38,15 +38,6 @@ namespace NxA { namespace Serato { namespace Internal {
         #pragma mark Constructors & Destructors
         Track(Serato::ObjectTag& tag, const String& rootFolderPath);
 
-        #pragma mark Class Methods
-#if NXA_PRINT_DEBUG_INFO
-        static void debugPrintString(const String& text, const String& name);
-        static void debugPrintUint(uinteger32 value, const String& name);
-        static void debugPrintTimeFromMilliseconds(uinteger32 value, const String& name);
-        static void debugPrintDate(timestamp value, const String& name);
-        static void debugPrint(const Serato::Track& track, const Serato::TrackFile& trackFile);
-#endif
-
         #pragma mark Instance Variables
         Serato::ObjectTag::Pointer trackTag;
         String::PointerToConst rootFolder;

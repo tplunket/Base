@@ -471,8 +471,11 @@ void Track::setDateModifiedInSecondsSinceJanuary1st1970(timestamp dateModified)
 
 void Track::setDateAddedInSecondsSinceJanuary1st1970(timestamp dateAdded)
 {
+    auto dateAsString = Date::formattedStringWithTimestampAndFormat(dateAdded, "%d-%m-%Y");
+
     // TODO: Should make sure the cast doesn't chop off anything.
     internal->setUInt32ForSubTagForIdentifier(static_cast<uinteger32>(dateAdded), trackDateAddedTagIdentifier);
+    internal->setStringForSubTagForIdentifier(dateAsString, trackDateAddedStringTagIdentifier);
     internal->needsToUpdateDatabaseFile = true;
 }
 

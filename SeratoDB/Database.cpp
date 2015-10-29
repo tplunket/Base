@@ -192,14 +192,11 @@ void Database::saveIfModified(void) const
         }
 
         if (track->needsToUpdateTrackFile()) {
-            printf("Saving modifications to Serato track '%s'.\n", track->title().toUTF8());
             track->saveToTrackFile();
         }
     }
 
     if (needsToUpdateDatabaseFile) {
-        printf("Saving modifications to Serato database file at '%s'.\n", internal->databaseFilePath->toUTF8());
-
         auto outputData = Blob::blob();
 
         auto versionTag = VersionTag::tagWithIdentifierAndValue(databaseVersionTagIdentifier,

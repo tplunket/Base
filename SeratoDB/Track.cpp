@@ -234,101 +234,61 @@ const GridMarker::ArrayOfConst& Track::gridMarkers(void) const
 
 void Track::setTitle(const String& title)
 {
-#if NXA_OUTPUT_DEBUG_METADATA
-    internal->setStringForSubTagForIdentifier(String::stringWithFormat("!%s", title.toUTF8()), trackTitleTagIdentifier);
-#else
     internal->setStringForSubTagForIdentifier(title, trackTitleTagIdentifier);
-#endif
     internal->needsToUpdateDatabaseFile = true;
 }
 
 void Track::setArtist(const String& artist)
 {
-#if NXA_OUTPUT_DEBUG_METADATA
-    internal->setStringForSubTagForIdentifier(String::stringWithFormat("!%s", artist.toUTF8()), trackArtistTagIdentifier);
-#else
     internal->setStringForSubTagForIdentifier(artist, trackArtistTagIdentifier);
-#endif
     internal->needsToUpdateDatabaseFile = true;
 }
 
 void Track::setAlbum(const String& album)
 {
-#if NXA_OUTPUT_DEBUG_METADATA
-    internal->setStringForSubTagForIdentifier(String::stringWithFormat("!%s", album.toUTF8()), trackAlbumTagIdentifier);
-#else
     internal->setStringForSubTagForIdentifier(album, trackAlbumTagIdentifier);
-#endif
     internal->needsToUpdateDatabaseFile = true;
 }
 
 void Track::setGenre(const String& genre)
 {
-#if NXA_OUTPUT_DEBUG_METADATA
-    internal->setStringForSubTagForIdentifier(String::stringWithFormat("!%s", genre.toUTF8()), trackGenreTagIdentifier);
-#else
     internal->setStringForSubTagForIdentifier(genre, trackGenreTagIdentifier);
-#endif
     internal->needsToUpdateDatabaseFile = true;
 }
 
 void Track::setComments(const String& comments)
 {
-#if NXA_OUTPUT_DEBUG_METADATA
-    internal->setStringForSubTagForIdentifier(String::stringWithFormat("!%s", comments.toUTF8()), trackCommentsTagIdentifier);
-#else
     internal->setStringForSubTagForIdentifier(comments, trackCommentsTagIdentifier);
-#endif
     internal->needsToUpdateDatabaseFile = true;
 }
 
 void Track::setGrouping(const String& grouping)
 {
-#if NXA_OUTPUT_DEBUG_METADATA
-    internal->setStringForSubTagForIdentifier(String::stringWithFormat("!%s", grouping.toUTF8()), trackGroupingTagIdentifier);
-#else
     internal->setStringForSubTagForIdentifier(grouping, trackGroupingTagIdentifier);
-#endif
     internal->needsToUpdateDatabaseFile = true;
 }
 
 void Track::setRemixer(const String& remixer)
 {
-#if NXA_OUTPUT_DEBUG_METADATA
-    internal->setStringForSubTagForIdentifier(String::stringWithFormat("!%s", remixer.toUTF8()), trackRemixerTagIdentifier);
-#else
     internal->setStringForSubTagForIdentifier(remixer, trackRemixerTagIdentifier);
-#endif
     internal->needsToUpdateDatabaseFile = true;
 }
 
 void Track::setRecordLabel(const String& recordLabel)
 {
-#if NXA_OUTPUT_DEBUG_METADATA
-    internal->setStringForSubTagForIdentifier(String::stringWithFormat("!%s", recordLabel.toUTF8()), trackLabelTagIdentifier);
-#else
     internal->setStringForSubTagForIdentifier(recordLabel, trackLabelTagIdentifier);
-#endif
     internal->needsToUpdateDatabaseFile = true;
 }
 
 void Track::setComposer(const String& composer)
 {
-#if NXA_OUTPUT_DEBUG_METADATA
-    internal->setStringForSubTagForIdentifier(String::stringWithFormat("!%s", composer.toUTF8()), trackComposerTagIdentifier);
-#else
     internal->setStringForSubTagForIdentifier(composer, trackComposerTagIdentifier);
-#endif
     internal->needsToUpdateDatabaseFile = true;
 }
 
 void Track::setKey(const String& key)
 {
-#if NXA_OUTPUT_DEBUG_METADATA
-    internal->setStringForSubTagForIdentifier(String::stringWithFormat("!%s", key.toUTF8()), trackKeyTagIdentifier);
-#else
     internal->setStringForSubTagForIdentifier(key, trackKeyTagIdentifier);
-#endif
     internal->needsToUpdateDatabaseFile = true;
 }
 
@@ -377,43 +337,27 @@ void Track::setSampleRateInSamplesPerSecond(uinteger32 sampleRate)
 
 void Track::setBpm(const String& bpm)
 {
-#if NXA_OUTPUT_DEBUG_METADATA
-    internal->setStringForSubTagForIdentifier(String::stringWithFormat("%.2f", ::atof(bpm.toUTF8()) + 1.0f), trackBpmTagIdentifier);
-#else
     internal->setStringForSubTagForIdentifier(bpm, trackBpmTagIdentifier);
-#endif
     internal->needsToUpdateDatabaseFile = true;
 }
 
 void Track::setYear(const String& year)
 {
-#if NXA_OUTPUT_DEBUG_METADATA
-    internal->setStringForSubTagForIdentifier(String::stringWithFormat("%4d", ::atoi(year.toUTF8()) + 1), trackYearTagIdentifier);
-#else
     internal->setStringForSubTagForIdentifier(year, trackYearTagIdentifier);
-#endif
     internal->needsToUpdateDatabaseFile = true;
 }
 
 void Track::setTrackNumber(count trackNumber)
 {
-#if NXA_OUTPUT_DEBUG_METADATA
-    internal->setUInt32ForSubTagForIdentifier(static_cast<uinteger32>(this->trackNumber() + 10), trackNumberTagIdentifier);
-#else
     // TODO: Should make sure the cast doesn't chop off anything.
     internal->setUInt32ForSubTagForIdentifier(static_cast<uinteger32>(trackNumber), trackNumberTagIdentifier);
-#endif
     internal->needsToUpdateDatabaseFile = true;
 }
 
 void Track::setDiscNumber(count discNumber)
 {
-#if NXA_OUTPUT_DEBUG_METADATA
-    internal->setUInt32ForSubTagForIdentifier(static_cast<uinteger32>(this->discNumber() + 10), trackDiscNumberTagIdentifier);
-#else
     // TODO: Should make sure the cast doesn't chop off anything.
     internal->setUInt32ForSubTagForIdentifier(static_cast<uinteger32>(discNumber), trackDiscNumberTagIdentifier);
-#endif
     internal->needsToUpdateDatabaseFile = true;
 }
 
@@ -437,18 +381,7 @@ void Track::setCueMarkersWhichWereModifiedOn(CueMarker::ArrayOfConst& markers, t
         internal->readMarkers();
     }
 
-#if NXA_OUTPUT_DEBUG_METADATA
-    auto cueMarkers = CueMarker::ArrayOfConst::array();
-    for (auto& marker : markers) {
-        auto markerCopy = CueMarker::markerWithLabelPositionAndIndex(marker->label(),
-                                                                     marker->positionInMilliseconds() + 1000,
-                                                                     marker->index());
-        cueMarkers->append(markerCopy);
-    }
-    internal->cueMarkers = cueMarkers;
-#else
     internal->cueMarkers = markers.pointer();
-#endif
 
     if (internal->lastMarkersModificationDate < modificationDateInSecondsSince1970) {
         internal->lastMarkersModificationDate = modificationDateInSecondsSince1970;
@@ -461,19 +394,7 @@ void Track::setLoopMarkersWhichWereModifiedOn(LoopMarker::ArrayOfConst& markers,
         internal->readMarkers();
     }
 
-#if NXA_OUTPUT_DEBUG_METADATA
-    auto loopMarkers = LoopMarker::ArrayOfConst::array();
-    for (auto& marker : markers) {
-        auto markerCopy = LoopMarker::markerWithLabelStartEndPositionsAndIndex(marker->label(),
-                                                                               marker->startPositionInMilliseconds() + 1000,
-                                                                               marker->endPositionInMilliseconds() + 1000,
-                                                                               marker->index());
-        loopMarkers->append(markerCopy);
-    }
-    internal->loopMarkers = loopMarkers;
-#else
     internal->loopMarkers = markers.pointer();
-#endif
 
     if (internal->lastMarkersModificationDate < modificationDateInSecondsSince1970) {
         internal->lastMarkersModificationDate = modificationDateInSecondsSince1970;
@@ -486,17 +407,7 @@ void Track::setGridMarkersWhichWereModifiedOn(GridMarker::ArrayOfConst& markers,
         internal->readMarkers();
     }
 
-#if NXA_OUTPUT_DEBUG_METADATA
-    auto gridMarkers = GridMarker::ArrayOfConst::array();
-    for (auto& marker : markers) {
-        auto markerCopy = GridMarker::markerWithPositionAndBeatsPerMinute(marker->positionInSeconds() + 0.2f,
-                                                                          marker->beatsPerMinute() + 1.0f);
-        gridMarkers->append(markerCopy);
-    }
-    internal->gridMarkers = gridMarkers;
-#else
     internal->gridMarkers = markers.pointer();
-#endif
 
     if (internal->lastMarkersModificationDate < modificationDateInSecondsSince1970) {
         internal->lastMarkersModificationDate = modificationDateInSecondsSince1970;

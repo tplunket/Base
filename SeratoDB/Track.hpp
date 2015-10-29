@@ -52,7 +52,7 @@ namespace NxA { namespace Serato {
         const String& recordLabel(void) const;
         const String& composer(void) const;
         const String& key(void) const;
-        const String& size(void) const;
+        count size(void) const;
         const String& length(void) const;
         const String& bitRate(void) const;
         const String& sampleRate(void) const;

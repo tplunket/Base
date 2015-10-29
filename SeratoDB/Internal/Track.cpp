@@ -71,7 +71,7 @@ void Track::debugPrintDate(timestamp value, const String& name)
 
 void Track::debugPrint(const Serato::Track& track, const Serato::TrackFile& trackFile)
 {
-    Track::debugPrintString(track.size(), String::stringWith("size"));
+    Track::debugPrintUint(static_cast<uinteger32>(track.size()), String::stringWith("size"));
     Track::debugPrintDate(track.dateModifiedInSecondsSinceJanuary1st1970(), String::stringWith("datemodified"));
     Track::debugPrintDate(track.dateAddedInSecondsSinceJanuary1st1970(), String::stringWith("dateadded"));
 

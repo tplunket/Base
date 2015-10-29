@@ -433,6 +433,10 @@ void Track::setDateAddedInSecondsSinceJanuary1st1970(timestamp dateAdded)
 
 void Track::setCueMarkersWhichWereModifiedOn(CueMarker::ArrayOfConst& markers, timestamp modificationDateInSecondsSince1970)
 {
+    if (!internal->trackFilemarkersWereRead) {
+        internal->readMarkers();
+    }
+
 #if NXA_OUTPUT_DEBUG_METADATA
     auto cueMarkers = CueMarker::ArrayOfConst::array();
     for (auto& marker : markers) {
@@ -453,6 +457,10 @@ void Track::setCueMarkersWhichWereModifiedOn(CueMarker::ArrayOfConst& markers, t
 
 void Track::setLoopMarkersWhichWereModifiedOn(LoopMarker::ArrayOfConst& markers, timestamp modificationDateInSecondsSince1970)
 {
+    if (!internal->trackFilemarkersWereRead) {
+        internal->readMarkers();
+    }
+
 #if NXA_OUTPUT_DEBUG_METADATA
     auto loopMarkers = LoopMarker::ArrayOfConst::array();
     for (auto& marker : markers) {
@@ -474,6 +482,10 @@ void Track::setLoopMarkersWhichWereModifiedOn(LoopMarker::ArrayOfConst& markers,
 
 void Track::setGridMarkersWhichWereModifiedOn(GridMarker::ArrayOfConst& markers, timestamp modificationDateInSecondsSince1970)
 {
+    if (!internal->trackFilemarkersWereRead) {
+        internal->readMarkers();
+    }
+
 #if NXA_OUTPUT_DEBUG_METADATA
     auto gridMarkers = GridMarker::ArrayOfConst::array();
     for (auto& marker : markers) {

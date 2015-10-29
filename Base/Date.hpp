@@ -22,16 +22,15 @@
 #pragma once
 
 #include "Base/Types.hpp"
-#include "Base/Exception.hpp"
-#include "Base/Assert.hpp"
-#include "Base/Pointer.hpp"
-#include "Base/WeakPointer.hpp"
-#include "Base/Uncopyable.hpp"
 #include "Base/Object.hpp"
 #include "Base/String.hpp"
-#include "Base/ArrayContainer.hpp"
-#include "Base/Map.hpp"
-#include "Base/Blob.hpp"
-#include "Base/File.hpp"
-#include "Base/Platform.hpp"
-#include "Base/Date.hpp"
+
+namespace NxA {
+    class Date : public Object {
+        NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_BASE_CLASS(NxA, Date);
+
+    public:
+        #pragma mark Class Methods
+        static String::Pointer formattedStringWithTimestampAndFormat(timestamp time, const character *format);
+    };
+}

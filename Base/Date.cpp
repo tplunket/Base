@@ -19,19 +19,29 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#pragma once
-
-#include "Base/Types.hpp"
-#include "Base/Exception.hpp"
-#include "Base/Assert.hpp"
-#include "Base/Pointer.hpp"
-#include "Base/WeakPointer.hpp"
-#include "Base/Uncopyable.hpp"
-#include "Base/Object.hpp"
-#include "Base/String.hpp"
-#include "Base/ArrayContainer.hpp"
-#include "Base/Map.hpp"
-#include "Base/Blob.hpp"
-#include "Base/File.hpp"
-#include "Base/Platform.hpp"
 #include "Base/Date.hpp"
+
+#include <iostream>
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdocumentation"
+#pragma clang diagnostic ignored "-Wshorten-64-to-32"
+#include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/date_time/posix_time/posix_time_io.hpp>
+#pragma clang diagnostic pop
+
+using namespace NxA;
+
+#pragma mark Class Methods
+
+String::Pointer Date::formattedStringWithTimestampAndFormat(timestamp time, const character *format)
+{
+    boost::posix_time::time_facet *facet = new boost::posix_time::time_facet(format);
+    static std::locale loc(std::cout.getloc(), facet);
+
+    std::basic_stringstream<char> stream;
+    stream.imbue(loc);
+    stream << boost::posix_time::from_time_t(time);
+
+    return String::stringWith(stream.str().c_str());
+}

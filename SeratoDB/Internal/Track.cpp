@@ -23,6 +23,7 @@
 #include "TrackFiles/TrackFileFactory.hpp"
 #include "Tags/ObjectTag.hpp"
 #include "Tags/TextTag.hpp"
+#include "Tags/BooleanTag.hpp"
 #include "Tags/PathTag.hpp"
 #include "Tags/UInteger32Tag.hpp"
 #include "Tags/DatabaseV2Tags.hpp"
@@ -175,6 +176,21 @@ void Track::setUInt32ForSubTagForIdentifier(uinteger32 value, uinteger32 identif
     else {
         auto& uinteger32Tag = dynamic_cast<Serato::UInteger32Tag&>(trackObjectTag.subTagForIdentifier(identifier));
         uinteger32Tag.setValue(value);
+    }
+
+    this->needsToUpdateDatabaseFile = true;
+}
+
+void Track::setBooleanForSubTagForIdentifier(boolean value, uinteger32 identifier)
+{
+    auto& trackObjectTag = *this->trackTag;
+    if (!trackObjectTag.hasSubTagForIdentifier(identifier)) {
+        auto booleanTag = Serato::BooleanTag::tagWithIdentifierAndValue(identifier, value);
+        trackObjectTag.setSubTag(*booleanTag);
+    }
+    else {
+        auto& booleanTag = dynamic_cast<Serato::BooleanTag&>(trackObjectTag.subTagForIdentifier(identifier));
+        booleanTag.setValue(value);
     }
 
     this->needsToUpdateDatabaseFile = true;

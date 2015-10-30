@@ -119,6 +119,9 @@ Blob::Pointer OGGTrackFile::artwork(void) const
 void OGGTrackFile::setReleaseDate(const String& date)
 {
     internal->setStringValueForFieldNamed(date, Internal::oggDateFieldName);
+
+    auto components = date.splitBySeperator('-');
+    internal->setStringValueForFieldNamed(components->firstObject(), Internal::oggYearFieldName);
     internal->metadataWasModified = true;
 }
 

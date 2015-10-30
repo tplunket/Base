@@ -213,6 +213,8 @@ void FLACTrackFile::setReleaseDate(const String& date)
     }
 
     internal->metadataWasModified = true;
+
+    TrackFile::setReleaseDate(date);
 }
 
 void FLACTrackFile::setKey(const String& key)

@@ -133,6 +133,8 @@ void ID3TrackFile::setReleaseDate(const String& date)
     internal->setStringValueForFrameNamed(date, Internal::id3RecordingTimeFrameName);
     internal->setStringValueForFrameNamed(date, Internal::id3ReleaseTimeFrameName);
     internal->metadataWasModified = true;
+
+    TrackFile::setReleaseDate(date);
 }
 
 void ID3TrackFile::setKey(const String& key)

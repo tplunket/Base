@@ -21,6 +21,9 @@ NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, MP4
 namespace NxA { namespace Serato { namespace Internal {
     #pragma mark Constants
     constexpr const character* mp4KeyItemName = "----:com.apple.iTunes:initialkey";
+    constexpr const character* mp4PublisherItemName = "----:com.apple.iTunes:publisher";
+    constexpr const character* mp4LabelItemName = "----:com.apple.iTunes:LABEL";
+
     constexpr const character* mp4ComposerItemName = "\251wrt";
     constexpr const character* mp4GroupingItemName = "\251grp";
     constexpr const character* mp4BpmItemName = "tmpo";
@@ -87,12 +90,12 @@ String::Pointer MP4TrackFile::bpm(void) const
 
 boolean MP4TrackFile::hasRecordLabel(void) const
 {
-    return false;
+    return true;
 }
 
 String::Pointer MP4TrackFile::recordLabel(void) const
 {
-    return String::string();
+    return internal->stringValueForItemNamed(Internal::mp4LabelItemName);
 }
 
 boolean MP4TrackFile::hasRemixer(void) const
@@ -158,7 +161,9 @@ void MP4TrackFile::setBpm(const String& bpm)
 
 void MP4TrackFile::setRecordLabel(const String& recordLabel)
 {
-    // -- This is not supported by MP4 files.
+    internal->setStringValueForItemNamed(recordLabel, Internal::mp4LabelItemName);
+    internal->setStringValueForItemNamed(recordLabel, Internal::mp4PublisherItemName);
+    internal->metadataWasModified = true;
 }
 
 void MP4TrackFile::setRemixer(const String& remixer)

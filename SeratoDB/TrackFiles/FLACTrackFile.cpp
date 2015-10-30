@@ -129,18 +129,6 @@ String::Pointer FLACTrackFile::bpm(void) const
     }
 }
 
-uinteger32 FLACTrackFile::lengthInMilliseconds(void) const
-{
-    auto audioProperties = dynamic_cast<const TagLib::FLAC::Properties*>(internal->file->audioProperties());
-    NXA_ASSERT_NOT_NULL(audioProperties);
-
-    auto numberOfFrames = audioProperties->sampleFrames();
-    auto sampleRate = audioProperties->sampleRate();
-
-    uinteger32 numberOfMilliseconds = (static_cast<double>(numberOfFrames) * 1000.0) / static_cast<double>(sampleRate);
-    return numberOfMilliseconds;
-}
-
 boolean FLACTrackFile::hasBitDepth(void) const
 {
     return true;

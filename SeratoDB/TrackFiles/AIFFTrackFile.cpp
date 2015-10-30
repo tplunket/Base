@@ -50,18 +50,6 @@ AIFFTrackFile::Pointer AIFFTrackFile::fileWithFileAt(const String& path, TrackFi
 
 #pragma mark Instance Methods
 
-uinteger32 AIFFTrackFile::lengthInMilliseconds(void) const
-{
-    auto audioProperties = dynamic_cast<const TagLib::RIFF::AIFF::Properties*>(internal->file->audioProperties());
-    NXA_ASSERT_NOT_NULL(audioProperties);
-
-    auto numberOfFrames = audioProperties->sampleFrames();
-    auto sampleRate = audioProperties->sampleRate();
-
-    uinteger32 numberOfMilliseconds = (static_cast<double>(numberOfFrames) * 1000.0) / static_cast<double>(sampleRate);
-    return numberOfMilliseconds;
-}
-
 boolean AIFFTrackFile::hasBitDepth(void) const
 {
     return true;

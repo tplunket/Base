@@ -28,7 +28,6 @@ namespace NxA { namespace Serato {
         static AIFFTrackFile::Pointer fileWithFileAt(const String& path, TrackFile::Flags flags);
 
         #pragma mark Instance Methods
-        virtual uinteger32 lengthInMilliseconds(void) const;
         virtual boolean hasBitDepth(void) const;
         virtual uinteger32 bitDepthInBits(void) const;
     };

@@ -52,7 +52,7 @@ OGGTrackFile::Pointer OGGTrackFile::fileWithFileAt(const String& path, TrackFile
 
 String::Pointer OGGTrackFile::releaseDate(void) const
 {
-    return internal->stringValueForFieldNamed(Internal::oggDateFieldName);
+    return Internal::OGGTrackFile::releaseDateInComment(internal->oggComment);
 }
 
 boolean OGGTrackFile::hasKey(void) const
@@ -118,10 +118,7 @@ Blob::Pointer OGGTrackFile::artwork(void) const
 
 void OGGTrackFile::setReleaseDate(const String& date)
 {
-    internal->setStringValueForFieldNamed(date, Internal::oggDateFieldName);
-
-    auto components = date.splitBySeperator('-');
-    internal->setStringValueForFieldNamed(components->firstObject(), Internal::oggYearFieldName);
+    Internal::OGGTrackFile::setReleaseDateInComment(date, internal->oggComment);
     internal->metadataWasModified = true;
 }
 

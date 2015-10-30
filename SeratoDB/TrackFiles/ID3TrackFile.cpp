@@ -24,19 +24,9 @@ using namespace NxA::Serato;
 
 String::Pointer ID3TrackFile::releaseDate(void) const
 {
-    auto date = internal->stringValueForFrameNamed(Internal::id3ReleaseTimeFrameName);
+    auto date = Internal::ID3TrackFile::releaseDateFromTag(internal->id3v2Tag);
     if (!date->length()) {
-        date = internal->stringValueForFrameNamed(Internal::id3OriginalReleaseTimeFrameName);
-        if (!date->length()) {
-            date = internal->stringValueForFrameNamed(Internal::id3RecordingTimeFrameName);
-            if (!date->length()) {
-                date = this->TrackFile::releaseDate();
-            }
-        }
-    }
-
-    if (date->length() == 4) {
-        date = String::stringWithFormat("%s-01-01", date->toUTF8());
+        date = this->TrackFile::releaseDate();
     }
 
     return date;
@@ -129,9 +119,7 @@ Blob::Pointer ID3TrackFile::artwork(void) const
 
 void ID3TrackFile::setReleaseDate(const String& date)
 {
-    internal->setStringValueForFrameNamed(date, Internal::id3OriginalReleaseTimeFrameName);
-    internal->setStringValueForFrameNamed(date, Internal::id3RecordingTimeFrameName);
-    internal->setStringValueForFrameNamed(date, Internal::id3ReleaseTimeFrameName);
+    Internal::ID3TrackFile::setReleaseDateForTag(date, internal->id3v2Tag);
     internal->metadataWasModified = true;
 
     TrackFile::setReleaseDate(date);

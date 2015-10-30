@@ -63,24 +63,14 @@ FLACTrackFile::Pointer FLACTrackFile::fileWithFileAt(const String& path, TrackFi
 String::Pointer FLACTrackFile::releaseDate(void) const
 {
     if (internal->oggComment) {
-        return Internal::OGGTrackFile::stringValueForFieldNamedInComment(Internal::oggDateFieldName, internal->oggComment);
+        return Internal::OGGTrackFile::releaseDateInComment(internal->oggComment);
     }
     else {
-        auto date = Internal::ID3TrackFile::stringValueForFrameNamedInTag(Internal::id3ReleaseTimeFrameName, internal->id3v2Tag);
+        auto date = Internal::ID3TrackFile::releaseDateFromTag(internal->id3v2Tag);
         if (!date->length()) {
-            date = Internal::ID3TrackFile::stringValueForFrameNamedInTag(Internal::id3OriginalReleaseTimeFrameName, internal->id3v2Tag);
-            if (!date->length()) {
-                date = Internal::ID3TrackFile::stringValueForFrameNamedInTag(Internal::id3RecordingTimeFrameName, internal->id3v2Tag);
-                if (!date->length()) {
-                    date = this->TrackFile::releaseDate();
-                }
-            }
+            date = this->TrackFile::releaseDate();
         }
 
-        if (date->length() == 4) {
-            date = String::stringWithFormat("%s-01-01", date->toUTF8());
-        }
-        
         return date;
     }
 }
@@ -192,17 +182,15 @@ Blob::Pointer FLACTrackFile::artwork(void) const
 void FLACTrackFile::setReleaseDate(const String& date)
 {
     if (internal->oggComment) {
-        Internal::OGGTrackFile::setStringValueForFieldNamedInComment(date, Internal::oggDateFieldName, internal->oggComment);
+        Internal::OGGTrackFile::setReleaseDateInComment(date, internal->oggComment);
     }
     else {
-        Internal::ID3TrackFile::setStringValueForFrameNamedInTag(date, Internal::id3OriginalReleaseTimeFrameName, internal->id3v2Tag);
-        Internal::ID3TrackFile::setStringValueForFrameNamedInTag(date, Internal::id3RecordingTimeFrameName, internal->id3v2Tag);
-        Internal::ID3TrackFile::setStringValueForFrameNamedInTag(date, Internal::id3ReleaseTimeFrameName, internal->id3v2Tag);
+        Internal::ID3TrackFile::setReleaseDateForTag(date, internal->id3v2Tag);
+
+        TrackFile::setReleaseDate(date);
     }
 
     internal->metadataWasModified = true;
-
-    TrackFile::setReleaseDate(date);
 }
 
 void FLACTrackFile::setKey(const String& key)

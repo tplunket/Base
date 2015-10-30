@@ -58,6 +58,19 @@ void OGGTrackFile::setStringValueForFieldNamedInComment(const String& value, con
     oggComment->addField(name, TagLib::String(value.toUTF8()));
 }
 
+String::Pointer OGGTrackFile::releaseDateInComment(TagLib::Ogg::XiphComment* oggComment)
+{
+    return OGGTrackFile::stringValueForFieldNamedInComment(oggDateFieldName, oggComment);
+}
+
+void OGGTrackFile::setReleaseDateInComment(const String& date, TagLib::Ogg::XiphComment* oggComment)
+{
+    OGGTrackFile::setStringValueForFieldNamedInComment(date, oggDateFieldName, oggComment);
+
+    auto components = date.splitBySeperator('-');
+    OGGTrackFile::setStringValueForFieldNamedInComment(components->firstObject(), oggYearFieldName, oggComment);
+}
+
 #pragma mark Instance Methods
 
 String::Pointer OGGTrackFile::stringValueForFieldNamed(const character* name) const

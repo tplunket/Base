@@ -47,6 +47,8 @@ namespace NxA { namespace Serato { namespace Internal {
         #pragma mark Class Methods
         static String::Pointer stringValueForFieldNamedInComment(const character* name, const TagLib::Ogg::XiphComment* oggComment);
         static void setStringValueForFieldNamedInComment(const String& value, const character* name, TagLib::Ogg::XiphComment* oggComment);
+        static String::Pointer releaseDateInComment(TagLib::Ogg::XiphComment* oggComment);
+        static void setReleaseDateInComment(const String& date, TagLib::Ogg::XiphComment* oggComment);
 
         #pragma mark Instance Variables
         TagLib::Ogg::XiphComment* oggComment;

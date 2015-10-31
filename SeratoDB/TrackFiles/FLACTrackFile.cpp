@@ -77,16 +77,17 @@ String::Pointer FLACTrackFile::releaseDate(void) const
 
 boolean FLACTrackFile::hasKey(void) const
 {
-    return internal->id3v2Tag != nullptr;
+    return true;
 }
 
 String::Pointer FLACTrackFile::key(void) const
 {
-    if (internal->id3v2Tag) {
+    if (internal->oggComment) {
+        return Internal::OGGTrackFile::stringValueForFieldNamedInComment(Internal::oggKeyFieldName, internal->oggComment);
+    }
+    else {
         return Internal::ID3TrackFile::stringValueForFrameNamedInTag(Internal::id3KeyFrameName, internal->id3v2Tag);
     }
-
-    return String::string();
 }
 
 String::Pointer FLACTrackFile::composer(void) const
@@ -195,10 +196,14 @@ void FLACTrackFile::setReleaseDate(const String& date)
 
 void FLACTrackFile::setKey(const String& key)
 {
-    if (internal->id3v2Tag) {
-        Internal::ID3TrackFile::setStringValueForFrameNamedInTag(key, Internal::id3KeyFrameName, internal->id3v2Tag);
-        internal->metadataWasModified = true;
+    if (internal->oggComment) {
+        Internal::OGGTrackFile::setStringValueForFieldNamedInComment(key, Internal::oggKeyFieldName, internal->oggComment);
     }
+    else {
+        Internal::ID3TrackFile::setStringValueForFrameNamedInTag(key, Internal::id3KeyFrameName, internal->id3v2Tag);
+    }
+
+    internal->metadataWasModified = true;
 }
 
 void FLACTrackFile::setComposer(const String& composer)

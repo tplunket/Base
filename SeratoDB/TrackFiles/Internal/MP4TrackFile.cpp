@@ -35,6 +35,7 @@ namespace NxA { namespace Serato { namespace Internal {
     } MP4MarkersHeaderStruct;
 
     #pragma mark Constants
+    constexpr const character* mp4MarkersItemName = "----:com.serato.dj:markersv2";
     constexpr const character* mp4MarkersV2ItemName = "----:com.serato.dj:markersv2";
     constexpr const character* mp4BeatgridItemName = "----:com.serato.dj:beatgrid";
 
@@ -195,6 +196,8 @@ void MP4TrackFile::replaceGridMarkersItem(void)
 
 void MP4TrackFile::writeMarkers(void)
 {
+    this->mp4Tag->removeItem(mp4MarkersItemName);
+
     this->replaceMarkersV2Item();
     this->replaceGridMarkersItem();
 }

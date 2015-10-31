@@ -479,6 +479,19 @@ void Track::setDateAddedInSecondsSinceJanuary1st1970(timestamp dateAdded)
     internal->needsToUpdateDatabaseFile = true;
 }
 
+void Track::setCueLoopAndGridMarkersWhichWereModifiedOn(CueMarker::ArrayOfConst& cueMarkers,
+                                                        LoopMarker::ArrayOfConst& loopMarkers,
+                                                        GridMarker::ArrayOfConst& gridMarkers,
+                                                        timestamp modificationDateInSecondsSince1970)
+{
+    // -- In case we haven't read the markers and since we're overwriting them anyway, we mark them as read.
+    internal->trackFilemarkersWereRead = true;
+
+    this->setCueMarkersWhichWereModifiedOn(cueMarkers, modificationDateInSecondsSince1970);
+    this->setLoopMarkersWhichWereModifiedOn(loopMarkers, modificationDateInSecondsSince1970);
+    this->setGridMarkersWhichWereModifiedOn(gridMarkers, modificationDateInSecondsSince1970);
+}
+
 void Track::setCueMarkersWhichWereModifiedOn(CueMarker::ArrayOfConst& markers, timestamp modificationDateInSecondsSince1970)
 {
     if (!internal->trackFilemarkersWereRead) {

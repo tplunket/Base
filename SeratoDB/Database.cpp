@@ -133,7 +133,10 @@ void Database::removeTrackEntry(TrackEntry& trackEntry)
 
 void Database::removeCrate(Crate& crate)
 {
-    internal->crateFilesToDelete->append(String::stringWith(crate.crateFilePath()));
+    auto& crateFiles = crate.crateFilePaths();
+    for (auto& file : crateFiles) {
+        internal->crateFilesToDelete->append(file);
+    }
 
     if (crate.hasParentCrate()) {
         crate.removeFromParentCrate();

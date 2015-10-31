@@ -28,14 +28,9 @@ static const character* crateFileCurrentVersionString = "1.0/Serato ScratchLive 
 
 #pragma mark Factory Methods
 
-Crate::Pointer Crate::crateWithNameInFolderOnVolume(const String& crateFullName,
-                                                    const String& seratoFolderPath,
-                                                    const String& volumePath)
+Crate::Pointer Crate::crateWithName(const String& crateFullName)
 {
-    auto internalObject = Internal::Crate::Pointer(std::make_shared<Internal::Crate>(crateFullName,
-                                                                                     volumePath,
-                                                                                     crateFilePathForCrateNameInSeratoFolder(crateFullName,
-                                                                                                                             seratoFolderPath)));
+    auto internalObject = Internal::Crate::Pointer(std::make_shared<Internal::Crate>(crateFullName));
     auto newCrate = Crate::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
 
     auto lastSeperatorIndex = crateFullName.indexOfLastOccurenceOf("%%");
@@ -150,6 +145,18 @@ void Crate::removeCrate(Crate& crate)
     internal->markCratesAsModified();
 }
 
+Crate::Pointer Crate::findOrAddCrateWithName(const String& crateName) {
+    for (auto& crate : crates()) {
+        if (crate->crateFullName() == crateName) {
+            return crate;
+        }
+    }
+
+    auto crate = Serato::Crate::crateWithName(crateName);
+    crates().append(crate);
+    return crate;
+}
+
 void Crate::addTrackEntry(Serato::TrackEntry& trackEntry)
 {
     if (trackEntry.hasParentCrate()) {
@@ -177,9 +184,13 @@ void Crate::removeTrackEntry(TrackEntry& trackEntry)
     }
 }
 
-void Crate::loadFromFile(void)
+void Crate::readFromFolderInVolume(const String& seratoFolderPath, const String& volume)
 {
-    auto crateFileData = File::readFileAt(internal->crateFilePath);
+    auto filePath = crateFilePathForCrateNameInSeratoFolder(crateFullName(), seratoFolderPath);
+
+    internal->crateFilePaths->append(String::stringWith(filePath));
+
+    auto crateFileData = File::readFileAt(filePath);
     auto tags = TagFactory::parseTagsAt(crateFileData->data(), crateFileData->size());
     if (!tags->length()) {
         return;
@@ -197,8 +208,7 @@ void Crate::loadFromFile(void)
                 break;
             }
             case trackEntryTagIdentifier: {
-                this->addTrackEntry(Serato::TrackEntry::entryWithTagOnVolume(dynamic_cast<ObjectTag&>(*tag),
-                                                                             internal->rootVolumePath));
+                this->addTrackEntry(Serato::TrackEntry::entryWithTagOnVolume(dynamic_cast<ObjectTag&>(*tag), volume));
                 break;
             }
             default: {
@@ -224,9 +234,9 @@ void Crate::removeFromParentCrate(void)
     this->parentCrate().removeCrate(*this);
 }
 
-const String& Crate::crateFilePath(void) const
+const String::Array& Crate::crateFilePaths(void) const
 {
-    return internal->crateFilePath;
+    return internal->crateFilePaths;
 }
 
 void Crate::resetModificationFlags()
@@ -242,22 +252,24 @@ boolean Crate::childrenCratesWereModified(void) const
 
 void Crate::saveIfModifiedAndRecurseToChildren(void) const
 {
-    if (internal->rootVolumePath->length() && internal->tracksWereModified) {
-        auto outputData = Blob::blob();
+    if (internal->tracksWereModified) {
+        for (auto cratePath : *internal->crateFilePaths) {
+            auto outputData = Blob::blob();
 
-        auto versionTag = VersionTag::tagWithIdentifierAndValue(crateVersionTagIdentifier,
-                                                                String::stringWith(crateFileCurrentVersionString));
-        versionTag->addTo(outputData);
+            auto versionTag = VersionTag::tagWithIdentifierAndValue(crateVersionTagIdentifier,
+                                                                    String::stringWith(crateFileCurrentVersionString));
+            versionTag->addTo(outputData);
 
-        for (auto& trackEntry : *internal->trackEntries) {
-            trackEntry->tagForEntry().addTo(outputData);
+            for (auto& trackEntry : *internal->trackEntries) {
+                trackEntry->tagForEntry().addTo(outputData);
+            }
+
+            for (auto& tag : *internal->otherTags) {
+                tag->addTo(outputData);
+            }
+
+            File::writeBlobToFileAt(outputData, cratePath);
         }
-
-        for (auto& tag : *internal->otherTags) {
-            tag->addTo(outputData);
-        }
-
-        File::writeBlobToFileAt(outputData, internal->crateFilePath);
     }
 
     for (auto& crate : *internal->childrenCrates) {

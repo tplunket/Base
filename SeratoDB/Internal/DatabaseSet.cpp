@@ -30,9 +30,7 @@ using namespace NxA::Serato::Internal;
 
 DatabaseSet::DatabaseSet(void) :
                          databases(Serato::Database::Array::array()),
-                         rootCrate(Serato::Crate::crateWithNameInFolderOnVolume(String::string(),
-                                                                                String::string(),
-                                                                                String::string())) { }
+                         rootCrate(Serato::Crate::crateWithName(String::string())) { }
 
 #pragma mark Class Methods
 

@@ -27,9 +27,7 @@ namespace NxA { namespace Serato {
 
     public:
         #pragma mark Factory Methods
-        static Crate::Pointer crateWithNameInFolderOnVolume(const String& crateFullName,
-                                                            const String& seratoFolderPath,
-                                                            const String& volumePath);
+        static Crate::Pointer crateWithName(const String& crateFullName);
 
         #pragma mark Class Methods
         static String::Pointer subCratesDirectoryPathInSeratoFolder(const String& seratoFolderPath);
@@ -53,6 +51,7 @@ namespace NxA { namespace Serato {
 
         void addCrate(Crate& crate);
         void removeCrate(Crate& crate);
+        Crate::Pointer findOrAddCrateWithName(const String& crateName);
 
         void addTrackEntry(TrackEntry& trackEntry);
         void removeTrackEntry(TrackEntry& trackEntry);
@@ -61,11 +60,11 @@ namespace NxA { namespace Serato {
         Crate& parentCrate(void);
         void removeFromParentCrate(void);
 
-        const String& crateFilePath(void) const;
+        const String::Array& crateFilePaths(void) const;
 
         void resetModificationFlags();
 
-        void loadFromFile(void);
+        void readFromFolderInVolume(const String& seratoFolderPath, const String& volume);
         void saveIfModifiedAndRecurseToChildren(void) const;
         boolean childrenCratesWereModified(void) const;
 

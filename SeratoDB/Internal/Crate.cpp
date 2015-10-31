@@ -28,15 +28,12 @@ using namespace NxA::Serato::Internal;
 
 #pragma mark Constructors & Destructors
 
-Crate::Crate(const String& fullName,
-             const String& volumePath,
-             const String& filePath) :
+Crate::Crate(const String& fullName) :
              crateName(String::string()),
              crateFullName(fullName.pointer()),
-             rootVolumePath(volumePath.pointer()),
-             crateFilePath(filePath.pointer()),
              tracksWereModified(true),
              cratesWereModified(false),
+             crateFilePaths(String::Array::array()),
              childrenCrates(Serato::Crate::Array::array()),
              trackEntries(Serato::TrackEntry::Array::array()),
              otherTags(Serato::Tag::ArrayOfConst::array()) { }

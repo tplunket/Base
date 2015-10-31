@@ -25,7 +25,7 @@
 #include <errno.h>
 #include <dirent.h>
 
-// -- Generated internal implementation ommitted because this class does not use the default contructor.
+// -- Generated internal implementation omitted because this class does not use the default contructor.
 
 using namespace NxA;
 using namespace NxA::Serato::Internal;
@@ -125,14 +125,13 @@ void CrateOrderFile::addCratesNamesAtTheStartOfUnlessAlreadyThere(String::ArrayO
 
 #pragma mark Instance Methods
 
-Serato::Crate::Array::Pointer CrateOrderFile::childrenCratesOfCrateNamedUsingNameList(const String& name,
-                                                                                      String::ArrayOfConst::iterator& it,
-                                                                                      const String::ArrayOfConst::iterator& end,
-                                                                                      const String& seratoFolderPath,
-                                                                                      const String& rootFolderPath)
+void CrateOrderFile::addChildrenCratesOfCrateNamedUsingNameList(Serato::Crate& parentCrate,
+                                                                const String& name,
+                                                                String::ArrayOfConst::iterator& it,
+                                                                const String::ArrayOfConst::iterator& end,
+                                                                const String& seratoFolderPath,
+                                                                const String& rootFolderPath)
 {
-    auto cratesFound = Serato::Crate::Array::array();
-
     while (it != end) {
         auto fullCrateName = *it;
         if (name.length() && !fullCrateName->hasPrefix(name)) {
@@ -145,12 +144,10 @@ Serato::Crate::Array::Pointer CrateOrderFile::childrenCratesOfCrateNamedUsingNam
             continue;
         }
 
-        auto newCrate = Serato::Crate::crateWithNameInFolderOnVolume(fullCrateName,
-                                                                     seratoFolderPath,
-                                                                     rootFolderPath);
+        auto newCrate = parentCrate.findOrAddCrateWithName(fullCrateName);
 
         if (Serato::Crate::isAValidCrateName(fullCrateName, seratoFolderPath)) {
-            newCrate->loadFromFile();
+            newCrate->readFromFolderInVolume(seratoFolderPath, rootFolderPath);
         }
 
         ++it;
@@ -158,19 +155,13 @@ Serato::Crate::Array::Pointer CrateOrderFile::childrenCratesOfCrateNamedUsingNam
         auto crateNameWithSeperator = String::stringWith(fullCrateName);
         crateNameWithSeperator->append("%%");
 
-        auto childCrates = CrateOrderFile::childrenCratesOfCrateNamedUsingNameList(crateNameWithSeperator,
-                                                                                   it,
-                                                                                   end,
-                                                                                   seratoFolderPath,
-                                                                                   rootFolderPath);
-        for (auto& crate : *childCrates) {
-            newCrate->addCrate(crate);
-        }
+        CrateOrderFile::addChildrenCratesOfCrateNamedUsingNameList(newCrate,
+                                                                   crateNameWithSeperator,
+                                                                   it,
+                                                                   end,
+                                                                   seratoFolderPath,
+                                                                   rootFolderPath);
 
         newCrate->resetModificationFlags();
-
-        cratesFound->append(newCrate);
     }
-    
-    return cratesFound;
 }

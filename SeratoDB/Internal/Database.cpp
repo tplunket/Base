@@ -20,16 +20,24 @@
 //
 
 #include "Internal/Database.hpp"
+#include "Tags/DatabaseV2Tags.hpp"
+#include "Tags/TagFactory.hpp"
+#include "Tags/VersionTag.hpp"
 
 // -- Generated internal implementation ommitted because this class does not use the default contructor.
 
 using namespace NxA::Serato::Internal;
 
+#pragma mark Constants
+
+const char* Database::databaseFileCurrentVersionString = "2.0/Serato Scratch LIVE Database";
+
 #pragma mark Constructors & Destructors
 
-Database::Database(const String& path,
+Database::Database(const String& path, const String& volume,
                    Serato::CrateOrderFile& usingCrateOrderFile) :
                    databaseFilePath(path.pointer()),
+                   databaseVolume(volume.pointer()),
                    tracks(Serato::Track::Array::array()),
                    otherTags(Serato::Tag::ArrayOfConst::array()),
                    crateFilesToDelete(String::Array::array()),
@@ -62,9 +70,43 @@ void Database::debugListCrate(Serato::Crate& crate,
 
 #pragma mark Instance Methods
 
+void Database::parseDatabaseFile(void)
+{
+    auto databaseFile = File::readFileAt(databaseFilePath);
+
+    auto tags = TagFactory::parseTagsAt(databaseFile->data(), databaseFile->size());
+    for (auto& tag : *tags) {
+        switch (tag->identifier()) {
+            case trackObjectTagIdentifier: {
+                storeTrackTag(dynamic_cast<Serato::ObjectTag&>(*tag));
+                break;
+            }
+            case databaseVersionTagIdentifier: {
+                auto& versionText = dynamic_cast<Serato::VersionTag&>(*tag).value();
+                if (versionText != databaseFileCurrentVersionString) {
+                    tracks->emptyAll();
+                    otherTags->emptyAll();
+                    return;
+                }
+                break;
+            }
+            default: {
+                storeOtherTag(tag);
+                break;
+            }
+        }
+    }
+
+#if NXA_PRINT_DEBUG_INFO
+    debugListCrate(crateOrderFile->rootCrate(), String::string());
+#endif
+
+    databaseIsValid = true;
+}
+
 void Database::storeTrackTag(Serato::ObjectTag& tag)
 {
-    this->tracks->append(Serato::Track::trackWithTagOnVolume(tag, String::stringWith("")));
+    this->tracks->append(Serato::Track::trackWithTagOnVolume(tag, databaseVolume));
 }
 
 void Database::storeOtherTag(const Serato::Tag& tag)

@@ -19,8 +19,8 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include "Internal/Crate.hpp"
-#include "SeratoDB/Database.hpp"
+#include "Internal/DatabaseSet.hpp"
+#include "Database.hpp"
 
 // -- Generated internal implementation ommitted because this class does not use the default contructor.
 
@@ -28,24 +28,9 @@ using namespace NxA::Serato::Internal;
 
 #pragma mark Constructors & Destructors
 
-Crate::Crate(const String& fullName) :
-             crateName(String::string()),
-             crateFullName(fullName.pointer()),
-             tracksWereModified(true),
-             cratesWereModified(false),
-             crateFilePaths(String::Array::array()),
-             childrenCrates(Serato::Crate::Array::array()),
-             trackEntries(Serato::TrackEntry::Array::array()),
-             otherTags(Serato::Tag::ArrayOfConst::array()) { }
+DatabaseSet::DatabaseSet(void) :
+                         databases(Serato::Database::Array::array()),
+                         rootCrate(Serato::Crate::crateWithName(String::string())) { }
 
-#pragma mark Instance Methods
+#pragma mark Class Methods
 
-void Crate::markCratesAsModified(void)
-{
-    this->cratesWereModified = true;
-
-    if (this->parentCrate.isValid()) {
-        auto parent = this->parentCrate.pointer();
-        parent->internal->markCratesAsModified();
-    }
-}

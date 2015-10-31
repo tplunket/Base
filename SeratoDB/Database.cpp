@@ -22,50 +22,26 @@ NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, Dat
 using namespace NxA;
 using namespace NxA::Serato;
 
-#pragma mark Constants
-
-static const char* databaseFileCurrentVersionString = "2.0/Serato Scratch LIVE Database";
-
 #pragma mark Factory Methods
 
-Database::Pointer Database::databaseWithFileAt(const String& seratoFolderPath)
+Database::Pointer Database::databaseWithFileAndVolume(const String& seratoFolderPath, const String& volume)
 {
-    auto crateOrderFile = CrateOrderFile::fileWithSeratoFolderInRootFolder(seratoFolderPath,
-                                                                           String::string());
-    auto internalObject = Internal::Database::Pointer(std::make_shared<Internal::Database>(databaseFilePathForSeratoFolder(seratoFolderPath),
-                                                                                           crateOrderFile));
+    auto crateOrderFile = CrateOrderFile::fileWithSeratoFolderInRootFolder(seratoFolderPath, volume);
+
+    auto internalObject = Internal::Database::Pointer(std::make_shared<Internal::Database>(databaseFilePathForSeratoFolder(seratoFolderPath), volume, crateOrderFile));
     auto newDatabase = Database::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
+    newDatabase->internal->parseDatabaseFile();
 
-    auto databaseFile = File::readFileAt(newDatabase->internal->databaseFilePath);
+    return newDatabase;
+}
 
-    auto tags = TagFactory::parseTagsAt(databaseFile->data(), databaseFile->size());
-    for (auto& tag : *tags) {
-        switch (tag->identifier()) {
-            case trackObjectTagIdentifier: {
-                newDatabase->internal->storeTrackTag(dynamic_cast<ObjectTag&>(*tag));
-                break;
-            }
-            case databaseVersionTagIdentifier: {
-                auto& versionText = dynamic_cast<VersionTag&>(*tag).value();
-                if (versionText != databaseFileCurrentVersionString) {
-                    newDatabase->internal->tracks->emptyAll();
-                    newDatabase->internal->otherTags->emptyAll();
-                    return newDatabase;
-                }
-                break;
-            }
-            default: {
-                newDatabase->internal->storeOtherTag(tag);
-                break;
-            }
-        }
-    }
+Database::Pointer Database::databaseWithFileVolumeAndRootCrate(const String& seratoFolderPath, const String& volume, Crate& rootCrate)
+{
+    auto crateOrderFile = CrateOrderFile::fileWithSeratoFolderInRootFolderWithRootCrate(seratoFolderPath, volume, rootCrate);
 
-#if NXA_PRINT_DEBUG_INFO
-    Internal::Database::debugListCrate(newDatabase->rootCrate(), String::string());
-#endif
-
-    newDatabase->internal->databaseIsValid = true;
+    auto internalObject = Internal::Database::Pointer(std::make_shared<Internal::Database>(databaseFilePathForSeratoFolder(seratoFolderPath), volume, crateOrderFile));
+    auto newDatabase = Database::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
+    newDatabase->internal->parseDatabaseFile();
 
     return newDatabase;
 }
@@ -143,6 +119,11 @@ Track::Array::Pointer Database::removeAndReturnTracks(void)
     return tracks;
 }
 
+NxA::String::PointerToConst Database::volume(void) const
+{
+    return internal->databaseVolume;
+}
+
 void Database::removeTrackEntry(TrackEntry& trackEntry)
 {
     if (trackEntry.hasParentCrate()) {
@@ -152,7 +133,10 @@ void Database::removeTrackEntry(TrackEntry& trackEntry)
 
 void Database::removeCrate(Crate& crate)
 {
-    internal->crateFilesToDelete->append(String::stringWith(crate.crateFilePath()));
+    auto& crateFiles = crate.crateFilePaths();
+    for (auto& file : crateFiles) {
+        internal->crateFilesToDelete->append(file);
+    }
 
     if (crate.hasParentCrate()) {
         crate.removeFromParentCrate();
@@ -200,7 +184,7 @@ void Database::saveIfModified(void) const
         auto outputData = Blob::blob();
 
         auto versionTag = VersionTag::tagWithIdentifierAndValue(databaseVersionTagIdentifier,
-                                                                String::stringWith(databaseFileCurrentVersionString));
+                                                                String::stringWith(Internal::Database::databaseFileCurrentVersionString));
         versionTag->addTo(outputData);
 
         for (auto& track : *(internal->tracks)) {

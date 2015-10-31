@@ -24,7 +24,15 @@ using namespace NxA::Serato;
 CrateOrderFile::Pointer CrateOrderFile::fileWithSeratoFolderInRootFolder(const String& seratoFolderPath,
                                                                          const String& rootFolderPath)
 {
-    auto rootCrate = Crate::crateWithNameInFolderOnVolume(String::string(), String::string(), String::string());
+    auto rootCrate = Crate::crateWithName(String::string());
+    auto newCrateOrderFile = fileWithSeratoFolderInRootFolderWithRootCrate(seratoFolderPath, rootFolderPath, rootCrate);
+    return newCrateOrderFile;
+}
+
+CrateOrderFile::Pointer CrateOrderFile::fileWithSeratoFolderInRootFolderWithRootCrate(const String& seratoFolderPath,
+                                                                                      const String& rootFolderPath,
+                                                                                      Crate& rootCrate)
+{
     auto crateOrderFilePath = CrateOrderFile::pathForFileInSeratoFolder(seratoFolderPath);
     auto internalObject = Internal::CrateOrderFile::Pointer(std::make_shared<Internal::CrateOrderFile>(crateOrderFilePath, rootCrate));
     auto newCrateOrderFile = CrateOrderFile::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
@@ -40,14 +48,12 @@ CrateOrderFile::Pointer CrateOrderFile::fileWithSeratoFolderInRootFolder(const S
     Internal::CrateOrderFile::addCratesNamesAtTheStartOfUnlessAlreadyThere(*cratesInOrder, *subCratesFound);
 
     auto it = cratesInOrder->begin();
-    auto crates = newCrateOrderFile->internal->childrenCratesOfCrateNamedUsingNameList(String::string(),
-                                                                                       it,
-                                                                                       cratesInOrder->end(),
-                                                                                       seratoFolderPath,
-                                                                                       rootFolderPath);
-    for (auto& crate : *crates) {
-        newCrateOrderFile->internal->rootCrate->addCrate(crate);
-    }
+    newCrateOrderFile->internal->addChildrenCratesOfCrateNamedUsingNameList(*newCrateOrderFile->internal->rootCrate,
+                                                                            String::string(),
+                                                                            it,
+                                                                            cratesInOrder->end(),
+                                                                            seratoFolderPath,
+                                                                            rootFolderPath);
 
     newCrateOrderFile->internal->rootCrate->resetModificationFlags();
 

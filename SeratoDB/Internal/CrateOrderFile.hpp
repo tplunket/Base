@@ -52,10 +52,11 @@ namespace NxA { namespace Serato { namespace Internal {
         String::ArrayOfConst::Pointer unknownCratesNames;
 
         #pragma mark Instance Methods
-        Serato::Crate::Array::Pointer childrenCratesOfCrateNamedUsingNameList(const String& name,
-                                                                              String::ArrayOfConst::iterator& it,
-                                                                              const String::ArrayOfConst::iterator& end,
-                                                                              const String& seratoFolderPath,
-                                                                              const String& rootFolderPath);
+        void addChildrenCratesOfCrateNamedUsingNameList(Serato::Crate& parentCrate,
+                                                        const String& name,
+                                                        String::ArrayOfConst::iterator& it,
+                                                        const String::ArrayOfConst::iterator& end,
+                                                        const String& seratoFolderPath,
+                                                        const String& rootFolderPath);
     };
 } } }

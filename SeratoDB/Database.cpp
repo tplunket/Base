@@ -113,6 +113,15 @@ boolean Database::containsAValidSeratoFolder(const String& folderPath)
     return File::fileExistsAt(databaseFilePath);
 }
 
+void Database::setDatabaseFilesInSeratoFolderAsModifedOnDateInSecondsSince1970(const String& folderPath, timestamp dateModified)
+{
+    auto databaseFilePath = databaseFilePathForSeratoFolder(folderPath);
+    File::setModificationDateInSecondsSince1970ForFile(dateModified, databaseFilePath);
+
+    auto crateOrderFilePath = CrateOrderFile::pathForFileInSeratoFolder(folderPath);
+    File::setModificationDateInSecondsSince1970ForFile(dateModified, crateOrderFilePath);
+}
+
 #pragma mark Instance Methods
 
 timestamp Database::databaseModificationDateInSecondsSince1970(void) const

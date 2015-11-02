@@ -85,12 +85,14 @@ TagLib::ID3v2::FrameList::Iterator ID3TrackFile::frameInListWithDescription(TagL
 String::Pointer ID3TrackFile::stringValueForFrameNamedInTag(const character* name, const TagLib::ID3v2::Tag* id3v2Tag)
 {
     auto frameList = id3v2Tag->frameList(name);
-    if (frameList.size() == 0) {
-        return String::string();
+    for (auto& frame : frameList) {
+        auto stringValue = frame->toString();
+        if (stringValue.length()) {
+            return String::stringWith(stringValue.toCString());
+        }
     }
 
-    NXA_ASSERT_EQ(frameList.size(), 1);
-    return String::stringWith(frameList.front()->toString().toCString());
+    return String::string();
 }
 
 integer ID3TrackFile::integerValueForFrameNamedInTag(const character* name, const TagLib::ID3v2::Tag* id3v2Tag)

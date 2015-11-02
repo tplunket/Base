@@ -21,6 +21,8 @@
 
 #include "Internal/Database.hpp"
 
+#include "SeratoDB/TrackFiles/TrackFileFactory.hpp"
+
 // -- Generated internal implementation ommitted because this class does not use the default contructor.
 
 using namespace NxA::Serato::Internal;
@@ -64,7 +66,14 @@ void Database::debugListCrate(Serato::Crate& crate,
 
 void Database::storeTrackTag(Serato::ObjectTag& tag)
 {
-    this->tracks->append(Serato::Track::trackWithTagOnVolume(tag, String::stringWith("")));
+    auto track = Serato::Track::trackWithTagOnVolume(tag, String::stringWith(""));
+
+    if (TrackFileFactory::audioFileTypeForPath(track->trackFilePath()) == TrackFileFactory::Unknown) {
+        this->storeOtherTag(tag);
+    }
+    else {
+        this->tracks->append(track);
+    }
 }
 
 void Database::storeOtherTag(const Serato::Tag& tag)

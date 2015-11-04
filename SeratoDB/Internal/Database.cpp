@@ -67,8 +67,10 @@ void Database::debugListCrate(Serato::Crate& crate,
 void Database::storeTrackTag(Serato::ObjectTag& tag)
 {
     auto track = Serato::Track::trackWithTagOnVolume(tag, String::stringWith(""));
+    auto path = track->trackFilePath();
 
-    if (TrackFileFactory::audioFileTypeForPath(track->trackFilePath()) == TrackFileFactory::Unknown) {
+    if (!File::fileExistsAt(path) ||
+        (TrackFileFactory::audioFileTypeForPath(path) == TrackFileFactory::Unknown)) {
         this->storeOtherTag(tag);
     }
     else {

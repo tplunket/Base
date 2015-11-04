@@ -200,8 +200,10 @@ void Crate::loadFromFile(void)
             case trackEntryTagIdentifier: {
                 auto entry = Serato::TrackEntry::entryWithTagOnVolume(dynamic_cast<ObjectTag&>(*tag),
                                                                       internal->rootVolumePath);
+                auto path = entry->trackFilePath();
 
-                if (TrackFileFactory::audioFileTypeForPath(entry->trackFilePath()) == TrackFileFactory::Unknown) {
+                if (!File::fileExistsAt(path) ||
+                    (TrackFileFactory::audioFileTypeForPath(path) == TrackFileFactory::Unknown)) {
                     internal->otherTags->append(tag);
                 }
                 else {

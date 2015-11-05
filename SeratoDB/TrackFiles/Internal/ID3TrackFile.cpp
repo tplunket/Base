@@ -254,6 +254,7 @@ void ID3TrackFile::removeArtwork(void)
         this->id3v2Tag->removeFrame(*frameToRemove);
     }
 }
+
 void ID3TrackFile::readMarkers(void)
 {
     auto framesList = this->id3v2Tag->frameList("GEOB");

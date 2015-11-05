@@ -182,7 +182,7 @@ void Database::removeTrack(Track& track)
     internal->tracks->remove(track);
 }
 
-void Database::saveIfModified(void) const
+void Database::saveIfModified(String::Array& simpleWarningLog) const
 {
     if (!internal->databaseIsValid) {
         return;
@@ -201,7 +201,7 @@ void Database::saveIfModified(void) const
         }
 
         if (track->needsToUpdateTrackFile()) {
-            track->saveToTrackFile();
+            track->saveToTrackFile(simpleWarningLog);
         }
     }
 

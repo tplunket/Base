@@ -110,6 +110,6 @@ namespace NxA { namespace Serato {
         boolean needsToUpdateDatabaseFile(void) const;
 
         void addTo(Blob& destination) const;
-        void saveToTrackFile(void) const;
+        void saveToTrackFile(String::Array& simpleWarningLog) const;
     };
 } }

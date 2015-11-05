@@ -546,11 +546,11 @@ void Track::addTo(Blob& destination) const
     internal->trackTag->addInSeratoTrackOrderTo(destination);
 }
 
-void Track::saveToTrackFile(void) const
+void Track::saveToTrackFile(String::Array& simpleWarningLog) const
 {
     NXA_ASSERT_TRUE(internal->lastMarkersModificationDate != 0);
 
-    internal->saveToTrackFile();
+    internal->saveToTrackFile(simpleWarningLog);
 
     File::setModificationDateInSecondsSince1970ForFile(internal->lastMarkersModificationDate,
                                                        internal->trackFilePath());

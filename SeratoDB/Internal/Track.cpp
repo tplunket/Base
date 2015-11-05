@@ -154,44 +154,38 @@ String::Pointer Track::trackFilePath(void) const
 
 void Track::readMarkers(void)
 {
-    try {
-        auto trackFile = TrackFileFactory::trackFileForPath(this->trackFilePath());
+    auto trackFile = TrackFileFactory::trackFileForPath(this->trackFilePath());
 
-        auto& allCueMarkers = trackFile->cueMarkers();
-        for (auto& marker : allCueMarkers) {
+    auto& allCueMarkers = trackFile->cueMarkers();
+    for (auto& marker : allCueMarkers) {
 #if NXA_PRINT_DEBUG_INFO
-            printf("Found cue marker at %f and index %d.\n", (float)marker->positionInMilliseconds()/1000, marker->index());
+        printf("Found cue marker at %f and index %d.\n", (float)marker->positionInMilliseconds()/1000, marker->index());
 #endif
-            this->cueMarkers->append(Serato::CueMarker::markerWith(marker));
-        }
-
-        auto& allLoopMarkers = trackFile->loopMarkers();
-        for (auto& marker : allLoopMarkers) {
-#if NXA_PRINT_DEBUG_INFO
-            printf("Found loop marker at %f and index %d.\n", (float)marker->startPositionInMilliseconds()/1000, marker->index());
-#endif
-            this->loopMarkers->append(Serato::LoopMarker::markerWith(marker));
-        }
-
-        auto& allGridMarkers = trackFile->gridMarkers();
-        for (auto& marker : allGridMarkers) {
-#if NXA_PRINT_DEBUG_INFO
-            printf("Found grid marker at %f and bpm %f.\n", marker->positionInSeconds(), marker->beatsPerMinute());
-#endif
-            this->gridMarkers->append(Serato::GridMarker::markerWith(marker));
-        }
-
-        this->lastMarkersModificationDate = File::modificationDateInSecondsSince1970ForFile(this->trackFilePath());
-        
-        this->trackFilemarkersWereRead = true;
+        this->cueMarkers->append(Serato::CueMarker::markerWith(marker));
     }
-    catch (TrackFileError& exception) {
-        // TODO: This should be logged.
-        return;
+
+    auto& allLoopMarkers = trackFile->loopMarkers();
+    for (auto& marker : allLoopMarkers) {
+#if NXA_PRINT_DEBUG_INFO
+        printf("Found loop marker at %f and index %d.\n", (float)marker->startPositionInMilliseconds()/1000, marker->index());
+#endif
+        this->loopMarkers->append(Serato::LoopMarker::markerWith(marker));
     }
+
+    auto& allGridMarkers = trackFile->gridMarkers();
+    for (auto& marker : allGridMarkers) {
+#if NXA_PRINT_DEBUG_INFO
+        printf("Found grid marker at %f and bpm %f.\n", marker->positionInSeconds(), marker->beatsPerMinute());
+#endif
+        this->gridMarkers->append(Serato::GridMarker::markerWith(marker));
+    }
+
+    this->lastMarkersModificationDate = File::modificationDateInSecondsSince1970ForFile(this->trackFilePath());
+
+    this->trackFilemarkersWereRead = true;
 }
 
-void Track::saveToTrackFile(void) const
+void Track::saveToTrackFile(String::Array& simpleWarningLog) const
 {
     try {
         auto trackFile = TrackFileFactory::trackFileForPath(this->trackFilePath());
@@ -220,7 +214,10 @@ void Track::saveToTrackFile(void) const
         trackFile->saveChangesIfAny();
     }
     catch (TrackFileError& exception) {
-        // TODO: This should be logged.
+        auto warningString = String::stringWithFormat("Couldn't save changes to track file '%s' because of '%s'.",
+                                                      this->trackFilePath()->toUTF8(),
+                                                      exception.what());
+        simpleWarningLog.append(warningString);
         return;
     }
 

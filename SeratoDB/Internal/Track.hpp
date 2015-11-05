@@ -62,6 +62,6 @@ namespace NxA { namespace Serato { namespace Internal {
 
         String::Pointer trackFilePath(void) const;
         void readMarkers(void);
-        void saveToTrackFile(void) const;
+        void saveToTrackFile(String::Array& simpleWarningLog) const;
     };
 } } }

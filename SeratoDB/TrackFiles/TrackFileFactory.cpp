@@ -49,9 +49,6 @@ TrackFileFactory::AudioFileType TrackFileFactory::audioFileTypeForPath(const Str
     else if (trackFilePath.hasPostfix(".wav")) {
         return AudioFileType::WAV;
     }
-    else if (trackFilePath.hasPostfix(".wma")) {
-        return AudioFileType::WMA;
-    }
     else {
         return AudioFileType::Unknown;
     }

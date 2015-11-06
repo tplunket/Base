@@ -452,6 +452,30 @@ TEST(Base_String, Substring_FromAnIndexAndToAnotherInInverserOrderTheEndOfTheStr
     ASSERT_THROW(test->subString(244, 25), NxA::Exception);
 }
 
+TEST(Base_String, UpperCaseString_StringWithLowerCaseCharacters_ReturnsOneWithUpperCaseCharacters)
+{
+    // -- Given.
+    auto test = String::stringWith("Mp3 grüßEN");
+
+    // -- When.
+    auto result = test->uppperCaseString();
+
+    // -- Then.
+    ASSERT_EQ("MP3 GRüßEN", *result);
+}
+
+TEST(Base_String, LowerCaseString_StringWithUpperCaseCharacters_ReturnsOneWithLowerCaseCharacters)
+{
+    // -- Given.
+    auto test = String::stringWith("MP3 GRüßEN");
+
+    // -- When.
+    auto result = test->lowerCaseString();
+
+    // -- Then.
+    ASSERT_EQ("mp3 grüßen", *result);
+}
+
 TEST(Base_String, HasPrefix_StringWithAGivenPrefix_ReturnsTrue)
 {
     // -- Given.

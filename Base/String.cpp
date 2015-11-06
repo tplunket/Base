@@ -23,6 +23,11 @@
 #include "Base/Blob.hpp"
 #include "Base/Platform.hpp"
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdocumentation"
+#include <boost/locale.hpp>
+#pragma clang diagnostic pop
+
 #include <cstdio>
 #include <codecvt>
 #include <locale>
@@ -78,6 +83,10 @@ inline uinteger32 SBox(const byte *key, count len, uinteger32 seed) {
     h += ( h >> 22 ) ^ ( h << 4 );
     return h;
 }
+
+#pragma mark Private Static Variables
+
+static boolean defaultLocaleWasInitialized = false;
 
 #pragma mark Factory Methods
 
@@ -149,6 +158,14 @@ String::Pointer String::stringWithUTF16(const Blob& other)
 }
 
 #pragma mark Class Methods
+
+void String::p_initDefaultLocale(void)
+{
+    boost::locale::generator gen;
+    std::locale defaultLocale = gen("");
+    std::locale::global(defaultLocale);
+    std::wcout.imbue(defaultLocale);
+}
 
 uinteger32 String::hashFor(String::Pointer str)
 {
@@ -274,6 +291,30 @@ String::Pointer String::subString(count start, count end) const
     auto newString = String::makeShared();
     newString->std::string::operator=(this->substr(start, end - start));
     
+    return newString;
+}
+
+String::Pointer String::lowerCaseString(void) const
+{
+    if (!defaultLocaleWasInitialized) {
+        String::p_initDefaultLocale();
+    }
+    
+    auto result = boost::locale::to_lower(*this);
+    auto newString = String::stringWith(result.c_str());
+
+    return newString;
+}
+
+String::Pointer String::uppperCaseString(void) const
+{
+    if (!defaultLocaleWasInitialized) {
+        String::p_initDefaultLocale();
+    }
+
+    auto result = boost::locale::to_upper(*this);
+    auto newString = String::stringWith(result.c_str());
+
     return newString;
 }
 

@@ -34,6 +34,9 @@ namespace NxA {
         NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_BASE_CLASS(NxA, String);
         NXA_GENERATED_CLASS_IDENTIFIER_METHODS_FOR(NxA, String);
 
+        #pragma mark Private Class Methods
+        static void p_initDefaultLocale(void);
+
     public:
         #pragma mark Factory Methods
         static String::Pointer string(void);
@@ -79,6 +82,8 @@ namespace NxA {
 
         String::Array::Pointer splitBySeperator(char seperator) const;
         String::Pointer subString(count start, count end = -1) const;
+        String::Pointer lowerCaseString(void) const;
+        String::Pointer uppperCaseString(void) const;
 
         boolean hasPrefix(const String& prefix) const;
         boolean hasPostfix(const String& postfix) const;

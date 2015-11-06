@@ -298,6 +298,7 @@ String::Pointer String::lowerCaseString(void) const
 {
     if (!defaultLocaleWasInitialized) {
         String::p_initDefaultLocale();
+        defaultLocaleWasInitialized = true;
     }
     
     auto result = boost::locale::to_lower(*this);
@@ -310,6 +311,7 @@ String::Pointer String::uppperCaseString(void) const
 {
     if (!defaultLocaleWasInitialized) {
         String::p_initDefaultLocale();
+        defaultLocaleWasInitialized = true;
     }
 
     auto result = boost::locale::to_upper(*this);

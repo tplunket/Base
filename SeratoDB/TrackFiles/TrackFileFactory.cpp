@@ -26,27 +26,29 @@ using namespace NxA::Serato;
 
 TrackFileFactory::AudioFileType TrackFileFactory::audioFileTypeForPath(const String& trackFilePath)
 {
-    if (trackFilePath.hasPostfix(".aiff") || trackFilePath.hasPostfix(".aif")) {
+    auto lowerCaseString = trackFilePath.lowerCaseString();
+    
+    if (lowerCaseString->hasPostfix(".aiff") || lowerCaseString->hasPostfix(".aif")) {
         return AudioFileType::AIFF;
     }
-    else if (trackFilePath.hasPostfix(".mp3")) {
+    else if (lowerCaseString->hasPostfix(".mp3")) {
         return AudioFileType::MP3;
     }
-    else if (trackFilePath.hasPostfix(".m4a") || trackFilePath.hasPostfix(".mp4")) {
-        auto file = std::make_shared<TagLib::MP4::File>(trackFilePath.toUTF8());
+    else if (lowerCaseString->hasPostfix(".m4a") || lowerCaseString->hasPostfix(".mp4")) {
+        auto file = std::make_shared<TagLib::MP4::File>(lowerCaseString->toUTF8());
         if (!file->isValid()) {
             return AudioFileType::Unknown;
         }
 
         return file->audioProperties()->codec() == TagLib::MP4::Properties::Codec::ALAC ? AudioFileType::ALAC : AudioFileType::AAC;
     }
-    else if (trackFilePath.hasPostfix(".flac")) {
+    else if (lowerCaseString->hasPostfix(".flac")) {
         return AudioFileType::FLAC;
     }
-    else if (trackFilePath.hasPostfix(".ogg")) {
+    else if (lowerCaseString->hasPostfix(".ogg")) {
         return AudioFileType::OGG;
     }
-    else if (trackFilePath.hasPostfix(".wav")) {
+    else if (lowerCaseString->hasPostfix(".wav")) {
         return AudioFileType::WAV;
     }
     else {
@@ -81,4 +83,3 @@ TrackFile::Pointer TrackFileFactory::trackFileForPath(const String& trackFilePat
         }
     }
 }
-

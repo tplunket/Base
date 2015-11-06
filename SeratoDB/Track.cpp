@@ -82,8 +82,7 @@ Track::Pointer Track::trackWithFileAtOnVolume(const String& trackFilePath, const
             fileTypeString = "oggvorbis";
             break;
         }
-        case TrackFileFactory::AAC:
-        case TrackFileFactory::ALAC: {
+        case TrackFileFactory::MP4: {
             fileTypeString = "quicktime";
             break;
         }

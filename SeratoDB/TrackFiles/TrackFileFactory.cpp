@@ -35,12 +35,7 @@ TrackFileFactory::AudioFileType TrackFileFactory::audioFileTypeForPath(const Str
         return AudioFileType::MP3;
     }
     else if (lowerCaseString->hasPostfix(".m4a") || lowerCaseString->hasPostfix(".mp4")) {
-        auto file = std::make_shared<TagLib::MP4::File>(lowerCaseString->toUTF8());
-        if (!file->isValid()) {
-            return AudioFileType::Unknown;
-        }
-
-        return file->audioProperties()->codec() == TagLib::MP4::Properties::Codec::ALAC ? AudioFileType::ALAC : AudioFileType::AAC;
+        return AudioFileType::MP4;
     }
     else if (lowerCaseString->hasPostfix(".flac")) {
         return AudioFileType::FLAC;
@@ -65,8 +60,7 @@ TrackFile::Pointer TrackFileFactory::trackFileForPath(const String& trackFilePat
         case AudioFileType::MP3: {
             return TrackFile::Pointer::dynamicCastFrom(MPEGTrackFile::fileWithFileAt(trackFilePath, flags));
         }
-        case AudioFileType::ALAC:
-        case AudioFileType::AAC: {
+        case AudioFileType::MP4: {
             return TrackFile::Pointer::dynamicCastFrom(MP4TrackFile::fileWithFileAt(trackFilePath, flags));
         }
         case AudioFileType::FLAC: {

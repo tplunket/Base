@@ -26,9 +26,8 @@ namespace NxA { namespace Serato {
             MP3,
             WAV,
             OGG,
-            AAC,
+            MP4,
             FLAC,
-            ALAC,
             WMA,
         };
 

@@ -159,6 +159,8 @@ void Track::debugPrint(const Serato::Track& track)
 
 bool Track::operator==(const Track& other) const
 {
+    NXA_ALOG("Trying to test track equality.");
+    
     if (this == &other) {
         return true;
     }

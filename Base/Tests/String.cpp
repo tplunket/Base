@@ -461,7 +461,7 @@ TEST(Base_String, UpperCaseString_StringWithLowerCaseCharacters_ReturnsOneWithUp
     auto result = test->uppperCaseString();
 
     // -- Then.
-    ASSERT_EQ("MP3 GRüßEN", *result);
+    ASSERT_STREQ("MP3 GRüßEN", result->toUTF8());
 }
 
 TEST(Base_String, LowerCaseString_StringWithUpperCaseCharacters_ReturnsOneWithLowerCaseCharacters)
@@ -473,7 +473,7 @@ TEST(Base_String, LowerCaseString_StringWithUpperCaseCharacters_ReturnsOneWithLo
     auto result = test->lowerCaseString();
 
     // -- Then.
-    ASSERT_EQ("mp3 grüßen", *result);
+    ASSERT_STREQ("mp3 grüßen", result->toUTF8());
 }
 
 TEST(Base_String, HasPrefix_StringWithAGivenPrefix_ReturnsTrue)

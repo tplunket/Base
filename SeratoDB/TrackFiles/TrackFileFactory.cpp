@@ -73,7 +73,7 @@ TrackFile::Pointer TrackFileFactory::trackFileForPath(const String& trackFilePat
             return TrackFile::Pointer::dynamicCastFrom(WAVTrackFile::fileWithFileAt(trackFilePath, flags));
         }
         default: {
-            NXA_ALOG("Unknown file extension for file '%s'.", trackFilePath.toUTF8());
+            throw TrackFileError::exceptionWith("Unknown file extension for file '%s'.", trackFilePath.toUTF8());
         }
     }
 }

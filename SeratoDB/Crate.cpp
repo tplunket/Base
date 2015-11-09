@@ -16,7 +16,6 @@
 #include "Tags/CrateV1Tags.hpp"
 #include "Tags/VersionTag.hpp"
 #include "Tags/TagFactory.hpp"
-#include "SeratoDB/TrackFiles/TrackFileFactory.hpp"
 
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, Crate, Object);
 
@@ -200,15 +199,7 @@ void Crate::loadFromFile(void)
             case trackEntryTagIdentifier: {
                 auto entry = Serato::TrackEntry::entryWithTagOnVolume(dynamic_cast<ObjectTag&>(*tag),
                                                                       internal->rootVolumePath);
-                auto path = entry->trackFilePath();
-
-                if (!File::fileExistsAt(path) ||
-                    (TrackFileFactory::audioFileTypeForPath(path) == TrackFileFactory::Unknown)) {
-                    internal->otherTags->append(tag);
-                }
-                else {
-                    this->addTrackEntry(entry);
-                }
+                this->addTrackEntry(entry);
                 break;
             }
             default: {

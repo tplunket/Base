@@ -122,7 +122,7 @@ timestamp File::modificationDateInSecondsSince1970ForFile(const String& path)
 void File::setModificationDateInSecondsSince1970ForFile(timestamp modificationDateInSeconds, const String& path)
 {
     boost::filesystem::path boostPath(path.toUTF8());
-    NXA_ASSERT_TRUE(boost::filesystem::exists(boostPath));
-
-    boost::filesystem::last_write_time(boostPath, modificationDateInSeconds);
+    if (boost::filesystem::exists(boostPath)) {
+        boost::filesystem::last_write_time(boostPath, modificationDateInSeconds);
+    }
 }

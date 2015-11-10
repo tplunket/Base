@@ -12,10 +12,6 @@
 
 #pragma once
 
-#include "Markers/CueMarker.hpp"
-#include "Markers/LoopMarker.hpp"
-#include "Markers/GridMarker.hpp"
-
 #include "Tags/ObjectTag.hpp"
 
 #include <Base/Base.hpp>
@@ -71,10 +67,6 @@ namespace NxA { namespace Serato {
         timestamp dateModifiedInSecondsSinceJanuary1st1970(void) const;
         timestamp dateAddedInSecondsSinceJanuary1st1970(void) const;
 
-        const CueMarker::ArrayOfConst& cueMarkers(void) const;
-        const LoopMarker::ArrayOfConst& loopMarkers(void) const;
-        const GridMarker::ArrayOfConst& gridMarkers(void) const;
-
         void setTitle(const String& title);
         void setArtist(const String& artist);
         void setAlbum(const String& album);
@@ -98,18 +90,8 @@ namespace NxA { namespace Serato {
         void setSampleRateInSamplesPerSecond(uinteger32 sampleRate);
         void setArtwork(const Blob& artwork);
 
-        void setCueLoopAndGridMarkersWhichWereModifiedOn(CueMarker::ArrayOfConst& cueMarkers,
-                                                         LoopMarker::ArrayOfConst& loopMarkers,
-                                                         GridMarker::ArrayOfConst& gridMarkers,
-                                                         timestamp modificationDateInSecondsSince1970);
-        void setCueMarkersWhichWereModifiedOn(CueMarker::ArrayOfConst& markers, timestamp modificationDateInSecondsSince1970);
-        void setLoopMarkersWhichWereModifiedOn(LoopMarker::ArrayOfConst& markers, timestamp modificationDateInSecondsSince1970);
-        void setGridMarkersWhichWereModifiedOn(GridMarker::ArrayOfConst& markers, timestamp modificationDateInSecondsSince1970);
-
-        boolean needsToUpdateTrackFile(void) const;
         boolean needsToUpdateDatabaseFile(void) const;
 
         void addTo(Blob& destination) const;
-        void saveToTrackFile(String::Array& simpleWarningLog) const;
     };
 } }

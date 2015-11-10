@@ -199,10 +199,6 @@ void Database::saveIfModified(String::Array& simpleWarningLog) const
         if (track->needsToUpdateDatabaseFile()) {
             needsToUpdateDatabaseFile = true;
         }
-
-        if (track->needsToUpdateTrackFile()) {
-            track->saveToTrackFile(simpleWarningLog);
-        }
     }
 
     if (needsToUpdateDatabaseFile) {

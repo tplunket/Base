@@ -146,11 +146,6 @@ void Track::debugPrint(const Serato::Track& track)
     Track::debugPrintString(track.bpm(), String::stringWith("bpm"));
     Track::debugPrintUint((uinteger32)track.trackNumber(), String::stringWith("tracknumber"));
     Track::debugPrintUint((uinteger32)track.discNumber(), String::stringWith("discnumber"));
-
-    printf("Found %ld cue markers, %ld grid markers and %ld loop markers.\n",
-           track.cueMarkers().length(),
-           track.gridMarkers().length(),
-           track.loopMarkers().length());
 }
 #endif
 
@@ -186,10 +181,7 @@ bool Track::operator==(const Track& other) const
                     this->trackNumber() == other.trackNumber() &&
                     this->discNumber() == other.discNumber() &&
                     this->dateModifiedInSecondsSinceJanuary1st1970() == other.dateModifiedInSecondsSinceJanuary1st1970() &&
-                    this->dateAddedInSecondsSinceJanuary1st1970() == other.dateAddedInSecondsSinceJanuary1st1970() &&
-                    this->cueMarkers() == other.cueMarkers() &&
-                    this->gridMarkers() == other.gridMarkers() &&
-                    this->loopMarkers() == other.loopMarkers());
+                    this->dateAddedInSecondsSinceJanuary1st1970() == other.dateAddedInSecondsSinceJanuary1st1970());
 
     return true;
 }
@@ -305,33 +297,6 @@ timestamp Track::dateModifiedInSecondsSinceJanuary1st1970(void) const
 timestamp Track::dateAddedInSecondsSinceJanuary1st1970(void) const
 {
     return internal->uint32ForSubTagForIdentifier(trackDateAddedTagIdentifier);
-}
-
-const CueMarker::ArrayOfConst& Track::cueMarkers(void) const
-{
-    if (!internal->trackFilemarkersWereRead) {
-        internal->readMarkers();
-    }
-
-    return internal->cueMarkers;
-}
-
-const LoopMarker::ArrayOfConst& Track::loopMarkers(void) const
-{
-    if (!internal->trackFilemarkersWereRead) {
-        internal->readMarkers();
-    }
-
-    return internal->loopMarkers;
-}
-
-const GridMarker::ArrayOfConst& Track::gridMarkers(void) const
-{
-    if (!internal->trackFilemarkersWereRead) {
-        internal->readMarkers();
-    }
-
-    return internal->gridMarkers;
 }
 
 void Track::setTitle(const String& title)
@@ -480,63 +445,6 @@ void Track::setDateAddedInSecondsSinceJanuary1st1970(timestamp dateAdded)
     internal->needsToUpdateDatabaseFile = true;
 }
 
-void Track::setCueLoopAndGridMarkersWhichWereModifiedOn(CueMarker::ArrayOfConst& cueMarkers,
-                                                        LoopMarker::ArrayOfConst& loopMarkers,
-                                                        GridMarker::ArrayOfConst& gridMarkers,
-                                                        timestamp modificationDateInSecondsSince1970)
-{
-    // -- In case we haven't read the markers and since we're overwriting them anyway, we mark them as read.
-    internal->trackFilemarkersWereRead = true;
-
-    this->setCueMarkersWhichWereModifiedOn(cueMarkers, modificationDateInSecondsSince1970);
-    this->setLoopMarkersWhichWereModifiedOn(loopMarkers, modificationDateInSecondsSince1970);
-    this->setGridMarkersWhichWereModifiedOn(gridMarkers, modificationDateInSecondsSince1970);
-}
-
-void Track::setCueMarkersWhichWereModifiedOn(CueMarker::ArrayOfConst& markers, timestamp modificationDateInSecondsSince1970)
-{
-    if (!internal->trackFilemarkersWereRead) {
-        internal->readMarkers();
-    }
-
-    internal->cueMarkers = markers.pointer();
-
-    if (internal->lastMarkersModificationDate < modificationDateInSecondsSince1970) {
-        internal->lastMarkersModificationDate = modificationDateInSecondsSince1970;
-    }
-}
-
-void Track::setLoopMarkersWhichWereModifiedOn(LoopMarker::ArrayOfConst& markers, timestamp modificationDateInSecondsSince1970)
-{
-    if (!internal->trackFilemarkersWereRead) {
-        internal->readMarkers();
-    }
-
-    internal->loopMarkers = markers.pointer();
-
-    if (internal->lastMarkersModificationDate < modificationDateInSecondsSince1970) {
-        internal->lastMarkersModificationDate = modificationDateInSecondsSince1970;
-    }
-}
-
-void Track::setGridMarkersWhichWereModifiedOn(GridMarker::ArrayOfConst& markers, timestamp modificationDateInSecondsSince1970)
-{
-    if (!internal->trackFilemarkersWereRead) {
-        internal->readMarkers();
-    }
-
-    internal->gridMarkers = markers.pointer();
-
-    if (internal->lastMarkersModificationDate < modificationDateInSecondsSince1970) {
-        internal->lastMarkersModificationDate = modificationDateInSecondsSince1970;
-    }
-}
-
-boolean Track::needsToUpdateTrackFile(void) const
-{
-    return internal->lastMarkersModificationDate != 0;
-}
-
 boolean Track::needsToUpdateDatabaseFile(void) const
 {
     return internal->needsToUpdateDatabaseFile;
@@ -545,14 +453,4 @@ boolean Track::needsToUpdateDatabaseFile(void) const
 void Track::addTo(Blob& destination) const
 {
     internal->trackTag->addInSeratoTrackOrderTo(destination);
-}
-
-void Track::saveToTrackFile(String::Array& simpleWarningLog) const
-{
-    NXA_ASSERT_TRUE(internal->lastMarkersModificationDate != 0);
-
-    internal->saveToTrackFile(simpleWarningLog);
-
-    File::setModificationDateInSecondsSince1970ForFile(internal->lastMarkersModificationDate,
-                                                       internal->trackFilePath());
 }

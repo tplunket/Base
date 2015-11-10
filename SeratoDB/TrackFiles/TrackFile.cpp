@@ -156,8 +156,13 @@ void TrackFile::setTrackNumber(count trackNumber)
 
 void TrackFile::setReleaseDate(const String& date)
 {
-    auto components = date.splitBySeperator('-');
-    internal->tag->setYear(::atoi(components->firstObject().toUTF8()));
+    if (date.length()) {
+        auto components = date.splitBySeperator('-');
+        internal->tag->setYear(::atoi(components->firstObject().toUTF8()));
+    }
+    else {
+        internal->tag->setYear(0);
+    }
     internal->metadataWasModified = true;
 }
 

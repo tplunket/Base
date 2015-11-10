@@ -24,7 +24,9 @@ using namespace NxA::Serato;
 
 AIFFTrackFile::Pointer AIFFTrackFile::fileWithFileAt(const String& path, TrackFile::Flags flags)
 {
-    auto file = Internal::TagLibFilePointer(std::make_shared<TagLib::RIFF::AIFF::File>(path.toUTF8()));
+    auto file = Internal::TagLibFilePointer(std::make_shared<TagLib::RIFF::AIFF::File>(path.toUTF8(),
+                                                                                       true,
+                                                                                       TagLib::AudioProperties::ReadStyle::Fast));
     if (!file->isValid()) {
         throw TrackFileError::exceptionWith("Error loading track file '%s'.", path.toUTF8());
     }

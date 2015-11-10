@@ -37,7 +37,9 @@ using namespace NxA::Serato;
 
 MP4TrackFile::Pointer MP4TrackFile::fileWithFileAt(const String& path, TrackFile::Flags flags)
 {
-    auto file = Internal::TagLibFilePointer(std::make_shared<TagLib::MP4::File>(path.toUTF8()));
+    auto file = Internal::TagLibFilePointer(std::make_shared<TagLib::MP4::File>(path.toUTF8(),
+                                                                                true,
+                                                                                TagLib::AudioProperties::ReadStyle::Fast));
     if (!file->isValid()) {
         throw TrackFileError::exceptionWith("Error loading track file '%s'.", path.toUTF8());
     }

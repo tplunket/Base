@@ -185,41 +185,55 @@ void Track::readMarkers(void)
     this->trackFilemarkersWereRead = true;
 }
 
-void Track::saveToTrackFile(void) const
+void Track::saveToTrackFile(String::Array& simpleWarningLog) const
 {
-    auto trackFile = TrackFileFactory::trackFileForPath(this->trackFilePath());
+    try {
+        auto trackFile = TrackFileFactory::trackFileForPath(this->trackFilePath());
 
-    auto newCueMarkers = Serato::CueMarker::Array::array();
-    for (auto& marker : *(this->cueMarkers)) {
-        auto markerCopy = Serato::CueMarker::markerWith(marker);
-        newCueMarkers->append(markerCopy);
+        auto newCueMarkers = Serato::CueMarker::Array::array();
+        for (auto& marker : *(this->cueMarkers)) {
+            auto markerCopy = Serato::CueMarker::markerWith(marker);
+            newCueMarkers->append(markerCopy);
+        }
+        trackFile->setCueMarkers(newCueMarkers);
+
+        auto newLoopMarkers = Serato::LoopMarker::Array::array();
+        for (auto& marker : *(this->loopMarkers)) {
+            auto markerCopy = Serato::LoopMarker::markerWith(marker);
+            newLoopMarkers->append(markerCopy);
+        }
+        trackFile->setLoopMarkers(newLoopMarkers);
+
+        auto newGridMarkers = Serato::GridMarker::Array::array();
+        for (auto& marker : *(this->gridMarkers)) {
+            auto markerCopy = Serato::GridMarker::markerWith(marker);
+            newGridMarkers->append(markerCopy);
+        }
+        trackFile->setGridMarkers(newGridMarkers);
+
+        trackFile->saveChangesIfAny();
     }
-    trackFile->setCueMarkers(newCueMarkers);
-
-    auto newLoopMarkers = Serato::LoopMarker::Array::array();
-    for (auto& marker : *(this->loopMarkers)) {
-        auto markerCopy = Serato::LoopMarker::markerWith(marker);
-        newLoopMarkers->append(markerCopy);
+    catch (TrackFileError& exception) {
+        auto warningString = String::stringWithFormat("Couldn't save changes to track file '%s' because of '%s'.",
+                                                      this->trackFilePath()->toUTF8(),
+                                                      exception.what());
+        simpleWarningLog.append(warningString);
+        return;
     }
-    trackFile->setLoopMarkers(newLoopMarkers);
-
-    auto newGridMarkers = Serato::GridMarker::Array::array();
-    for (auto& marker : *(this->gridMarkers)) {
-        auto markerCopy = Serato::GridMarker::markerWith(marker);
-        newGridMarkers->append(markerCopy);
-    }
-    trackFile->setGridMarkers(newGridMarkers);
-
-    trackFile->saveChangesIfAny();
 
 #if NXA_PRINT_DEBUG_INFO
     {
-        printf("After saving to track file for '%s' ----------\n", this->trackFilePath()->toUTF8());
-        auto debugtrackFile = TrackFileFactory::trackFileForPath(this->trackFilePath());
-        printf("    Found %ld cue markers, %ld grid markers and %ld loop markers.\n",
-               debugtrackFile->cueMarkers().length(),
-               debugtrackFile->gridMarkers().length(),
-               debugtrackFile->loopMarkers().length());
+        try {
+            printf("After saving to track file for '%s' ----------\n", this->trackFilePath()->toUTF8());
+            auto debugtrackFile = TrackFileFactory::trackFileForPath(this->trackFilePath());
+            printf("    Found %ld cue markers, %ld grid markers and %ld loop markers.\n",
+                   debugtrackFile->cueMarkers().length(),
+                   debugtrackFile->gridMarkers().length(),
+                   debugtrackFile->loopMarkers().length());
+        } catch (TrackFileError& exception) {
+            printf("Error\n");
+            return;
+        }
     }
 #endif
 }

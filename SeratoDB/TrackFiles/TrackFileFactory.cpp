@@ -26,31 +26,25 @@ using namespace NxA::Serato;
 
 TrackFileFactory::AudioFileType TrackFileFactory::audioFileTypeForPath(const String& trackFilePath)
 {
-    if (trackFilePath.hasPostfix(".aiff") || trackFilePath.hasPostfix(".aif")) {
+    auto lowerCaseString = trackFilePath.lowerCaseString();
+    
+    if (lowerCaseString->hasPostfix(".aiff") || lowerCaseString->hasPostfix(".aif")) {
         return AudioFileType::AIFF;
     }
-    else if (trackFilePath.hasPostfix(".mp3")) {
+    else if (lowerCaseString->hasPostfix(".mp3")) {
         return AudioFileType::MP3;
     }
-    else if (trackFilePath.hasPostfix(".m4a") || trackFilePath.hasPostfix(".mp4") || trackFilePath.hasPostfix("m4v")) {
-        auto file = std::make_shared<TagLib::MP4::File>(trackFilePath.toUTF8());
-        if (!file->isValid()) {
-            return AudioFileType::Unknown;
-        }
-
-        return file->audioProperties()->codec() == TagLib::MP4::Properties::Codec::ALAC ? AudioFileType::ALAC : AudioFileType::AAC;
+    else if (lowerCaseString->hasPostfix(".m4a") || lowerCaseString->hasPostfix(".mp4") || lowerCaseString->hasPostfix("m4v")) {
+        return AudioFileType::MP4;
     }
-    else if (trackFilePath.hasPostfix(".flac")) {
+    else if (lowerCaseString->hasPostfix(".flac")) {
         return AudioFileType::FLAC;
     }
-    else if (trackFilePath.hasPostfix(".ogg")) {
+    else if (lowerCaseString->hasPostfix(".ogg")) {
         return AudioFileType::OGG;
     }
-    else if (trackFilePath.hasPostfix(".wav")) {
+    else if (lowerCaseString->hasPostfix(".wav")) {
         return AudioFileType::WAV;
-    }
-    else if (trackFilePath.hasPostfix(".wma")) {
-        return AudioFileType::WMA;
     }
     else {
         return AudioFileType::Unknown;
@@ -66,8 +60,7 @@ TrackFile::Pointer TrackFileFactory::trackFileForPath(const String& trackFilePat
         case AudioFileType::MP3: {
             return TrackFile::Pointer::dynamicCastFrom(MPEGTrackFile::fileWithFileAt(trackFilePath, flags));
         }
-        case AudioFileType::ALAC:
-        case AudioFileType::AAC: {
+        case AudioFileType::MP4: {
             return TrackFile::Pointer::dynamicCastFrom(MP4TrackFile::fileWithFileAt(trackFilePath, flags));
         }
         case AudioFileType::FLAC: {
@@ -80,8 +73,7 @@ TrackFile::Pointer TrackFileFactory::trackFileForPath(const String& trackFilePat
             return TrackFile::Pointer::dynamicCastFrom(WAVTrackFile::fileWithFileAt(trackFilePath, flags));
         }
         default: {
-            NXA_ALOG("Unknown file extension.");
+            throw TrackFileError::exceptionWith("Unknown file extension for file '%s'.", trackFilePath.toUTF8());
         }
     }
 }
-

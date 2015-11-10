@@ -208,7 +208,8 @@ void Crate::readFromFolderInVolume(const String& seratoFolderPath, const String&
                 break;
             }
             case trackEntryTagIdentifier: {
-                this->addTrackEntry(Serato::TrackEntry::entryWithTagOnVolume(dynamic_cast<ObjectTag&>(*tag), volume));
+                auto entry = Serato::TrackEntry::entryWithTagOnVolume(dynamic_cast<ObjectTag&>(*tag), volume);
+                this->addTrackEntry(entry);
                 break;
             }
             default: {

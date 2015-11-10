@@ -89,6 +89,15 @@ boolean Database::containsAValidSeratoFolder(const String& folderPath)
     return File::fileExistsAt(databaseFilePath);
 }
 
+void Database::setDatabaseFilesInSeratoFolderAsModifedOnDateInSecondsSince1970(const String& folderPath, timestamp dateModified)
+{
+    auto databaseFilePath = databaseFilePathForSeratoFolder(folderPath);
+    File::setModificationDateInSecondsSince1970ForFile(dateModified, databaseFilePath);
+
+    auto crateOrderFilePath = CrateOrderFile::pathForFileInSeratoFolder(folderPath);
+    File::setModificationDateInSecondsSince1970ForFile(dateModified, crateOrderFilePath);
+}
+
 #pragma mark Instance Methods
 
 timestamp Database::databaseModificationDateInSecondsSince1970(void) const
@@ -157,7 +166,7 @@ void Database::removeTrack(Track& track)
     internal->tracks->remove(track);
 }
 
-void Database::saveIfModified(void) const
+void Database::saveIfModified(String::Array& simpleWarningLog) const
 {
     if (!internal->databaseIsValid) {
         return;
@@ -173,10 +182,6 @@ void Database::saveIfModified(void) const
     for (auto& track : *(internal->tracks)) {
         if (track->needsToUpdateDatabaseFile()) {
             needsToUpdateDatabaseFile = true;
-        }
-
-        if (track->needsToUpdateTrackFile()) {
-            track->saveToTrackFile();
         }
     }
 

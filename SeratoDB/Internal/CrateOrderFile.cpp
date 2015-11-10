@@ -117,7 +117,6 @@ void CrateOrderFile::addCratesNamesAtTheStartOfUnlessAlreadyThere(String::ArrayO
             continue;
         }
 
-        printf("added: %s\n", crateName->toUTF8());
         cratesToAddTo.insertAt(*crateName, insertionPosition);
         insertionPosition += 1;
     }

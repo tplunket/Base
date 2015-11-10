@@ -106,7 +106,8 @@ void Database::parseDatabaseFile(void)
 
 void Database::storeTrackTag(Serato::ObjectTag& tag)
 {
-    this->tracks->append(Serato::Track::trackWithTagOnVolume(tag, databaseVolume));
+    auto track = Serato::Track::trackWithTagOnVolume(tag, databaseVolume);
+    this->tracks->append(track);
 }
 
 void Database::storeOtherTag(const Serato::Tag& tag)

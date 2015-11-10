@@ -110,15 +110,16 @@ String::ArrayOfConst::Pointer CrateOrderFile::readCratesNamesInCrateOrderFile(co
 void CrateOrderFile::addCratesNamesAtTheStartOfUnlessAlreadyThere(String::ArrayOfConst& cratesToAddTo,
                                                                   const String::ArrayOfConst& cratesToAdd)
 {
-    auto insertionPosition = cratesToAddTo.begin();
+    count insertionIndex = 0;
     for (auto& crateName : cratesToAdd) {
-        boolean alreadyHaveThisCrate = cratesToAddTo.find(crateName) != cratesToAddTo.end();
+        boolean alreadyHaveThisCrate = cratesToAddTo.contains(crateName);
         if (alreadyHaveThisCrate) {
             continue;
         }
 
-        cratesToAddTo.insertAt(*crateName, insertionPosition);
-        insertionPosition += 1;
+        cratesToAddTo.insertAt(*crateName, cratesToAddTo.begin() + insertionIndex);
+
+        ++insertionIndex;
     }
 }
 

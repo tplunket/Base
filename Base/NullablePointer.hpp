@@ -34,6 +34,7 @@ namespace NxA {
         NullablePointer(const Pointer<T>& other) : Pointer<T>(other) { };
         ~NullablePointer() = default;
 
+        #pragma mark Operators
         operator Pointer<const T>() const
         {
             NXA_ASSERT_FALSE(this->isNull());

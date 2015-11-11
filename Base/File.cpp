@@ -24,7 +24,6 @@
 
 #include <boost/filesystem.hpp>
 
-#include <sys/stat.h>
 #include <iostream>
 #include <fstream>
 
@@ -41,6 +40,12 @@ Blob::Pointer File::readFileAt(const String& path)
         if (fileData) {
             fstream file(path.toUTF8(), ios::in | ios::binary);
             file.read(reinterpret_cast<char*>(fileData), fileSize);
+
+            if (file.rdstate() & std::ifstream::failbit) {
+                file.close();
+                throw FileError::exceptionWith("Error reading file at '%s'.", path.toUTF8());
+            }
+            
             file.close();
 
             auto result = Blob::blobWithMemoryAndSize(fileData, fileSize);
@@ -57,6 +62,12 @@ void File::writeBlobToFileAt(const Blob& content, const String& path)
 {
     fstream file(path.toUTF8(), ios::out | ios::binary);
     file.write(reinterpret_cast<const char *>(content.data()), content.size());
+
+    if (file.rdstate() & std::ifstream::failbit) {
+        file.close();
+        throw FileError::exceptionWith("Error writing to file at '%s'.", path.toUTF8());
+    }
+
     file.close();
 }
 
@@ -95,34 +106,46 @@ String::Pointer File::removePrefixFromPath(const String& prefix,
 
 boolean File::fileExistsAt(const String& path)
 {
-    struct stat buf;
-    return (::stat(path.toUTF8(), &buf) != -1);
+    boost::filesystem::path boostPath(path.toUTF8());
+    return (boost::filesystem::exists(boostPath) && boost::filesystem::is_regular_file(boostPath));
+}
+
+boolean File::directoryExistsAt(const String& path)
+{
+    boost::filesystem::path boostPath(path.toUTF8());
+    return (boost::filesystem::exists(boostPath) && boost::filesystem::is_directory(boostPath));
 }
 
 NxA::count File::sizeOfFileAt(const String& path)
 {
-    struct stat buf;
-    if (::stat(path.toUTF8(), &buf) == -1) {
-        return 0;
-    }
+    boost::filesystem::path boostPath(path.toUTF8());
+    return (boost::filesystem::file_size(boostPath));
+}
 
-    return buf.st_size;
+void File::createDirectoryAt(const String& path)
+{
+    try {
+        boost::filesystem::path boostPath(path.toUTF8());
+        boost::filesystem::create_directory(boostPath);
+    } catch (...) {
+        throw FileError::exceptionWith("Error creating directory at '%s'.", path.toUTF8());
+    }
 }
 
 timestamp File::modificationDateInSecondsSince1970ForFile(const String& path)
 {
-    struct stat buf;
-    if (::stat(path.toUTF8(), &buf) == -1) {
-        return 0;
-    }
-
-    return buf.st_mtimespec.tv_sec;
+    boost::filesystem::path boostPath(path.toUTF8());
+    return (boost::filesystem::last_write_time(boostPath));
 }
 
 void File::setModificationDateInSecondsSince1970ForFile(timestamp modificationDateInSeconds, const String& path)
 {
-    boost::filesystem::path boostPath(path.toUTF8());
-    if (boost::filesystem::exists(boostPath)) {
-        boost::filesystem::last_write_time(boostPath, modificationDateInSeconds);
+    try {
+        boost::filesystem::path boostPath(path.toUTF8());
+        if (boost::filesystem::exists(boostPath)) {
+            boost::filesystem::last_write_time(boostPath, modificationDateInSeconds);
+        }
+    } catch (...) {
+        throw FileError::exceptionWith("Error setting modification date on '%s'.", path.toUTF8());
     }
 }

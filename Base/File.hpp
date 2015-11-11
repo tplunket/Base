@@ -27,6 +27,8 @@
 #include "Base/Uncopyable.hpp"
 
 namespace NxA {
+    NXA_EXCEPTION_NAMED_WITH_PARENT(FileError, NxA::Exception);
+
     class File : private Uncopyable {
     public:
         #pragma mark Constructors & Destructors
@@ -44,7 +46,10 @@ namespace NxA {
                                                     const String& path);
 
         static boolean fileExistsAt(const String& path);
+        static boolean directoryExistsAt(const String& path);
         static count sizeOfFileAt(const String& path);
+
+        static void createDirectoryAt(const String& path);
 
         static timestamp modificationDateInSecondsSince1970ForFile(const String& path);
         static void setModificationDateInSecondsSince1970ForFile(timestamp modificationDateInSeconds, const String& path);

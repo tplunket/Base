@@ -56,10 +56,10 @@ void DatabaseSet::removeDatabase(Database& db)
     internal->databases->remove(db);
 }
 
-void DatabaseSet::saveIfModified(String::Array& simpleWarningLog) const
+void DatabaseSet::saveIfModified(void) const
 {
     auto& dbs = this->databases();
     for (auto iter = dbs.begin(); iter != dbs.end(); ++iter) {
-        (*iter)->saveIfModified(simpleWarningLog);
+        (*iter)->saveIfModified();
     }
 }

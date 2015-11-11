@@ -37,6 +37,6 @@ namespace NxA { namespace Serato {
                                                        const String& volume);
         void removeDatabase(Database& db);
 
-        void saveIfModified(String::Array& simpleWarningLog) const;
+        void saveIfModified(void) const;
     };
 } }

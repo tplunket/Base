@@ -24,9 +24,6 @@
 #include <SeratoDB/Track.hpp>
 #include <Tags/ObjectTag.hpp>
 #include <TrackFiles/TrackFile.hpp>
-#include <Markers/CueMarker.hpp>
-#include <Markers/LoopMarker.hpp>
-#include <Markers/GridMarker.hpp>
 
 #include <Base/Base.hpp>
 #include <Base/Internal/Object.hpp>
@@ -43,12 +40,6 @@ namespace NxA { namespace Serato { namespace Internal {
         String::PointerToConst rootFolder;
 
         boolean needsToUpdateDatabaseFile;
-        boolean trackFilemarkersWereRead;
-
-        Serato::CueMarker::ArrayOfConst::Pointer cueMarkers;
-        Serato::LoopMarker::ArrayOfConst::Pointer loopMarkers;
-        Serato::GridMarker::ArrayOfConst::Pointer gridMarkers;
-        timestamp lastMarkersModificationDate;
 
         #pragma mark Instance Methods
         const String& stringForSubTagForIdentifier(uinteger32 identifier) const;
@@ -61,7 +52,5 @@ namespace NxA { namespace Serato { namespace Internal {
         void setBooleanForSubTagForIdentifier(boolean value, uinteger32 identifier);
 
         String::Pointer trackFilePath(void) const;
-        void readMarkers(void);
-        void saveToTrackFile(String::Array& simpleWarningLog) const;
     };
 } } }

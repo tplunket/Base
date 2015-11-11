@@ -203,9 +203,12 @@ void TrackFile::saveChangesIfAny(void)
 #if NXA_PRINT_DEBUG_INFO
         printf("Saving track file '%s'.\n", this->filePath()->toUTF8());
 #endif
-        internal->file->save();
 
         internal->metadataWasModified = false;
         internal->markersWereModified = false;
+
+        if (!internal->file->save()) {
+            throw TrackFileError::exceptionWith("Couldn't not save file at '%s'.", this->filePath()->toUTF8());
+        }
     }
 }

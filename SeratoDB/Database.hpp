@@ -55,6 +55,6 @@ namespace NxA { namespace Serato {
         void addTrack(Track& track);
         void removeTrack(Track& track);
 
-        void saveIfModified(String::Array& simpleWarningLog) const;
+        void saveIfModified(void) const;
     };
 } }

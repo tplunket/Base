@@ -126,6 +126,11 @@ void Database::setDatabaseFilesInSeratoFolderAsModifedOnDateInSecondsSince1970(c
 
 timestamp Database::databaseModificationDateInSecondsSince1970(void) const
 {
+    if (!File::fileExistsAt(internal->databaseFilePath)) {
+        // -- If we don't have a database file yet, we return a very old date.
+        return 0;
+    }
+
     return File::modificationDateInSecondsSince1970ForFile(internal->databaseFilePath);
 }
 

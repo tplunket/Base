@@ -71,6 +71,11 @@ Crate& CrateOrderFile::rootCrate(void)
 
 timestamp CrateOrderFile::modificationDateInSecondsSince1970(void) const
 {
+    if (!File::fileExistsAt(internal->crateOrderFilePath)) {
+        // -- If we don't have a crate order file yet, we return a really old date.
+        return 0;
+    }
+
     return File::modificationDateInSecondsSince1970ForFile(internal->crateOrderFilePath);
 }
 

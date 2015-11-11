@@ -34,13 +34,20 @@ namespace NxA { namespace Serato { namespace Internal {
         NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTORS_FOR(NxA::Serato, Crate);
 
         #pragma mark Constructors & Destructors
-        Crate(const String& fullName, const String& volumePath, const String& filePath);
+        Crate(const String& fullName, const String& volumePath, const String& fromSeratoFolderPath);
+
+        #pragma mark Class Methods
+        static String::Pointer smartCratesDirectoryPathInSeratoFolder(const String& seratoFolderPath);
+        static String::Pointer crateFilePathForCrateNameInSeratoFolder(const String& crateName,
+                                                                       const String& seratoFolderPath);
+        static String::Pointer crateFilePathForSmartCrateNameInSeratoFolder(const String& crateName,
+                                                                            const String& seratoFolderPath);
 
         #pragma mark Instance Variables
         String::PointerToConst crateName;
         String::PointerToConst crateFullName;
         String::PointerToConst rootVolumePath;
-        String::PointerToConst crateFilePath;
+        String::PointerToConst seratoFolderPath;
 
         boolean tracksWereModified;
         boolean cratesWereModified;
@@ -53,5 +60,7 @@ namespace NxA { namespace Serato { namespace Internal {
 
         #pragma mark Instance Methods
         void markCratesAsModified(void);
+
+        String::Pointer crateFilePath(void);
     };
 } } }

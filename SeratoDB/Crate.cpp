@@ -34,8 +34,7 @@ Crate::Pointer Crate::crateWithNameInFolderOnVolume(const String& crateFullName,
 {
     auto internalObject = Internal::Crate::Pointer(std::make_shared<Internal::Crate>(crateFullName,
                                                                                      volumePath,
-                                                                                     crateFilePathForCrateNameInSeratoFolder(crateFullName,
-                                                                                                                             seratoFolderPath)));
+                                                                                     seratoFolderPath));
     auto newCrate = Crate::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
 
     auto lastSeperatorIndex = crateFullName.indexOfLastOccurenceOf("%%");
@@ -57,41 +56,15 @@ String::Pointer Crate::subCratesDirectoryPathInSeratoFolder(const String& serato
     return joinedPath;
 }
 
-String::Pointer Crate::smartCratesDirectoryPathInSeratoFolder(const String& seratoFolderPath)
-{
-    auto joinedPath = File::joinPaths(seratoFolderPath, String::stringWith("SmartCrates"));
-    return joinedPath;
-}
-
-String::Pointer Crate::crateFilePathForCrateNameInSeratoFolder(const String& crateName,
-                                                               const String& seratoFolderPath)
-{
-    auto cratesFolderPath = subCratesDirectoryPathInSeratoFolder(seratoFolderPath);
-    auto crateFilePartialPath = File::joinPaths(cratesFolderPath, crateName);
-    crateFilePartialPath->append(".crate");
-
-    return crateFilePartialPath;
-}
-
-String::Pointer Crate::crateFilePathForSmartCrateNameInSeratoFolder(const String& crateName,
-                                                                    const String& seratoFolderPath)
-{
-    auto cratesFolderPath = subCratesDirectoryPathInSeratoFolder(seratoFolderPath);
-    auto crateFilePartialPath = File::joinPaths(cratesFolderPath, crateName);
-    crateFilePartialPath->append(".scrate");
-
-    return crateFilePartialPath;
-}
-
 boolean Crate::isAValidCrateName(const String& crateFullName, const String& seratoFolderPath)
 {
-    auto crateFilePath = crateFilePathForCrateNameInSeratoFolder(crateFullName, seratoFolderPath);
+    auto crateFilePath = Internal::Crate::crateFilePathForCrateNameInSeratoFolder(crateFullName, seratoFolderPath);
     return File::fileExistsAt(crateFilePath);
 }
 
 boolean Crate::isASmartCrateName(const String& crateFullName, const String& seratoFolderPath)
 {
-    auto crateFilePath = crateFilePathForSmartCrateNameInSeratoFolder(crateFullName, seratoFolderPath);
+    auto crateFilePath = Internal::Crate::crateFilePathForSmartCrateNameInSeratoFolder(crateFullName, seratoFolderPath);
     return File::fileExistsAt(crateFilePath);
 }
 
@@ -179,7 +152,7 @@ void Crate::removeTrackEntry(TrackEntry& trackEntry)
 
 void Crate::loadFromFile(void)
 {
-    auto crateFileData = File::readFileAt(internal->crateFilePath);
+    auto crateFileData = File::readFileAt(internal->crateFilePath());
     auto tags = TagFactory::parseTagsAt(crateFileData->data(), crateFileData->size());
     if (!tags->length()) {
         return;
@@ -227,7 +200,7 @@ void Crate::removeFromParentCrate(void)
 
 const String& Crate::crateFilePath(void) const
 {
-    return internal->crateFilePath;
+    return internal->crateFilePath();
 }
 
 void Crate::resetModificationFlags()
@@ -258,7 +231,12 @@ void Crate::saveIfModifiedAndRecurseToChildren(void) const
             tag->addTo(outputData);
         }
 
-        File::writeBlobToFileAt(outputData, internal->crateFilePath);
+        auto subCratesPath = Crate::subCratesDirectoryPathInSeratoFolder(internal->seratoFolderPath);
+        if (!File::directoryExistsAt(subCratesPath)) {
+            File::createDirectoryAt(subCratesPath);
+        }
+        
+        File::writeBlobToFileAt(outputData, internal->crateFilePath());
     }
 
     for (auto& crate : *internal->childrenCrates) {

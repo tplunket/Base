@@ -108,7 +108,7 @@ void OGGTrackFile::readMarkers(void)
                     double position = std::stod(values[0].toCString());
                     double bpm = std::stod(values[1].substr(0, values[1].length() - 1).toCString());
 
-                    this->addGridMarker(Serato::GridMarker::markerWithPositionAndBeatsPerMinute(position, bpm));
+                    this->gridMarkers->append(Serato::GridMarker::markerWithPositionAndBeatsPerMinute(position, bpm));
                 }
             }
         }

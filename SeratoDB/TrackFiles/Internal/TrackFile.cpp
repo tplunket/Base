@@ -122,20 +122,13 @@ void TrackFile::readMarkersV2FromBase64String(const byte* markerV2Data, count to
     }
 }
 
-void TrackFile::addGridMarker(Serato::GridMarker& gridMarker)
-{
-    this->gridMarkers->append(gridMarker.pointer());
-    this->markersWereModified = true;
-}
-
 void TrackFile::readGridMarkersFrom(const byte* gridMarkerData)
 {
     NXA_ASSERT_FALSE(this->markersWereIgnored);
 
-
     auto markers = Serato::GridMarker::markersWithMemoryAt(gridMarkerData);
     for (auto& marker : *markers) {
-        this->addGridMarker(marker);
+        this->gridMarkers->append(marker);
     }
 }
 

@@ -60,7 +60,6 @@ namespace NxA { namespace Serato { namespace Internal {
         const byte* readMarkerAtAndAdvanceToNextTag(const byte* tagStart);
         void readMarkersV2FromBase64String(const byte* markerV2Data, count totalSize);
         void readGridMarkersFrom(const byte* gridMarkerData);
-        void addGridMarker(Serato::GridMarker& gridMarker);
         String::Pointer base64StringFromMarkersV2(void);
         Blob::Pointer gridMarkerDataFromGridMarkers(void);
         virtual void writeMarkers(void) = 0;

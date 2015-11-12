@@ -52,41 +52,15 @@ String::Pointer Crate::subCratesDirectoryPathInSeratoFolder(const String& serato
     return joinedPath;
 }
 
-String::Pointer Crate::smartCratesDirectoryPathInSeratoFolder(const String& seratoFolderPath)
-{
-    auto joinedPath = File::joinPaths(seratoFolderPath, String::stringWith("SmartCrates"));
-    return joinedPath;
-}
-
-String::Pointer Crate::crateFilePathForCrateNameInSeratoFolder(const String& crateName,
-                                                               const String& seratoFolderPath)
-{
-    auto cratesFolderPath = subCratesDirectoryPathInSeratoFolder(seratoFolderPath);
-    auto crateFilePartialPath = File::joinPaths(cratesFolderPath, crateName);
-    crateFilePartialPath->append(".crate");
-
-    return crateFilePartialPath;
-}
-
-String::Pointer Crate::crateFilePathForSmartCrateNameInSeratoFolder(const String& crateName,
-                                                                    const String& seratoFolderPath)
-{
-    auto cratesFolderPath = subCratesDirectoryPathInSeratoFolder(seratoFolderPath);
-    auto crateFilePartialPath = File::joinPaths(cratesFolderPath, crateName);
-    crateFilePartialPath->append(".scrate");
-
-    return crateFilePartialPath;
-}
-
 boolean Crate::isAValidCrateName(const String& crateFullName, const String& seratoFolderPath)
 {
-    auto crateFilePath = crateFilePathForCrateNameInSeratoFolder(crateFullName, seratoFolderPath);
+    auto crateFilePath = Internal::Crate::crateFilePathForCrateNameInSeratoFolder(crateFullName, seratoFolderPath);
     return File::fileExistsAt(crateFilePath);
 }
 
 boolean Crate::isASmartCrateName(const String& crateFullName, const String& seratoFolderPath)
 {
-    auto crateFilePath = crateFilePathForSmartCrateNameInSeratoFolder(crateFullName, seratoFolderPath);
+    auto crateFilePath = Internal::Crate::crateFilePathForSmartCrateNameInSeratoFolder(crateFullName, seratoFolderPath);
     return File::fileExistsAt(crateFilePath);
 }
 
@@ -186,7 +160,7 @@ void Crate::removeTrackEntry(TrackEntry& trackEntry)
 
 void Crate::readFromFolderInVolume(const String& seratoFolderPath, const String& volume)
 {
-    auto filePath = crateFilePathForCrateNameInSeratoFolder(crateFullName(), seratoFolderPath);
+    auto filePath = Internal::Crate::crateFilePathForCrateNameInSeratoFolder(crateFullName(), seratoFolderPath);
 
     internal->crateFilePaths->append(String::stringWith(filePath));
 
@@ -255,19 +229,19 @@ void Crate::saveIfModifiedAndRecurseToChildren(void) const
 {
     if (internal->tracksWereModified) {
         for (auto cratePath : *internal->crateFilePaths) {
-            auto outputData = Blob::blob();
+        auto outputData = Blob::blob();
 
-            auto versionTag = VersionTag::tagWithIdentifierAndValue(crateVersionTagIdentifier,
-                                                                    String::stringWith(crateFileCurrentVersionString));
-            versionTag->addTo(outputData);
+        auto versionTag = VersionTag::tagWithIdentifierAndValue(crateVersionTagIdentifier,
+                                                                String::stringWith(crateFileCurrentVersionString));
+        versionTag->addTo(outputData);
 
-            for (auto& trackEntry : *internal->trackEntries) {
-                trackEntry->tagForEntry().addTo(outputData);
-            }
+        for (auto& trackEntry : *internal->trackEntries) {
+            trackEntry->tagForEntry().addTo(outputData);
+        }
 
-            for (auto& tag : *internal->otherTags) {
-                tag->addTo(outputData);
-            }
+        for (auto& tag : *internal->otherTags) {
+            tag->addTo(outputData);
+        }
 
             File::writeBlobToFileAt(outputData, cratePath);
         }

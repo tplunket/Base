@@ -156,6 +156,8 @@ void OGGTrackFile::replaceGridMarkersField(void)
 void OGGTrackFile::writeMarkers(void)
 {
     this->oggComment->removeField(oggMarkersItemName);
+    TagLib::String propertyString;
+    this->oggComment->addField(oggMarkersItemName, propertyString);
 
     this->replaceMarkersV2Field();
     this->replaceGridMarkersField();

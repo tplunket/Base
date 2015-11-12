@@ -36,6 +36,13 @@ namespace NxA { namespace Serato { namespace Internal {
         #pragma mark Constructors & Destructors
         Crate(const String& fullName);
 
+        #pragma mark Class Methods
+        static String::Pointer smartCratesDirectoryPathInSeratoFolder(const String& seratoFolderPath);
+        static String::Pointer crateFilePathForCrateNameInSeratoFolder(const String& crateName,
+                                                                       const String& seratoFolderPath);
+        static String::Pointer crateFilePathForSmartCrateNameInSeratoFolder(const String& crateName,
+                                                                            const String& seratoFolderPath);
+                                                                            
         #pragma mark Instance Variables
         String::PointerToConst crateName;
         String::PointerToConst crateFullName;

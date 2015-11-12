@@ -136,13 +136,13 @@ void FLACTrackFile::writeGridMarkersItem(void)
 void FLACTrackFile::writeMarkers(void)
 {
     if (this->id3v2Tag) {
-        ID3TrackFile::removeGEOBFrameNamedInTag(String::stringWith(id3MarkersFrameDescription), this->id3v2Tag);
-
+        ID3TrackFile::replaceMarkersFrameInTagWithEmptyFrame(this->id3v2Tag);
         ID3TrackFile::replaceMarkersV2FrameInTagWith(this->id3v2Tag, this->base64StringFromMarkersV2());
         ID3TrackFile::replaceGridMarkersFrameInTagWith(this->id3v2Tag, this->gridMarkerDataFromGridMarkers());
     }
     else {
         this->oggComment->removeField(flacMarkersItemName);
+        this->oggComment->addField(flacMarkersItemName, TagLib::String());
 
         this->writeMarkersV2Item();
         this->writeGridMarkersItem();

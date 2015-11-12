@@ -128,6 +128,21 @@ void ID3TrackFile::removeGEOBFrameNamedInTag(const String& name, TagLib::ID3v2::
     }
 }
 
+void ID3TrackFile::replaceMarkersFrameInTagWithEmptyFrame(TagLib::ID3v2::Tag* id3v2Tag)
+{
+    ID3TrackFile::removeGEOBFrameNamedInTag(String::stringWith(id3MarkersFrameDescription), id3v2Tag);
+
+    auto newFrame = new TagLib::ID3v2::GeneralEncapsulatedObjectFrame();
+    TagLib::ByteVector newData;
+    newFrame->setObject(newData);
+    newFrame->setTextEncoding(TagLib::String::Latin1);
+    newFrame->setMimeType("application/octet-stream");
+    newFrame->setFileName("");
+    newFrame->setDescription(id3MarkersFrameDescription);
+
+    id3v2Tag->addFrame(newFrame);
+}
+
 void ID3TrackFile::replaceMarkersV2FrameInTagWith(TagLib::ID3v2::Tag* id3v2Tag, const String& base64MarkersData)
 {
     ID3TrackFile::removeGEOBFrameNamedInTag(String::stringWith(id3MarkersV2FrameDescription), id3v2Tag);
@@ -295,7 +310,7 @@ void ID3TrackFile::readMarkers(void)
 
 void ID3TrackFile::writeMarkers(void)
 {
-    ID3TrackFile::removeGEOBFrameNamedInTag(String::stringWith(id3MarkersFrameDescription), this->id3v2Tag);
+    ID3TrackFile::replaceMarkersFrameInTagWithEmptyFrame(this->id3v2Tag);
 
     ID3TrackFile::replaceMarkersV2FrameInTagWith(this->id3v2Tag, this->base64StringFromMarkersV2());
     ID3TrackFile::replaceGridMarkersFrameInTagWith(this->id3v2Tag, this->gridMarkerDataFromGridMarkers());

@@ -132,13 +132,10 @@ void TrackFile::readGridMarkersFrom(const byte* gridMarkerData)
 {
     NXA_ASSERT_FALSE(this->markersWereIgnored);
 
-    auto numberOfMarkers = Platform::bigEndianUInteger32ValueAt(gridMarkerData);
-    gridMarkerData += 4;
 
-    for (uint32_t index = 0; index < numberOfMarkers; ++index) {
-        this->addGridMarker(Serato::GridMarker::markerWithMemoryAt(gridMarkerData));
-
-        gridMarkerData = Serato::GridMarker::nextGridMarkerAfter(gridMarkerData);
+    auto markers = Serato::GridMarker::markersWithMemoryAt(gridMarkerData);
+    for (auto& marker : *markers) {
+        this->addGridMarker(marker);
     }
 }
 
@@ -187,15 +184,7 @@ Blob::Pointer TrackFile::gridMarkerDataFromGridMarkers(void)
         return data;
     }
 
-    uinteger32 numberOfMarkers;
-    Platform::writeBigEndianUInteger32ValueAt(this->gridMarkers->length(), reinterpret_cast<byte*>(&numberOfMarkers));
+    Serato::GridMarker::addMarkersTo(this->gridMarkers, data);
 
-    auto numberOfMarkersData = Blob::blobWithMemoryAndSize(reinterpret_cast<byte*>(&numberOfMarkers), sizeof(numberOfMarkers));
-    data->append(numberOfMarkersData);
-
-    for (auto& marker : *(this->gridMarkers)) {
-        marker->addDataTo(data);
-    }
-    
     return data;
 }

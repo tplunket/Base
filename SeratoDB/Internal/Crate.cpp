@@ -38,6 +38,34 @@ Crate::Crate(const String& fullName) :
              trackEntries(Serato::TrackEntry::Array::array()),
              otherTags(Serato::Tag::ArrayOfConst::array()) { }
 
+#pragma mark Class Methods
+
+NxA::String::Pointer Crate::smartCratesDirectoryPathInSeratoFolder(const String& seratoFolderPath)
+{
+    auto joinedPath = File::joinPaths(seratoFolderPath, String::stringWith("SmartCrates"));
+    return joinedPath;
+}
+
+NxA::String::Pointer Crate::crateFilePathForCrateNameInSeratoFolder(const String& crateName,
+                                                                    const String& seratoFolderPath)
+{
+    auto cratesFolderPath = NxA::Serato::Crate::subCratesDirectoryPathInSeratoFolder(seratoFolderPath);
+    auto crateFilePartialPath = File::joinPaths(cratesFolderPath, crateName);
+    crateFilePartialPath->append(".crate");
+
+    return crateFilePartialPath;
+}
+
+NxA::String::Pointer Crate::crateFilePathForSmartCrateNameInSeratoFolder(const String& crateName,
+                                                                         const String& seratoFolderPath)
+{
+    auto cratesFolderPath = NxA::Serato::Crate::subCratesDirectoryPathInSeratoFolder(seratoFolderPath);
+    auto crateFilePartialPath = File::joinPaths(cratesFolderPath, crateName);
+    crateFilePartialPath->append(".scrate");
+
+    return crateFilePartialPath;
+}
+
 #pragma mark Instance Methods
 
 void Crate::markCratesAsModified(void)

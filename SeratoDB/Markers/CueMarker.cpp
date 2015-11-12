@@ -149,3 +149,16 @@ void CueMarker::addId3TagTo(Blob& data) const
     data.append(headerData);
     data.appendWithStringTermination(this->label().toUTF8());
 }
+
+#pragma mark Overriden Object Instance Methods
+
+NxA::String::Pointer CueMarker::description(void)
+{
+    return NxA::String::stringWithFormat("Cue Marker at %fms with index %d label '%s' and color 0x%02x 0x%02x 0x%02x.",
+                                         this->positionInMilliseconds(),
+                                         this->index(),
+                                         this->label().toUTF8(),
+                                         this->colorRedComponent(),
+                                         this->colorGreenComponent(),
+                                         this->colorBlueComponent());
+}

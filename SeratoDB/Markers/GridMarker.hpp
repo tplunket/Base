@@ -36,5 +36,8 @@ namespace NxA { namespace Serato {
         #pragma mark Instance Methods
         decimal positionInSeconds(void) const;
         decimal beatsPerMinute(void) const;
+
+        #pragma mark Overidden Object Instance Methods
+        virtual NxA::String::Pointer description(void);
     };
 } }

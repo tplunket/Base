@@ -47,5 +47,8 @@ namespace NxA { namespace Serato {
         byte colorBlueComponent(void) const;
 
         void addId3TagTo(Blob& data) const;
+
+        #pragma mark Overidden Object Instance Methods
+        virtual NxA::String::Pointer description(void);
     };
 } }

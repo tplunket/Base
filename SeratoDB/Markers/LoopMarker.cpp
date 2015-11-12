@@ -168,3 +168,17 @@ void LoopMarker::addId3TagTo(Blob& data) const
     data.append(headerData);
     data.appendWithStringTermination(this->label().toUTF8());
 }
+
+#pragma mark Overriden Object Instance Methods
+
+NxA::String::Pointer LoopMarker::description(void)
+{
+    return NxA::String::stringWithFormat("Loop Marker at %fms ends at %d with index %d label '%s' and color 0x%02x 0x%02x 0x%02x.",
+                                         this->startPositionInMilliseconds(),
+                                         this->endPositionInMilliseconds(),
+                                         this->index(),
+                                         this->label().toUTF8(),
+                                         this->colorRedComponent(),
+                                         this->colorGreenComponent(),
+                                         this->colorBlueComponent());
+}

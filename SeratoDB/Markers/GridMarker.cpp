@@ -137,3 +137,10 @@ decimal GridMarker::beatsPerMinute(void) const
 {
     return internal->beatsPerMinute;
 }
+
+#pragma mark Overriden Object Instance Methods
+
+NxA::String::Pointer GridMarker::description(void)
+{
+    return NxA::String::stringWithFormat("Grid Marker at %fs with bpm %f.", this->positionInSeconds(), this->beatsPerMinute());
+}

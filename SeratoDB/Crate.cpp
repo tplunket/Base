@@ -89,12 +89,12 @@ void Crate::addFullCrateNameWithPrefixAndRecurseToChildren(String& destination, 
     }
 }
 
-TrackEntry::Array& Crate::trackEntries(void)
+const TrackEntry::Array& Crate::trackEntries(void) const
 {
     return *(internal->trackEntries);
 }
 
-Crate::Array& Crate::crates(void)
+const Crate::Array& Crate::crates(void) const
 {
     return *(internal->childrenCrates);
 }
@@ -127,7 +127,7 @@ Crate::Pointer Crate::findOrAddCrateWithName(const String& crateName) {
     }
 
     auto crate = Serato::Crate::crateWithName(crateName);
-    crates().append(crate);
+    this->addCrate(crate);
     return crate;
 }
 

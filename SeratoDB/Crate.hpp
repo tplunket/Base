@@ -41,8 +41,8 @@ namespace NxA { namespace Serato {
         const String& crateFullName(void) const;
         void addFullCrateNameWithPrefixAndRecurseToChildren(String& destination, const char* prefix) const;
 
-        TrackEntry::Array& trackEntries(void);
-        Crate::Array& crates(void);
+        const TrackEntry::Array& trackEntries(void) const;
+        const Crate::Array& crates(void) const;
 
         void addCrate(Crate& crate);
         void removeCrate(Crate& crate);

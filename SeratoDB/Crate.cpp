@@ -119,7 +119,8 @@ void Crate::removeCrate(Crate& crate)
     internal->markCratesAsModified();
 }
 
-Crate::Pointer Crate::findOrAddCrateWithName(const String& crateName) {
+Crate::Pointer Crate::findOrAddCrateWithName(const String& crateName)
+{
     for (auto& crate : crates()) {
         if (crate->crateFullName() == crateName) {
             return crate;

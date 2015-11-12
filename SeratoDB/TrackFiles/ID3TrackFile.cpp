@@ -119,66 +119,86 @@ Blob::Pointer ID3TrackFile::artwork(void) const
 
 void ID3TrackFile::setReleaseDate(const String& date)
 {
-    Internal::ID3TrackFile::setReleaseDateForTag(date, internal->id3v2Tag);
-    internal->metadataWasModified = true;
+    if (date != this->releaseDate()) {
+        Internal::ID3TrackFile::setReleaseDateForTag(date, internal->id3v2Tag);
+        internal->metadataWasModified = true;
 
-    TrackFile::setReleaseDate(date);
+        TrackFile::setReleaseDate(date);
+    }
 }
 
 void ID3TrackFile::setKey(const String& key)
 {
-    internal->setStringValueForFrameNamed(key, Internal::id3KeyFrameName);
-    internal->metadataWasModified = true;
+    if (key != this->key()) {
+        internal->setStringValueForFrameNamed(key, Internal::id3KeyFrameName);
+        internal->metadataWasModified = true;
+    }
 }
 
 void ID3TrackFile::setComposer(const String& composer)
 {
-    internal->setStringValueForFrameNamed(composer, Internal::id3ComposerFrameName);
-    internal->metadataWasModified = true;
+    if (composer != this->composer()) {
+        internal->setStringValueForFrameNamed(composer, Internal::id3ComposerFrameName);
+        internal->metadataWasModified = true;
+    }
 }
 
 void ID3TrackFile::setGrouping(const String& grouping)
 {
-    internal->setStringValueForFrameNamed(grouping, Internal::id3GroupingFrameName);
-    internal->metadataWasModified = true;
+    if (grouping != this->grouping()) {
+        internal->setStringValueForFrameNamed(grouping, Internal::id3GroupingFrameName);
+        internal->metadataWasModified = true;
+    }
 }
 
 void ID3TrackFile::setBpm(const String& bpm)
 {
-    internal->setStringValueForFrameNamed(bpm, Internal::id3BpmFrameName);
-    internal->metadataWasModified = true;
+    if (bpm != this->bpm()) {
+        internal->setStringValueForFrameNamed(bpm, Internal::id3BpmFrameName);
+        internal->metadataWasModified = true;
+    }
 }
 
 void ID3TrackFile::setRecordLabel(const String& recordLabel)
 {
-    internal->setStringValueForFrameNamed(recordLabel, Internal::id3RecordLabelFrameName);
-    internal->metadataWasModified = true;
+    if (recordLabel != this->recordLabel()) {
+        internal->setStringValueForFrameNamed(recordLabel, Internal::id3RecordLabelFrameName);
+        internal->metadataWasModified = true;
+    }
 }
 
 void ID3TrackFile::setRemixer(const String& remixer)
 {
-    internal->setStringValueForFrameNamed(remixer, Internal::id3RemixerFrameName);
-    internal->metadataWasModified = true;
+    if (remixer != this->remixer()) {
+        internal->setStringValueForFrameNamed(remixer, Internal::id3RemixerFrameName);
+        internal->metadataWasModified = true;
+    }
 }
 
 void ID3TrackFile::setRating(integer rating)
 {
-    internal->setIntegerValueForFrameNamed(rating, Internal::id3RatingFrameName);
-    internal->metadataWasModified = true;
+    if (rating != this->rating()) {
+        printf("%d %d\n", rating, this->rating());
+        internal->setIntegerValueForFrameNamed(rating, Internal::id3RatingFrameName);
+        printf("%d %d\n", rating, this->rating());
+        internal->metadataWasModified = true;
+    }
 }
 
 void ID3TrackFile::setArtwork(const Blob& artwork)
 {
-    internal->removeArtwork();
+    if (artwork != this->artwork()) {
+        internal->removeArtwork();
 
-    TagLib::ByteVector data(*artwork.data(), artwork.size());
+        TagLib::ByteVector data(*artwork.data(), artwork.size());
 
-    auto* newFrame = new TagLib::ID3v2::AttachedPictureFrame;
-    newFrame->setData(data);
-    newFrame->setType(TagLib::ID3v2::AttachedPictureFrame::FrontCover);
-    newFrame->setDescription("");
-    newFrame->setTextEncoding(TagLib::String::Latin1);
+        auto* newFrame = new TagLib::ID3v2::AttachedPictureFrame;
+        newFrame->setData(data);
+        newFrame->setType(TagLib::ID3v2::AttachedPictureFrame::FrontCover);
+        newFrame->setDescription("");
+        newFrame->setTextEncoding(TagLib::String::Latin1);
 
-    internal->id3v2Tag->addFrame(newFrame);
-    internal->metadataWasModified = true;
+        internal->id3v2Tag->addFrame(newFrame);
+        internal->metadataWasModified = true;
+    }
 }

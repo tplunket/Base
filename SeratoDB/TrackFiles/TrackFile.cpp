@@ -120,74 +120,95 @@ const GridMarker::Array& TrackFile::gridMarkers(void) const
 
 void TrackFile::setTitle(const String& title)
 {
-    internal->tag->setTitle(TagLib::String(title.toUTF8()));
-    internal->metadataWasModified = true;
+    if (title != this->title()) {
+        internal->tag->setTitle(TagLib::String(title.toUTF8()));
+        internal->metadataWasModified = true;
+    }
 }
 
 void TrackFile::setArtist(const String& artist)
 {
-    internal->tag->setArtist(TagLib::String(artist.toUTF8()));
-    internal->metadataWasModified = true;
+    if (artist != this->artist()) {
+        internal->tag->setArtist(TagLib::String(artist.toUTF8()));
+        internal->metadataWasModified = true;
+    }
 }
 
 void TrackFile::setGenre(const String& genre)
 {
-    internal->tag->setGenre(TagLib::String(genre.toUTF8()));
-    internal->metadataWasModified = true;
+    if (genre != this->genre()) {
+        internal->tag->setGenre(TagLib::String(genre.toUTF8()));
+        internal->metadataWasModified = true;
+    }
 }
 
 void TrackFile::setComments(const String& comments)
 {
-    internal->tag->setComment(TagLib::String(comments.toUTF8()));
-    internal->metadataWasModified = true;
+    if (comments != this->comments()) {
+        internal->tag->setComment(TagLib::String(comments.toUTF8()));
+        internal->metadataWasModified = true;
+    }
 }
 
 void TrackFile::setAlbum(const String& album)
 {
-    internal->tag->setAlbum(TagLib::String(album.toUTF8()));
-    internal->metadataWasModified = true;
+    if (album != this->album()) {
+        internal->tag->setAlbum(TagLib::String(album.toUTF8()));
+        internal->metadataWasModified = true;
+    }
 }
 
 void TrackFile::setTrackNumber(count trackNumber)
 {
-    internal->tag->setTrack(trackNumber);
-    internal->metadataWasModified = true;
+    if (trackNumber != this->trackNumber()) {
+        internal->tag->setTrack(trackNumber);
+        internal->metadataWasModified = true;
+    }
 }
 
 void TrackFile::setReleaseDate(const String& date)
 {
+    count year = 0;
+
     if (date.length()) {
         auto components = date.splitBySeperator('-');
-        internal->tag->setYear(::atoi(components->firstObject().toUTF8()));
+        year = ::atoi(components->firstObject().toUTF8());
     }
-    else {
-        internal->tag->setYear(0);
+
+    if (year != internal->file->tag()->year()) {
+        internal->tag->setYear(year);
+        internal->metadataWasModified = true;
     }
-    internal->metadataWasModified = true;
 }
 
 void TrackFile::setCueMarkers(CueMarker::Array& markers)
 {
     NXA_ASSERT_FALSE(internal->markersWereIgnored);
 
-    internal->cueMarkers = markers.pointer();
-    internal->markersWereModified = true;
+    if (markers != this->cueMarkers()) {
+        internal->cueMarkers = markers.pointer();
+        internal->markersWereModified = true;
+    }
 }
 
 void TrackFile::setLoopMarkers(LoopMarker::Array& markers)
 {
     NXA_ASSERT_FALSE(internal->markersWereIgnored);
 
-    internal->loopMarkers = markers.pointer();
-    internal->markersWereModified = true;
+    if (markers != this->loopMarkers()) {
+        internal->loopMarkers = markers.pointer();
+        internal->markersWereModified = true;
+    }
 }
 
 void TrackFile::setGridMarkers(GridMarker::Array& markers)
 {
     NXA_ASSERT_FALSE(internal->markersWereIgnored);
     
-    internal->gridMarkers = markers.pointer();
-    internal->markersWereModified = true;
+    if (markers != this->gridMarkers()) {
+        internal->gridMarkers = markers.pointer();
+        internal->markersWereModified = true;
+    }
 }
 
 void TrackFile::saveChangesIfAny(void)
@@ -197,15 +218,17 @@ void TrackFile::saveChangesIfAny(void)
         printf("Writing markers for track file '%s'.\n", this->filePath()->toUTF8());
 #endif
         internal->writeMarkers();
+
+        internal->markersWereModified = false;
+        internal->metadataWasModified = true;
     }
 
-    if (internal->metadataWasModified || internal->markersWereModified) {
+    if (internal->metadataWasModified) {
 #if NXA_PRINT_DEBUG_INFO
         printf("Saving track file '%s'.\n", this->filePath()->toUTF8());
 #endif
 
         internal->metadataWasModified = false;
-        internal->markersWereModified = false;
 
         if (!internal->file->save()) {
             throw TrackFileError::exceptionWith("Couldn't not save file at '%s'.", this->filePath()->toUTF8());

@@ -139,33 +139,45 @@ Blob::Pointer MP4TrackFile::artwork(void) const
 
 void MP4TrackFile::setKey(const String& key)
 {
-    internal->setStringValueForItemNamed(key, Internal::mp4KeyItemName);
-    internal->metadataWasModified = true;
+    if (key != this->key()) {
+        internal->setStringValueForItemNamed(key, Internal::mp4KeyItemName);
+        internal->metadataWasModified = true;
+    }
 }
 
 void MP4TrackFile::setComposer(const String& composer)
 {
-    internal->setStringValueForItemNamed(composer, Internal::mp4ComposerItemName);
-    internal->metadataWasModified = true;
+    if (composer != this->composer()) {
+        internal->setStringValueForItemNamed(composer, Internal::mp4ComposerItemName);
+        internal->metadataWasModified = true;
+    }
 }
 
 void MP4TrackFile::setGrouping(const String& grouping)
 {
-    internal->setStringValueForItemNamed(grouping, Internal::mp4GroupingItemName);
-    internal->metadataWasModified = true;
+    if (grouping != this->grouping()) {
+        internal->setStringValueForItemNamed(grouping, Internal::mp4GroupingItemName);
+        internal->metadataWasModified = true;
+    }
 }
 
 void MP4TrackFile::setBpm(const String& bpm)
 {
-    internal->setIntegerValueForItemNamed(bpm.integerValue(), Internal::mp4BpmItemName);
-    internal->metadataWasModified = true;
+    integer integerBpm = bpm.integerValue();
+
+    if (integerBpm != internal->integerValueForItemNamed(Internal::mp4BpmItemName)) {
+        internal->setIntegerValueForItemNamed(integerBpm, Internal::mp4BpmItemName);
+        internal->metadataWasModified = true;
+    }
 }
 
 void MP4TrackFile::setRecordLabel(const String& recordLabel)
 {
-    internal->setStringValueForItemNamed(recordLabel, Internal::mp4LabelItemName);
-    internal->setStringValueForItemNamed(recordLabel, Internal::mp4PublisherItemName);
-    internal->metadataWasModified = true;
+    if (recordLabel != this->recordLabel()) {
+        internal->setStringValueForItemNamed(recordLabel, Internal::mp4LabelItemName);
+        internal->setStringValueForItemNamed(recordLabel, Internal::mp4PublisherItemName);
+        internal->metadataWasModified = true;
+    }
 }
 
 void MP4TrackFile::setRemixer(const String& remixer)
@@ -180,15 +192,17 @@ void MP4TrackFile::setRating(integer rating)
 
 void MP4TrackFile::setArtwork(const Blob& artwork)
 {
-    TagLib::ByteVector data(*artwork.data(), artwork.size());
-    TagLib::MP4::CoverArt newCoverArt(TagLib::MP4::CoverArt::Unknown, data);
-    TagLib::MP4::CoverArtList newCoverArtList;
-    newCoverArtList.append(newCoverArt);
+    if (artwork != this->artwork()) {
+        TagLib::ByteVector data(*artwork.data(), artwork.size());
+        TagLib::MP4::CoverArt newCoverArt(TagLib::MP4::CoverArt::Unknown, data);
+        TagLib::MP4::CoverArtList newCoverArtList;
+        newCoverArtList.append(newCoverArt);
 
-    TagLib::MP4::Item newItem(newCoverArtList);
-    // -- TODO: This needs to be set to the correct type.
-    newItem.setAtomDataType(TagLib::MP4::AtomDataType::TypePNG);
+        TagLib::MP4::Item newItem(newCoverArtList);
+        // -- TODO: This needs to be set to the correct type.
+        newItem.setAtomDataType(TagLib::MP4::AtomDataType::TypePNG);
 
-    internal->mp4Tag->setItem(Internal::mp4ArtworkItemName, newItem);
-    internal->metadataWasModified = true;
+        internal->mp4Tag->setItem(Internal::mp4ArtworkItemName, newItem);
+        internal->metadataWasModified = true;
+    }
 }

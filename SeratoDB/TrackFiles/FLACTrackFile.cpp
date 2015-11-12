@@ -184,64 +184,74 @@ Blob::Pointer FLACTrackFile::artwork(void) const
 
 void FLACTrackFile::setReleaseDate(const String& date)
 {
-    if (internal->oggComment) {
-        Internal::OGGTrackFile::setReleaseDateInComment(date, internal->oggComment);
-    }
-    else {
-        Internal::ID3TrackFile::setReleaseDateForTag(date, internal->id3v2Tag);
+    if (date != this->releaseDate()) {
+        if (internal->oggComment) {
+            Internal::OGGTrackFile::setReleaseDateInComment(date, internal->oggComment);
+        }
+        else {
+            Internal::ID3TrackFile::setReleaseDateForTag(date, internal->id3v2Tag);
 
-        TrackFile::setReleaseDate(date);
-    }
+            TrackFile::setReleaseDate(date);
+        }
 
-    internal->metadataWasModified = true;
+        internal->metadataWasModified = true;
+    }
 }
 
 void FLACTrackFile::setKey(const String& key)
 {
-    if (internal->oggComment) {
-        Internal::OGGTrackFile::setStringValueForFieldNamedInComment(key, Internal::oggKeyFieldName, internal->oggComment);
-    }
-    else {
-        Internal::ID3TrackFile::setStringValueForFrameNamedInTag(key, Internal::id3KeyFrameName, internal->id3v2Tag);
-    }
+    if (key != this->key()) {
+        if (internal->oggComment) {
+            Internal::OGGTrackFile::setStringValueForFieldNamedInComment(key, Internal::oggKeyFieldName, internal->oggComment);
+        }
+        else {
+            Internal::ID3TrackFile::setStringValueForFrameNamedInTag(key, Internal::id3KeyFrameName, internal->id3v2Tag);
+        }
 
-    internal->metadataWasModified = true;
+        internal->metadataWasModified = true;
+    }
 }
 
 void FLACTrackFile::setComposer(const String& composer)
 {
-    if (internal->oggComment) {
-        Internal::OGGTrackFile::setStringValueForFieldNamedInComment(composer, Internal::oggComposerFieldName, internal->oggComment);
-    }
-    else {
-        Internal::ID3TrackFile::setStringValueForFrameNamedInTag(composer, Internal::id3ComposerFrameName, internal->id3v2Tag);
-    }
+    if (composer != this->composer()) {
+        if (internal->oggComment) {
+            Internal::OGGTrackFile::setStringValueForFieldNamedInComment(composer, Internal::oggComposerFieldName, internal->oggComment);
+        }
+        else {
+            Internal::ID3TrackFile::setStringValueForFrameNamedInTag(composer, Internal::id3ComposerFrameName, internal->id3v2Tag);
+        }
 
-    internal->metadataWasModified = true;
+        internal->metadataWasModified = true;
+    }
 }
 
 void FLACTrackFile::setGrouping(const String& grouping)
 {
-    if (internal->oggComment) {
-        Internal::OGGTrackFile::setStringValueForFieldNamedInComment(grouping, Internal::oggGroupingFieldName, internal->oggComment);
-    }
-    else {
-        Internal::ID3TrackFile::setStringValueForFrameNamedInTag(grouping, Internal::id3GroupingFrameName, internal->id3v2Tag);
-    }
+    if (grouping != this->grouping()) {
+        if (internal->oggComment) {
+            Internal::OGGTrackFile::setStringValueForFieldNamedInComment(grouping, Internal::oggGroupingFieldName, internal->oggComment);
+        }
+        else {
+            Internal::ID3TrackFile::setStringValueForFrameNamedInTag(grouping, Internal::id3GroupingFrameName, internal->id3v2Tag);
+        }
 
-    internal->metadataWasModified = true;
+        internal->metadataWasModified = true;
+    }
 }
 
 void FLACTrackFile::setBpm(const String& bpm)
 {
-    if (internal->oggComment) {
-        Internal::OGGTrackFile::setStringValueForFieldNamedInComment(bpm, Internal::oggBpmFieldName, internal->oggComment);
-    }
-    else {
-        Internal::ID3TrackFile::setStringValueForFrameNamedInTag(bpm, Internal::id3BpmFrameName, internal->id3v2Tag);
-    }
+    if (bpm != this->bpm()) {
+        if (internal->oggComment) {
+            Internal::OGGTrackFile::setStringValueForFieldNamedInComment(bpm, Internal::oggBpmFieldName, internal->oggComment);
+        }
+        else {
+            Internal::ID3TrackFile::setStringValueForFrameNamedInTag(bpm, Internal::id3BpmFrameName, internal->id3v2Tag);
+        }
 
-    internal->metadataWasModified = true;
+        internal->metadataWasModified = true;
+    }
 }
 
 void FLACTrackFile::setRecordLabel(const String& recordLabel)
@@ -256,12 +266,14 @@ void FLACTrackFile::setRemixer(const String& remixer)
 
 void FLACTrackFile::setRating(integer rating)
 {
-    if (internal->oggComment) {
-        // -- TODO: To be implemented.
-    }
-    else {
-        Internal::ID3TrackFile::setIntegerValueForFrameNamedInTag(rating, Internal::id3RatingFrameName, internal->id3v2Tag);
-        internal->metadataWasModified = true;
+    if (rating != this->rating()) {
+        if (internal->oggComment) {
+            // -- TODO: To be implemented.
+        }
+        else {
+            Internal::ID3TrackFile::setIntegerValueForFrameNamedInTag(rating, Internal::id3RatingFrameName, internal->id3v2Tag);
+            internal->metadataWasModified = true;
+        }
     }
 }
 

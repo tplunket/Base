@@ -120,8 +120,10 @@ Blob::Pointer OGGTrackFile::artwork(void) const
 
 void OGGTrackFile::setReleaseDate(const String& date)
 {
-    Internal::OGGTrackFile::setReleaseDateInComment(date, internal->oggComment);
-    internal->metadataWasModified = true;
+    if (date != this->releaseDate()) {
+        Internal::OGGTrackFile::setReleaseDateInComment(date, internal->oggComment);
+        internal->metadataWasModified = true;
+    }
 }
 
 void OGGTrackFile::setKey(const String& key)
@@ -131,32 +133,42 @@ void OGGTrackFile::setKey(const String& key)
 
 void OGGTrackFile::setComposer(const String& composer)
 {
-    internal->setStringValueForFieldNamed(composer, Internal::oggComposerFieldName);
-    internal->metadataWasModified = true;
+    if (composer != this->composer()) {
+        internal->setStringValueForFieldNamed(composer, Internal::oggComposerFieldName);
+        internal->metadataWasModified = true;
+    }
 }
 
 void OGGTrackFile::setGrouping(const String& grouping)
 {
-    internal->setStringValueForFieldNamed(grouping, Internal::oggGroupingFieldName);
-    internal->metadataWasModified = true;
+    if (grouping != this->grouping()) {
+        internal->setStringValueForFieldNamed(grouping, Internal::oggGroupingFieldName);
+        internal->metadataWasModified = true;
+    }
 }
 
 void OGGTrackFile::setBpm(const String& bpm)
 {
-    internal->setStringValueForFieldNamed(bpm, Internal::oggBpmFieldName);
-    internal->metadataWasModified = true;
+    if (bpm != this->bpm()) {
+        internal->setStringValueForFieldNamed(bpm, Internal::oggBpmFieldName);
+        internal->metadataWasModified = true;
+    }
 }
 
 void OGGTrackFile::setRecordLabel(const String& recordLabel)
 {
-    internal->setStringValueForFieldNamed(recordLabel, Internal::oggRecordLabelFieldName);
-    internal->metadataWasModified = true;
+    if (recordLabel != this->recordLabel()) {
+        internal->setStringValueForFieldNamed(recordLabel, Internal::oggRecordLabelFieldName);
+        internal->metadataWasModified = true;
+    }
 }
 
 void OGGTrackFile::setRemixer(const String& remixer)
 {
-    internal->setStringValueForFieldNamed(remixer, Internal::oggRemixerFieldName);
-    internal->metadataWasModified = true;
+    if (remixer != this->remixer()) {
+        internal->setStringValueForFieldNamed(remixer, Internal::oggRemixerFieldName);
+        internal->metadataWasModified = true;
+    }
 }
 
 void OGGTrackFile::setRating(integer rating)

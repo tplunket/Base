@@ -22,13 +22,13 @@ namespace NxA { namespace Serato {
 
     public:
         #pragma mark Factory Methods
-        static GridMarker::Pointer markerWithMemoryAt(const byte* id3TagStart);
         static GridMarker::Pointer markerWithPositionAndBeatsPerMinute(decimal positionInSeconds,
                                                                        decimal beatsPerMinute);
         static GridMarker::Pointer markerWith(const GridMarker& other);
 
         #pragma mark Class Methods
-        static const byte* nextGridMarkerAfter(const byte* markerData);
+        static GridMarker::Array::Pointer markersWithMemoryAt(const byte* id3TagStart);
+        static void addMarkersTo(GridMarker::Array& markers, Blob& data);
 
         #pragma mark Operators
         bool operator==(const GridMarker& other) const;
@@ -36,7 +36,5 @@ namespace NxA { namespace Serato {
         #pragma mark Instance Methods
         decimal positionInSeconds(void) const;
         decimal beatsPerMinute(void) const;
-
-        void addDataTo(Blob& data) const;
     };
 } }

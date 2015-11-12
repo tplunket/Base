@@ -22,15 +22,17 @@ TEST(SeratoDB_GridMarker, markerWithMemoryAt_ASeratoMarkerTag_ReturnsACorrectMar
 {
     // -- Given.
     constexpr byte data[] = {
-        0x3C, 0x08, 0xE7, 0xA4, 0x42, 0xF8, 0x00, 0x00
+        0x00, 0x00, 0x00, 0x1, 0x3C, 0x08, 0xE7, 0xA4, 0x42, 0xF8, 0x00, 0x00
     };
 
     // -- When.
-    auto test = GridMarker::markerWithMemoryAt(data);
+    auto test = GridMarker::markersWithMemoryAt(data);
 
     // -- Then.
-    ASSERT_EQ(0.0083560086786746978, test->positionInSeconds());
-    ASSERT_EQ(124, test->beatsPerMinute());
+    ASSERT_EQ(1, test->length());
+    auto& marker = test->firstObject();
+    ASSERT_EQ(0.0083560086786746978, marker.positionInSeconds());
+    ASSERT_EQ(124, marker.beatsPerMinute());
 }
 
 TEST(SeratoDB_GridMarker, markerWithPositionAndBeatsPerMinute_AMarkerWithInitialValues_ReturnsACorrectMarker)
@@ -55,20 +57,6 @@ TEST(SeratoDB_GridMarker, markerWith_AMarkerAsSource_ReturnsACorrectMarker)
     // -- Then.
     ASSERT_EQ(0.0083560086786746978, test->positionInSeconds());
     ASSERT_EQ(124, test->beatsPerMinute());
-}
-
-TEST(SeratoDB_GridMarker, nextGridMarkerAfter_ASeratoMarkerTag_ReturnsTheAddressRightAfterTheTag)
-{
-    // -- Given.
-    constexpr byte data[] = {
-        0x3C, 0x08, 0xE7, 0xA4, 0x42, 0xF8, 0x00, 0x00
-    };
-
-    // -- When.
-    auto test = GridMarker::nextGridMarkerAfter(data);
-
-    // -- Then.
-    ASSERT_EQ(data + sizeof(data), test);
 }
 
 TEST(SeratoDB_GridMarker, OperatorEqual_TwoEqualMarkers_ReturnsTrue)
@@ -141,15 +129,17 @@ TEST(SeratoDB_GridMarker, addDataTo_AMarkerWithData_WritesTheCorrectData)
 {
     // -- Given.
     auto destination = Blob::blob();
-    auto test = GridMarker::markerWithPositionAndBeatsPerMinute(0.0083560086786746978, 124);
+    auto marker = GridMarker::markerWithPositionAndBeatsPerMinute(0.0083560086786746978, 124);
+    auto test = GridMarker::Array::array();
+    test->append(marker);
 
     // -- When.
-    test->addDataTo(destination);
+    GridMarker::addMarkersTo(test, destination);
 
     // -- Then.
     auto data = destination->data();
     constexpr byte expectedData[] = {
-        0x3C, 0x08, 0xE7, 0xA4, 0x42, 0xF8, 0x00, 0x00
+        0x00, 0x00, 0x00, 0x01, 0x3C, 0x08, 0xE7, 0xA4, 0x42, 0xF8, 0x00, 0x00, 0x00
     };
     ASSERT_EQ(sizeof(expectedData), destination->size());
     ASSERT_EQ(0, ::memcmp(expectedData, data, sizeof(expectedData)));

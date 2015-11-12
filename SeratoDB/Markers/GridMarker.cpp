@@ -20,7 +20,6 @@ namespace NxA { namespace Serato {
     typedef struct {
         byte positionInSeconds[4];
         byte beatsPerMinute[4];
-        byte endOfStruct[0];
     } GridMarkerStruct;
 } }
 
@@ -28,14 +27,6 @@ using namespace NxA;
 using namespace NxA::Serato;
 
 #pragma mark Factory Methods
-
-GridMarker::Pointer GridMarker::markerWithMemoryAt(const byte* id3TagStart)
-{
-    const GridMarkerStruct* gridMarker = (const GridMarkerStruct* )id3TagStart;
-
-    return GridMarker::markerWithPositionAndBeatsPerMinute(Platform::bigEndianFloatValueAt(gridMarker->positionInSeconds),
-                                                           Platform::bigEndianFloatValueAt(gridMarker->beatsPerMinute));
-}
 
 GridMarker::Pointer GridMarker::markerWithPositionAndBeatsPerMinute(decimal positionInSeconds, decimal beatsPerMinute)
 {
@@ -53,9 +44,74 @@ GridMarker::Pointer GridMarker::markerWith(const GridMarker& other)
 
 #pragma mark Class Methods
 
-const byte* GridMarker::nextGridMarkerAfter(const byte* markerData)
+GridMarker::Array::Pointer GridMarker::markersWithMemoryAt(const byte* id3TagStart)
 {
-    return markerData + sizeof(GridMarkerStruct);
+    auto result = GridMarker::Array::array();
+
+    auto numberOfMarkers = Platform::bigEndianUInteger32ValueAt(id3TagStart);
+    if (!numberOfMarkers) {
+        return result;
+    }
+    else if (numberOfMarkers > 256) {
+        numberOfMarkers = 256;
+    }
+
+    float nextPosition;
+
+    const GridMarkerStruct* gridMarker = (const GridMarkerStruct* )(id3TagStart + 4);
+    for (count markerIndex = 0; markerIndex < numberOfMarkers; ++markerIndex) {
+        decimal position = markerIndex ? nextPosition : Platform::bigEndianFloatValueAt(gridMarker->positionInSeconds);
+        decimal bpm;
+
+        const GridMarkerStruct* nextGridMarker = gridMarker + 1;
+        if ((markerIndex + 1) < numberOfMarkers) {
+            nextPosition = Platform::bigEndianFloatValueAt(nextGridMarker->positionInSeconds);
+
+            bpm = 240.0f / (nextPosition - position);
+        }
+        else {
+            bpm = Platform::bigEndianFloatValueAt(gridMarker->beatsPerMinute);
+        }
+
+        result->append(GridMarker::markerWithPositionAndBeatsPerMinute(position, bpm));
+
+        gridMarker = nextGridMarker;
+    }
+    
+    return result;
+}
+
+void GridMarker::addMarkersTo(GridMarker::Array& markers, NxA::Blob& data)
+{
+    uinteger32 numberOfMarkers = static_cast<uinteger32>(markers.length());
+
+    uinteger32 numberOfMarkersBuffer;
+    Platform::writeBigEndianUInteger32ValueAt(numberOfMarkers, reinterpret_cast<byte*>(&numberOfMarkersBuffer));
+    auto numberOfMarkersData = Blob::blobWithMemoryAndSize(reinterpret_cast<byte*>(&numberOfMarkersBuffer), sizeof(numberOfMarkersBuffer));
+    data.append(numberOfMarkersData);
+
+    count lastMarkerIndex = numberOfMarkers - 1;
+
+    for (count index = 0; index < numberOfMarkers; ++index) {
+        auto marker = *(markers.begin() + index);
+
+        GridMarkerStruct markerData;
+
+        Platform::writeBigEndianFloatValueAt(marker->positionInSeconds(), markerData.positionInSeconds);
+        if (index == lastMarkerIndex) {
+            Platform::writeBigEndianFloatValueAt(marker->beatsPerMinute(), markerData.beatsPerMinute);
+        }
+        else {
+            // -- Currently I'm not sure what this value means but it seems only the last marker stores a bpm value.
+            Platform::writeBigEndianUInteger32ValueAt(4, markerData.beatsPerMinute);
+        }
+
+        auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<const byte*>(&markerData), sizeof(GridMarkerStruct));
+        data.append(headerData);
+    }
+
+    // -- This marks the end of tags.
+    data.append('\0');
 }
 
 #pragma mark Operators
@@ -80,15 +136,4 @@ decimal GridMarker::positionInSeconds(void) const
 decimal GridMarker::beatsPerMinute(void) const
 {
     return internal->beatsPerMinute;
-}
-
-void GridMarker::addDataTo(Blob& data) const
-{
-    GridMarkerStruct marker;
-
-    Platform::writeBigEndianFloatValueAt(this->positionInSeconds(), marker.positionInSeconds);
-    Platform::writeBigEndianFloatValueAt(this->beatsPerMinute(), marker.beatsPerMinute);
-
-    auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<const byte*>(&marker), sizeof(GridMarkerStruct));
-    data.append(headerData);
 }

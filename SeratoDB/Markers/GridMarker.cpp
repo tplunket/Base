@@ -67,7 +67,9 @@ GridMarker::Array::Pointer GridMarker::markersWithMemoryAt(const byte* id3TagSta
         if ((markerIndex + 1) < numberOfMarkers) {
             nextPosition = Platform::bigEndianFloatValueAt(nextGridMarker->positionInSeconds);
 
-            bpm = 240.0f / (nextPosition - position);
+            count numberOfBeats = Platform::bigEndianUInteger32ValueAt(gridMarker->beatsPerMinute);
+
+            bpm = ((decimal)numberOfBeats * 60.0f) / (nextPosition - position);
         }
         else {
             bpm = Platform::bigEndianFloatValueAt(gridMarker->beatsPerMinute);
@@ -93,17 +95,19 @@ void GridMarker::addMarkersTo(GridMarker::Array& markers, NxA::Blob& data)
     count lastMarkerIndex = numberOfMarkers - 1;
 
     for (count index = 0; index < numberOfMarkers; ++index) {
-        auto marker = *(markers.begin() + index);
+        auto& marker = markers[index];
 
         GridMarkerStruct markerData;
 
-        Platform::writeBigEndianFloatValueAt(marker->positionInSeconds(), markerData.positionInSeconds);
+        Platform::writeBigEndianFloatValueAt(marker.positionInSeconds(), markerData.positionInSeconds);
         if (index == lastMarkerIndex) {
-            Platform::writeBigEndianFloatValueAt(marker->beatsPerMinute(), markerData.beatsPerMinute);
+            Platform::writeBigEndianFloatValueAt(marker.beatsPerMinute(), markerData.beatsPerMinute);
         }
         else {
-            // -- Currently I'm not sure what this value means but it seems only the last marker stores a bpm value.
-            Platform::writeBigEndianUInteger32ValueAt(4, markerData.beatsPerMinute);
+            auto& nextMarker = markers[index + 1];
+            uinteger32 numberOfBeats = (marker.beatsPerMinute() * 60.0f) / (nextMarker.positionInSeconds() - marker.positionInSeconds());
+
+            Platform::writeBigEndianUInteger32ValueAt(numberOfBeats, markerData.beatsPerMinute);
         }
 
         auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<const byte*>(&markerData), sizeof(GridMarkerStruct));

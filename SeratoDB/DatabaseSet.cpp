@@ -60,7 +60,7 @@ void DatabaseSet::removeDatabase(Database& db)
 void DatabaseSet::saveIfModified(void) const
 {
     auto& dbs = this->databases();
-    for (auto iter = dbs.begin(); iter != dbs.end(); ++iter) {
-        (*iter)->saveIfModified();
+    for (auto& database : dbs) {
+        database->saveIfModified();
     }
 }

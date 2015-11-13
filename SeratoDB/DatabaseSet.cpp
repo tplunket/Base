@@ -45,7 +45,8 @@ Database::Array& DatabaseSet::databases(void) const
 Database::Pointer DatabaseSet::addDatabaseWithFileAndVolume(const String& seratoFilePath,
                                                             const String& volume)
 {
-    auto db = Serato::Database::databaseWithFileVolumeAndRootCrate(seratoFilePath, volume,
+    auto db = Serato::Database::databaseWithFileVolumeAndRootCrate(seratoFilePath,
+                                                                   volume,
                                                                    internal->rootCrate);
     internal->databases->append(db);
     return db;

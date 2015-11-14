@@ -26,6 +26,9 @@
 
 #include <iostream>
 #include <fstream>
+#include <string>
+#include <errno.h>
+#include <dirent.h>
 
 using namespace NxA;
 using namespace std;
@@ -130,6 +133,24 @@ void File::createDirectoryAt(const String& path)
     } catch (...) {
         throw FileError::exceptionWith("Error creating directory at '%s'.", path.toUTF8());
     }
+}
+
+String::Array::Pointer File::pathsForFilesInDirectory(const String& path)
+{
+    auto pathsFound = String::Array::array();
+
+    boost::filesystem::path boostPath(path.toUTF8());
+    boost::filesystem::directory_iterator end_iterator;
+
+    // cycle through the directory
+    for (boost::filesystem::directory_iterator iterator(boostPath); iterator != end_iterator; ++iterator) {
+        auto& pathFound = iterator->path();
+        if (boost::filesystem::is_regular_file(pathFound)){
+            pathsFound->append(String::stringWith(pathFound.c_str()));
+        }
+    }
+
+    return pathsFound;
 }
 
 timestamp File::modificationDateInSecondsSince1970ForFile(const String& path)

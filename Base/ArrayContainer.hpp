@@ -145,6 +145,12 @@ namespace NxA {
         {
             this->push_back(object.pointer());
         }
+        void append(const ArrayContainer<T>& other)
+        {
+            for (auto& object : other) {
+                this->append(object);
+            }
+        }
 
         const T& firstObject(void) const
         {

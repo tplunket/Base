@@ -26,6 +26,7 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdocumentation"
 #include <boost/locale.hpp>
+#include <boost/algorithm/string/replace.hpp>
 #pragma clang diagnostic pop
 
 #include <cstdio>
@@ -381,3 +382,7 @@ count String::indexOfLastOccurenceOf(const char*  other) const
     return pos;
 }
 
+void String::replaceOccurenceOfStringWith(const character* occurence, const character* replacement)
+{
+    boost::replace_all(*static_cast<std::string*>(this), occurence, replacement);
+}

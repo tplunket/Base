@@ -119,11 +119,6 @@ void Crate::addCrate(Crate& crate)
 {
     NXA_ASSERT_FALSE(crate.hasParentCrate());
 
-    if (!crate.trackEntries()->length() && !crate.crates().length()) {
-        // -- Serato deletes empty crates anyway wo we don't even add them.
-        return;
-    }
-
     crate.internal->parentCrate = Crate::WeakPointer(this->pointer());
     internal->childrenCrates->append(crate);
 
@@ -258,13 +253,18 @@ void Crate::saveIfOnVolumeAndRecurseToChildren(const String& volumePath, const S
     for (count pathIndex = 0; pathIndex < numberOfPaths; ++pathIndex) {
         auto& path = (*internal->volumePaths)[pathIndex];
         if (path == volumePath) {
+            auto& trackEntries = (*internal->trackEntriesPerPath)[pathIndex];
+            if (!trackEntries.length()) {
+                // -- Serato deletes empty crates anyway so we don't even save them.
+                break;
+            }
+
             auto outputData = Blob::blob();
 
             auto versionTag = VersionTag::tagWithIdentifierAndValue(crateVersionTagIdentifier,
                                                                     String::stringWith(crateFileCurrentVersionString));
             versionTag->addTo(outputData);
 
-            auto& trackEntries = (*internal->trackEntriesPerPath)[pathIndex];
             for (auto& trackEntry : trackEntries) {
                 trackEntry->tagForEntry().addTo(outputData);
             }

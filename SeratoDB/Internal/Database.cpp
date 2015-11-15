@@ -311,7 +311,9 @@ void Database::parseAnyDatabaseFilesIn(const String& pathForLocalSeratoFolder,
                                                                                 otherCrateNames);
         }
 
+#if NXA_PRINT_DEBUG_INFO
         printf("  found %ld tracks and %ld other tags.\n", this->tracks->length() - previousTrackCount, otherTags->length());
+#endif
 
         previousTrackCount = this->tracks->length();
 

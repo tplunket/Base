@@ -188,9 +188,7 @@ void ID3TrackFile::setRemixer(const String& remixer)
 void ID3TrackFile::setRating(integer rating)
 {
     if (rating != this->rating()) {
-        printf("%d %d\n", rating, this->rating());
         internal->setIntegerValueForFrameNamed(rating, Internal::id3RatingFrameName);
-        printf("%d %d\n", rating, this->rating());
         internal->metadataWasModified = true;
     }
 }

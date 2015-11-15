@@ -26,7 +26,7 @@
 
 #include <Base/Base.hpp>
 
-#define NXA_PRINT_DEBUG_INFO                1
+#define NXA_PRINT_DEBUG_INFO                0
 #define NXA_PRINT_TAG_DEBUG_INFO            0
 #define NXA_PRINT_TRACK_DEBUG_INFO          0
 

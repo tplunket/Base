@@ -166,14 +166,19 @@ Track::Array::Pointer Database::removeAndReturnTracks(void)
 
 const String& Database::volumePathForTrackFilePath(const String& trackFilePath) const
 {
-    count numberOfPaths = internal->volumePathsPerPath->length();
-    for (count pathIndex = numberOfPaths - 1; pathIndex > 0; --pathIndex) {
+    count pathIndex = internal->volumePathsPerPath->length();
+    NXA_ASSERT_TRUE(pathIndex != 0);
+
+    do {
+        --pathIndex;
+        
         auto& volumePath = (*internal->volumePathsPerPath)[pathIndex];
 
         if (trackFilePath.hasPrefix(volumePath)) {
             return volumePath;
         }
     }
+    while (pathIndex > 0);
 
     NXA_ALOG("Could not find volume for track at '%s'.", trackFilePath.toUTF8());
     return (*internal->volumePathsPerPath)[0];

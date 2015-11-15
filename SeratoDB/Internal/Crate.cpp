@@ -78,13 +78,10 @@ NxA::count Crate::indexOfVolumePath(const String& volumePath)
     NXA_ASSERT_TRUE(volumePath.length() != 0);
     
     count numberOfPaths = this->volumePaths->length();
-    if (numberOfPaths > 1) {
-        for (count pathIndex = 1; pathIndex < numberOfPaths; ++pathIndex) {
-            auto& path = (*this->volumePaths)[pathIndex];
-            if (volumePath == path) {
-                printf("Index of '%s' is %ld\n", volumePath.toUTF8(), pathIndex);
-                return pathIndex;
-            }
+    for (count pathIndex = 0; pathIndex < numberOfPaths; ++pathIndex) {
+        auto& path = (*this->volumePaths)[pathIndex];
+        if (volumePath == path) {
+            return pathIndex;
         }
     }
 

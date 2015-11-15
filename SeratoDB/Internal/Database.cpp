@@ -140,7 +140,7 @@ NxA::String::ArrayOfConst::Pointer Database::cratesInSubCratesDirectory(const St
     auto crateNamesFound = String::ArrayOfConst::array();
 
     for (auto& path : *cratePathsFound) {
-        auto fileName = path->subString(directory.length() + 1, path->length());
+        auto fileName = File::removePrefixFromPath(directory, path);
 
         if (Database::filenameIsAValidCrateName(fileName)) {
             crateNamesFound->append(Database::crateNameFromFilename(fileName));

@@ -103,6 +103,22 @@ String::Pointer File::joinPaths(const String& first,
 String::Pointer File::removePrefixFromPath(const String& prefix,
                                            const String& path)
 {
+    auto fullPrefix = String::stringWith(prefix);
+
+    const character *seperator;
+    if (Platform::platform == Platform::Windows) {
+        seperator = "\\";
+    }
+    else {
+        seperator = "/";
+    }
+
+    if (!fullPrefix->hasPostfix(seperator)) {
+        fullPrefix->append(seperator);
+    }
+
+    NXA_ASSERT_TRUE(path.hasPrefix(prefix));
+
     count lengthToCrop = prefix.length();
     return path.subString(lengthToCrop);
 }

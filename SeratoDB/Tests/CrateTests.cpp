@@ -59,8 +59,8 @@ TEST(SeratoDB_Crate, AddCrate_AddingTwoCratesToACrate_AddsTheTwoCratesCorrectly)
 
     // -- Then.
     auto& crates = crate1->crates();
-    auto& tracks = crate1->trackEntries();
-    ASSERT_EQ(0, tracks.length());
+    auto tracks = crate1->trackEntries();
+    ASSERT_EQ(0, tracks->length());
     ASSERT_EQ(2, crates.length());
     ASSERT_EQ(&(*crate2), &crates[0]);
     ASSERT_EQ(&(*crate3), &crates[1]);
@@ -95,8 +95,8 @@ TEST(SeratoDB_Crate, RemoveCrate_ACrateWithTwoCrates_RemovesCrateCorrectly)
 
     // -- Then.
     auto& crates = crate1->crates();
-    auto& tracks = crate1->trackEntries();
-    ASSERT_EQ(0, tracks.length());
+    auto tracks = crate1->trackEntries();
+    ASSERT_EQ(0, tracks->length());
     ASSERT_EQ(1, crates.length());
     ASSERT_EQ(&(*crate3), &crates[0]);
     ASSERT_FALSE(crate2->hasParentCrate());
@@ -107,8 +107,8 @@ TEST(SeratoDB_Crate, AddTrackEntry_ACrateAndTwoTrackEntries_AddsEntryCorrectly)
 {
     // -- Given.
     auto crate = Crate::crateWithName(String::stringWith("MyFolder%%MyCrate1"));
-    auto entry1 = TrackEntry::entryWithTrackFileAtOnVolume(String::stringWith("Test/MyFile.mp4"), String::stringWith(""));
-    auto entry2 = TrackEntry::entryWithTrackFileAtOnVolume(String::stringWith("Test/MyFile2.mp4"), String::stringWith(""));
+    auto entry1 = TrackEntry::entryWithTrackFileAtOnVolume(String::stringWith("/Test/MyFile.mp4"), String::stringWith("/"));
+    auto entry2 = TrackEntry::entryWithTrackFileAtOnVolume(String::stringWith("/Test/MyFile2.mp4"), String::stringWith("/"));
 
     // -- When.
     crate->addTrackEntry(entry1);
@@ -116,11 +116,11 @@ TEST(SeratoDB_Crate, AddTrackEntry_ACrateAndTwoTrackEntries_AddsEntryCorrectly)
 
     // -- Then.
     auto& crates = crate->crates();
-    auto& tracks = crate->trackEntries();
+    auto tracks = crate->trackEntries();
     ASSERT_EQ(0, crates.length());
-    ASSERT_EQ(2, tracks.length());
-    ASSERT_EQ(&(*entry1), &tracks[0]);
-    ASSERT_EQ(&(*entry2), &tracks[1]);
+    ASSERT_EQ(2, tracks->length());
+    ASSERT_EQ(&(*entry1), &(*tracks)[0]);
+    ASSERT_EQ(&(*entry2), &(*tracks)[1]);
     ASSERT_TRUE(entry1->hasParentCrate());
     ASSERT_TRUE(entry2->hasParentCrate());
 }
@@ -130,7 +130,7 @@ TEST(SeratoDB_Crate, AddTrackEntry_ACrateAndATrackEntryAlreadyInAnotherCrate_Thr
     // -- Given.
     auto crate1 = Crate::crateWithName(String::stringWith("MyFolder%%MyCrate1"));
     auto crate2 = Crate::crateWithName(String::stringWith("MyFolder%%MyCrate2"));
-    auto entry = TrackEntry::entryWithTrackFileAtOnVolume(String::stringWith("Test/MyFile.mp4"), String::stringWith(""));
+    auto entry = TrackEntry::entryWithTrackFileAtOnVolume(String::stringWith("/Test/MyFile.mp4"), String::stringWith("/"));
     crate2->addTrackEntry(entry);
 
     // -- When.
@@ -142,8 +142,8 @@ TEST(SeratoDB_Crate, RemoveTrackEntry_ACrateAndATwoTrackEntried_AddsEntryCorrect
 {
     // -- Given.
     auto crate = Crate::crateWithName(String::stringWith("MyFolder%%MyCrate1"));
-    auto entry1 = TrackEntry::entryWithTrackFileAtOnVolume(String::stringWith("Test/MyFile.mp4"), String::stringWith(""));
-    auto entry2 = TrackEntry::entryWithTrackFileAtOnVolume(String::stringWith("Test/MyFile2.mp4"), String::stringWith(""));
+    auto entry1 = TrackEntry::entryWithTrackFileAtOnVolume(String::stringWith("/Test/MyFile.mp4"), String::stringWith("/"));
+    auto entry2 = TrackEntry::entryWithTrackFileAtOnVolume(String::stringWith("/Test/MyFile2.mp4"), String::stringWith("/"));
     crate->addTrackEntry(entry1);
     crate->addTrackEntry(entry2);
 
@@ -152,10 +152,10 @@ TEST(SeratoDB_Crate, RemoveTrackEntry_ACrateAndATwoTrackEntried_AddsEntryCorrect
 
     // -- Then.
     auto& crates = crate->crates();
-    auto& tracks = crate->trackEntries();
+    auto tracks = crate->trackEntries();
     ASSERT_EQ(0, crates.length());
-    ASSERT_EQ(1, tracks.length());
-    ASSERT_EQ(&(*entry2), &tracks[0]);
+    ASSERT_EQ(1, tracks->length());
+    ASSERT_EQ(&(*entry2), &(*tracks)[0]);
     ASSERT_FALSE(entry1->hasParentCrate());
     ASSERT_TRUE(entry2->hasParentCrate());
 }
@@ -252,8 +252,8 @@ TEST(SeratoDB_Crate, RemoveAndReturnTrackEntries_ACrateWithTwoTrackEntries_Retur
 {
     // -- Given.
     auto crate = Crate::crateWithName(String::stringWith("MyFolder%%MyCrate1"));
-    auto entry1 = TrackEntry::entryWithTrackFileAtOnVolume(String::stringWith("Test/MyFile.mp4"), String::stringWith(""));
-    auto entry2 = TrackEntry::entryWithTrackFileAtOnVolume(String::stringWith("Test/MyFile2.mp4"), String::stringWith(""));
+    auto entry1 = TrackEntry::entryWithTrackFileAtOnVolume(String::stringWith("/Test/MyFile.mp4"), String::stringWith("/"));
+    auto entry2 = TrackEntry::entryWithTrackFileAtOnVolume(String::stringWith("/Test/MyFile2.mp4"), String::stringWith("/"));
     crate->addTrackEntry(entry1);
     crate->addTrackEntry(entry2);
 
@@ -262,7 +262,7 @@ TEST(SeratoDB_Crate, RemoveAndReturnTrackEntries_ACrateWithTwoTrackEntries_Retur
 
     // -- Then.
     ASSERT_EQ(0, crate->crates().length());
-    ASSERT_EQ(0, crate->trackEntries().length());
+    ASSERT_EQ(0, crate->trackEntries()->length());
     ASSERT_EQ(2, result->length());
     ASSERT_EQ(&(*entry1), &(*result)[0]);
     ASSERT_EQ(&(*entry2), &(*result)[1]);
@@ -280,7 +280,7 @@ TEST(SeratoDB_Crate, RemoveAndReturnTrackEntries_ACrateWithNoTrackEntries_Return
 
     // -- Then.
     ASSERT_EQ(0, crate->crates().length());
-    ASSERT_EQ(0, crate->trackEntries().length());
+    ASSERT_EQ(0, crate->trackEntries()->length());
     ASSERT_EQ(0, result->length());
 }
 
@@ -298,7 +298,7 @@ TEST(SeratoDB_Crate, RemoveAndReturnChildrenCrates_ACrateWithTwoChildCrates_Retu
 
     // -- Then.
     ASSERT_EQ(0, crate1->crates().length());
-    ASSERT_EQ(0, crate1->trackEntries().length());
+    ASSERT_EQ(0, crate1->trackEntries()->length());
     ASSERT_EQ(2, result->length());
     ASSERT_EQ(&(*crate2), &(*result)[0]);
     ASSERT_EQ(&(*crate3), &(*result)[1]);
@@ -316,6 +316,6 @@ TEST(SeratoDB_Crate, RemoveAndReturnChildrenCrates_ACrateWithNoChildCrates_Retur
 
     // -- Then.
     ASSERT_EQ(0, crate1->crates().length());
-    ASSERT_EQ(0, crate1->trackEntries().length());
+    ASSERT_EQ(0, crate1->trackEntries()->length());
     ASSERT_EQ(0, result->length());
 }

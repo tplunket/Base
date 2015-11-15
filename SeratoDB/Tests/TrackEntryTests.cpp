@@ -39,7 +39,7 @@ TEST(SeratoDB_TrackEntry, EntryWithTagOnVolume_EntryWithInitialValues_ReturnsAVa
     auto tags = Tag::Array::array();
     tags->append(PathTag::tagWithIdentifierAndValue(trackEntryPathTagIdentifier, String::stringWith("Users/didier/Music/Gigs/02 Money On My Mind (MK Remix).m4a")));
     auto tag = ObjectTag::tagWithIdentifierAndValue(trackEntryTagIdentifier, tags);
-    auto volumePath = String::stringWith("");
+    auto volumePath = String::stringWith("/");
 
     // -- When.
     auto entry = TrackEntry::entryWithTagOnVolume(tag, volumePath);
@@ -51,8 +51,8 @@ TEST(SeratoDB_TrackEntry, EntryWithTagOnVolume_EntryWithInitialValues_ReturnsAVa
 TEST(SeratoDB_TrackEntry, EntryWithTrackFileAtOnVolume_EntryWithInitialValues_ReturnsAValidEntry)
 {
     // -- Given.
-    auto filePath = String::stringWith("Users/didier/Music/Gigs/02 Money On My Mind (MK Remix).m4a");
-    auto volumePath = String::stringWith("");
+    auto filePath = String::stringWith("/Users/didier/Music/Gigs/02 Money On My Mind (MK Remix).m4a");
+    auto volumePath = String::stringWith("/");
 
     // -- When.
     auto entry = TrackEntry::entryWithTrackFileAtOnVolume(filePath, volumePath);
@@ -65,7 +65,7 @@ TEST(SeratoDB_TrackEntry, HasParentCrate_EntryWithAParentCrate_ReturnsTrue)
 {
     // -- Given.
     auto crate = Crate::crateWithName(String::stringWith("MyFolder%%MyCrate1"));
-    auto entry = TrackEntry::entryWithTrackFileAtOnVolume(String::stringWith("Users/didier/Music/Gigs/02 Money On My Mind (MK Remix).m4a"), String::stringWith(""));
+    auto entry = TrackEntry::entryWithTrackFileAtOnVolume(String::stringWith("/Users/didier/Music/Gigs/02 Money On My Mind (MK Remix).m4a"), String::stringWith("/"));
     crate->addTrackEntry(entry);
 
     // -- When.
@@ -76,7 +76,7 @@ TEST(SeratoDB_TrackEntry, HasParentCrate_EntryWithAParentCrate_ReturnsTrue)
 TEST(SeratoDB_TrackEntry, HasParentCrate_EntryWithNoParentCrate_ReturnsFalse)
 {
     // -- Given.
-    auto entry = TrackEntry::entryWithTrackFileAtOnVolume(String::stringWith("Users/didier/Music/Gigs/02 Money On My Mind (MK Remix).m4a"), String::stringWith(""));
+    auto entry = TrackEntry::entryWithTrackFileAtOnVolume(String::stringWith("/Users/didier/Music/Gigs/02 Money On My Mind (MK Remix).m4a"), String::stringWith("/"));
 
     // -- When.
     // -- Then.
@@ -87,7 +87,7 @@ TEST(SeratoDB_TrackEntry, HasParentCrate_EntryWithParentCrateRemoved_ReturnsFals
 {
     // -- Given.
     auto crate = Crate::crateWithName(String::stringWith("MyFolder%%MyCrate1"));
-    auto entry = TrackEntry::entryWithTrackFileAtOnVolume(String::stringWith("Users/didier/Music/Gigs/02 Money On My Mind (MK Remix).m4a"), String::stringWith(""));
+    auto entry = TrackEntry::entryWithTrackFileAtOnVolume(String::stringWith("/Users/didier/Music/Gigs/02 Money On My Mind (MK Remix).m4a"), String::stringWith("/"));
     crate->addTrackEntry(entry);
     crate->removeTrackEntry(entry);
 
@@ -100,7 +100,7 @@ TEST(SeratoDB_TrackEntry, ParentCrate_EntryWithAParentCrate_ReturnsParentCrate)
 {
     // -- Given.
     auto crate = Crate::crateWithName(String::stringWith("MyFolder%%MyCrate1"));
-    auto entry = TrackEntry::entryWithTrackFileAtOnVolume(String::stringWith("Users/didier/Music/Gigs/02 Money On My Mind (MK Remix).m4a"), String::stringWith(""));
+    auto entry = TrackEntry::entryWithTrackFileAtOnVolume(String::stringWith("/Users/didier/Music/Gigs/02 Money On My Mind (MK Remix).m4a"), String::stringWith("/"));
     crate->addTrackEntry(entry);
 
     // -- When.
@@ -111,7 +111,7 @@ TEST(SeratoDB_TrackEntry, ParentCrate_EntryWithAParentCrate_ReturnsParentCrate)
 TEST(SeratoDB_TrackEntry, ParentCrate_EntryWithoutAParentCrate_ThrowsException)
 {
     // -- Given.
-    auto entry = TrackEntry::entryWithTrackFileAtOnVolume(String::stringWith("Test/MyFile.mp4"), String::stringWith(""));
+    auto entry = TrackEntry::entryWithTrackFileAtOnVolume(String::stringWith("/Test/MyFile.mp4"), String::stringWith("/"));
 
     // -- When.
     // -- Then.
@@ -122,7 +122,7 @@ TEST(SeratoDB_TrackEntry, SetParentCrate_AParentCrate_SetsTheParentCrate)
 {
     // -- Given.
     auto crate = Crate::crateWithName(String::stringWith("MyFolder%%MyCrate1"));
-    auto entry = TrackEntry::entryWithTrackFileAtOnVolume(String::stringWith("Users/didier/Music/Gigs/02 Money On My Mind (MK Remix).m4a"), String::stringWith(""));
+    auto entry = TrackEntry::entryWithTrackFileAtOnVolume(String::stringWith("/Users/didier/Music/Gigs/02 Money On My Mind (MK Remix).m4a"), String::stringWith("/"));
 
     // -- When.
     entry->setParentCrate(crate);
@@ -136,7 +136,7 @@ TEST(SeratoDB_TrackEntry, RemoveFromParentCrate_AnEntryWithAParentCrate_RemovesT
 {
     // -- Given.
     auto crate = Crate::crateWithName(String::stringWith("MyFolder%%MyCrate1"));
-    auto entry = TrackEntry::entryWithTrackFileAtOnVolume(String::stringWith("Users/didier/Music/Gigs/02 Money On My Mind (MK Remix).m4a"), String::stringWith(""));
+    auto entry = TrackEntry::entryWithTrackFileAtOnVolume(String::stringWith("/Users/didier/Music/Gigs/02 Money On My Mind (MK Remix).m4a"), String::stringWith("/"));
     crate->addTrackEntry(entry);
 
     // -- When.
@@ -144,13 +144,13 @@ TEST(SeratoDB_TrackEntry, RemoveFromParentCrate_AnEntryWithAParentCrate_RemovesT
 
     // -- Then.
     ASSERT_FALSE(entry->hasParentCrate());
-    ASSERT_EQ(0, crate->trackEntries().length());
+    ASSERT_EQ(0, crate->trackEntries()->length());
 }
 
 TEST(SeratoDB_TrackEntry, RemoveFromParentCrate_AnEntryWithoutAParentCrate_ThrowsException)
 {
     // -- Given.
-    auto entry = TrackEntry::entryWithTrackFileAtOnVolume(String::stringWith("Users/didier/Music/Gigs/02 Money On My Mind (MK Remix).m4a"), String::stringWith(""));
+    auto entry = TrackEntry::entryWithTrackFileAtOnVolume(String::stringWith("/Users/didier/Music/Gigs/02 Money On My Mind (MK Remix).m4a"), String::stringWith("/"));
 
     // -- When.
     // -- Then.
@@ -160,8 +160,8 @@ TEST(SeratoDB_TrackEntry, RemoveFromParentCrate_AnEntryWithoutAParentCrate_Throw
 TEST(SeratoDB_TrackEntry, TagForEntry_AnEntryWithValues_ReturnsTheCorrectTag)
 {
     // -- Given.
-    auto filePath = String::stringWith("Users/didier/Music/Gigs/02 Money On My Mind (MK Remix).m4a");
-    auto volumePath = String::stringWith("");
+    auto filePath = String::stringWith("/Users/didier/Music/Gigs/02 Money On My Mind (MK Remix).m4a");
+    auto volumePath = String::stringWith("/");
     auto entry = TrackEntry::entryWithTrackFileAtOnVolume(filePath, volumePath);
 
     // -- When.
@@ -173,5 +173,6 @@ TEST(SeratoDB_TrackEntry, TagForEntry_AnEntryWithValues_ReturnsTheCorrectTag)
     ASSERT_EQ(1, objectTag.numberOfSubTags());
     auto& pathTag = dynamic_cast<const PathTag&>(objectTag.subTagForIdentifier(trackEntryPathTagIdentifier));
     ASSERT_EQ(trackEntryPathTagIdentifier, pathTag.identifier());
-    ASSERT_STREQ(filePath->toUTF8(), pathTag.value().toUTF8());
+    ASSERT_EQ(filePath->toUTF8()[0], '/');
+    ASSERT_STREQ(filePath->toUTF8() + 1, pathTag.value().toUTF8());
 }

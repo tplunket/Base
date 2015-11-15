@@ -141,9 +141,3 @@ void Track::setBooleanForSubTagForIdentifier(boolean value, uinteger32 identifie
 
     this->needsToUpdateDatabaseFile = true;
 }
-
-String::Pointer Track::trackFilePath(void) const
-{
-    auto& pathFromVolumePath = this->pathForSubTagForIdentifier(trackFilePathTagIdentifier);
-    return File::joinPaths(this->volumePath, pathFromVolumePath);
-}

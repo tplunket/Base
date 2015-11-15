@@ -202,7 +202,8 @@ bool Track::operator==(const Track& other) const
 
 String::Pointer Track::trackFilePath(void) const
 {
-    return internal->trackFilePath();
+    auto& pathFromVolumePath = internal->pathForSubTagForIdentifier(trackFilePathTagIdentifier);
+    return File::joinPaths(internal->volumePath, pathFromVolumePath);
 }
 
 const String& Track::volumePath(void) const
@@ -212,7 +213,7 @@ const String& Track::volumePath(void) const
 
 timestamp Track::trackFileModificationDateInSecondsSince1970(void) const
 {
-    auto filePath = internal->trackFilePath();
+    auto filePath = this->trackFilePath();
     return File::modificationDateInSecondsSince1970ForFile(*filePath);
 }
 

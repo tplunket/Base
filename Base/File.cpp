@@ -117,9 +117,10 @@ String::Pointer File::removePrefixFromPath(const String& prefix,
         fullPrefix->append(seperator);
     }
 
-    NXA_ASSERT_TRUE(path.hasPrefix(prefix));
 
-    count lengthToCrop = prefix.length();
+    NXA_ASSERT_TRUE(path.hasPrefix(fullPrefix));
+
+    count lengthToCrop = fullPrefix->length();
     return path.subString(lengthToCrop);
 }
 

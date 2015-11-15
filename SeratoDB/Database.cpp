@@ -166,16 +166,11 @@ Track::Array::Pointer Database::removeAndReturnTracks(void)
 
 const String& Database::volumePathForTrackFilePath(const String& trackFilePath) const
 {
-    printf("Looking for volume for track at '%s'.\n", trackFilePath.toUTF8());
-
     count numberOfPaths = internal->volumePathsPerPath->length();
     for (count pathIndex = numberOfPaths - 1; pathIndex > 0; --pathIndex) {
         auto& volumePath = (*internal->volumePathsPerPath)[pathIndex];
 
-        printf("   found '%s'.\n", volumePath.toUTF8());
-
         if (trackFilePath.hasPrefix(volumePath)) {
-            printf("   yes.\n");
             return volumePath;
         }
     }

@@ -85,8 +85,6 @@ NxA::count Crate::indexOfVolumePath(const String& volumePath)
         }
     }
 
-    printf("Index of NEW path '%s' is %ld\n", volumePath.toUTF8(), numberOfPaths);
-
     this->volumePaths->append(volumePath);
     this->trackEntriesPerPath->append(Serato::TrackEntry::Array::array());
     this->otherTagsPerPath->append(Serato::Tag::ArrayOfConst::array());

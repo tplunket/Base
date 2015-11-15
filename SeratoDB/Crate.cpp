@@ -195,8 +195,6 @@ void Crate::readFromFolderInVolume(const String& seratoFolderPath, const String&
         return;
     }
 
-    printf("Looking in '%s'.\n", filePath->toUTF8());
-
     auto otherTags = Serato::Tag::ArrayOfConst::array();
     auto trackEntries = Serato::TrackEntry::Array::array();
 
@@ -211,8 +209,6 @@ void Crate::readFromFolderInVolume(const String& seratoFolderPath, const String&
             }
             case trackEntryTagIdentifier: {
                 auto entry = Serato::TrackEntry::entryWithTagOnVolume(dynamic_cast<ObjectTag&>(*tag), volumePath);
-                printf("  Found track entry '%s'.\n", entry->trackFilePath()->toUTF8());
-
                 entry->setParentCrate(*this);
                 trackEntries->append(entry);
                 break;

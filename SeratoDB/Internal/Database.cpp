@@ -140,16 +140,10 @@ NxA::String::ArrayOfConst::Pointer Database::cratesInSubCratesDirectory(const St
     auto crateNamesFound = String::ArrayOfConst::array();
 
     for (auto& path : *cratePathsFound) {
-        printf("Found path %s\n", path->toUTF8());
-
         auto fileName = path->subString(directory.length() + 1, path->length());
 
         if (Database::filenameIsAValidCrateName(fileName)) {
-            printf("  Filename %s (valid)\n", fileName->toUTF8());
             crateNamesFound->append(Database::crateNameFromFilename(fileName));
-        }
-        else {
-            printf("  Filename %s (unknown)\n", fileName->toUTF8());
         }
     }
 
@@ -271,8 +265,6 @@ void Database::parseAnyDatabaseFilesIn(const String& pathForLocalSeratoFolder,
     count previousTrackCount = 0;
 
     for (auto& path : *(this->pathsForSeratoDirectories)) {
-        printf("Looking in path '%s'\n", path->toUTF8());
-
         auto otherTags = Serato::Tag::ArrayOfConst::array();
         auto otherCrateNames = String::ArrayOfConst::array();
         String::PointerToConst volumePath(path);
@@ -281,8 +273,6 @@ void Database::parseAnyDatabaseFilesIn(const String& pathForLocalSeratoFolder,
             auto seratoFolderPath = Serato::Database::seratoFolderPathForFolder(path);
             auto databasePath = Serato::Database::databaseFilePathForSeratoFolder(*seratoFolderPath);
 
-            printf("  database is at '%s'\n", databasePath->toUTF8());
-
             if (firstPath) {
                 volumePath = String::stringWith("/");
                 firstPath = false;
@@ -290,8 +280,6 @@ void Database::parseAnyDatabaseFilesIn(const String& pathForLocalSeratoFolder,
             else {
                 volumePath = path;
             }
-
-            printf("  located on volume '%s'\n", volumePath->toUTF8());
 
             auto databaseFile = File::readFileAt(databasePath);
 

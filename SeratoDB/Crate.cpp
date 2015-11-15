@@ -86,16 +86,19 @@ const String& Crate::crateFullName(void) const
     return internal->crateFullName;
 }
 
-void Crate::addFullCrateNameWithPrefixAndRecurseToChildren(String& destination, const char* prefix) const
+void Crate::addFullCrateNameWithPrefixForCratesOnVolumeAndRecurseToChildren(String& destination, const char* prefix, const String& volumePath) const
 {
     if (internal->crateFullName->length()) {
-        destination.append(prefix);
-        destination.append(internal->crateFullName);
-        destination.append("\n");
+        count volumePathIndex = internal->indexOfVolumePath(volumePath);
+        if (volumePathIndex != internal->volumePaths->length()) {
+            destination.append(prefix);
+            destination.append(internal->crateFullName);
+            destination.append("\n");
+        }
     }
 
     for (auto& crate : *internal->childrenCrates) {
-        crate->addFullCrateNameWithPrefixAndRecurseToChildren(destination, prefix);
+        crate->addFullCrateNameWithPrefixForCratesOnVolumeAndRecurseToChildren(destination, prefix, volumePath);
     }
 }
 

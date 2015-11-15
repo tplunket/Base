@@ -101,7 +101,7 @@ void Database::saveContentOfRootCrateIfModifiedAndOnVolumeAndUnknownCrateNamesTo
 
     auto result = String::string();
     result->append("[begin record]\n");
-    rootCrate.addFullCrateNameWithPrefixAndRecurseToChildren(result, "[crate]");
+    rootCrate.addFullCrateNameWithPrefixForCratesOnVolumeAndRecurseToChildren(result, "[crate]", volumePath);
     for (auto& crateName : unknownCratesNames) {
         result->append("[crate]");
         result->append(crateName);

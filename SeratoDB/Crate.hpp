@@ -49,7 +49,9 @@ namespace NxA { namespace Serato {
         #pragma mark Instance Methods
         const String& crateName(void) const;
         const String& crateFullName(void) const;
-        void addFullCrateNameWithPrefixAndRecurseToChildren(String& destination, const char* prefix) const;
+        void addFullCrateNameWithPrefixForCratesOnVolumeAndRecurseToChildren(String& destination,
+                                                                             const char* prefix,
+                                                                             const String& volumePath) const;
 
         TrackEntry::Array::Pointer trackEntries(void) const;
         const Crate::Array& crates(void) const;

@@ -35,12 +35,12 @@ using namespace NxA::Serato;
 
 #pragma mark Factory Methods
 
-Track::Pointer Track::trackWithTagOnVolume(ObjectTag& trackTag, const String& locatedOnVolumePath)
+Track::Pointer Track::trackWithTagLocatedOnVolume(ObjectTag& trackTag, const String& volumePath)
 {
-    auto internalObject = Internal::Track::Pointer(std::make_shared<Internal::Track>(trackTag, locatedOnVolumePath));
+    auto internalObject = Internal::Track::Pointer(std::make_shared<Internal::Track>(trackTag, volumePath));
     auto newTrack = Track::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
 
-#if NXA_PRINT_DEBUG_INFO
+#if NXA_PRINT_TRACK_DEBUG_INFO
     printf("Reading track ----------------------------------------\n");
     Track::debugPrint(*newTrack);
 #endif
@@ -48,15 +48,15 @@ Track::Pointer Track::trackWithTagOnVolume(ObjectTag& trackTag, const String& lo
     return newTrack;
 }
 
-Track::Pointer Track::trackWithFileAtOnVolume(const String& trackFilePath, const String& locatedOnVolumePath)
+Track::Pointer Track::trackWithFilePathLocatedOnVolume(const String& trackFilePath, const String& volumePath)
 {
-    auto relativePath = File::removePrefixFromPath(String::stringWith(locatedOnVolumePath),
+    auto relativePath = File::removePrefixFromPath(String::stringWith(volumePath),
                                                    String::stringWith(trackFilePath));
     auto tags = Tag::Array::array();
     tags->append(Tag::Pointer::dynamicCastFrom(PathTag::tagWithIdentifierAndValue(trackFilePathTagIdentifier, relativePath)));
 
     auto trackTag = ObjectTag::tagWithIdentifierAndValue(trackObjectTagIdentifier, tags);
-    auto internalObject = Internal::Track::Pointer(std::make_shared<Internal::Track>(trackTag, locatedOnVolumePath));
+    auto internalObject = Internal::Track::Pointer(std::make_shared<Internal::Track>(trackTag, volumePath));
 
     auto newTrack = Track::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
     newTrack->internal->setBooleanForSubTagForIdentifier(false, trackBeatGridIsLockedTagIdentifier);
@@ -114,7 +114,7 @@ Track::Pointer Track::trackWithFileAtOnVolume(const String& trackFilePath, const
 
 #pragma mark Class Methods
 
-#if NXA_PRINT_DEBUG_INFO
+#if NXA_PRINT_TRACK_DEBUG_INFO
 void Track::debugPrintString(const String& text, const String& name)
 {
     printf("%s '%s'\n", name.toUTF8(), text.toUTF8());
@@ -133,7 +133,9 @@ void Track::debugPrintDate(timestamp value, const String& name)
 
 void Track::debugPrint(const Serato::Track& track)
 {
+#if NXA_PRINT_TAG_DEBUG_INFO
     track.internal->trackTag->debugPrint();
+#endif
 
     Track::debugPrintUint(static_cast<uinteger32>(track.size()), String::stringWith("size"));
     Track::debugPrintDate(track.dateModifiedInSecondsSinceJanuary1st1970(), String::stringWith("datemodified"));
@@ -201,6 +203,11 @@ bool Track::operator==(const Track& other) const
 String::Pointer Track::trackFilePath(void) const
 {
     return internal->trackFilePath();
+}
+
+const String& Track::volumePath(void) const
+{
+    return *(internal->volumePath);
 }
 
 timestamp Track::trackFileModificationDateInSecondsSince1970(void) const

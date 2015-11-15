@@ -51,7 +51,7 @@ namespace NxA { namespace Serato {
         const String& crateFullName(void) const;
         void addFullCrateNameWithPrefixAndRecurseToChildren(String& destination, const char* prefix) const;
 
-        const TrackEntry::Array& trackEntries(void) const;
+        TrackEntry::Array::Pointer trackEntries(void) const;
         const Crate::Array& crates(void) const;
 
         void addCrate(Crate& crate);
@@ -65,12 +65,10 @@ namespace NxA { namespace Serato {
         Crate& parentCrate(void);
         void removeFromParentCrate(void);
 
-        const String::Array& crateFilePaths(void) const;
-
         void resetModificationFlags();
 
-        void readFromFolderInVolume(const String& seratoFolderPath, const String& volume);
-        void saveIfModifiedAndRecurseToChildren(void) const;
+        void readFromFolderInVolume(const String& seratoFolderPath, const String& volumePath);
+        void saveIfOnVolumeAndRecurseToChildren(const String& volumePath, const String& seratoFolderPath) const;
         boolean childrenCratesWereModified(void) const;
 
         TrackEntry::Array::Pointer removeAndReturnTrackEntries(void);

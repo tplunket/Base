@@ -40,9 +40,9 @@ static String::Pointer emptyString = String::string();
 
 #pragma mark Constructors & Destructors
 
-Track::Track(Serato::ObjectTag& tag, const String& rootFolderPath) :
+Track::Track(Serato::ObjectTag& tag, const String& newVolumePath) :
              trackTag(tag.pointer()),
-             rootFolder(rootFolderPath.pointer()),
+             volumePath(newVolumePath.pointer()),
              needsToUpdateDatabaseFile(false)
 {
 }
@@ -144,6 +144,6 @@ void Track::setBooleanForSubTagForIdentifier(boolean value, uinteger32 identifie
 
 String::Pointer Track::trackFilePath(void) const
 {
-    auto& pathFromRootFolder = this->pathForSubTagForIdentifier(trackFilePathTagIdentifier);
-    return File::joinPaths(this->rootFolder, pathFromRootFolder);
+    auto& pathFromVolumePath = this->pathForSubTagForIdentifier(trackFilePathTagIdentifier);
+    return File::joinPaths(this->volumePath, pathFromVolumePath);
 }

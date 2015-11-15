@@ -35,17 +35,206 @@ const char* Database::databaseFileCurrentVersionString = "2.0/Serato Scratch LIV
 
 #pragma mark Constructors & Destructors
 
-Database::Database(const String& path, const String& volume,
-                   Serato::CrateOrderFile& usingCrateOrderFile) :
-                   databaseFilePath(path.pointer()),
-                   databaseVolume(volume.pointer()),
+Database::Database(const String& pathForLocalSeratoFolder,
+                   const String::ArrayOfConst& pathsForExternalSeratoFolders) :
+                   rootCrate(Serato::Crate::crateWithName(String::string())),
                    tracks(Serato::Track::Array::array()),
-                   otherTags(Serato::Tag::ArrayOfConst::array()),
-                   crateFilesToDelete(String::Array::array()),
-                   crateOrderFile(usingCrateOrderFile.pointer()),
-                   databaseIsValid(false) { }
+                   pathsForSeratoDirectories(String::ArrayOfConst::array()),
+                   volumePathsPerPath(String::ArrayOfConst::array()),
+                   otherTagsPerPath(Serato::Tag::ArrayOfConst::Array::array()),
+                   otherCrateNamesPerPath(String::ArrayOfConst::Array::array()),
+                   databaseIsValid(false)
+{
+    this->parseAnyDatabaseFilesIn(pathForLocalSeratoFolder, pathsForExternalSeratoFolders);
+}
 
 #pragma mark Class Methods
+
+NxA::String::Pointer Database::pathForCrateOrderFileInSeratoFolder(const String& seratoFolderPath)
+{
+    auto joinedPath = File::joinPaths(seratoFolderPath, String::stringWith("neworder.pref"));
+    return joinedPath;
+}
+
+void Database::addCratesFoundInSeratoFolderOnVolumeToRootCrate(const String& seratoFolderPath,
+                                                               const String& volumePath,
+                                                               Serato::Crate& rootCrate,
+                                                               String::ArrayOfConst& unknownCratesNames)
+{
+    auto crateOrderFilePath = Internal::Database::pathForCrateOrderFileInSeratoFolder(seratoFolderPath);
+    auto cratesInOrder = Internal::Database::readCratesNamesInCrateOrderFile(crateOrderFilePath);
+
+    auto subCratesDirectory = NxA::Serato::Crate::subCratesDirectoryPathInSeratoFolder(seratoFolderPath);
+    auto subCratesFound = Internal::Database::cratesInSubCratesDirectory(subCratesDirectory);
+    Internal::Database::addCratesNamesAtTheStartOfUnlessAlreadyThere(*cratesInOrder, *subCratesFound);
+
+    auto it = cratesInOrder->begin();
+    Internal::Database::addChildrenCratesOfCrateNamedUsingNameList(rootCrate,
+                                                                         String::string(),
+                                                                         it,
+                                                                         cratesInOrder->end(),
+                                                                         seratoFolderPath,
+                                                                         volumePath,
+                                                                         unknownCratesNames);
+
+    rootCrate.resetModificationFlags();
+}
+
+void Database::saveContentOfRootCrateIfModifiedAndOnVolumeAndUnknownCrateNamesToSeratoFolder(const Serato::Crate& rootCrate,
+                                                                                             const String& volumePath,
+                                                                                             const String::ArrayOfConst& unknownCratesNames,
+                                                                                             const String& seratoFolderPath)
+{
+    if (!rootCrate.childrenCratesWereModified()) {
+        return;
+    }
+
+    auto subCratesDirectory = Serato::Crate::subCratesDirectoryPathInSeratoFolder(seratoFolderPath);
+    if (File::directoryExistsAt(subCratesDirectory)) {
+        auto cratePathsFound = File::pathsForFilesInDirectory(subCratesDirectory);
+        for (auto& path : *cratePathsFound) {
+            File::deleteFileAt(path);
+        }
+    }
+
+    rootCrate.saveIfOnVolumeAndRecurseToChildren(volumePath, seratoFolderPath);
+
+    auto result = String::string();
+    result->append("[begin record]\n");
+    rootCrate.addFullCrateNameWithPrefixAndRecurseToChildren(result, "[crate]");
+    for (auto& crateName : unknownCratesNames) {
+        result->append("[crate]");
+        result->append(crateName);
+        result->append("\n");
+    }
+    result->append("[end record]\n");
+
+    auto crateOrderFilePath = Database::pathForCrateOrderFileInSeratoFolder(seratoFolderPath);
+    File::writeBlobToFileAt(result->toUTF16(), crateOrderFilePath);
+}
+
+NxA::String::Pointer Database::crateNameIfValidCrateOrEmptyIfNot(const String& name)
+{
+    auto result = String::string();
+
+    if (name.hasPrefix("[crate]")) {
+        result = name.subString(7);
+    }
+
+    return result;
+}
+
+NxA::boolean Database::filenameIsAValidCrateName(const String& fileName)
+{
+    return !fileName.hasPrefix(".") && fileName.hasPostfix(".crate");
+}
+
+NxA::String::Pointer Database::crateNameFromFilename(const String& fileName)
+{
+    return fileName.subString(0, fileName.length() - 6);
+}
+
+NxA::String::ArrayOfConst::Pointer Database::cratesInSubCratesDirectory(const String& directory)
+{
+    auto cratePathsFound = File::pathsForFilesInDirectory(directory);
+    auto crateNamesFound = String::ArrayOfConst::array();
+
+    for (auto& path : *cratePathsFound) {
+        printf("Found path %s\n", path->toUTF8());
+
+        auto fileName = path->subString(directory.length() + 1, path->length());
+
+        if (Database::filenameIsAValidCrateName(fileName)) {
+            printf("  Filename %s (valid)\n", fileName->toUTF8());
+            crateNamesFound->append(Database::crateNameFromFilename(fileName));
+        }
+        else {
+            printf("  Filename %s (unknown)\n", fileName->toUTF8());
+        }
+    }
+
+    return crateNamesFound;
+}
+
+NxA::String::ArrayOfConst::Pointer Database::readCratesNamesInCrateOrderFile(const String& crateOrderFilePath)
+{
+    auto cratesInOrder = String::ArrayOfConst::array();
+
+    if (File::fileExistsAt(crateOrderFilePath)) {
+        auto crateOrderFile = File::readFileAt(crateOrderFilePath);
+        if (crateOrderFile->size()) {
+            auto textAsString = String::stringWithUTF16(crateOrderFile);
+            auto lines = textAsString->splitBySeperator('\n');
+            for (auto& crateLine : *lines) {
+                auto fullCrateName = Database::crateNameIfValidCrateOrEmptyIfNot(crateLine);
+                if (fullCrateName->isEmpty()) {
+                    continue;
+                }
+
+                cratesInOrder->append(fullCrateName);
+            }
+        }
+    }
+
+    return cratesInOrder;
+}
+
+void Database::addCratesNamesAtTheStartOfUnlessAlreadyThere(String::ArrayOfConst& cratesToAddTo,
+                                                                  const String::ArrayOfConst& cratesToAdd)
+{
+    count insertionIndex = 0;
+    for (auto& crateName : cratesToAdd) {
+        boolean alreadyHaveThisCrate = cratesToAddTo.contains(crateName);
+        if (alreadyHaveThisCrate) {
+            continue;
+        }
+
+        cratesToAddTo.insertAt(*crateName, cratesToAddTo.begin() + insertionIndex);
+
+        ++insertionIndex;
+    }
+}
+
+void Database::addChildrenCratesOfCrateNamedUsingNameList(Serato::Crate& parentCrate,
+                                                                const String& name,
+                                                                String::ArrayOfConst::iterator& it,
+                                                                const String::ArrayOfConst::iterator& end,
+                                                                const String& seratoFolderPath,
+                                                                const String& volumePath,
+                                                                String::ArrayOfConst& unknownCratesNames)
+{
+    while (it != end) {
+        auto fullCrateName = *it;
+        if (name.length() && !fullCrateName->hasPrefix(name)) {
+            break;
+        }
+
+        if (Serato::Crate::isASmartCrateName(fullCrateName, seratoFolderPath) ||
+            !Serato::Crate::isAValidCrateName(fullCrateName, seratoFolderPath)) {
+            unknownCratesNames.append(fullCrateName);
+            ++it;
+            continue;
+        }
+
+        auto newCrate = parentCrate.findOrAddCrateWithName(fullCrateName);
+        newCrate->readFromFolderInVolume(seratoFolderPath, volumePath);
+
+        ++it;
+
+        auto crateNameWithSeperator = String::stringWith(fullCrateName);
+        crateNameWithSeperator->append("%%");
+
+        Database::addChildrenCratesOfCrateNamedUsingNameList(newCrate,
+                                                                   crateNameWithSeperator,
+                                                                   it,
+                                                                   end,
+                                                                   seratoFolderPath,
+                                                                   volumePath,
+                                                                   unknownCratesNames);
+        
+        newCrate->resetModificationFlags();
+    }
+}
 
 #if NXA_PRINT_DEBUG_INFO
 void Database::debugListCrate(Serato::Crate& crate,
@@ -56,8 +245,8 @@ void Database::debugListCrate(Serato::Crate& crate,
         auto& crateName = subCrate->crateName();
         printf("%sCrate '%s'\n", spacing.toUTF8(), crateName.toUTF8());
 
-        auto& crateTracks = subCrate->trackEntries();
-        for (auto& trackEntry : crateTracks) {
+        auto crateTracks = subCrate->trackEntries();
+        for (auto& trackEntry : *crateTracks) {
             printf("%s   Track '%s'\n", spacing.toUTF8(), trackEntry->trackFilePath()->toUTF8());
         }
 
@@ -71,47 +260,89 @@ void Database::debugListCrate(Serato::Crate& crate,
 
 #pragma mark Instance Methods
 
-void Database::parseDatabaseFile(void)
+void Database::parseAnyDatabaseFilesIn(const String& pathForLocalSeratoFolder,
+                                       const String::ArrayOfConst& pathsForExternalSeratoFolders)
 {
-    auto databaseFile = File::readFileAt(databaseFilePath);
+    this->pathsForSeratoDirectories->append(pathForLocalSeratoFolder);
+    this->pathsForSeratoDirectories->append(pathsForExternalSeratoFolders);
 
-    auto tags = TagFactory::parseTagsAt(databaseFile->data(), databaseFile->size());
-    for (auto& tag : *tags) {
-        switch (tag->identifier()) {
-            case trackObjectTagIdentifier: {
-                storeTrackTag(dynamic_cast<Serato::ObjectTag&>(*tag));
-                break;
+    boolean firstPath = true;
+
+    count previousTrackCount = 0;
+
+    for (auto& path : *(this->pathsForSeratoDirectories)) {
+        printf("Looking in path '%s'\n", path->toUTF8());
+
+        auto otherTags = Serato::Tag::ArrayOfConst::array();
+        auto otherCrateNames = String::ArrayOfConst::array();
+        String::PointerToConst volumePath(path);
+
+        if (Serato::Database::containsAValidSeratoFolder(path)) {
+            auto seratoFolderPath = Serato::Database::seratoFolderPathForFolder(path);
+            auto databasePath = Serato::Database::databaseFilePathForSeratoFolder(*seratoFolderPath);
+
+            printf("  database is at '%s'\n", databasePath->toUTF8());
+
+            if (firstPath) {
+                volumePath = String::stringWith("/");
+                firstPath = false;
             }
-            case databaseVersionTagIdentifier: {
-                auto& versionText = dynamic_cast<Serato::VersionTag&>(*tag).value();
-                if (versionText != databaseFileCurrentVersionString) {
-                    tracks->emptyAll();
-                    otherTags->emptyAll();
-                    return;
+            else {
+                volumePath = path;
+            }
+
+            printf("  located on volume '%s'\n", volumePath->toUTF8());
+
+            auto databaseFile = File::readFileAt(databasePath);
+
+            auto tags = TagFactory::parseTagsAt(databaseFile->data(), databaseFile->size());
+            for (auto& tag : *tags) {
+                switch (tag->identifier()) {
+                    case trackObjectTagIdentifier: {
+                        storeTrackTagLocatedOnVolume(dynamic_cast<Serato::ObjectTag&>(*tag), path);
+                        break;
+                    }
+                    case databaseVersionTagIdentifier: {
+                        auto& versionText = dynamic_cast<Serato::VersionTag&>(*tag).value();
+                        if (versionText != databaseFileCurrentVersionString) {
+                            throw NxA::Serato::DatabaseError::exceptionWith("Illegal database version for file at '%s'.", path->toUTF8());
+                            return;
+                        }
+                        break;
+                    }
+                    default: {
+                        otherTags->append(tag);
+                        break;
+                    }
                 }
-                break;
             }
-            default: {
-                storeOtherTag(tag);
-                break;
-            }
+
+            Internal::Database::addCratesFoundInSeratoFolderOnVolumeToRootCrate(seratoFolderPath,
+                                                                                path,
+                                                                                this->rootCrate,
+                                                                                otherCrateNames);
         }
+
+        printf("  found %ld tracks and %ld other tags.\n", this->tracks->length() - previousTrackCount, otherTags->length());
+
+        previousTrackCount = this->tracks->length();
+
+        NXA_ASSERT_TRUE(volumePath->length() != 0);
+        
+        this->volumePathsPerPath->append(volumePath);
+        this->otherTagsPerPath->append(*otherTags);
+        this->otherCrateNamesPerPath->append(*otherCrateNames);
     }
 
 #if NXA_PRINT_DEBUG_INFO
-    debugListCrate(crateOrderFile->rootCrate(), String::string());
+    debugListCrate(this->rootCrate, String::string());
 #endif
 
     databaseIsValid = true;
 }
 
-void Database::storeTrackTag(Serato::ObjectTag& tag)
+void Database::storeTrackTagLocatedOnVolume(Serato::ObjectTag& tag, const String& volumePath)
 {
-    auto track = Serato::Track::trackWithTagOnVolume(tag, databaseVolume);
+    auto track = Serato::Track::trackWithTagLocatedOnVolume(tag, volumePath);
     this->tracks->append(track);
-}
-
-void Database::storeOtherTag(const Serato::Tag& tag)
-{
-    this->otherTags->append(tag);
 }

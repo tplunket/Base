@@ -26,7 +26,9 @@
 
 #include <Base/Base.hpp>
 
-#define NXA_PRINT_DEBUG_INFO                0
+#define NXA_PRINT_DEBUG_INFO                1
+#define NXA_PRINT_TAG_DEBUG_INFO            0
+#define NXA_PRINT_TRACK_DEBUG_INFO          0
 
 namespace NxA { namespace Serato {
     NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(ObjectTag);
@@ -43,7 +45,7 @@ namespace NxA { namespace Serato {
         bool operator==(const ObjectTag& other) const;
 
         #pragma mark Instance Methods
-#if NXA_PRINT_DEBUG_INFO
+#if NXA_PRINT_TAG_DEBUG_INFO
         void debugPrint(void) const;
 #endif
 

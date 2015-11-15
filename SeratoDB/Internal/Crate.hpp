@@ -51,15 +51,16 @@ namespace NxA { namespace Serato { namespace Internal {
         boolean tracksWereModified;
         boolean cratesWereModified;
 
-        String::Array::Pointer crateFilePaths;
-
         Serato::Crate::WeakPointer parentCrate;
         Serato::Crate::Array::Pointer childrenCrates;
-        Serato::TrackEntry::Array::Pointer trackEntries;
 
-        Serato::Tag::ArrayOfConst::Pointer otherTags;
+        String::ArrayOfConst::Pointer volumePaths;
+        Serato::TrackEntry::Array::Array::Pointer trackEntriesPerPath;
+        Serato::Tag::ArrayOfConst::Array::Pointer otherTagsPerPath;
 
         #pragma mark Instance Methods
+        NxA::count indexOfVolumePath(const String& volumePath);
+
         void markCratesAsModified(void);
     };
 } } }

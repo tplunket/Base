@@ -34,10 +34,10 @@ Crate::Crate(const String& fullName) :
              crateFullName(fullName.pointer()),
              tracksWereModified(true),
              cratesWereModified(false),
-             crateFilePaths(String::Array::array()),
              childrenCrates(Serato::Crate::Array::array()),
-             trackEntries(Serato::TrackEntry::Array::array()),
-             otherTags(Serato::Tag::ArrayOfConst::array()) { }
+             volumePaths(String::ArrayOfConst::array()),
+             trackEntriesPerPath(Serato::TrackEntry::Array::Array::array()),
+             otherTagsPerPath(Serato::Tag::ArrayOfConst::Array::array()) { }
 
 #pragma mark Class Methods
 
@@ -50,6 +50,8 @@ NxA::String::Pointer Crate::smartCratesDirectoryPathInSeratoFolder(const String&
 NxA::String::Pointer Crate::crateFilePathForCrateNameInSeratoFolder(const String& crateName,
                                                                     const String& seratoFolderPath)
 {
+    NXA_ASSERT_TRUE(crateName.length() != 0);
+
     auto cratesFolderPath = NxA::Serato::Crate::subCratesDirectoryPathInSeratoFolder(seratoFolderPath);
     auto crateFilePartialPath = File::joinPaths(cratesFolderPath, crateName);
     crateFilePartialPath->append(".crate");
@@ -60,6 +62,8 @@ NxA::String::Pointer Crate::crateFilePathForCrateNameInSeratoFolder(const String
 NxA::String::Pointer Crate::crateFilePathForSmartCrateNameInSeratoFolder(const String& crateName,
                                                                          const String& seratoFolderPath)
 {
+    NXA_ASSERT_TRUE(crateName.length() != 0);
+    
     auto cratesFolderPath = NxA::Serato::Crate::subCratesDirectoryPathInSeratoFolder(seratoFolderPath);
     auto crateFilePartialPath = File::joinPaths(cratesFolderPath, crateName);
     crateFilePartialPath->append(".scrate");
@@ -68,6 +72,30 @@ NxA::String::Pointer Crate::crateFilePathForSmartCrateNameInSeratoFolder(const S
 }
 
 #pragma mark Instance Methods
+
+NxA::count Crate::indexOfVolumePath(const String& volumePath)
+{
+    NXA_ASSERT_TRUE(volumePath.length() != 0);
+    
+    count numberOfPaths = this->volumePaths->length();
+    if (numberOfPaths > 1) {
+        for (count pathIndex = 1; pathIndex < numberOfPaths; ++pathIndex) {
+            auto& path = (*this->volumePaths)[pathIndex];
+            if (volumePath == path) {
+                printf("Index of '%s' is %ld\n", volumePath.toUTF8(), pathIndex);
+                return pathIndex;
+            }
+        }
+    }
+
+    printf("Index of NEW path '%s' is %ld\n", volumePath.toUTF8(), numberOfPaths);
+
+    this->volumePaths->append(volumePath);
+    this->trackEntriesPerPath->append(Serato::TrackEntry::Array::array());
+    this->otherTagsPerPath->append(Serato::Tag::ArrayOfConst::array());
+
+    return numberOfPaths;
+}
 
 void Crate::markCratesAsModified(void)
 {

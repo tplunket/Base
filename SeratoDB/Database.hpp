@@ -22,9 +22,13 @@
 
 #pragma once
 
+#include <SeratoDB/Track.hpp>
+
 #include <Base/Base.hpp>
 
 namespace NxA { namespace Serato {
+    NXA_EXCEPTION_NAMED_WITH_PARENT(DatabaseError, NxA::Exception);
+
     NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(Database);
 
     class Crate;
@@ -37,17 +41,15 @@ namespace NxA { namespace Serato {
 
     public:
         #pragma mark Factory Methods
-        static Database::Pointer databaseWithFileAndVolume(const String& seratoFolderPath,
-                                                           const String& volume);
-        static Database::Pointer databaseWithFileVolumeAndRootCrate(const String& seratoFolderPath,
-                                                                    const String& volume,
-                                                                    Crate& rootCrate);
+        static Database::Pointer databaseWithPathsForLocalAndExternalSeratoDirectories(const String& pathForLocalSeratoFolder,
+                                                                                       const String::ArrayOfConst& pathsForExternalSeratoFolders);
 
         #pragma mark Class Methods
         static String::Pointer versionAsStringForDatabaseIn(const String& seratoFolderPath);
         static String::Pointer seratoFolderPathForFolder(const String& folderPath);
         static String::Pointer databaseFilePathForSeratoFolder(const String& seratoFolderPath);
         static boolean containsAValidSeratoFolder(const String& folderPath);
+        static void createSeratoFolderIfDoesNotExists(const String& seratoFolderPath);
         static void setDatabaseFilesInSeratoFolderAsModifedOnDateInSecondsSince1970(const String& folderPath, timestamp dateModified);
 
         #pragma mark Instance Methods
@@ -55,9 +57,9 @@ namespace NxA { namespace Serato {
         timestamp rootCrateModificationDateInSecondsSince1970(void) const;
 
         Crate& rootCrate(void) const;
-        const NxA::ArrayContainer<Track>& tracks(void) const;
-        NxA::Pointer<NxA::ArrayContainer<Track>> removeAndReturnTracks(void);
-        NxA::String::PointerToConst volume(void) const;
+        const Track::Array& tracks(void) const;
+        Track::Array::Pointer removeAndReturnTracks(void);
+        const String& volumePathForTrackFilePath(const String& trackFilePath) const;
 
         void removeTrackEntry(TrackEntry& trackEntry);
         void removeCrate(Crate& crate);

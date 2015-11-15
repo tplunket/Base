@@ -36,6 +36,8 @@ using namespace NxA::Serato;
 
 TrackEntry::Pointer TrackEntry::entryWithTagOnVolume(const ObjectTag& tag, const String& volumePath)
 {
+    NXA_ASSERT_TRUE(volumePath.length() != 0);
+
     auto internalObject = Internal::TrackEntry::Pointer(std::make_shared<Internal::TrackEntry>(tag, volumePath));
     auto newTrackEntry = TrackEntry::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
     return newTrackEntry;
@@ -43,6 +45,9 @@ TrackEntry::Pointer TrackEntry::entryWithTagOnVolume(const ObjectTag& tag, const
 
 TrackEntry::Pointer TrackEntry::entryWithTrackFileAtOnVolume(const String& path, const String& volumePath)
 {
+    NXA_ASSERT_TRUE(path.length() != 0);
+    NXA_ASSERT_TRUE(volumePath.length() != 0);
+
     auto entryPath = File::removePrefixFromPath(volumePath, path);
 
     auto tags = Tag::Array::array();
@@ -59,13 +64,18 @@ String::Pointer TrackEntry::trackFilePath(void) const
     auto& trackObjectTag = dynamic_cast<const ObjectTag&>(*internal->trackEntryTag);
     if (trackObjectTag.hasSubTagForIdentifier(trackEntryPathTagIdentifier)) {
         auto& pathTag = dynamic_cast<const PathTag&>(trackObjectTag.subTagForIdentifier(trackEntryPathTagIdentifier));
-        auto& pathFromRootFolder = pathTag.value();
+        auto& pathFromVolumePath = pathTag.value();
 
-        auto trackFilePath = File::joinPaths(internal->rootVolumePath, pathFromRootFolder);
+        auto trackFilePath = File::joinPaths(internal->volumePath, pathFromVolumePath);
         return trackFilePath;
     }
 
     return String::string();
+}
+
+const String& TrackEntry::volumePath(void) const
+{
+    return *(internal->volumePath);
 }
 
 boolean TrackEntry::hasParentCrate(void) const

@@ -99,9 +99,15 @@ void Crate::addFullCrateNameWithPrefixAndRecurseToChildren(String& destination, 
     }
 }
 
-const TrackEntry::Array& Crate::trackEntries(void) const
+TrackEntry::Array::Pointer Crate::trackEntries(void) const
 {
-    return *(internal->trackEntries);
+    auto allEntries = TrackEntry::Array::array();
+
+    for (auto& entries : *(internal->trackEntriesPerPath)) {
+        allEntries->append(entries);
+    }
+
+    return allEntries;
 }
 
 const Crate::Array& Crate::crates(void) const
@@ -112,6 +118,11 @@ const Crate::Array& Crate::crates(void) const
 void Crate::addCrate(Crate& crate)
 {
     NXA_ASSERT_FALSE(crate.hasParentCrate());
+
+    if (!crate.trackEntries()->length() && !crate.crates().length()) {
+        // -- Serato deletes empty crates anyway wo we don't even add them.
+        return;
+    }
 
     crate.internal->parentCrate = Crate::WeakPointer(this->pointer());
     internal->childrenCrates->append(crate);
@@ -137,9 +148,9 @@ Crate::Pointer Crate::findOrAddCrateWithName(const String& crateName)
         }
     }
 
-    auto crate = Serato::Crate::crateWithName(crateName);
-    this->addCrate(crate);
-    return crate;
+    auto newCrate = Serato::Crate::crateWithName(crateName);
+    this->addCrate(newCrate);
+    return newCrate;
 }
 
 void Crate::addTrackEntry(Serato::TrackEntry& trackEntry)
@@ -150,16 +161,21 @@ void Crate::addTrackEntry(Serato::TrackEntry& trackEntry)
     }
 
     trackEntry.setParentCrate(*this);
-    internal->trackEntries->append(trackEntry);
+
+    count volumePathIndex = internal->indexOfVolumePath(trackEntry.volumePath());
+    (*internal->trackEntriesPerPath)[volumePathIndex].append(trackEntry);
 
     internal->tracksWereModified = true;
 }
 
 void Crate::removeTrackEntry(TrackEntry& trackEntry)
 {
-    auto position = internal->trackEntries->find(trackEntry);
-    if (position != internal->trackEntries->end()) {
-        internal->trackEntries->removeObjectAt(position);
+    count volumePathIndex = internal->indexOfVolumePath(trackEntry.volumePath());
+    auto& trackEntries = (*internal->trackEntriesPerPath)[volumePathIndex];
+
+    auto position = trackEntries.find(trackEntry);
+    if (position != trackEntries.end()) {
+        trackEntries.removeObjectAt(position);
         internal->tracksWereModified = true;
     }
 
@@ -169,11 +185,9 @@ void Crate::removeTrackEntry(TrackEntry& trackEntry)
     }
 }
 
-void Crate::readFromFolderInVolume(const String& seratoFolderPath, const String& volume)
+void Crate::readFromFolderInVolume(const String& seratoFolderPath, const String& volumePath)
 {
-    auto filePath = Internal::Crate::crateFilePathForCrateNameInSeratoFolder(crateFullName(), seratoFolderPath);
-
-    internal->crateFilePaths->append(String::stringWith(filePath));
+    auto filePath = Internal::Crate::crateFilePathForCrateNameInSeratoFolder(this->crateFullName(), seratoFolderPath);
 
     auto crateFileData = File::readFileAt(filePath);
     auto tags = TagFactory::parseTagsAt(crateFileData->data(), crateFileData->size());
@@ -181,28 +195,38 @@ void Crate::readFromFolderInVolume(const String& seratoFolderPath, const String&
         return;
     }
 
+    printf("Looking in '%s'.\n", filePath->toUTF8());
+
+    auto otherTags = Serato::Tag::ArrayOfConst::array();
+    auto trackEntries = Serato::TrackEntry::Array::array();
+
     for (auto& tag : *(tags)) {
         switch (tag->identifier()) {
             case crateVersionTagIdentifier: {
                 auto& versionTag = dynamic_cast<VersionTag&>(*tag);
                 if (versionTag.value() != crateFileCurrentVersionString) {
-                    internal->otherTags->emptyAll();
-                    internal->trackEntries->emptyAll();
-                    return;
+                    throw Serato::DatabaseError::exceptionWith("Illegal crate file version for file '%s'.", filePath->toUTF8());
                 }
                 break;
             }
             case trackEntryTagIdentifier: {
-                auto entry = Serato::TrackEntry::entryWithTagOnVolume(dynamic_cast<ObjectTag&>(*tag), volume);
-                this->addTrackEntry(entry);
+                auto entry = Serato::TrackEntry::entryWithTagOnVolume(dynamic_cast<ObjectTag&>(*tag), volumePath);
+                printf("  Found track entry '%s'.\n", entry->trackFilePath()->toUTF8());
+
+                entry->setParentCrate(*this);
+                trackEntries->append(entry);
                 break;
             }
             default: {
-                internal->otherTags->append(tag);
+                otherTags->append(tag);
                 break;
             }
         }
     }
+
+    internal->volumePaths->append(volumePath);
+    internal->trackEntriesPerPath->append(trackEntries);
+    internal->otherTagsPerPath->append(otherTags);
 }
 
 boolean Crate::hasParentCrate(void) const
@@ -220,11 +244,6 @@ void Crate::removeFromParentCrate(void)
     this->parentCrate().removeCrate(*this);
 }
 
-const String::Array& Crate::crateFilePaths(void) const
-{
-    return internal->crateFilePaths;
-}
-
 void Crate::resetModificationFlags()
 {
     internal->cratesWereModified = false;
@@ -236,30 +255,45 @@ boolean Crate::childrenCratesWereModified(void) const
     return internal->cratesWereModified;
 }
 
-void Crate::saveIfModifiedAndRecurseToChildren(void) const
+void Crate::saveIfOnVolumeAndRecurseToChildren(const String& volumePath, const String& seratoFolderPath) const
 {
-    if (internal->tracksWereModified) {
-        for (auto cratePath : *internal->crateFilePaths) {
-        auto outputData = Blob::blob();
+    count numberOfPaths = internal->volumePaths->length();
 
-        auto versionTag = VersionTag::tagWithIdentifierAndValue(crateVersionTagIdentifier,
-                                                                String::stringWith(crateFileCurrentVersionString));
-        versionTag->addTo(outputData);
+    for (count pathIndex = 0; pathIndex < numberOfPaths; ++pathIndex) {
+        auto& path = (*internal->volumePaths)[pathIndex];
+        if (path == volumePath) {
+            auto outputData = Blob::blob();
 
-        for (auto& trackEntry : *internal->trackEntries) {
-            trackEntry->tagForEntry().addTo(outputData);
-        }
+            auto versionTag = VersionTag::tagWithIdentifierAndValue(crateVersionTagIdentifier,
+                                                                    String::stringWith(crateFileCurrentVersionString));
+            versionTag->addTo(outputData);
 
-        for (auto& tag : *internal->otherTags) {
-            tag->addTo(outputData);
-        }
+            auto& trackEntries = (*internal->trackEntriesPerPath)[pathIndex];
+            for (auto& trackEntry : trackEntries) {
+                trackEntry->tagForEntry().addTo(outputData);
+            }
 
-            File::writeBlobToFileAt(outputData, cratePath);
+            auto& otherTags = (*internal->otherTagsPerPath)[pathIndex];
+            for (auto& tag : otherTags) {
+                tag->addTo(outputData);
+            }
+
+            Database::createSeratoFolderIfDoesNotExists(seratoFolderPath);
+
+            auto cratesFolderPath = NxA::Serato::Crate::subCratesDirectoryPathInSeratoFolder(seratoFolderPath);
+            if (!File::directoryExistsAt(cratesFolderPath)) {
+                File::createDirectoryAt(cratesFolderPath);
+            }
+
+            auto crateFilePath = Internal::Crate::crateFilePathForCrateNameInSeratoFolder(this->crateFullName(), seratoFolderPath);
+            File::writeBlobToFileAt(outputData, crateFilePath);
+
+            break;
         }
     }
 
     for (auto& crate : *internal->childrenCrates) {
-        crate->saveIfModifiedAndRecurseToChildren();
+        crate->saveIfOnVolumeAndRecurseToChildren(volumePath, seratoFolderPath);
     }
 }
 

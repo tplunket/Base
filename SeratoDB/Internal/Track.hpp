@@ -34,11 +34,11 @@ namespace NxA { namespace Serato { namespace Internal {
         NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTORS_FOR(NxA::Serato, Track);
 
         #pragma mark Constructors & Destructors
-        Track(Serato::ObjectTag& tag, const String& rootFolderPath);
+        Track(Serato::ObjectTag& tag, const String& volumePath);
 
         #pragma mark Instance Variables
         Serato::ObjectTag::Pointer trackTag;
-        String::PointerToConst rootFolder;
+        String::PointerToConst volumePath;
 
         boolean needsToUpdateDatabaseFile;
 

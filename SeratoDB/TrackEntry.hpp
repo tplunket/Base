@@ -43,6 +43,7 @@ namespace NxA { namespace Serato {
 
         #pragma mark Instance Methods
         String::Pointer trackFilePath(void) const;
+        const String& volumePath(void) const;
 
         boolean hasParentCrate(void) const;
         Crate& parentCrate(void);

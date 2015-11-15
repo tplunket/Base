@@ -36,11 +36,11 @@ namespace NxA { namespace Serato {
 
     public:
         #pragma mark Factory Methods
-        static Track::Pointer trackWithTagOnVolume(ObjectTag& trackTag, const String& locatedOnVolumePath);
-        static Track::Pointer trackWithFileAtOnVolume(const String& trackFilePath, const String& locatedOnVolumePath);
+        static Track::Pointer trackWithTagLocatedOnVolume(ObjectTag& trackTag, const String& volumePath);
+        static Track::Pointer trackWithFilePathLocatedOnVolume(const String& trackFilePath, const String& volumePath);
 
         #pragma mark Class Methods
-#if NXA_PRINT_DEBUG_INFO
+#if NXA_PRINT_TRACK_DEBUG_INFO
         static void debugPrintString(const String& text, const String& name);
         static void debugPrintUint(uinteger32 value, const String& name);
         static void debugPrintTimeFromMilliseconds(uinteger32 value, const String& name);
@@ -53,6 +53,7 @@ namespace NxA { namespace Serato {
 
         #pragma mark Instance Methods
         String::Pointer trackFilePath(void) const;
+        const String& volumePath(void) const;
         timestamp trackFileModificationDateInSecondsSince1970(void) const;
 
         const String& title(void) const;

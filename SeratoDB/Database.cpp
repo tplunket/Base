@@ -218,9 +218,6 @@ void Database::saveIfModified(void) const
         return;
     }
 
-    // Delete neworder file if root crate is empty?
-    // Delete database file and _Serato_ folder is content is empty?
-
     count numberOfPaths = internal->pathsForSeratoDirectories->length();
     for (count pathIndex = 0; pathIndex < numberOfPaths; ++pathIndex) {
         auto& pathsForSeratoDirectory = (*internal->pathsForSeratoDirectories)[pathIndex];
@@ -269,6 +266,22 @@ void Database::saveIfModified(void) const
 
             auto databaseFilePath = Database::databaseFilePathForSeratoFolder(seratoFolderPath);
             File::writeBlobToFileAt(outputData, databaseFilePath);
+        }
+    }
+}
+
+void Database::saveIfModifiedAndMarkAsModifiedOn(timestamp modificationTimesSince1970) const
+{
+    this->saveIfModified();
+
+    count numberOfPaths = internal->pathsForSeratoDirectories->length();
+    for (count pathIndex = 0; pathIndex < numberOfPaths; ++pathIndex) {
+        auto& pathsForSeratoDirectory = (*internal->pathsForSeratoDirectories)[pathIndex];
+        auto seratoFolderPath = Database::seratoFolderPathForFolder(pathsForSeratoDirectory);
+        auto databaseFilePath = Database::databaseFilePathForSeratoFolder(seratoFolderPath);
+
+        if (File::fileExistsAt(databaseFilePath)) {
+            File::setModificationDateInSecondsSince1970ForFile(modificationTimesSince1970, databaseFilePath);
         }
     }
 }

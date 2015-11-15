@@ -41,6 +41,39 @@ Crate::Crate(const String& fullName) :
 
 #pragma mark Class Methods
 
+NxA::String::Pointer Crate::crateNameIfValidCrateOrEmptyIfNot(const String& name)
+{
+    auto result = String::string();
+
+    if (name.hasPrefix("[crate]")) {
+        result = name.subString(7);
+    }
+
+    return result;
+}
+
+NxA::String::Pointer Crate::escapedNameFromCrateName(const String& CrateName)
+{
+    String::Pointer result = String::stringWith(CrateName);
+
+    result->replaceOccurenceOfStringWith("&", "&&");
+    result->replaceOccurenceOfStringWith("/", "&fs");
+    result->replaceOccurenceOfStringWith("\\", "&bs");
+
+    return result;
+}
+
+NxA::String::Pointer Crate::crateNameFromEscapedName(const String& EscapedName)
+{
+    String::Pointer result = String::stringWith(EscapedName);
+
+    result->replaceOccurenceOfStringWith("&bs", "\\");
+    result->replaceOccurenceOfStringWith("&fs", "/");
+    result->replaceOccurenceOfStringWith("&&", "&");
+
+    return result;
+}
+
 NxA::String::Pointer Crate::smartCratesDirectoryPathInSeratoFolder(const String& seratoFolderPath)
 {
     auto joinedPath = File::joinPaths(seratoFolderPath, String::stringWith("SmartCrates"));
@@ -53,7 +86,7 @@ NxA::String::Pointer Crate::crateFilePathForCrateNameInSeratoFolder(const String
     NXA_ASSERT_TRUE(crateName.length() != 0);
 
     auto cratesFolderPath = NxA::Serato::Crate::subCratesDirectoryPathInSeratoFolder(seratoFolderPath);
-    auto crateFilePartialPath = File::joinPaths(cratesFolderPath, crateName);
+    auto crateFilePartialPath = File::joinPaths(cratesFolderPath, Crate::escapedNameFromCrateName(crateName));
     crateFilePartialPath->append(".crate");
 
     return crateFilePartialPath;
@@ -65,7 +98,7 @@ NxA::String::Pointer Crate::crateFilePathForSmartCrateNameInSeratoFolder(const S
     NXA_ASSERT_TRUE(crateName.length() != 0);
     
     auto cratesFolderPath = NxA::Serato::Crate::subCratesDirectoryPathInSeratoFolder(seratoFolderPath);
-    auto crateFilePartialPath = File::joinPaths(cratesFolderPath, crateName);
+    auto crateFilePartialPath = File::joinPaths(cratesFolderPath, Crate::escapedNameFromCrateName(crateName));
     crateFilePartialPath->append(".scrate");
 
     return crateFilePartialPath;
@@ -85,11 +118,19 @@ NxA::count Crate::indexOfVolumePath(const String& volumePath)
         }
     }
 
-    this->volumePaths->append(volumePath);
-    this->trackEntriesPerPath->append(Serato::TrackEntry::Array::array());
-    this->otherTagsPerPath->append(Serato::Tag::ArrayOfConst::array());
-
     return numberOfPaths;
+}
+
+NxA::count Crate::indexOfVolumePathAndAddIfNotPresent(const String& volumePath)
+{
+    count pathIndex = this->indexOfVolumePath(volumePath);
+    if (pathIndex == this->volumePaths->length()) {
+        this->volumePaths->append(volumePath);
+        this->trackEntriesPerPath->append(Serato::TrackEntry::Array::array());
+        this->otherTagsPerPath->append(Serato::Tag::ArrayOfConst::array());
+    }
+
+    return pathIndex;
 }
 
 void Crate::markCratesAsModified(void)

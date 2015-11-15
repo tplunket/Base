@@ -41,10 +41,14 @@ namespace NxA { namespace Serato {
 
         #pragma mark Class Methods
         static String::Pointer subCratesDirectoryPathInSeratoFolder(const String& seratoFolderPath);
+        static String::ArrayOfConst::Pointer readCratesNamesInCrateOrderFile(const String& crateOrderFilePath);
+        static boolean filenameIsAValidCrateName(const String& fileName);
+        static String::Pointer crateNameFromFilename(const String& fileName);
+        static String::ArrayOfConst::Pointer cratesInSubCratesDirectory(const String& directory);
         static boolean isAValidCrateName(const String& crateFullName,
-                                      const String& seratoFolderPath);
+                                         const String& seratoFolderPath);
         static boolean isASmartCrateName(const String& crateFullName,
-                                      const String& seratoFolderPath);
+                                         const String& seratoFolderPath);
 
         #pragma mark Instance Methods
         const String& crateName(void) const;

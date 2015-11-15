@@ -51,6 +51,8 @@ Crate::Pointer Crate::crateWithName(const String& crateFullName)
         newCrate->internal->crateName = crateFullName.pointer();
     }
 
+    Internal::Crate::crateNameFromEscapedName(newCrate->internal->crateName);
+
     return newCrate;
 }
 
@@ -60,6 +62,54 @@ String::Pointer Crate::subCratesDirectoryPathInSeratoFolder(const String& serato
 {
     auto joinedPath = File::joinPaths(seratoFolderPath, String::stringWith("Subcrates"));
     return joinedPath;
+}
+
+String::ArrayOfConst::Pointer Crate::readCratesNamesInCrateOrderFile(const String& crateOrderFilePath)
+{
+    auto cratesInOrder = String::ArrayOfConst::array();
+
+    if (File::fileExistsAt(crateOrderFilePath)) {
+        auto crateOrderFile = File::readFileAt(crateOrderFilePath);
+        if (crateOrderFile->size()) {
+            auto textAsString = String::stringWithUTF16(crateOrderFile);
+            auto lines = textAsString->splitBySeperator('\n');
+            for (auto& crateLine : *lines) {
+                auto fullCrateName = Internal::Crate::crateNameIfValidCrateOrEmptyIfNot(crateLine);
+                if (!fullCrateName->isEmpty()) {
+                    Internal::Crate::crateNameFromEscapedName(fullCrateName);
+                    cratesInOrder->append(Internal::Crate::crateNameFromEscapedName(fullCrateName));
+                }
+            }
+        }
+    }
+
+    return cratesInOrder;
+}
+
+NxA::boolean Crate::filenameIsAValidCrateName(const String& fileName)
+{
+    return !fileName.hasPrefix(".") && fileName.hasPostfix(".crate");
+}
+
+NxA::String::Pointer Crate::crateNameFromFilename(const String& fileName)
+{
+    return fileName.subString(0, fileName.length() - 6);
+}
+
+NxA::String::ArrayOfConst::Pointer Crate::cratesInSubCratesDirectory(const String& directory)
+{
+    auto cratePathsFound = File::pathsForFilesInDirectory(directory);
+    auto crateNamesFound = String::ArrayOfConst::array();
+
+    for (auto& path : *cratePathsFound) {
+        auto fileName = File::removePrefixFromPath(directory, path);
+        if (Crate::filenameIsAValidCrateName(fileName)) {
+            auto escapedCrateName = Crate::crateNameFromFilename(fileName);
+            crateNamesFound->append(Internal::Crate::crateNameFromEscapedName(escapedCrateName));
+        }
+    }
+
+    return crateNamesFound;
 }
 
 boolean Crate::isAValidCrateName(const String& crateFullName, const String& seratoFolderPath)
@@ -160,7 +210,7 @@ void Crate::addTrackEntry(Serato::TrackEntry& trackEntry)
 
     trackEntry.setParentCrate(*this);
 
-    count volumePathIndex = internal->indexOfVolumePath(trackEntry.volumePath());
+    count volumePathIndex = internal->indexOfVolumePathAndAddIfNotPresent(trackEntry.volumePath());
     (*internal->trackEntriesPerPath)[volumePathIndex].append(trackEntry);
 
     internal->tracksWereModified = true;
@@ -169,6 +219,8 @@ void Crate::addTrackEntry(Serato::TrackEntry& trackEntry)
 void Crate::removeTrackEntry(TrackEntry& trackEntry)
 {
     count volumePathIndex = internal->indexOfVolumePath(trackEntry.volumePath());
+    NXA_ASSERT_TRUE(volumePathIndex != internal->volumePaths->length());
+
     auto& trackEntries = (*internal->trackEntriesPerPath)[volumePathIndex];
 
     auto position = trackEntries.find(trackEntry);

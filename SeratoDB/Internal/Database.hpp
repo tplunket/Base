@@ -52,11 +52,6 @@ namespace NxA { namespace Serato { namespace Internal {
                                                                                                   const String::ArrayOfConst& unknownCratesNames,
                                                                                                   const String& seratoFolderPath);
 
-        static String::Pointer crateNameIfValidCrateOrEmptyIfNot(const String& name);
-        static boolean filenameIsAValidCrateName(const String& fileName);
-        static String::Pointer crateNameFromFilename(const String& fileName);
-        static String::ArrayOfConst::Pointer cratesInSubCratesDirectory(const String& directory);
-        static String::ArrayOfConst::Pointer readCratesNamesInCrateOrderFile(const String& crateOrderFilePath);
         static void addCratesNamesAtTheStartOfUnlessAlreadyThere(String::ArrayOfConst& cratesToAddTo,
                                                                  const String::ArrayOfConst& cratesToAdd);
 

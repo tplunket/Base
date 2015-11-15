@@ -62,20 +62,20 @@ void Database::addCratesFoundInSeratoFolderOnVolumeToRootCrate(const String& ser
                                                                String::ArrayOfConst& unknownCratesNames)
 {
     auto crateOrderFilePath = Internal::Database::pathForCrateOrderFileInSeratoFolder(seratoFolderPath);
-    auto cratesInOrder = Internal::Database::readCratesNamesInCrateOrderFile(crateOrderFilePath);
+    auto cratesInOrder = Serato::Crate::readCratesNamesInCrateOrderFile(crateOrderFilePath);
 
     auto subCratesDirectory = NxA::Serato::Crate::subCratesDirectoryPathInSeratoFolder(seratoFolderPath);
-    auto subCratesFound = Internal::Database::cratesInSubCratesDirectory(subCratesDirectory);
+    auto subCratesFound = Serato::Crate::cratesInSubCratesDirectory(subCratesDirectory);
     Internal::Database::addCratesNamesAtTheStartOfUnlessAlreadyThere(*cratesInOrder, *subCratesFound);
 
     auto it = cratesInOrder->begin();
     Internal::Database::addChildrenCratesOfCrateNamedUsingNameList(rootCrate,
-                                                                         String::string(),
-                                                                         it,
-                                                                         cratesInOrder->end(),
-                                                                         seratoFolderPath,
-                                                                         volumePath,
-                                                                         unknownCratesNames);
+                                                                   String::string(),
+                                                                   it,
+                                                                   cratesInOrder->end(),
+                                                                   seratoFolderPath,
+                                                                   volumePath,
+                                                                   unknownCratesNames);
 
     rootCrate.resetModificationFlags();
 }
@@ -113,68 +113,8 @@ void Database::saveContentOfRootCrateIfModifiedAndOnVolumeAndUnknownCrateNamesTo
     File::writeBlobToFileAt(result->toUTF16(), crateOrderFilePath);
 }
 
-NxA::String::Pointer Database::crateNameIfValidCrateOrEmptyIfNot(const String& name)
-{
-    auto result = String::string();
-
-    if (name.hasPrefix("[crate]")) {
-        result = name.subString(7);
-    }
-
-    return result;
-}
-
-NxA::boolean Database::filenameIsAValidCrateName(const String& fileName)
-{
-    return !fileName.hasPrefix(".") && fileName.hasPostfix(".crate");
-}
-
-NxA::String::Pointer Database::crateNameFromFilename(const String& fileName)
-{
-    return fileName.subString(0, fileName.length() - 6);
-}
-
-NxA::String::ArrayOfConst::Pointer Database::cratesInSubCratesDirectory(const String& directory)
-{
-    auto cratePathsFound = File::pathsForFilesInDirectory(directory);
-    auto crateNamesFound = String::ArrayOfConst::array();
-
-    for (auto& path : *cratePathsFound) {
-        auto fileName = File::removePrefixFromPath(directory, path);
-
-        if (Database::filenameIsAValidCrateName(fileName)) {
-            crateNamesFound->append(Database::crateNameFromFilename(fileName));
-        }
-    }
-
-    return crateNamesFound;
-}
-
-NxA::String::ArrayOfConst::Pointer Database::readCratesNamesInCrateOrderFile(const String& crateOrderFilePath)
-{
-    auto cratesInOrder = String::ArrayOfConst::array();
-
-    if (File::fileExistsAt(crateOrderFilePath)) {
-        auto crateOrderFile = File::readFileAt(crateOrderFilePath);
-        if (crateOrderFile->size()) {
-            auto textAsString = String::stringWithUTF16(crateOrderFile);
-            auto lines = textAsString->splitBySeperator('\n');
-            for (auto& crateLine : *lines) {
-                auto fullCrateName = Database::crateNameIfValidCrateOrEmptyIfNot(crateLine);
-                if (fullCrateName->isEmpty()) {
-                    continue;
-                }
-
-                cratesInOrder->append(fullCrateName);
-            }
-        }
-    }
-
-    return cratesInOrder;
-}
-
 void Database::addCratesNamesAtTheStartOfUnlessAlreadyThere(String::ArrayOfConst& cratesToAddTo,
-                                                                  const String::ArrayOfConst& cratesToAdd)
+                                                            const String::ArrayOfConst& cratesToAdd)
 {
     count insertionIndex = 0;
     for (auto& crateName : cratesToAdd) {
@@ -190,12 +130,12 @@ void Database::addCratesNamesAtTheStartOfUnlessAlreadyThere(String::ArrayOfConst
 }
 
 void Database::addChildrenCratesOfCrateNamedUsingNameList(Serato::Crate& parentCrate,
-                                                                const String& name,
-                                                                String::ArrayOfConst::iterator& it,
-                                                                const String::ArrayOfConst::iterator& end,
-                                                                const String& seratoFolderPath,
-                                                                const String& volumePath,
-                                                                String::ArrayOfConst& unknownCratesNames)
+                                                          const String& name,
+                                                          String::ArrayOfConst::iterator& it,
+                                                          const String::ArrayOfConst::iterator& end,
+                                                          const String& seratoFolderPath,
+                                                          const String& volumePath,
+                                                          String::ArrayOfConst& unknownCratesNames)
 {
     while (it != end) {
         auto fullCrateName = *it;

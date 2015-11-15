@@ -287,13 +287,13 @@ void Database::parseAnyDatabaseFilesIn(const String& pathForLocalSeratoFolder,
             for (auto& tag : *tags) {
                 switch (tag->identifier()) {
                     case trackObjectTagIdentifier: {
-                        storeTrackTagLocatedOnVolume(dynamic_cast<Serato::ObjectTag&>(*tag), path);
+                        storeTrackTagLocatedOnVolume(dynamic_cast<Serato::ObjectTag&>(*tag), volumePath);
                         break;
                     }
                     case databaseVersionTagIdentifier: {
                         auto& versionText = dynamic_cast<Serato::VersionTag&>(*tag).value();
                         if (versionText != databaseFileCurrentVersionString) {
-                            throw NxA::Serato::DatabaseError::exceptionWith("Illegal database version for file at '%s'.", path->toUTF8());
+                            throw NxA::Serato::DatabaseError::exceptionWith("Illegal database version for file at '%s'.", databasePath->toUTF8());
                             return;
                         }
                         break;
@@ -306,7 +306,7 @@ void Database::parseAnyDatabaseFilesIn(const String& pathForLocalSeratoFolder,
             }
 
             Internal::Database::addCratesFoundInSeratoFolderOnVolumeToRootCrate(seratoFolderPath,
-                                                                                path,
+                                                                                volumePath,
                                                                                 this->rootCrate,
                                                                                 otherCrateNames);
         }

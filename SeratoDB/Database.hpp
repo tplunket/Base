@@ -50,7 +50,6 @@ namespace NxA { namespace Serato {
         static String::Pointer databaseFilePathForSeratoFolder(const String& seratoFolderPath);
         static boolean containsAValidSeratoFolder(const String& folderPath);
         static void createSeratoFolderIfDoesNotExists(const String& seratoFolderPath);
-        static void setDatabaseFilesInSeratoFolderAsModifedOnDateInSecondsSince1970(const String& folderPath, timestamp dateModified);
 
         #pragma mark Instance Methods
         timestamp databaseModificationDateInSecondsSince1970(void) const;

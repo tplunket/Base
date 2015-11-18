@@ -66,5 +66,7 @@ namespace NxA { namespace Serato { namespace Internal {
         NxA::count indexOfVolumePathAndAddIfNotPresent(const String& volumePath);
 
         void markCratesAsModified(void);
+
+        void saveDataToCrateFileInSeratoFolder(const Blob& data, const String& seratoFolderPath);
     };
 } } }

@@ -52,6 +52,8 @@ namespace NxA { namespace Serato { namespace Internal {
                                                                                                   const String::ArrayOfConst& unknownCratesNames,
                                                                                                   const String& seratoFolderPath);
 
+        static void setDatabaseFilesInSeratoFolderAsModifedOnDateInSecondsSince1970(const String& folderPath, timestamp dateModified);
+
         static void addCratesNamesAtTheStartOfUnlessAlreadyThere(String::ArrayOfConst& cratesToAddTo,
                                                                  const String::ArrayOfConst& cratesToAdd);
 
@@ -83,6 +85,8 @@ namespace NxA { namespace Serato { namespace Internal {
         boolean databaseIsValid;
 
         #pragma mark Instance Methods
+        Serato::Tag::ArrayOfConst::Pointer parseDatabaseFileAtLocatedOnVolumeAndReturnOtherTags(const String& databasePath,
+                                                                                                const String& volumePath);
         void parseAnyDatabaseFilesIn(const String& pathForLocalSeratoFolder,
                                      const String::ArrayOfConst& pathsForExternalSeratoFolders);
 

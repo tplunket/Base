@@ -142,3 +142,21 @@ void Crate::markCratesAsModified(void)
         parent->internal->markCratesAsModified();
     }
 }
+
+void Crate::saveDataToCrateFileInSeratoFolder(const Blob& data, const String& seratoFolderPath)
+{
+    try {
+        Serato::Database::createSeratoFolderIfDoesNotExists(seratoFolderPath);
+
+        auto cratesFolderPath = NxA::Serato::Crate::subCratesDirectoryPathInSeratoFolder(seratoFolderPath);
+        if (!File::directoryExistsAt(cratesFolderPath)) {
+            File::createDirectoryAt(cratesFolderPath);
+        }
+
+        auto crateFilePath = Internal::Crate::crateFilePathForCrateNameInSeratoFolder(this->crateFullName, seratoFolderPath);
+        File::writeBlobToFileAt(data, crateFilePath);
+    }
+    catch (FileError& e) {
+        // -- This should log something.
+    }
+}

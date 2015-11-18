@@ -20,9 +20,9 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#include "SeratoDB/Database.hpp"
 #include "SeratoDB/Crate.hpp"
 #include "Internal/Crate.hpp"
-#include "SeratoDB/Database.hpp"
 #include "Tags/CrateV1Tags.hpp"
 #include "Tags/VersionTag.hpp"
 #include "Tags/TagFactory.hpp"
@@ -68,19 +68,24 @@ String::ArrayOfConst::Pointer Crate::readCratesNamesInCrateOrderFile(const Strin
 {
     auto cratesInOrder = String::ArrayOfConst::array();
 
-    if (File::fileExistsAt(crateOrderFilePath)) {
-        auto crateOrderFile = File::readFileAt(crateOrderFilePath);
-        if (crateOrderFile->size()) {
-            auto textAsString = String::stringWithUTF16(crateOrderFile);
-            auto lines = textAsString->splitBySeperator('\n');
-            for (auto& crateLine : *lines) {
-                auto fullCrateName = Internal::Crate::crateNameIfValidCrateOrEmptyIfNot(crateLine);
-                if (!fullCrateName->isEmpty()) {
-                    Internal::Crate::crateNameFromEscapedName(fullCrateName);
-                    cratesInOrder->append(Internal::Crate::crateNameFromEscapedName(fullCrateName));
+    try {
+        if (File::fileExistsAt(crateOrderFilePath)) {
+            auto crateOrderFile = File::readFileAt(crateOrderFilePath);
+            if (crateOrderFile->size()) {
+                auto textAsString = String::stringWithUTF16(crateOrderFile);
+                auto lines = textAsString->splitBySeperator('\n');
+                for (auto& crateLine : *lines) {
+                    auto fullCrateName = Internal::Crate::crateNameIfValidCrateOrEmptyIfNot(crateLine);
+                    if (!fullCrateName->isEmpty()) {
+                        Internal::Crate::crateNameFromEscapedName(fullCrateName);
+                        cratesInOrder->append(Internal::Crate::crateNameFromEscapedName(fullCrateName));
+                    }
                 }
             }
         }
+    }
+    catch (FileError::Exception& e) {
+        // -- This should log something.
     }
 
     return cratesInOrder;
@@ -237,37 +242,45 @@ void Crate::removeTrackEntry(TrackEntry& trackEntry)
 
 void Crate::readFromFolderInVolume(const String& seratoFolderPath, const String& volumePath)
 {
-    auto filePath = Internal::Crate::crateFilePathForCrateNameInSeratoFolder(this->crateFullName(), seratoFolderPath);
-
-    auto crateFileData = File::readFileAt(filePath);
-    auto tags = TagFactory::parseTagsAt(crateFileData->data(), crateFileData->size());
-    if (!tags->length()) {
-        return;
-    }
-
     auto otherTags = Serato::Tag::ArrayOfConst::array();
     auto trackEntries = Serato::TrackEntry::Array::array();
 
-    for (auto& tag : *(tags)) {
-        switch (tag->identifier()) {
-            case crateVersionTagIdentifier: {
-                auto& versionTag = dynamic_cast<VersionTag&>(*tag);
-                if (versionTag.value() != crateFileCurrentVersionString) {
-                    throw Serato::DatabaseError::exceptionWith("Illegal crate file version for file '%s'.", filePath->toUTF8());
+    try {
+        auto filePath = Internal::Crate::crateFilePathForCrateNameInSeratoFolder(this->crateFullName(), seratoFolderPath);
+
+        auto crateFileData = File::readFileAt(filePath);
+        auto tags = TagFactory::parseTagsAt(crateFileData->data(), crateFileData->size());
+        if (!tags->length()) {
+            return;
+        }
+
+        for (auto& tag : *(tags)) {
+            switch (tag->identifier()) {
+                case crateVersionTagIdentifier: {
+                    auto& versionTag = dynamic_cast<VersionTag&>(*tag);
+                    if (versionTag.value() != crateFileCurrentVersionString) {
+                        throw Serato::DatabaseError::exceptionWith("Illegal crate file version for file '%s'.", filePath->toUTF8());
+                    }
+                    break;
                 }
-                break;
-            }
-            case trackEntryTagIdentifier: {
-                auto entry = Serato::TrackEntry::entryWithTagOnVolume(dynamic_cast<ObjectTag&>(*tag), volumePath);
-                entry->setParentCrate(*this);
-                trackEntries->append(entry);
-                break;
-            }
-            default: {
-                otherTags->append(tag);
-                break;
+                case trackEntryTagIdentifier: {
+                    auto entry = Serato::TrackEntry::entryWithTagOnVolume(dynamic_cast<ObjectTag&>(*tag), volumePath);
+                    entry->setParentCrate(*this);
+                    trackEntries->append(entry);
+                    break;
+                }
+                default: {
+                    otherTags->append(tag);
+                    break;
+                }
             }
         }
+    }
+    catch (DatabaseError& e) {
+        // -- This should be logged.
+    }
+    catch (FileError& e) {
+        // -- This should be logged.
     }
 
     internal->volumePaths->append(volumePath);
@@ -329,16 +342,7 @@ void Crate::saveIfOnVolumeAndRecurseToChildren(const String& volumePath, const S
                 tag->addTo(outputData);
             }
 
-            Database::createSeratoFolderIfDoesNotExists(seratoFolderPath);
-
-            auto cratesFolderPath = NxA::Serato::Crate::subCratesDirectoryPathInSeratoFolder(seratoFolderPath);
-            if (!File::directoryExistsAt(cratesFolderPath)) {
-                File::createDirectoryAt(cratesFolderPath);
-            }
-
-            auto crateFilePath = Internal::Crate::crateFilePathForCrateNameInSeratoFolder(this->crateFullName(), seratoFolderPath);
-            File::writeBlobToFileAt(outputData, crateFilePath);
-
+            internal->saveDataToCrateFileInSeratoFolder(outputData, seratoFolderPath);
             break;
         }
     }

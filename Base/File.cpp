@@ -63,6 +63,8 @@ Blob::Pointer File::readFileAt(const String& path)
 
 void File::writeBlobToFileAt(const Blob& content, const String& path)
 {
+    NXA_ASSERT_TRUE(content.size() != 0);
+
     fstream file(path.toUTF8(), ios::out | ios::binary);
     file.write(reinterpret_cast<const char *>(content.data()), content.size());
 

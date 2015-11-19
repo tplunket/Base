@@ -123,7 +123,6 @@ integer ID3TrackFile::ratingValueForRatingFrameInTag(const TagLib::ID3v2::Tag* i
 void ID3TrackFile::setStringValueForFrameNamedInTag(const String& value, const character* name, TagLib::ID3v2::Tag* id3v2Tag)
 {
     id3v2Tag->removeFrames(name);
-
     auto frame = new TagLib::ID3v2::TextIdentificationFrame(name, TagLib::String::Latin1);
     frame->setText(TagLib::StringList(TagLib::String(value.toUTF8())));
     id3v2Tag->addFrame(frame);

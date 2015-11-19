@@ -182,7 +182,7 @@ integer FLACTrackFile::rating(void) const
         return 0;
     }
     else {
-        return Internal::ID3TrackFile::integerValueForFrameNamedInTag(Internal::id3RatingFrameName, internal->id3v2Tag);
+        return Internal::ID3TrackFile::ratingValueForRatingFrameInTag(internal->id3v2Tag);
     }
 }
 
@@ -281,7 +281,7 @@ void FLACTrackFile::setRating(integer rating)
             // -- TODO: To be implemented.
         }
         else {
-            Internal::ID3TrackFile::setIntegerValueForFrameNamedInTag(rating, Internal::id3RatingFrameName, internal->id3v2Tag);
+            Internal::ID3TrackFile::setRatingValueForRatingFrameInTag(rating, internal->id3v2Tag);
             internal->metadataWasModified = true;
         }
     }

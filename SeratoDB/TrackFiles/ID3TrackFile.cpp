@@ -94,7 +94,7 @@ boolean ID3TrackFile::hasRating(void) const
 
 integer ID3TrackFile::rating(void) const
 {
-    return internal->integerValueForFrameNamed(Internal::id3RatingFrameName);
+    return Internal::ID3TrackFile::ratingValueForRatingFrameInTag(internal->id3v2Tag);
 }
 
 Blob::Pointer ID3TrackFile::artwork(void) const
@@ -188,7 +188,7 @@ void ID3TrackFile::setRemixer(const String& remixer)
 void ID3TrackFile::setRating(integer rating)
 {
     if (rating != this->rating()) {
-        internal->setIntegerValueForFrameNamed(rating, Internal::id3RatingFrameName);
+        Internal::ID3TrackFile::setRatingValueForRatingFrameInTag(rating, internal->id3v2Tag);
         internal->metadataWasModified = true;
     }
 }

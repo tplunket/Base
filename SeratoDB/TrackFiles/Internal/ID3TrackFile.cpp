@@ -25,6 +25,7 @@
 #include <mpegfile.h>
 #include <attachedpictureframe.h>
 #include <textidentificationframe.h>
+#include <popularimeterframe.h>
 
 // -- Generated internal implementation ommitted because this class does not use the default contructor.
 
@@ -101,6 +102,13 @@ integer ID3TrackFile::integerValueForFrameNamedInTag(const character* name, cons
     return ID3TrackFile::stringValueForFrameNamedInTag(name, id3v2Tag)->integerValue();
 }
 
+integer ID3TrackFile::ratingValueForRatingFrameInTag(const TagLib::ID3v2::Tag* id3v2Tag)
+{
+    auto frameList = id3v2Tag->frameList(Internal::id3RatingFrameName);
+    TagLib::ID3v2::PopularimeterFrame* frame = dynamic_cast<TagLib::ID3v2::PopularimeterFrame*>(frameList.front());
+    return frame->rating();
+}
+
 void ID3TrackFile::setStringValueForFrameNamedInTag(const String& value, const character* name, TagLib::ID3v2::Tag* id3v2Tag)
 {
     id3v2Tag->removeFrames(name);
@@ -115,6 +123,12 @@ void ID3TrackFile::setIntegerValueForFrameNamedInTag(integer value, const charac
     ID3TrackFile::setStringValueForFrameNamedInTag(String::stringWithFormat("%ld", value), name, id3v2Tag);
 }
 
+void ID3TrackFile::setRatingValueForRatingFrameInTag(integer value, const TagLib::ID3v2::Tag* id3v2Tag)
+{
+    auto frameList = id3v2Tag->frameList(Internal::id3RatingFrameName);
+    TagLib::ID3v2::PopularimeterFrame* frame = dynamic_cast<TagLib::ID3v2::PopularimeterFrame*>(frameList.front());
+    frame->setRating(value);
+}
 
 void ID3TrackFile::removeGEOBFrameNamedInTag(const String& name, TagLib::ID3v2::Tag* id3v2Tag)
 {

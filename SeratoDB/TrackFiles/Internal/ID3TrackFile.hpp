@@ -58,8 +58,10 @@ namespace NxA { namespace Serato { namespace Internal {
                                                                              const String& description);
         static String::Pointer stringValueForFrameNamedInTag(const character* name, const TagLib::ID3v2::Tag* id3v2Tag);
         static integer integerValueForFrameNamedInTag(const character* name, const TagLib::ID3v2::Tag* id3v2Tag);
+        static integer ratingValueForRatingFrameInTag(const TagLib::ID3v2::Tag* id3v2Tag);
         static void setStringValueForFrameNamedInTag(const String& value, const character* name, TagLib::ID3v2::Tag* id3v2Tag);
         static void setIntegerValueForFrameNamedInTag(integer value, const character* name, TagLib::ID3v2::Tag* id3v2Tag);
+        static void setRatingValueForRatingFrameInTag(integer value, const TagLib::ID3v2::Tag* id3v2Tag);
         static void removeGEOBFrameNamedInTag(const String& name, TagLib::ID3v2::Tag* id3v2Tag);
         static void replaceMarkersFrameInTagWithEmptyFrame(TagLib::ID3v2::Tag* id3v2Tag);
         static void replaceMarkersV2FrameInTagWith(TagLib::ID3v2::Tag* id3v2Tag, const String& base64MarkersData);

@@ -214,9 +214,39 @@ void TrackFile::setLoopMarkers(LoopMarker::Array& markers)
 void TrackFile::setGridMarkers(GridMarker::Array& markers)
 {
     NXA_ASSERT_FALSE(internal->markersWereIgnored);
-    
-    if (markers != this->gridMarkers()) {
-        internal->gridMarkers = markers.pointer();
+
+    // -- Serato doesn't support very flexible grid markers, the ones we end up writing
+    // -- might not be exactly the ones we wanted to write so we fix them
+    // -- before setting them to make sure our internal ones match what was written.
+    auto fixedMarkers = GridMarker::Array::array();
+    count numberOfMarkers = markers.length();
+    count lastMarkerIndex = numberOfMarkers - 1;
+
+    for (count index = 0; index < numberOfMarkers; ++index) {
+        auto& marker = markers[index];
+
+        if (index == lastMarkerIndex) {
+            fixedMarkers->append(marker);
+        }
+        else {
+            auto& nextMarker = markers[index + 1];
+            decimal timeBetweenMarkersInSeconds = nextMarker.positionInSeconds() - marker.positionInSeconds();
+            uinteger32 numberOfBeats = (marker.beatsPerMinute() * timeBetweenMarkersInSeconds) / 60.f;
+
+            decimal bpm = ((decimal)numberOfBeats * 60.0f) / timeBetweenMarkersInSeconds;
+            if (bpm != marker.beatsPerMinute()) {
+                // -- This should be logged.
+                auto newMarker = GridMarker::markerWithPositionAndBeatsPerMinute(marker.positionInSeconds(), bpm);
+                fixedMarkers->append(newMarker);
+            }
+            else {
+                fixedMarkers->append(marker);
+            }
+        }
+    }
+
+    if (fixedMarkers != this->gridMarkers()) {
+        internal->gridMarkers = fixedMarkers;
         internal->markersWereModified = true;
     }
 }

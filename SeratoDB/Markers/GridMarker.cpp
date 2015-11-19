@@ -115,7 +115,7 @@ void GridMarker::addMarkersTo(GridMarker::Array& markers, NxA::Blob& data)
         }
         else {
             auto& nextMarker = markers[index + 1];
-            uinteger32 numberOfBeats = (marker.beatsPerMinute() * 60.0f) / (nextMarker.positionInSeconds() - marker.positionInSeconds());
+            uinteger32 numberOfBeats = (marker.beatsPerMinute() * (nextMarker.positionInSeconds() - marker.positionInSeconds())) / 60.f;
 
             Platform::writeBigEndianUInteger32ValueAt(numberOfBeats, markerData.beatsPerMinute);
         }

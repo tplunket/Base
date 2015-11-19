@@ -166,7 +166,7 @@ String::Pointer TrackFile::base64StringFromMarkersV2(void)
     return encodedData;
 }
 
-Blob::Pointer TrackFile::gridMarkerDataFromGridMarkers(void)
+Blob::Pointer TrackFile::gridMarkerDataFromGridMarkersAndFixGridMarkersToMatchData(void)
 {
     NXA_ASSERT_FALSE(this->markersWereIgnored);
 
@@ -176,6 +176,11 @@ Blob::Pointer TrackFile::gridMarkerDataFromGridMarkers(void)
     }
 
     Serato::GridMarker::addMarkersTo(this->gridMarkers, data);
+
+    // -- Serato doesn't support very flexible grid markers, the ones we end up writing
+    // -- might not be exactly the ones we wanted to write so we read them back to
+    // -- make sure our internal ones match what was written.
+    this->gridMarkers = Serato::GridMarker::markersWithMemoryAt(data->data());
 
     return data;
 }

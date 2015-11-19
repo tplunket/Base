@@ -166,7 +166,7 @@ void MP4TrackFile::replaceGridMarkersItem(void)
 {
     this->mp4Tag->removeItem(mp4BeatgridItemName);
 
-    auto gridMarkerData = this->gridMarkerDataFromGridMarkers();
+    auto gridMarkerData = this->gridMarkerDataFromGridMarkersAndFixGridMarkersToMatchData();
     if (!gridMarkerData->size()) {
         return;
     }

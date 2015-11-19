@@ -88,9 +88,11 @@ String::Pointer ID3TrackFile::stringValueForFrameNamedInTag(const character* nam
 {
     auto frameList = id3v2Tag->frameList(name);
     for (auto& frame : frameList) {
-        auto stringValue = frame->toString();
-        if (stringValue.length()) {
-            return String::stringWith(stringValue.toCString());
+        if (frame) {
+            auto stringValue = frame->toString();
+            if (stringValue.length()) {
+                return String::stringWith(stringValue.toCString());
+            }
         }
     }
 
@@ -104,9 +106,18 @@ integer ID3TrackFile::integerValueForFrameNamedInTag(const character* name, cons
 
 integer ID3TrackFile::ratingValueForRatingFrameInTag(const TagLib::ID3v2::Tag* id3v2Tag)
 {
+    integer rating = 0;
+
     auto frameList = id3v2Tag->frameList(Internal::id3RatingFrameName);
-    TagLib::ID3v2::PopularimeterFrame* frame = dynamic_cast<TagLib::ID3v2::PopularimeterFrame*>(frameList.front());
-    return frame->rating();
+    auto frame = frameList.front();
+    if (frame) {
+        TagLib::ID3v2::PopularimeterFrame* popFrame = dynamic_cast<TagLib::ID3v2::PopularimeterFrame*>(frameList.front());
+        if (popFrame) {
+            rating = popFrame->rating();
+        }
+    }
+
+    return rating;
 }
 
 void ID3TrackFile::setStringValueForFrameNamedInTag(const String& value, const character* name, TagLib::ID3v2::Tag* id3v2Tag)
@@ -123,11 +134,25 @@ void ID3TrackFile::setIntegerValueForFrameNamedInTag(integer value, const charac
     ID3TrackFile::setStringValueForFrameNamedInTag(String::stringWithFormat("%ld", value), name, id3v2Tag);
 }
 
-void ID3TrackFile::setRatingValueForRatingFrameInTag(integer value, const TagLib::ID3v2::Tag* id3v2Tag)
+void ID3TrackFile::setRatingValueForRatingFrameInTag(integer value, TagLib::ID3v2::Tag* id3v2Tag)
 {
+    count counter = 0;
     auto frameList = id3v2Tag->frameList(Internal::id3RatingFrameName);
-    TagLib::ID3v2::PopularimeterFrame* frame = dynamic_cast<TagLib::ID3v2::PopularimeterFrame*>(frameList.front());
-    frame->setRating(value);
+    auto frame = frameList.front();
+    if (frame) {
+        TagLib::ID3v2::PopularimeterFrame* popFrame = dynamic_cast<TagLib::ID3v2::PopularimeterFrame*>(frameList.front());
+        if (popFrame) {
+            counter = popFrame->counter();
+        }
+    }
+
+    id3v2Tag->removeFrames(Internal::id3RatingFrameName);
+
+    auto popFrame = new TagLib::ID3v2::PopularimeterFrame();
+    popFrame->setRating(value);
+    popFrame->setCounter(counter);
+
+    id3v2Tag->addFrame(popFrame);
 }
 
 void ID3TrackFile::removeGEOBFrameNamedInTag(const String& name, TagLib::ID3v2::Tag* id3v2Tag)

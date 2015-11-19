@@ -38,19 +38,12 @@ static const character* crateFileCurrentVersionString = "1.0/Serato ScratchLive 
 
 #pragma mark Factory Methods
 
-Crate::Pointer Crate::crateWithName(const String& crateFullName)
+Crate::Pointer Crate::crateWithFullName(const String& fullCrateName)
 {
-    auto internalObject = Internal::Crate::Pointer(std::make_shared<Internal::Crate>(crateFullName));
+    auto internalObject = Internal::Crate::Pointer(std::make_shared<Internal::Crate>(fullCrateName));
     auto newCrate = Crate::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
 
-    auto lastSeperatorIndex = crateFullName.indexOfLastOccurenceOf("%%");
-    if (lastSeperatorIndex != crateFullName.length()) {
-        newCrate->internal->crateName = crateFullName.subString(lastSeperatorIndex + 2);
-    }
-    else {
-        newCrate->internal->crateName = crateFullName.pointer();
-    }
-
+    newCrate->internal->crateName = Internal::Crate::crateNameFromFullCrateName(fullCrateName);
     Internal::Crate::crateNameFromEscapedName(newCrate->internal->crateName);
 
     return newCrate;
@@ -117,16 +110,34 @@ NxA::String::ArrayOfConst::Pointer Crate::cratesInSubCratesDirectory(const Strin
     return crateNamesFound;
 }
 
-boolean Crate::isAValidCrateName(const String& crateFullName, const String& seratoFolderPath)
+boolean Crate::isAnExistingFullCrateName(const String& fullCrateName, const String& seratoFolderPath)
 {
-    auto crateFilePath = Internal::Crate::crateFilePathForCrateNameInSeratoFolder(crateFullName, seratoFolderPath);
+    auto crateFilePath = Internal::Crate::crateFilePathForFullCrateNameInSeratoFolder(fullCrateName, seratoFolderPath);
     return File::fileExistsAt(crateFilePath);
 }
 
-boolean Crate::isASmartCrateName(const String& crateFullName, const String& seratoFolderPath)
+boolean Crate::isAnExistingFullSmartCrateName(const String& fullCrateName, const String& seratoFolderPath)
 {
-    auto crateFilePath = Internal::Crate::crateFilePathForSmartCrateNameInSeratoFolder(crateFullName, seratoFolderPath);
+    auto crateFilePath = Internal::Crate::crateFilePathForFullSmartCrateNameInSeratoFolder(fullCrateName, seratoFolderPath);
     return File::fileExistsAt(crateFilePath);
+}
+
+void Crate::parseCratesInSeratoFolderOnVolumeAddToCrateAndSaveUnknownCrateNamesIn(String::ArrayOfConst& cratesInOrder,
+                                                                                  const String& seratoFolderPath,
+                                                                                  const String& volumePath,
+                                                                                  Serato::Crate& parentCrate,
+                                                                                  String::ArrayOfConst& unknownCratesNames)
+{
+    for (auto fullEntryName : cratesInOrder) {
+        if (Serato::Crate::isAnExistingFullSmartCrateName(fullEntryName, seratoFolderPath) ||
+            !Serato::Crate::isAnExistingFullCrateName(fullEntryName, seratoFolderPath)) {
+            unknownCratesNames.append(fullEntryName);
+            continue;
+        }
+
+        auto newCrate = parentCrate.findOrAddCrateWithRelativeNameAndFullName(fullEntryName, fullEntryName);
+        newCrate->readFromFolderInVolume(seratoFolderPath, volumePath);
+    }
 }
 
 #pragma mark Instance Methods
@@ -136,18 +147,18 @@ const String& Crate::crateName(void) const
     return internal->crateName;
 }
 
-const String& Crate::crateFullName(void) const
+const String& Crate::fullCrateName(void) const
 {
-    return internal->crateFullName;
+    return internal->fullCrateName;
 }
 
 void Crate::addFullCrateNameWithPrefixForCratesOnVolumeAndRecurseToChildren(String& destination, const char* prefix, const String& volumePath) const
 {
-    if (internal->crateFullName->length()) {
+    if (internal->fullCrateName->length()) {
         count volumePathIndex = internal->indexOfVolumePath(volumePath);
         if (volumePathIndex != internal->volumePaths->length()) {
             destination.append(prefix);
-            destination.append(internal->crateFullName);
+            destination.append(internal->fullCrateName);
             destination.append("\n");
         }
     }
@@ -193,17 +204,38 @@ void Crate::removeCrate(Crate& crate)
     internal->markCratesAsModified();
 }
 
-Crate::Pointer Crate::findOrAddCrateWithName(const String& crateName)
+Crate::Pointer Crate::findOrAddCrateWithRelativeNameAndFullName(const String& relativeName, const String& fullCrateName)
 {
+    auto topCrateName = Internal::Crate::topParentCrateNameFromFullCrateName(relativeName);
+
+    Crate::NullablePointer crateFound;
+
     for (auto& crate : crates()) {
-        if (crate->crateFullName() == crateName) {
-            return crate;
+        if (crate->crateName() == topCrateName) {
+            crateFound = crate;
+            break;
         }
     }
 
-    auto newCrate = Serato::Crate::crateWithName(crateName);
-    this->addCrate(newCrate);
-    return newCrate;
+    if (crateFound.isNull()) {
+        if (this->hasParentCrate()) {
+            auto newCrateFullName = String::stringWithFormat("%s%%%%%s",
+                                                             this->fullCrateName().toUTF8(),
+                                                             topCrateName->toUTF8());
+            crateFound = Serato::Crate::crateWithFullName(newCrateFullName);
+        }
+        else {
+            crateFound = Serato::Crate::crateWithFullName(topCrateName);
+        }
+
+        this->addCrate(crateFound);
+    }
+
+    if (topCrateName == relativeName) {
+        return crateFound->pointer();
+    }
+
+    return crateFound->findOrAddCrateWithRelativeNameAndFullName(relativeName.subString(topCrateName->length() + 2), fullCrateName);
 }
 
 void Crate::addTrackEntry(Serato::TrackEntry& trackEntry)
@@ -246,7 +278,7 @@ void Crate::readFromFolderInVolume(const String& seratoFolderPath, const String&
     auto trackEntries = Serato::TrackEntry::Array::array();
 
     try {
-        auto filePath = Internal::Crate::crateFilePathForCrateNameInSeratoFolder(this->crateFullName(), seratoFolderPath);
+        auto filePath = Internal::Crate::crateFilePathForFullCrateNameInSeratoFolder(this->fullCrateName(), seratoFolderPath);
 
         auto crateFileData = File::readFileAt(filePath);
         auto tags = TagFactory::parseTagsAt(crateFileData->data(), crateFileData->size());

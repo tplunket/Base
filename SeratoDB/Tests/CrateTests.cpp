@@ -37,11 +37,11 @@ TEST(SeratoDB_Crate, crateWithName_CrateInitialValues_ReturnsAValidCrate)
     auto volumePath = String::stringWith("");
 
     // -- When.
-    auto crate = Crate::crateWithName(crateName);
+    auto crate = Crate::crateWithFullName(crateName);
 
     // -- Then.
     ASSERT_STREQ("MyCrate", crate->crateName().toUTF8());
-    ASSERT_STREQ("MyFolder%%MyCrate", crate->crateFullName().toUTF8());
+    ASSERT_STREQ("MyFolder%%MyCrate", crate->fullCrateName().toUTF8());
 }
 
 // -- TDOO: Add test for addFullCrateNameWithPrefixAndRecurseToChildren()
@@ -49,9 +49,9 @@ TEST(SeratoDB_Crate, crateWithName_CrateInitialValues_ReturnsAValidCrate)
 TEST(SeratoDB_Crate, AddCrate_AddingTwoCratesToACrate_AddsTheTwoCratesCorrectly)
 {
     // -- Given.
-    auto crate1 = Crate::crateWithName(String::stringWith("MyFolder%%MyCrate1"));
-    auto crate2 = Crate::crateWithName(String::stringWith("MyFolder%%MyCrate2"));
-    auto crate3 = Crate::crateWithName(String::stringWith("MyFolder%%MyCrate3"));
+    auto crate1 = Crate::crateWithFullName(String::stringWith("MyFolder%%MyCrate1"));
+    auto crate2 = Crate::crateWithFullName(String::stringWith("MyFolder%%MyCrate2"));
+    auto crate3 = Crate::crateWithFullName(String::stringWith("MyFolder%%MyCrate3"));
 
     // -- When.
     crate1->addCrate(crate2);
@@ -71,9 +71,9 @@ TEST(SeratoDB_Crate, AddCrate_AddingTwoCratesToACrate_AddsTheTwoCratesCorrectly)
 TEST(SeratoDB_Crate, AddCrate_AddingACrateWhichAlreadyHasAParent_ThrowsAnException)
 {
     // -- Given.
-    auto crate1 = Crate::crateWithName(String::stringWith("MyFolder%%MyCrate1"));
-    auto crate2 = Crate::crateWithName(String::stringWith("MyFolder%%MyCrate2"));
-    auto crate3 = Crate::crateWithName(String::stringWith("MyFolder%%MyCrate3"));
+    auto crate1 = Crate::crateWithFullName(String::stringWith("MyFolder%%MyCrate1"));
+    auto crate2 = Crate::crateWithFullName(String::stringWith("MyFolder%%MyCrate2"));
+    auto crate3 = Crate::crateWithFullName(String::stringWith("MyFolder%%MyCrate3"));
     crate2->addCrate(crate3);
 
     // -- When.
@@ -84,9 +84,9 @@ TEST(SeratoDB_Crate, AddCrate_AddingACrateWhichAlreadyHasAParent_ThrowsAnExcepti
 TEST(SeratoDB_Crate, RemoveCrate_ACrateWithTwoCrates_RemovesCrateCorrectly)
 {
     // -- Given.
-    auto crate1 = Crate::crateWithName(String::stringWith("MyFolder%%MyCrate1"));
-    auto crate2 = Crate::crateWithName(String::stringWith("MyFolder%%MyCrate2"));
-    auto crate3 = Crate::crateWithName(String::stringWith("MyFolder%%MyCrate3"));
+    auto crate1 = Crate::crateWithFullName(String::stringWith("MyFolder%%MyCrate1"));
+    auto crate2 = Crate::crateWithFullName(String::stringWith("MyFolder%%MyCrate2"));
+    auto crate3 = Crate::crateWithFullName(String::stringWith("MyFolder%%MyCrate3"));
     crate1->addCrate(crate2);
     crate1->addCrate(crate3);
 
@@ -106,7 +106,7 @@ TEST(SeratoDB_Crate, RemoveCrate_ACrateWithTwoCrates_RemovesCrateCorrectly)
 TEST(SeratoDB_Crate, AddTrackEntry_ACrateAndTwoTrackEntries_AddsEntryCorrectly)
 {
     // -- Given.
-    auto crate = Crate::crateWithName(String::stringWith("MyFolder%%MyCrate1"));
+    auto crate = Crate::crateWithFullName(String::stringWith("MyFolder%%MyCrate1"));
     auto entry1 = TrackEntry::entryWithTrackFileAtOnVolume(String::stringWith("/Test/MyFile.mp4"), String::stringWith("/"));
     auto entry2 = TrackEntry::entryWithTrackFileAtOnVolume(String::stringWith("/Test/MyFile2.mp4"), String::stringWith("/"));
 
@@ -128,8 +128,8 @@ TEST(SeratoDB_Crate, AddTrackEntry_ACrateAndTwoTrackEntries_AddsEntryCorrectly)
 TEST(SeratoDB_Crate, AddTrackEntry_ACrateAndATrackEntryAlreadyInAnotherCrate_ThrowsException)
 {
     // -- Given.
-    auto crate1 = Crate::crateWithName(String::stringWith("MyFolder%%MyCrate1"));
-    auto crate2 = Crate::crateWithName(String::stringWith("MyFolder%%MyCrate2"));
+    auto crate1 = Crate::crateWithFullName(String::stringWith("MyFolder%%MyCrate1"));
+    auto crate2 = Crate::crateWithFullName(String::stringWith("MyFolder%%MyCrate2"));
     auto entry = TrackEntry::entryWithTrackFileAtOnVolume(String::stringWith("/Test/MyFile.mp4"), String::stringWith("/"));
     crate2->addTrackEntry(entry);
 
@@ -141,7 +141,7 @@ TEST(SeratoDB_Crate, AddTrackEntry_ACrateAndATrackEntryAlreadyInAnotherCrate_Thr
 TEST(SeratoDB_Crate, RemoveTrackEntry_ACrateAndATwoTrackEntried_AddsEntryCorrectly)
 {
     // -- Given.
-    auto crate = Crate::crateWithName(String::stringWith("MyFolder%%MyCrate1"));
+    auto crate = Crate::crateWithFullName(String::stringWith("MyFolder%%MyCrate1"));
     auto entry1 = TrackEntry::entryWithTrackFileAtOnVolume(String::stringWith("/Test/MyFile.mp4"), String::stringWith("/"));
     auto entry2 = TrackEntry::entryWithTrackFileAtOnVolume(String::stringWith("/Test/MyFile2.mp4"), String::stringWith("/"));
     crate->addTrackEntry(entry1);
@@ -163,8 +163,8 @@ TEST(SeratoDB_Crate, RemoveTrackEntry_ACrateAndATwoTrackEntried_AddsEntryCorrect
 TEST(SeratoDB_Crate, HasParentCrate_ACrateWithAParent_ReturnsTrue)
 {
     // -- Given.
-    auto crate1 = Crate::crateWithName(String::stringWith("MyFolder%%MyCrate1"));
-    auto crate2 = Crate::crateWithName(String::stringWith("MyFolder%%MyCrate2"));
+    auto crate1 = Crate::crateWithFullName(String::stringWith("MyFolder%%MyCrate1"));
+    auto crate2 = Crate::crateWithFullName(String::stringWith("MyFolder%%MyCrate2"));
     crate1->addCrate(crate2);
 
     // -- When.
@@ -175,8 +175,8 @@ TEST(SeratoDB_Crate, HasParentCrate_ACrateWithAParent_ReturnsTrue)
 TEST(SeratoDB_Crate, HasParentCrate_ACrateWithNoParent_ReturnsFalse)
 {
     // -- Given.
-    auto crate1 = Crate::crateWithName(String::stringWith("MyFolder%%MyCrate1"));
-    auto crate2 = Crate::crateWithName(String::stringWith("MyFolder%%MyCrate2"));
+    auto crate1 = Crate::crateWithFullName(String::stringWith("MyFolder%%MyCrate1"));
+    auto crate2 = Crate::crateWithFullName(String::stringWith("MyFolder%%MyCrate2"));
 
     // -- When.
     // -- Then.
@@ -186,8 +186,8 @@ TEST(SeratoDB_Crate, HasParentCrate_ACrateWithNoParent_ReturnsFalse)
 TEST(SeratoDB_Crate, HasParentCrate_ACrateWithNoParentBecauseItWasRemoved_ReturnsFalse)
 {
     // -- Given.
-    auto crate1 = Crate::crateWithName(String::stringWith("MyFolder%%MyCrate1"));
-    auto crate2 = Crate::crateWithName(String::stringWith("MyFolder%%MyCrate2"));
+    auto crate1 = Crate::crateWithFullName(String::stringWith("MyFolder%%MyCrate1"));
+    auto crate2 = Crate::crateWithFullName(String::stringWith("MyFolder%%MyCrate2"));
     crate1->addCrate(crate2);
     crate1->removeCrate(crate2);
 
@@ -199,8 +199,8 @@ TEST(SeratoDB_Crate, HasParentCrate_ACrateWithNoParentBecauseItWasRemoved_Return
 TEST(SeratoDB_Crate, ParentCrate_ACrateWithAParent_ReturnsTheCorrectCrate)
 {
     // -- Given.
-    auto crate1 = Crate::crateWithName(String::stringWith("MyFolder%%MyCrate1"));
-    auto crate2 = Crate::crateWithName(String::stringWith("MyFolder%%MyCrate2"));
+    auto crate1 = Crate::crateWithFullName(String::stringWith("MyFolder%%MyCrate1"));
+    auto crate2 = Crate::crateWithFullName(String::stringWith("MyFolder%%MyCrate2"));
     crate1->addCrate(crate2);
 
     // -- When.
@@ -211,7 +211,7 @@ TEST(SeratoDB_Crate, ParentCrate_ACrateWithAParent_ReturnsTheCorrectCrate)
 TEST(SeratoDB_Crate, ParentCrate_ACrateWithoutAParent_ThrowsException)
 {
     // -- Given.
-    auto crate2 = Crate::crateWithName(String::stringWith("MyFolder%%MyCrate2"));
+    auto crate2 = Crate::crateWithFullName(String::stringWith("MyFolder%%MyCrate2"));
 
     // -- When.
     // -- Then.
@@ -221,8 +221,8 @@ TEST(SeratoDB_Crate, ParentCrate_ACrateWithoutAParent_ThrowsException)
 TEST(SeratoDB_Crate, RemoveFromParentCrate_ACrateWithAParent_RemovesTheCrateFromItsParent)
 {
     // -- Given.
-    auto crate1 = Crate::crateWithName(String::stringWith("MyFolder%%MyCrate1"));
-    auto crate2 = Crate::crateWithName(String::stringWith("MyFolder%%MyCrate2"));
+    auto crate1 = Crate::crateWithFullName(String::stringWith("MyFolder%%MyCrate1"));
+    auto crate2 = Crate::crateWithFullName(String::stringWith("MyFolder%%MyCrate2"));
     crate1->addCrate(crate2);
 
     // -- When.
@@ -236,7 +236,7 @@ TEST(SeratoDB_Crate, RemoveFromParentCrate_ACrateWithAParent_RemovesTheCrateFrom
 TEST(SeratoDB_Crate, RemoveFromParentCrate_ACrateWithoutParent_ThrowsException)
 {
     // -- Given.
-    auto crate2 = Crate::crateWithName(String::stringWith("MyFolder%%MyCrate2"));
+    auto crate2 = Crate::crateWithFullName(String::stringWith("MyFolder%%MyCrate2"));
 
     // -- When.
     // -- Then.
@@ -251,7 +251,7 @@ TEST(SeratoDB_Crate, RemoveFromParentCrate_ACrateWithoutParent_ThrowsException)
 TEST(SeratoDB_Crate, RemoveAndReturnTrackEntries_ACrateWithTwoTrackEntries_ReturnsTheTwoEntriesSeperateFromTheirParent)
 {
     // -- Given.
-    auto crate = Crate::crateWithName(String::stringWith("MyFolder%%MyCrate1"));
+    auto crate = Crate::crateWithFullName(String::stringWith("MyFolder%%MyCrate1"));
     auto entry1 = TrackEntry::entryWithTrackFileAtOnVolume(String::stringWith("/Test/MyFile.mp4"), String::stringWith("/"));
     auto entry2 = TrackEntry::entryWithTrackFileAtOnVolume(String::stringWith("/Test/MyFile2.mp4"), String::stringWith("/"));
     crate->addTrackEntry(entry1);
@@ -273,7 +273,7 @@ TEST(SeratoDB_Crate, RemoveAndReturnTrackEntries_ACrateWithTwoTrackEntries_Retur
 TEST(SeratoDB_Crate, RemoveAndReturnTrackEntries_ACrateWithNoTrackEntries_ReturnsAnEmptyArray)
 {
     // -- Given.
-    auto crate = Crate::crateWithName(String::stringWith("MyFolder%%MyCrate1"));
+    auto crate = Crate::crateWithFullName(String::stringWith("MyFolder%%MyCrate1"));
 
     // -- When.
     auto result = crate->removeAndReturnTrackEntries();
@@ -287,9 +287,9 @@ TEST(SeratoDB_Crate, RemoveAndReturnTrackEntries_ACrateWithNoTrackEntries_Return
 TEST(SeratoDB_Crate, RemoveAndReturnChildrenCrates_ACrateWithTwoChildCrates_ReturnsTheTwoCratesSeperateFromTheirParent)
 {
     // -- Given.
-    auto crate1 = Crate::crateWithName(String::stringWith("MyFolder%%MyCrate1"));
-    auto crate2 = Crate::crateWithName(String::stringWith("MyFolder%%MyCrate2"));
-    auto crate3 = Crate::crateWithName(String::stringWith("MyFolder%%MyCrate3"));
+    auto crate1 = Crate::crateWithFullName(String::stringWith("MyFolder%%MyCrate1"));
+    auto crate2 = Crate::crateWithFullName(String::stringWith("MyFolder%%MyCrate2"));
+    auto crate3 = Crate::crateWithFullName(String::stringWith("MyFolder%%MyCrate3"));
     crate1->addCrate(crate2);
     crate1->addCrate(crate3);
 
@@ -309,7 +309,7 @@ TEST(SeratoDB_Crate, RemoveAndReturnChildrenCrates_ACrateWithTwoChildCrates_Retu
 TEST(SeratoDB_Crate, RemoveAndReturnChildrenCrates_ACrateWithNoChildCrates_ReturnsAnEmptyArray)
 {
     // -- Given.
-    auto crate1 = Crate::crateWithName(String::stringWith("MyFolder%%MyCrate1"));
+    auto crate1 = Crate::crateWithFullName(String::stringWith("MyFolder%%MyCrate1"));
 
     // -- When.
     auto result = crate1->removeAndReturnChildrenCrates();

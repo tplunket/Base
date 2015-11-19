@@ -37,7 +37,7 @@ namespace NxA { namespace Serato {
 
     public:
         #pragma mark Factory Methods
-        static Crate::Pointer crateWithName(const String& crateFullName);
+        static Crate::Pointer crateWithFullName(const String& fullCrateName);
 
         #pragma mark Class Methods
         static String::Pointer subCratesDirectoryPathInSeratoFolder(const String& seratoFolderPath);
@@ -45,14 +45,19 @@ namespace NxA { namespace Serato {
         static boolean filenameIsAValidCrateName(const String& fileName);
         static String::Pointer crateNameFromFilename(const String& fileName);
         static String::ArrayOfConst::Pointer cratesInSubCratesDirectory(const String& directory);
-        static boolean isAValidCrateName(const String& crateFullName,
-                                         const String& seratoFolderPath);
-        static boolean isASmartCrateName(const String& crateFullName,
-                                         const String& seratoFolderPath);
+        static boolean isAnExistingFullCrateName(const String& fullCrateName,
+                                                 const String& seratoFolderPath);
+        static boolean isAnExistingFullSmartCrateName(const String& fullCrateName,
+                                                      const String& seratoFolderPath);
+        static void parseCratesInSeratoFolderOnVolumeAddToCrateAndSaveUnknownCrateNamesIn(String::ArrayOfConst& cratesInOrder,
+                                                                                          const String& seratoFolderPath,
+                                                                                          const String& volumePath,
+                                                                                          Serato::Crate& parentCrate,
+                                                                                          String::ArrayOfConst& unknownCratesNames);
 
         #pragma mark Instance Methods
         const String& crateName(void) const;
-        const String& crateFullName(void) const;
+        const String& fullCrateName(void) const;
         void addFullCrateNameWithPrefixForCratesOnVolumeAndRecurseToChildren(String& destination,
                                                                              const char* prefix,
                                                                              const String& volumePath) const;
@@ -62,7 +67,7 @@ namespace NxA { namespace Serato {
 
         void addCrate(Crate& crate);
         void removeCrate(Crate& crate);
-        Crate::Pointer findOrAddCrateWithName(const String& crateName);
+        Crate::Pointer findOrAddCrateWithRelativeNameAndFullName(const String& relativeName, const String& fullCrateName);
 
         void addTrackEntry(TrackEntry& trackEntry);
         void removeTrackEntry(TrackEntry& trackEntry);

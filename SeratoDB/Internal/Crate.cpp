@@ -31,7 +31,7 @@ using namespace NxA::Serato::Internal;
 
 Crate::Crate(const String& fullName) :
              crateName(String::string()),
-             crateFullName(fullName.pointer()),
+             fullCrateName(fullName.pointer()),
              tracksWereModified(true),
              cratesWereModified(false),
              childrenCrates(Serato::Crate::Array::array()),
@@ -74,34 +74,50 @@ NxA::String::Pointer Crate::crateNameFromEscapedName(const String& EscapedName)
     return result;
 }
 
+NxA::String::Pointer Crate::crateNameFromFullCrateName(const String& fullCrateName)
+{
+    auto lastSeperatorIndex = fullCrateName.indexOfLastOccurenceOf("%%");
+    if (lastSeperatorIndex == fullCrateName.length()) {
+        return String::stringWith(fullCrateName.pointer());
+    }
+
+    return fullCrateName.subString(lastSeperatorIndex + 2);
+}
+
+NxA::String::Pointer Crate::topParentCrateNameFromFullCrateName(const String& fullCrateName)
+{
+    auto firstSeperatorIndex = fullCrateName.indexOfFirstOccurenceOf("%%");
+    return fullCrateName.subString(0, firstSeperatorIndex);
+}
+
 NxA::String::Pointer Crate::smartCratesDirectoryPathInSeratoFolder(const String& seratoFolderPath)
 {
     auto joinedPath = File::joinPaths(seratoFolderPath, String::stringWith("SmartCrates"));
     return joinedPath;
 }
 
-NxA::String::Pointer Crate::crateFilePathForCrateNameInSeratoFolder(const String& crateName,
-                                                                    const String& seratoFolderPath)
+NxA::String::Pointer Crate::crateFilePathForFullCrateNameInSeratoFolder(const String& fullCrateName,
+                                                                        const String& seratoFolderPath)
 {
-    NXA_ASSERT_TRUE(crateName.length() != 0);
+    NXA_ASSERT_TRUE(fullCrateName.length() != 0);
 
     auto cratesFolderPath = NxA::Serato::Crate::subCratesDirectoryPathInSeratoFolder(seratoFolderPath);
-    auto crateFilePartialPath = File::joinPaths(cratesFolderPath, Crate::escapedNameFromCrateName(crateName));
-    crateFilePartialPath->append(".crate");
+    auto crateFilePath = File::joinPaths(cratesFolderPath, fullCrateName);
+    crateFilePath->append(".crate");
 
-    return crateFilePartialPath;
+    return crateFilePath;
 }
 
-NxA::String::Pointer Crate::crateFilePathForSmartCrateNameInSeratoFolder(const String& crateName,
-                                                                         const String& seratoFolderPath)
+NxA::String::Pointer Crate::crateFilePathForFullSmartCrateNameInSeratoFolder(const String& fullCrateName,
+                                                                             const String& seratoFolderPath)
 {
-    NXA_ASSERT_TRUE(crateName.length() != 0);
+    NXA_ASSERT_TRUE(fullCrateName.length() != 0);
     
     auto cratesFolderPath = NxA::Serato::Crate::subCratesDirectoryPathInSeratoFolder(seratoFolderPath);
-    auto crateFilePartialPath = File::joinPaths(cratesFolderPath, Crate::escapedNameFromCrateName(crateName));
-    crateFilePartialPath->append(".scrate");
+    auto crateFilePath = File::joinPaths(cratesFolderPath, fullCrateName);
+    crateFilePath->append(".scrate");
 
-    return crateFilePartialPath;
+    return crateFilePath;
 }
 
 #pragma mark Instance Methods
@@ -153,7 +169,7 @@ void Crate::saveDataToCrateFileInSeratoFolder(const Blob& data, const String& se
             File::createDirectoryAt(cratesFolderPath);
         }
 
-        auto crateFilePath = Internal::Crate::crateFilePathForCrateNameInSeratoFolder(this->crateFullName, seratoFolderPath);
+        auto crateFilePath = Internal::Crate::crateFilePathForFullCrateNameInSeratoFolder(this->fullCrateName, seratoFolderPath);
         File::writeBlobToFileAt(data, crateFilePath);
     }
     catch (FileError& e) {

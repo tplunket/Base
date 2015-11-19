@@ -57,14 +57,6 @@ namespace NxA { namespace Serato { namespace Internal {
         static void addCratesNamesAtTheStartOfUnlessAlreadyThere(String::ArrayOfConst& cratesToAddTo,
                                                                  const String::ArrayOfConst& cratesToAdd);
 
-        static void addChildrenCratesOfCrateNamedUsingNameList(Serato::Crate& parentCrate,
-                                                               const String& name,
-                                                               String::ArrayOfConst::iterator& it,
-                                                               const String::ArrayOfConst::iterator& end,
-                                                               const String& seratoFolderPath,
-                                                               const String& volumePath,
-                                                               String::ArrayOfConst& unknownCratesNames);
-
 #if NXA_PRINT_DEBUG_INFO
         static void debugListCrate(Serato::Crate& crate,
                                    const String& spacing);

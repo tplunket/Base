@@ -37,7 +37,7 @@ const char* Database::databaseFileCurrentVersionString = "2.0/Serato Scratch LIV
 
 Database::Database(const String& pathForLocalSeratoFolder,
                    const String::ArrayOfConst& pathsForExternalSeratoFolders) :
-                   rootCrate(Serato::Crate::crateWithName(String::string())),
+                   rootCrate(Serato::Crate::crateWithFullName(String::string())),
                    tracks(Serato::Track::Array::array()),
                    pathsForSeratoDirectories(String::ArrayOfConst::array()),
                    volumePathsPerPath(String::ArrayOfConst::array()),
@@ -68,14 +68,11 @@ void Database::addCratesFoundInSeratoFolderOnVolumeToRootCrate(const String& ser
     auto subCratesFound = Serato::Crate::cratesInSubCratesDirectory(subCratesDirectory);
     Internal::Database::addCratesNamesAtTheStartOfUnlessAlreadyThere(*cratesInOrder, *subCratesFound);
 
-    auto it = cratesInOrder->begin();
-    Internal::Database::addChildrenCratesOfCrateNamedUsingNameList(rootCrate,
-                                                                   String::string(),
-                                                                   it,
-                                                                   cratesInOrder->end(),
-                                                                   seratoFolderPath,
-                                                                   volumePath,
-                                                                   unknownCratesNames);
+    Serato::Crate::parseCratesInSeratoFolderOnVolumeAddToCrateAndSaveUnknownCrateNamesIn(cratesInOrder,
+                                                                                         seratoFolderPath,
+                                                                                         volumePath,
+                                                                                         rootCrate,
+                                                                                         unknownCratesNames);
 
     rootCrate.resetModificationFlags();
 }
@@ -140,47 +137,6 @@ void Database::addCratesNamesAtTheStartOfUnlessAlreadyThere(String::ArrayOfConst
         cratesToAddTo.insertAt(*crateName, cratesToAddTo.begin() + insertionIndex);
 
         ++insertionIndex;
-    }
-}
-
-void Database::addChildrenCratesOfCrateNamedUsingNameList(Serato::Crate& parentCrate,
-                                                          const String& name,
-                                                          String::ArrayOfConst::iterator& it,
-                                                          const String::ArrayOfConst::iterator& end,
-                                                          const String& seratoFolderPath,
-                                                          const String& volumePath,
-                                                          String::ArrayOfConst& unknownCratesNames)
-{
-    while (it != end) {
-        auto fullCrateName = *it;
-        if (name.length() && !fullCrateName->hasPrefix(name)) {
-            break;
-        }
-
-        if (Serato::Crate::isASmartCrateName(fullCrateName, seratoFolderPath) ||
-            !Serato::Crate::isAValidCrateName(fullCrateName, seratoFolderPath)) {
-            unknownCratesNames.append(fullCrateName);
-            ++it;
-            continue;
-        }
-
-        auto newCrate = parentCrate.findOrAddCrateWithName(fullCrateName);
-        newCrate->readFromFolderInVolume(seratoFolderPath, volumePath);
-
-        ++it;
-
-        auto crateNameWithSeperator = String::stringWith(fullCrateName);
-        crateNameWithSeperator->append("%%");
-
-        Database::addChildrenCratesOfCrateNamedUsingNameList(newCrate,
-                                                             crateNameWithSeperator,
-                                                             it,
-                                                             end,
-                                                             seratoFolderPath,
-                                                             volumePath,
-                                                             unknownCratesNames);
-        
-        newCrate->resetModificationFlags();
     }
 }
 

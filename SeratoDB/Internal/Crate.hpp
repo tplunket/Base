@@ -41,15 +41,17 @@ namespace NxA { namespace Serato { namespace Internal {
         static String::Pointer crateNameIfValidCrateOrEmptyIfNot(const String& name);
         static String::Pointer escapedNameFromCrateName(const String& CrateName);
         static String::Pointer crateNameFromEscapedName(const String& EscapedName);
+        static String::Pointer crateNameFromFullCrateName(const String& fullCrateName);
+        static String::Pointer topParentCrateNameFromFullCrateName(const String& fullCrateName);
         static String::Pointer smartCratesDirectoryPathInSeratoFolder(const String& seratoFolderPath);
-        static String::Pointer crateFilePathForCrateNameInSeratoFolder(const String& crateName,
-                                                                       const String& seratoFolderPath);
-        static String::Pointer crateFilePathForSmartCrateNameInSeratoFolder(const String& crateName,
-                                                                            const String& seratoFolderPath);
-                                                                            
+        static String::Pointer crateFilePathForFullCrateNameInSeratoFolder(const String& crateName,
+                                                                           const String& seratoFolderPath);
+        static String::Pointer crateFilePathForFullSmartCrateNameInSeratoFolder(const String& fullCrateName,
+                                                                                const String& seratoFolderPath);
+
         #pragma mark Instance Variables
         String::PointerToConst crateName;
-        String::PointerToConst crateFullName;
+        String::PointerToConst fullCrateName;
 
         boolean tracksWereModified;
         boolean cratesWereModified;

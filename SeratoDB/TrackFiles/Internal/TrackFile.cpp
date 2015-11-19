@@ -93,7 +93,6 @@ const byte* TrackFile::readMarkerAtAndAdvanceToNextTag(const byte* tagStart)
     }
     catch (LoopMarkerError exception) {
         // TODO: This should be a logging call instead.
-        printf("%s\n", exception.what());
     }
 
     return nextTagPositionAfterTagNamed(tagName, tagStart);

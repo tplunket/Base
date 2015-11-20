@@ -110,7 +110,8 @@ uinteger32 TrackFile::sampleRateInSamplesPerSecond(void) const
 
 String::Pointer TrackFile::releaseDate(void) const
 {
-    return String::stringWithFormat("%04d-01-01", internal->file->tag()->year());
+    integer year = internal->file->tag()->year();
+    return year ? String::stringWithFormat("%04d-01-01", year) : String::string();
 }
 
 const CueMarker::Array& TrackFile::cueMarkers(void) const

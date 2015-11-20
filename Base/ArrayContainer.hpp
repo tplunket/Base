@@ -78,7 +78,7 @@ namespace NxA {
         }
         T& operator[] (count index)
         {
-            return const_cast<T&>((static_cast<const ArrayContainer<T>&>(*this))[index]);
+            return const_cast<T&>(static_cast<const ArrayContainer<T>*>(this)->operator[](index));
         }
         bool operator==(const ArrayContainer<T>& other) const
         {
@@ -159,7 +159,7 @@ namespace NxA {
         }
         T& firstObject(void)
         {
-            return const_cast<T&>((static_cast<const ArrayContainer<T>&>(*this)).firstObject());
+            return const_cast<T&>((static_cast<const ArrayContainer<T>*>(this))->firstObject());
         }
         const T& lastObject(void) const
         {
@@ -169,7 +169,7 @@ namespace NxA {
         }
         T& lastObject(void)
         {
-            return const_cast<T&>((static_cast<const ArrayContainer<T>&>(*this)).lastObject());
+            return const_cast<T&>((static_cast<const ArrayContainer<T>*>(this))->lastObject());
         }
         void insertAt(T& object, const_iterator pos)
         {

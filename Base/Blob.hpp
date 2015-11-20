@@ -51,7 +51,7 @@ namespace NxA {
         const byte& operator[] (integer index) const;
         byte& operator[] (integer index)
         {
-            return const_cast<uinteger8&>(static_cast<const Blob&>(*this)[index]);
+            return const_cast<uinteger8&>(static_cast<const Blob*>(this)->operator[](index));
         }
         bool operator==(const Blob& other) const;
 
@@ -61,7 +61,7 @@ namespace NxA {
         const byte* data(void) const;
         byte* data(void)
         {
-            return const_cast<byte*>(static_cast<const Blob&>(*this).data());
+            return const_cast<byte*>(static_cast<const Blob*>(this)->data());
         }
 
         void fillWithZeros(void);

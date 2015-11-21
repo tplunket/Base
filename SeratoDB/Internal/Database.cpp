@@ -211,7 +211,9 @@ void Database::parseAnyDatabaseFilesIn(const String& pathForLocalSeratoFolder,
 
     boolean firstPath = true;
 
+#if NXA_PRINT_DEBUG_INFO
     count previousTrackCount = 0;
+#endif
 
     for (auto& path : *(this->pathsForSeratoDirectories)) {
         auto otherCrateNames = String::ArrayOfConst::array();
@@ -243,9 +245,8 @@ void Database::parseAnyDatabaseFilesIn(const String& pathForLocalSeratoFolder,
 
 #if NXA_PRINT_DEBUG_INFO
         printf("  found %ld tracks and %ld other tags.\n", this->tracks->length() - previousTrackCount, otherTags->length());
-#endif
-
         previousTrackCount = this->tracks->length();
+#endif
 
         NXA_ASSERT_TRUE(volumePath->length() != 0);
         

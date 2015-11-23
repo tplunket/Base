@@ -158,14 +158,16 @@ String::Array::Pointer File::pathsForFilesInDirectory(const String& path)
 {
     auto pathsFound = String::Array::array();
 
-    boost::filesystem::path boostPath(path.toUTF8());
-    boost::filesystem::directory_iterator end_iterator;
+    if (File::directoryExistsAt(path)) {
+        boost::filesystem::path boostPath(path.toUTF8());
+        boost::filesystem::directory_iterator end_iterator;
 
-    // cycle through the directory
-    for (boost::filesystem::directory_iterator iterator(boostPath); iterator != end_iterator; ++iterator) {
-        auto& pathFound = iterator->path();
-        if (boost::filesystem::is_regular_file(pathFound)){
-            pathsFound->append(String::stringWith(pathFound.c_str()));
+        // cycle through the directory
+        for (boost::filesystem::directory_iterator iterator(boostPath); iterator != end_iterator; ++iterator) {
+            auto& pathFound = iterator->path();
+            if (boost::filesystem::is_regular_file(pathFound)){
+                pathsFound->append(String::stringWith(pathFound.c_str()));
+            }
         }
     }
 

@@ -62,8 +62,13 @@ ID3TrackFile::ID3TrackFile(const String& path, const TagLibFilePointer& newFile)
 
 boolean ID3TrackFile::isAValidGeobFrame(const TagLib::ID3v2::GeneralEncapsulatedObjectFrame* frame)
 {
-    TagLib::String frameID(reinterpret_cast<char*>(frame->frameID().data()));
-    if (frameID != "GEOB") {
+    auto frameID = frame->frameID();
+    if (frameID.size() != 4) {
+        return false;
+    }
+
+    auto frameIDData = frameID.data();
+    if ((frameIDData[0] != 'G') || (frameIDData[0] != 'E') || (frameIDData[0] != 'O') || (frameIDData[0] != 'B')) {
         return false;
     }
 

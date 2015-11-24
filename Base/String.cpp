@@ -101,6 +101,8 @@ String::Pointer String::string(void)
 
 String::Pointer String::stringWith(const character* other)
 {
+    NXA_ASSERT_NOT_NULL(other);
+
     auto newString = String::makeShared();
     newString->std::string::operator=(other);
 
@@ -109,6 +111,8 @@ String::Pointer String::stringWith(const character* other)
 
 String::Pointer String::stringWith(const character* other, count length)
 {
+    NXA_ASSERT_NOT_NULL(other);
+
     auto newString = String::makeShared();
     newString->std::string::operator=(std::string(other, length));
 
@@ -125,6 +129,8 @@ String::Pointer String::stringWith(const String& other)
 
 String::Pointer String::stringWithFormat(const character* format, ...)
 {
+    NXA_ASSERT_NOT_NULL(format);
+
     constexpr count formatStringBufferSize = 256;
     char buffer[formatStringBufferSize];
 
@@ -175,14 +181,17 @@ uinteger32 String::hashFor(String::Pointer str)
 
 uinteger32 String::hashFor(const character* str)
 {
+    NXA_ASSERT_NOT_NULL(str);
+
     return SBox((const byte*)str, lengthOf(str), uinteger32(-1));
 }
 
 count String::lengthOf(const character* str)
 {
+    NXA_ASSERT_NOT_NULL(str);
+
     const character* end = str;
-    while (*end)
-    {
+    while (*end) {
         ++end;
     }
 
@@ -204,11 +213,16 @@ bool String::operator==(const String& other) const
 
 bool String::operator==(const char* other) const
 {
+    NXA_ASSERT_NOT_NULL(other);
+
     const std::string& stdStringThis = *this;
     return stdStringThis == other;
 }
+
 bool String::operator!=(const char* other) const
 {
+    NXA_ASSERT_NOT_NULL(other);
+
     const std::string& stdStringThis = *this;
     return stdStringThis != other;
 }
@@ -261,6 +275,8 @@ void String::append(const String& other)
 
 void String::append(const character* other)
 {
+    NXA_ASSERT_NOT_NULL(other);
+
     this->std::string::append(other);
 }
 
@@ -338,11 +354,15 @@ boolean String::hasPostfix(const String& postfix) const
 
 boolean String::hasPrefix(const character* prefix) const
 {
+    NXA_ASSERT_NOT_NULL(prefix);
+
     return this->find(prefix) == 0;
 }
 
 boolean String::hasPostfix(const character* postfix) const
 {
+    NXA_ASSERT_NOT_NULL(postfix);
+
     size_t pos = this->rfind(postfix);
     if (pos == std::string::npos) {
         return false;
@@ -364,6 +384,8 @@ count String::indexOfLastOccurenceOf(const String& other) const
 
 count String::indexOfFirstOccurenceOf(const char* other) const
 {
+    NXA_ASSERT_NOT_NULL(other);
+
     size_t pos = this->find(other);
     if (pos == std::string::npos) {
         return this->length();
@@ -374,6 +396,8 @@ count String::indexOfFirstOccurenceOf(const char* other) const
 
 count String::indexOfLastOccurenceOf(const char*  other) const
 {
+    NXA_ASSERT_NOT_NULL(other);
+
     size_t pos = this->rfind(other);
     if (pos == std::string::npos) {
         return this->length();
@@ -384,5 +408,8 @@ count String::indexOfLastOccurenceOf(const char*  other) const
 
 void String::replaceOccurenceOfStringWith(const character* occurence, const character* replacement)
 {
+    NXA_ASSERT_NOT_NULL(occurence);
+    NXA_ASSERT_NOT_NULL(replacement);
+
     boost::replace_all(*static_cast<std::string*>(this), occurence, replacement);
 }

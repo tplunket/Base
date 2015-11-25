@@ -37,28 +37,34 @@ using namespace std;
 
 Blob::Pointer File::readFileAt(const String& path)
 {
+    byte* fileData = nullptr;
+
     count fileSize = File::sizeOfFileAt(path);
-    if (fileSize) {
-        byte* fileData = new byte[fileSize];
-        if (fileData) {
-            fstream file(path.toUTF8(), ios::in | ios::binary);
-            file.read(reinterpret_cast<char*>(fileData), fileSize);
-
-            if (file.rdstate() & std::ifstream::failbit) {
-                file.close();
-                throw FileError::exceptionWith("Error reading file at '%s'.", path.toUTF8());
-            }
-            
-            file.close();
-
-            auto result = Blob::blobWithMemoryAndSize(fileData, fileSize);
-            delete[] fileData;
-
-            return result;
-        }
+    if (!fileSize) {
+        return Blob::blob();
     }
 
-    return Blob::blob();
+    fileData = new byte[fileSize];
+    NXA_SCOPE_EXIT(fileData) {
+        delete[] fileData;
+    } NXA_SCOPE_EXIT_END
+
+    if (!fileData) {
+        throw FileError::exceptionWith("Error reading file at '%s'.", path.toUTF8());
+    }
+
+    fstream file(path.toUTF8(), ios::in | ios::binary);
+    file.read(reinterpret_cast<char*>(fileData), fileSize);
+    NXA_SCOPE_EXIT(&file) {
+        file.close();
+    } NXA_SCOPE_EXIT_END
+
+    if (file.rdstate() & std::ifstream::failbit) {
+        throw FileError::exceptionWith("Error reading file at '%s'.", path.toUTF8());
+    }
+
+    auto result = Blob::blobWithMemoryAndSize(fileData, fileSize);
+    return result;
 }
 
 void File::writeBlobToFileAt(const Blob& content, const String& path)

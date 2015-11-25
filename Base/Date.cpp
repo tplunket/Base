@@ -36,9 +36,12 @@ using namespace NxA;
 
 String::Pointer Date::formattedStringWithTimestampAndFormat(timestamp time, const character *format)
 {
-    boost::posix_time::time_facet facet(format);
-    static std::locale loc(std::cout.getloc(), &facet);
+    boost::posix_time::time_facet *facet = new boost::posix_time::time_facet(format);
+    if (!facet) {
+        return String::string();
+    }
 
+    std::locale loc(std::cout.getloc(), facet);
     std::basic_stringstream<char> stream;
     stream.imbue(loc);
     stream << boost::posix_time::from_time_t(time);

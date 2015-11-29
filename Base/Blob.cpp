@@ -142,7 +142,7 @@ namespace NxA {
 
         h1 += h2;
         h2 += h1;
-        
+
         ((uint64_t*)out)[0] = h1;
         ((uint64_t*)out)[1] = h2;
     }
@@ -402,6 +402,20 @@ Blob::Pointer Blob::blobWithBase64String(const String& str)
     NXA_ASSERT_TRUE(codeLength <= sizeof(codeOut));
 
     auto newBlob = Blob::blobWithMemoryAndSize(reinterpret_cast<byte*>(codeOut), codeLength);
+    return newBlob;
+}
+
+Blob::Pointer Blob::blobWithStringWithTerminator(const String& str)
+{
+    auto newBlob = Blob::makeShared();
+    newBlob->appendWithStringTermination(str.toUTF8());
+    return newBlob;
+}
+
+Blob::Pointer Blob::blobWithStringWithoutTerminator(const String& str)
+{
+    auto newBlob = Blob::makeShared();
+    newBlob->appendWithoutStringTermination(str.toUTF8());
     return newBlob;
 }
 

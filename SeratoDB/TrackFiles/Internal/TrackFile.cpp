@@ -24,10 +24,18 @@
 namespace NxA { namespace Serato { namespace Internal {
     #pragma mark Structures
     typedef struct {
-        unsigned char majorVersion;
-        unsigned char minorVersion;
-        unsigned char data[0];
-    } MarkerHeaderStruct;
+        byte majorVersion;
+        byte minorVersion;
+        byte data[0];
+    } MarkerV2HeaderStruct;
+
+    typedef struct {
+        byte majorVersion;
+        byte minorVersion;
+        byte size[4];
+        byte data[0];
+    } MarkerV1HeaderStruct;
+
 } } }
 
 using namespace NxA;
@@ -109,7 +117,7 @@ void TrackFile::readMarkersV2FromBase64String(const byte* markerV2Data, count to
     auto decodedData = Blob::blobWithBase64String(String::stringWith(reinterpret_cast<const character*>(markerV2Data),
                                                                      totalSize));
 
-    auto markerStruct = reinterpret_cast<MarkerHeaderStruct*>(decodedData->data());
+    auto markerStruct = reinterpret_cast<MarkerV2HeaderStruct*>(decodedData->data());
     if ((markerStruct->majorVersion != 1) || (markerStruct->minorVersion != 1)) {
         return;
     }
@@ -149,19 +157,19 @@ String::Pointer TrackFile::base64StringFromMarkersV2(void)
 
     auto decodedData = Blob::blob();
 
-    MarkerHeaderStruct markersHeader;
+    MarkerV2HeaderStruct markersHeader;
     markersHeader.majorVersion = 1;
     markersHeader.minorVersion = 1;
 
-    auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<byte*>(&markersHeader), sizeof(MarkerHeaderStruct));
+    auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<byte*>(&markersHeader), sizeof(MarkerV2HeaderStruct));
     decodedData->append(headerData);
 
     for (auto& marker : *this->cueMarkers) {
-        marker->addId3TagTo(decodedData);
+        marker->addMarkerV2TagTo(decodedData);
     }
 
     for (auto& marker : *this->loopMarkers) {
-        marker->addId3TagTo(decodedData);
+        marker->addMarkerV2TagTo(decodedData);
     }
 
     for (auto& tagData : *this->otherTags) {
@@ -173,6 +181,50 @@ String::Pointer TrackFile::base64StringFromMarkersV2(void)
 
     auto encodedData = Blob::base64StringFor(decodedData->data(), decodedData->size());
     return encodedData;
+}
+
+Blob::Pointer TrackFile::blobFromMarkersV1(void)
+{
+    NXA_ASSERT_FALSE(this->markersWereIgnored);
+
+    auto blobData = Blob::blob();
+
+    MarkerV1HeaderStruct markersHeader;
+    markersHeader.majorVersion = 2;
+    markersHeader.minorVersion = 5;
+    markersHeader.size[0] = 0;
+    markersHeader.size[1] = 0;
+    markersHeader.size[2] = 0;
+    markersHeader.size[3] = 14;
+
+    auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<byte*>(&markersHeader), sizeof(MarkerV1HeaderStruct));
+    blobData->append(headerData);
+
+    // files with >5 cues are saved with all cues empty in V1 by serato
+    bool noCues = (this->cueMarkers->length() > 5);
+
+    for (int i = 0; i < 5; ++i) {
+        if (i < this->cueMarkers->length() && !noCues) {
+            (*cueMarkers)[i].addMarkerV1TagTo(blobData);
+        }
+        else {
+            Serato::CueMarker::addEmptyMarkerV1TagTo(blobData);
+        }
+    }
+
+    for (int i = 0; i < 9; ++i) {
+        if (i < this->loopMarkers->length()) {
+            (*loopMarkers)[i].addMarkerV1TagTo(blobData);
+        }
+        else {
+            Serato::LoopMarker::addEmptyMarkerV1TagTo(blobData);
+        }
+    }
+
+    // -- This marks the end of tags.
+    blobData->append('\0');
+
+    return blobData;
 }
 
 Blob::Pointer TrackFile::gridMarkerDataFromGridMarkers(void)

@@ -20,7 +20,7 @@ namespace NxA { namespace Serato {
     typedef struct {
         byte tag[5];
         byte size[4];
-    } SeratoLoopTagHeaderStruct;
+    } SeratoLoopTagV2HeaderStruct;
 
     typedef struct {
         byte tag[5];
@@ -33,7 +33,58 @@ namespace NxA { namespace Serato {
         byte loop_enabled;
         byte loop_locked;
         byte label[0];
-    } SeratoLoopTagStruct;
+    } SeratoLoopTagV2Struct;
+
+    typedef struct {
+        byte position[5];
+        byte loopPosition[5];
+        byte zero;
+        byte loopIterations[5];
+        byte color[4];
+        byte type;
+        byte locked;
+    } SeratoLoopTagV1Struct;
+
+    static void initializeLoopTagV1Struct(SeratoLoopTagV1Struct& tag)
+    {
+        for (int i = 0; i < 5; ++i)
+        {
+            tag.position[i] = 0x7f;
+            tag.loopPosition[i] = 0x7f;
+            tag.loopIterations[i] = 0x7f;
+        }
+        for (int i = 0; i < 4; ++i)
+        {
+            tag.color[i] = 0;
+        }
+        tag.zero = 0;
+        tag.type = 3;
+        tag.locked = 0;
+    }
+
+    inline void packUInteger32(uinteger32 input, byte packed[5])
+    {
+      if (input == 0xFFFFFFFF)
+      {
+          packed[4] = packed[3] = packed[2] = packed[1] = packed[0] = 0x7f;
+      }
+      else
+      {
+          packed[4] = (input & 0x0000007f);
+          packed[3] = (input & 0x00003f80) >> 7;
+          packed[2] = (input & 0x001fc000) >> 14;
+          packed[1] = (input & 0x0fe00000) >> 21;
+          packed[0] = (input & 0xf0000000) >> 28;
+      }
+    }
+
+    inline void packColor(byte r, byte g, byte b, byte packed[4])
+    {
+        packed[3] = (b & 0x7f);
+        packed[2] = ((b & 0x80) >> 7) | ((g & 0x3f) << 1);
+        packed[1] = ((g & 0xc0) >> 6) | ((r & 0x1f) << 2);
+        packed[0] = ((r & 0xe0) >> 5);
+    }
 } }
 
 using namespace NxA;
@@ -43,7 +94,7 @@ using namespace NxA::Serato;
 
 LoopMarker::Pointer LoopMarker::markerWithMemoryAt(const byte* id3TagStart)
 {
-    const SeratoLoopTagStruct* tagStruct = reinterpret_cast<const SeratoLoopTagStruct*>(id3TagStart);
+    auto tagStruct = reinterpret_cast<const SeratoLoopTagV2Struct*>(id3TagStart);
 
     NXA_ASSERT_TRUE(*String::stringWith(reinterpret_cast<const character*>(tagStruct->tag)) == "LOOP");
 
@@ -146,12 +197,36 @@ byte LoopMarker::colorBlueComponent(void) const
     return internal->colorBlueComponent;
 }
 
-void LoopMarker::addId3TagTo(Blob& data) const
+void LoopMarker::addMarkerV1TagTo(Blob& data) const
 {
-    SeratoLoopTagStruct header;
+    SeratoLoopTagV1Struct tag;
+    initializeLoopTagV1Struct(tag);
+
+    packUInteger32(this->startPositionInMilliseconds(), tag.position);
+    packUInteger32(this->endPositionInMilliseconds(), tag.loopPosition);
+    packUInteger32(0xFFFFFFFF, tag.loopIterations);
+    packColor(this->colorRedComponent(), this->colorGreenComponent(), this->colorBlueComponent(), tag.color);
+    tag.locked = 0;
+
+    auto tagData = Blob::blobWithMemoryAndSize(reinterpret_cast<const byte*>(&tag), sizeof(SeratoLoopTagV1Struct));
+    data.append(tagData);
+}
+
+void LoopMarker::addEmptyMarkerV1TagTo(Blob& data)
+{
+    SeratoLoopTagV1Struct tag;
+    initializeLoopTagV1Struct(tag);
+
+    auto tagData = Blob::blobWithMemoryAndSize(reinterpret_cast<const byte*>(&tag), sizeof(SeratoLoopTagV1Struct));
+    data.append(tagData);
+}
+
+void LoopMarker::addMarkerV2TagTo(Blob& data) const
+{
+    SeratoLoopTagV2Struct header;
 
     memcpy(header.tag, "LOOP", 5);
-    size_t size = sizeof(SeratoLoopTagStruct) + this->label().length() + 1 - sizeof(SeratoLoopTagHeaderStruct);
+    size_t size = sizeof(SeratoLoopTagV2Struct) + this->label().length() + 1 - sizeof(SeratoLoopTagV2HeaderStruct);
     Platform::writeBigEndianUInteger32ValueAt((uint32_t)size, header.size);
     Platform::writeBigEndianUInteger16ValueAt(this->index(), header.index);
     Platform::writeBigEndianUInteger32ValueAt(this->startPositionInMilliseconds(), header.position);
@@ -164,7 +239,7 @@ void LoopMarker::addId3TagTo(Blob& data) const
     header.loop_enabled = 0;
     header.loop_locked = 0;
 
-    auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<const byte*>(&header), sizeof(SeratoLoopTagStruct));
+    auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<const byte*>(&header), sizeof(SeratoLoopTagV2Struct));
     data.append(headerData);
     data.appendWithStringTermination(this->label().toUTF8());
 }

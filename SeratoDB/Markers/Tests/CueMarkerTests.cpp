@@ -237,15 +237,15 @@ TEST(SeratoDB_CueMarker, OperatorUnequal_TwoUnequalMarkersDifferentBlue_ReturnsT
     ASSERT_TRUE(*test != *other);
 }
 
-TEST(SeratoDB_CueMarker, addId3TagTo_AMarkerWithData_WritesTheCorrectData)
+TEST(SeratoDB_CueMarker, addMarkerV2TagTo_AMarkerWithData_WritesTheCorrectData)
 {
     // -- Given.
     auto destination = Blob::blob();
     auto test = CueMarker::markerWithLabelPositionIndexAndColor(String::stringWith("TEST"), 187750, 1, 0x45, 0xdc, 0x02);
-
+    
     // -- When.
-    test->addId3TagTo(destination);
-
+    test->addMarkerV2TagTo(destination);
+    
     // -- Then.
     auto data = destination->data();
     constexpr byte expectedData[] = {

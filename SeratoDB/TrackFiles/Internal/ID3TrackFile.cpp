@@ -45,6 +45,7 @@ namespace NxA { namespace Serato { namespace Internal {
     } GeobObjectStruct;
 
     #pragma mark Constants
+    constexpr const character* id3MarkersV1FrameDescription = "Serato Markers_";
     constexpr const character* id3MarkersV2FrameDescription = "Serato Markers2";
     constexpr const character* id3BeatgridFrameDescription = "Serato BeatGrid";
 } } }
@@ -171,6 +172,12 @@ void ID3TrackFile::replaceFrameNamedInTagWithDataAndVersion(const String& frameN
     newFrame->setDescription(frameName.toUTF8());
 
     id3v2Tag->addFrame(newFrame);
+}
+
+void ID3TrackFile::replaceMarkersV1FrameInTagWith(TagLib::ID3v2::Tag* id3v2Tag, const Blob& markersV1Data)
+{
+    auto frameName = String::stringWith(id3MarkersV1FrameDescription);
+    ID3TrackFile::replaceFrameNamedInTagWithDataAndVersion(frameName, id3v2Tag, markersV1Data, 2, 5);
 }
 
 void ID3TrackFile::replaceMarkersV2FrameInTagWith(TagLib::ID3v2::Tag* id3v2Tag, const String& base64MarkersData)

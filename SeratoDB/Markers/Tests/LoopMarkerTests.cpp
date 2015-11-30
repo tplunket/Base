@@ -270,15 +270,15 @@ TEST(SeratoDB_LoopMarker, OperatorUnequal_TwoUnequalMarkersDifferentBlue_Returns
     ASSERT_TRUE(*test != *other);
 }
 
-TEST(SeratoDB_LoopMarker, addId3TagTo_AMarkerWithData_WritesTheCorrectData)
+TEST(SeratoDB_LoopMarker, addMarkerV2TagTo_AMarkerWithData_WritesTheCorrectData)
 {
     // -- Given.
     auto destination = Blob::blob();
     auto test = LoopMarker::markerWithLabelStartEndPositionsIndexAndColor(String::stringWith("TEST"), 139847, 143718, 0, 0x22, 0xff, 0xcc);
-
+    
     // -- When.
-    test->addId3TagTo(destination);
-
+    test->addMarkerV2TagTo(destination);
+    
     // -- Then.
     auto data = destination->data();
     constexpr byte expectedData[] = {

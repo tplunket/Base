@@ -43,8 +43,6 @@ namespace NxA { namespace Serato { namespace Internal {
     constexpr const character* id3RecordingTimeFrameName = "TDRC";
     constexpr const character* id3ReleaseTimeFrameName = "TDRL";
 
-    constexpr const character* id3MarkersFrameDescription = "Serato Markers_";
-
     struct ID3TrackFile : public TrackFile {
         NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTORS_FOR(NxA::Serato, ID3TrackFile);
 
@@ -60,7 +58,10 @@ namespace NxA { namespace Serato { namespace Internal {
         static void setStringValueForFrameNamedInTag(const String& value, const character* name, TagLib::ID3v2::Tag* id3v2Tag);
         static void setIntegerValueForFrameNamedInTag(integer value, const character* name, TagLib::ID3v2::Tag* id3v2Tag);
         static void removeGEOBFrameNamedInTag(const String& name, TagLib::ID3v2::Tag* id3v2Tag);
+        static void replaceFrameNamedInTagWithDataAndVersion(const String& frameName, TagLib::ID3v2::Tag* id3v2Tag,
+                                                             const Blob& frameData, int majorVersion, int minorVersion);
         static void replaceMarkersFrameInTagWithEmptyFrame(TagLib::ID3v2::Tag* id3v2Tag);
+        static void replaceMarkersV1FrameInTagWith(TagLib::ID3v2::Tag* id3v2Tag, const Blob& markersV1Data);
         static void replaceMarkersV2FrameInTagWith(TagLib::ID3v2::Tag* id3v2Tag, const String& base64MarkersData);
         static void replaceGridMarkersFrameInTagWith(TagLib::ID3v2::Tag* id3v2Tag, const Blob& gridMarkersData);
         static String::Pointer releaseDateFromTag(TagLib::ID3v2::Tag* id3v2Tag);

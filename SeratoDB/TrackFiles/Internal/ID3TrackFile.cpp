@@ -131,7 +131,7 @@ void ID3TrackFile::removeGEOBFrameNamedInTag(const String& name, TagLib::ID3v2::
 
 void ID3TrackFile::replaceMarkersFrameInTagWithEmptyFrame(TagLib::ID3v2::Tag* id3v2Tag)
 {
-    ID3TrackFile::removeGEOBFrameNamedInTag(String::stringWith(id3MarkersFrameDescription), id3v2Tag);
+    ID3TrackFile::removeGEOBFrameNamedInTag(String::stringWith(id3MarkersV1FrameDescription), id3v2Tag);
 
     auto newFrame = new TagLib::ID3v2::GeneralEncapsulatedObjectFrame();
     TagLib::ByteVector newData;
@@ -139,7 +139,7 @@ void ID3TrackFile::replaceMarkersFrameInTagWithEmptyFrame(TagLib::ID3v2::Tag* id
     newFrame->setTextEncoding(TagLib::String::Latin1);
     newFrame->setMimeType("application/octet-stream");
     newFrame->setFileName("");
-    newFrame->setDescription(id3MarkersFrameDescription);
+    newFrame->setDescription(id3MarkersV1FrameDescription);
 
     id3v2Tag->addFrame(newFrame);
 }

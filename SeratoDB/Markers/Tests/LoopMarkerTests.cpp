@@ -288,3 +288,39 @@ TEST(SeratoDB_LoopMarker, addMarkerV2TagTo_AMarkerWithData_WritesTheCorrectData)
     ASSERT_EQ(sizeof(expectedData), destination->size());
     ASSERT_EQ(0, ::memcmp(expectedData, data, sizeof(expectedData)));
 }
+
+TEST(SeratoDB_LoopMarker, addEmptyMarkerV1TagTo_AMarkerWithData_WritesTheCorrectData)
+{
+    // -- Given.
+    auto destination = Blob::blob();
+    
+    // -- When.
+    LoopMarker::addEmptyMarkerV1TagTo(destination);
+    
+    // -- Then.
+    auto data = destination->data();
+    constexpr byte expectedData[] = {
+        0x7F, 0x7F, 0x7F, 0x7F, 0x7F, 0x7F, 0x7F, 0x7F, 0x7F, 0x7F, 0,
+        0x7F, 0x7F, 0x7F, 0x7F, 0x7F, 0, 0, 0, 0, 3, 0
+    };
+    ASSERT_EQ(sizeof(expectedData), destination->size());
+    ASSERT_EQ(0, ::memcmp(expectedData, data, sizeof(expectedData)));
+}
+
+TEST(SeratoDB_LoopMarker, addMarkerV1TagTo_AMarkerWithData_WritesTheCorrectData)
+{
+    // -- Given.
+    auto destination = Blob::blob();
+    auto test = LoopMarker::markerWithLabelStartEndPositionsIndexAndColor(String::stringWith("TEST"), 139847, 143718, 0, 0x22, 0xff, 0xcc);
+    
+    // -- When.
+    test->addMarkerV1TagTo(destination);
+    
+    // -- Then.
+    auto data = destination->data();
+    constexpr byte expectedData[] = {
+        0, 0, 8, 68, 71, 0, 0, 8, 98, 102, 0, 127, 127, 127, 127, 127, 1, 11, 127, 76, 3, 0
+    };
+    ASSERT_EQ(sizeof(expectedData), destination->size());
+    ASSERT_EQ(0, ::memcmp(expectedData, data, sizeof(expectedData)));
+}

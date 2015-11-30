@@ -185,10 +185,10 @@ void CueMarker::addMarkerV1TagTo(Blob& data) const
     SeratoCueTagV1Struct tag;
     initializeCueTagV1Struct(tag);
 
-    packCueUInteger32(this->positionInMilliseconds(), tag.position);
-    packCueUInteger32(0xFFFFFFFF, tag.loopPosition);
-    packCueUInteger32(0xFFFFFFFF, tag.loopIterations);
-    packCueColor(this->colorRedComponent(), this->colorGreenComponent(), this->colorBlueComponent(), tag.color);
+    packUInteger32(this->positionInMilliseconds(), tag.position);
+    packUInteger32(0xFFFFFFFF, tag.loopPosition);
+    packUInteger32(0xFFFFFFFF, tag.loopIterations);
+    packColor(this->colorRedComponent(), this->colorGreenComponent(), this->colorBlueComponent(), tag.color);
     tag.locked = 0;
     tag.type = 1;
 

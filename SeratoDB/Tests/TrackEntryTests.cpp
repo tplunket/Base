@@ -64,7 +64,7 @@ TEST(SeratoDB_TrackEntry, EntryWithTrackFileAtOnVolume_EntryWithInitialValues_Re
 TEST(SeratoDB_TrackEntry, HasParentCrate_EntryWithAParentCrate_ReturnsTrue)
 {
     // -- Given.
-    auto crate = Crate::crateWithFullName(String::stringWith("MyFolder%%MyCrate1"));
+    auto crate = Crate::crateWithName(String::stringWith("MyCrate1"));
     auto entry = TrackEntry::entryWithTrackFileAtOnVolume(String::stringWith("/Users/didier/Music/Gigs/02 Money On My Mind (MK Remix).m4a"), String::stringWith("/"));
     crate->addTrackEntry(entry);
 
@@ -86,7 +86,7 @@ TEST(SeratoDB_TrackEntry, HasParentCrate_EntryWithNoParentCrate_ReturnsFalse)
 TEST(SeratoDB_TrackEntry, HasParentCrate_EntryWithParentCrateRemoved_ReturnsFalse)
 {
     // -- Given.
-    auto crate = Crate::crateWithFullName(String::stringWith("MyFolder%%MyCrate1"));
+    auto crate = Crate::crateWithName(String::stringWith("MyCrate1"));
     auto entry = TrackEntry::entryWithTrackFileAtOnVolume(String::stringWith("/Users/didier/Music/Gigs/02 Money On My Mind (MK Remix).m4a"), String::stringWith("/"));
     crate->addTrackEntry(entry);
     crate->removeTrackEntry(entry);
@@ -99,7 +99,7 @@ TEST(SeratoDB_TrackEntry, HasParentCrate_EntryWithParentCrateRemoved_ReturnsFals
 TEST(SeratoDB_TrackEntry, ParentCrate_EntryWithAParentCrate_ReturnsParentCrate)
 {
     // -- Given.
-    auto crate = Crate::crateWithFullName(String::stringWith("MyFolder%%MyCrate1"));
+    auto crate = Crate::crateWithName(String::stringWith("MyCrate1"));
     auto entry = TrackEntry::entryWithTrackFileAtOnVolume(String::stringWith("/Users/didier/Music/Gigs/02 Money On My Mind (MK Remix).m4a"), String::stringWith("/"));
     crate->addTrackEntry(entry);
 

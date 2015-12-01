@@ -37,7 +37,7 @@ const char* Database::databaseFileCurrentVersionString = "2.0/Serato Scratch LIV
 
 Database::Database(const String& pathForLocalSeratoFolder,
                    const String::ArrayOfConst& pathsForExternalSeratoFolders) :
-                   rootCrate(Serato::Crate::crateWithFullName(String::string())),
+                   rootCrate(Serato::Crate::crateWithName(String::string())),
                    tracks(Serato::Track::Array::array()),
                    pathsForSeratoDirectories(String::ArrayOfConst::array()),
                    volumePathsPerPath(String::ArrayOfConst::array()),

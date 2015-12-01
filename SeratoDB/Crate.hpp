@@ -37,7 +37,7 @@ namespace NxA { namespace Serato {
 
     public:
         #pragma mark Factory Methods
-        static Crate::Pointer crateWithFullName(const String& fullCrateName);
+        static Crate::Pointer crateWithName(const String& crateName);
 
         #pragma mark Class Methods
         static String::Pointer subCratesDirectoryPathInSeratoFolder(const String& seratoFolderPath);
@@ -56,7 +56,7 @@ namespace NxA { namespace Serato {
                                                                                           String::ArrayOfConst& unknownCratesNames);
 
         #pragma mark Instance Methods
-        const String& crateName(void) const;
+        const String& name(void) const;
         void addFullCrateNameWithPrefixForCratesOnVolumeAndRecurseToChildren(String& destination,
                                                                              const char* prefix,
                                                                              const String& volumePath) const;

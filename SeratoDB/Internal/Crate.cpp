@@ -29,9 +29,8 @@ using namespace NxA::Serato::Internal;
 
 #pragma mark Constructors & Destructors
 
-Crate::Crate(const String& fullName) :
-             crateName(String::string()),
-             fullCrateName(fullName.pointer()),
+Crate::Crate(const String& crateName) :
+             name(crateName.pointer()),
              tracksWereModified(true),
              cratesWereModified(false),
              childrenCrates(Serato::Crate::Array::array()),
@@ -43,13 +42,17 @@ Crate::Crate(const String& fullName) :
 
 NxA::String::Pointer Crate::crateNameIfValidCrateOrEmptyIfNot(const String& name)
 {
-    auto result = String::string();
-
     if (name.hasPrefix("[crate]")) {
-        result = name.subString(7);
-    }
+        auto lastSeperatorIndex = name.indexOfLastOccurenceOf("%%");
+        if (lastSeperatorIndex == name.length()) {
+            return String::stringWith(name.pointer());
+        }
 
-    return result;
+        return name.subString(lastSeperatorIndex + 2);
+    }
+    else {
+        return String::string();
+    }
 }
 
 NxA::String::Pointer Crate::escapedNameFromCrateName(const String& crateName)
@@ -74,16 +77,6 @@ NxA::String::Pointer Crate::crateNameFromEscapedName(const String& escapedName)
     result->replaceOccurenceOfStringWith("&&", "&");
 
     return result;
-}
-
-NxA::String::Pointer Crate::crateNameFromFullCrateName(const String& fullCrateName)
-{
-    auto lastSeperatorIndex = fullCrateName.indexOfLastOccurenceOf("%%");
-    if (lastSeperatorIndex == fullCrateName.length()) {
-        return String::stringWith(fullCrateName.pointer());
-    }
-
-    return fullCrateName.subString(lastSeperatorIndex + 2);
 }
 
 NxA::String::Pointer Crate::topParentCrateNameFromFullCrateName(const String& fullCrateName)
@@ -123,6 +116,20 @@ NxA::String::Pointer Crate::crateFilePathForFullSmartCrateNameInSeratoFolder(con
 }
 
 #pragma mark Instance Methods
+
+NxA::String::Pointer Crate::fullCrateName(void)
+{
+    auto escapedName = Internal::Crate::escapedNameFromCrateName(this->name);
+    if (this->parentCrate.isValid()) {
+        auto parentCratePointer = this->parentCrate.pointer();
+        auto parentFullCrateName = parentCratePointer->internal->fullCrateName();
+        if (parentFullCrateName->length()) {
+            return NxA::String::stringWithFormat("%s%%%%%s", parentFullCrateName->toUTF8(), escapedName->toUTF8());
+        }
+    }
+
+    return NxA::String::stringWith(escapedName);
+}
 
 NxA::count Crate::indexOfVolumePath(const String& volumePath)
 {
@@ -171,7 +178,7 @@ void Crate::saveDataToCrateFileInSeratoFolder(const Blob& data, const String& se
             File::createDirectoryAt(cratesFolderPath);
         }
 
-        auto crateFilePath = Internal::Crate::crateFilePathForFullCrateNameInSeratoFolder(this->fullCrateName, seratoFolderPath);
+        auto crateFilePath = Internal::Crate::crateFilePathForFullCrateNameInSeratoFolder(this->fullCrateName(), seratoFolderPath);
         File::writeBlobToFileAt(data, crateFilePath);
     }
     catch (FileError& e) {

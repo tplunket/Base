@@ -35,13 +35,12 @@ namespace NxA { namespace Serato { namespace Internal {
         NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTORS_FOR(NxA::Serato, Crate);
 
         #pragma mark Constructors & Destructors
-        Crate(const String& fullName);
+        Crate(const String& crateName);
 
         #pragma mark Class Methods
         static String::Pointer crateNameIfValidCrateOrEmptyIfNot(const String& name);
         static String::Pointer escapedNameFromCrateName(const String& crateName);
         static String::Pointer crateNameFromEscapedName(const String& escapedName);
-        static String::Pointer crateNameFromFullCrateName(const String& fullCrateName);
         static String::Pointer topParentCrateNameFromFullCrateName(const String& fullCrateName);
         static String::Pointer smartCratesDirectoryPathInSeratoFolder(const String& seratoFolderPath);
         static String::Pointer crateFilePathForFullCrateNameInSeratoFolder(const String& crateName,
@@ -50,8 +49,7 @@ namespace NxA { namespace Serato { namespace Internal {
                                                                                 const String& seratoFolderPath);
 
         #pragma mark Instance Variables
-        String::PointerToConst crateName;
-        String::PointerToConst fullCrateName;
+        String::PointerToConst name;
 
         boolean tracksWereModified;
         boolean cratesWereModified;
@@ -64,6 +62,8 @@ namespace NxA { namespace Serato { namespace Internal {
         Serato::Tag::ArrayOfConst::Array::Pointer otherTagsPerPath;
 
         #pragma mark Instance Methods
+        String::Pointer fullCrateName(void);
+
         NxA::count indexOfVolumePath(const String& volumePath);
         NxA::count indexOfVolumePathAndAddIfNotPresent(const String& volumePath);
 

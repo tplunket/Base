@@ -47,6 +47,7 @@ namespace NxA { namespace Serato { namespace Internal {
         void readMarkers(void);
         void replaceFrameNamedWithDataAndVersion(const character* frameName, const character* frameDescription,
                                                  const Blob& frameData, int majorVersion, int minorVersion);
+        void replaceMarkersV1Item(void);
         void replaceMarkersV2Item(void);
         void replaceGridMarkersItem(void);
         void writeMarkers(void);

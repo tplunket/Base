@@ -157,6 +157,18 @@ void MP4TrackFile::replaceFrameNamedWithDataAndVersion(const character* frameNam
     this->mp4Tag->setItem(frameName, newItem);
 }
 
+void MP4TrackFile::replaceMarkersV1Item(void)
+{
+    this->mp4Tag->removeItem(mp4MarkersV1ItemName);
+    TagLib::String newString;
+    TagLib::StringList newList(newString);
+
+    TagLib::MP4::Item newItem(newList);
+    newItem.setAtomDataType(TagLib::MP4::AtomDataType::TypeUTF8);
+    NXA_ASSERT_TRUE(newItem.isValid());
+    this->mp4Tag->setItem(mp4MarkersV1ItemName, newItem);
+}
+
 void MP4TrackFile::replaceMarkersV2Item(void)
 {
     auto base64String = this->base64StringFromMarkersV2();
@@ -179,15 +191,7 @@ void MP4TrackFile::replaceGridMarkersItem(void)
 
 void MP4TrackFile::writeMarkers(void)
 {
-    this->mp4Tag->removeItem(mp4MarkersV1ItemName);
-    TagLib::String newString;
-    TagLib::StringList newList(newString);
-
-    TagLib::MP4::Item newItem(newList);
-    newItem.setAtomDataType(TagLib::MP4::AtomDataType::TypeUTF8);
-    NXA_ASSERT_TRUE(newItem.isValid());
-    this->mp4Tag->setItem(mp4MarkersV1ItemName, newItem);
-
+    this->replaceMarkersV1Item();
     this->replaceMarkersV2Item();
     this->replaceGridMarkersItem();
 }

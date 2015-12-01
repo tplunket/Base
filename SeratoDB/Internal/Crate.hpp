@@ -39,8 +39,8 @@ namespace NxA { namespace Serato { namespace Internal {
 
         #pragma mark Class Methods
         static String::Pointer crateNameIfValidCrateOrEmptyIfNot(const String& name);
-        static String::Pointer escapedNameFromCrateName(const String& CrateName);
-        static String::Pointer crateNameFromEscapedName(const String& EscapedName);
+        static String::Pointer escapedNameFromCrateName(const String& crateName);
+        static String::Pointer crateNameFromEscapedName(const String& escapedName);
         static String::Pointer crateNameFromFullCrateName(const String& fullCrateName);
         static String::Pointer topParentCrateNameFromFullCrateName(const String& fullCrateName);
         static String::Pointer smartCratesDirectoryPathInSeratoFolder(const String& seratoFolderPath);

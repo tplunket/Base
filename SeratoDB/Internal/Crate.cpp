@@ -52,9 +52,9 @@ NxA::String::Pointer Crate::crateNameIfValidCrateOrEmptyIfNot(const String& name
     return result;
 }
 
-NxA::String::Pointer Crate::escapedNameFromCrateName(const String& CrateName)
+NxA::String::Pointer Crate::escapedNameFromCrateName(const String& crateName)
 {
-    String::Pointer result = String::stringWith(CrateName);
+    String::Pointer result = String::stringWith(crateName);
 
     result->replaceOccurenceOfStringWith("&", "&&");
     result->replaceOccurenceOfStringWith("%", "&pc");
@@ -64,9 +64,9 @@ NxA::String::Pointer Crate::escapedNameFromCrateName(const String& CrateName)
     return result;
 }
 
-NxA::String::Pointer Crate::crateNameFromEscapedName(const String& EscapedName)
+NxA::String::Pointer Crate::crateNameFromEscapedName(const String& escapedName)
 {
-    String::Pointer result = String::stringWith(EscapedName);
+    String::Pointer result = String::stringWith(escapedName);
 
     result->replaceOccurenceOfStringWith("&bs", "\\");
     result->replaceOccurenceOfStringWith("&fs", "/");

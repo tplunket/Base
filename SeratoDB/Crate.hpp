@@ -83,5 +83,8 @@ namespace NxA { namespace Serato {
 
         TrackEntry::Array::Pointer removeAndReturnTrackEntries(void);
         Crate::Array::Pointer removeAndReturnChildrenCrates(void);
+
+        #pragma mark Overridden Object Instance Methods
+        virtual String::Pointer description(void) const;
     };
 } }

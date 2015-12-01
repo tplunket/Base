@@ -404,3 +404,10 @@ Crate::Array::Pointer Crate::removeAndReturnChildrenCrates(void)
 
     return crates;
 }
+
+#pragma mark Overridden Object Instance Methods
+
+String::Pointer Crate::description(void) const
+{
+    return String::stringWithFormat("Crate with name '%s' at %08lx", this->fullCrateName().toUTF8(), (long)this);
+}

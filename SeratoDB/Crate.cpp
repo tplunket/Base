@@ -148,11 +148,6 @@ const String& Crate::crateName(void) const
     return internal->crateName;
 }
 
-const String& Crate::fullCrateName(void) const
-{
-    return internal->fullCrateName;
-}
-
 void Crate::addFullCrateNameWithPrefixForCratesOnVolumeAndRecurseToChildren(String& destination, const char* prefix, const String& volumePath) const
 {
     if (internal->fullCrateName->length()) {
@@ -221,7 +216,7 @@ Crate::Pointer Crate::findOrAddCrateWithRelativeNameAndFullName(const String& re
     if (crateFound.isNull()) {
         if (this->hasParentCrate()) {
             auto newCrateFullName = String::stringWithFormat("%s%%%%%s",
-                                                             this->fullCrateName().toUTF8(),
+                                                             internal->fullCrateName->toUTF8(),
                                                              topCrateName->toUTF8());
             crateFound = Serato::Crate::crateWithFullName(newCrateFullName);
         }
@@ -278,7 +273,7 @@ void Crate::readFromFolderInVolume(const String& seratoFolderPath, const String&
     auto trackEntries = Serato::TrackEntry::Array::array();
 
     try {
-        auto filePath = Internal::Crate::crateFilePathForFullCrateNameInSeratoFolder(this->fullCrateName(), seratoFolderPath);
+        auto filePath = Internal::Crate::crateFilePathForFullCrateNameInSeratoFolder(internal->fullCrateName, seratoFolderPath);
 
         auto crateFileData = File::readFileAt(filePath);
         auto tags = TagFactory::parseTagsAt(crateFileData->data(), crateFileData->size());
@@ -409,5 +404,5 @@ Crate::Array::Pointer Crate::removeAndReturnChildrenCrates(void)
 
 String::Pointer Crate::description(void) const
 {
-    return String::stringWithFormat("Crate with name '%s' at %08lx", this->fullCrateName().toUTF8(), (long)this);
+    return String::stringWithFormat("Crate with name '%s' at %08lx", internal->fullCrateName->toUTF8(), (long)this);
 }

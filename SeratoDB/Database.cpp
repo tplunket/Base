@@ -179,21 +179,23 @@ const String& Database::volumePathForTrackFilePath(const String& trackFilePath) 
     return (*internal->volumePathsPerPath)[0];
 }
 
-void Database::removeTrackEntry(TrackEntry& trackEntry)
+void Database::removeTrackEntry(TrackEntry::Pointer& trackEntry)
 {
-    if (trackEntry.hasParentCrate()) {
-        trackEntry.removeFromParentCrate();
+    if (trackEntry->hasParentCrate()) {
+        trackEntry->parentCrate().removeTrackEntry(trackEntry);
     }
 }
 
-void Database::removeCrate(Crate& crate)
+void Database::removeCrate(Crate::Pointer& crate)
 {
-    if (crate.hasParentCrate()) {
-        crate.removeFromParentCrate();
+    if (crate->hasParentCrate()) {
+        crate->parentCrate().removeCrate(crate);
     }
 
-    for (auto& childrenCrate : crate.crates()) {
-        this->removeCrate(childrenCrate);
+    auto crates = Crate::Array::arrayWith(crate->crates());
+    for (auto& childrenCrate : *crates) {
+        auto childrenCratePointer = childrenCrate->pointer();
+        this->removeCrate(childrenCratePointer);
     }
 }
 
@@ -275,9 +277,7 @@ void Database::saveIfModifiedAndMarkAsModifiedOn(timestamp modificationTimesSinc
     try {
         this->saveIfModified();
 
-        count numberOfPaths = internal->pathsForSeratoDirectories->length();
-        for (count pathIndex = 0; pathIndex < numberOfPaths; ++pathIndex) {
-            auto& pathsForSeratoDirectory = (*internal->pathsForSeratoDirectories)[pathIndex];
+        for (auto& pathsForSeratoDirectory : *internal->pathsForSeratoDirectories) {
             auto seratoFolderPath = Database::seratoFolderPathForFolder(pathsForSeratoDirectory);
             Internal::Database::setDatabaseFilesInSeratoFolderAsModifedOnDateInSecondsSince1970(seratoFolderPath, modificationTimesSince1970);
         }

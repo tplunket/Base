@@ -66,15 +66,14 @@ namespace NxA { namespace Serato {
         const Crate::Array& crates(void) const;
 
         void addCrate(Crate& crate);
-        void removeCrate(Crate& crate);
+        void removeCrate(Crate::Pointer& crate);
         Crate::Pointer findOrAddCrateWithRelativeNameAndFullName(const String& relativeName, const String& fullCrateName);
 
         void addTrackEntry(TrackEntry& trackEntry);
-        void removeTrackEntry(TrackEntry& trackEntry);
+        void removeTrackEntry(TrackEntry::Pointer& trackEntry);
 
         boolean hasParentCrate(void) const;
         Crate& parentCrate(void);
-        void removeFromParentCrate(void);
 
         void resetModificationFlags();
 

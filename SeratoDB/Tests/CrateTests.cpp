@@ -218,31 +218,6 @@ TEST(SeratoDB_Crate, ParentCrate_ACrateWithoutAParent_ThrowsException)
     ASSERT_THROW(crate2->parentCrate(), NxA::Exception);
 }
 
-TEST(SeratoDB_Crate, RemoveFromParentCrate_ACrateWithAParent_RemovesTheCrateFromItsParent)
-{
-    // -- Given.
-    auto crate1 = Crate::crateWithFullName(String::stringWith("MyFolder%%MyCrate1"));
-    auto crate2 = Crate::crateWithFullName(String::stringWith("MyFolder%%MyCrate2"));
-    crate1->addCrate(crate2);
-
-    // -- When.
-    crate2->removeFromParentCrate();
-
-    // -- Then.
-    ASSERT_EQ(0, crate1->crates().length());
-    ASSERT_FALSE(crate2->hasParentCrate());
-}
-
-TEST(SeratoDB_Crate, RemoveFromParentCrate_ACrateWithoutParent_ThrowsException)
-{
-    // -- Given.
-    auto crate2 = Crate::crateWithFullName(String::stringWith("MyFolder%%MyCrate2"));
-
-    // -- When.
-    // -- Then.
-    ASSERT_THROW(crate2->removeFromParentCrate(), NxA::Exception);
-}
-
 // -- TDOO: Add test for crateFilePath()
 // -- TDOO: Add test for resetModificationFlags()
 // -- TDOO: Add test for childrenCratesWereModified()

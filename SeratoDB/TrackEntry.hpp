@@ -36,6 +36,8 @@ namespace NxA { namespace Serato {
         NXA_GENERATED_OPERATOR_EQUAL_DECLARATION_IN_NAMESPACE_FOR_CLASS(NxA::Serato, TrackEntry);
         NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_CLASS(NxA::Serato, TrackEntry);
 
+        friend Crate;
+
     public:
         #pragma mark Factory Methods
         static TrackEntry::Pointer entryWithTagOnVolume(const ObjectTag& tag, const String& volumePath);
@@ -48,9 +50,6 @@ namespace NxA { namespace Serato {
         boolean hasParentCrate(void) const;
         Crate& parentCrate(void);
         
-        void setParentCrate(Crate& crate);
-        void removeFromParentCrate(void);
-
         const Tag& tagForEntry(void) const;
     };
 } }

@@ -88,24 +88,6 @@ Crate& TrackEntry::parentCrate(void)
     return *(internal->parentCrate.pointer());
 }
 
-void TrackEntry::setParentCrate(Crate& crate)
-{
-    NXA_ASSERT_FALSE(this->hasParentCrate());
-
-    internal->parentCrate = Crate::WeakPointer(crate.pointer());
-
-    crate.addTrackEntry(*this);
-}
-
-void TrackEntry::removeFromParentCrate(void)
-{
-    Crate::Pointer parentCrate = this->parentCrate().pointer();
-
-    internal->parentCrate.release();
-
-    parentCrate->removeTrackEntry(*this);
-}
-
 const Tag& TrackEntry::tagForEntry(void) const
 {
     return internal->trackEntryTag;

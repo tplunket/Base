@@ -118,45 +118,6 @@ TEST(SeratoDB_TrackEntry, ParentCrate_EntryWithoutAParentCrate_ThrowsException)
     ASSERT_THROW(entry->parentCrate(), NxA::Exception);
 }
 
-TEST(SeratoDB_TrackEntry, SetParentCrate_AParentCrate_SetsTheParentCrate)
-{
-    // -- Given.
-    auto crate = Crate::crateWithFullName(String::stringWith("MyFolder%%MyCrate1"));
-    auto entry = TrackEntry::entryWithTrackFileAtOnVolume(String::stringWith("/Users/didier/Music/Gigs/02 Money On My Mind (MK Remix).m4a"), String::stringWith("/"));
-
-    // -- When.
-    entry->setParentCrate(crate);
-
-    // -- Then.
-    ASSERT_TRUE(entry->hasParentCrate());
-    ASSERT_EQ(&(*crate), &entry->parentCrate());
-}
-
-TEST(SeratoDB_TrackEntry, RemoveFromParentCrate_AnEntryWithAParentCrate_RemovesTheParentCrate)
-{
-    // -- Given.
-    auto crate = Crate::crateWithFullName(String::stringWith("MyFolder%%MyCrate1"));
-    auto entry = TrackEntry::entryWithTrackFileAtOnVolume(String::stringWith("/Users/didier/Music/Gigs/02 Money On My Mind (MK Remix).m4a"), String::stringWith("/"));
-    crate->addTrackEntry(entry);
-
-    // -- When.
-    entry->removeFromParentCrate();
-
-    // -- Then.
-    ASSERT_FALSE(entry->hasParentCrate());
-    ASSERT_EQ(0, crate->trackEntries()->length());
-}
-
-TEST(SeratoDB_TrackEntry, RemoveFromParentCrate_AnEntryWithoutAParentCrate_ThrowsException)
-{
-    // -- Given.
-    auto entry = TrackEntry::entryWithTrackFileAtOnVolume(String::stringWith("/Users/didier/Music/Gigs/02 Money On My Mind (MK Remix).m4a"), String::stringWith("/"));
-
-    // -- When.
-    // -- Then.
-    ASSERT_THROW(entry->removeFromParentCrate(), NxA::Exception);
-}
-
 TEST(SeratoDB_TrackEntry, TagForEntry_AnEntryWithValues_ReturnsTheCorrectTag)
 {
     // -- Given.

@@ -23,6 +23,7 @@
 #pragma once
 
 #include <SeratoDB/Track.hpp>
+#include <SeratoDB/Crate.hpp>
 
 #include <Base/Base.hpp>
 
@@ -31,8 +32,6 @@ namespace NxA { namespace Serato {
 
     NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(Database);
 
-    class Crate;
-    class Track;
     class TrackEntry;
 
     class Database : public Object {
@@ -60,8 +59,8 @@ namespace NxA { namespace Serato {
         Track::Array::Pointer removeAndReturnTracks(void);
         const String& volumePathForTrackFilePath(const String& trackFilePath) const;
 
-        void removeTrackEntry(TrackEntry& trackEntry);
-        void removeCrate(Crate& crate);
+        void removeTrackEntry(TrackEntry::Pointer& trackEntry);
+        void removeCrate(Crate::Pointer& crate);
 
         void addTrack(Track& track);
         void removeTrack(Track& track);

@@ -23,6 +23,7 @@
 #include "SeratoDB/Database.hpp"
 #include "SeratoDB/Crate.hpp"
 #include "Internal/Crate.hpp"
+#include "Internal/TrackEntry.hpp"
 #include "Tags/CrateV1Tags.hpp"
 #include "Tags/VersionTag.hpp"
 #include "Tags/TagFactory.hpp"
@@ -194,11 +195,11 @@ void Crate::addCrate(Crate& crate)
     internal->markCratesAsModified();
 }
 
-void Crate::removeCrate(Crate& crate)
+void Crate::removeCrate(Crate::Pointer& crate)
 {
-    NXA_ASSERT_TRUE(crate.hasParentCrate() && &(crate.parentCrate()) == this);
+    NXA_ASSERT_TRUE(crate->hasParentCrate() && &(crate->parentCrate()) == this);
 
-    crate.internal->parentCrate.release();
+    crate->internal->parentCrate.release();
     internal->childrenCrates->remove(crate);
 
     internal->markCratesAsModified();
@@ -245,7 +246,7 @@ void Crate::addTrackEntry(Serato::TrackEntry& trackEntry)
         return;
     }
 
-    trackEntry.setParentCrate(*this);
+    trackEntry.internal->parentCrate = Crate::WeakPointer(this->pointer());
 
     count volumePathIndex = internal->indexOfVolumePathAndAddIfNotPresent(trackEntry.volumePath());
     (*internal->trackEntriesPerPath)[volumePathIndex].append(trackEntry);
@@ -253,9 +254,13 @@ void Crate::addTrackEntry(Serato::TrackEntry& trackEntry)
     internal->tracksWereModified = true;
 }
 
-void Crate::removeTrackEntry(TrackEntry& trackEntry)
+void Crate::removeTrackEntry(TrackEntry::Pointer& trackEntry)
 {
-    count volumePathIndex = internal->indexOfVolumePath(trackEntry.volumePath());
+    NXA_ASSERT_TRUE(trackEntry->hasParentCrate() && &(trackEntry->parentCrate()) == this);
+
+    trackEntry->internal->parentCrate.release();
+
+    count volumePathIndex = internal->indexOfVolumePath(trackEntry->volumePath());
     NXA_ASSERT_TRUE(volumePathIndex != internal->volumePaths->length());
 
     auto& trackEntries = (*internal->trackEntriesPerPath)[volumePathIndex];
@@ -264,11 +269,6 @@ void Crate::removeTrackEntry(TrackEntry& trackEntry)
     if (position != trackEntries.end()) {
         trackEntries.removeObjectAt(position);
         internal->tracksWereModified = true;
-    }
-
-    if (trackEntry.hasParentCrate()) {
-        NXA_ASSERT_TRUE(&trackEntry.parentCrate() == this);
-        trackEntry.removeFromParentCrate();
     }
 }
 
@@ -297,7 +297,7 @@ void Crate::readFromFolderInVolume(const String& seratoFolderPath, const String&
                 }
                 case trackEntryTagIdentifier: {
                     auto entry = Serato::TrackEntry::entryWithTagOnVolume(dynamic_cast<ObjectTag&>(*tag), volumePath);
-                    entry->setParentCrate(*this);
+                    entry->internal->parentCrate = Crate::WeakPointer(this->pointer());
                     trackEntries->append(entry);
                     break;
                 }
@@ -328,11 +328,6 @@ boolean Crate::hasParentCrate(void) const
 Crate& Crate::parentCrate(void)
 {
     return *(internal->parentCrate.pointer());
-}
-
-void Crate::removeFromParentCrate(void)
-{
-    this->parentCrate().removeCrate(*this);
 }
 
 void Crate::resetModificationFlags()
@@ -386,26 +381,26 @@ void Crate::saveIfOnVolumeAndRecurseToChildren(const String& volumePath, const S
 
 TrackEntry::Array::Pointer Crate::removeAndReturnTrackEntries(void)
 {
-    auto result = TrackEntry::Array::arrayWith(this->trackEntries());
-
-    for (auto& entry : *result) {
-        entry->removeFromParentCrate();
+    auto entries = TrackEntry::Array::arrayWith(this->trackEntries());
+    for (auto& entry : *entries) {
+        auto entryPointer = entry->pointer();
+        this->removeTrackEntry(entryPointer);
     }
 
     internal->tracksWereModified = true;
 
-    return result;
+    return entries;
 }
 
 Crate::Array::Pointer Crate::removeAndReturnChildrenCrates(void)
 {
-    auto result = Crate::Array::arrayWith(this->crates());
-
-    for (auto& crate : *result) {
-        crate->removeFromParentCrate();
+    auto crates = Crate::Array::arrayWith(this->crates());
+    for (auto& crate : *crates) {
+        auto cratePointer = crate->pointer();
+        this->removeCrate(cratePointer);
     }
 
     internal->markCratesAsModified();
 
-    return result;
+    return crates;
 }

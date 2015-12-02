@@ -100,7 +100,7 @@ namespace NxA { namespace Serato {
 
         void setCueMarkers(CueMarker::Array& markers);
         void setLoopMarkers(LoopMarker::Array& markers);
-        void setGridMarkers(GridMarker::Array& markers);
+        void setGridMarkers(GridMarker::Array& markers, String::ArrayOfConst& warningLog);
 
         void saveChangesIfAny(void);
     };

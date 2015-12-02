@@ -212,7 +212,7 @@ void TrackFile::setLoopMarkers(LoopMarker::Array& markers)
     }
 }
 
-void TrackFile::setGridMarkers(GridMarker::Array& markers)
+void TrackFile::setGridMarkers(GridMarker::Array& markers, String::ArrayOfConst& warningLog)
 {
     NXA_ASSERT_FALSE(internal->markersWereIgnored);
 
@@ -236,9 +236,7 @@ void TrackFile::setGridMarkers(GridMarker::Array& markers)
 
             decimal bpm = ((decimal)numberOfBeats * 60.0f) / timeBetweenMarkersInSeconds;
             if (bpm != marker.beatsPerMinute()) {
-                // -- This should be logged.
-                auto newMarker = GridMarker::markerWithPositionAndBeatsPerMinute(marker.positionInSeconds(), bpm);
-                fixedMarkers->append(newMarker);
+                warningLog.append(String::stringWith("with grid markers unsupported by Serato. Those have not been written to Serato."));
             }
             else {
                 fixedMarkers->append(marker);

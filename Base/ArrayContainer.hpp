@@ -29,6 +29,9 @@
 #include <mutex>
 
 namespace NxA {
+    // -- This is a utility function to return the description of the content of an array.
+    NxA::Pointer<NxA::String> descriptionOfObjectsInArray(const Object::ArrayOfConst& array, const void* originalArrayAddress);
+
     template <class T> class ArrayContainer : public Object, private std::vector<Pointer<T>> {
         NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_BASE_CLASS(NxA, ArrayContainer<T>);
 
@@ -190,6 +193,18 @@ namespace NxA {
         void remove(const T& object)
         {
             this->std::vector<NxA::Pointer<T>>::erase(this->find(object));
+        }
+
+        #pragma mark Overridden Object Instance Methods
+        virtual NxA::Pointer<NxA::String> description(void) const
+        {
+            auto tempArray = Object::ArrayOfConst::array();
+            for (auto& item : *this) {
+                tempArray->append(item->pointer());
+            }
+
+            const void* originalArrayAddress = static_cast<const void*>(this);
+            return descriptionOfObjectsInArray(tempArray, originalArrayAddress);
         }
     };
 }

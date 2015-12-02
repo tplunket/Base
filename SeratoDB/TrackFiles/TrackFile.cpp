@@ -255,6 +255,9 @@ void TrackFile::saveChangesIfAny(void)
     if (internal->markersWereModified) {
 #if NXA_PRINT_DEBUG_INFO
         printf("Writing markers for track file '%s'.\n", this->filePath()->toUTF8());
+        printf("Cue Markers:\n%s\n", this->cueMarkers().description()->toUTF8());
+        printf("Loop Markers:\n%s\n", this->loopMarkers().description()->toUTF8());
+        printf("GridMarkers:\n%s\n", this->gridMarkers().description()->toUTF8());
 #endif
 
         internal->writeMarkers();

@@ -21,6 +21,7 @@
 //
 
 #include "Markers/GridMarker.hpp"
+#include "Markers/CueMarker.hpp"
 #include "Markers/Internal/GridMarker.hpp"
 
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, GridMarker, Object);
@@ -156,5 +157,7 @@ decimal GridMarker::beatsPerMinute(void) const
 
 NxA::String::Pointer GridMarker::description(void) const
 {
-    return NxA::String::stringWithFormat("Grid Marker at %fs with bpm %f.", this->positionInSeconds(), this->beatsPerMinute());
+    return NxA::String::stringWithFormat("Grid Marker at %s with bpm %f.",
+                                         CueMarker::stringRepresentationForTimeInMilliseconds(this->positionInSeconds() * 1000.0f)->toUTF8(),
+                                         this->beatsPerMinute());
 }

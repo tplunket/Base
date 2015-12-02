@@ -185,8 +185,8 @@ void CueMarker::addId3TagTo(Blob& data) const
 
 NxA::String::Pointer CueMarker::description(void) const
 {
-    return NxA::String::stringWithFormat("Cue Marker at %fms with index %d label '%s' and color 0x%02x 0x%02x 0x%02x.",
-                                         this->positionInMilliseconds(),
+    return NxA::String::stringWithFormat("Cue Marker at %s with index %d label '%s' and color 0x%02x 0x%02x 0x%02x.",
+                                         CueMarker::stringRepresentationForTimeInMilliseconds(this->positionInMilliseconds())->toUTF8(),
                                          this->index(),
                                          this->label().toUTF8(),
                                          this->colorRedComponent(),

@@ -21,6 +21,7 @@
 //
 
 #include "Markers/LoopMarker.hpp"
+#include "Markers/CueMarker.hpp"
 #include "Markers/Internal/LoopMarker.hpp"
 
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, LoopMarker, Object);
@@ -183,9 +184,9 @@ void LoopMarker::addId3TagTo(Blob& data) const
 
 NxA::String::Pointer LoopMarker::description(void) const
 {
-    return NxA::String::stringWithFormat("Loop Marker at %fms ends at %d with index %d label '%s' and color 0x%02x 0x%02x 0x%02x.",
-                                         this->startPositionInMilliseconds(),
-                                         this->endPositionInMilliseconds(),
+    return NxA::String::stringWithFormat("Loop Marker at %s ends at %s with index %d label '%s' and color 0x%02x 0x%02x 0x%02x.",
+                                         CueMarker::stringRepresentationForTimeInMilliseconds(this->startPositionInMilliseconds())->toUTF8(),
+                                         CueMarker::stringRepresentationForTimeInMilliseconds(this->endPositionInMilliseconds())->toUTF8(),
                                          this->index(),
                                          this->label().toUTF8(),
                                          this->colorRedComponent(),

@@ -143,9 +143,7 @@ String::Pointer String::stringWithFormat(const character* format, ...)
     vsnprintf(buffer, formatStringBufferSize, format, args);
     va_end(args);
 
-    auto newString = String::makeShared();
-    newString->std::string::operator=(buffer);
-
+    auto newString = String::stringWith(buffer);
     return newString;
 }
 

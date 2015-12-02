@@ -112,7 +112,7 @@ void FLACTrackFile::writeGridMarkersItem(void)
 {
     this->oggComment->removeField(flacBeatgridItemName);
 
-    auto gridMarkerData = this->gridMarkerDataFromGridMarkersAndFixGridMarkersToMatchData();
+    auto gridMarkerData = this->gridMarkerDataFromGridMarkers();
     if (!gridMarkerData->size()) {
         return;
     }
@@ -139,7 +139,7 @@ void FLACTrackFile::writeMarkers(void)
     if (this->id3v2Tag) {
         ID3TrackFile::replaceMarkersFrameInTagWithEmptyFrame(this->id3v2Tag);
         ID3TrackFile::replaceMarkersV2FrameInTagWith(this->id3v2Tag, this->base64StringFromMarkersV2());
-        ID3TrackFile::replaceGridMarkersFrameInTagWith(this->id3v2Tag, this->gridMarkerDataFromGridMarkersAndFixGridMarkersToMatchData());
+        ID3TrackFile::replaceGridMarkersFrameInTagWith(this->id3v2Tag, this->gridMarkerDataFromGridMarkers());
     }
     else {
         this->oggComment->removeField(flacMarkersItemName);

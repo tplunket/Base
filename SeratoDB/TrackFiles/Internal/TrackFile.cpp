@@ -165,7 +165,7 @@ String::Pointer TrackFile::base64StringFromMarkersV2(void)
     return encodedData;
 }
 
-Blob::Pointer TrackFile::gridMarkerDataFromGridMarkersAndFixGridMarkersToMatchData(void)
+Blob::Pointer TrackFile::gridMarkerDataFromGridMarkers(void)
 {
     NXA_ASSERT_FALSE(this->markersWereIgnored);
 

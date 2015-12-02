@@ -28,3 +28,17 @@ using namespace NxA::Serato::Internal;
 
 GridMarker::GridMarker() : positionInSeconds(0.0f),
                            beatsPerMinute(0.0f) { }
+
+#pragma mark Class Methods
+
+NxA::boolean GridMarker::numberOfBeatsValueSupportedBySerato(decimal numberOfBeats)
+{
+    uinteger32 integerNumberOfBeats = numberOfBeats;
+    if ((numberOfBeats != static_cast<decimal>(integerNumberOfBeats)) ||
+        (integerNumberOfBeats % 4)) {
+        // -- This grid marker is not on a first downbeat which is not supported by Serato.
+        return false;
+    }
+
+    return true;
+}

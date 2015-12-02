@@ -31,6 +31,9 @@ namespace NxA { namespace Serato { namespace Internal {
     struct GridMarker : public NxA::Internal::Object {
         NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, GridMarker);
 
+        #pragma mark Class Methods
+        static boolean numberOfBeatsValueSupportedBySerato(decimal numberOfBeats);
+
         #pragma mark Instance Variables
         decimal positionInSeconds;
 

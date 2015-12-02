@@ -256,6 +256,7 @@ void TrackFile::saveChangesIfAny(void)
 #if NXA_PRINT_DEBUG_INFO
         printf("Writing markers for track file '%s'.\n", this->filePath()->toUTF8());
 #endif
+
         internal->writeMarkers();
 
         internal->markersWereModified = false;

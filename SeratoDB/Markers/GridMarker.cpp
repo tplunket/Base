@@ -93,7 +93,7 @@ GridMarker::Array::Pointer GridMarker::markersWithMemoryAt(const byte* id3TagSta
     return result;
 }
 
-void GridMarker::addMarkersTo(GridMarker::Array& markers, NxA::Blob& data)
+void GridMarker::addMarkersTo(const GridMarker::Array& markers, NxA::Blob& data)
 {
     uinteger32 numberOfMarkers = static_cast<uinteger32>(markers.length());
 
@@ -154,7 +154,7 @@ decimal GridMarker::beatsPerMinute(void) const
 
 #pragma mark Overriden Object Instance Methods
 
-NxA::String::Pointer GridMarker::description(void)
+NxA::String::Pointer GridMarker::description(void) const
 {
     return NxA::String::stringWithFormat("Grid Marker at %fs with bpm %f.", this->positionInSeconds(), this->beatsPerMinute());
 }

@@ -162,7 +162,7 @@ void CueMarker::addId3TagTo(Blob& data) const
 
 #pragma mark Overriden Object Instance Methods
 
-NxA::String::Pointer CueMarker::description(void)
+NxA::String::Pointer CueMarker::description(void) const
 {
     return NxA::String::stringWithFormat("Cue Marker at %fms with index %d label '%s' and color 0x%02x 0x%02x 0x%02x.",
                                          this->positionInMilliseconds(),

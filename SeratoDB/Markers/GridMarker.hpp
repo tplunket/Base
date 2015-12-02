@@ -38,7 +38,7 @@ namespace NxA { namespace Serato {
 
         #pragma mark Class Methods
         static GridMarker::Array::Pointer markersWithMemoryAt(const byte* id3TagStart);
-        static void addMarkersTo(GridMarker::Array& markers, Blob& data);
+        static void addMarkersTo(const GridMarker::Array& markers, Blob& data);
 
         #pragma mark Operators
         bool operator==(const GridMarker& other) const;
@@ -48,6 +48,6 @@ namespace NxA { namespace Serato {
         decimal beatsPerMinute(void) const;
 
         #pragma mark Overidden Object Instance Methods
-        virtual NxA::String::Pointer description(void);
+        virtual NxA::String::Pointer description(void) const;
     };
 } }

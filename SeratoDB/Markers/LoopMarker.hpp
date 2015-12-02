@@ -59,6 +59,6 @@ namespace NxA { namespace Serato {
         void addId3TagTo(Blob& data) const;
 
         #pragma mark Overidden Object Instance Methods
-        virtual NxA::String::Pointer description(void);
+        virtual NxA::String::Pointer description(void) const;
     };
 } }

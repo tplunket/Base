@@ -91,6 +91,27 @@ CueMarker::Pointer CueMarker::markerWith(const CueMarker&other)
                                                            other.colorBlueComponent());
 }
 
+#pragma mark Class Methods
+
+NxA::String::Pointer CueMarker::stringRepresentationForTimeInMilliseconds(uinteger32 timeInMilliseconds)
+{
+    uinteger32 seconds = timeInMilliseconds / 1000;
+    uinteger32 minutes = seconds / 60;
+    uinteger32 hours = minutes / 60;
+
+    timeInMilliseconds %= 1000;
+    seconds %= 60;
+
+    if (hours) {
+        minutes %= 60;
+
+        return String::stringWithFormat("%02ld:%02ld:%02ld:%03ld", hours, minutes, seconds, timeInMilliseconds);
+    }
+    else {
+        return String::stringWithFormat("%02ld:%02ld:%03ld", minutes, seconds, timeInMilliseconds);
+    }
+}
+
 #pragma mark Operators
 
 bool CueMarker::operator==(const CueMarker& other) const

@@ -40,6 +40,9 @@ namespace NxA { namespace Serato {
                                                                        byte colorBlueComponent);
         static CueMarker::Pointer markerWith(const CueMarker&other);
 
+        #pragma mark Class Methods
+        static NxA::String::Pointer stringRepresentationForTimeInMilliseconds(uinteger32 timeInMilliseconds);
+
         #pragma mark Operators
         bool operator==(const CueMarker& other) const;
 

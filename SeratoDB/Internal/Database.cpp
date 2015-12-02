@@ -146,7 +146,7 @@ void Database::debugListCrate(Serato::Crate& crate,
 {
     auto& crates = crate.crates();
     for (auto& subCrate : crates) {
-        auto& crateName = subCrate->crateName();
+        auto& crateName = subCrate->name();
         printf("%sCrate '%s'\n", spacing.toUTF8(), crateName.toUTF8());
 
         auto crateTracks = subCrate->trackEntries();
@@ -213,6 +213,7 @@ void Database::parseAnyDatabaseFilesIn(const String& pathForLocalSeratoFolder,
 
 #if NXA_PRINT_DEBUG_INFO
     count previousTrackCount = 0;
+    count previousOtherTagsCount = 0;
 #endif
 
     for (auto& path : *(this->pathsForSeratoDirectories)) {
@@ -244,8 +245,11 @@ void Database::parseAnyDatabaseFilesIn(const String& pathForLocalSeratoFolder,
         }
 
 #if NXA_PRINT_DEBUG_INFO
-        printf("  found %ld tracks and %ld other tags.\n", this->tracks->length() - previousTrackCount, otherTags->length());
+        printf("  found %ld tracks and %ld other tags.\n",
+               this->tracks->length() - previousTrackCount,
+               this->otherTagsPerPath->length() - previousOtherTagsCount);
         previousTrackCount = this->tracks->length();
+        previousOtherTagsCount = this->otherTagsPerPath->length();
 #endif
 
         NXA_ASSERT_TRUE(volumePath->length() != 0);

@@ -22,6 +22,7 @@
 #include "Base/String.hpp"
 #include "Base/Blob.hpp"
 #include "Base/Platform.hpp"
+#include "Base/Exception.hpp"
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdocumentation"
@@ -131,8 +132,11 @@ String::Pointer String::stringWithFormat(const character* format, ...)
 {
     NXA_ASSERT_NOT_NULL(format);
 
-    constexpr count formatStringBufferSize = 256;
-    char buffer[formatStringBufferSize];
+    constexpr count formatStringBufferSize = 1024;
+    auto buffer = new char[formatStringBufferSize];
+    NXA_SCOPE_EXIT(buffer) {
+        delete [] buffer;
+    } NXA_SCOPE_EXIT_END
 
     va_list args;
     va_start(args, format);

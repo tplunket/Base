@@ -238,6 +238,7 @@ void TrackFile::setGridMarkers(GridMarker::Array& markers, String::ArrayOfConst&
             if (!GridMarker::numberOfBeatsValueSupportedBySerato(numberOfBeats)) {
                 warningLog.append(String::stringWith("with grid markers unsupported by Serato. Those have not been written to Serato."));
                 foundAnInvalidMarker = true;
+                printf("Invalid number of beats %f.\n", numberOfBeats);
             }
             else {
                 fixedMarkers->append(marker);

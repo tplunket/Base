@@ -117,7 +117,7 @@ void TrackFile::readMarkersV2FromBase64String(const byte* markerV2Data, count to
     auto markerDataEnd = (const byte*)markerStruct + decodedData->size();
     auto tagStart = (const byte*)markerStruct->data;
 
-    while (*tagStart && (tagStart < markerDataEnd)) {
+    while ((tagStart < markerDataEnd) && *tagStart) {
         tagStart = this->readMarkerAtAndAdvanceToNextTag(tagStart);
     }
 }

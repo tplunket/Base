@@ -83,6 +83,9 @@ GridMarker::Array::Pointer GridMarker::markersWithMemoryAt(const byte* id3TagSta
             count numberOfBeats = Platform::bigEndianUInteger32ValueAt(gridMarker->beatsPerMinute);
 
             bpm = ((decimal)numberOfBeats * 60.0f) / (nextPosition - position);
+            if (bpm > 200.0f) {
+                NXA_ALOG("Illegal bpm computed by %ld %f %f.", numberOfBeats, nextPosition, position);
+            }
         }
         else {
             bpm = Platform::bigEndianFloatValueAt(gridMarker->beatsPerMinute);

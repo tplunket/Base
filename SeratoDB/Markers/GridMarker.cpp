@@ -117,7 +117,7 @@ void GridMarker::addMarkersTo(const GridMarker::Array& markers, NxA::Blob& data)
         else {
             auto& nextMarker = markers[index + 1];
             decimal numberOfBeats = (marker.beatsPerMinute() * (nextMarker.positionInSeconds() - marker.positionInSeconds())) / 60.f;
-            NXA_ASSERT_TRUE(Internal::GridMarker::numberOfBeatsValueSupportedBySerato(numberOfBeats));
+            NXA_ASSERT_TRUE(GridMarker::numberOfBeatsValueSupportedBySerato(numberOfBeats));
 
             Platform::writeBigEndianUInteger32ValueAt(static_cast<uinteger32>(numberOfBeats), markerData.beatsPerMinute);
         }
@@ -128,6 +128,18 @@ void GridMarker::addMarkersTo(const GridMarker::Array& markers, NxA::Blob& data)
 
     // -- This marks the end of tags.
     data.append('\0');
+}
+
+boolean GridMarker::numberOfBeatsValueSupportedBySerato(decimal numberOfBeats)
+{
+    uinteger32 integerNumberOfBeats = numberOfBeats;
+    if ((numberOfBeats != static_cast<decimal>(integerNumberOfBeats)) ||
+        (integerNumberOfBeats % 4)) {
+        // -- This grid marker is not on a first downbeat which is not supported by Serato.
+        return false;
+    }
+
+    return true;
 }
 
 #pragma mark Operators

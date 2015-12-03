@@ -40,6 +40,8 @@ namespace NxA { namespace Serato {
         static GridMarker::Array::Pointer markersWithMemoryAt(const byte* id3TagStart);
         static void addMarkersTo(const GridMarker::Array& markers, Blob& data);
 
+        static boolean numberOfBeatsValueSupportedBySerato(decimal numberOfBeats);
+
         #pragma mark Operators
         bool operator==(const GridMarker& other) const;
 

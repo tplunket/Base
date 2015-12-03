@@ -24,6 +24,8 @@
 #include "Markers/CueMarker.hpp"
 #include "Markers/Internal/GridMarker.hpp"
 
+#include <math.h>
+
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, GridMarker, Object);
 
 namespace NxA { namespace Serato {
@@ -132,7 +134,8 @@ void GridMarker::addMarkersTo(const GridMarker::Array& markers, NxA::Blob& data)
 
 boolean GridMarker::numberOfBeatsValueSupportedBySerato(decimal numberOfBeats)
 {
-    uinteger32 integerNumberOfBeats = numberOfBeats;
+    numberOfBeats = ::roundf(numberOfBeats * 100.0f) / 100.0f;
+    uinteger32 integerNumberOfBeats = numberOfBeats + 0.01f;
     if ((numberOfBeats != static_cast<decimal>(integerNumberOfBeats)) ||
         (integerNumberOfBeats % 4)) {
         // -- This grid marker is not on a first downbeat which is not supported by Serato.

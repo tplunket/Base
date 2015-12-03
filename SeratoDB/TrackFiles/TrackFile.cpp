@@ -223,6 +223,8 @@ void TrackFile::setGridMarkers(GridMarker::Array& markers, String::ArrayOfConst&
     count numberOfMarkers = markers.length();
     count lastMarkerIndex = numberOfMarkers - 1;
 
+    bool foundAnInvalidMarker = false;
+
     for (count index = 0; index < numberOfMarkers; ++index) {
         auto& marker = markers[index];
 
@@ -231,17 +233,20 @@ void TrackFile::setGridMarkers(GridMarker::Array& markers, String::ArrayOfConst&
         }
         else {
             auto& nextMarker = markers[index + 1];
-            decimal timeBetweenMarkersInSeconds = nextMarker.positionInSeconds() - marker.positionInSeconds();
-            uinteger32 numberOfBeats = (marker.beatsPerMinute() * timeBetweenMarkersInSeconds) / 60.f;
+            decimal numberOfBeats = (marker.beatsPerMinute() * (nextMarker.positionInSeconds() - marker.positionInSeconds())) / 60.f;
 
-            decimal bpm = ((decimal)numberOfBeats * 60.0f) / timeBetweenMarkersInSeconds;
-            if (bpm != marker.beatsPerMinute()) {
+            if (!GridMarker::numberOfBeatsValueSupportedBySerato(numberOfBeats)) {
                 warningLog.append(String::stringWith("with grid markers unsupported by Serato. Those have not been written to Serato."));
+                foundAnInvalidMarker = true;
             }
             else {
                 fixedMarkers->append(marker);
             }
         }
+    }
+
+    if (foundAnInvalidMarker) {
+        printf("Invalid grid markers for '%s':\n%s\n", this->filePath()->toUTF8(), markers.description()->toUTF8());
     }
 
     if (fixedMarkers != this->gridMarkers()) {

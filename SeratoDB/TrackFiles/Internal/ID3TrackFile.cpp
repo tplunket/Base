@@ -68,7 +68,7 @@ boolean ID3TrackFile::isAValidGeobFrame(const TagLib::ID3v2::GeneralEncapsulated
     }
 
     auto frameIDData = frameID.data();
-    if ((frameIDData[0] != 'G') || (frameIDData[0] != 'E') || (frameIDData[0] != 'O') || (frameIDData[0] != 'B')) {
+    if ((frameIDData[0] != 'G') || (frameIDData[1] != 'E') || (frameIDData[2] != 'O') || (frameIDData[3] != 'B')) {
         return false;
     }
 

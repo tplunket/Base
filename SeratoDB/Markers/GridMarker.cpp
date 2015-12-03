@@ -119,7 +119,10 @@ void GridMarker::addMarkersTo(const GridMarker::Array& markers, NxA::Blob& data)
         else {
             auto& nextMarker = markers[index + 1];
             decimal numberOfBeats = (marker.beatsPerMinute() * (nextMarker.positionInSeconds() - marker.positionInSeconds())) / 60.f;
-            NXA_ASSERT_TRUE(GridMarker::numberOfBeatsValueSupportedBySerato(numberOfBeats));
+            if (!GridMarker::numberOfBeatsValueSupportedBySerato(numberOfBeats)) {
+                data.removeAll();
+                return;
+            }
 
             Platform::writeBigEndianUInteger32ValueAt(static_cast<uinteger32>(numberOfBeats), markerData.beatsPerMinute);
         }

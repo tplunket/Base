@@ -73,5 +73,7 @@ namespace NxA {
         void appendWithStringTermination(const character* other);
         void appendWithoutStringTermination(const character* other);
         void append(const character other);
+
+        void removeAll(void);
     };
 }

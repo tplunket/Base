@@ -223,8 +223,6 @@ void TrackFile::setGridMarkers(GridMarker::Array& markers, String::ArrayOfConst&
     count numberOfMarkers = markers.length();
     count lastMarkerIndex = numberOfMarkers - 1;
 
-    bool foundAnInvalidMarker = false;
-
     for (count index = 0; index < numberOfMarkers; ++index) {
         auto& marker = markers[index];
 
@@ -237,17 +235,14 @@ void TrackFile::setGridMarkers(GridMarker::Array& markers, String::ArrayOfConst&
 
             if (!GridMarker::numberOfBeatsValueSupportedBySerato(numberOfBeats)) {
                 warningLog.append(String::stringWith("with grid markers unsupported by Serato. Those have not been written to Serato."));
-                foundAnInvalidMarker = true;
-                printf("Invalid number of beats %f.\n", numberOfBeats);
+                printf("Invalid grid markers for '%s':\n%s\n", this->filePath()->toUTF8(), markers.description()->toUTF8());
+                printf("Invalid number of beats %f for marker index %ld.\n", numberOfBeats, index);
+                return;
             }
             else {
                 fixedMarkers->append(marker);
             }
         }
-    }
-
-    if (foundAnInvalidMarker) {
-        printf("Invalid grid markers for '%s':\n%s\n", this->filePath()->toUTF8(), markers.description()->toUTF8());
     }
 
     if (fixedMarkers != this->gridMarkers()) {

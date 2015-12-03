@@ -59,10 +59,10 @@ NxA::String::Pointer Crate::escapedNameFromCrateName(const String& crateName)
 {
     String::Pointer result = String::stringWith(crateName);
 
-    result->replaceOccurenceOfStringWith("&", "&&");
-    result->replaceOccurenceOfStringWith("%", "&pc");
-    result->replaceOccurenceOfStringWith("/", "&fs");
-    result->replaceOccurenceOfStringWith("\\", "&bs");
+    result->replaceOccurenceOfStringWith("?", "??");
+    result->replaceOccurenceOfStringWith("%", "?pc");
+    result->replaceOccurenceOfStringWith("/", "?fs");
+    result->replaceOccurenceOfStringWith("\\", "?bs");
 
     return result;
 }
@@ -71,10 +71,10 @@ NxA::String::Pointer Crate::crateNameFromEscapedName(const String& escapedName)
 {
     String::Pointer result = String::stringWith(escapedName);
 
-    result->replaceOccurenceOfStringWith("&bs", "\\");
-    result->replaceOccurenceOfStringWith("&fs", "/");
-    result->replaceOccurenceOfStringWith("&pc", "%");
-    result->replaceOccurenceOfStringWith("&&", "&");
+    result->replaceOccurenceOfStringWith("?bs", "\\");
+    result->replaceOccurenceOfStringWith("?fs", "/");
+    result->replaceOccurenceOfStringWith("?pc", "%");
+    result->replaceOccurenceOfStringWith("??", "?");
 
     return result;
 }

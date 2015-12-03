@@ -59,9 +59,9 @@ LoopMarker::Pointer LoopMarker::markerWithMemoryAt(const byte* id3TagStart)
     NXA_ASSERT_TRUE(*String::stringWith(reinterpret_cast<const character*>(tagStruct->tag)) == "LOOP");
 
     return LoopMarker::markerWithLabelStartEndPositionsIndexAndColor(String::stringWith(reinterpret_cast<const character*>(tagStruct->label)),
-                                                                Platform::bigEndianUInteger32ValueAt(tagStruct->position),
-                                                                Platform::bigEndianUInteger32ValueAt(tagStruct->loopPosition),
-                                                                Platform::bigEndianUInteger16ValueAt(tagStruct->index),
+                                                                     Platform::bigEndianUInteger32ValueAt(tagStruct->position),
+                                                                     Platform::bigEndianUInteger32ValueAt(tagStruct->loopPosition),
+                                                                     Platform::bigEndianUInteger16ValueAt(tagStruct->index),
                                                                      tagStruct->color[1],
                                                                      tagStruct->color[2],
                                                                      tagStruct->color[3]);

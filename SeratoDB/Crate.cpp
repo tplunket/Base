@@ -340,7 +340,6 @@ boolean Crate::childrenCratesWereModified(void) const
 void Crate::saveIfOnVolumeAndRecurseToChildren(const String& volumePath, const String& seratoFolderPath) const
 {
     count numberOfPaths = internal->volumePaths->length();
-
     for (count pathIndex = 0; pathIndex < numberOfPaths; ++pathIndex) {
         auto& path = (*internal->volumePaths)[pathIndex];
         if (path == volumePath) {
@@ -366,6 +365,7 @@ void Crate::saveIfOnVolumeAndRecurseToChildren(const String& volumePath, const S
             }
 
             internal->saveDataToCrateFileInSeratoFolder(outputData, seratoFolderPath);
+
             break;
         }
     }

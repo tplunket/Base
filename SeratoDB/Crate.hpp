@@ -65,6 +65,7 @@ namespace NxA { namespace Serato {
 
         void addCrate(Crate& crate);
         void removeCrate(Crate::Pointer& crate);
+
         Crate::Pointer findOrAddCrateWithRelativeNameAndFullName(const String& relativeName, const String& fullCrateName);
         bool crateOrChildrenCrateContainsTracks(void);
 

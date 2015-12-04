@@ -68,7 +68,7 @@ String::ArrayOfConst::Pointer Crate::readCratesNamesInCrateOrderFile(const Strin
                 for (auto& crateLine : *lines) {
                     auto crateName = Internal::Crate::crateNameIfValidCrateOrEmptyIfNot(crateLine);
                     if (!crateName->isEmpty()) {
-                        cratesInOrder->append(Internal::Crate::crateNameFromEscapedName(crateName));
+                        cratesInOrder->append(crateName);
                     }
                 }
             }
@@ -86,17 +86,6 @@ NxA::boolean Crate::filenameIsAValidCrateName(const String& fileName)
     return !fileName.hasPrefix(".") && fileName.hasPostfix(".crate");
 }
 
-NxA::String::Pointer Crate::crateNameFromFilename(const String& fileName)
-{
-    count startIndex = 0;
-    auto lastSeperatorIndex = fileName.indexOfLastOccurenceOf("%%");
-    if (lastSeperatorIndex != fileName.length()) {
-        startIndex = lastSeperatorIndex + 2;
-    }
-
-    return fileName.subString(startIndex, fileName.length() - 6);
-}
-
 NxA::String::ArrayOfConst::Pointer Crate::cratesInSubCratesDirectory(const String& directory)
 {
     auto cratePathsFound = File::pathsForFilesInDirectory(directory);
@@ -105,7 +94,7 @@ NxA::String::ArrayOfConst::Pointer Crate::cratesInSubCratesDirectory(const Strin
     for (auto& path : *cratePathsFound) {
         auto fileName = File::removePrefixFromPath(directory, path);
         if (Crate::filenameIsAValidCrateName(fileName)) {
-            auto escapedCrateName = Crate::crateNameFromFilename(fileName);
+            auto escapedCrateName = Internal::Crate::fullCrateNameFromFilename(fileName);
             crateNamesFound->append(Internal::Crate::crateNameFromEscapedName(escapedCrateName));
         }
     }
@@ -125,16 +114,18 @@ boolean Crate::isAnExistingFullSmartCrateName(const String& fullCrateName, const
     return File::fileExistsAt(crateFilePath);
 }
 
-void Crate::parseCratesInSeratoFolderOnVolumeAddToCrateAndSaveUnknownCrateNamesIn(String::ArrayOfConst& cratesInOrder,
-                                                                                  const String& seratoFolderPath,
-                                                                                  const String& volumePath,
-                                                                                  Serato::Crate& parentCrate,
-                                                                                  String::ArrayOfConst& unknownCratesNames)
+void Crate::parseCratesInSeratoFolderOnVolumeAddToCrateAndSaveSmartCrateNamesIn(String::ArrayOfConst& cratesInOrder,
+                                                                                const String& seratoFolderPath,
+                                                                                const String& volumePath,
+                                                                                Serato::Crate& parentCrate,
+                                                                                String::ArrayOfConst& smartCrateNames)
 {
     for (auto fullEntryName : cratesInOrder) {
-        if (Serato::Crate::isAnExistingFullSmartCrateName(fullEntryName, seratoFolderPath) ||
-            !Serato::Crate::isAnExistingFullCrateName(fullEntryName, seratoFolderPath)) {
-            unknownCratesNames.append(fullEntryName);
+        if (!Serato::Crate::isAnExistingFullCrateName(fullEntryName, seratoFolderPath)) {
+            if (Serato::Crate::isAnExistingFullSmartCrateName(fullEntryName, seratoFolderPath)) {
+                smartCrateNames.append(fullEntryName);
+            }
+
             continue;
         }
 

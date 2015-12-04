@@ -45,12 +45,12 @@ namespace NxA { namespace Serato { namespace Internal {
         static void addCratesFoundInSeratoFolderOnVolumeToRootCrate(const String& seratoFolderPath,
                                                                     const String& volumePath,
                                                                     Serato::Crate& rootCrate,
-                                                                    String::ArrayOfConst& unknownCratesNames);
+                                                                    String::ArrayOfConst& SmartCrateNames);
 
-        static void saveContentOfRootCrateIfModifiedAndOnVolumeAndUnknownCrateNamesToSeratoFolder(const Serato::Crate& rootCrate,
-                                                                                                  const String& volumePath,
-                                                                                                  const String::ArrayOfConst& unknownCratesNames,
-                                                                                                  const String& seratoFolderPath);
+        static void saveContentOfRootCrateIfModifiedAndOnVolumeAndSmartCrateNamesToSeratoFolder(const Serato::Crate& rootCrate,
+                                                                                                const String& volumePath,
+                                                                                                const String::ArrayOfConst& smartCrateNames,
+                                                                                                const String& seratoFolderPath);
 
         static void setDatabaseFilesInSeratoFolderAsModifedOnDateInSecondsSince1970(const String& folderPath, timestamp dateModified);
 
@@ -72,7 +72,7 @@ namespace NxA { namespace Serato { namespace Internal {
         String::ArrayOfConst::Pointer pathsForSeratoDirectories;
         String::ArrayOfConst::Pointer volumePathsPerPath;
         Serato::Tag::ArrayOfConst::Array::Pointer otherTagsPerPath;
-        String::ArrayOfConst::Array::Pointer otherCrateNamesPerPath;
+        String::ArrayOfConst::Array::Pointer smartCrateNamesPerPath;
 
         boolean databaseIsValid;
 

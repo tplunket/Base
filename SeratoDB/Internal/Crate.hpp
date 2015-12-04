@@ -47,6 +47,7 @@ namespace NxA { namespace Serato { namespace Internal {
                                                                            const String& seratoFolderPath);
         static String::Pointer crateFilePathForFullSmartCrateNameInSeratoFolder(const String& fullCrateName,
                                                                                 const String& seratoFolderPath);
+        static String::Pointer fullCrateNameFromFilename(const String& fileName);
 
         #pragma mark Instance Variables
         String::PointerToConst name;

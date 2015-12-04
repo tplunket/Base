@@ -43,12 +43,7 @@ Crate::Crate(const String& crateName) :
 NxA::String::Pointer Crate::crateNameIfValidCrateOrEmptyIfNot(const String& name)
 {
     if (name.hasPrefix("[crate]")) {
-        auto lastSeperatorIndex = name.indexOfLastOccurenceOf("%%");
-        if (lastSeperatorIndex == name.length()) {
-            return String::stringWith(name.pointer());
-        }
-
-        return name.subString(lastSeperatorIndex + 2);
+        return name.subString(7);
     }
     else {
         return String::string();
@@ -108,11 +103,16 @@ NxA::String::Pointer Crate::crateFilePathForFullSmartCrateNameInSeratoFolder(con
 {
     NXA_ASSERT_TRUE(fullCrateName.length() != 0);
     
-    auto cratesFolderPath = NxA::Serato::Crate::subCratesDirectoryPathInSeratoFolder(seratoFolderPath);
+    auto cratesFolderPath = smartCratesDirectoryPathInSeratoFolder(seratoFolderPath);
     auto crateFilePath = File::joinPaths(cratesFolderPath, fullCrateName);
     crateFilePath->append(".scrate");
 
     return crateFilePath;
+}
+
+NxA::String::Pointer Crate::fullCrateNameFromFilename(const String& fileName)
+{
+    return fileName.subString(0, fileName.length() - 6);
 }
 
 #pragma mark Instance Methods

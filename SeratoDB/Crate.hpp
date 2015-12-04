@@ -43,17 +43,16 @@ namespace NxA { namespace Serato {
         static String::Pointer subCratesDirectoryPathInSeratoFolder(const String& seratoFolderPath);
         static String::ArrayOfConst::Pointer readCratesNamesInCrateOrderFile(const String& crateOrderFilePath);
         static boolean filenameIsAValidCrateName(const String& fileName);
-        static String::Pointer crateNameFromFilename(const String& fileName);
         static String::ArrayOfConst::Pointer cratesInSubCratesDirectory(const String& directory);
         static boolean isAnExistingFullCrateName(const String& fullCrateName,
                                                  const String& seratoFolderPath);
         static boolean isAnExistingFullSmartCrateName(const String& fullCrateName,
                                                       const String& seratoFolderPath);
-        static void parseCratesInSeratoFolderOnVolumeAddToCrateAndSaveUnknownCrateNamesIn(String::ArrayOfConst& cratesInOrder,
-                                                                                          const String& seratoFolderPath,
-                                                                                          const String& volumePath,
-                                                                                          Serato::Crate& parentCrate,
-                                                                                          String::ArrayOfConst& unknownCratesNames);
+        static void parseCratesInSeratoFolderOnVolumeAddToCrateAndSaveSmartCrateNamesIn(String::ArrayOfConst& cratesInOrder,
+                                                                                        const String& seratoFolderPath,
+                                                                                        const String& volumePath,
+                                                                                        Serato::Crate& parentCrate,
+                                                                                        String::ArrayOfConst& smartCrateNames);
 
         #pragma mark Instance Methods
         const String& name(void) const;

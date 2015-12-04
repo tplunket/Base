@@ -220,13 +220,13 @@ void Database::saveIfModified(void) const
         for (count pathIndex = 0; pathIndex < numberOfPaths; ++pathIndex) {
             auto& pathsForSeratoDirectory = (*internal->pathsForSeratoDirectories)[pathIndex];
             auto seratoFolderPath = Database::seratoFolderPathForFolder(pathsForSeratoDirectory);
-            auto& unknownCrateNames = (*internal->otherCrateNamesPerPath)[pathIndex];
+            auto& smartCrateNames = (*internal->smartCrateNamesPerPath)[pathIndex];
             auto& volumePath = (*internal->volumePathsPerPath)[pathIndex];
 
-            Internal::Database::saveContentOfRootCrateIfModifiedAndOnVolumeAndUnknownCrateNamesToSeratoFolder(internal->rootCrate,
-                                                                                                              volumePath,
-                                                                                                              unknownCrateNames,
-                                                                                                              seratoFolderPath);
+            Internal::Database::saveContentOfRootCrateIfModifiedAndOnVolumeAndSmartCrateNamesToSeratoFolder(internal->rootCrate,
+                                                                                                            volumePath,
+                                                                                                            smartCrateNames,
+                                                                                                            seratoFolderPath);
 
             boolean needsToUpdateDatabaseFile = false;
             for (auto& track : *(internal->tracks)) {

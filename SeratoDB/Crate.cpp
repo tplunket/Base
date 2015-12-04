@@ -229,6 +229,21 @@ Crate::Pointer Crate::findOrAddCrateWithRelativeNameAndFullName(const String& re
     return crateFound->findOrAddCrateWithRelativeNameAndFullName(relativeName.subString(topCrateName->length() + 2), fullCrateName);
 }
 
+bool Crate::crateOrChildrenCrateContainsTracks(void)
+{
+    if (this->trackEntries()->length()) {
+        return true;
+    }
+
+    for (auto& crate : *internal->childrenCrates) {
+        if (crate->crateOrChildrenCrateContainsTracks()) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 void Crate::addTrackEntry(Serato::TrackEntry& trackEntry)
 {
     if (trackEntry.hasParentCrate()) {

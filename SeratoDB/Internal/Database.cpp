@@ -122,6 +122,14 @@ void Database::setDatabaseFilesInSeratoFolderAsModifedOnDateInSecondsSince1970(c
 
     auto crateOrderFilePath = Internal::Database::pathForCrateOrderFileInSeratoFolder(folderPath);
     File::setModificationDateInSecondsSince1970ForFile(dateModified, crateOrderFilePath);
+
+    auto subCratesDirectory = Serato::Crate::subCratesDirectoryPathInSeratoFolder(folderPath);
+    if (File::directoryExistsAt(subCratesDirectory)) {
+        auto cratePathsFound = File::pathsForFilesInDirectory(subCratesDirectory);
+        for (auto& path : *cratePathsFound) {
+            File::setModificationDateInSecondsSince1970ForFile(dateModified, path);
+        }
+    }
 }
 
 void Database::addCratesNamesAtTheStartOfUnlessAlreadyThere(String::ArrayOfConst& cratesToAddTo,

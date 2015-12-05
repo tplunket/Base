@@ -65,7 +65,6 @@ namespace NxA { namespace Serato {
         void addTrack(Track& track);
         void removeTrack(Track& track);
 
-        void saveIfModified(void) const;
         void saveIfModifiedAndMarkAsModifiedOn(timestamp modificationTimesSince1970) const;
     };
 } }

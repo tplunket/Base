@@ -209,7 +209,7 @@ void Database::removeTrack(Track& track)
     internal->tracks->remove(track);
 }
 
-void Database::saveIfModified(void) const
+void Database::saveIfModifiedAndMarkAsModifiedOn(timestamp modificationTimesSince1970) const
 {
     try {
         if (!internal->databaseIsValid) {
@@ -264,22 +264,9 @@ void Database::saveIfModified(void) const
                 
                 auto databaseFilePath = Database::databaseFilePathForSeratoFolder(seratoFolderPath);
                 File::writeBlobToFileAt(outputData, databaseFilePath);
+
+                Internal::Database::setDatabaseFilesInSeratoFolderAsModifedOnDateInSecondsSince1970(seratoFolderPath, modificationTimesSince1970);
             }
-        }
-    }
-    catch (FileError& e) {
-        // -- This should log something.
-    }
-}
-
-void Database::saveIfModifiedAndMarkAsModifiedOn(timestamp modificationTimesSince1970) const
-{
-    try {
-        this->saveIfModified();
-
-        for (auto& pathsForSeratoDirectory : *internal->pathsForSeratoDirectories) {
-            auto seratoFolderPath = Database::seratoFolderPathForFolder(pathsForSeratoDirectory);
-            Internal::Database::setDatabaseFilesInSeratoFolderAsModifedOnDateInSecondsSince1970(seratoFolderPath, modificationTimesSince1970);
         }
     }
     catch (FileError& e) {

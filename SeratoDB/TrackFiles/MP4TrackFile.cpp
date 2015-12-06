@@ -192,12 +192,12 @@ void MP4TrackFile::setRecordLabel(const String& recordLabel)
 
 void MP4TrackFile::setRemixer(const String& remixer)
 {
-    // -- This is not supported by MP4 files.
+    NXA_ALOG("Illegal call to set a remixer on an MP4 file.");
 }
 
 void MP4TrackFile::setRating(integer rating)
 {
-    // -- This is not supported by MP4 files.
+    NXA_ALOG("Illegal call to set a rating on an MP4 file.");
 }
 
 void MP4TrackFile::setArtwork(const Blob& artwork)

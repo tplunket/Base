@@ -266,12 +266,12 @@ void FLACTrackFile::setBpm(const String& bpm)
 
 void FLACTrackFile::setRecordLabel(const String& recordLabel)
 {
-    // -- This is not supported by FLAC files.
+    NXA_ALOG("Illegal call to set a record label on an MP4 file.");
 }
 
 void FLACTrackFile::setRemixer(const String& remixer)
 {
-    // -- This is not supported by FLAC files.
+    NXA_ALOG("Illegal call to set a remixer on a FLAC file.");
 }
 
 void FLACTrackFile::setRating(integer rating)

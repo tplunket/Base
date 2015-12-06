@@ -138,7 +138,7 @@ void OGGTrackFile::setReleaseDate(const String& date)
 
 void OGGTrackFile::setKey(const String& key)
 {
-    // -- This is not supported by OGG files.
+    NXA_ALOG("Illegal call to set a key on an OGG file.");
 }
 
 void OGGTrackFile::setComposer(const String& composer)

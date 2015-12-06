@@ -28,3 +28,28 @@ using namespace NxA::Serato::Internal;
 
 GridMarker::GridMarker() : positionInSeconds(0.0f),
                            beatsPerMinute("0.0") { }
+
+#pragma mark Class Methods
+
+NxA::count GridMarker::actualNumberOfBeatsIfSupported(const decimal3& numberOfBeats)
+{
+    integer64 integerPart = numberOfBeats.getUnbiased();
+    integer64 decimalPart = integerPart % 1000;
+
+    if (decimalPart > 995) {
+        integerPart += 10;
+    }
+    else if (decimalPart >= 5) {
+        return 0;
+    }
+
+    integerPart /= 1000;
+
+    // -- Serato grid marker need to be on a first downbeat.
+    if (integerPart % 4) {
+        return 0;
+    }
+    else {
+        return integerPart;
+    }
+}

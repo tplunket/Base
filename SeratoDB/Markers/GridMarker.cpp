@@ -134,7 +134,7 @@ void GridMarker::addMarkersTo(const GridMarker::Array& markers, NxA::Blob& data)
             bpmDecimal3.setUnbiased(marker.beatsPerMinute().getUnbiased() * 10);
             decimal3 numberOfBeats = (bpmDecimal3 * (nextMarker.positionInSeconds() - marker.positionInSeconds())) / decimal3("60");
 
-            count actualNumberOfBeats = GridMarker::actualNumberOfBeatsIfSupportedBySerato(numberOfBeats);
+            count actualNumberOfBeats = Internal::GridMarker::actualNumberOfBeatsIfSupported(numberOfBeats);
             if (!actualNumberOfBeats) {
                 data.removeAll();
                 return;
@@ -151,27 +151,31 @@ void GridMarker::addMarkersTo(const GridMarker::Array& markers, NxA::Blob& data)
     data.append('\0');
 }
 
-count GridMarker::actualNumberOfBeatsIfSupportedBySerato(const decimal3& numberOfBeats)
+boolean GridMarker::gridMarkersAreValid(const GridMarker::Array& markers)
 {
-    integer64 integerPart = numberOfBeats.getUnbiased();
-    integer64 decimalPart = integerPart % 1000;
+    // -- Serato doesn't support very flexible grid markers, the ones we end up writing
+    // -- might not be exactly the ones we wanted to write so we test them
+    // -- before setting them and if at least one is invalid, we write none.
+    count numberOfMarkers = markers.length();
+    count lastMarkerIndex = numberOfMarkers - 1;
 
-    if (decimalPart > 995) {
-        integerPart += 10;
-    }
-    else if (decimalPart >= 5) {
-        return 0;
+    for (count index = 0; index < numberOfMarkers; ++index) {
+        auto& marker = markers[index];
+
+        if (index != lastMarkerIndex) {
+            auto& nextMarker = markers[index + 1];
+            decimal3 bpmDecimal3;
+            bpmDecimal3.setUnbiased(marker.beatsPerMinute().getUnbiased() * 10);
+            decimal3 numberOfBeats = (bpmDecimal3 * (nextMarker.positionInSeconds() - marker.positionInSeconds())) / decimal3("60");
+
+            count actualNumberOfBeats = Internal::GridMarker::actualNumberOfBeatsIfSupported(numberOfBeats);
+            if (actualNumberOfBeats == 0) {
+                return false;
+            }
+        }
     }
 
-    integerPart /= 1000;
-
-    // -- Serato grid marker need to be on a first downbeat.
-    if (integerPart % 4) {
-        return 0;
-    }
-    else {
-        return integerPart;
-    }
+    return true;
 }
 
 #pragma mark Operators

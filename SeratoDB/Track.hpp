@@ -48,9 +48,6 @@ namespace NxA { namespace Serato {
         static void debugPrint(const Serato::Track& track);
 #endif
 
-        #pragma mark Operators
-        bool operator==(const Track& other) const;
-
         #pragma mark Instance Methods
         String::Pointer trackFilePath(void) const;
         const String& volumePath(void) const;

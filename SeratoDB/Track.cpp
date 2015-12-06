@@ -161,43 +161,6 @@ void Track::debugPrint(const Serato::Track& track)
 }
 #endif
 
-#pragma mark Operators
-
-bool Track::operator==(const Track& other) const
-{
-    NXA_ALOG("Trying to test track equality.");
-    
-    if (this == &other) {
-        return true;
-    }
-    else if (*this->trackFilePath() != *other.trackFilePath()) {
-        return false;
-    }
-
-    NXA_ASSERT_TRUE(this->title() == other.title() &&
-                    this->artist() == other.artist() &&
-                    this->album() == other.album() &&
-                    this->genre() == other.genre() &&
-                    this->comments() == other.comments() &&
-                    this->grouping() == other.grouping() &&
-                    this->remixer() == other.remixer() &&
-                    this->recordLabel() == other.recordLabel() &&
-                    this->composer() == other.composer() &&
-                    this->key() == other.key() &&
-                    this->size() == other.size() &&
-                    this->length() == other.length() &&
-                    this->bitRate() == other.bitRate() &&
-                    this->sampleRate() == other.sampleRate() &&
-                    this->bpm() == other.bpm() &&
-                    this->year() == other.year() &&
-                    this->trackNumber() == other.trackNumber() &&
-                    this->discNumber() == other.discNumber() &&
-                    this->dateModifiedInSecondsSinceJanuary1st1970() == other.dateModifiedInSecondsSinceJanuary1st1970() &&
-                    this->dateAddedInSecondsSinceJanuary1st1970() == other.dateAddedInSecondsSinceJanuary1st1970());
-
-    return true;
-}
-
 #pragma mark Instance Methods
 
 String::Pointer Track::trackFilePath(void) const

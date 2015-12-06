@@ -212,34 +212,10 @@ void TrackFile::setLoopMarkers(LoopMarker::Array& markers)
     }
 }
 
-void TrackFile::setGridMarkers(GridMarker::Array& markers, String::ArrayOfConst& warningLog)
+void TrackFile::setGridMarkers(GridMarker::Array& markers)
 {
     NXA_ASSERT_FALSE(internal->markersWereIgnored);
-
-    // -- Serato doesn't support very flexible grid markers, the ones we end up writing
-    // -- might not be exactly the ones we wanted to write so we test them
-    // -- before setting them and if at least one is invalid, we write none.
-    count numberOfMarkers = markers.length();
-    count lastMarkerIndex = numberOfMarkers - 1;
-
-    for (count index = 0; index < numberOfMarkers; ++index) {
-        auto& marker = markers[index];
-
-        if (index != lastMarkerIndex) {
-            auto& nextMarker = markers[index + 1];
-            decimal3 bpmDecimal3;
-            bpmDecimal3.setUnbiased(marker.beatsPerMinute().getUnbiased() * 10);
-            decimal3 numberOfBeats = (bpmDecimal3 * (nextMarker.positionInSeconds() - marker.positionInSeconds())) / decimal3("60");
-
-            count actualNumberOfBeats = GridMarker::actualNumberOfBeatsIfSupportedBySerato(numberOfBeats);
-            if (actualNumberOfBeats == 0) {
-                warningLog.append(String::stringWith("with grid markers unsupported by Serato. Those have not been written to Serato."));
-                printf("Invalid grid markers for '%s':\n%s\n", this->filePath()->toUTF8(), markers.description()->toUTF8());
-                printf("Invalid number of beats %lld for marker index %ld.\n", numberOfBeats.getAsInteger(), index);
-                return;
-            }
-        }
-    }
+    NXA_ASSERT_TRUE(GridMarker::gridMarkersAreValid(markers));
 
     //printf("Setting grid markers for '%s':\n%s\n", this->filePath()->toUTF8(), markers.description()->toUTF8());
 

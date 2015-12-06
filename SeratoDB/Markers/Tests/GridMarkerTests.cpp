@@ -42,39 +42,39 @@ TEST(SeratoDB_GridMarker, markerWithMemoryAt_ASeratoMarkerTag_ReturnsACorrectMar
     // -- Then.
     ASSERT_EQ(1, test->length());
     auto& marker = test->firstObject();
-    ASSERT_EQ(0.0083560086786746978, marker.positionInSeconds());
-    ASSERT_EQ(124, marker.beatsPerMinute());
+    ASSERT_STREQ("0.008", marker.positionInSecondsAsString()->toUTF8());
+    ASSERT_STREQ("124.00", marker.beatsPerMinuteAsString()->toUTF8());
 }
 
 TEST(SeratoDB_GridMarker, markerWithPositionAndBeatsPerMinute_AMarkerWithInitialValues_ReturnsACorrectMarker)
 {
     // -- Given.
     // -- When.
-    auto test = GridMarker::markerWithPositionAndBeatsPerMinute(0.0083560086786746978, 124);
+    auto test = GridMarker::markerWithPositionAndBeatsPerMinute(decimal3("0.0083560086786746978"), decimal2("124"));
 
     // -- Then.
-    ASSERT_EQ(0.0083560086786746978, test->positionInSeconds());
-    ASSERT_EQ(124, test->beatsPerMinute());
+    ASSERT_STREQ("0.008", test->positionInSecondsAsString()->toUTF8());
+    ASSERT_STREQ("124.00", test->beatsPerMinuteAsString()->toUTF8());
 }
 
 TEST(SeratoDB_GridMarker, markerWith_AMarkerAsSource_ReturnsACorrectMarker)
 {
     // -- Given.
-    auto initial = GridMarker::markerWithPositionAndBeatsPerMinute(0.0083560086786746978, 124);
+    auto initial = GridMarker::markerWithPositionAndBeatsPerMinute(decimal3("0.0083560086786746978"), decimal2("124"));
 
     // -- When.
     auto test = GridMarker::markerWith(initial);
 
     // -- Then.
-    ASSERT_EQ(0.0083560086786746978, test->positionInSeconds());
-    ASSERT_EQ(124, test->beatsPerMinute());
+    ASSERT_STREQ("0.008", test->positionInSecondsAsString()->toUTF8());
+    ASSERT_STREQ("124.00", test->beatsPerMinuteAsString()->toUTF8());
 }
 
 TEST(SeratoDB_GridMarker, OperatorEqual_TwoEqualMarkers_ReturnsTrue)
 {
     // -- Given.
-    auto test = GridMarker::markerWithPositionAndBeatsPerMinute(0.0083560086786746978, 124);
-    auto other = GridMarker::markerWithPositionAndBeatsPerMinute(0.0083560086786746978, 124);
+    auto test = GridMarker::markerWithPositionAndBeatsPerMinute(decimal3("0.0083560086786746978"), decimal2("124"));
+    auto other = GridMarker::markerWithPositionAndBeatsPerMinute(decimal3("0.0083560086786746978"), decimal2("124"));
 
     // -- When.
     // -- Then.
@@ -84,8 +84,8 @@ TEST(SeratoDB_GridMarker, OperatorEqual_TwoEqualMarkers_ReturnsTrue)
 TEST(SeratoDB_GridMarker, OperatorEqual_TwoUnequalMarkersDifferentPosition_ReturnsFalse)
 {
     // -- Given.
-    auto test = GridMarker::markerWithPositionAndBeatsPerMinute(0.0083560086786746978, 124);
-    auto other = GridMarker::markerWithPositionAndBeatsPerMinute(0.0083560086786746278, 124);
+    auto test = GridMarker::markerWithPositionAndBeatsPerMinute(decimal3("0.0073560086786746978"), decimal2("124"));
+    auto other = GridMarker::markerWithPositionAndBeatsPerMinute(decimal3("0.0083560086786746278"), decimal2("124"));
 
     // -- When.
     // -- Then.
@@ -95,8 +95,8 @@ TEST(SeratoDB_GridMarker, OperatorEqual_TwoUnequalMarkersDifferentPosition_Retur
 TEST(SeratoDB_GridMarker, OperatorEqual_TwoUnequalMarkersDifferentBpm_ReturnsFalse)
 {
     // -- Given.
-    auto test = GridMarker::markerWithPositionAndBeatsPerMinute(0.0083560086786746978, 124);
-    auto other = GridMarker::markerWithPositionAndBeatsPerMinute(0.0083560086786746978, 123);
+    auto test = GridMarker::markerWithPositionAndBeatsPerMinute(decimal3("0.0083560086786746978"), decimal2("124"));
+    auto other = GridMarker::markerWithPositionAndBeatsPerMinute(decimal3("0.0083560086786746978"), decimal2("123"));
 
     // -- When.
     // -- Then.
@@ -106,8 +106,8 @@ TEST(SeratoDB_GridMarker, OperatorEqual_TwoUnequalMarkersDifferentBpm_ReturnsFal
 TEST(SeratoDB_GridMarker, OperatorUnequal_TwoEqualMarkers_ReturnsFalse)
 {
     // -- Given.
-    auto test = GridMarker::markerWithPositionAndBeatsPerMinute(0.0083560086786746978, 124);
-    auto other = GridMarker::markerWithPositionAndBeatsPerMinute(0.0083560086786746978, 124);
+    auto test = GridMarker::markerWithPositionAndBeatsPerMinute(decimal3("0.0083560086786746978"), decimal2("124"));
+    auto other = GridMarker::markerWithPositionAndBeatsPerMinute(decimal3("0.0083560086786746978"), decimal2("124"));
 
     // -- When.
     // -- Then.
@@ -117,8 +117,8 @@ TEST(SeratoDB_GridMarker, OperatorUnequal_TwoEqualMarkers_ReturnsFalse)
 TEST(SeratoDB_GridMarker, OperatorUnequal_TwoUnequalMarkersDifferentPosition_ReturnsTrue)
 {
     // -- Given.
-    auto test = GridMarker::markerWithPositionAndBeatsPerMinute(0.0083560086786746978, 124);
-    auto other = GridMarker::markerWithPositionAndBeatsPerMinute(0.0083560086786746278, 124);
+    auto test = GridMarker::markerWithPositionAndBeatsPerMinute(decimal3("0.0183560086786746978"), decimal2("124"));
+    auto other = GridMarker::markerWithPositionAndBeatsPerMinute(decimal3("0.0083560086786746278"), decimal2("124"));
 
     // -- When.
     // -- Then.
@@ -128,8 +128,8 @@ TEST(SeratoDB_GridMarker, OperatorUnequal_TwoUnequalMarkersDifferentPosition_Ret
 TEST(SeratoDB_GridMarker, OperatorUnequal_TwoUnequalMarkersDifferentBpm_ReturnsTrue)
 {
     // -- Given.
-    auto test = GridMarker::markerWithPositionAndBeatsPerMinute(0.0083560086786746978, 124);
-    auto other = GridMarker::markerWithPositionAndBeatsPerMinute(0.0083560086786746978, 123);
+    auto test = GridMarker::markerWithPositionAndBeatsPerMinute(decimal3("0.0083560086786746978"), decimal2("124"));
+    auto other = GridMarker::markerWithPositionAndBeatsPerMinute(decimal3("0.0083560086786746978"), decimal2("123"));
 
     // -- When.
     // -- Then.
@@ -140,7 +140,7 @@ TEST(SeratoDB_GridMarker, addDataTo_AMarkerWithData_WritesTheCorrectData)
 {
     // -- Given.
     auto destination = Blob::blob();
-    auto marker = GridMarker::markerWithPositionAndBeatsPerMinute(0.0083560086786746978, 124);
+    auto marker = GridMarker::markerWithPositionAndBeatsPerMinute(decimal3("0.0083560086786746978"), decimal2("124"));
     auto test = GridMarker::Array::array();
     test->append(marker);
 
@@ -150,7 +150,7 @@ TEST(SeratoDB_GridMarker, addDataTo_AMarkerWithData_WritesTheCorrectData)
     // -- Then.
     auto data = destination->data();
     constexpr byte expectedData[] = {
-        0x00, 0x00, 0x00, 0x01, 0x3C, 0x08, 0xE7, 0xA4, 0x42, 0xF8, 0x00, 0x00, 0x00
+        0x00, 0x00, 0x00, 0x01, 0x3C, 0x03, 0x12, 0x6F, 0x42, 0xF8, 0x00, 0x00, 0x00
     };
     ASSERT_EQ(sizeof(expectedData), destination->size());
     ASSERT_EQ(0, ::memcmp(expectedData, data, sizeof(expectedData)));

@@ -32,8 +32,8 @@ namespace NxA { namespace Serato { namespace Internal {
         NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, GridMarker);
 
         #pragma mark Instance Variables
-        decimal positionInSeconds;
+        decimal3 positionInSeconds;
 
-        decimal beatsPerMinute;
+        decimal2 beatsPerMinute;
     };
 } } }

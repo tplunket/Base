@@ -217,36 +217,34 @@ void TrackFile::setGridMarkers(GridMarker::Array& markers, String::ArrayOfConst&
     NXA_ASSERT_FALSE(internal->markersWereIgnored);
 
     // -- Serato doesn't support very flexible grid markers, the ones we end up writing
-    // -- might not be exactly the ones we wanted to write so we fix them
-    // -- before setting them to make sure our internal ones match what was written.
-    auto fixedMarkers = GridMarker::Array::array();
+    // -- might not be exactly the ones we wanted to write so we test them
+    // -- before setting them and if at least one is invalid, we write none.
     count numberOfMarkers = markers.length();
     count lastMarkerIndex = numberOfMarkers - 1;
 
     for (count index = 0; index < numberOfMarkers; ++index) {
         auto& marker = markers[index];
 
-        if (index == lastMarkerIndex) {
-            fixedMarkers->append(marker);
-        }
-        else {
+        if (index != lastMarkerIndex) {
             auto& nextMarker = markers[index + 1];
-            decimal numberOfBeats = (marker.beatsPerMinute() * (nextMarker.positionInSeconds() - marker.positionInSeconds())) / 60.f;
+            decimal3 bpmDecimal3;
+            bpmDecimal3.setUnbiased(marker.beatsPerMinute().getUnbiased() * 10);
+            decimal3 numberOfBeats = (bpmDecimal3 * (nextMarker.positionInSeconds() - marker.positionInSeconds())) / decimal3("60");
 
-            if (!GridMarker::numberOfBeatsValueSupportedBySerato(numberOfBeats)) {
+            count actualNumberOfBeats = GridMarker::actualNumberOfBeatsIfSupportedBySerato(numberOfBeats);
+            if (actualNumberOfBeats == 0) {
                 warningLog.append(String::stringWith("with grid markers unsupported by Serato. Those have not been written to Serato."));
                 printf("Invalid grid markers for '%s':\n%s\n", this->filePath()->toUTF8(), markers.description()->toUTF8());
-                printf("Invalid number of beats %f for marker index %ld.\n", numberOfBeats, index);
+                printf("Invalid number of beats %lld for marker index %ld.\n", numberOfBeats.getAsInteger(), index);
                 return;
-            }
-            else {
-                fixedMarkers->append(marker);
             }
         }
     }
 
-    if (fixedMarkers != this->gridMarkers()) {
-        internal->gridMarkers = fixedMarkers;
+    //printf("Setting grid markers for '%s':\n%s\n", this->filePath()->toUTF8(), markers.description()->toUTF8());
+
+    if (markers != this->gridMarkers()) {
+        internal->gridMarkers = markers.pointer();
         internal->markersWereModified = true;
     }
 }

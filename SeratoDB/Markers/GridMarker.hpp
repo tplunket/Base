@@ -32,22 +32,24 @@ namespace NxA { namespace Serato {
 
     public:
         #pragma mark Factory Methods
-        static GridMarker::Pointer markerWithPositionAndBeatsPerMinute(decimal positionInSeconds,
-                                                                       decimal beatsPerMinute);
+        static GridMarker::Pointer markerWithPositionAndBeatsPerMinute(const decimal3& positionInSeconds,
+                                                                       const decimal2& beatsPerMinute);
         static GridMarker::Pointer markerWith(const GridMarker& other);
 
         #pragma mark Class Methods
         static GridMarker::Array::Pointer markersWithMemoryAt(const byte* id3TagStart);
         static void addMarkersTo(const GridMarker::Array& markers, Blob& data);
 
-        static boolean numberOfBeatsValueSupportedBySerato(decimal numberOfBeats);
+        static count actualNumberOfBeatsIfSupportedBySerato(const decimal3& numberOfBeats);
 
         #pragma mark Operators
         bool operator==(const GridMarker& other) const;
 
         #pragma mark Instance Methods
-        decimal positionInSeconds(void) const;
-        decimal beatsPerMinute(void) const;
+        const decimal3& positionInSeconds(void) const;
+        String::Pointer positionInSecondsAsString(void) const;
+        const decimal2& beatsPerMinute(void) const;
+        String::Pointer beatsPerMinuteAsString(void) const;
 
         #pragma mark Overidden Object Instance Methods
         virtual NxA::String::Pointer description(void) const;

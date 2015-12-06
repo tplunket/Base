@@ -106,10 +106,10 @@ void OGGTrackFile::readMarkers(void)
             if (markerStrings.size() == numberOfGridMarkers) {
                 for (auto& markerString : markerStrings) {
                     auto values = markerString.split(",");
-                    double position = std::stod(values[0].toCString());
-                    double bpm = std::stod(values[1].substr(0, values[1].length() - 1).toCString());
+                    auto bpm = values[1].substr(0, values[1].length() - 1);
 
-                    this->gridMarkers->append(Serato::GridMarker::markerWithPositionAndBeatsPerMinute(position, bpm));
+                    this->gridMarkers->append(Serato::GridMarker::markerWithPositionAndBeatsPerMinute(decimal3(values[0].toCString()),
+                                                                                                      decimal2(bpm.toCString())));
                 }
             }
         }
@@ -147,7 +147,7 @@ void OGGTrackFile::replaceGridMarkersField(void)
     propertyString.append(buffer);
 
     for (auto& marker : *(this->gridMarkers)) {
-        ::snprintf(buffer, sizeof(buffer), "(%0.6f,%0.6f)", marker->positionInSeconds(), marker->beatsPerMinute());
+        ::snprintf(buffer, sizeof(buffer), "(%s000f,%s0000)", marker->positionInSecondsAsString()->toUTF8(), marker->beatsPerMinuteAsString()->toUTF8());
         propertyString.append(buffer);
     }
 

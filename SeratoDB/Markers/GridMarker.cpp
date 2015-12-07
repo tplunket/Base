@@ -13,7 +13,7 @@
 #include "Markers/GridMarker.hpp"
 #include "Markers/Internal/GridMarker.hpp"
 
-NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, GridMarker, Object);
+NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, GridMarker, Marker);
 
 namespace NxA { namespace Serato {
     #pragma mark Structures

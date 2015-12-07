@@ -141,9 +141,23 @@ const String& Crate::name(void) const
     return internal->name;
 }
 
+NxA::String::Pointer Crate::fullCrateName(void) const
+{
+    auto escapedName = Internal::Crate::escapedNameFromCrateName(internal->name);
+    if (internal->parentCrate.isValid()) {
+        auto parentCratePointer = internal->parentCrate.pointer();
+        auto parentFullCrateName = parentCratePointer->fullCrateName();
+        if (parentFullCrateName->length()) {
+            return NxA::String::stringWithFormat("%s%%%%%s", parentFullCrateName->toUTF8(), escapedName->toUTF8());
+        }
+    }
+
+    return NxA::String::stringWith(escapedName);
+}
+
 void Crate::addFullCrateNameWithPrefixForCratesOnVolumeAndRecurseToChildren(String& destination, const char* prefix, const String& volumePath) const
 {
-    auto fullCrateName = internal->fullCrateName();
+    auto fullCrateName = this->fullCrateName();
     if (fullCrateName->length()) {
         count volumePathIndex = internal->indexOfVolumePath(volumePath);
         if (volumePathIndex != internal->volumePaths->length()) {
@@ -274,7 +288,7 @@ void Crate::readFromFolderInVolume(const String& seratoFolderPath, const String&
     auto trackEntries = Serato::TrackEntry::Array::array();
 
     try {
-        auto filePath = Internal::Crate::crateFilePathForFullCrateNameInSeratoFolder(internal->fullCrateName(), seratoFolderPath);
+        auto filePath = Internal::Crate::crateFilePathForFullCrateNameInSeratoFolder(this->fullCrateName(), seratoFolderPath);
 
         auto crateFileData = File::readFileAt(filePath);
         auto tags = TagFactory::parseTagsAt(crateFileData->data(), crateFileData->size());
@@ -364,7 +378,7 @@ void Crate::saveIfOnVolumeAndRecurseToChildren(const String& volumePath, const S
                 tag->addTo(outputData);
             }
 
-            internal->saveDataToCrateFileInSeratoFolder(outputData, seratoFolderPath);
+            internal->saveDataToCrateFileInSeratoFolder(outputData, seratoFolderPath, this->fullCrateName());
 
             break;
         }
@@ -405,5 +419,5 @@ Crate::Array::Pointer Crate::removeAndReturnChildrenCrates(void)
 
 String::Pointer Crate::description(void) const
 {
-    return String::stringWithFormat("Crate with name '%s' at %08lx", internal->fullCrateName()->toUTF8(), (long)this);
+    return String::stringWithFormat("Crate with name '%s' at %08lx", this->fullCrateName()->toUTF8(), (long)this);
 }

@@ -117,20 +117,6 @@ NxA::String::Pointer Crate::fullCrateNameFromFilename(const String& fileName)
 
 #pragma mark Instance Methods
 
-NxA::String::Pointer Crate::fullCrateName(void)
-{
-    auto escapedName = Internal::Crate::escapedNameFromCrateName(this->name);
-    if (this->parentCrate.isValid()) {
-        auto parentCratePointer = this->parentCrate.pointer();
-        auto parentFullCrateName = parentCratePointer->internal->fullCrateName();
-        if (parentFullCrateName->length()) {
-            return NxA::String::stringWithFormat("%s%%%%%s", parentFullCrateName->toUTF8(), escapedName->toUTF8());
-        }
-    }
-
-    return NxA::String::stringWith(escapedName);
-}
-
 NxA::count Crate::indexOfVolumePath(const String& volumePath)
 {
     NXA_ASSERT_TRUE(volumePath.length() != 0);
@@ -168,7 +154,7 @@ void Crate::markCratesAsModified(void)
     }
 }
 
-void Crate::saveDataToCrateFileInSeratoFolder(const Blob& data, const String& seratoFolderPath)
+void Crate::saveDataToCrateFileInSeratoFolder(const Blob& data, const String& seratoFolderPath, const String& fullCrateName)
 {
     try {
         Serato::Database::createSeratoFolderIfDoesNotExists(seratoFolderPath);
@@ -178,7 +164,7 @@ void Crate::saveDataToCrateFileInSeratoFolder(const Blob& data, const String& se
             File::createDirectoryAt(cratesFolderPath);
         }
 
-        auto crateFilePath = Internal::Crate::crateFilePathForFullCrateNameInSeratoFolder(this->fullCrateName(), seratoFolderPath);
+        auto crateFilePath = Internal::Crate::crateFilePathForFullCrateNameInSeratoFolder(fullCrateName, seratoFolderPath);
         File::writeBlobToFileAt(data, crateFilePath);
     }
     catch (FileError& e) {

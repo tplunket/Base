@@ -63,13 +63,11 @@ namespace NxA { namespace Serato { namespace Internal {
         Serato::Tag::ArrayOfConst::Array::Pointer otherTagsPerPath;
 
         #pragma mark Instance Methods
-        String::Pointer fullCrateName(void);
-
         NxA::count indexOfVolumePath(const String& volumePath);
         NxA::count indexOfVolumePathAndAddIfNotPresent(const String& volumePath);
 
         void markCratesAsModified(void);
 
-        void saveDataToCrateFileInSeratoFolder(const Blob& data, const String& seratoFolderPath);
+        void saveDataToCrateFileInSeratoFolder(const Blob& data, const String& seratoFolderPath, const String& fullCrateName);
     };
 } } }

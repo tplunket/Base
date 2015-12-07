@@ -13,7 +13,7 @@
 #include "Markers/LoopMarker.hpp"
 #include "Markers/Internal/LoopMarker.hpp"
 
-NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, LoopMarker, Object);
+NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, LoopMarker, Marker);
 
 namespace NxA { namespace Serato {
     #pragma mark Structures

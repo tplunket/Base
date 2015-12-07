@@ -13,11 +13,12 @@
 #pragma once
 
 #include <Base/Base.hpp>
+#include "Markers/Marker.hpp"
 
 namespace NxA { namespace Serato {
     NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(CueMarker);
 
-    class CueMarker : public Object {
+    class CueMarker : public Marker {
         NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_CLASS(NxA::Serato, CueMarker);
 
     public:

@@ -21,25 +21,13 @@
 
 #pragma once
 
-#include "Markers/LoopMarker.hpp"
-#include "Markers/Internal/Marker.hpp"
+#include "Markers/Marker.hpp"
 
 #include <Base/Base.hpp>
+#include <Base/Internal/Object.hpp>
 
 namespace NxA { namespace Serato { namespace Internal {
-    struct LoopMarker : public NxA::Serato::Internal::Marker {
-        NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, LoopMarker);
-
-        #pragma mark Instance Variable
-        uinteger32 startPositionInMilliseconds;
-        uinteger32 endPositionInMilliseconds;
-
-        uinteger16 index;
-
-        String::PointerToConst label;
-
-        byte colorRedComponent;
-        byte colorGreenComponent;
-        byte colorBlueComponent;
+    struct Marker : public NxA::Internal::Object {
+        NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, Marker);
     };
 } } }

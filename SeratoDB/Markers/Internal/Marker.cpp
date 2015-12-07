@@ -19,27 +19,10 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#pragma once
-
-#include "Markers/LoopMarker.hpp"
 #include "Markers/Internal/Marker.hpp"
 
-#include <Base/Base.hpp>
+using namespace NxA::Serato::Internal;
 
-namespace NxA { namespace Serato { namespace Internal {
-    struct LoopMarker : public NxA::Serato::Internal::Marker {
-        NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, LoopMarker);
+#pragma mark Constructors & Destructors
 
-        #pragma mark Instance Variable
-        uinteger32 startPositionInMilliseconds;
-        uinteger32 endPositionInMilliseconds;
-
-        uinteger16 index;
-
-        String::PointerToConst label;
-
-        byte colorRedComponent;
-        byte colorGreenComponent;
-        byte colorBlueComponent;
-    };
-} } }
+Marker::Marker() {}

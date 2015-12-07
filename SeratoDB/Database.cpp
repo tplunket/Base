@@ -264,9 +264,9 @@ void Database::saveIfModifiedAndMarkAsModifiedOn(timestamp modificationTimesSinc
                 
                 auto databaseFilePath = Database::databaseFilePathForSeratoFolder(seratoFolderPath);
                 File::writeBlobToFileAt(outputData, databaseFilePath);
-
-                Internal::Database::setDatabaseFilesInSeratoFolderAsModifedOnDateInSecondsSince1970(seratoFolderPath, modificationTimesSince1970);
             }
+
+            Internal::Database::setDatabaseFilesInSeratoFolderAsModifedOnDateInSecondsSince1970(seratoFolderPath, modificationTimesSince1970);
         }
     }
     catch (FileError& e) {

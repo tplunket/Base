@@ -520,3 +520,12 @@ void Blob::append(const character other)
 {
     this->insert(this->end(), 1, other);
 }
+
+void Blob::padToAlignment(integer32 alignment)
+{
+    count paddingSize = (((this->size() + alignment - 1) / alignment) * alignment) - this->size();
+    if (paddingSize > 0)
+    {
+        this->append(Blob::blobWithCapacity(paddingSize));
+    }
+}

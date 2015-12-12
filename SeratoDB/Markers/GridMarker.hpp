@@ -51,6 +51,6 @@ namespace NxA { namespace Serato {
         String::Pointer beatsPerMinuteAsString(void) const;
 
         #pragma mark Overidden Object Instance Methods
-        virtual NxA::String::Pointer description(void) const;
+        virtual NxA::String::Pointer description(void) const override;
     };
 } }

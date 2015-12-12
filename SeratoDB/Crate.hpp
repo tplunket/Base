@@ -87,6 +87,6 @@ namespace NxA { namespace Serato {
         Crate::Array::Pointer removeAndReturnChildrenCrates(void);
 
         #pragma mark Overridden Object Instance Methods
-        virtual String::Pointer description(void) const;
+        virtual String::Pointer description(void) const override;
     };
 } }

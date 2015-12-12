@@ -42,7 +42,7 @@ namespace NxA { namespace Serato {
         static ObjectTag::Pointer tagWithIdentifierAndValue(uinteger32 identifier, const Tag::Array& content);
 
         #pragma mark Operators
-        bool operator==(const ObjectTag& other) const;
+        virtual bool operator==(const ObjectTag& other) const;
 
         #pragma mark Instance Methods
 #if NXA_PRINT_TAG_DEBUG_INFO
@@ -59,6 +59,8 @@ namespace NxA { namespace Serato {
         count numberOfSubTags(void) const;
 
         void addInSeratoTrackOrderTo(Blob& destination) const;
-        void addTo(Blob& destination) const;
+
+        #pragma mark Overriden Tag Methods
+        virtual void addTo(Blob& destination) const override;
     };
 } }

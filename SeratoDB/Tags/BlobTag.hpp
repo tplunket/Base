@@ -38,12 +38,13 @@ namespace NxA { namespace Serato {
         static BlobTag::Pointer tagWithIdentifierAndValue(uint32_t identifier, const Blob& value);
 
         #pragma mark Operators
-        bool operator==(const BlobTag& other) const;
+        virtual bool operator==(const BlobTag& other) const;
 
         #pragma mark Instance Methods
         const Blob& value(void) const;
         void setValue(const Blob& newValue);
 
-        void addTo(Blob& destination) const;
+        #pragma mark Overriden Tag Methods
+        virtual void addTo(Blob& destination) const override;
     };
 } }

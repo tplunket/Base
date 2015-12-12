@@ -26,6 +26,9 @@
 
 #include <iostream>
 #include <fstream>
+#include <string>
+#include <errno.h>
+#include <dirent.h>
 
 using namespace NxA;
 using namespace std;
@@ -34,32 +37,40 @@ using namespace std;
 
 Blob::Pointer File::readFileAt(const String& path)
 {
+    byte* fileData = nullptr;
+
     count fileSize = File::sizeOfFileAt(path);
-    if (fileSize) {
-        byte* fileData = new byte[fileSize];
-        if (fileData) {
-            fstream file(path.toUTF8(), ios::in | ios::binary);
-            file.read(reinterpret_cast<char*>(fileData), fileSize);
-
-            if (file.rdstate() & std::ifstream::failbit) {
-                file.close();
-                throw FileError::exceptionWith("Error reading file at '%s'.", path.toUTF8());
-            }
-            
-            file.close();
-
-            auto result = Blob::blobWithMemoryAndSize(fileData, fileSize);
-            delete[] fileData;
-
-            return result;
-        }
+    if (!fileSize) {
+        return Blob::blob();
     }
 
-    return Blob::blob();
+    fileData = new byte[fileSize];
+    NXA_SCOPE_EXIT(fileData) {
+        delete[] fileData;
+    } NXA_SCOPE_EXIT_END
+
+    if (!fileData) {
+        throw FileError::exceptionWith("Error reading file at '%s'.", path.toUTF8());
+    }
+
+    fstream file(path.toUTF8(), ios::in | ios::binary);
+    file.read(reinterpret_cast<char*>(fileData), fileSize);
+    NXA_SCOPE_EXIT(&file) {
+        file.close();
+    } NXA_SCOPE_EXIT_END
+
+    if (file.rdstate() & std::ifstream::failbit) {
+        throw FileError::exceptionWith("Error reading file at '%s'.", path.toUTF8());
+    }
+
+    auto result = Blob::blobWithMemoryAndSize(fileData, fileSize);
+    return result;
 }
 
 void File::writeBlobToFileAt(const Blob& content, const String& path)
 {
+    NXA_ASSERT_TRUE(content.size() != 0);
+
     fstream file(path.toUTF8(), ios::out | ios::binary);
     file.write(reinterpret_cast<const char *>(content.data()), content.size());
 
@@ -100,7 +111,24 @@ String::Pointer File::joinPaths(const String& first,
 String::Pointer File::removePrefixFromPath(const String& prefix,
                                            const String& path)
 {
-    count lengthToCrop = prefix.length();
+    auto fullPrefix = String::stringWith(prefix);
+
+    const character *seperator;
+    if (Platform::platform == Platform::Windows) {
+        seperator = "\\";
+    }
+    else {
+        seperator = "/";
+    }
+
+    if (!fullPrefix->hasPostfix(seperator)) {
+        fullPrefix->append(seperator);
+    }
+
+
+    NXA_ASSERT_TRUE(path.hasPrefix(fullPrefix));
+
+    count lengthToCrop = fullPrefix->length();
     return path.subString(lengthToCrop);
 }
 
@@ -130,6 +158,26 @@ void File::createDirectoryAt(const String& path)
     } catch (...) {
         throw FileError::exceptionWith("Error creating directory at '%s'.", path.toUTF8());
     }
+}
+
+String::Array::Pointer File::pathsForFilesInDirectory(const String& path)
+{
+    auto pathsFound = String::Array::array();
+
+    if (File::directoryExistsAt(path)) {
+        boost::filesystem::path boostPath(path.toUTF8());
+        boost::filesystem::directory_iterator end_iterator;
+
+        // cycle through the directory
+        for (boost::filesystem::directory_iterator iterator(boostPath); iterator != end_iterator; ++iterator) {
+            auto& pathFound = iterator->path();
+            if (boost::filesystem::is_regular_file(pathFound)){
+                pathsFound->append(String::stringWith(pathFound.c_str()));
+            }
+        }
+    }
+
+    return pathsFound;
 }
 
 timestamp File::modificationDateInSecondsSince1970ForFile(const String& path)

@@ -47,9 +47,11 @@ namespace NxA { namespace Serato {
         byte colorGreenComponent(void) const;
         byte colorBlueComponent(void) const;
 
-        void addMarkerV1TagTo(Blob& data) const;
         void addMarkerV2TagTo(Blob& data) const;
         
-        static void addEmptyMarkerV1TagTo(Blob& data);
+        void addRawMarkerV1TagTo(Blob& data) const;
+        void addEncodedMarkerV1TagTo(Blob& data) const;
+        static void addEmptyRawMarkerV1TagTo(Blob& data);
+        static void addEmptyEncodedMarkerV1TagTo(Blob& data);
     };
 } }

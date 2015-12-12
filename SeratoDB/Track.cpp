@@ -9,6 +9,16 @@
 //  please refer to the modified MIT license provided with this library,
 //  or email licensing@serato.com.
 //
+//  The above copyright notice and this permission notice shall be included in all
+//  copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+//  INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+//  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+//  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+//  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+//  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
 
 #include "SeratoDB/Track.hpp"
 #include "SeratoDB/Internal/Track.hpp"
@@ -25,12 +35,12 @@ using namespace NxA::Serato;
 
 #pragma mark Factory Methods
 
-Track::Pointer Track::trackWithTagOnVolume(ObjectTag& trackTag, const String& locatedOnVolumePath)
+Track::Pointer Track::trackWithTagLocatedOnVolume(ObjectTag& trackTag, const String& volumePath)
 {
-    auto internalObject = Internal::Track::Pointer(std::make_shared<Internal::Track>(trackTag, locatedOnVolumePath));
+    auto internalObject = Internal::Track::Pointer(std::make_shared<Internal::Track>(trackTag, volumePath));
     auto newTrack = Track::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
 
-#if NXA_PRINT_DEBUG_INFO
+#if NXA_PRINT_TRACK_DEBUG_INFO
     printf("Reading track ----------------------------------------\n");
     Track::debugPrint(*newTrack);
 #endif
@@ -38,15 +48,15 @@ Track::Pointer Track::trackWithTagOnVolume(ObjectTag& trackTag, const String& lo
     return newTrack;
 }
 
-Track::Pointer Track::trackWithFileAtOnVolume(const String& trackFilePath, const String& locatedOnVolumePath)
+Track::Pointer Track::trackWithFilePathLocatedOnVolume(const String& trackFilePath, const String& volumePath)
 {
-    auto relativePath = File::removePrefixFromPath(String::stringWith(locatedOnVolumePath),
+    auto relativePath = File::removePrefixFromPath(String::stringWith(volumePath),
                                                    String::stringWith(trackFilePath));
     auto tags = Tag::Array::array();
     tags->append(Tag::Pointer::dynamicCastFrom(PathTag::tagWithIdentifierAndValue(trackFilePathTagIdentifier, relativePath)));
 
     auto trackTag = ObjectTag::tagWithIdentifierAndValue(trackObjectTagIdentifier, tags);
-    auto internalObject = Internal::Track::Pointer(std::make_shared<Internal::Track>(trackTag, locatedOnVolumePath));
+    auto internalObject = Internal::Track::Pointer(std::make_shared<Internal::Track>(trackTag, volumePath));
 
     auto newTrack = Track::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
     newTrack->internal->setBooleanForSubTagForIdentifier(false, trackBeatGridIsLockedTagIdentifier);
@@ -104,7 +114,7 @@ Track::Pointer Track::trackWithFileAtOnVolume(const String& trackFilePath, const
 
 #pragma mark Class Methods
 
-#if NXA_PRINT_DEBUG_INFO
+#if NXA_PRINT_TRACK_DEBUG_INFO
 void Track::debugPrintString(const String& text, const String& name)
 {
     printf("%s '%s'\n", name.toUTF8(), text.toUTF8());
@@ -123,7 +133,9 @@ void Track::debugPrintDate(timestamp value, const String& name)
 
 void Track::debugPrint(const Serato::Track& track)
 {
+#if NXA_PRINT_TAG_DEBUG_INFO
     track.internal->trackTag->debugPrint();
+#endif
 
     Track::debugPrintUint(static_cast<uinteger32>(track.size()), String::stringWith("size"));
     Track::debugPrintDate(track.dateModifiedInSecondsSinceJanuary1st1970(), String::stringWith("datemodified"));
@@ -149,53 +161,22 @@ void Track::debugPrint(const Serato::Track& track)
 }
 #endif
 
-#pragma mark Operators
-
-bool Track::operator==(const Track& other) const
-{
-    NXA_ALOG("Trying to test track equality.");
-    
-    if (this == &other) {
-        return true;
-    }
-    else if (*this->trackFilePath() != *other.trackFilePath()) {
-        return false;
-    }
-
-    NXA_ASSERT_TRUE(this->title() == other.title() &&
-                    this->artist() == other.artist() &&
-                    this->album() == other.album() &&
-                    this->genre() == other.genre() &&
-                    this->comments() == other.comments() &&
-                    this->grouping() == other.grouping() &&
-                    this->remixer() == other.remixer() &&
-                    this->recordLabel() == other.recordLabel() &&
-                    this->composer() == other.composer() &&
-                    this->key() == other.key() &&
-                    this->size() == other.size() &&
-                    this->length() == other.length() &&
-                    this->bitRate() == other.bitRate() &&
-                    this->sampleRate() == other.sampleRate() &&
-                    this->bpm() == other.bpm() &&
-                    this->year() == other.year() &&
-                    this->trackNumber() == other.trackNumber() &&
-                    this->discNumber() == other.discNumber() &&
-                    this->dateModifiedInSecondsSinceJanuary1st1970() == other.dateModifiedInSecondsSinceJanuary1st1970() &&
-                    this->dateAddedInSecondsSinceJanuary1st1970() == other.dateAddedInSecondsSinceJanuary1st1970());
-
-    return true;
-}
-
 #pragma mark Instance Methods
 
 String::Pointer Track::trackFilePath(void) const
 {
-    return internal->trackFilePath();
+    auto& pathFromVolumePath = internal->pathForSubTagForIdentifier(trackFilePathTagIdentifier);
+    return File::joinPaths(internal->volumePath, pathFromVolumePath);
+}
+
+const String& Track::volumePath(void) const
+{
+    return *(internal->volumePath);
 }
 
 timestamp Track::trackFileModificationDateInSecondsSince1970(void) const
 {
-    auto filePath = internal->trackFilePath();
+    auto filePath = this->trackFilePath();
     return File::modificationDateInSecondsSince1970ForFile(*filePath);
 }
 

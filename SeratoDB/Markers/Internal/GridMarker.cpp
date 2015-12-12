@@ -1,12 +1,13 @@
 //
 //  Copyright (c) 2015 Next Audio Labs, LLC. All rights reserved.
 //
-//  Permission is hereby granted, free of charge, to any person obtaining a copy of
-//  this software and associated documentation files (the "Software"), to deal in the
-//  Software without restriction, including without limitation the rights to use, copy,
-//  modify, merge, publish, distribute, sublicense, and/or sell copies of the Software,
-//  and to permit persons to whom the Software is furnished to do so, subject to the
-//  following conditions:
+//  This file contains confidential and proprietary information of Serato
+//  Inc. LLP ("Serato"). No use is permitted without express written
+//  permission of Serato. If you are not a party to a Confidentiality/
+//  Non-Disclosure Agreement with Serato, please immediately delete this
+//  file as well as all copies in your possession. For further information,
+//  please refer to the modified MIT license provided with this library,
+//  or email licensing@serato.com.
 //
 //  The above copyright notice and this permission notice shall be included in all
 //  copies or substantial portions of the Software.
@@ -26,4 +27,29 @@ using namespace NxA::Serato::Internal;
 #pragma mark Constructors & Destructors
 
 GridMarker::GridMarker() : positionInSeconds(0.0f),
-                           beatsPerMinute(0.0f) { }
+                           beatsPerMinute("0.0") { }
+
+#pragma mark Class Methods
+
+NxA::count GridMarker::actualNumberOfBeatsIfSupported(const decimal3& numberOfBeats)
+{
+    integer64 integerPart = numberOfBeats.getUnbiased();
+    integer64 decimalPart = integerPart % 1000;
+
+    if (decimalPart > 995) {
+        integerPart += 10;
+    }
+    else if (decimalPart >= 5) {
+        return 0;
+    }
+
+    integerPart /= 1000;
+
+    // -- Serato grid marker need to be on a first downbeat.
+    if (integerPart % 4) {
+        return 0;
+    }
+    else {
+        return integerPart;
+    }
+}

@@ -9,6 +9,16 @@
 //  please refer to the modified MIT license provided with this library,
 //  or email licensing@serato.com.
 //
+//  The above copyright notice and this permission notice shall be included in all
+//  copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+//  INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+//  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+//  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+//  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+//  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
 
 #pragma once
 
@@ -26,11 +36,11 @@ namespace NxA { namespace Serato {
 
     public:
         #pragma mark Factory Methods
-        static Track::Pointer trackWithTagOnVolume(ObjectTag& trackTag, const String& locatedOnVolumePath);
-        static Track::Pointer trackWithFileAtOnVolume(const String& trackFilePath, const String& locatedOnVolumePath);
+        static Track::Pointer trackWithTagLocatedOnVolume(ObjectTag& trackTag, const String& volumePath);
+        static Track::Pointer trackWithFilePathLocatedOnVolume(const String& trackFilePath, const String& volumePath);
 
         #pragma mark Class Methods
-#if NXA_PRINT_DEBUG_INFO
+#if NXA_PRINT_TRACK_DEBUG_INFO
         static void debugPrintString(const String& text, const String& name);
         static void debugPrintUint(uinteger32 value, const String& name);
         static void debugPrintTimeFromMilliseconds(uinteger32 value, const String& name);
@@ -38,11 +48,9 @@ namespace NxA { namespace Serato {
         static void debugPrint(const Serato::Track& track);
 #endif
 
-        #pragma mark Operators
-        bool operator==(const Track& other) const;
-
         #pragma mark Instance Methods
         String::Pointer trackFilePath(void) const;
+        const String& volumePath(void) const;
         timestamp trackFileModificationDateInSecondsSince1970(void) const;
 
         const String& title(void) const;

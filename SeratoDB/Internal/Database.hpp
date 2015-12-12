@@ -1,12 +1,13 @@
 //
 //  Copyright (c) 2015 Next Audio Labs, LLC. All rights reserved.
 //
-//  Permission is hereby granted, free of charge, to any person obtaining a copy of
-//  this software and associated documentation files (the "Software"), to deal in the
-//  Software without restriction, including without limitation the rights to use, copy,
-//  modify, merge, publish, distribute, sublicense, and/or sell copies of the Software,
-//  and to permit persons to whom the Software is furnished to do so, subject to the
-//  following conditions:
+//  This file contains confidential and proprietary information of Serato
+//  Inc. LLP ("Serato"). No use is permitted without express written
+//  permission of Serato. If you are not a party to a Confidentiality/
+//  Non-Disclosure Agreement with Serato, please immediately delete this
+//  file as well as all copies in your possession. For further information,
+//  please refer to the modified MIT license provided with this library,
+//  or email licensing@serato.com.
 //
 //  The above copyright notice and this permission notice shall be included in all
 //  copies or substantial portions of the Software.
@@ -24,7 +25,6 @@
 #include "SeratoDB/Database.hpp"
 #include "SeratoDB/Track.hpp"
 #include "SeratoDB/Crate.hpp"
-#include "SeratoDB/CrateOrderFile.hpp"
 #include "Tags/Tag.hpp"
 #include "Tags/ObjectTag.hpp"
 
@@ -36,11 +36,27 @@ namespace NxA { namespace Serato { namespace Internal {
         NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTORS_FOR(NxA::Serato, Database);
 
         #pragma mark Constructors & Destructors
-        Database(const String& path,
-                 const String& volume,
-                 Serato::CrateOrderFile& usingCrateOrderFile);
+        Database(const String& pathForLocalSeratoFolder,
+                 const String::ArrayOfConst& pathsForExternalSeratoFolders);
 
         #pragma mark Class Methods
+        static String::Pointer pathForCrateOrderFileInSeratoFolder(const String& seratoFolderPath);
+
+        static void addCratesFoundInSeratoFolderOnVolumeToRootCrate(const String& seratoFolderPath,
+                                                                    const String& volumePath,
+                                                                    Serato::Crate& rootCrate,
+                                                                    String::ArrayOfConst& SmartCrateNames);
+
+        static void saveContentOfRootCrateIfModifiedAndOnVolumeAndSmartCrateNamesToSeratoFolder(const Serato::Crate& rootCrate,
+                                                                                                const String& volumePath,
+                                                                                                const String::ArrayOfConst& smartCrateNames,
+                                                                                                const String& seratoFolderPath);
+
+        static void setDatabaseFilesInSeratoFolderAsModifedOnDateInSecondsSince1970(const String& folderPath, timestamp dateModified);
+
+        static void addCratesNamesAtTheStartOfUnlessAlreadyThere(String::ArrayOfConst& cratesToAddTo,
+                                                                 const String::ArrayOfConst& cratesToAdd);
+
 #if NXA_PRINT_DEBUG_INFO
         static void debugListCrate(Serato::Crate& crate,
                                    const String& spacing);
@@ -50,20 +66,22 @@ namespace NxA { namespace Serato { namespace Internal {
         static const char* databaseFileCurrentVersionString;
 
         #pragma mark Instance Variables
-        String::PointerToConst databaseFilePath;
-        String::PointerToConst databaseVolume;
+        Serato::Crate::Pointer rootCrate;
         Serato::Track::Array::Pointer tracks;
-        Serato::Tag::ArrayOfConst::Pointer otherTags;
 
-        String::Array::Pointer crateFilesToDelete;
-
-        Serato::CrateOrderFile::Pointer crateOrderFile;
+        String::ArrayOfConst::Pointer pathsForSeratoDirectories;
+        String::ArrayOfConst::Pointer volumePathsPerPath;
+        Serato::Tag::ArrayOfConst::Array::Pointer otherTagsPerPath;
+        String::ArrayOfConst::Array::Pointer smartCrateNamesPerPath;
 
         boolean databaseIsValid;
 
         #pragma mark Instance Methods
-        void parseDatabaseFile(void);
-        void storeTrackTag(Serato::ObjectTag& tag);
-        void storeOtherTag(const Serato::Tag& tag);
+        Serato::Tag::ArrayOfConst::Pointer parseDatabaseFileAtLocatedOnVolumeAndReturnOtherTags(const String& databasePath,
+                                                                                                const String& volumePath);
+        void parseAnyDatabaseFilesIn(const String& pathForLocalSeratoFolder,
+                                     const String::ArrayOfConst& pathsForExternalSeratoFolders);
+
+        void storeTrackTagLocatedOnVolume(Serato::ObjectTag& tag, const String& volumePath);
     };
 } } }

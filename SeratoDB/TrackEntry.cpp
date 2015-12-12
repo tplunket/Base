@@ -9,6 +9,16 @@
 //  please refer to the modified MIT license provided with this library,
 //  or email licensing@serato.com.
 //
+//  The above copyright notice and this permission notice shall be included in all
+//  copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+//  INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+//  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+//  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+//  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+//  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
 
 #include "SeratoDB/TrackEntry.hpp"
 #include "SeratoDB/Internal/TrackEntry.hpp"
@@ -26,6 +36,8 @@ using namespace NxA::Serato;
 
 TrackEntry::Pointer TrackEntry::entryWithTagOnVolume(const ObjectTag& tag, const String& volumePath)
 {
+    NXA_ASSERT_TRUE(volumePath.length() != 0);
+
     auto internalObject = Internal::TrackEntry::Pointer(std::make_shared<Internal::TrackEntry>(tag, volumePath));
     auto newTrackEntry = TrackEntry::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
     return newTrackEntry;
@@ -33,6 +45,9 @@ TrackEntry::Pointer TrackEntry::entryWithTagOnVolume(const ObjectTag& tag, const
 
 TrackEntry::Pointer TrackEntry::entryWithTrackFileAtOnVolume(const String& path, const String& volumePath)
 {
+    NXA_ASSERT_TRUE(path.length() != 0);
+    NXA_ASSERT_TRUE(volumePath.length() != 0);
+
     auto entryPath = File::removePrefixFromPath(volumePath, path);
 
     auto tags = Tag::Array::array();
@@ -49,13 +64,18 @@ String::Pointer TrackEntry::trackFilePath(void) const
     auto& trackObjectTag = dynamic_cast<const ObjectTag&>(*internal->trackEntryTag);
     if (trackObjectTag.hasSubTagForIdentifier(trackEntryPathTagIdentifier)) {
         auto& pathTag = dynamic_cast<const PathTag&>(trackObjectTag.subTagForIdentifier(trackEntryPathTagIdentifier));
-        auto& pathFromRootFolder = pathTag.value();
+        auto& pathFromVolumePath = pathTag.value();
 
-        auto trackFilePath = File::joinPaths(internal->rootVolumePath, pathFromRootFolder);
+        auto trackFilePath = File::joinPaths(internal->volumePath, pathFromVolumePath);
         return trackFilePath;
     }
 
     return String::string();
+}
+
+const String& TrackEntry::volumePath(void) const
+{
+    return *(internal->volumePath);
 }
 
 boolean TrackEntry::hasParentCrate(void) const
@@ -66,24 +86,6 @@ boolean TrackEntry::hasParentCrate(void) const
 Crate& TrackEntry::parentCrate(void)
 {
     return *(internal->parentCrate.pointer());
-}
-
-void TrackEntry::setParentCrate(Crate& crate)
-{
-    NXA_ASSERT_FALSE(this->hasParentCrate());
-
-    internal->parentCrate = Crate::WeakPointer(crate.pointer());
-
-    crate.addTrackEntry(*this);
-}
-
-void TrackEntry::removeFromParentCrate(void)
-{
-    Crate::Pointer parentCrate = this->parentCrate().pointer();
-
-    internal->parentCrate.release();
-
-    parentCrate->removeTrackEntry(*this);
 }
 
 const Tag& TrackEntry::tagForEntry(void) const

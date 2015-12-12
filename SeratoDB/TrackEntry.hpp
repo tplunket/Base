@@ -9,6 +9,16 @@
 //  please refer to the modified MIT license provided with this library,
 //  or email licensing@serato.com.
 //
+//  The above copyright notice and this permission notice shall be included in all
+//  copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+//  INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+//  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+//  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+//  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+//  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
 
 #pragma once
 
@@ -26,6 +36,8 @@ namespace NxA { namespace Serato {
         NXA_GENERATED_OPERATOR_EQUAL_DECLARATION_IN_NAMESPACE_FOR_CLASS(NxA::Serato, TrackEntry);
         NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_CLASS(NxA::Serato, TrackEntry);
 
+        friend Crate;
+
     public:
         #pragma mark Factory Methods
         static TrackEntry::Pointer entryWithTagOnVolume(const ObjectTag& tag, const String& volumePath);
@@ -33,13 +45,11 @@ namespace NxA { namespace Serato {
 
         #pragma mark Instance Methods
         String::Pointer trackFilePath(void) const;
+        const String& volumePath(void) const;
 
         boolean hasParentCrate(void) const;
         Crate& parentCrate(void);
         
-        void setParentCrate(Crate& crate);
-        void removeFromParentCrate(void);
-
         const Tag& tagForEntry(void) const;
     };
 } }

@@ -9,8 +9,19 @@
 //  please refer to the modified MIT license provided with this library,
 //  or email licensing@serato.com.
 //
+//  The above copyright notice and this permission notice shall be included in all
+//  copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+//  INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+//  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+//  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+//  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+//  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
 
 #include "Markers/LoopMarker.hpp"
+#include "Markers/CueMarker.hpp"
 #include "Markers/Internal/LoopMarker.hpp"
 
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, LoopMarker, Object);
@@ -99,9 +110,9 @@ LoopMarker::Pointer LoopMarker::markerWithMemoryAt(const byte* id3TagStart)
     NXA_ASSERT_TRUE(*String::stringWith(reinterpret_cast<const character*>(tagStruct->tag)) == "LOOP");
 
     return LoopMarker::markerWithLabelStartEndPositionsIndexAndColor(String::stringWith(reinterpret_cast<const character*>(tagStruct->label)),
-                                                                Platform::bigEndianUInteger32ValueAt(tagStruct->position),
-                                                                Platform::bigEndianUInteger32ValueAt(tagStruct->loopPosition),
-                                                                Platform::bigEndianUInteger16ValueAt(tagStruct->index),
+                                                                     Platform::bigEndianUInteger32ValueAt(tagStruct->position),
+                                                                     Platform::bigEndianUInteger32ValueAt(tagStruct->loopPosition),
+                                                                     Platform::bigEndianUInteger16ValueAt(tagStruct->index),
                                                                      tagStruct->color[1],
                                                                      tagStruct->color[2],
                                                                      tagStruct->color[3]);
@@ -242,4 +253,18 @@ void LoopMarker::addMarkerV2TagTo(Blob& data) const
     auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<const byte*>(&header), sizeof(SeratoLoopTagV2Struct));
     data.append(headerData);
     data.appendWithStringTermination(this->label().toUTF8());
+}
+
+#pragma mark Overriden Object Instance Methods
+
+NxA::String::Pointer LoopMarker::description(void) const
+{
+    return NxA::String::stringWithFormat("Loop Marker at %s ends at %s with index %d label '%s' and color 0x%02x 0x%02x 0x%02x.",
+                                         CueMarker::stringRepresentationForTimeInMilliseconds(this->startPositionInMilliseconds())->toUTF8(),
+                                         CueMarker::stringRepresentationForTimeInMilliseconds(this->endPositionInMilliseconds())->toUTF8(),
+                                         this->index(),
+                                         this->label().toUTF8(),
+                                         this->colorRedComponent(),
+                                         this->colorGreenComponent(),
+                                         this->colorBlueComponent());
 }

@@ -1,12 +1,13 @@
 //
 //  Copyright (c) 2015 Next Audio Labs, LLC. All rights reserved.
 //
-//  Permission is hereby granted, free of charge, to any person obtaining a copy of
-//  this software and associated documentation files (the "Software"), to deal in the
-//  Software without restriction, including without limitation the rights to use, copy,
-//  modify, merge, publish, distribute, sublicense, and/or sell copies of the Software,
-//  and to permit persons to whom the Software is furnished to do so, subject to the
-//  following conditions:
+//  This file contains confidential and proprietary information of Serato
+//  Inc. LLP ("Serato"). No use is permitted without express written
+//  permission of Serato. If you are not a party to a Confidentiality/
+//  Non-Disclosure Agreement with Serato, please immediately delete this
+//  file as well as all copies in your possession. For further information,
+//  please refer to the modified MIT license provided with this library,
+//  or email licensing@serato.com.
 //
 //  The above copyright notice and this permission notice shall be included in all
 //  copies or substantial portions of the Software.
@@ -24,6 +25,7 @@
 #include <mpegfile.h>
 #include <attachedpictureframe.h>
 #include <textidentificationframe.h>
+#include <popularimeterframe.h>
 
 // -- Generated internal implementation ommitted because this class does not use the default contructor.
 
@@ -61,8 +63,13 @@ ID3TrackFile::ID3TrackFile(const String& path, const TagLibFilePointer& newFile)
 
 boolean ID3TrackFile::isAValidGeobFrame(const TagLib::ID3v2::GeneralEncapsulatedObjectFrame* frame)
 {
-    TagLib::String frameID(reinterpret_cast<char*>(frame->frameID().data()));
-    if (frameID != "GEOB") {
+    auto frameID = frame->frameID();
+    if (frameID.size() != 4) {
+        return false;
+    }
+
+    auto frameIDData = frameID.data();
+    if ((frameIDData[0] != 'G') || (frameIDData[1] != 'E') || (frameIDData[2] != 'O') || (frameIDData[3] != 'B')) {
         return false;
     }
 
@@ -87,9 +94,11 @@ String::Pointer ID3TrackFile::stringValueForFrameNamedInTag(const character* nam
 {
     auto frameList = id3v2Tag->frameList(name);
     for (auto& frame : frameList) {
-        auto stringValue = frame->toString();
-        if (stringValue.length()) {
-            return String::stringWith(stringValue.toCString());
+        if (frame) {
+            auto stringValue = frame->toString();
+            if (stringValue.length()) {
+                return String::stringWith(stringValue.toCString());
+            }
         }
     }
 
@@ -101,10 +110,25 @@ integer ID3TrackFile::integerValueForFrameNamedInTag(const character* name, cons
     return ID3TrackFile::stringValueForFrameNamedInTag(name, id3v2Tag)->integerValue();
 }
 
+integer ID3TrackFile::ratingValueForRatingFrameInTag(const TagLib::ID3v2::Tag* id3v2Tag)
+{
+    integer rating = 0;
+
+    auto frameList = id3v2Tag->frameList(Internal::id3RatingFrameName);
+    auto frame = frameList.front();
+    if (frame) {
+        TagLib::ID3v2::PopularimeterFrame* popFrame = dynamic_cast<TagLib::ID3v2::PopularimeterFrame*>(frameList.front());
+        if (popFrame) {
+            rating = popFrame->rating();
+        }
+    }
+
+    return rating;
+}
+
 void ID3TrackFile::setStringValueForFrameNamedInTag(const String& value, const character* name, TagLib::ID3v2::Tag* id3v2Tag)
 {
     id3v2Tag->removeFrames(name);
-
     auto frame = new TagLib::ID3v2::TextIdentificationFrame(name, TagLib::String::Latin1);
     frame->setText(TagLib::StringList(TagLib::String(value.toUTF8())));
     id3v2Tag->addFrame(frame);
@@ -115,6 +139,26 @@ void ID3TrackFile::setIntegerValueForFrameNamedInTag(integer value, const charac
     ID3TrackFile::setStringValueForFrameNamedInTag(String::stringWithFormat("%ld", value), name, id3v2Tag);
 }
 
+void ID3TrackFile::setRatingValueForRatingFrameInTag(integer value, TagLib::ID3v2::Tag* id3v2Tag)
+{
+    count counter = 0;
+    auto frameList = id3v2Tag->frameList(Internal::id3RatingFrameName);
+    auto frame = frameList.front();
+    if (frame) {
+        TagLib::ID3v2::PopularimeterFrame* popFrame = dynamic_cast<TagLib::ID3v2::PopularimeterFrame*>(frameList.front());
+        if (popFrame) {
+            counter = popFrame->counter();
+        }
+    }
+
+    id3v2Tag->removeFrames(Internal::id3RatingFrameName);
+
+    auto popFrame = new TagLib::ID3v2::PopularimeterFrame();
+    popFrame->setRating(value);
+    popFrame->setCounter(counter);
+
+    id3v2Tag->addFrame(popFrame);
+}
 
 void ID3TrackFile::removeGEOBFrameNamedInTag(const String& name, TagLib::ID3v2::Tag* id3v2Tag)
 {

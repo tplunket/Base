@@ -1,12 +1,13 @@
 //
 //  Copyright (c) 2015 Next Audio Labs, LLC. All rights reserved.
 //
-//  Permission is hereby granted, free of charge, to any person obtaining a copy of
-//  this software and associated documentation files (the "Software"), to deal in the
-//  Software without restriction, including without limitation the rights to use, copy,
-//  modify, merge, publish, distribute, sublicense, and/or sell copies of the Software,
-//  and to permit persons to whom the Software is furnished to do so, subject to the
-//  following conditions:
+//  This file contains confidential and proprietary information of Serato
+//  Inc. LLP ("Serato"). No use is permitted without express written
+//  permission of Serato. If you are not a party to a Confidentiality/
+//  Non-Disclosure Agreement with Serato, please immediately delete this
+//  file as well as all copies in your possession. For further information,
+//  please refer to the modified MIT license provided with this library,
+//  or email licensing@serato.com.
 //
 //  The above copyright notice and this permission notice shall be included in all
 //  copies or substantial portions of the Software.
@@ -100,7 +101,6 @@ const byte* TrackFile::readMarkerAtAndAdvanceToNextTag(const byte* tagStart)
     }
     catch (LoopMarkerError exception) {
         // TODO: This should be a logging call instead.
-        printf("%s\n", exception.what());
     }
 
     return nextTagPositionAfterTagNamed(tagName, tagStart);
@@ -125,26 +125,16 @@ void TrackFile::readMarkersV2FromBase64String(const byte* markerV2Data, count to
     auto markerDataEnd = (const byte*)markerStruct + decodedData->size();
     auto tagStart = (const byte*)markerStruct->data;
 
-    while (*tagStart && (tagStart < markerDataEnd)) {
+    while ((tagStart < markerDataEnd) && *tagStart) {
         tagStart = this->readMarkerAtAndAdvanceToNextTag(tagStart);
     }
-}
-
-void TrackFile::addGridMarker(Serato::GridMarker& gridMarker)
-{
-    this->gridMarkers->append(gridMarker.pointer());
-    this->markersWereModified = true;
 }
 
 void TrackFile::readGridMarkersFrom(const byte* gridMarkerData)
 {
     NXA_ASSERT_FALSE(this->markersWereIgnored);
 
-
-    auto markers = Serato::GridMarker::markersWithMemoryAt(gridMarkerData);
-    for (auto& marker : *markers) {
-        this->addGridMarker(marker);
-    }
+    this->gridMarkers = Serato::GridMarker::markersWithMemoryAt(gridMarkerData);
 }
 
 String::Pointer TrackFile::base64StringFromMarkersV2(void)

@@ -1,12 +1,13 @@
 //
 //  Copyright (c) 2015 Next Audio Labs, LLC. All rights reserved.
 //
-//  Permission is hereby granted, free of charge, to any person obtaining a copy of
-//  this software and associated documentation files (the "Software"), to deal in the
-//  Software without restriction, including without limitation the rights to use, copy,
-//  modify, merge, publish, distribute, sublicense, and/or sell copies of the Software,
-//  and to permit persons to whom the Software is furnished to do so, subject to the
-//  following conditions:
+//  This file contains confidential and proprietary information of Serato
+//  Inc. LLP ("Serato"). No use is permitted without express written
+//  permission of Serato. If you are not a party to a Confidentiality/
+//  Non-Disclosure Agreement with Serato, please immediately delete this
+//  file as well as all copies in your possession. For further information,
+//  please refer to the modified MIT license provided with this library,
+//  or email licensing@serato.com.
 //
 //  The above copyright notice and this permission notice shall be included in all
 //  copies or substantial portions of the Software.
@@ -34,31 +35,39 @@ namespace NxA { namespace Serato { namespace Internal {
         NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTORS_FOR(NxA::Serato, Crate);
 
         #pragma mark Constructors & Destructors
-        Crate(const String& fullName);
+        Crate(const String& crateName);
 
         #pragma mark Class Methods
+        static String::Pointer crateNameIfValidCrateOrEmptyIfNot(const String& name);
+        static String::Pointer escapedNameFromCrateName(const String& crateName);
+        static String::Pointer crateNameFromEscapedName(const String& escapedName);
+        static String::Pointer topParentCrateNameFromFullCrateName(const String& fullCrateName);
         static String::Pointer smartCratesDirectoryPathInSeratoFolder(const String& seratoFolderPath);
-        static String::Pointer crateFilePathForCrateNameInSeratoFolder(const String& crateName,
-                                                                       const String& seratoFolderPath);
-        static String::Pointer crateFilePathForSmartCrateNameInSeratoFolder(const String& crateName,
-                                                                            const String& seratoFolderPath);
-                                                                            
+        static String::Pointer crateFilePathForFullCrateNameInSeratoFolder(const String& crateName,
+                                                                           const String& seratoFolderPath);
+        static String::Pointer crateFilePathForFullSmartCrateNameInSeratoFolder(const String& fullCrateName,
+                                                                                const String& seratoFolderPath);
+        static String::Pointer fullCrateNameFromFilename(const String& fileName);
+
         #pragma mark Instance Variables
-        String::PointerToConst crateName;
-        String::PointerToConst crateFullName;
+        String::PointerToConst name;
 
         boolean tracksWereModified;
         boolean cratesWereModified;
 
-        String::Array::Pointer crateFilePaths;
-
         Serato::Crate::WeakPointer parentCrate;
         Serato::Crate::Array::Pointer childrenCrates;
-        Serato::TrackEntry::Array::Pointer trackEntries;
 
-        Serato::Tag::ArrayOfConst::Pointer otherTags;
+        String::ArrayOfConst::Pointer volumePaths;
+        Serato::TrackEntry::Array::Array::Pointer trackEntriesPerPath;
+        Serato::Tag::ArrayOfConst::Array::Pointer otherTagsPerPath;
 
         #pragma mark Instance Methods
+        NxA::count indexOfVolumePath(const String& volumePath);
+        NxA::count indexOfVolumePathAndAddIfNotPresent(const String& volumePath);
+
         void markCratesAsModified(void);
+
+        void saveDataToCrateFileInSeratoFolder(const Blob& data, const String& seratoFolderPath, const String& fullCrateName);
     };
 } } }

@@ -30,9 +30,7 @@ namespace NxA { namespace Serato { namespace Internal {
     } MarkerV2HeaderStruct;
 
     typedef struct {
-        byte majorVersion;
-        byte minorVersion;
-        byte size[4];
+        byte markerCount[4];
         byte data[0];
     } MarkerV1HeaderStruct;
 
@@ -183,19 +181,62 @@ String::Pointer TrackFile::base64StringFromMarkersV2(void)
     return encodedData;
 }
 
-Blob::Pointer TrackFile::blobFromMarkersV1(void)
+Blob::Pointer TrackFile::rawBlobFromMarkersV1(void)
 {
     NXA_ASSERT_FALSE(this->markersWereIgnored);
 
     auto blobData = Blob::blob();
 
     MarkerV1HeaderStruct markersHeader;
-    markersHeader.majorVersion = 2;
-    markersHeader.minorVersion = 5;
-    markersHeader.size[0] = 0;
-    markersHeader.size[1] = 0;
-    markersHeader.size[2] = 0;
-    markersHeader.size[3] = 14;
+    markersHeader.markerCount[0] = 0;
+    markersHeader.markerCount[1] = 0;
+    markersHeader.markerCount[2] = 0;
+    markersHeader.markerCount[3] = 14;
+
+    auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<byte*>(&markersHeader), sizeof(MarkerV1HeaderStruct));
+    blobData->append(headerData);
+
+    // files with >5 cues are saved by serato with all cues empty in V1
+    bool noCues = (this->cueMarkers->length() > 5);
+
+    for (int i = 0; i < 5; ++i) {
+        if (i < this->cueMarkers->length() && !noCues) {
+            (*cueMarkers)[i].addRawMarkerV1TagTo(blobData);
+        }
+        else {
+            Serato::CueMarker::addEmptyRawMarkerV1TagTo(blobData);
+        }
+    }
+
+    for (int i = 0; i < 9; ++i) {
+        if (i < this->loopMarkers->length()) {
+            (*loopMarkers)[i].addRawMarkerV1TagTo(blobData);
+        }
+        else {
+            Serato::LoopMarker::addEmptyRawMarkerV1TagTo(blobData);
+        }
+    }
+
+    // -- This marks the end of tags.
+    blobData->append(0x00);
+    blobData->append(0xFF);
+    blobData->append(0xFF);
+    blobData->append(0xFF);
+
+    return blobData;
+}
+
+Blob::Pointer TrackFile::id3EncodedBlobFromMarkersV1(void)
+{
+    NXA_ASSERT_FALSE(this->markersWereIgnored);
+
+    auto blobData = Blob::blob();
+
+    MarkerV1HeaderStruct markersHeader;
+    markersHeader.markerCount[0] = 0;
+    markersHeader.markerCount[1] = 0;
+    markersHeader.markerCount[2] = 0;
+    markersHeader.markerCount[3] = 14;
 
     auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<byte*>(&markersHeader), sizeof(MarkerV1HeaderStruct));
     blobData->append(headerData);
@@ -205,19 +246,19 @@ Blob::Pointer TrackFile::blobFromMarkersV1(void)
 
     for (int i = 0; i < 5; ++i) {
         if (i < this->cueMarkers->length() && !noCues) {
-            (*cueMarkers)[i].addMarkerV1TagTo(blobData);
+            (*cueMarkers)[i].addEncodedMarkerV1TagTo(blobData);
         }
         else {
-            Serato::CueMarker::addEmptyMarkerV1TagTo(blobData);
+            Serato::CueMarker::addEmptyEncodedMarkerV1TagTo(blobData);
         }
     }
 
     for (int i = 0; i < 9; ++i) {
         if (i < this->loopMarkers->length()) {
-            (*loopMarkers)[i].addMarkerV1TagTo(blobData);
+            (*loopMarkers)[i].addEncodedMarkerV1TagTo(blobData);
         }
         else {
-            Serato::LoopMarker::addEmptyMarkerV1TagTo(blobData);
+            Serato::LoopMarker::addEmptyEncodedMarkerV1TagTo(blobData);
         }
     }
 

@@ -39,7 +39,7 @@ namespace NxA { namespace Serato { namespace Internal {
     constexpr const character* mp4MarkersV2ItemName = "----:com.serato.dj:markersv2";
     constexpr const character* mp4BeatgridItemName = "----:com.serato.dj:beatgrid";
 
-    //constexpr const character* mp4MarkersV1FrameDescription = "Serato Markers";
+    constexpr const character* mp4MarkersV1FrameDescription = "Serato Markers_";
     constexpr const character* mp4MarkersV2FrameDescription = "Serato Markers2";
     constexpr const character* mp4BeatgridFrameDescription = "Serato Beatgrid";
 } } }
@@ -159,26 +159,15 @@ void MP4TrackFile::replaceFrameNamedWithDataAndVersion(const character* frameNam
 
 void MP4TrackFile::replaceMarkersV1Item(void)
 {
-    this->mp4Tag->removeItem(mp4MarkersV1ItemName);
-    TagLib::String newString;
-    TagLib::StringList newList(newString);
-
-    TagLib::MP4::Item newItem(newList);
-    newItem.setAtomDataType(TagLib::MP4::AtomDataType::TypeUTF8);
-    NXA_ASSERT_TRUE(newItem.isValid());
-    this->mp4Tag->setItem(mp4MarkersV1ItemName, newItem);
+    auto markerData = this->rawBlobFromMarkersV1();
+    replaceFrameNamedWithDataAndVersion(mp4MarkersV1ItemName, mp4MarkersV1FrameDescription, markerData, 2, 5);
 }
 
 void MP4TrackFile::replaceMarkersV2Item(void)
 {
     auto base64String = this->base64StringFromMarkersV2();
     auto frameData = Blob::blobWithStringWithoutTerminator(base64String);
-    if (base64String->length() > 0)
-    {
-        constexpr integer paddingMulptipleOf = 256;
-        count paddingSize = (((base64String->length() + paddingMulptipleOf - 1) / paddingMulptipleOf) * paddingMulptipleOf) - base64String->length();
-        frameData->append(Blob::blobWithCapacity(paddingSize));
-    }
+    frameData->padToAlignment(256);
 
     replaceFrameNamedWithDataAndVersion(mp4MarkersV2ItemName, mp4MarkersV2FrameDescription, frameData, 1, 1);
 }

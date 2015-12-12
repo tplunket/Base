@@ -302,7 +302,7 @@ void ID3TrackFile::readMarkers(void)
 
 void ID3TrackFile::writeMarkers(void)
 {
-    ID3TrackFile::replaceMarkersV1FrameInTagWith(this->id3v2Tag, this->blobFromMarkersV1());
+    ID3TrackFile::replaceMarkersV1FrameInTagWith(this->id3v2Tag, this->id3EncodedBlobFromMarkersV1());
     ID3TrackFile::replaceMarkersV2FrameInTagWith(this->id3v2Tag, this->base64StringFromMarkersV2());
     ID3TrackFile::replaceGridMarkersFrameInTagWith(this->id3v2Tag, this->gridMarkerDataFromGridMarkers());
 }

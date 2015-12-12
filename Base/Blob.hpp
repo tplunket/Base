@@ -28,7 +28,7 @@ namespace NxA {
     class String;
 
     class Blob : public Object, private std::vector<byte> {
-        NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_BASE_CLASS(NxA, Blob);
+        NXA_GENERATED_DECLARATIONS_WITHOUT_OVERRIDE_IN_NAMESPACE_FOR_BASE_CLASS(NxA, Blob);
 
     public:
         #pragma mark Factory Methods

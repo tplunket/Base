@@ -63,8 +63,6 @@ namespace NxA {
         bool operator>(const String& other) const { return compareTo(other) > 0; }
 
         #pragma mark Instance Methods
-        virtual String::Pointer description(void) const;
-
         count length(void) const;
         boolean isEmpty(void) const
         {
@@ -96,6 +94,9 @@ namespace NxA {
         count indexOfLastOccurenceOf(const character* other) const;
 
         void replaceOccurenceOfStringWith(const character* occurence, const character* replacement);
+
+        #pragma mark Overriden Object Instance Methods
+        virtual String::Pointer description(void) const override;
     };
 
     inline bool operator==(const char* first, const String& second)

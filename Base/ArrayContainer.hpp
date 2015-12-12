@@ -33,7 +33,7 @@ namespace NxA {
     NxA::Pointer<NxA::String> descriptionOfObjectsInArray(const Object::ArrayOfConst& array, const void* originalArrayAddress);
 
     template <class T> class ArrayContainer : public Object, private std::vector<Pointer<T>> {
-        NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_BASE_CLASS(NxA, ArrayContainer<T>);
+        NXA_GENERATED_DECLARATIONS_WITHOUT_OVERRIDE_IN_NAMESPACE_FOR_BASE_CLASS(NxA, ArrayContainer<T>);
 
     public:
         using iterator = typename std::vector<NxA::Pointer<T>>::iterator;
@@ -93,7 +93,7 @@ namespace NxA {
             }
 
             for (count i = 0; i < this->length(); ++i) {
-                if ((*this)[i] != other[i]) {
+                if (!(this->ArrayContainer<T>::operator[](i).T::operator==(other.ArrayContainer<T>::operator[](i)))) {
                     return false;
                 }
             }

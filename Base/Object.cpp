@@ -35,14 +35,6 @@ uinteger32 Object::hashOfClassName(void)
     return hash;
 }
 
-#pragma mark Operators
-
-bool Object::operator==(const Object& other) const
-{
-    // -- This should be overridden with a better test.
-    return this == &other;
-}
-
 #pragma mark Instance Methods
 
 String::Pointer Object::description(void) const

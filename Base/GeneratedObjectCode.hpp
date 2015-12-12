@@ -78,7 +78,10 @@ namespace NxA {
 
 #define NXA_GENERATED_SHARED_INTERNAL_DECLARATIONS_FOR(namespace_name, class_name...) \
         NXA_GENERATED_SHARED_INTERNAL_CONSTRUCTORS_DECLARATION_FOR(namespace_name, class_name) \
-        NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTORS_FOR(namespace_name, class_name) \
+        NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTORS_FOR(namespace_name, class_name)
+
+#define NXA_GENERATED_SHARED_INTERNAL_DECLARATIONS_WITHOUT_DESTRUCTOR_FOR(namespace_name, class_name...) \
+        NXA_GENERATED_SHARED_INTERNAL_CONSTRUCTORS_DECLARATION_FOR(namespace_name, class_name)
 
 // -- Generated declarations and implementations for base objects.
 // -- Base objects are classes like String, Map, Array which do not contain an internal object
@@ -86,18 +89,51 @@ namespace NxA {
 
 #define NXA_GENERATED_SHARED_BASE_OPERATOR_EQUAL_WITH_OBJECT_DECLARATIONS_FOR(namespace_name, class_name...) \
         public: \
-            virtual bool operator==(const NxA::Object& other) const \
+            virtual bool operator==(const NxA::Object& other) const override \
             { \
                 return (this->className() == other.className()) && \
-                       this->operator==(dynamic_cast<const namespace_name::class_name&>(other)); \
+                        this->operator==(dynamic_cast<const namespace_name::class_name&>(other)); \
             } \
-            bool operator!=(const NxA::Object& other) const \
+            bool operator!=(const namespace_name::class_name& other) const \
             { \
                 return !this->operator==(other); \
             }
 
-#define NXA_GENERATED_SHARED_BASE_DECLARATIONS_FOR_PURE_VIRTUAL_CLASS(namespace_name, class_name...) \
-        NXA_GENERATED_SHARED_INTERNAL_DECLARATIONS_FOR(namespace_name, class_name) \
+#define NXA_GENERATED_SHARED_BASE_OPERATOR_EQUAL_WITHOUT_OVERRIDE_WITH_OBJECT_DECLARATIONS_FOR(namespace_name, class_name...) \
+        public: \
+            virtual bool operator==(const namespace_name::class_name& other) const \
+            { \
+                return (this->className() == other.className()) && \
+                        this->operator==(dynamic_cast<const namespace_name::class_name&>(other)); \
+            } \
+            bool operator!=(const namespace_name::class_name& other) const \
+            { \
+                return !this->operator==(other); \
+            }
+
+#define NXA_GENERATED_SHARED_CLASS_NAME_AND_HASH_FOR_PURE_VIRTUAL_CLASS(namespace_name, class_name...) \
+        public: \
+            virtual const character* className(void) const override \
+            { \
+                return namespace_name::class_name::nameOfClass(); \
+            } \
+            virtual uinteger classHash(void) const override \
+            { \
+                return hashOfClassName(); \
+            }
+
+#define NXA_GENERATED_SHARED_CLASS_NAME_AND_HASH_WITHOUT_OVERRIDE_FOR_PURE_VIRTUAL_CLASS(namespace_name, class_name...) \
+        public: \
+            virtual const character* className(void) const \
+            { \
+                return namespace_name::class_name::nameOfClass(); \
+            } \
+            virtual uinteger classHash(void) const \
+            { \
+                return hashOfClassName(); \
+            }
+
+#define NXA_GENERATED_SHARED_COMMON_BASE_DECLARATIONS_FOR_PURE_VIRTUAL_CLASS(namespace_name, class_name...) \
         public: \
             using Pointer = NxA::Pointer<namespace_name::class_name>; \
             using PointerToConst = NxA::Pointer<const namespace_name::class_name>; \
@@ -118,19 +154,22 @@ namespace NxA {
                 std::shared_ptr<const namespace_name::class_name> result = std::dynamic_pointer_cast<const namespace_name::class_name>(this->shared_from_this()); \
                 NXA_ASSERT_NOT_NULL(result.get()); \
                 return NxA::Pointer<const namespace_name::class_name>(result); \
-            } \
-            virtual const character* className(void) const \
-            { \
-                return namespace_name::class_name::nameOfClass(); \
-            } \
-            virtual uinteger classHash(void) const \
-            { \
-                return hashOfClassName(); \
-            } \
-            bool operator!=(const namespace_name::class_name& other) const \
-            { \
-                return !this->operator==(other); \
             }
+
+#define NXA_GENERATED_SHARED_BASE_DECLARATIONS_FOR_PURE_VIRTUAL_CLASS(namespace_name, class_name...) \
+        NXA_GENERATED_SHARED_INTERNAL_DECLARATIONS_FOR(namespace_name, class_name) \
+        NXA_GENERATED_SHARED_COMMON_BASE_DECLARATIONS_FOR_PURE_VIRTUAL_CLASS(namespace_name, class_name) \
+        NXA_GENERATED_SHARED_CLASS_NAME_AND_HASH_FOR_PURE_VIRTUAL_CLASS(namespace_name, class_name)
+
+#define NXA_GENERATED_SHARED_BASE_DECLARATIONS_WITHOUT_DESTRUCTOR_FOR_PURE_VIRTUAL_CLASS(namespace_name, class_name...) \
+        NXA_GENERATED_SHARED_INTERNAL_DECLARATIONS_WITHOUT_DESTRUCTOR_FOR(namespace_name, class_name) \
+        NXA_GENERATED_SHARED_COMMON_BASE_DECLARATIONS_FOR_PURE_VIRTUAL_CLASS(namespace_name, class_name) \
+        NXA_GENERATED_SHARED_CLASS_NAME_AND_HASH_FOR_PURE_VIRTUAL_CLASS(namespace_name, class_name)
+
+#define NXA_GENERATED_SHARED_BASE_DECLARATIONS_WITHOUT_OVERRIDE_FOR_PURE_VIRTUAL_CLASS(namespace_name, class_name...) \
+        NXA_GENERATED_SHARED_INTERNAL_DECLARATIONS_FOR(namespace_name, class_name) \
+        NXA_GENERATED_SHARED_COMMON_BASE_DECLARATIONS_FOR_PURE_VIRTUAL_CLASS(namespace_name, class_name) \
+        NXA_GENERATED_SHARED_CLASS_NAME_AND_HASH_WITHOUT_OVERRIDE_FOR_PURE_VIRTUAL_CLASS(namespace_name, class_name)
 
 #define NXA_GENERATED_SHARED_BASE_DECLARATIONS_FOR(namespace_name, class_name...) \
         NXA_GENERATED_SHARED_BASE_DECLARATIONS_FOR_PURE_VIRTUAL_CLASS(namespace_name, class_name) \
@@ -140,9 +179,22 @@ namespace NxA {
                 return NxA::Pointer<namespace_name::class_name>(std::make_shared<namespace_name::class_name>(namespace_name::class_name::constructor_access())); \
             }
 
+#define NXA_GENERATED_SHARED_BASE_DECLARATIONS_WITHOUT_OVERRIDE_FOR(namespace_name, class_name...) \
+        NXA_GENERATED_SHARED_BASE_DECLARATIONS_WITHOUT_OVERRIDE_FOR_PURE_VIRTUAL_CLASS(namespace_name, class_name) \
+        protected: \
+            static NxA::Pointer<class_name> makeShared(void) \
+            { \
+                return NxA::Pointer<namespace_name::class_name>(std::make_shared<namespace_name::class_name>(namespace_name::class_name::constructor_access())); \
+            }
+
 #define NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_BASE_CLASS(namespace_name, class_name...) \
         NXA_GENERATED_SHARED_BASE_DECLARATIONS_FOR(namespace_name, class_name) \
         NXA_GENERATED_SHARED_BASE_OPERATOR_EQUAL_WITH_OBJECT_DECLARATIONS_FOR(namespace_name, class_name) \
+        public: \
+            explicit class_name(const namespace_name::class_name::constructor_access&) : Object(NxA::Object::constructor_access()) { }
+
+#define NXA_GENERATED_DECLARATIONS_WITHOUT_OVERRIDE_IN_NAMESPACE_FOR_BASE_CLASS(namespace_name, class_name...) \
+        NXA_GENERATED_SHARED_BASE_DECLARATIONS_WITHOUT_OVERRIDE_FOR(namespace_name, class_name) \
         public: \
             explicit class_name(const namespace_name::class_name::constructor_access&) : Object(NxA::Object::constructor_access()) { }
 
@@ -160,6 +212,14 @@ namespace NxA {
             explicit class_name() : class_name(namespace_name::class_name::makeInternal()) { }
 
 #define NXA_ENABLE_SHARED_FROM_THIS(class_name) std::enable_shared_from_this<class_name>
+
+#define NXA_GENERATED_SHARED_OBJECT_DECLARATION_WITHOUT_DESTRUCTOR_FOR_PURE_VIRTUAL_CLASS(namespace_name, class_name...) \
+        NXA_GENERATED_SHARED_BASE_DECLARATIONS_WITHOUT_DESTRUCTOR_FOR_PURE_VIRTUAL_CLASS(namespace_name, class_name) \
+        NXA_GENERATED_SHARED_OBJECT_CONSTRUCTORS_DECLARATION_FOR(namespace_name, class_name) \
+        public: \
+            friend namespace_name::Internal::class_name; \
+        private: \
+            namespace_name::Internal::class_name* internal;
 
 #define NXA_GENERATED_SHARED_OBJECT_DECLARATION_FOR_PURE_VIRTUAL_CLASS(namespace_name, class_name...) \
         NXA_GENERATED_SHARED_BASE_DECLARATIONS_FOR_PURE_VIRTUAL_CLASS(namespace_name, class_name) \
@@ -192,8 +252,7 @@ namespace NxA {
         private: \
             namespace_name::Internal::class_name* internal;
 
-#define NXA_GENERATED_OBJECT_DECLARATIONS_FOR(namespace_name, class_name...) \
-        NXA_GENERATED_SHARED_BASE_DECLARATIONS_FOR(namespace_name, class_name) \
+#define NXA_GENERATED_COMMON_OBJECT_DECLARATIONS_FOR(namespace_name, class_name...) \
         public: \
             explicit class_name(const namespace_name::class_name::constructor_access&); \
             friend namespace_name::Internal::class_name; \
@@ -204,6 +263,14 @@ namespace NxA {
         private: \
             NxA::Pointer<NxA::Internal::Object> internalImplementation; \
             namespace_name::Internal::class_name* internal;
+
+#define NXA_GENERATED_OBJECT_DECLARATIONS_FOR(namespace_name, class_name...) \
+        NXA_GENERATED_SHARED_BASE_DECLARATIONS_FOR(namespace_name, class_name) \
+        NXA_GENERATED_COMMON_OBJECT_DECLARATIONS_FOR(namespace_name, class_name)
+
+#define NXA_GENERATED_OBJECT_DECLARATIONS_WITHOUT_OVERRIDE_FOR(namespace_name, class_name...) \
+        NXA_GENERATED_SHARED_BASE_DECLARATIONS_WITHOUT_OVERRIDE_FOR(namespace_name, class_name) \
+        NXA_GENERATED_COMMON_OBJECT_DECLARATIONS_FOR(namespace_name, class_name)
 
 #define NXA_GENERATED_SHARED_OBJECT_IMPLEMENTATION_FOR(namespace_name, class_name...) \
         NxA::Pointer<NxA::Internal::Object> namespace_name::class_name::makeInternal(void) \
@@ -229,6 +296,10 @@ namespace NxA {
             explicit class_name(const namespace_name::class_name::constructor_access&) : class_name(namespace_name::class_name::makeInternal()) { } \
             explicit class_name(const namespace_name::class_name::constructor_access&, const NxA::Pointer<NxA::Internal::Object>& initial_internal) : class_name(initial_internal) { } \
 
+#define NXA_GENERATED_DECLARATIONS_WITHOUT_DESTRUCTOR_IN_NAMESPACE_FOR_PURE_VIRTUAL_CLASS(namespace_name, class_name...) \
+        NXA_GENERATED_SHARED_OBJECT_DECLARATION_WITHOUT_DESTRUCTOR_FOR_PURE_VIRTUAL_CLASS(namespace_name, class_name) \
+        NXA_GENERATED_COMMON_DECLARATIONS_IN_NAMESPACE_FOR_CLASS(namespace_name, class_name)
+
 #define NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_PURE_VIRTUAL_CLASS(namespace_name, class_name...) \
         NXA_GENERATED_SHARED_OBJECT_DECLARATION_FOR_PURE_VIRTUAL_CLASS(namespace_name, class_name) \
         NXA_GENERATED_COMMON_DECLARATIONS_IN_NAMESPACE_FOR_CLASS(namespace_name, class_name)
@@ -242,9 +313,9 @@ namespace NxA {
 #define NXA_GENERATED_OPERATOR_EQUAL_DECLARATION_IN_NAMESPACE_FOR_CLASS(namespace_name, class_name...) \
         public: \
             bool operator==(const namespace_name::class_name& other) const \
-        { \
-            return this == &other; \
-        }
+            { \
+                return this == &other; \
+            }
 
 #define NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_PURE_VIRTUAL_CLASS_WITH_PARENT(namespace_name, class_name, parent_class) \
         namespace_name::class_name::class_name(const NxA::Pointer<NxA::Internal::Object>& initial_internal) : \

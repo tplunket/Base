@@ -186,23 +186,48 @@ Blob::Pointer TrackFile::rawBlobFromMarkersV1(void)
     auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<byte*>(&markersHeader), sizeof(MarkerV1HeaderStruct));
     blobData->append(headerData);
 
-    // files with >5 cues are saved by serato with all cues empty in V1
-    bool noCues = (this->cueMarkers->length() > 5);
-
-    for (int i = 0; i < 5; ++i) {
-        if (i < this->cueMarkers->length() && !noCues) {
-            (*cueMarkers)[i].addRawMarkerV1TagTo(blobData);
-        }
-        else {
+    // files with >5 cues are saved with all cues empty in V1 by serato
+    if (this->cueMarkers->length() > 5)
+    {
+        for (int i = 0; i < 5; ++i) {
             Serato::CueMarker::addEmptyRawMarkerV1TagTo(blobData);
+        }
+    }
+    else
+    {
+        for (int i = 0; i < 5; ++i) {
+            // Find the cue with this index
+            bool cueFound = false;
+            for (auto& cue : *this->cueMarkers)
+            {
+                if (cue->index() == i) {
+                    cue->addRawMarkerV1TagTo(blobData);
+                    cueFound = true;
+                    break;
+                }
+            }
+
+            // Otherwise, write an empty cue
+            if (!cueFound) {
+                Serato::CueMarker::addEmptyRawMarkerV1TagTo(blobData);
+            }
         }
     }
 
     for (int i = 0; i < 9; ++i) {
-        if (i < this->loopMarkers->length()) {
-            (*loopMarkers)[i].addRawMarkerV1TagTo(blobData);
+        // Find the loop with this index
+        bool loopFound = false;
+        for (auto& loop : *this->loopMarkers)
+        {
+            if (loop->index() == i) {
+                loop->addRawMarkerV1TagTo(blobData);
+                loopFound = true;
+                break;
+            }
         }
-        else {
+
+        // Otherwise, write an empty loop
+        if (!loopFound) {
             Serato::LoopMarker::addEmptyRawMarkerV1TagTo(blobData);
         }
     }
@@ -232,28 +257,56 @@ Blob::Pointer TrackFile::id3EncodedBlobFromMarkersV1(void)
     blobData->append(headerData);
 
     // files with >5 cues are saved with all cues empty in V1 by serato
-    bool noCues = (this->cueMarkers->length() > 5);
-
-    for (int i = 0; i < 5; ++i) {
-        if (i < this->cueMarkers->length() && !noCues) {
-            (*cueMarkers)[i].addEncodedMarkerV1TagTo(blobData);
-        }
-        else {
+    if (this->cueMarkers->length() > 5)
+    {
+        for (int i = 0; i < 5; ++i) {
             Serato::CueMarker::addEmptyEncodedMarkerV1TagTo(blobData);
+        }
+    }
+    else
+    {
+        for (int i = 0; i < 5; ++i) {
+            // Find the cue with this index
+            bool cueFound = false;
+            for (auto& cue : *this->cueMarkers)
+            {
+                if (cue->index() == i) {
+                    cue->addEncodedMarkerV1TagTo(blobData);
+                    cueFound = true;
+                    break;
+                }
+            }
+
+            // Otherwise, write an empty cue
+            if (!cueFound) {
+                Serato::CueMarker::addEmptyEncodedMarkerV1TagTo(blobData);
+            }
         }
     }
 
     for (int i = 0; i < 9; ++i) {
-        if (i < this->loopMarkers->length()) {
-            (*loopMarkers)[i].addEncodedMarkerV1TagTo(blobData);
+        // Find the loop with this index
+        bool loopFound = false;
+        for (auto& loop : *this->loopMarkers)
+        {
+            if (loop->index() == i) {
+                loop->addEncodedMarkerV1TagTo(blobData);
+                loopFound = true;
+                break;
+            }
         }
-        else {
+
+        // Otherwise, write an empty loop
+        if (!loopFound) {
             Serato::LoopMarker::addEmptyEncodedMarkerV1TagTo(blobData);
         }
     }
 
     // -- This marks the end of tags.
-    blobData->append('\0');
+    blobData->append(0x07);
+    blobData->append(0x7F);
+    blobData->append(0x7F);
+    blobData->append(0x7F);
 
     return blobData;
 }

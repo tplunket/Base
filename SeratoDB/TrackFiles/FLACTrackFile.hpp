@@ -37,35 +37,9 @@ namespace NxA { namespace Serato {
         #pragma mark Factory Methods
         static FLACTrackFile::Pointer fileWithFileAt(const String& path, TrackFile::Flags flags);
 
-        #pragma mark Instance Methods
-        virtual String::Pointer releaseDate(void) const;
-        virtual boolean hasKey(void) const;
-        virtual String::Pointer key(void) const;
-        virtual String::Pointer composer(void) const;
-        virtual String::Pointer grouping(void) const;
-        virtual String::Pointer bpm(void) const;
-
-        virtual boolean hasBitDepth(void) const;
-        virtual uinteger32 bitDepthInBits(void) const;
-
-        virtual boolean hasRecordLabel(void) const;
-        virtual String::Pointer recordLabel(void) const;
-        virtual boolean hasRemixer(void) const;
-        virtual String::Pointer remixer(void) const;
-        virtual boolean hasRating(void) const;
-        virtual integer rating(void) const;
-
-        virtual Blob::Pointer artwork(void) const;
-
-        virtual void setReleaseDate(const String& date);
-        virtual void setKey(const String& key);
-        virtual void setComposer(const String& composer);
-        virtual void setGrouping(const String& grouping);
-        virtual void setBpm(const String& bpm);
-        virtual void setRecordLabel(const String& recordLabel);
-        virtual void setRemixer(const String& remixer);
-        virtual void setRating(integer rating);
-
-        virtual void setArtwork(const Blob& artwork);
+        #pragma mark Overriden TrackFile Instance Methods
+        virtual boolean hasKey(void) const override;
+        virtual boolean hasBitDepth(void) const override;
+        virtual boolean hasRating(void) const override;
     };
 } }

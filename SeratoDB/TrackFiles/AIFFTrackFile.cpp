@@ -23,8 +23,6 @@
 #include "TrackFiles/AIFFTrackFile.hpp"
 #include "TrackFiles/Internal/AIFFTrackFile.hpp"
 
-#include <aifffile.h>
-
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, AIFFTrackFile, ID3TrackFile);
 
 using namespace NxA;
@@ -34,43 +32,18 @@ using namespace NxA::Serato;
 
 AIFFTrackFile::Pointer AIFFTrackFile::fileWithFileAt(const String& path, TrackFile::Flags flags)
 {
-    auto file = Internal::TagLibFilePointer(std::make_shared<TagLib::RIFF::AIFF::File>(path.toUTF8(),
-                                                                                       true,
-                                                                                       TagLib::AudioProperties::ReadStyle::Fast));
-    if (!file->isValid()) {
-        throw TrackFileError::exceptionWith("Error loading track file '%s'.", path.toUTF8());
-    }
-
-    auto aiffFile = dynamic_cast<TagLib::RIFF::AIFF::File*>(&(*file));
-
-    auto internalObject = Internal::AIFFTrackFile::Pointer(std::make_shared<Internal::AIFFTrackFile>(path, file));
+    auto internalObject = Internal::AIFFTrackFile::Pointer(std::make_shared<Internal::AIFFTrackFile>(path));
     auto newFile = AIFFTrackFile::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
-    newFile->internal->tag = newFile->internal->id3v2Tag = aiffFile->tag();
-    if (!newFile->internal->tag) {
-        throw TrackFileError::exceptionWith("Error reading tags from track file '%s'.", path.toUTF8());
-    }
 
-    if (flags & TrackFile::Flags::IgnoreMarkers) {
-        newFile->internal->markersWereIgnored = true;
-    }
-    else {
-        newFile->internal->readMarkers();
-    }
+    newFile->internal->markersWereIgnored = (flags & TrackFile::Flags::IgnoreMarkers);
+    newFile->internal->loadAndParseFile();
 
     return newFile;
 }
 
-#pragma mark Instance Methods
+#pragma mark Overriden TrackFile Instance Methods
 
 boolean AIFFTrackFile::hasBitDepth(void) const
 {
     return true;
-}
-
-uinteger32 AIFFTrackFile::bitDepthInBits(void) const
-{
-    auto audioProperties = dynamic_cast<const TagLib::RIFF::AIFF::Properties*>(internal->file->audioProperties());
-    NXA_ASSERT_NOT_NULL(audioProperties);
-
-    return audioProperties->sampleWidth();
 }

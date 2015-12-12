@@ -56,13 +56,13 @@ using namespace NxA::Serato::Internal;
 
 #pragma mark Constructors & Destructors
 
-ID3TrackFile::ID3TrackFile(const String& path, const TagLibFilePointer& newFile) : TrackFile(path, newFile) { }
+ID3TrackFile::ID3TrackFile(const String& path) : TrackFile(path) { }
 
 #pragma mark Class Methods
 
-boolean ID3TrackFile::isAValidGeobFrame(const TagLib::ID3v2::GeneralEncapsulatedObjectFrame* frame)
+boolean ID3TrackFile::isAValidGeobFrame(const TagLib::ID3v2::GeneralEncapsulatedObjectFrame& frame)
 {
-    auto frameID = frame->frameID();
+    auto frameID = frame.frameID();
     if (frameID.size() != 4) {
         return false;
     }
@@ -72,7 +72,7 @@ boolean ID3TrackFile::isAValidGeobFrame(const TagLib::ID3v2::GeneralEncapsulated
         return false;
     }
 
-    TagLib::String mimeType = frame->mimeType();
+    TagLib::String mimeType = frame.mimeType();
     return mimeType == "application/octet-stream";
 }
 
@@ -89,9 +89,9 @@ TagLib::ID3v2::FrameList::Iterator ID3TrackFile::frameInListWithDescription(TagL
     return list.end();
 }
 
-String::Pointer ID3TrackFile::stringValueForFrameNamedInTag(const character* name, const TagLib::ID3v2::Tag* id3v2Tag)
+String::Pointer ID3TrackFile::stringValueForFrameNamedInTag(const character* name, const TagLib::ID3v2::Tag& tag)
 {
-    auto frameList = id3v2Tag->frameList(name);
+    auto frameList = tag.frameList(name);
     for (auto& frame : frameList) {
         if (frame) {
             auto stringValue = frame->toString();
@@ -104,16 +104,16 @@ String::Pointer ID3TrackFile::stringValueForFrameNamedInTag(const character* nam
     return String::string();
 }
 
-integer ID3TrackFile::integerValueForFrameNamedInTag(const character* name, const TagLib::ID3v2::Tag* id3v2Tag)
+integer ID3TrackFile::integerValueForFrameNamedInTag(const character* name, const TagLib::ID3v2::Tag& tag)
 {
-    return ID3TrackFile::stringValueForFrameNamedInTag(name, id3v2Tag)->integerValue();
+    return ID3TrackFile::stringValueForFrameNamedInTag(name, tag)->integerValue();
 }
 
-integer ID3TrackFile::ratingValueForRatingFrameInTag(const TagLib::ID3v2::Tag* id3v2Tag)
+integer ID3TrackFile::ratingValueForRatingFrameInTag(const TagLib::ID3v2::Tag& id3v2Tag)
 {
     integer rating = 0;
 
-    auto frameList = id3v2Tag->frameList(Internal::id3RatingFrameName);
+    auto frameList = id3v2Tag.frameList(Internal::id3RatingFrameName);
     auto frame = frameList.front();
     if (frame) {
         TagLib::ID3v2::PopularimeterFrame* popFrame = dynamic_cast<TagLib::ID3v2::PopularimeterFrame*>(frameList.front());
@@ -125,23 +125,23 @@ integer ID3TrackFile::ratingValueForRatingFrameInTag(const TagLib::ID3v2::Tag* i
     return rating;
 }
 
-void ID3TrackFile::setStringValueForFrameNamedInTag(const String& value, const character* name, TagLib::ID3v2::Tag* id3v2Tag)
+void ID3TrackFile::setStringValueForFrameNamedInTag(const String& value, const character* name, TagLib::ID3v2::Tag& tag)
 {
-    id3v2Tag->removeFrames(name);
+    tag.removeFrames(name);
     auto frame = new TagLib::ID3v2::TextIdentificationFrame(name, TagLib::String::Latin1);
     frame->setText(TagLib::StringList(TagLib::String(value.toUTF8())));
-    id3v2Tag->addFrame(frame);
+    tag.addFrame(frame);
 }
 
-void ID3TrackFile::setIntegerValueForFrameNamedInTag(integer value, const character* name, TagLib::ID3v2::Tag* id3v2Tag)
+void ID3TrackFile::setIntegerValueForFrameNamedInTag(integer value, const character* name, TagLib::ID3v2::Tag& tag)
 {
-    ID3TrackFile::setStringValueForFrameNamedInTag(String::stringWithFormat("%ld", value), name, id3v2Tag);
+    ID3TrackFile::setStringValueForFrameNamedInTag(String::stringWithFormat("%ld", value), name, tag);
 }
 
-void ID3TrackFile::setRatingValueForRatingFrameInTag(integer value, TagLib::ID3v2::Tag* id3v2Tag)
+void ID3TrackFile::setRatingValueForRatingFrameInTag(integer value, TagLib::ID3v2::Tag& tag)
 {
     count counter = 0;
-    auto frameList = id3v2Tag->frameList(Internal::id3RatingFrameName);
+    auto frameList = tag.frameList(Internal::id3RatingFrameName);
     auto frame = frameList.front();
     if (frame) {
         TagLib::ID3v2::PopularimeterFrame* popFrame = dynamic_cast<TagLib::ID3v2::PopularimeterFrame*>(frameList.front());
@@ -150,31 +150,69 @@ void ID3TrackFile::setRatingValueForRatingFrameInTag(integer value, TagLib::ID3v
         }
     }
 
-    id3v2Tag->removeFrames(Internal::id3RatingFrameName);
+    tag.removeFrames(Internal::id3RatingFrameName);
 
     auto popFrame = new TagLib::ID3v2::PopularimeterFrame();
     popFrame->setRating(value);
     popFrame->setCounter(counter);
 
-    id3v2Tag->addFrame(popFrame);
+    tag.addFrame(popFrame);
 }
 
-void ID3TrackFile::removeGEOBFrameNamedInTag(const String& name, TagLib::ID3v2::Tag* id3v2Tag)
+void ID3TrackFile::removeGEOBFrameNamedInTag(const String& name, TagLib::ID3v2::Tag& tag)
 {
-    auto framesList = id3v2Tag->frameList("GEOB");
+    auto framesList = tag.frameList("GEOB");
     if (!framesList.size()) {
         return;
     }
 
     auto frameToDelete = ID3TrackFile::frameInListWithDescription(framesList, name);
     if (frameToDelete != framesList.end()) {
-        id3v2Tag->removeFrame(*frameToDelete);
+        tag.removeFrame(*frameToDelete);
     }
 }
 
-void ID3TrackFile::replaceMarkersFrameInTagWithEmptyFrame(TagLib::ID3v2::Tag* id3v2Tag)
+void ID3TrackFile::parseMarkersInTagToTrackFile(const TagLib::ID3v2::Tag& tag, TrackFile& trackFile)
 {
-    ID3TrackFile::removeGEOBFrameNamedInTag(String::stringWith(id3MarkersFrameDescription), id3v2Tag);
+    auto framesList = tag.frameList("GEOB");
+    if (!framesList.size()) {
+        return;
+    }
+
+    auto framePos = ID3TrackFile::frameInListWithDescription(framesList, String::stringWith(id3MarkersV2FrameDescription));
+    if (framePos != framesList.end()) {
+        auto frame = dynamic_cast<const TagLib::ID3v2::GeneralEncapsulatedObjectFrame*>(*framePos);
+        if (isAValidGeobFrame(*frame)) {
+            auto frameObject = frame->object();
+            auto headerStruct = reinterpret_cast<GeobObjectStruct*>(frameObject.data());
+            if ((headerStruct->majorVersion == 1) && (headerStruct->minorVersion == 1)) {
+                count size = frameObject.size() - sizeof(GeobObjectStruct);
+                if (size) {
+                    trackFile.parseMarkersV2FromBase64String(headerStruct->data, size);
+                }
+            }
+        }
+    }
+
+    framePos = ID3TrackFile::frameInListWithDescription(framesList, String::stringWith(id3BeatgridFrameDescription));
+    if (framePos != framesList.end()) {
+        auto frame = dynamic_cast<const TagLib::ID3v2::GeneralEncapsulatedObjectFrame*>(*framePos);
+        if (isAValidGeobFrame(*frame)) {
+            auto frameObject = frame->object();
+            auto headerStruct = reinterpret_cast<GeobObjectStruct*>(frameObject.data());
+            if ((headerStruct->majorVersion == 1) && (headerStruct->minorVersion == 0)) {
+                count size = frame->size() - sizeof(GeobObjectStruct);
+                if (size) {
+                    trackFile.parseGridMarkersFrom(headerStruct->data);
+                }
+            }
+        }
+    }
+}
+
+void ID3TrackFile::replaceMarkersFrameInTagWithEmptyFrame(TagLib::ID3v2::Tag& tag)
+{
+    ID3TrackFile::removeGEOBFrameNamedInTag(String::stringWith(id3MarkersFrameDescription), tag);
 
     auto newFrame = new TagLib::ID3v2::GeneralEncapsulatedObjectFrame();
     TagLib::ByteVector newData;
@@ -184,12 +222,12 @@ void ID3TrackFile::replaceMarkersFrameInTagWithEmptyFrame(TagLib::ID3v2::Tag* id
     newFrame->setFileName("");
     newFrame->setDescription(id3MarkersFrameDescription);
 
-    id3v2Tag->addFrame(newFrame);
+    tag.addFrame(newFrame);
 }
 
-void ID3TrackFile::replaceMarkersV2FrameInTagWith(TagLib::ID3v2::Tag* id3v2Tag, const String& base64MarkersData)
+void ID3TrackFile::replaceMarkersV2FrameInTagWith(TagLib::ID3v2::Tag& tag, const String& base64MarkersData)
 {
-    ID3TrackFile::removeGEOBFrameNamedInTag(String::stringWith(id3MarkersV2FrameDescription), id3v2Tag);
+    ID3TrackFile::removeGEOBFrameNamedInTag(String::stringWith(id3MarkersV2FrameDescription), tag);
 
     if (!base64MarkersData.length()) {
         return;
@@ -213,12 +251,12 @@ void ID3TrackFile::replaceMarkersV2FrameInTagWith(TagLib::ID3v2::Tag* id3v2Tag, 
     newFrame->setFileName("");
     newFrame->setDescription(id3MarkersV2FrameDescription);
 
-    id3v2Tag->addFrame(newFrame);
+    tag.addFrame(newFrame);
 }
 
-void ID3TrackFile::replaceGridMarkersFrameInTagWith(TagLib::ID3v2::Tag* id3v2Tag, const Blob& gridMarkersData)
+void ID3TrackFile::replaceGridMarkersFrameInTagWith(TagLib::ID3v2::Tag& tag, const Blob& gridMarkersData)
 {
-    ID3TrackFile::removeGEOBFrameNamedInTag(String::stringWith(id3BeatgridFrameDescription), id3v2Tag);
+    ID3TrackFile::removeGEOBFrameNamedInTag(String::stringWith(id3BeatgridFrameDescription), tag);
 
     if (!gridMarkersData.size()) {
         return;
@@ -242,16 +280,24 @@ void ID3TrackFile::replaceGridMarkersFrameInTagWith(TagLib::ID3v2::Tag* id3v2Tag
     newFrame->setFileName("");
     newFrame->setDescription(id3BeatgridFrameDescription);
     
-    id3v2Tag->addFrame(newFrame);
+    tag.addFrame(newFrame);
 }
 
-String::Pointer ID3TrackFile::releaseDateFromTag(TagLib::ID3v2::Tag* id3v2Tag)
+void ID3TrackFile::updateMarkersInTagFromTrackFile(TagLib::ID3v2::Tag& tag, const TrackFile& trackFile)
 {
-    auto date = ID3TrackFile::stringValueForFrameNamedInTag(id3ReleaseTimeFrameName, id3v2Tag);
+    ID3TrackFile::replaceMarkersFrameInTagWithEmptyFrame(tag);
+
+    ID3TrackFile::replaceMarkersV2FrameInTagWith(tag, trackFile.base64StringFromMarkersV2());
+    ID3TrackFile::replaceGridMarkersFrameInTagWith(tag, trackFile.gridMarkerDataFromGridMarkers());
+}
+
+String::Pointer ID3TrackFile::releaseDateFromTag(const TagLib::ID3v2::Tag& tag)
+{
+    auto date = ID3TrackFile::stringValueForFrameNamedInTag(id3ReleaseTimeFrameName, tag);
     if (!date->length()) {
-        date = ID3TrackFile::stringValueForFrameNamedInTag(id3OriginalReleaseTimeFrameName, id3v2Tag);
+        date = ID3TrackFile::stringValueForFrameNamedInTag(id3OriginalReleaseTimeFrameName, tag);
         if (!date->length()) {
-            return ID3TrackFile::stringValueForFrameNamedInTag(id3RecordingTimeFrameName, id3v2Tag);
+            return ID3TrackFile::stringValueForFrameNamedInTag(id3RecordingTimeFrameName, tag);
         }
     }
 
@@ -262,38 +308,46 @@ String::Pointer ID3TrackFile::releaseDateFromTag(TagLib::ID3v2::Tag* id3v2Tag)
     return date;
 }
 
-void ID3TrackFile::setReleaseDateForTag(const String& date, TagLib::ID3v2::Tag* id3v2Tag)
+void ID3TrackFile::setReleaseDateInTag(const String& date, TagLib::ID3v2::Tag& tag)
 {
-    ID3TrackFile::setStringValueForFrameNamedInTag(date, id3OriginalReleaseTimeFrameName, id3v2Tag);
-    ID3TrackFile::setStringValueForFrameNamedInTag(date, id3RecordingTimeFrameName, id3v2Tag);
-    ID3TrackFile::setStringValueForFrameNamedInTag(date, id3ReleaseTimeFrameName, id3v2Tag);
+    ID3TrackFile::setStringValueForFrameNamedInTag(date, id3OriginalReleaseTimeFrameName, tag);
+    ID3TrackFile::setStringValueForFrameNamedInTag(date, id3RecordingTimeFrameName, tag);
+    ID3TrackFile::setStringValueForFrameNamedInTag(date, id3ReleaseTimeFrameName, tag);
 }
 
-#pragma mark Instance Methods
-
-String::Pointer ID3TrackFile::stringValueForFrameNamed(const character* name) const
+Blob::Pointer ID3TrackFile::artworkInTag(const TagLib::ID3v2::Tag& tag)
 {
-    return ID3TrackFile::stringValueForFrameNamedInTag(name, this->id3v2Tag);
+    auto frameList = tag.frameList(Internal::id3ArtworkFrameName);
+    if (frameList.size()) {
+        const TagLib::ID3v2::AttachedPictureFrame* artworkFrame = nullptr;
+
+        for (const TagLib::ID3v2::Frame* frame : frameList) {
+            auto pic = dynamic_cast<const TagLib::ID3v2::AttachedPictureFrame*>(frame);
+            if (pic->type() == TagLib::ID3v2::AttachedPictureFrame::FrontCover) {
+                artworkFrame = pic;
+                break;
+            }
+            else if (pic->type() == TagLib::ID3v2::AttachedPictureFrame::Other) {
+                artworkFrame = pic;
+            }
+        }
+
+        if (artworkFrame) {
+            auto picture = artworkFrame->picture();
+            auto size = picture.size();
+            if (size) {
+                char *artworkData = picture.data();
+                return Blob::blobWithMemoryAndSize(reinterpret_cast<byte *>(artworkData), size);
+            }
+        }
+    }
+
+    return Blob::blob();
 }
 
-integer ID3TrackFile::integerValueForFrameNamed(const character* name) const
+void ID3TrackFile::removeArtworkInTag(TagLib::ID3v2::Tag& tag)
 {
-    return ID3TrackFile::integerValueForFrameNamedInTag(name, this->id3v2Tag);
-}
-
-void ID3TrackFile::setStringValueForFrameNamed(const String& value, const character* name)
-{
-    ID3TrackFile::setStringValueForFrameNamedInTag(value, name, this->id3v2Tag);
-}
-
-void ID3TrackFile::setIntegerValueForFrameNamed(integer value, const character* name)
-{
-    ID3TrackFile::setIntegerValueForFrameNamedInTag(value, name, this->id3v2Tag);
-}
-
-void ID3TrackFile::removeArtwork(void)
-{
-    auto frameList = this->id3v2Tag->frameList("APIC");
+    auto frameList = tag.frameList("APIC");
     auto frameToRemove = frameList.end();
     if (frameList.size()) {
         for (auto it = frameList.begin(); it != frameList.end(); ++it) {
@@ -310,52 +364,57 @@ void ID3TrackFile::removeArtwork(void)
     }
 
     if (frameToRemove != frameList.end()) {
-        this->id3v2Tag->removeFrame(*frameToRemove);
+        tag.removeFrame(*frameToRemove);
     }
 }
 
-void ID3TrackFile::readMarkers(void)
+#pragma mark Instance Methods
+
+void ID3TrackFile::parseTag(const TagLib::ID3v2::Tag& tag)
 {
-    auto framesList = this->id3v2Tag->frameList("GEOB");
-    if (!framesList.size()) {
-        return;
-    }
+    this->TrackFile::parseTag(tag);
+    
+    this->releaseDate = ID3TrackFile::releaseDateFromTag(tag);
 
-    auto framePos = ID3TrackFile::frameInListWithDescription(framesList, String::stringWith(id3MarkersV2FrameDescription));
-    if (framePos != framesList.end()) {
-        auto frame = dynamic_cast<const TagLib::ID3v2::GeneralEncapsulatedObjectFrame*>(*framePos);
-        if (isAValidGeobFrame(frame)) {
-            auto frameObject = frame->object();
-            auto headerStruct = reinterpret_cast<GeobObjectStruct*>(frameObject.data());
-            if ((headerStruct->majorVersion == 1) && (headerStruct->minorVersion == 1)) {
-                count size = frameObject.size() - sizeof(GeobObjectStruct);
-                if (size) {
-                    this->readMarkersV2FromBase64String(headerStruct->data, size);
-                }
-            }
-        }
-    }
+    this->key = ID3TrackFile::stringValueForFrameNamedInTag(Internal::id3KeyFrameName, tag);
+    this->composer = ID3TrackFile::stringValueForFrameNamedInTag(Internal::id3ComposerFrameName, tag);
+    this->grouping = ID3TrackFile::stringValueForFrameNamedInTag(Internal::id3GroupingFrameName, tag);
+    this->bpm = ID3TrackFile::stringValueForFrameNamedInTag(Internal::id3BpmFrameName, tag);
+    this->recordLabel = ID3TrackFile::stringValueForFrameNamedInTag(Internal::id3RecordLabelFrameName, tag);
+    this->remixer = ID3TrackFile::stringValueForFrameNamedInTag(Internal::id3RemixerFrameName, tag);
+    this->rating = ID3TrackFile::ratingValueForRatingFrameInTag(tag);
 
-    framePos = ID3TrackFile::frameInListWithDescription(framesList, String::stringWith(id3BeatgridFrameDescription));
-    if (framePos != framesList.end()) {
-        auto frame = dynamic_cast<const TagLib::ID3v2::GeneralEncapsulatedObjectFrame*>(*framePos);
-        if (isAValidGeobFrame(frame)) {
-            auto frameObject = frame->object();
-            auto headerStruct = reinterpret_cast<GeobObjectStruct*>(frameObject.data());
-            if ((headerStruct->majorVersion == 1) && (headerStruct->minorVersion == 0)) {
-                count size = frame->size() - sizeof(GeobObjectStruct);
-                if (size) {
-                    this->readGridMarkersFrom(headerStruct->data);
-                }
-            }
-        }
-    }
+    this->artwork = ID3TrackFile::artworkInTag(tag);
 }
 
-void ID3TrackFile::writeMarkers(void)
+void ID3TrackFile::updateArtworkInTag(TagLib::ID3v2::Tag& tag) const
 {
-    ID3TrackFile::replaceMarkersFrameInTagWithEmptyFrame(this->id3v2Tag);
+    ID3TrackFile::removeArtworkInTag(tag);
 
-    ID3TrackFile::replaceMarkersV2FrameInTagWith(this->id3v2Tag, this->base64StringFromMarkersV2());
-    ID3TrackFile::replaceGridMarkersFrameInTagWith(this->id3v2Tag, this->gridMarkerDataFromGridMarkers());
+    TagLib::ByteVector data(*this->artwork->data(), this->artwork->size());
+
+    auto* newFrame = new TagLib::ID3v2::AttachedPictureFrame;
+    newFrame->setData(data);
+    newFrame->setType(TagLib::ID3v2::AttachedPictureFrame::FrontCover);
+    newFrame->setDescription("");
+    newFrame->setTextEncoding(TagLib::String::Latin1);
+
+    tag.addFrame(newFrame);
+}
+
+void ID3TrackFile::updateTag(TagLib::ID3v2::Tag& tag) const
+{
+    this->TrackFile::updateTag(tag);
+
+    ID3TrackFile::setReleaseDateInTag(this->releaseDate, tag);
+
+    ID3TrackFile::setStringValueForFrameNamedInTag(this->key, Internal::id3KeyFrameName, tag);
+    ID3TrackFile::setStringValueForFrameNamedInTag(this->composer, Internal::id3ComposerFrameName, tag);
+    ID3TrackFile::setStringValueForFrameNamedInTag(this->grouping, Internal::id3GroupingFrameName, tag);
+    ID3TrackFile::setStringValueForFrameNamedInTag(this->bpm, Internal::id3BpmFrameName, tag);
+    ID3TrackFile::setStringValueForFrameNamedInTag(this->recordLabel, Internal::id3RecordLabelFrameName, tag);
+    ID3TrackFile::setStringValueForFrameNamedInTag(this->remixer, Internal::id3RemixerFrameName, tag);
+    ID3TrackFile::setRatingValueForRatingFrameInTag(this->rating, tag);
+
+    this->updateArtworkInTag(tag);
 }

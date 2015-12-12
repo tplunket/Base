@@ -24,6 +24,7 @@
 #include "Markers/GridMarker.hpp"
 
 #include <string>
+#include <vorbisfile.h>
 
 // -- Generated internal implementation ommitted because this class does not use the default contructor.
 
@@ -39,13 +40,13 @@ using namespace NxA::Serato::Internal;
 
 #pragma mark Constructors & Destructors
 
-OGGTrackFile::OGGTrackFile(const String& path, const TagLibFilePointer& newFile) : TrackFile(path, newFile) { }
+OGGTrackFile::OGGTrackFile(const String& path) : TrackFile(path) { }
 
 #pragma mark Class Methods
 
-String::Pointer OGGTrackFile::stringValueForFieldNamedInComment(const character* name, const TagLib::Ogg::XiphComment* oggComment)
+String::Pointer OGGTrackFile::stringValueForFieldNamedInComment(const character* name, const TagLib::Ogg::XiphComment& oggComment)
 {
-    auto& stringList = oggComment->fieldListMap()[name];
+    auto& stringList = oggComment.fieldListMap()[name];
     if (stringList.size() == 0) {
         return String::string();
     }
@@ -54,17 +55,17 @@ String::Pointer OGGTrackFile::stringValueForFieldNamedInComment(const character*
     return String::stringWith(stringList.front().toCString());
 }
 
-void OGGTrackFile::setStringValueForFieldNamedInComment(const String& value, const character* name, TagLib::Ogg::XiphComment* oggComment)
+void OGGTrackFile::setStringValueForFieldNamedInComment(const String& value, const character* name, TagLib::Ogg::XiphComment& oggComment)
 {
-    oggComment->addField(name, TagLib::String(value.toUTF8()));
+    oggComment.addField(name, TagLib::String(value.toUTF8()));
 }
 
-String::Pointer OGGTrackFile::releaseDateInComment(TagLib::Ogg::XiphComment* oggComment)
+String::Pointer OGGTrackFile::releaseDateInComment(const TagLib::Ogg::XiphComment& oggComment)
 {
     return OGGTrackFile::stringValueForFieldNamedInComment(oggDateFieldName, oggComment);
 }
 
-void OGGTrackFile::setReleaseDateInComment(const String& date, TagLib::Ogg::XiphComment* oggComment)
+void OGGTrackFile::setReleaseDateInComment(const String& date, TagLib::Ogg::XiphComment& oggComment)
 {
     OGGTrackFile::setStringValueForFieldNamedInComment(date, oggDateFieldName, oggComment);
 
@@ -74,25 +75,15 @@ void OGGTrackFile::setReleaseDateInComment(const String& date, TagLib::Ogg::Xiph
 
 #pragma mark Instance Methods
 
-String::Pointer OGGTrackFile::stringValueForFieldNamed(const character* name) const
+void OGGTrackFile::parseMarkersInComment(const TagLib::Ogg::XiphComment& oggComment)
 {
-    return OGGTrackFile::stringValueForFieldNamedInComment(name, this->oggComment);
-}
-
-void OGGTrackFile::setStringValueForFieldNamed(const String& value, const character* name)
-{
-    OGGTrackFile::setStringValueForFieldNamedInComment(value, name, this->oggComment);
-}
-
-void OGGTrackFile::readMarkers(void)
-{
-    auto& fieldListMap = this->oggComment->fieldListMap();
+    auto& fieldListMap = oggComment.fieldListMap();
 
     auto markersEncodedData = fieldListMap[oggMarkersV2ItemName].toString();
     auto encodedDataSize = markersEncodedData.size();
     if (encodedDataSize) {
-        this->readMarkersV2FromBase64String(reinterpret_cast<const byte*>(markersEncodedData.data(TagLib::String::UTF8).data()),
-                                            encodedDataSize);
+        this->parseMarkersV2FromBase64String(reinterpret_cast<const byte*>(markersEncodedData.data(TagLib::String::UTF8).data()),
+                                             encodedDataSize);
     }
 
     auto beatGridEncodedData = fieldListMap[oggBeatgridItemName].toString();
@@ -116,9 +107,9 @@ void OGGTrackFile::readMarkers(void)
     }
 }
 
-void OGGTrackFile::replaceMarkersV2Field(void)
+void OGGTrackFile::replaceMarkersV2FieldInComment(TagLib::Ogg::XiphComment& oggComment) const
 {
-    this->oggComment->removeField(oggMarkersV2ItemName);
+    oggComment.removeField(oggMarkersV2ItemName);
 
     auto base64String = this->base64StringFromMarkersV2();
     if (!base64String->length()) {
@@ -127,12 +118,12 @@ void OGGTrackFile::replaceMarkersV2Field(void)
 
     auto decodedData = Blob::blob();
 
-    this->oggComment->addField(oggMarkersV2ItemName, TagLib::String(base64String->toUTF8()));
+    oggComment.addField(oggMarkersV2ItemName, TagLib::String(base64String->toUTF8()));
 }
 
-void OGGTrackFile::replaceGridMarkersField(void)
+void OGGTrackFile::replaceGridMarkersFieldInComment(TagLib::Ogg::XiphComment& oggComment) const
 {
-    this->oggComment->removeField(oggBeatgridItemName);
+    oggComment.removeField(oggBeatgridItemName);
 
     if (!this->gridMarkers->length()) {
         return;
@@ -151,15 +142,107 @@ void OGGTrackFile::replaceGridMarkersField(void)
         propertyString.append(buffer);
     }
 
-    this->oggComment->addField(oggBeatgridItemName, propertyString);
+    oggComment.addField(oggBeatgridItemName, propertyString);
 }
 
-void OGGTrackFile::writeMarkers(void)
+void OGGTrackFile::updateMarkersInComment(TagLib::Ogg::XiphComment& oggComment) const
 {
-    this->oggComment->removeField(oggMarkersItemName);
-    TagLib::String propertyString;
-    this->oggComment->addField(oggMarkersItemName, propertyString);
+    oggComment.removeField(oggMarkersItemName);
 
-    this->replaceMarkersV2Field();
-    this->replaceGridMarkersField();
+    TagLib::String propertyString;
+    oggComment.addField(oggMarkersItemName, propertyString);
+
+    this->replaceMarkersV2FieldInComment(oggComment);
+    this->replaceGridMarkersFieldInComment(oggComment);
+}
+
+void OGGTrackFile::parseComment(TagLib::Ogg::XiphComment& oggComment)
+{
+    this->TrackFile::parseTag(oggComment);
+
+    this->releaseDate = OGGTrackFile::releaseDateInComment(oggComment);
+
+    this->composer = OGGTrackFile::stringValueForFieldNamedInComment(Internal::oggComposerFieldName, oggComment);
+    this->grouping = OGGTrackFile::stringValueForFieldNamedInComment(Internal::oggGroupingFieldName, oggComment);
+    this->bpm = OGGTrackFile::stringValueForFieldNamedInComment(Internal::oggBpmFieldName, oggComment);
+    this->recordLabel = OGGTrackFile::stringValueForFieldNamedInComment(Internal::oggRecordLabelFieldName, oggComment);
+    this->remixer = OGGTrackFile::stringValueForFieldNamedInComment(Internal::oggRemixerFieldName, oggComment);
+    // -- TODO: Rating to be implemented.
+    // -- TODO: Artwork to be implemented.
+}
+
+void OGGTrackFile::updateComment(TagLib::Ogg::XiphComment& oggComment) const
+{
+    this->TrackFile::updateTag(oggComment);
+
+    OGGTrackFile::setReleaseDateInComment(this->releaseDate, oggComment);
+
+    OGGTrackFile::setStringValueForFieldNamedInComment(this->composer, Internal::oggComposerFieldName, oggComment);
+    OGGTrackFile::setStringValueForFieldNamedInComment(this->grouping, Internal::oggGroupingFieldName, oggComment);
+    OGGTrackFile::setStringValueForFieldNamedInComment(this->bpm, Internal::oggBpmFieldName, oggComment);
+    OGGTrackFile::setStringValueForFieldNamedInComment(this->recordLabel, Internal::oggRecordLabelFieldName, oggComment);
+    OGGTrackFile::setStringValueForFieldNamedInComment(this->remixer, Internal::oggRemixerFieldName, oggComment);
+    // -- TODO: Rating to be implemented.
+    // -- TODO: Artwork to be implemented.
+}
+
+#pragma mark Overridden TrackFile Instance Methods
+
+void OGGTrackFile::loadAndParseFile(void)
+{
+    TagLib::Vorbis::File file(this->filePath->toUTF8(),
+                              true,
+                              TagLib::AudioProperties::ReadStyle::Fast);
+    if (!file.isValid()) {
+        throw TrackFileError::exceptionWith("Error loading track file '%s'.", this->filePath->toUTF8());
+    }
+
+    auto oggComment = file.tag();
+    if (!oggComment) {
+        throw TrackFileError::exceptionWith("Error reading tags from track file '%s'.", this->filePath->toUTF8());
+    }
+    this->parseComment(*oggComment);
+
+    auto audioProperties = file.audioProperties();
+    if (!audioProperties) {
+        throw TrackFileError::exceptionWith("Error reading audio properties from track file '%s'.", this->filePath->toUTF8());
+    }
+    this->parseAudioProperties(*audioProperties);
+    
+    if (!this->markersWereIgnored) {
+        this->parseMarkersInComment(*oggComment);
+    }
+}
+
+void OGGTrackFile::updateAndSaveFileIfModified(void) const
+{
+    if (!this->metadataWasModified && !this->markersWereModified) {
+        return;
+    }
+
+    TagLib::Vorbis::File file(this->filePath->toUTF8(),
+                              true,
+                              TagLib::AudioProperties::ReadStyle::Fast);
+    if (!file.isValid()) {
+        throw TrackFileError::exceptionWith("Error loading track file '%s'.", this->filePath->toUTF8());
+    }
+
+    auto oggComment = file.tag();
+    if (!oggComment) {
+        throw TrackFileError::exceptionWith("Error reading tags from track file '%s'.", this->filePath->toUTF8());
+    }
+
+    if (this->metadataWasModified) {
+        this->updateComment(*oggComment);
+    }
+
+    if (this->markersWereModified) {
+        NXA_ASSERT_FALSE(this->markersWereIgnored);
+
+        this->updateMarkersInComment(*oggComment);
+    }
+
+    // -- This is misleading. It doesn't actually save anything to disk.
+    // -- Instead, real saving takes place in the file's desctructor. #ugh
+    file.save();
 }

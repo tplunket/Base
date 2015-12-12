@@ -36,12 +36,31 @@ using namespace NxA::Serato::Internal;
 
 #pragma mark Constructors & Destructors
 
-TrackFile::TrackFile(const String& path, const TagLibFilePointer& newFile) :
-                     trackFilePath(path.pointer()),
-                     file(newFile),
+TrackFile::TrackFile(const String& path) :
+                     filePath(path.pointer()),
                      markersWereIgnored(false),
                      markersWereModified(false),
                      metadataWasModified(false),
+                     title(String::string()),
+                     artist(String::string()),
+                     genre(String::string()),
+                     key(String::string()),
+                     comments(String::string()),
+                     album(String::string()),
+                     composer(String::string()),
+                     grouping(String::string()),
+                     bpm(String::string()),
+                     trackNumber(0),
+                     audioDataSizeInBytes(0),
+                     lengthInMilliseconds(0),
+                     bitRateInKiloBitsPerSecond(0),
+                     bitDepthInBits(0),
+                     sampleRateInSamplesPerSecond(0),
+                     artwork(Blob::blob()),
+                     recordLabel(String::string()),
+                     remixer(String::string()),
+                     rating(0),
+                     releaseDate(String::string()),
                      cueMarkers(Serato::CueMarker::Array::array()),
                      loopMarkers(Serato::LoopMarker::Array::array()),
                      gridMarkers(Serato::GridMarker::Array::array()),
@@ -74,7 +93,42 @@ Blob::Pointer TrackFile::markerV2TagDataFrom(const byte* tagStart)
 
 #pragma mark Instance Methods
 
-const byte* TrackFile::readMarkerAtAndAdvanceToNextTag(const byte* tagStart)
+void TrackFile::parseAudioProperties(const TagLib::AudioProperties& properties)
+{
+    this->lengthInMilliseconds = properties.lengthInMilliseconds();
+    this->bitRateInKiloBitsPerSecond = properties.bitrate();
+    this->sampleRateInSamplesPerSecond = properties.sampleRate();
+
+    this->audioDataSizeInBytes = ((uinteger64)this->lengthInMilliseconds * (uinteger64)this->bitRateInKiloBitsPerSecond * 1024) / 8 / 1000;
+}
+
+void TrackFile::parseTag(const TagLib::Tag& tag)
+{
+    this->title = String::stringWith(tag.title().toCString());
+    this->artist = String::stringWith(tag.artist().toCString());
+    this->genre = String::stringWith(tag.genre().toCString());
+    this->comments = String::stringWith(tag.comment().toCString());
+    this->album = String::stringWith(tag.album().toCString());
+    this->trackNumber = tag.track();
+
+    integer year = tag.year();
+    this->releaseDate = year ? String::stringWithFormat("%04d-01-01", year) : String::string();
+}
+
+void TrackFile::updateTag(TagLib::Tag& tag) const
+{
+    tag.setTitle(TagLib::String(this->title->toUTF8()));
+    tag.setArtist(TagLib::String(this->artist->toUTF8()));
+    tag.setGenre(TagLib::String(this->genre->toUTF8()));
+    tag.setComment(TagLib::String(this->comments->toUTF8()));
+    tag.setAlbum(TagLib::String(this->album->toUTF8()));
+    tag.setTrack(trackNumber);
+
+    auto components = this->releaseDate->splitBySeperator('-');
+    tag.setYear(components->length() ? components->firstObject().integerValue() : 0);
+}
+
+const byte* TrackFile::parseMarkerAtAndAdvanceToNextTag(const byte* tagStart)
 {
     NXA_ASSERT_FALSE(this->markersWereIgnored);
 
@@ -98,7 +152,7 @@ const byte* TrackFile::readMarkerAtAndAdvanceToNextTag(const byte* tagStart)
     return nextTagPositionAfterTagNamed(tagName, tagStart);
 }
 
-void TrackFile::readMarkersV2FromBase64String(const byte* markerV2Data, count totalSize)
+void TrackFile::parseMarkersV2FromBase64String(const byte* markerV2Data, count totalSize)
 {
     NXA_ASSERT_FALSE(this->markersWereIgnored);
 
@@ -118,18 +172,18 @@ void TrackFile::readMarkersV2FromBase64String(const byte* markerV2Data, count to
     auto tagStart = (const byte*)markerStruct->data;
 
     while ((tagStart < markerDataEnd) && *tagStart) {
-        tagStart = this->readMarkerAtAndAdvanceToNextTag(tagStart);
+        tagStart = this->parseMarkerAtAndAdvanceToNextTag(tagStart);
     }
 }
 
-void TrackFile::readGridMarkersFrom(const byte* gridMarkerData)
+void TrackFile::parseGridMarkersFrom(const byte* gridMarkerData)
 {
     NXA_ASSERT_FALSE(this->markersWereIgnored);
 
     this->gridMarkers = Serato::GridMarker::markersWithMemoryAt(gridMarkerData);
 }
 
-String::Pointer TrackFile::base64StringFromMarkersV2(void)
+String::Pointer TrackFile::base64StringFromMarkersV2(void) const
 {
     NXA_ASSERT_FALSE(this->markersWereIgnored);
 
@@ -165,7 +219,7 @@ String::Pointer TrackFile::base64StringFromMarkersV2(void)
     return encodedData;
 }
 
-Blob::Pointer TrackFile::gridMarkerDataFromGridMarkers(void)
+Blob::Pointer TrackFile::gridMarkerDataFromGridMarkers(void) const
 {
     NXA_ASSERT_FALSE(this->markersWereIgnored);
 

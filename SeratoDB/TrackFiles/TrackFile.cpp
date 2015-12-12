@@ -20,12 +20,13 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#include "SeratoDB/Tags/ObjectTag.hpp"
+
 #include "TrackFiles/TrackFile.hpp"
 #include "TrackFiles/Internal/TrackFile.hpp"
 
 #include <tpropertymap.h>
 #include <generalencapsulatedobjectframe.h>
-#include <audioproperties.h>
 
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_PURE_VIRTUAL_CLASS_WITH_PARENT(NxA::Serato, TrackFile, Object);
 
@@ -34,60 +35,248 @@ using namespace NxA::Serato;
 
 #pragma mark Instance Methods
 
-String::PointerToConst TrackFile::filePath(void) const
+const String& TrackFile::filePath(void) const
 {
-    return internal->trackFilePath;
+    return internal->filePath;
 }
 
-String::Pointer TrackFile::title(void) const
+const String& TrackFile::title(void) const
 {
-    return String::stringWith(internal->tag->title().toCString());
+    return internal->title;
 }
 
-String::Pointer TrackFile::artist(void) const
+void TrackFile::setTitle(const String& title)
 {
-    return String::stringWith(internal->tag->artist().toCString());
+    if (title != *internal->title) {
+        internal->title = String::stringWith(title);
+        internal->metadataWasModified = true;
+    }
 }
 
-String::Pointer TrackFile::genre(void) const
+const String& TrackFile::artist(void) const
 {
-    return String::stringWith(internal->tag->genre().toCString());
+    return internal->artist;
 }
 
-String::Pointer TrackFile::comments(void) const
+void TrackFile::setArtist(const String& artist)
 {
-    return String::stringWith(internal->tag->comment().toCString());
+    if (artist != internal->artist) {
+        internal->artist = String::stringWith(artist);
+        internal->metadataWasModified = true;
+    }
 }
 
-String::Pointer TrackFile::album(void) const
+const String& TrackFile::genre(void) const
 {
-    return String::stringWith(internal->tag->album().toCString());
+    return internal->genre;
+}
+
+void TrackFile::setGenre(const String& genre)
+{
+    if (genre != internal->genre) {
+        internal->genre = String::stringWith(genre);
+        internal->metadataWasModified = true;
+    }
+}
+
+const String& TrackFile::comments(void) const
+{
+    return internal->comments;
+}
+
+void TrackFile::setComments(const String& comments)
+{
+    if (comments != internal->comments) {
+        internal->comments = String::stringWith(comments);
+        internal->metadataWasModified = true;
+    }
+}
+
+const String& TrackFile::album(void) const
+{
+    return internal->album;
+}
+
+void TrackFile::setAlbum(const String& album)
+{
+    if (album != internal->album) {
+        internal->album = String::stringWith(album);
+        internal->metadataWasModified = true;
+    }
 }
 
 count TrackFile::trackNumber(void) const
 {
-    return internal->tag->track();
+    return internal->trackNumber;
+}
+
+void TrackFile::setTrackNumber(count trackNumber)
+{
+    if (trackNumber != internal->trackNumber) {
+        internal->trackNumber = trackNumber;
+        internal->metadataWasModified = true;
+    }
+}
+
+const String& TrackFile::releaseDate(void) const
+{
+    return internal->releaseDate;
+}
+
+void TrackFile::setReleaseDate(const String& date)
+{
+    if (date != internal->releaseDate) {
+        internal->releaseDate = String::stringWith(date);
+        internal->metadataWasModified = true;
+    }
+}
+
+boolean TrackFile::hasKey(void) const
+{
+    return false;
+}
+
+const String& TrackFile::key(void) const
+{
+    NXA_ASSERT_TRUE(this->hasKey());
+    return internal->key;
+}
+
+void TrackFile::setKey(const String& key)
+{
+    NXA_ASSERT_TRUE(this->hasKey());
+    if (key != internal->key) {
+        internal->key = String::stringWith(key);
+        internal->metadataWasModified = true;
+    }
+}
+
+const String& TrackFile::composer(void) const
+{
+    return internal->composer;
+}
+
+void TrackFile::setComposer(const String& composer)
+{
+    if (composer != internal->composer) {
+        internal->composer = String::stringWith(composer);
+        internal->metadataWasModified = true;
+    }
+}
+
+const String& TrackFile::grouping(void) const
+{
+    return internal->grouping;
+}
+
+void TrackFile::setGrouping(const String& grouping)
+{
+    if (grouping != internal->grouping) {
+        internal->grouping = String::stringWith(grouping);
+        internal->metadataWasModified = true;
+    }
+}
+
+const String& TrackFile::bpm(void) const
+{
+    return internal->bpm;
+}
+
+void TrackFile::setBpm(const String& bpm)
+{
+    if (bpm != internal->bpm) {
+        internal->bpm = String::stringWith(bpm);
+        internal->metadataWasModified = true;
+    }
+}
+
+boolean TrackFile::hasRecordLabel(void) const
+{
+    return false;
+}
+
+const String& TrackFile::recordLabel(void) const
+{
+    NXA_ASSERT_TRUE(this->hasRecordLabel());
+    return internal->recordLabel;
+}
+
+void TrackFile::setRecordLabel(const String& recordLabel)
+{
+    NXA_ASSERT_TRUE(this->hasRecordLabel());
+    if (recordLabel != internal->recordLabel) {
+        internal->recordLabel = String::stringWith(recordLabel);
+        internal->metadataWasModified = true;
+    }
+}
+
+boolean TrackFile::hasRemixer(void) const
+{
+    return false;
+}
+
+const String& TrackFile::remixer(void) const
+{
+    NXA_ASSERT_TRUE(this->hasRemixer());
+    return internal->remixer;
+}
+
+
+void TrackFile::setRemixer(const String& remixer)
+{
+    NXA_ASSERT_TRUE(this->hasRemixer());
+    if (remixer != internal->remixer) {
+        internal->remixer = String::stringWith(remixer);
+        internal->metadataWasModified = true;
+    }
+}
+
+boolean TrackFile::hasRating(void) const
+{
+    return false;
+}
+
+integer TrackFile::rating(void) const
+{
+    NXA_ASSERT_TRUE(this->hasRating());
+    return internal->rating;
+}
+
+void TrackFile::setRating(integer rating)
+{
+    NXA_ASSERT_TRUE(this->hasRating());
+    if (rating != internal->rating) {
+        internal->rating = rating;
+        internal->metadataWasModified = true;
+    }
+}
+
+const Blob& TrackFile::artwork(void) const
+{
+    return internal->artwork;
+}
+
+void TrackFile::setArtwork(const Blob& artwork)
+{
+    if (artwork != internal->artwork) {
+        internal->artwork = Blob::blobWith(artwork);
+        internal->metadataWasModified = true;
+    }
 }
 
 count TrackFile::audioDataSizeInBytes(void) const
 {
-    return ((uinteger64)this->lengthInMilliseconds() * (uinteger64)this->bitRateInKiloBitsPerSecond() * 1024) / 8 / 1000;
+    return internal->audioDataSizeInBytes;
 }
 
 uinteger32 TrackFile::lengthInMilliseconds(void) const
 {
-    auto audioProperties = internal->file->audioProperties();
-    NXA_ASSERT_NOT_NULL(audioProperties);
-
-    return audioProperties->lengthInMilliseconds();
+    return internal->lengthInMilliseconds;
 }
 
 uinteger32 TrackFile::bitRateInKiloBitsPerSecond(void) const
 {
-    auto audioProperties = internal->file->audioProperties();
-    NXA_ASSERT_NOT_NULL(audioProperties);
-
-    return audioProperties->bitrate();
+    return internal->bitRateInKiloBitsPerSecond;
 }
 
 boolean TrackFile::hasBitDepth(void) const
@@ -97,21 +286,13 @@ boolean TrackFile::hasBitDepth(void) const
 
 uinteger32 TrackFile::bitDepthInBits(void) const
 {
-    return 0;
+    NXA_ASSERT_TRUE(this->hasBitDepth());
+    return internal->bitDepthInBits;
 }
 
 uinteger32 TrackFile::sampleRateInSamplesPerSecond(void) const
 {
-    TagLib::AudioProperties* audioProperties = internal->file->audioProperties();
-    NXA_ASSERT_NOT_NULL(audioProperties);
-
-    return audioProperties->sampleRate();
-}
-
-String::Pointer TrackFile::releaseDate(void) const
-{
-    integer year = internal->file->tag()->year();
-    return year ? String::stringWithFormat("%04d-01-01", year) : String::string();
+    return internal->sampleRateInSamplesPerSecond;
 }
 
 const CueMarker::Array& TrackFile::cueMarkers(void) const
@@ -119,9 +300,29 @@ const CueMarker::Array& TrackFile::cueMarkers(void) const
     return internal->cueMarkers;
 }
 
+void TrackFile::setCueMarkers(const CueMarker::Array& markers)
+{
+    NXA_ASSERT_FALSE(internal->markersWereIgnored);
+
+    if (markers != internal->cueMarkers) {
+        internal->cueMarkers = CueMarker::Array::arrayWith(markers);
+        internal->markersWereModified = true;
+    }
+}
+
 const LoopMarker::Array& TrackFile::loopMarkers(void) const
 {
     return internal->loopMarkers;
+}
+
+void TrackFile::setLoopMarkers(const LoopMarker::Array& markers)
+{
+    NXA_ASSERT_FALSE(internal->markersWereIgnored);
+
+    if (markers != internal->loopMarkers) {
+        internal->loopMarkers = LoopMarker::Array::arrayWith(markers);
+        internal->markersWereModified = true;
+    }
 }
 
 const GridMarker::Array& TrackFile::gridMarkers(void) const
@@ -129,127 +330,21 @@ const GridMarker::Array& TrackFile::gridMarkers(void) const
     return internal->gridMarkers;
 }
 
-void TrackFile::setTitle(const String& title)
-{
-    if (title != this->title()) {
-        internal->tag->setTitle(TagLib::String(title.toUTF8()));
-        internal->metadataWasModified = true;
-    }
-}
-
-void TrackFile::setArtist(const String& artist)
-{
-    if (artist != this->artist()) {
-        internal->tag->setArtist(TagLib::String(artist.toUTF8()));
-        internal->metadataWasModified = true;
-    }
-}
-
-void TrackFile::setGenre(const String& genre)
-{
-    if (genre != this->genre()) {
-        internal->tag->setGenre(TagLib::String(genre.toUTF8()));
-        internal->metadataWasModified = true;
-    }
-}
-
-void TrackFile::setComments(const String& comments)
-{
-    if (comments != this->comments()) {
-        internal->tag->setComment(TagLib::String(comments.toUTF8()));
-        internal->metadataWasModified = true;
-    }
-}
-
-void TrackFile::setAlbum(const String& album)
-{
-    if (album != this->album()) {
-        internal->tag->setAlbum(TagLib::String(album.toUTF8()));
-        internal->metadataWasModified = true;
-    }
-}
-
-void TrackFile::setTrackNumber(count trackNumber)
-{
-    if (trackNumber != this->trackNumber()) {
-        internal->tag->setTrack(trackNumber);
-        internal->metadataWasModified = true;
-    }
-}
-
-void TrackFile::setReleaseDate(const String& date)
-{
-    count year = 0;
-
-    if (date.length()) {
-        auto components = date.splitBySeperator('-');
-        year = ::atoi(components->firstObject().toUTF8());
-    }
-
-    if (year != internal->file->tag()->year()) {
-        internal->tag->setYear(year);
-        internal->metadataWasModified = true;
-    }
-}
-
-void TrackFile::setCueMarkers(CueMarker::Array& markers)
-{
-    NXA_ASSERT_FALSE(internal->markersWereIgnored);
-
-    if (markers != this->cueMarkers()) {
-        internal->cueMarkers = markers.pointer();
-        internal->markersWereModified = true;
-    }
-}
-
-void TrackFile::setLoopMarkers(LoopMarker::Array& markers)
-{
-    NXA_ASSERT_FALSE(internal->markersWereIgnored);
-
-    if (markers != this->loopMarkers()) {
-        internal->loopMarkers = markers.pointer();
-        internal->markersWereModified = true;
-    }
-}
-
-void TrackFile::setGridMarkers(GridMarker::Array& markers)
+void TrackFile::setGridMarkers(const GridMarker::Array& markers)
 {
     NXA_ASSERT_FALSE(internal->markersWereIgnored);
     NXA_ASSERT_TRUE(GridMarker::gridMarkersAreValid(markers));
 
-    //printf("Setting grid markers for '%s':\n%s\n", this->filePath()->toUTF8(), markers.description()->toUTF8());
-
     if (markers != this->gridMarkers()) {
-        internal->gridMarkers = markers.pointer();
+        internal->gridMarkers = GridMarker::Array::arrayWith(markers);
         internal->markersWereModified = true;
     }
 }
 
-void TrackFile::saveChangesIfAny(void)
+void TrackFile::saveIfModified(void)
 {
-    if (internal->markersWereModified) {
-#if NXA_PRINT_DEBUG_INFO
-        printf("Writing markers for track file '%s'.\n", this->filePath()->toUTF8());
-        printf("Cue Markers:\n%s\n", this->cueMarkers().description()->toUTF8());
-        printf("Loop Markers:\n%s\n", this->loopMarkers().description()->toUTF8());
-        printf("GridMarkers:\n%s\n", this->gridMarkers().description()->toUTF8());
-#endif
+    internal->updateAndSaveFileIfModified();
 
-        internal->writeMarkers();
-
-        internal->markersWereModified = false;
-        internal->metadataWasModified = true;
-    }
-
-    if (internal->metadataWasModified) {
-#if NXA_PRINT_DEBUG_INFO
-        printf("Saving track file '%s'.\n", this->filePath()->toUTF8());
-#endif
-
-        internal->metadataWasModified = false;
-
-        if (!internal->file->save()) {
-            throw TrackFileError::exceptionWith("Couldn't not save file at '%s'.", this->filePath()->toUTF8());
-        }
-    }
+    internal->metadataWasModified = false;
+    internal->markersWereModified = false;
 }

@@ -23,22 +23,7 @@
 #include "TrackFiles/MP4TrackFile.hpp"
 #include "TrackFiles/Internal/MP4TrackFile.hpp"
 
-#include <mp4tag.h>
-#include <mp4file.h>
-
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, MP4TrackFile, TrackFile);
-
-namespace NxA { namespace Serato { namespace Internal {
-    #pragma mark Constants
-    constexpr const character* mp4KeyItemName = "----:com.apple.iTunes:initialkey";
-    constexpr const character* mp4PublisherItemName = "----:com.apple.iTunes:publisher";
-    constexpr const character* mp4LabelItemName = "----:com.apple.iTunes:LABEL";
-
-    constexpr const character* mp4ComposerItemName = "\251wrt";
-    constexpr const character* mp4GroupingItemName = "\251grp";
-    constexpr const character* mp4BpmItemName = "tmpo";
-    constexpr const character* mp4ArtworkItemName = "covr";
-} } }
 
 using namespace NxA;
 using namespace NxA::Serato;
@@ -47,57 +32,20 @@ using namespace NxA::Serato;
 
 MP4TrackFile::Pointer MP4TrackFile::fileWithFileAt(const String& path, TrackFile::Flags flags)
 {
-    auto file = Internal::TagLibFilePointer(std::make_shared<TagLib::MP4::File>(path.toUTF8(),
-                                                                                true,
-                                                                                TagLib::AudioProperties::ReadStyle::Fast));
-    if (!file->isValid()) {
-        throw TrackFileError::exceptionWith("Error loading track file '%s'.", path.toUTF8());
-    }
-
-    auto mp4File = dynamic_cast<TagLib::MP4::File*>(&(*file));
-
-    auto internalObject = Internal::MP4TrackFile::Pointer(std::make_shared<Internal::MP4TrackFile>(path, file));
+    auto internalObject = Internal::MP4TrackFile::Pointer(std::make_shared<Internal::MP4TrackFile>(path));
     auto newFile = MP4TrackFile::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
-    newFile->internal->tag = newFile->internal->mp4Tag = mp4File->tag();
-    if (!newFile->internal->tag) {
-        throw TrackFileError::exceptionWith("Error reading tags from track file '%s'.", path.toUTF8());
-    }
 
-    if (flags & TrackFile::Flags::IgnoreMarkers) {
-        newFile->internal->markersWereIgnored = true;
-    }
-    else {
-        newFile->internal->readMarkers();
-    }
+    newFile->internal->markersWereIgnored = (flags & TrackFile::Flags::IgnoreMarkers);
+    newFile->internal->loadAndParseFile();
 
     return newFile;
 }
 
-#pragma mark Instance Methods
+#pragma mark Overriden TrackFile Instance Methods
 
 boolean MP4TrackFile::hasKey(void) const
 {
     return true;
-}
-
-String::Pointer MP4TrackFile::key(void) const
-{
-    return internal->stringValueForItemNamed(Internal::mp4KeyItemName);
-}
-
-String::Pointer MP4TrackFile::composer(void) const
-{
-    return internal->stringValueForItemNamed(Internal::mp4ComposerItemName);
-}
-
-String::Pointer MP4TrackFile::grouping(void) const
-{
-    return internal->stringValueForItemNamed(Internal::mp4GroupingItemName);
-}
-
-String::Pointer MP4TrackFile::bpm(void) const
-{
-    return String::stringWithFormat("%d", internal->integerValueForItemNamed(Internal::mp4BpmItemName));
 }
 
 boolean MP4TrackFile::hasRecordLabel(void) const
@@ -105,114 +53,26 @@ boolean MP4TrackFile::hasRecordLabel(void) const
     return true;
 }
 
-String::Pointer MP4TrackFile::recordLabel(void) const
-{
-    return internal->stringValueForItemNamed(Internal::mp4LabelItemName);
-}
-
-boolean MP4TrackFile::hasRemixer(void) const
-{
-    return false;
-}
-
-String::Pointer MP4TrackFile::remixer(void) const
-{
-    return String::string();
-}
-
-boolean MP4TrackFile::hasRating(void) const
-{
-    return false;
-}
-
-integer MP4TrackFile::rating(void) const
-{
-    return 0;
-}
-
-Blob::Pointer MP4TrackFile::artwork(void) const
-{
-    auto item = internal->mp4Tag->item(Internal::mp4ArtworkItemName);
-    if (item.isValid()) {
-        auto coverArtList = item.toCoverArtList();
-        auto coverArt = coverArtList.front();
-        auto coverArtData = coverArt.data();
-        auto size = coverArtData.size();
-        if (size) {
-            const byte* data = reinterpret_cast<const byte*>(coverArtData.data());
-            return Blob::blobWithMemoryAndSize(data, size);
-        }
-    }
-
-    return Blob::blob();
-}
-
-void MP4TrackFile::setKey(const String& key)
-{
-    if (key != this->key()) {
-        internal->setStringValueForItemNamed(key, Internal::mp4KeyItemName);
-        internal->metadataWasModified = true;
-    }
-}
-
-void MP4TrackFile::setComposer(const String& composer)
-{
-    if (composer != this->composer()) {
-        internal->setStringValueForItemNamed(composer, Internal::mp4ComposerItemName);
-        internal->metadataWasModified = true;
-    }
-}
-
-void MP4TrackFile::setGrouping(const String& grouping)
-{
-    if (grouping != this->grouping()) {
-        internal->setStringValueForItemNamed(grouping, Internal::mp4GroupingItemName);
-        internal->metadataWasModified = true;
-    }
-}
-
 void MP4TrackFile::setBpm(const String& bpm)
 {
     integer integerBpm = bpm.integerValue();
 
-    if (integerBpm != internal->integerValueForItemNamed(Internal::mp4BpmItemName)) {
-        internal->setIntegerValueForItemNamed(integerBpm, Internal::mp4BpmItemName);
+    if (integerBpm != internal->bpm->integerValue()) {
+        internal->bpm = String::stringWith(bpm);
         internal->metadataWasModified = true;
     }
 }
 
-void MP4TrackFile::setRecordLabel(const String& recordLabel)
+void MP4TrackFile::setReleaseDate(const String& date)
 {
-    if (recordLabel != this->recordLabel()) {
-        internal->setStringValueForItemNamed(recordLabel, Internal::mp4LabelItemName);
-        internal->setStringValueForItemNamed(recordLabel, Internal::mp4PublisherItemName);
-        internal->metadataWasModified = true;
+    if (date.length()) {
+        auto components = date.splitBySeperator('-');
+        if (components->length()) {
+            auto dateWithOnlyYear = String::stringWithFormat("%s-01-01", components->firstObject().toUTF8());
+            this->TrackFile::setReleaseDate(dateWithOnlyYear);
+            return;
+        }
     }
-}
 
-void MP4TrackFile::setRemixer(const String& remixer)
-{
-    NXA_ALOG("Illegal call to set a remixer on an MP4 file.");
-}
-
-void MP4TrackFile::setRating(integer rating)
-{
-    NXA_ALOG("Illegal call to set a rating on an MP4 file.");
-}
-
-void MP4TrackFile::setArtwork(const Blob& artwork)
-{
-    if (artwork != this->artwork()) {
-        TagLib::ByteVector data(*artwork.data(), artwork.size());
-        TagLib::MP4::CoverArt newCoverArt(TagLib::MP4::CoverArt::Unknown, data);
-        TagLib::MP4::CoverArtList newCoverArtList;
-        newCoverArtList.append(newCoverArt);
-
-        TagLib::MP4::Item newItem(newCoverArtList);
-        // -- TODO: This needs to be set to the correct type.
-        newItem.setAtomDataType(TagLib::MP4::AtomDataType::TypePNG);
-
-        internal->mp4Tag->setItem(Internal::mp4ArtworkItemName, newItem);
-        internal->metadataWasModified = true;
-    }
+    this->TrackFile::setReleaseDate(date);
 }

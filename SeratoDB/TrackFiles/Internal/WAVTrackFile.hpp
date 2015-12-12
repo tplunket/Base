@@ -27,11 +27,20 @@
 
 #include <Base/Base.hpp>
 
+#include <wavproperties.h>
+
 namespace NxA { namespace Serato { namespace Internal {
     struct WAVTrackFile : public ID3TrackFile {
         NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTORS_FOR(NxA::Serato, WAVTrackFile);
 
         #pragma mark Constructor & Destructors
-        WAVTrackFile(const String& path, const TagLibFilePointer& newFile);
+        WAVTrackFile(const String& path);
+
+        #pragma mark Instance Methods
+        void parseAudioProperties(const TagLib::RIFF::WAV::Properties& properties);
+
+        #pragma mark Overridden TrackFile Instance Methods
+        virtual void loadAndParseFile(void) override;
+        virtual void updateAndSaveFileIfModified(void) const override;
     };
 } } }

@@ -27,11 +27,20 @@
 
 #include <Base/Base.hpp>
 
+#include <aiffproperties.h>
+
 namespace NxA { namespace Serato { namespace Internal {
     struct AIFFTrackFile : public ID3TrackFile {
         NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTORS_FOR(NxA::Serato, AIFFTrackFile);
 
         #pragma mark Constructors & Destuctors
-        AIFFTrackFile(const String& path, const TagLibFilePointer& newFile);
+        AIFFTrackFile(const String& path);
+
+        #pragma mark Instance methods
+        void parseAudioProperties(const TagLib::RIFF::AIFF::Properties& properties);
+
+        #pragma mark Overridden TrackFile Instance methods
+        virtual void loadAndParseFile(void) override;
+        virtual void updateAndSaveFileIfModified(void) const override;
     };
 } } }

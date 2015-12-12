@@ -29,22 +29,31 @@
 
 #include <id3v2tag.h>
 #include <xiphcomment.h>
+#include <flacproperties.h>
 
 namespace NxA { namespace Serato { namespace Internal {
     struct FLACTrackFile : public TrackFile {
         NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTORS_FOR(NxA::Serato, FLACTrackFile);
 
         #pragma mark Constructor & Destructors
-        FLACTrackFile(const String& path, const TagLibFilePointer& newFile);
+        FLACTrackFile(const String& path);
 
         #pragma mark Instance Variables
-        TagLib::ID3v2::Tag* id3v2Tag;
-        TagLib::Ogg::XiphComment* oggComment;
+        boolean hasRating;
 
         #pragma mark Instance Methods
-        void readMarkers(void);
-        void writeMarkersV2Item(void);
-        void writeGridMarkersItem(void);
-        void writeMarkers(void);
+        void parseAudioProperties(const TagLib::FLAC::Properties& properties);
+        void parseTag(const TagLib::ID3v2::Tag& id3v2Tag);
+        void parseComment(const TagLib::Ogg::XiphComment& oggComment);
+        void parseMarkersInComment(const TagLib::Ogg::XiphComment& oggComment);
+        void updateMarkersV2ItemInComment(TagLib::Ogg::XiphComment& oggComment) const;
+        void updateGridMarkersItemInComment(TagLib::Ogg::XiphComment& oggComment) const;
+        void updateMarkersInComment(TagLib::Ogg::XiphComment& oggComment) const;
+        void updateTag(TagLib::ID3v2::Tag& tag) const;
+        void updateComment(TagLib::Ogg::XiphComment& oggComment) const;
+
+        #pragma mark Overridden TrackFile Instance Methods
+        virtual void loadAndParseFile(void) override;
+        virtual void updateAndSaveFileIfModified(void) const override;
     };
 } } }

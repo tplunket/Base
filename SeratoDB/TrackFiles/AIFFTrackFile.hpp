@@ -37,8 +37,7 @@ namespace NxA { namespace Serato {
         #pragma mark Factory Methods
         static AIFFTrackFile::Pointer fileWithFileAt(const String& path, TrackFile::Flags flags);
 
-        #pragma mark Instance Methods
-        virtual boolean hasBitDepth(void) const;
-        virtual uinteger32 bitDepthInBits(void) const;
+        #pragma mark Overriden TrackFile Instance Methods
+        virtual boolean hasBitDepth(void) const override;
     };
 } }

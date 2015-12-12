@@ -44,24 +44,24 @@ namespace NxA { namespace Serato { namespace Internal {
         NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTORS_FOR(NxA::Serato, OGGTrackFile);
 
         #pragma mark Constructor & Destructors
-        OGGTrackFile(const String& path, const TagLibFilePointer& newFile);
+        OGGTrackFile(const String& path);
 
         #pragma mark Class Methods
-        static String::Pointer stringValueForFieldNamedInComment(const character* name, const TagLib::Ogg::XiphComment* oggComment);
-        static void setStringValueForFieldNamedInComment(const String& value, const character* name, TagLib::Ogg::XiphComment* oggComment);
-        static String::Pointer releaseDateInComment(TagLib::Ogg::XiphComment* oggComment);
-        static void setReleaseDateInComment(const String& date, TagLib::Ogg::XiphComment* oggComment);
-
-        #pragma mark Instance Variables
-        TagLib::Ogg::XiphComment* oggComment;
+        static String::Pointer stringValueForFieldNamedInComment(const character* name, const TagLib::Ogg::XiphComment& oggComment);
+        static void setStringValueForFieldNamedInComment(const String& value, const character* name, TagLib::Ogg::XiphComment& oggComment);
+        static String::Pointer releaseDateInComment(const TagLib::Ogg::XiphComment& oggComment);
+        static void setReleaseDateInComment(const String& date, TagLib::Ogg::XiphComment& oggComment);
 
         #pragma mark Instance Methods
-        String::Pointer stringValueForFieldNamed(const character* name) const;
-        void setStringValueForFieldNamed(const String& value, const character* name);
+        void parseMarkersInComment(const TagLib::Ogg::XiphComment& oggComment);
+        void replaceGridMarkersFieldInComment(TagLib::Ogg::XiphComment& oggComment) const;
+        void replaceMarkersV2FieldInComment(TagLib::Ogg::XiphComment& oggComment) const;
+        void updateMarkersInComment(TagLib::Ogg::XiphComment& oggComment) const;
+        void parseComment(TagLib::Ogg::XiphComment& oggComment);
+        void updateComment(TagLib::Ogg::XiphComment& oggComment) const;
 
-        void readMarkers(void);
-        void replaceGridMarkersField(void);
-        void replaceMarkersV2Field(void);
-        void writeMarkers(void);
+        #pragma mark Overridden TrackFile Instance Methods
+        virtual void loadAndParseFile(void) override;
+        virtual void updateAndSaveFileIfModified(void) const override;
     };
 } } }

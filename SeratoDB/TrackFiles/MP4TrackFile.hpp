@@ -37,31 +37,10 @@ namespace NxA { namespace Serato {
         #pragma mark Factory Methods
         static MP4TrackFile::Pointer fileWithFileAt(const String& path, TrackFile::Flags flags);
 
-        #pragma mark Instance Methods
-        virtual boolean hasKey(void) const;
-        virtual String::Pointer key(void) const;
-        virtual String::Pointer composer(void) const;
-        virtual String::Pointer grouping(void) const;
-        virtual String::Pointer bpm(void) const;
-
-        virtual boolean hasRecordLabel(void) const;
-        virtual String::Pointer recordLabel(void) const;
-        virtual boolean hasRemixer(void) const;
-        virtual String::Pointer remixer(void) const;
-        virtual boolean hasRating(void) const;
-        virtual integer rating(void) const;
-
-        virtual Blob::Pointer artwork(void) const;
-
-        virtual void setKey(const String& key);
-        virtual void setComposer(const String& composer);
-        virtual void setGrouping(const String& grouping);
-        virtual void setBpm(const String& bpm);
-
-        virtual void setRecordLabel(const String& recordLabel);
-        virtual void setRemixer(const String& emixer);
-        virtual void setRating(integer rating);
-
-        virtual void setArtwork(const Blob& artwork);
+        #pragma mark Overriden TrackFile Instance Methods
+        virtual boolean hasKey(void) const override;
+        virtual boolean hasRecordLabel(void) const override;
+        virtual void setBpm(const String& bpm) override;
+        virtual void setReleaseDate(const String& date) override;
     };
 } }

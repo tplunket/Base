@@ -22,6 +22,9 @@
 
 #include "TrackFiles/Internal/MP4TrackFile.hpp"
 
+#include <mp4tag.h>
+#include <mp4file.h>
+
 // -- Generated internal implementation ommitted because this class does not use the default contructor.
 
 namespace NxA { namespace Serato { namespace Internal {
@@ -39,6 +42,13 @@ namespace NxA { namespace Serato { namespace Internal {
     constexpr const character* mp4MarkersItemName = "----:com.serato.dj:markersv2";
     constexpr const character* mp4MarkersV2ItemName = "----:com.serato.dj:markersv2";
     constexpr const character* mp4BeatgridItemName = "----:com.serato.dj:beatgrid";
+    constexpr const character* mp4KeyItemName = "----:com.apple.iTunes:initialkey";
+    constexpr const character* mp4PublisherItemName = "----:com.apple.iTunes:publisher";
+    constexpr const character* mp4LabelItemName = "----:com.apple.iTunes:LABEL";
+    constexpr const character* mp4ComposerItemName = "\251wrt";
+    constexpr const character* mp4GroupingItemName = "\251grp";
+    constexpr const character* mp4BpmItemName = "tmpo";
+    constexpr const character* mp4ArtworkItemName = "covr";
 
     constexpr const character* mp4MarkersV2FrameDescription = "Serato Markers2";
     constexpr const character* mp4BeatgridFrameDescription = "Serato Beatgrid";
@@ -49,22 +59,22 @@ using namespace NxA::Serato::Internal;
 
 #pragma mark Constructors & Destructors
 
-MP4TrackFile::MP4TrackFile(const String& path, const TagLibFilePointer& newFile) : TrackFile(path, newFile) { }
+MP4TrackFile::MP4TrackFile(const String& path) : TrackFile(path) { }
 
-#pragma mark Instance Methods
+#pragma mark Class Methods
 
-integer MP4TrackFile::integerValueForItemNamed(const character* name) const
+integer MP4TrackFile::integerValueForItemNamedInTag(const character* name, const TagLib::MP4::Tag& tag)
 {
-    auto item = this->mp4Tag->item(name);
+    auto item = tag.item(name);
     if (!item.isValid()) {
         return 0;
     }
     return item.toInt();
 }
 
-String::Pointer MP4TrackFile::stringValueForItemNamed(const character* name) const
+String::Pointer MP4TrackFile::stringValueForItemNamedInTag(const character* name, const TagLib::MP4::Tag& tag)
 {
-    auto item = this->mp4Tag->item(name);
+    auto item = tag.item(name);
     if (!item.isValid()) {
         return String::string();
     }
@@ -77,21 +87,40 @@ String::Pointer MP4TrackFile::stringValueForItemNamed(const character* name) con
     return String::stringWith(stringList.front().toCString());
 }
 
-void MP4TrackFile::setIntegerValueForItemNamed(integer value, const character* name)
+void MP4TrackFile::setIntegerValueForItemNamedInTag(integer value, const character* name, TagLib::MP4::Tag& tag)
 {
     auto newItem = std::make_unique<TagLib::MP4::Item>(value);
-    this->mp4Tag->setItem(name, *newItem);
+    tag.setItem(name, *newItem);
 }
 
-void MP4TrackFile::setStringValueForItemNamed(const String& value, const character* name)
+void MP4TrackFile::setStringValueForItemNamedInTag(const String& value, const character* name, TagLib::MP4::Tag& tag)
 {
     auto newItem = std::make_unique<TagLib::MP4::Item>(TagLib::StringList(TagLib::String(value.toUTF8())));
-    this->mp4Tag->setItem(name, *newItem);
+    tag.setItem(name, *newItem);
 }
 
-void MP4TrackFile::readMarkers(void)
+Blob::Pointer MP4TrackFile::artworkInTag(const TagLib::MP4::Tag& tag)
 {
-    auto markersItem = this->mp4Tag->item(mp4MarkersV2ItemName);
+    auto item = tag.item(Internal::mp4ArtworkItemName);
+    if (item.isValid()) {
+        auto coverArtList = item.toCoverArtList();
+        auto coverArt = coverArtList.front();
+        auto coverArtData = coverArt.data();
+        auto size = coverArtData.size();
+        if (size) {
+            const byte* data = reinterpret_cast<const byte*>(coverArtData.data());
+            return Blob::blobWithMemoryAndSize(data, size);
+        }
+    }
+
+    return Blob::blob();
+}
+
+#pragma mark Instance Methods
+
+void MP4TrackFile::parseMarkersInTag(const TagLib::MP4::Tag& tag)
+{
+    auto markersItem = tag.item(mp4MarkersV2ItemName);
     if (markersItem.isValid() && (markersItem.atomDataType() == TagLib::MP4::AtomDataType::TypeUTF8)) {
         auto encodedData = markersItem.toStringList().toString();
 
@@ -101,12 +130,12 @@ void MP4TrackFile::readMarkers(void)
                                                                              encodedDataSize));
             auto headerStruct = reinterpret_cast<const MP4MarkersHeaderStruct*>(decodedData->data());
             if ((headerStruct->majorVersion == 1) && (headerStruct->minorVersion == 1)) {
-                this->readMarkersV2FromBase64String(headerStruct->data, decodedData->size() - sizeof(MP4MarkersHeaderStruct));
+                this->parseMarkersV2FromBase64String(headerStruct->data, decodedData->size() - sizeof(MP4MarkersHeaderStruct));
             }
         }
     }
 
-    auto beatgridItem = this->mp4Tag->item(mp4BeatgridItemName);
+    auto beatgridItem = tag.item(mp4BeatgridItemName);
     if (beatgridItem.isValid() && (beatgridItem.atomDataType() == TagLib::MP4::AtomDataType::TypeUTF8)) {
         auto encodedData = beatgridItem.toStringList().toString();
 
@@ -117,16 +146,16 @@ void MP4TrackFile::readMarkers(void)
             auto headerStruct = reinterpret_cast<const MP4MarkersHeaderStruct*>(decodedData->data());
             if ((headerStruct->majorVersion == 1) && (headerStruct->minorVersion == 0)) {
                 if ((decodedData->size() - sizeof(MP4MarkersHeaderStruct)) > 0) {
-                    this->readGridMarkersFrom(headerStruct->data);
+                    this->parseGridMarkersFrom(headerStruct->data);
                 }
             }
         }
     }
 }
 
-void MP4TrackFile::replaceMarkersV2Item(void)
+void MP4TrackFile::replaceMarkersV2ItemInTag(TagLib::MP4::Tag& tag) const
 {
-    this->mp4Tag->removeItem(mp4MarkersV2ItemName);
+    tag.removeItem(mp4MarkersV2ItemName);
 
     auto base64String = this->base64StringFromMarkersV2();
     if (!base64String->length()) {
@@ -159,12 +188,12 @@ void MP4TrackFile::replaceMarkersV2Item(void)
     newItem.setAtomDataType(TagLib::MP4::AtomDataType::TypeUTF8);
     NXA_ASSERT_TRUE(newItem.isValid());
 
-    this->mp4Tag->setItem(mp4MarkersV2ItemName, newItem);
+    tag.setItem(mp4MarkersV2ItemName, newItem);
 }
 
-void MP4TrackFile::replaceGridMarkersItem(void)
+void MP4TrackFile::replaceGridMarkersItemInTag(TagLib::MP4::Tag& tag) const
 {
-    this->mp4Tag->removeItem(mp4BeatgridItemName);
+    tag.removeItem(mp4BeatgridItemName);
 
     auto gridMarkerData = this->gridMarkerDataFromGridMarkers();
     if (!gridMarkerData->size()) {
@@ -192,20 +221,121 @@ void MP4TrackFile::replaceGridMarkersItem(void)
     newItem.setAtomDataType(TagLib::MP4::AtomDataType::TypeUTF8);
     NXA_ASSERT_TRUE(newItem.isValid());
 
-    this->mp4Tag->setItem(mp4BeatgridItemName, newItem);
+    tag.setItem(mp4BeatgridItemName, newItem);
 }
 
-void MP4TrackFile::writeMarkers(void)
+void MP4TrackFile::updateMarkersInTag(TagLib::MP4::Tag& tag) const
 {
-    this->mp4Tag->removeItem(mp4MarkersItemName);
+    tag.removeItem(mp4MarkersItemName);
     TagLib::String newString;
     TagLib::StringList newList(newString);
 
     TagLib::MP4::Item newItem(newList);
     newItem.setAtomDataType(TagLib::MP4::AtomDataType::TypeUTF8);
     NXA_ASSERT_TRUE(newItem.isValid());
-    this->mp4Tag->setItem(mp4MarkersItemName, newItem);
+    tag.setItem(mp4MarkersItemName, newItem);
 
-    this->replaceMarkersV2Item();
-    this->replaceGridMarkersItem();
+    this->replaceMarkersV2ItemInTag(tag);
+    this->replaceGridMarkersItemInTag(tag);
+}
+
+void MP4TrackFile::parseTag(const TagLib::MP4::Tag& tag)
+{
+    this->TrackFile::parseTag(tag);
+
+    this->key = MP4TrackFile::stringValueForItemNamedInTag(Internal::mp4KeyItemName, tag);
+    this->composer = MP4TrackFile::stringValueForItemNamedInTag(Internal::mp4ComposerItemName, tag);
+    this->grouping = MP4TrackFile::stringValueForItemNamedInTag(Internal::mp4GroupingItemName, tag);
+    this->bpm = String::stringWithFormat("%d", MP4TrackFile::integerValueForItemNamedInTag(Internal::mp4BpmItemName, tag));
+    this->recordLabel = MP4TrackFile::stringValueForItemNamedInTag(Internal::mp4LabelItemName, tag);
+    this->artwork = MP4TrackFile::artworkInTag(tag);
+}
+
+void MP4TrackFile::updateArtworkInTag(TagLib::MP4::Tag& tag) const
+{
+    TagLib::ByteVector data(*this->artwork->data(), this->artwork->size());
+    TagLib::MP4::CoverArt newCoverArt(TagLib::MP4::CoverArt::Unknown, data);
+    TagLib::MP4::CoverArtList newCoverArtList;
+    newCoverArtList.append(newCoverArt);
+
+    TagLib::MP4::Item newItem(newCoverArtList);
+    // -- TODO: This needs to be set to the correct type.
+    newItem.setAtomDataType(TagLib::MP4::AtomDataType::TypePNG);
+
+    tag.setItem(Internal::mp4ArtworkItemName, newItem);
+}
+
+void MP4TrackFile::updateTag(TagLib::MP4::Tag& tag) const
+{
+    this->TrackFile::updateTag(tag);
+
+    MP4TrackFile::setStringValueForItemNamedInTag(this->key, Internal::mp4KeyItemName, tag);
+    MP4TrackFile::setStringValueForItemNamedInTag(this->composer, Internal::mp4ComposerItemName, tag);
+    MP4TrackFile::setStringValueForItemNamedInTag(this->grouping, Internal::mp4GroupingItemName, tag);
+    MP4TrackFile::setIntegerValueForItemNamedInTag(this->bpm->integerValue(), Internal::mp4BpmItemName, tag);
+    MP4TrackFile::setStringValueForItemNamedInTag(this->recordLabel, Internal::mp4LabelItemName, tag);
+    MP4TrackFile::setStringValueForItemNamedInTag(this->recordLabel, Internal::mp4PublisherItemName, tag);
+
+    this->updateArtworkInTag(tag);
+}
+
+#pragma mark Overridden TrackFile Instance Methods
+
+void MP4TrackFile::loadAndParseFile(void)
+{
+    TagLib::MP4::File file(this->filePath->toUTF8(),
+                           true,
+                           TagLib::AudioProperties::ReadStyle::Fast);
+    if (!file.isValid()) {
+        throw TrackFileError::exceptionWith("Error loading track file '%s'.", this->filePath->toUTF8());
+    }
+
+    auto tag = file.tag();
+    if (!tag) {
+        throw TrackFileError::exceptionWith("Error reading tags from track file '%s'.", this->filePath->toUTF8());
+    }
+    this->parseTag(*tag);
+
+    auto audioProperties = file.audioProperties();
+    if (!audioProperties) {
+        throw TrackFileError::exceptionWith("Error reading audio properties from track file '%s'.", this->filePath->toUTF8());
+    }
+    this->parseAudioProperties(*audioProperties);
+
+    if (!this->markersWereIgnored) {
+        this->parseMarkersInTag(*tag);
+    }
+}
+
+void MP4TrackFile::updateAndSaveFileIfModified(void) const
+{
+    if (!this->metadataWasModified && !this->markersWereModified) {
+        return;
+    }
+
+    TagLib::MP4::File file(this->filePath->toUTF8(),
+                           true,
+                           TagLib::AudioProperties::ReadStyle::Fast);
+    if (!file.isValid()) {
+        throw TrackFileError::exceptionWith("Error loading track file '%s'.", this->filePath->toUTF8());
+    }
+
+    auto tag = file.tag();
+    if (!tag) {
+        throw TrackFileError::exceptionWith("Error reading tags from track file '%s'.", this->filePath->toUTF8());
+    }
+
+    if (this->metadataWasModified) {
+        this->updateTag(*tag);
+    }
+
+    if (this->markersWereModified) {
+        NXA_ASSERT_FALSE(this->markersWereIgnored);
+
+        this->updateMarkersInTag(*tag);
+    }
+
+    // -- This is misleading. It doesn't actually save anything to disk.
+    // -- Instead, real saving takes place in the file's desctructor. #ugh
+    file.save();
 }

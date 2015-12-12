@@ -22,6 +22,9 @@
 
 #include "TrackFiles/Internal/FLACTrackFile.hpp"
 #include "TrackFiles/Internal/ID3TrackFile.hpp"
+#include "TrackFiles/Internal/OGGTrackFile.hpp"
+
+#include <flacfile.h>
 
 // -- Generated internal implementation ommitted because this class does not use the default contructor.
 
@@ -47,13 +50,49 @@ using namespace NxA::Serato::Internal;
 
 #pragma mark Constructors & Destructors
 
-FLACTrackFile::FLACTrackFile(const String& path, const TagLibFilePointer& newFile) : TrackFile(path, newFile) { }
+FLACTrackFile::FLACTrackFile(const String& path) : TrackFile(path),
+                                                   hasRating(false) { }
 
 #pragma mark Instance Methods
 
-void FLACTrackFile::readMarkers(void)
+void FLACTrackFile::parseAudioProperties(const TagLib::FLAC::Properties& properties)
 {
-    auto& fieldListMap = this->oggComment->fieldListMap();
+    this->TrackFile::parseAudioProperties(properties);
+
+    this->bitDepthInBits = properties.sampleWidth();
+}
+
+void FLACTrackFile::parseTag(const TagLib::ID3v2::Tag& tag)
+{
+    this->TrackFile::parseTag(tag);
+
+    this->releaseDate = ID3TrackFile::releaseDateFromTag(tag);
+
+    this->key = ID3TrackFile::stringValueForFrameNamedInTag(Internal::id3KeyFrameName, tag);
+    this->composer = ID3TrackFile::stringValueForFrameNamedInTag(Internal::id3ComposerFrameName, tag);
+    this->grouping = ID3TrackFile::stringValueForFrameNamedInTag(Internal::id3GroupingFrameName, tag);
+    this->bpm = ID3TrackFile::stringValueForFrameNamedInTag(Internal::id3BpmFrameName, tag);
+    this->rating = ID3TrackFile::ratingValueForRatingFrameInTag(tag);
+    this->hasRating = true;
+}
+
+void FLACTrackFile::parseComment(const TagLib::Ogg::XiphComment& oggComment)
+{
+    this->TrackFile::parseTag(oggComment);
+
+    this->releaseDate = OGGTrackFile::releaseDateInComment(oggComment);
+
+    this->key = OGGTrackFile::stringValueForFieldNamedInComment(Internal::oggKeyFieldName, oggComment);
+    this->composer = OGGTrackFile::stringValueForFieldNamedInComment(Internal::oggComposerFieldName, oggComment);
+    this->grouping = OGGTrackFile::stringValueForFieldNamedInComment(Internal::oggGroupingFieldName, oggComment);
+    this->bpm = OGGTrackFile::stringValueForFieldNamedInComment(Internal::oggBpmFieldName, oggComment);
+    // -- TODO: Rating to be implemented.
+    this->hasRating = false;
+}
+
+void FLACTrackFile::parseMarkersInComment(const TagLib::Ogg::XiphComment& oggComment)
+{
+    auto& fieldListMap = oggComment.fieldListMap();
 
     auto markersEncodedData = fieldListMap[flacMarkersV2ItemName].toString();
     auto encodedDataSize = markersEncodedData.size();
@@ -63,7 +102,7 @@ void FLACTrackFile::readMarkers(void)
 
         auto headerStruct = reinterpret_cast<const FLACMarkersHeaderStruct*>(decodedMarkersData->data());
         if ((headerStruct->majorVersion == 1) && (headerStruct->minorVersion == 1)) {
-            this->readMarkersV2FromBase64String(headerStruct->data, decodedMarkersData->size() - sizeof(FLACMarkersHeaderStruct));
+            this->parseMarkersV2FromBase64String(headerStruct->data, decodedMarkersData->size() - sizeof(FLACMarkersHeaderStruct));
         }
     }
 
@@ -75,15 +114,15 @@ void FLACTrackFile::readMarkers(void)
         auto headerStruct = reinterpret_cast<const FLACMarkersHeaderStruct*>(decodedGridMarkersData->data());
         if ((headerStruct->majorVersion == 1) && (headerStruct->minorVersion == 0)) {
             if ((decodedGridMarkersData->size() - sizeof(FLACMarkersHeaderStruct)) > 0) {
-                this->readGridMarkersFrom(headerStruct->data);
+                this->parseGridMarkersFrom(headerStruct->data);
             }
         }
     }
 }
 
-void FLACTrackFile::writeMarkersV2Item(void)
+void FLACTrackFile::updateMarkersV2ItemInComment(TagLib::Ogg::XiphComment& oggComment) const
 {
-    this->oggComment->removeField(flacMarkersV2ItemName);
+    oggComment.removeField(flacMarkersV2ItemName);
 
     auto base64String = this->base64StringFromMarkersV2();
     if (!base64String->length()) {
@@ -105,12 +144,12 @@ void FLACTrackFile::writeMarkersV2Item(void)
     decodedData->appendWithoutStringTermination(base64String->toUTF8());
 
     auto encodedData = Blob::base64StringFor(decodedData->data(), decodedData->size());
-    this->oggComment->addField(flacMarkersV2ItemName, TagLib::String(encodedData->toUTF8()));
+    oggComment.addField(flacMarkersV2ItemName, TagLib::String(encodedData->toUTF8()));
 }
 
-void FLACTrackFile::writeGridMarkersItem(void)
+void FLACTrackFile::updateGridMarkersItemInComment(TagLib::Ogg::XiphComment& oggComment) const
 {
-    this->oggComment->removeField(flacBeatgridItemName);
+    oggComment.removeField(flacBeatgridItemName);
 
     auto gridMarkerData = this->gridMarkerDataFromGridMarkers();
     if (!gridMarkerData->size()) {
@@ -131,21 +170,126 @@ void FLACTrackFile::writeGridMarkersItem(void)
     decodedData->append(gridMarkerData);
 
     auto encodedData = Blob::base64StringFor(decodedData->data(), decodedData->size());
-    this->oggComment->addField(flacBeatgridItemName, TagLib::String(encodedData->toUTF8()));
+    oggComment.addField(flacBeatgridItemName, TagLib::String(encodedData->toUTF8()));
 }
 
-void FLACTrackFile::writeMarkers(void)
+void FLACTrackFile::updateMarkersInComment(TagLib::Ogg::XiphComment& oggComment) const
 {
-    if (this->id3v2Tag) {
-        ID3TrackFile::replaceMarkersFrameInTagWithEmptyFrame(this->id3v2Tag);
-        ID3TrackFile::replaceMarkersV2FrameInTagWith(this->id3v2Tag, this->base64StringFromMarkersV2());
-        ID3TrackFile::replaceGridMarkersFrameInTagWith(this->id3v2Tag, this->gridMarkerDataFromGridMarkers());
+    oggComment.removeField(flacMarkersItemName);
+    oggComment.addField(flacMarkersItemName, TagLib::String());
+
+    this->updateMarkersV2ItemInComment(oggComment);
+    this->updateGridMarkersItemInComment(oggComment);
+}
+
+void FLACTrackFile::updateTag(TagLib::ID3v2::Tag& tag) const
+{
+    this->TrackFile::updateTag(tag);
+
+    ID3TrackFile::setReleaseDateInTag(this->releaseDate, tag);
+
+    ID3TrackFile::setStringValueForFrameNamedInTag(this->key, Internal::id3KeyFrameName, tag);
+    ID3TrackFile::setStringValueForFrameNamedInTag(this->composer, Internal::id3ComposerFrameName, tag);
+    ID3TrackFile::setStringValueForFrameNamedInTag(this->grouping, Internal::id3GroupingFrameName, tag);
+    ID3TrackFile::setStringValueForFrameNamedInTag(this->bpm, Internal::id3BpmFrameName, tag);
+    ID3TrackFile::setRatingValueForRatingFrameInTag(this->rating, tag);
+    // -- TODO: Artwork to be implemented.
+}
+
+void FLACTrackFile::updateComment(TagLib::Ogg::XiphComment& oggComment) const
+{
+    this->TrackFile::updateTag(oggComment);
+
+    OGGTrackFile::setReleaseDateInComment(this->releaseDate, oggComment);
+
+    OGGTrackFile::setStringValueForFieldNamedInComment(this->key, Internal::oggKeyFieldName, oggComment);
+    OGGTrackFile::setStringValueForFieldNamedInComment(this->composer, Internal::oggComposerFieldName, oggComment);
+    OGGTrackFile::setStringValueForFieldNamedInComment(this->grouping, Internal::oggGroupingFieldName, oggComment);
+    OGGTrackFile::setStringValueForFieldNamedInComment(this->bpm, Internal::oggBpmFieldName, oggComment);
+    // -- TODO: Artwork to be implemented.
+}
+
+#pragma mark Overridden TrackFile Instance Methods
+
+void FLACTrackFile::loadAndParseFile(void)
+{
+    TagLib::FLAC::File file(this->filePath->toUTF8(),
+                            true,
+                            TagLib::AudioProperties::ReadStyle::Fast);
+
+    if (!file.isValid()) {
+        throw TrackFileError::exceptionWith("Error loading track file '%s'.", this->filePath->toUTF8());
+    }
+
+    auto id3v2Tag = file.hasID3v2Tag() ? file.ID3v2Tag() : nullptr;
+    auto oggComment = file.hasXiphComment() ? file.xiphComment() : nullptr;
+    if (!id3v2Tag && !oggComment) {
+        throw TrackFileError::exceptionWith("Error reading tags from track file '%s'.", this->filePath->toUTF8());
+    }
+    if (oggComment) {
+        this->parseComment(*oggComment);
     }
     else {
-        this->oggComment->removeField(flacMarkersItemName);
-        this->oggComment->addField(flacMarkersItemName, TagLib::String());
-
-        this->writeMarkersV2Item();
-        this->writeGridMarkersItem();
+        this->parseTag(*id3v2Tag);
     }
+
+    auto audioProperties = file.audioProperties();
+    if (!audioProperties) {
+        throw TrackFileError::exceptionWith("Error reading audio properties from track file '%s'.", this->filePath->toUTF8());
+    }
+    this->parseAudioProperties(*audioProperties);
+
+    if (!this->markersWereIgnored) {
+        if (oggComment) {
+            this->parseMarkersInComment(*oggComment);
+        }
+        else {
+            ID3TrackFile::parseMarkersInTagToTrackFile(*id3v2Tag, *this);
+        }
+    }
+}
+
+void FLACTrackFile::updateAndSaveFileIfModified(void) const
+{
+    if (!this->metadataWasModified && !this->markersWereModified) {
+        return;
+    }
+
+    TagLib::FLAC::File file(this->filePath->toUTF8(),
+                            true,
+                            TagLib::AudioProperties::ReadStyle::Fast);
+
+    if (!file.isValid()) {
+        throw TrackFileError::exceptionWith("Error loading track file '%s'.", this->filePath->toUTF8());
+    }
+
+    auto id3v2Tag = file.hasID3v2Tag() ? file.ID3v2Tag() : nullptr;
+    auto oggComment = file.hasXiphComment() ? file.xiphComment() : nullptr;
+    if (!id3v2Tag && !oggComment) {
+        throw TrackFileError::exceptionWith("Error reading tags from track file '%s'.", this->filePath->toUTF8());
+    }
+
+    if (this->metadataWasModified) {
+        if (oggComment) {
+            this->updateComment(*oggComment);
+        }
+        else {
+            this->updateTag(*id3v2Tag);
+        }
+    }
+
+    if (this->markersWereModified) {
+        NXA_ASSERT_FALSE(this->markersWereIgnored);
+
+        if (oggComment) {
+            this->updateMarkersInComment(*oggComment);
+        }
+        else {
+            ID3TrackFile::updateMarkersInTagFromTrackFile(*id3v2Tag, *this);
+        }
+    }
+
+    // -- This is misleading. It doesn't actually save anything to disk.
+    // -- Instead, real saving takes place in the file's desctructor. #ugh
+    file.save();
 }

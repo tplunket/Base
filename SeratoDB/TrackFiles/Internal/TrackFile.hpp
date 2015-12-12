@@ -25,32 +25,56 @@
 #include <Base/Internal/Object.hpp>
 
 #include "TrackFiles/TrackFile.hpp"
+#include "Markers/CueMarker.hpp"
+#include "Markers/LoopMarker.hpp"
+#include "Markers/GridMarker.hpp"
 
 #include <Base/Base.hpp>
 
 #include <tfile.h>
 #include <tpropertymap.h>
+#include <audioproperties.h>
 
 namespace NxA { namespace Serato { namespace Internal {
-    using TagLibFilePointer = NxA::Pointer<TagLib::File>;
-
     struct TrackFile : public NxA::Internal::Object {
         NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTORS_FOR(NxA::Serato, TrackFile);
 
         #pragma mark Constructor & Destructors
-        TrackFile(const String& path, const TagLibFilePointer& newFile);
+        TrackFile(const String& path);
 
         #pragma mark Class Methods
         static const byte* nextTagPositionAfterTagNamed(const String& tagName, const byte* currentTagPosition);
         static Blob::Pointer markerV2TagDataFrom(const byte* tagStart);
 
         #pragma mark Instance Variables
-        String::PointerToConst trackFilePath;
-        TagLibFilePointer file;
-        TagLib::Tag* tag;
+        String::PointerToConst filePath;
         boolean markersWereIgnored;
         boolean markersWereModified;
         boolean metadataWasModified;
+
+        String::Pointer title;
+        String::Pointer artist;
+        String::Pointer genre;
+        String::Pointer key;
+        String::Pointer comments;
+        String::Pointer album;
+        String::Pointer composer;
+        String::Pointer grouping;
+        String::Pointer bpm;
+        count trackNumber;
+
+        count audioDataSizeInBytes;
+        uinteger32 lengthInMilliseconds;
+        uinteger32 bitRateInKiloBitsPerSecond;
+        boolean hasBitDepth;
+        uinteger32 bitDepthInBits;
+        uinteger32 sampleRateInSamplesPerSecond;
+        Blob::Pointer artwork;
+
+        String::Pointer recordLabel;
+        String::Pointer remixer;
+        integer rating;
+        String::Pointer releaseDate;
 
         Serato::CueMarker::Array::Pointer cueMarkers;
         Serato::LoopMarker::Array::Pointer loopMarkers;
@@ -58,11 +82,15 @@ namespace NxA { namespace Serato { namespace Internal {
         Blob::Array::Pointer otherTags;
 
         #pragma mark Instance Methods
-        const byte* readMarkerAtAndAdvanceToNextTag(const byte* tagStart);
-        void readMarkersV2FromBase64String(const byte* markerV2Data, count totalSize);
-        void readGridMarkersFrom(const byte* gridMarkerData);
-        String::Pointer base64StringFromMarkersV2(void);
-        Blob::Pointer gridMarkerDataFromGridMarkers(void);
-        virtual void writeMarkers(void) = 0;
+        virtual void loadAndParseFile(void) = 0;
+        virtual void updateAndSaveFileIfModified(void) const = 0;
+        void parseTag(const TagLib::Tag& tag);
+        void updateTag(TagLib::Tag& tag) const;
+        void parseAudioProperties(const TagLib::AudioProperties& properties);
+        const byte* parseMarkerAtAndAdvanceToNextTag(const byte* tagStart);
+        void parseMarkersV2FromBase64String(const byte* markerV2Data, count totalSize);
+        void parseGridMarkersFrom(const byte* gridMarkerData);
+        String::Pointer base64StringFromMarkersV2(void) const;
+        Blob::Pointer gridMarkerDataFromGridMarkers(void) const;
     };
 } } }

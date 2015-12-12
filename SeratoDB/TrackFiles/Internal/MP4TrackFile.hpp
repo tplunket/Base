@@ -34,20 +34,26 @@ namespace NxA { namespace Serato { namespace Internal {
         NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTORS_FOR(NxA::Serato, MP4TrackFile);
 
         #pragma mark Constructor & Destructors
-        MP4TrackFile(const String& path, const TagLibFilePointer& newFile);
+        MP4TrackFile(const String& path);
 
-        #pragma mark Instance Variables
-        TagLib::MP4::Tag* mp4Tag;
+        #pragma mark Class Methods
+        static integer integerValueForItemNamedInTag(const character* name, const TagLib::MP4::Tag& tag);
+        static String::Pointer stringValueForItemNamedInTag(const character* name, const TagLib::MP4::Tag& tag);
+        static void setIntegerValueForItemNamedInTag(integer value, const character* name, TagLib::MP4::Tag& tag);
+        static void setStringValueForItemNamedInTag(const String& value, const character* name, TagLib::MP4::Tag& tag);
+        Blob::Pointer artworkInTag(const TagLib::MP4::Tag& tag);
 
         #pragma mark Instance Methods
-        integer integerValueForItemNamed(const character* name) const;
-        String::Pointer stringValueForItemNamed(const character* name) const;
-        void setIntegerValueForItemNamed(integer value, const character* name);
-        void setStringValueForItemNamed(const String& value, const character* name);
+        void parseMarkersInTag(const TagLib::MP4::Tag& tag);
+        void replaceMarkersV2ItemInTag(TagLib::MP4::Tag& tag) const;
+        void replaceGridMarkersItemInTag(TagLib::MP4::Tag& tag) const;
+        void updateMarkersInTag(TagLib::MP4::Tag& tag) const;
+        void parseTag(const TagLib::MP4::Tag& tag);
+        void updateArtworkInTag(TagLib::MP4::Tag& tag) const;
+        void updateTag(TagLib::MP4::Tag& tag) const;
 
-        void readMarkers(void);
-        void replaceMarkersV2Item(void);
-        void replaceGridMarkersItem(void);
-        void writeMarkers(void);
+        #pragma mark Overridden TrackFile Instance Methods
+        virtual void loadAndParseFile(void) override;
+        virtual void updateAndSaveFileIfModified(void) const override;
     };
 } } }

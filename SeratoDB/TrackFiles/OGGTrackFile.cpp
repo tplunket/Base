@@ -23,8 +23,6 @@
 #include "TrackFiles/OGGTrackFile.hpp"
 #include "TrackFiles/Internal/OGGTrackFile.hpp"
 
-#include <vorbisfile.h>
-
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, OGGTrackFile, TrackFile);
 
 using namespace NxA;
@@ -34,159 +32,23 @@ using namespace NxA::Serato;
 
 OGGTrackFile::Pointer OGGTrackFile::fileWithFileAt(const String& path, TrackFile::Flags flags)
 {
-    auto file = Internal::TagLibFilePointer(std::make_shared<TagLib::Vorbis::File>(path.toUTF8(),
-                                                                                   true,
-                                                                                   TagLib::AudioProperties::ReadStyle::Fast));
-    if (!file->isValid()) {
-        throw TrackFileError::exceptionWith("Error loading track file '%s'.", path.toUTF8());
-    }
-
-    auto oggFile = dynamic_cast<TagLib::Vorbis::File*>(&(*file));
-
-    auto internalObject = Internal::OGGTrackFile::Pointer(std::make_shared<Internal::OGGTrackFile>(path, file));
+    auto internalObject = Internal::OGGTrackFile::Pointer(std::make_shared<Internal::OGGTrackFile>(path));
     auto newFile = OGGTrackFile::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
-    newFile->internal->tag = newFile->internal->oggComment = oggFile->tag();
-    if (!newFile->internal->tag) {
-        throw TrackFileError::exceptionWith("Error reading tags from track file '%s'.", path.toUTF8());
-    }
 
-    if (flags & TrackFile::Flags::IgnoreMarkers) {
-        newFile->internal->markersWereIgnored = true;
-    }
-    else {
-        newFile->internal->readMarkers();
-    }
+    newFile->internal->markersWereIgnored = (flags & TrackFile::Flags::IgnoreMarkers);
+    newFile->internal->loadAndParseFile();
 
     return newFile;
 }
 
-#pragma mark Instance Methods
-
-String::Pointer OGGTrackFile::releaseDate(void) const
-{
-    return Internal::OGGTrackFile::releaseDateInComment(internal->oggComment);
-}
-
-boolean OGGTrackFile::hasKey(void) const
-{
-    return false;
-}
-
-String::Pointer OGGTrackFile::key(void) const
-{
-    return String::string();
-}
-
-String::Pointer OGGTrackFile::composer(void) const
-{
-    return internal->stringValueForFieldNamed(Internal::oggComposerFieldName);
-}
-
-String::Pointer OGGTrackFile::grouping(void) const
-{
-    return internal->stringValueForFieldNamed(Internal::oggGroupingFieldName);
-}
-
-String::Pointer OGGTrackFile::bpm(void) const
-{
-    return internal->stringValueForFieldNamed(Internal::oggBpmFieldName);
-}
+#pragma mark Overriden TrackFile Instance Methods
 
 boolean OGGTrackFile::hasRecordLabel(void) const
 {
     return true;
 }
 
-String::Pointer OGGTrackFile::recordLabel(void) const
-{
-    return internal->stringValueForFieldNamed(Internal::oggRecordLabelFieldName);
-}
-
 boolean OGGTrackFile::hasRemixer(void) const
 {
     return true;
-}
-
-String::Pointer OGGTrackFile::remixer(void) const
-{
-    return internal->stringValueForFieldNamed(Internal::oggRemixerFieldName);
-}
-
-boolean OGGTrackFile::hasRating(void) const
-{
-    return false;
-}
-
-integer OGGTrackFile::rating(void) const
-{
-    return 0;
-}
-
-Blob::Pointer OGGTrackFile::artwork(void) const
-{
-    // -- TODO: To be implemented.
-    return Blob::blob();
-}
-
-void OGGTrackFile::setReleaseDate(const String& date)
-{
-    if (date != this->releaseDate()) {
-        Internal::OGGTrackFile::setReleaseDateInComment(date, internal->oggComment);
-        internal->metadataWasModified = true;
-    }
-}
-
-void OGGTrackFile::setKey(const String& key)
-{
-    NXA_ALOG("Illegal call to set a key on an OGG file.");
-}
-
-void OGGTrackFile::setComposer(const String& composer)
-{
-    if (composer != this->composer()) {
-        internal->setStringValueForFieldNamed(composer, Internal::oggComposerFieldName);
-        internal->metadataWasModified = true;
-    }
-}
-
-void OGGTrackFile::setGrouping(const String& grouping)
-{
-    if (grouping != this->grouping()) {
-        internal->setStringValueForFieldNamed(grouping, Internal::oggGroupingFieldName);
-        internal->metadataWasModified = true;
-    }
-}
-
-void OGGTrackFile::setBpm(const String& bpm)
-{
-    if (bpm != this->bpm()) {
-        internal->setStringValueForFieldNamed(bpm, Internal::oggBpmFieldName);
-        internal->metadataWasModified = true;
-    }
-}
-
-void OGGTrackFile::setRecordLabel(const String& recordLabel)
-{
-    if (recordLabel != this->recordLabel()) {
-        internal->setStringValueForFieldNamed(recordLabel, Internal::oggRecordLabelFieldName);
-        internal->metadataWasModified = true;
-    }
-}
-
-void OGGTrackFile::setRemixer(const String& remixer)
-{
-    if (remixer != this->remixer()) {
-        internal->setStringValueForFieldNamed(remixer, Internal::oggRemixerFieldName);
-        internal->metadataWasModified = true;
-    }
-}
-
-void OGGTrackFile::setRating(integer rating)
-{
-    // -- TODO: To be implemented.
-}
-
-void OGGTrackFile::setArtwork(const Blob& artwork)
-{
-    // -- TODO: To be implemented.
 }

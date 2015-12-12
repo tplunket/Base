@@ -22,6 +22,9 @@
 
 #include "TrackFiles/Internal/MPEGTrackFile.hpp"
 
+#include <mpegfile.h>
+#include <mpegproperties.h>
+
 // -- Generated internal implementation ommitted because this class does not use the default contructor.
 
 using namespace NxA;
@@ -29,4 +32,65 @@ using namespace NxA::Serato::Internal;
 
 #pragma mark Constructors & Destructors
 
-MPEGTrackFile::MPEGTrackFile(const String& path, const TagLibFilePointer& newFile) : ID3TrackFile(path, newFile) { }
+MPEGTrackFile::MPEGTrackFile(const String& path) : ID3TrackFile(path) { }
+
+#pragma mark Overridden TrackFile Instance Methods
+
+void MPEGTrackFile::loadAndParseFile(void)
+{
+    TagLib::MPEG::File file(this->filePath->toUTF8(),
+                            true,
+                            TagLib::AudioProperties::ReadStyle::Fast);
+    if (!file.isValid()) {
+        throw TrackFileError::exceptionWith("Error loading track file '%s'.", this->filePath->toUTF8());
+    }
+
+    auto tag = file.ID3v2Tag();
+    if (!tag) {
+        throw TrackFileError::exceptionWith("Error reading tags from track file '%s'.", this->filePath->toUTF8());
+    }
+    this->ID3TrackFile::parseTag(*tag);
+
+    auto audioProperties = file.audioProperties();
+    if (!audioProperties) {
+        throw TrackFileError::exceptionWith("Error reading audio properties from track file '%s'.", this->filePath->toUTF8());
+    }
+    this->parseAudioProperties(*audioProperties);
+
+    if (!this->markersWereIgnored) {
+        this->ID3TrackFile::parseMarkersInTagToTrackFile(*tag, *this);
+    }
+}
+
+void MPEGTrackFile::updateAndSaveFileIfModified(void) const
+{
+    if (!this->metadataWasModified && !this->markersWereModified) {
+        return;
+    }
+
+    TagLib::MPEG::File file(this->filePath->toUTF8(),
+                            true,
+                            TagLib::AudioProperties::ReadStyle::Fast);
+    if (!file.isValid()) {
+        throw TrackFileError::exceptionWith("Error loading track file '%s'.", this->filePath->toUTF8());
+    }
+
+    auto tag = file.ID3v2Tag();
+    if (!tag) {
+        throw TrackFileError::exceptionWith("Error reading tags from track file '%s'.", this->filePath->toUTF8());
+    }
+
+    if (this->metadataWasModified) {
+        this->ID3TrackFile::updateTag(*tag);
+    }
+
+    if (this->markersWereModified) {
+        NXA_ASSERT_FALSE(this->markersWereIgnored);
+
+        this->ID3TrackFile::updateMarkersInTagFromTrackFile(*tag, *this);
+    }
+
+    // -- This is misleading. It doesn't actually save anything to disk.
+    // -- Instead, real saving takes place in the file's desctructor. #ugh
+    file.save();
+}

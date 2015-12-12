@@ -45,63 +45,75 @@ namespace NxA { namespace Serato {
         };
 
         #pragma mark Instance Methods
-        String::PointerToConst filePath(void) const;
+        const String& filePath(void) const;
 
-        virtual String::Pointer title(void) const;
-        virtual String::Pointer artist(void) const;
-        virtual String::Pointer genre(void) const;
-        virtual boolean hasKey(void) const = 0;
-        virtual String::Pointer key(void) const = 0;
-        virtual String::Pointer comments(void) const;
-        virtual String::Pointer album(void) const;
-        virtual String::Pointer composer(void) const = 0;
-        virtual String::Pointer grouping(void) const = 0;
-        virtual String::Pointer bpm(void) const = 0;
-        virtual count trackNumber(void) const;
+        const String& title(void) const;
+        void setTitle(const String& title);
 
-        virtual count audioDataSizeInBytes(void) const;
-        virtual uinteger32 lengthInMilliseconds(void) const;
-        virtual uinteger32 bitRateInKiloBitsPerSecond(void) const;
-        virtual boolean hasBitDepth(void) const;
-        virtual uinteger32 bitDepthInBits(void) const;
-        virtual uinteger32 sampleRateInSamplesPerSecond(void) const;
-        virtual Blob::Pointer artwork(void) const = 0;
+        const String& artist(void) const;
+        void setArtist(const String& artist);
 
-        // -- TODO: Look into adding discNumber and numberOfAlbumTracks if they are available.
+        const String& genre(void) const;
+        void setGenre(const String& genre);
 
-        virtual boolean hasRecordLabel(void) const = 0;
-        virtual String::Pointer recordLabel(void) const = 0;
-        virtual boolean hasRemixer(void) const = 0;
-        virtual String::Pointer remixer(void) const = 0;
-        virtual boolean hasRating(void) const = 0;
-        virtual integer rating(void) const = 0;
-        virtual String::Pointer releaseDate(void) const;
+        const String& comments(void) const;
+        void setComments(const String& comments);
 
-        const CueMarker::Array& cueMarkers(void) const;
-        const LoopMarker::Array& loopMarkers(void) const;
-        const GridMarker::Array& gridMarkers(void) const;
+        const String& album(void) const;
+        void setAlbum(const String& album);
 
-        virtual void setTitle(const String& title);
-        virtual void setArtist(const String& artist);
-        virtual void setGenre(const String& genre);
-        virtual void setKey(const String& key) = 0;
-        virtual void setComments(const String& comments);
-        virtual void setAlbum(const String& album);
-        virtual void setComposer(const String& composer) = 0;
-        virtual void setGrouping(const String& grouping) = 0;
-        virtual void setBpm(const String& bpm) = 0;
-        virtual void setTrackNumber(count trackNumber);
-        virtual void setRecordLabel(const String& recordLabel) = 0;
-        virtual void setRemixer(const String& remixer) = 0;
-        virtual void setRating(integer rating) = 0;
+        count trackNumber(void) const;
+        void setTrackNumber(count trackNumber);
+
+        const String& releaseDate(void) const;
         virtual void setReleaseDate(const String& date);
 
-        virtual void setArtwork(const Blob& artwork) = 0;
+        virtual boolean hasKey(void) const;
+        const String& key(void) const;
+        void setKey(const String& key);
 
-        void setCueMarkers(CueMarker::Array& markers);
-        void setLoopMarkers(LoopMarker::Array& markers);
-        void setGridMarkers(GridMarker::Array& markers);
+        const String& composer(void) const;
+        void setComposer(const String& composer);
 
-        void saveChangesIfAny(void);
+        const String& grouping(void) const;
+        void setGrouping(const String& grouping);
+
+        const String& bpm(void) const;
+        virtual void setBpm(const String& bpm);
+
+        virtual boolean hasRecordLabel(void) const;
+        const String& recordLabel(void) const;
+        void setRecordLabel(const String& recordLabel);
+
+        virtual boolean hasRemixer(void) const;
+        const String& remixer(void) const;
+        void setRemixer(const String& remixer);
+
+        virtual boolean hasRating(void) const;
+        integer rating(void) const;
+        void setRating(integer rating);
+
+        const Blob& artwork(void) const;
+        void setArtwork(const Blob& artwork);
+
+        count audioDataSizeInBytes(void) const;
+        uinteger32 lengthInMilliseconds(void) const;
+        uinteger32 bitRateInKiloBitsPerSecond(void) const;
+        virtual boolean hasBitDepth(void) const;
+        uinteger32 bitDepthInBits(void) const;
+        uinteger32 sampleRateInSamplesPerSecond(void) const;
+        
+        const CueMarker::Array& cueMarkers(void) const;
+        void setCueMarkers(const CueMarker::Array& markers);
+
+        const LoopMarker::Array& loopMarkers(void) const;
+        void setLoopMarkers(const LoopMarker::Array& markers);
+
+        const GridMarker::Array& gridMarkers(void) const;
+        void setGridMarkers(const GridMarker::Array& markers);
+        
+        // -- TODO: Look into adding discNumber and numberOfAlbumTracks if they are available.
+
+        void saveIfModified(void);
     };
 } }

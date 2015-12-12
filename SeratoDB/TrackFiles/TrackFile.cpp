@@ -9,6 +9,16 @@
 //  please refer to the modified MIT license provided with this library,
 //  or email licensing@serato.com.
 //
+//  The above copyright notice and this permission notice shall be included in all
+//  copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+//  INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+//  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+//  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+//  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+//  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
 
 #include "TrackFiles/TrackFile.hpp"
 #include "TrackFiles/Internal/TrackFile.hpp"
@@ -100,7 +110,8 @@ uinteger32 TrackFile::sampleRateInSamplesPerSecond(void) const
 
 String::Pointer TrackFile::releaseDate(void) const
 {
-    return String::stringWithFormat("%04d-01-01", internal->file->tag()->year());
+    integer year = internal->file->tag()->year();
+    return year ? String::stringWithFormat("%04d-01-01", year) : String::string();
 }
 
 const CueMarker::Array& TrackFile::cueMarkers(void) const
@@ -120,74 +131,98 @@ const GridMarker::Array& TrackFile::gridMarkers(void) const
 
 void TrackFile::setTitle(const String& title)
 {
-    internal->tag->setTitle(TagLib::String(title.toUTF8()));
-    internal->metadataWasModified = true;
+    if (title != this->title()) {
+        internal->tag->setTitle(TagLib::String(title.toUTF8()));
+        internal->metadataWasModified = true;
+    }
 }
 
 void TrackFile::setArtist(const String& artist)
 {
-    internal->tag->setArtist(TagLib::String(artist.toUTF8()));
-    internal->metadataWasModified = true;
+    if (artist != this->artist()) {
+        internal->tag->setArtist(TagLib::String(artist.toUTF8()));
+        internal->metadataWasModified = true;
+    }
 }
 
 void TrackFile::setGenre(const String& genre)
 {
-    internal->tag->setGenre(TagLib::String(genre.toUTF8()));
-    internal->metadataWasModified = true;
+    if (genre != this->genre()) {
+        internal->tag->setGenre(TagLib::String(genre.toUTF8()));
+        internal->metadataWasModified = true;
+    }
 }
 
 void TrackFile::setComments(const String& comments)
 {
-    internal->tag->setComment(TagLib::String(comments.toUTF8()));
-    internal->metadataWasModified = true;
+    if (comments != this->comments()) {
+        internal->tag->setComment(TagLib::String(comments.toUTF8()));
+        internal->metadataWasModified = true;
+    }
 }
 
 void TrackFile::setAlbum(const String& album)
 {
-    internal->tag->setAlbum(TagLib::String(album.toUTF8()));
-    internal->metadataWasModified = true;
+    if (album != this->album()) {
+        internal->tag->setAlbum(TagLib::String(album.toUTF8()));
+        internal->metadataWasModified = true;
+    }
 }
 
 void TrackFile::setTrackNumber(count trackNumber)
 {
-    internal->tag->setTrack(trackNumber);
-    internal->metadataWasModified = true;
+    if (trackNumber != this->trackNumber()) {
+        internal->tag->setTrack(trackNumber);
+        internal->metadataWasModified = true;
+    }
 }
 
 void TrackFile::setReleaseDate(const String& date)
 {
+    count year = 0;
+
     if (date.length()) {
         auto components = date.splitBySeperator('-');
-        internal->tag->setYear(::atoi(components->firstObject().toUTF8()));
+        year = ::atoi(components->firstObject().toUTF8());
     }
-    else {
-        internal->tag->setYear(0);
+
+    if (year != internal->file->tag()->year()) {
+        internal->tag->setYear(year);
+        internal->metadataWasModified = true;
     }
-    internal->metadataWasModified = true;
 }
 
 void TrackFile::setCueMarkers(CueMarker::Array& markers)
 {
     NXA_ASSERT_FALSE(internal->markersWereIgnored);
 
-    internal->cueMarkers = markers.pointer();
-    internal->markersWereModified = true;
+    if (markers != this->cueMarkers()) {
+        internal->cueMarkers = markers.pointer();
+        internal->markersWereModified = true;
+    }
 }
 
 void TrackFile::setLoopMarkers(LoopMarker::Array& markers)
 {
     NXA_ASSERT_FALSE(internal->markersWereIgnored);
 
-    internal->loopMarkers = markers.pointer();
-    internal->markersWereModified = true;
+    if (markers != this->loopMarkers()) {
+        internal->loopMarkers = markers.pointer();
+        internal->markersWereModified = true;
+    }
 }
 
 void TrackFile::setGridMarkers(GridMarker::Array& markers)
 {
     NXA_ASSERT_FALSE(internal->markersWereIgnored);
-    
-    internal->gridMarkers = markers.pointer();
-    internal->markersWereModified = true;
+    NXA_ASSERT_TRUE(GridMarker::gridMarkersAreValid(markers));
+
+    //printf("Setting grid markers for '%s':\n%s\n", this->filePath()->toUTF8(), markers.description()->toUTF8());
+
+    if (markers != this->gridMarkers()) {
+        internal->gridMarkers = markers.pointer();
+        internal->markersWereModified = true;
+    }
 }
 
 void TrackFile::saveChangesIfAny(void)
@@ -195,17 +230,23 @@ void TrackFile::saveChangesIfAny(void)
     if (internal->markersWereModified) {
 #if NXA_PRINT_DEBUG_INFO
         printf("Writing markers for track file '%s'.\n", this->filePath()->toUTF8());
+        printf("Cue Markers:\n%s\n", this->cueMarkers().description()->toUTF8());
+        printf("Loop Markers:\n%s\n", this->loopMarkers().description()->toUTF8());
+        printf("GridMarkers:\n%s\n", this->gridMarkers().description()->toUTF8());
 #endif
+
         internal->writeMarkers();
+
+        internal->markersWereModified = false;
+        internal->metadataWasModified = true;
     }
 
-    if (internal->metadataWasModified || internal->markersWereModified) {
+    if (internal->metadataWasModified) {
 #if NXA_PRINT_DEBUG_INFO
         printf("Saving track file '%s'.\n", this->filePath()->toUTF8());
 #endif
 
         internal->metadataWasModified = false;
-        internal->markersWereModified = false;
 
         if (!internal->file->save()) {
             throw TrackFileError::exceptionWith("Couldn't not save file at '%s'.", this->filePath()->toUTF8());

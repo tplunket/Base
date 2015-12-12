@@ -9,6 +9,16 @@
 //  please refer to the modified MIT license provided with this library,
 //  or email licensing@serato.com.
 //
+//  The above copyright notice and this permission notice shall be included in all
+//  copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+//  INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+//  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+//  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+//  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+//  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
 
 #include "Markers/CueMarker.hpp"
 #include "Markers/Internal/CueMarker.hpp"
@@ -79,6 +89,27 @@ CueMarker::Pointer CueMarker::markerWith(const CueMarker&other)
                                                            other.colorRedComponent(),
                                                            other.colorGreenComponent(),
                                                            other.colorBlueComponent());
+}
+
+#pragma mark Class Methods
+
+NxA::String::Pointer CueMarker::stringRepresentationForTimeInMilliseconds(uinteger32 timeInMilliseconds)
+{
+    uinteger32 seconds = timeInMilliseconds / 1000;
+    uinteger32 minutes = seconds / 60;
+    uinteger32 hours = minutes / 60;
+
+    timeInMilliseconds %= 1000;
+    seconds %= 60;
+
+    if (hours) {
+        minutes %= 60;
+
+        return String::stringWithFormat("%02ld:%02ld:%02ld:%03ld", hours, minutes, seconds, timeInMilliseconds);
+    }
+    else {
+        return String::stringWithFormat("%02ld:%02ld:%03ld", minutes, seconds, timeInMilliseconds);
+    }
 }
 
 #pragma mark Operators
@@ -188,3 +219,16 @@ void CueMarker::addEmptyEncodedMarkerV1TagTo(Blob& data)
                                                         0, 0, 0, data);
 }
 
+
+#pragma mark Overriden Object Instance Methods
+
+NxA::String::Pointer CueMarker::description(void) const
+{
+    return NxA::String::stringWithFormat("Cue Marker at %s with index %d label '%s' and color 0x%02x 0x%02x 0x%02x.",
+                                         CueMarker::stringRepresentationForTimeInMilliseconds(this->positionInMilliseconds())->toUTF8(),
+                                         this->index(),
+                                         this->label().toUTF8(),
+                                         this->colorRedComponent(),
+                                         this->colorGreenComponent(),
+                                         this->colorBlueComponent());
+}

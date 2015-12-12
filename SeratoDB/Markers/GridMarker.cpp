@@ -9,9 +9,22 @@
 //  please refer to the modified MIT license provided with this library,
 //  or email licensing@serato.com.
 //
+//  The above copyright notice and this permission notice shall be included in all
+//  copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+//  INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+//  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+//  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+//  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+//  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
 
 #include "Markers/GridMarker.hpp"
+#include "Markers/CueMarker.hpp"
 #include "Markers/Internal/GridMarker.hpp"
+
+#include <math.h>
 
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, GridMarker, Marker);
 
@@ -28,7 +41,7 @@ using namespace NxA::Serato;
 
 #pragma mark Factory Methods
 
-GridMarker::Pointer GridMarker::markerWithPositionAndBeatsPerMinute(decimal positionInSeconds, decimal beatsPerMinute)
+GridMarker::Pointer GridMarker::markerWithPositionAndBeatsPerMinute(const decimal3& positionInSeconds, const decimal2& beatsPerMinute)
 {
     auto newMarker = GridMarker::makeShared();
     newMarker->internal->positionInSeconds = positionInSeconds;
@@ -56,24 +69,38 @@ GridMarker::Array::Pointer GridMarker::markersWithMemoryAt(const byte* id3TagSta
         numberOfMarkers = 256;
     }
 
-    float nextPosition;
+    decimal3 nextPosition;
 
     const GridMarkerStruct* gridMarker = (const GridMarkerStruct* )(id3TagStart + 4);
     for (count markerIndex = 0; markerIndex < numberOfMarkers; ++markerIndex) {
-        decimal position = markerIndex ? nextPosition : Platform::bigEndianFloatValueAt(gridMarker->positionInSeconds);
-        decimal bpm;
+        decimal3 position;
+        if (markerIndex) {
+            position = nextPosition;
+        }
+        else {
+            position.setUnbiased(::roundf(Platform::bigEndianFloatValueAt(gridMarker->positionInSeconds) * 1000.0f));
+        }
+
+        decimal2 bpm;
 
         const GridMarkerStruct* nextGridMarker = gridMarker + 1;
         if ((markerIndex + 1) < numberOfMarkers) {
             nextPosition = Platform::bigEndianFloatValueAt(nextGridMarker->positionInSeconds);
 
-            bpm = 240.0f / (nextPosition - position);
+            decimal3 numberOfBeats(Platform::bigEndianUInteger32ValueAt(gridMarker->beatsPerMinute));
+            decimal3 bpmAsDecimal3 = (numberOfBeats * decimal3("60.0")) / (nextPosition - position);
+            bpm.setUnbiased(bpmAsDecimal3.getUnbiased() / 10);
+
+            if (bpm.getAsInteger() > 200) {
+                NXA_ALOG("Illegal bpm computed by %lld %lld %lld.", numberOfBeats.getUnbiased(), nextPosition.getUnbiased(), position.getUnbiased());
+            }
         }
         else {
-            bpm = Platform::bigEndianFloatValueAt(gridMarker->beatsPerMinute);
+            bpm.setUnbiased(::roundf(Platform::bigEndianFloatValueAt(gridMarker->beatsPerMinute) * 100.0f));
         }
 
-        result->append(GridMarker::markerWithPositionAndBeatsPerMinute(position, bpm));
+        auto newMarker = GridMarker::markerWithPositionAndBeatsPerMinute(position, bpm);
+        result->append(newMarker);
 
         gridMarker = nextGridMarker;
     }
@@ -81,7 +108,7 @@ GridMarker::Array::Pointer GridMarker::markersWithMemoryAt(const byte* id3TagSta
     return result;
 }
 
-void GridMarker::addMarkersTo(GridMarker::Array& markers, NxA::Blob& data)
+void GridMarker::addMarkersTo(const GridMarker::Array& markers, NxA::Blob& data)
 {
     uinteger32 numberOfMarkers = static_cast<uinteger32>(markers.length());
 
@@ -93,17 +120,27 @@ void GridMarker::addMarkersTo(GridMarker::Array& markers, NxA::Blob& data)
     count lastMarkerIndex = numberOfMarkers - 1;
 
     for (count index = 0; index < numberOfMarkers; ++index) {
-        auto marker = *(markers.begin() + index);
+        auto& marker = markers[index];
 
         GridMarkerStruct markerData;
 
-        Platform::writeBigEndianFloatValueAt(marker->positionInSeconds(), markerData.positionInSeconds);
+        Platform::writeBigEndianFloatValueAt(marker.positionInSeconds().getAsDouble(), markerData.positionInSeconds);
         if (index == lastMarkerIndex) {
-            Platform::writeBigEndianFloatValueAt(marker->beatsPerMinute(), markerData.beatsPerMinute);
+            Platform::writeBigEndianFloatValueAt(marker.beatsPerMinute().getAsDouble(), markerData.beatsPerMinute);
         }
         else {
-            // -- Currently I'm not sure what this value means but it seems only the last marker stores a bpm value.
-            Platform::writeBigEndianUInteger32ValueAt(4, markerData.beatsPerMinute);
+            auto& nextMarker = markers[index + 1];
+            decimal3 bpmDecimal3;
+            bpmDecimal3.setUnbiased(marker.beatsPerMinute().getUnbiased() * 10);
+            decimal3 numberOfBeats = (bpmDecimal3 * (nextMarker.positionInSeconds() - marker.positionInSeconds())) / decimal3("60");
+
+            count actualNumberOfBeats = Internal::GridMarker::actualNumberOfBeatsIfSupported(numberOfBeats);
+            if (!actualNumberOfBeats) {
+                data.removeAll();
+                return;
+            }
+
+            Platform::writeBigEndianUInteger32ValueAt(static_cast<uinteger32>(actualNumberOfBeats), markerData.beatsPerMinute);
         }
 
         auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<const byte*>(&markerData), sizeof(GridMarkerStruct));
@@ -112,6 +149,33 @@ void GridMarker::addMarkersTo(GridMarker::Array& markers, NxA::Blob& data)
 
     // -- This marks the end of tags.
     data.append('\0');
+}
+
+boolean GridMarker::gridMarkersAreValid(const GridMarker::Array& markers)
+{
+    // -- Serato doesn't support very flexible grid markers, the ones we end up writing
+    // -- might not be exactly the ones we wanted to write so we test them
+    // -- before setting them and if at least one is invalid, we write none.
+    count numberOfMarkers = markers.length();
+    count lastMarkerIndex = numberOfMarkers - 1;
+
+    for (count index = 0; index < numberOfMarkers; ++index) {
+        auto& marker = markers[index];
+
+        if (index != lastMarkerIndex) {
+            auto& nextMarker = markers[index + 1];
+            decimal3 bpmDecimal3;
+            bpmDecimal3.setUnbiased(marker.beatsPerMinute().getUnbiased() * 10);
+            decimal3 numberOfBeats = (bpmDecimal3 * (nextMarker.positionInSeconds() - marker.positionInSeconds())) / decimal3("60");
+
+            count actualNumberOfBeats = Internal::GridMarker::actualNumberOfBeatsIfSupported(numberOfBeats);
+            if (actualNumberOfBeats == 0) {
+                return false;
+            }
+        }
+    }
+
+    return true;
 }
 
 #pragma mark Operators
@@ -128,12 +192,37 @@ bool GridMarker::operator==(const GridMarker& other) const
 
 #pragma mark Instance Methods
 
-decimal GridMarker::positionInSeconds(void) const
+const decimal3& GridMarker::positionInSeconds(void) const
 {
     return internal->positionInSeconds;
 }
 
-decimal GridMarker::beatsPerMinute(void) const
+String::Pointer GridMarker::positionInSecondsAsString(void) const
+{
+    integer64 integerPart = this->positionInSeconds().getUnbiased();
+    integer64 decimalPart = integerPart % 1000;
+
+    return String::stringWithFormat("%d.%03d", integerPart / 1000, decimalPart);
+}
+
+const decimal2& GridMarker::beatsPerMinute(void) const
 {
     return internal->beatsPerMinute;
+}
+
+String::Pointer GridMarker::beatsPerMinuteAsString(void) const
+{
+    integer64 integerPart = this->beatsPerMinute().getUnbiased();
+    integer64 decimalPart = integerPart % 100;
+
+    return String::stringWithFormat("%d.%02d", integerPart / 100, decimalPart);
+}
+
+#pragma mark Overriden Object Instance Methods
+
+String::Pointer GridMarker::description(void) const
+{
+    return NxA::String::stringWithFormat("Grid Marker at %s with bpm %s.",
+                                         CueMarker::stringRepresentationForTimeInMilliseconds(this->positionInSeconds().getAsDouble() * 1000.0f)->toUTF8(),
+                                         this->beatsPerMinuteAsString()->toUTF8());
 }

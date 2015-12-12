@@ -1,12 +1,13 @@
 //
 //  Copyright (c) 2015 Next Audio Labs, LLC. All rights reserved.
 //
-//  Permission is hereby granted, free of charge, to any person obtaining a copy of
-//  this software and associated documentation files (the "Software"), to deal in the
-//  Software without restriction, including without limitation the rights to use, copy,
-//  modify, merge, publish, distribute, sublicense, and/or sell copies of the Software,
-//  and to permit persons to whom the Software is furnished to do so, subject to the
-//  following conditions:
+//  This file contains confidential and proprietary information of Serato
+//  Inc. LLP ("Serato"). No use is permitted without express written
+//  permission of Serato. If you are not a party to a Confidentiality/
+//  Non-Disclosure Agreement with Serato, please immediately delete this
+//  file as well as all copies in your possession. For further information,
+//  please refer to the modified MIT license provided with this library,
+//  or email licensing@serato.com.
 //
 //  The above copyright notice and this permission notice shall be included in all
 //  copies or substantial portions of the Software.
@@ -60,7 +61,6 @@ namespace NxA { namespace Serato { namespace Internal {
         const byte* readMarkerAtAndAdvanceToNextTag(const byte* tagStart);
         void readMarkersV2FromBase64String(const byte* markerV2Data, count totalSize);
         void readGridMarkersFrom(const byte* gridMarkerData);
-        void addGridMarker(Serato::GridMarker& gridMarker);
         Blob::Pointer rawBlobFromMarkersV1(void);
         Blob::Pointer id3EncodedBlobFromMarkersV1(void);
         String::Pointer base64StringFromMarkersV2(void);

@@ -9,10 +9,19 @@
 //  please refer to the modified MIT license provided with this library,
 //  or email licensing@serato.com.
 //
+//  The above copyright notice and this permission notice shall be included in all
+//  copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+//  INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+//  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+//  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+//  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+//  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
 
 #include "SeratoDB/Database.hpp"
-#include "SeratoDb/Internal/Database.hpp"
-#include "SeratoDB/CrateOrderFile.hpp"
+#include "SeratoDB/Internal/Database.hpp"
 #include "Tags/DatabaseV2Tags.hpp"
 #include "Tags/TagFactory.hpp"
 #include "Tags/VersionTag.hpp"
@@ -24,25 +33,11 @@ using namespace NxA::Serato;
 
 #pragma mark Factory Methods
 
-Database::Pointer Database::databaseWithFileAndVolume(const String& seratoFolderPath, const String& volume)
+Database::Pointer Database::databaseWithPathsForLocalAndExternalSeratoDirectories(const String& pathForLocalSeratoFolder,
+                                                                                  const String::ArrayOfConst& pathsForExternalSeratoFolders)
 {
-    auto crateOrderFile = CrateOrderFile::fileWithSeratoFolderInRootFolder(seratoFolderPath, volume);
-
-    auto internalObject = Internal::Database::Pointer(std::make_shared<Internal::Database>(databaseFilePathForSeratoFolder(seratoFolderPath), volume, crateOrderFile));
+    auto internalObject = Internal::Database::Pointer(std::make_shared<Internal::Database>(pathForLocalSeratoFolder, pathsForExternalSeratoFolders));
     auto newDatabase = Database::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
-    newDatabase->internal->parseDatabaseFile();
-
-    return newDatabase;
-}
-
-Database::Pointer Database::databaseWithFileVolumeAndRootCrate(const String& seratoFolderPath, const String& volume, Crate& rootCrate)
-{
-    auto crateOrderFile = CrateOrderFile::fileWithSeratoFolderInRootFolderWithRootCrate(seratoFolderPath, volume, rootCrate);
-
-    auto internalObject = Internal::Database::Pointer(std::make_shared<Internal::Database>(databaseFilePathForSeratoFolder(seratoFolderPath), volume, crateOrderFile));
-    auto newDatabase = Database::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
-    newDatabase->internal->parseDatabaseFile();
-
     return newDatabase;
 }
 
@@ -50,21 +45,25 @@ Database::Pointer Database::databaseWithFileVolumeAndRootCrate(const String& ser
 
 String::Pointer Database::versionAsStringForDatabaseIn(const String& seratoFolderPath)
 {
-    auto databaseFilePath = databaseFilePathForSeratoFolder(seratoFolderPath);
-    auto databaseFile = File::readFileAt(databaseFilePath);
+    try {
+        auto databaseFilePath = databaseFilePathForSeratoFolder(seratoFolderPath);
+        auto databaseFile = File::readFileAt(databaseFilePath);
 
-    const byte* tagAddress = databaseFile->data();
-    const byte* endOfTagsAddress = databaseFile->data() + databaseFile->size();
+        const byte* tagAddress = databaseFile->data();
+        const byte* endOfTagsAddress = databaseFile->data() + databaseFile->size();
 
-    while (tagAddress < endOfTagsAddress) {
-        if ((Tag::dataSizeForTagAt(tagAddress) > 0) &&
-            (Tag::identifierForTagAt(tagAddress) == databaseVersionTagIdentifier)) {
-            auto tag = TagFactory::tagForTagAt(tagAddress);
-            auto& textTag = dynamic_cast<VersionTag&>(*tag);
-            return String::stringWith(textTag.value());
+        while (tagAddress < endOfTagsAddress) {
+            if ((Tag::dataSizeForTagAt(tagAddress) > 0) &&
+                (Tag::identifierForTagAt(tagAddress) == databaseVersionTagIdentifier)) {
+                auto tag = TagFactory::tagForTagAt(tagAddress);
+                auto& textTag = dynamic_cast<VersionTag&>(*tag);
+                return String::stringWith(textTag.value());
+            }
+
+            tagAddress = Tag::nextTagAfterTagAt(tagAddress);
         }
-
-        tagAddress = Tag::nextTagAfterTagAt(tagAddress);
+    }
+    catch (FileError& e) {
     }
 
     return String::string();
@@ -84,40 +83,67 @@ String::Pointer Database::databaseFilePathForSeratoFolder(const String& seratoFo
 
 boolean Database::containsAValidSeratoFolder(const String& folderPath)
 {
-    auto seratoFolderPath = seratoFolderPathForFolder(folderPath);
-    auto databaseFilePath = databaseFilePathForSeratoFolder(seratoFolderPath);
+    auto seratoFolderPath = Database::seratoFolderPathForFolder(folderPath);
+    auto databaseFilePath = Database::databaseFilePathForSeratoFolder(seratoFolderPath);
     return File::fileExistsAt(databaseFilePath);
 }
 
-void Database::setDatabaseFilesInSeratoFolderAsModifedOnDateInSecondsSince1970(const String& folderPath, timestamp dateModified)
+void Database::createSeratoFolderIfDoesNotExists(const String& seratoFolderPath)
 {
-    auto databaseFilePath = databaseFilePathForSeratoFolder(folderPath);
-    File::setModificationDateInSecondsSince1970ForFile(dateModified, databaseFilePath);
-
-    auto crateOrderFilePath = CrateOrderFile::pathForFileInSeratoFolder(folderPath);
-    File::setModificationDateInSecondsSince1970ForFile(dateModified, crateOrderFilePath);
+    if (!File::directoryExistsAt(seratoFolderPath)) {
+        File::createDirectoryAt(seratoFolderPath);
+    }
 }
 
 #pragma mark Instance Methods
 
 timestamp Database::databaseModificationDateInSecondsSince1970(void) const
 {
-    if (!File::fileExistsAt(internal->databaseFilePath)) {
-        // -- If we don't have a database file yet, we return a very old date.
-        return 0;
+    // -- If we don't have a database file yet, we return a very old date.
+    timestamp latestTimestamp = 0;
+
+    for (auto& path : *internal->pathsForSeratoDirectories) {
+        auto seratoFolderPath = Database::seratoFolderPathForFolder(path);
+        auto databaseFilePath = Database::databaseFilePathForSeratoFolder(seratoFolderPath);
+
+        if (!File::fileExistsAt(databaseFilePath)) {
+            continue;
+        }
+
+        timestamp newTimestamp = File::modificationDateInSecondsSince1970ForFile(databaseFilePath);
+        if (newTimestamp > latestTimestamp) {
+            latestTimestamp = newTimestamp;
+        }
     }
 
-    return File::modificationDateInSecondsSince1970ForFile(internal->databaseFilePath);
+    return latestTimestamp;
 }
 
 timestamp Database::rootCrateModificationDateInSecondsSince1970(void) const
 {
-    return internal->crateOrderFile->modificationDateInSecondsSince1970();
+    // -- If we don't have crate files yet, we return a very old date.
+    timestamp latestTimestamp = 0;
+
+    for (auto& path : *internal->pathsForSeratoDirectories) {
+        auto seratoFolderPath = Database::seratoFolderPathForFolder(path);
+        auto crateOrderFilePath = Internal::Database::pathForCrateOrderFileInSeratoFolder(seratoFolderPath);
+
+        if (!File::fileExistsAt(crateOrderFilePath)) {
+            continue;
+        }
+
+        timestamp newTimestamp = File::modificationDateInSecondsSince1970ForFile(crateOrderFilePath);
+        if (newTimestamp > latestTimestamp) {
+            latestTimestamp = newTimestamp;
+        }
+    }
+
+    return latestTimestamp;
 }
 
 Crate& Database::rootCrate(void) const
 {
-    return internal->crateOrderFile->rootCrate();
+    return internal->rootCrate;
 }
 
 const Track::Array& Database::tracks(void) const
@@ -133,31 +159,43 @@ Track::Array::Pointer Database::removeAndReturnTracks(void)
     return tracks;
 }
 
-NxA::String::PointerToConst Database::volume(void) const
+const String& Database::volumePathForTrackFilePath(const String& trackFilePath) const
 {
-    return internal->databaseVolume;
+    count pathIndex = internal->volumePathsPerPath->length();
+    NXA_ASSERT_TRUE(pathIndex != 0);
+
+    do {
+        --pathIndex;
+        
+        auto& volumePath = (*internal->volumePathsPerPath)[pathIndex];
+
+        if (trackFilePath.hasPrefix(volumePath)) {
+            return volumePath;
+        }
+    }
+    while (pathIndex > 0);
+
+    NXA_ALOG("Could not find volume for track at '%s'.", trackFilePath.toUTF8());
+    return (*internal->volumePathsPerPath)[0];
 }
 
-void Database::removeTrackEntry(TrackEntry& trackEntry)
+void Database::removeTrackEntry(TrackEntry::Pointer& trackEntry)
 {
-    if (trackEntry.hasParentCrate()) {
-        trackEntry.removeFromParentCrate();
+    if (trackEntry->hasParentCrate()) {
+        trackEntry->parentCrate().removeTrackEntry(trackEntry);
     }
 }
 
-void Database::removeCrate(Crate& crate)
+void Database::removeCrate(Crate::Pointer& crate)
 {
-    auto& crateFiles = crate.crateFilePaths();
-    for (auto& file : crateFiles) {
-        internal->crateFilesToDelete->append(file);
+    if (crate->hasParentCrate()) {
+        crate->parentCrate().removeCrate(crate);
     }
 
-    if (crate.hasParentCrate()) {
-        crate.removeFromParentCrate();
-    }
-
-    for (auto& childrenCrate : crate.crates()) {
-        this->removeCrate(childrenCrate);
+    auto crates = Crate::Array::arrayWith(crate->crates());
+    for (auto& childrenCrate : *crates) {
+        auto childrenCratePointer = childrenCrate->pointer();
+        this->removeCrate(childrenCratePointer);
     }
 }
 
@@ -171,40 +209,67 @@ void Database::removeTrack(Track& track)
     internal->tracks->remove(track);
 }
 
-void Database::saveIfModified(void) const
+void Database::saveIfModifiedAndMarkAsModifiedOn(timestamp modificationTimesSince1970) const
 {
-    if (!internal->databaseIsValid) {
-        return;
-    }
-
-    for (auto& path : *(internal->crateFilesToDelete)) {
-        File::deleteFileAt(path);
-    }
-
-    internal->crateOrderFile->saveIfModified();
-
-    boolean needsToUpdateDatabaseFile = false;
-    for (auto& track : *(internal->tracks)) {
-        if (track->needsToUpdateDatabaseFile()) {
-            needsToUpdateDatabaseFile = true;
-        }
-    }
-
-    if (needsToUpdateDatabaseFile) {
-        auto outputData = Blob::blob();
-
-        auto versionTag = VersionTag::tagWithIdentifierAndValue(databaseVersionTagIdentifier,
-                                                                String::stringWith(Internal::Database::databaseFileCurrentVersionString));
-        versionTag->addTo(outputData);
-
-        for (auto& track : *(internal->tracks)) {
-            track->addTo(outputData);
+    try {
+        if (!internal->databaseIsValid) {
+            return;
         }
 
-        for (auto& tag : *(internal->otherTags)) {
-            tag->addTo(outputData);
-        }
+        count numberOfPaths = internal->pathsForSeratoDirectories->length();
+        for (count pathIndex = 0; pathIndex < numberOfPaths; ++pathIndex) {
+            auto& pathsForSeratoDirectory = (*internal->pathsForSeratoDirectories)[pathIndex];
+            auto seratoFolderPath = Database::seratoFolderPathForFolder(pathsForSeratoDirectory);
+            auto& smartCrateNames = (*internal->smartCrateNamesPerPath)[pathIndex];
+            auto& volumePath = (*internal->volumePathsPerPath)[pathIndex];
 
-        File::writeBlobToFileAt(outputData, internal->databaseFilePath);
+            Internal::Database::saveContentOfRootCrateIfModifiedAndOnVolumeAndSmartCrateNamesToSeratoFolder(internal->rootCrate,
+                                                                                                            volumePath,
+                                                                                                            smartCrateNames,
+                                                                                                            seratoFolderPath);
+
+            boolean needsToUpdateDatabaseFile = false;
+            for (auto& track : *(internal->tracks)) {
+                if (track->volumePath() != volumePath) {
+                    continue;
+                }
+
+                if (track->needsToUpdateDatabaseFile()) {
+                    needsToUpdateDatabaseFile = true;
+                    break;
+                }
+            }
+
+            if (needsToUpdateDatabaseFile) {
+                auto outputData = Blob::blob();
+
+                auto versionTag = VersionTag::tagWithIdentifierAndValue(databaseVersionTagIdentifier,
+                                                                        String::stringWith(Internal::Database::databaseFileCurrentVersionString));
+                versionTag->addTo(outputData);
+
+                for (auto& track : *(internal->tracks)) {
+                    if (track->volumePath() != volumePath) {
+                        continue;
+                    }
+
+                    track->addTo(outputData);
+                }
+
+                auto& otherTags = (*internal->otherTagsPerPath)[pathIndex];
+                for (auto& tag : otherTags) {
+                    tag->addTo(outputData);
+                }
+                
+                Database::createSeratoFolderIfDoesNotExists(seratoFolderPath);
+                
+                auto databaseFilePath = Database::databaseFilePathForSeratoFolder(seratoFolderPath);
+                File::writeBlobToFileAt(outputData, databaseFilePath);
+            }
+
+            Internal::Database::setDatabaseFilesInSeratoFolderAsModifedOnDateInSecondsSince1970(seratoFolderPath, modificationTimesSince1970);
+        }
+    }
+    catch (FileError& e) {
+        // -- This should log something.
     }
 }

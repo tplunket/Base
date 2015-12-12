@@ -9,6 +9,16 @@
 //  please refer to the modified MIT license provided with this library,
 //  or email licensing@serato.com.
 //
+//  The above copyright notice and this permission notice shall be included in all
+//  copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+//  INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+//  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+//  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+//  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+//  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
 
 #include "TrackFiles/OGGTrackFile.hpp"
 #include "TrackFiles/Internal/OGGTrackFile.hpp"
@@ -120,43 +130,55 @@ Blob::Pointer OGGTrackFile::artwork(void) const
 
 void OGGTrackFile::setReleaseDate(const String& date)
 {
-    Internal::OGGTrackFile::setReleaseDateInComment(date, internal->oggComment);
-    internal->metadataWasModified = true;
+    if (date != this->releaseDate()) {
+        Internal::OGGTrackFile::setReleaseDateInComment(date, internal->oggComment);
+        internal->metadataWasModified = true;
+    }
 }
 
 void OGGTrackFile::setKey(const String& key)
 {
-    // -- This is not supported by OGG files.
+    NXA_ALOG("Illegal call to set a key on an OGG file.");
 }
 
 void OGGTrackFile::setComposer(const String& composer)
 {
-    internal->setStringValueForFieldNamed(composer, Internal::oggComposerFieldName);
-    internal->metadataWasModified = true;
+    if (composer != this->composer()) {
+        internal->setStringValueForFieldNamed(composer, Internal::oggComposerFieldName);
+        internal->metadataWasModified = true;
+    }
 }
 
 void OGGTrackFile::setGrouping(const String& grouping)
 {
-    internal->setStringValueForFieldNamed(grouping, Internal::oggGroupingFieldName);
-    internal->metadataWasModified = true;
+    if (grouping != this->grouping()) {
+        internal->setStringValueForFieldNamed(grouping, Internal::oggGroupingFieldName);
+        internal->metadataWasModified = true;
+    }
 }
 
 void OGGTrackFile::setBpm(const String& bpm)
 {
-    internal->setStringValueForFieldNamed(bpm, Internal::oggBpmFieldName);
-    internal->metadataWasModified = true;
+    if (bpm != this->bpm()) {
+        internal->setStringValueForFieldNamed(bpm, Internal::oggBpmFieldName);
+        internal->metadataWasModified = true;
+    }
 }
 
 void OGGTrackFile::setRecordLabel(const String& recordLabel)
 {
-    internal->setStringValueForFieldNamed(recordLabel, Internal::oggRecordLabelFieldName);
-    internal->metadataWasModified = true;
+    if (recordLabel != this->recordLabel()) {
+        internal->setStringValueForFieldNamed(recordLabel, Internal::oggRecordLabelFieldName);
+        internal->metadataWasModified = true;
+    }
 }
 
 void OGGTrackFile::setRemixer(const String& remixer)
 {
-    internal->setStringValueForFieldNamed(remixer, Internal::oggRemixerFieldName);
-    internal->metadataWasModified = true;
+    if (remixer != this->remixer()) {
+        internal->setStringValueForFieldNamed(remixer, Internal::oggRemixerFieldName);
+        internal->metadataWasModified = true;
+    }
 }
 
 void OGGTrackFile::setRating(integer rating)

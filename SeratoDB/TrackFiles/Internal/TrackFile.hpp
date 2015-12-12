@@ -83,7 +83,7 @@ namespace NxA { namespace Serato { namespace Internal {
 
         #pragma mark Instance Methods
         virtual void loadAndParseFile(void) = 0;
-        virtual void updateAndSaveFileIfModified(void) const = 0;
+        virtual void updateAndSaveFile(void) const = 0;
         void parseTag(const TagLib::Tag& tag);
         void updateTag(TagLib::Tag& tag) const;
         void parseAudioProperties(const TagLib::AudioProperties& properties);

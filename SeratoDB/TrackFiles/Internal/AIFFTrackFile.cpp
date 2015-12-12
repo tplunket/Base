@@ -70,12 +70,8 @@ void AIFFTrackFile::loadAndParseFile(void)
     }
 }
 
-void AIFFTrackFile::updateAndSaveFileIfModified(void) const
+void AIFFTrackFile::updateAndSaveFile(void) const
 {
-    if (!this->metadataWasModified && !this->markersWereModified) {
-        return;
-    }
-
     TagLib::RIFF::AIFF::File file(this->filePath->toUTF8(),
                                   true,
                                   TagLib::AudioProperties::ReadStyle::Fast);

@@ -214,12 +214,8 @@ void OGGTrackFile::loadAndParseFile(void)
     }
 }
 
-void OGGTrackFile::updateAndSaveFileIfModified(void) const
+void OGGTrackFile::updateAndSaveFile(void) const
 {
-    if (!this->metadataWasModified && !this->markersWereModified) {
-        return;
-    }
-
     TagLib::Vorbis::File file(this->filePath->toUTF8(),
                               true,
                               TagLib::AudioProperties::ReadStyle::Fast);

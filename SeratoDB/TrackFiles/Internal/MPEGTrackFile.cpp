@@ -62,12 +62,8 @@ void MPEGTrackFile::loadAndParseFile(void)
     }
 }
 
-void MPEGTrackFile::updateAndSaveFileIfModified(void) const
+void MPEGTrackFile::updateAndSaveFile(void) const
 {
-    if (!this->metadataWasModified && !this->markersWereModified) {
-        return;
-    }
-
     TagLib::MPEG::File file(this->filePath->toUTF8(),
                             true,
                             TagLib::AudioProperties::ReadStyle::Fast);

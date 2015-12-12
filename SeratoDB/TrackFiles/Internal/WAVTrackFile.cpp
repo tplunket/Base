@@ -70,12 +70,8 @@ void WAVTrackFile::loadAndParseFile(void)
     }
 }
 
-void WAVTrackFile::updateAndSaveFileIfModified(void) const
+void WAVTrackFile::updateAndSaveFile(void) const
 {
-    if (!this->metadataWasModified && !this->markersWereModified) {
-        return;
-    }
-
     TagLib::RIFF::WAV::File file(this->filePath->toUTF8(),
                                  true,
                                  TagLib::AudioProperties::ReadStyle::Fast);

@@ -249,12 +249,8 @@ void FLACTrackFile::loadAndParseFile(void)
     }
 }
 
-void FLACTrackFile::updateAndSaveFileIfModified(void) const
+void FLACTrackFile::updateAndSaveFile(void) const
 {
-    if (!this->metadataWasModified && !this->markersWereModified) {
-        return;
-    }
-
     TagLib::FLAC::File file(this->filePath->toUTF8(),
                             true,
                             TagLib::AudioProperties::ReadStyle::Fast);

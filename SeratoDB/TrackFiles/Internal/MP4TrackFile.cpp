@@ -307,12 +307,8 @@ void MP4TrackFile::loadAndParseFile(void)
     }
 }
 
-void MP4TrackFile::updateAndSaveFileIfModified(void) const
+void MP4TrackFile::updateAndSaveFile(void) const
 {
-    if (!this->metadataWasModified && !this->markersWereModified) {
-        return;
-    }
-
     TagLib::MP4::File file(this->filePath->toUTF8(),
                            true,
                            TagLib::AudioProperties::ReadStyle::Fast);

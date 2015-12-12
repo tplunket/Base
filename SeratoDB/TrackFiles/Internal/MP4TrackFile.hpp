@@ -54,6 +54,6 @@ namespace NxA { namespace Serato { namespace Internal {
 
         #pragma mark Overridden TrackFile Instance Methods
         virtual void loadAndParseFile(void) override;
-        virtual void updateAndSaveFileIfModified(void) const override;
+        virtual void updateAndSaveFile(void) const override;
     };
 } } }

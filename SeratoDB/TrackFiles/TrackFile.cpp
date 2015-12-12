@@ -341,10 +341,16 @@ void TrackFile::setGridMarkers(const GridMarker::Array& markers)
     }
 }
 
-void TrackFile::saveIfModified(void)
+boolean TrackFile::saveIfModified(void)
 {
-    internal->updateAndSaveFileIfModified();
+    if (!internal->metadataWasModified && !internal->markersWereModified) {
+        return false;
+    }
+
+    internal->updateAndSaveFile();
 
     internal->metadataWasModified = false;
     internal->markersWereModified = false;
+
+    return true;
 }

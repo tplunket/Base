@@ -54,6 +54,7 @@ namespace NxA {
     using decimal = double;
 
     using decimal2 = dec::decimal<2>;
+    using decimal3 = dec::decimal<3>;
 
     // -- Template used by default to produce the name of unknown types.
     template <typename T> struct TypeName

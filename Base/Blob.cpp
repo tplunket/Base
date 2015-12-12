@@ -521,6 +521,11 @@ void Blob::append(const character other)
     this->insert(this->end(), 1, other);
 }
 
+void Blob::removeAll(void)
+{
+    this->std::vector<byte>::clear();
+}
+
 void Blob::padToAlignment(integer32 alignment)
 {
     count paddingSize = (((this->size() + alignment - 1) / alignment) * alignment) - this->size();

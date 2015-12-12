@@ -23,20 +23,11 @@
 
 #include "Base/Types.hpp"
 
+#include <boost/scope_exit.hpp>
+
 #include <stdexcept>
 
-namespace NxA {
-    class String;
-    template <class T> class Pointer;
-
-    class Exception : public std::runtime_error {
-    public:
-        #pragma mark Constructors & Destructors
-        Exception() = delete;
-        explicit Exception(const character* reason) : std::runtime_error(reason) { };
-        virtual ~Exception() { }
-    };
-}
+#pragma mark Macros
 
 #define NXA_EXCEPTION_NAMED_WITH_PARENT(exception_name, parent_class_name) \
         class exception_name : public parent_class_name { \
@@ -55,3 +46,27 @@ namespace NxA {
                 return exception_name(buffer); \
             } \
         };
+
+#define NXA_SCOPE_EXIT \
+        _Pragma("clang diagnostic push") \
+        _Pragma("clang diagnostic ignored \"-Wshadow\"") \
+        BOOST_SCOPE_EXIT
+
+#define NXA_SCOPE_EXIT_END \
+        BOOST_SCOPE_EXIT_END \
+        _Pragma("clang diagnostic pop") \
+
+#pragma mark Public Interface
+
+namespace NxA {
+    class String;
+    template <class T> class Pointer;
+
+    class Exception : public std::runtime_error {
+    public:
+#pragma mark Constructors & Destructors
+        Exception() = delete;
+        explicit Exception(const character* reason) : std::runtime_error(reason) { };
+        virtual ~Exception() { }
+    };
+}

@@ -94,6 +94,8 @@ namespace NxA {
         count indexOfLastOccurenceOf(const String& other) const;
         count indexOfFirstOccurenceOf(const character* other) const;
         count indexOfLastOccurenceOf(const character* other) const;
+
+        void replaceOccurenceOfStringWith(const character* occurence, const character* replacement);
     };
 
     inline bool operator==(const char* first, const String& second)

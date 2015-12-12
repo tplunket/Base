@@ -19,32 +19,21 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include "Base/Date.hpp"
+#include "Base/ArrayContainer.hpp"
+#include "Base/String.hpp"
 
-#include <iostream>
+namespace NxA {
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdocumentation"
-#pragma clang diagnostic ignored "-Wshorten-64-to-32"
-#include <boost/date_time/posix_time/posix_time.hpp>
-#include <boost/date_time/posix_time/posix_time_io.hpp>
-#pragma clang diagnostic pop
-
-using namespace NxA;
-
-#pragma mark Class Methods
-
-String::Pointer Date::formattedStringWithTimestampAndFormat(timestamp time, const character *format)
+#pragma mark Overridden Object Instance Methods
+NxA::Pointer<NxA::String> descriptionOfObjectsInArray(const Object::ArrayOfConst& array, const void* originalArrayAddress)
 {
-    boost::posix_time::time_facet *facet = new boost::posix_time::time_facet(format);
-    if (!facet) {
-        return String::string();
+    auto result = String::stringWithFormat("Array at %08p with %ld elements:", originalArrayAddress, array.length());
+    for (count index = 0; index < array.length(); ++index) {
+        auto& item = array[index];
+        result->append(String::stringWithFormat("\n  %ld: %s", index, item.description()->toUTF8()));
     }
 
-    std::locale loc(std::cout.getloc(), facet);
-    std::basic_stringstream<char> stream;
-    stream.imbue(loc);
-    stream << boost::posix_time::from_time_t(time);
+    return result;
+}
 
-    return String::stringWith(stream.str().c_str());
 }

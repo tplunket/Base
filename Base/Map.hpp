@@ -112,7 +112,7 @@ namespace NxA {
         using const_iterator = typename std::map<const Tkey, std::shared_ptr<Tvalue>>::const_iterator;
         
         #pragma mark Factory Methods
-        static NxA::Pointer<Map<Tkey, Tvalue>>  map(void)
+        static NxA::Pointer<Map<Tkey, Tvalue>> map(void)
         {
             return Map::Pointer(std::make_shared<Map>(Map::constructor_access()));
         }

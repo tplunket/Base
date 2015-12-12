@@ -29,6 +29,9 @@
 #include <mutex>
 
 namespace NxA {
+    // -- This is a utility function to return the description of the content of an array.
+    NxA::Pointer<NxA::String> descriptionOfObjectsInArray(const Object::ArrayOfConst& array, const void* originalArrayAddress);
+
     template <class T> class ArrayContainer : public Object, private std::vector<Pointer<T>> {
         NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_BASE_CLASS(NxA, ArrayContainer<T>);
 
@@ -78,7 +81,7 @@ namespace NxA {
         }
         T& operator[] (count index)
         {
-            return const_cast<T&>((static_cast<const ArrayContainer<T>&>(*this))[index]);
+            return const_cast<T&>(static_cast<const ArrayContainer<T>*>(this)->operator[](index));
         }
         bool operator==(const ArrayContainer<T>& other) const
         {
@@ -145,6 +148,12 @@ namespace NxA {
         {
             this->push_back(object.pointer());
         }
+        void append(const ArrayContainer<T>& other)
+        {
+            for (auto& object : other) {
+                this->append(object);
+            }
+        }
 
         const T& firstObject(void) const
         {
@@ -153,7 +162,7 @@ namespace NxA {
         }
         T& firstObject(void)
         {
-            return const_cast<T&>((static_cast<const ArrayContainer<T>&>(*this)).firstObject());
+            return const_cast<T&>((static_cast<const ArrayContainer<T>*>(this))->firstObject());
         }
         const T& lastObject(void) const
         {
@@ -163,7 +172,7 @@ namespace NxA {
         }
         T& lastObject(void)
         {
-            return const_cast<T&>((static_cast<const ArrayContainer<T>&>(*this)).lastObject());
+            return const_cast<T&>((static_cast<const ArrayContainer<T>*>(this))->lastObject());
         }
         void insertAt(T& object, const_iterator pos)
         {
@@ -184,6 +193,18 @@ namespace NxA {
         void remove(const T& object)
         {
             this->std::vector<NxA::Pointer<T>>::erase(this->find(object));
+        }
+
+        #pragma mark Overridden Object Instance Methods
+        virtual NxA::Pointer<NxA::String> description(void) const
+        {
+            auto tempArray = Object::ArrayOfConst::array();
+            for (auto& item : *this) {
+                tempArray->append(item->pointer());
+            }
+
+            const void* originalArrayAddress = static_cast<const void*>(this);
+            return descriptionOfObjectsInArray(tempArray, originalArrayAddress);
         }
     };
 }

@@ -35,7 +35,6 @@ namespace NxA { namespace Serato {
     class TrackEntry;
 
     class Database : public Object {
-        NXA_GENERATED_OPERATOR_EQUAL_DECLARATION_IN_NAMESPACE_FOR_CLASS(NxA::Serato, Database);
         NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_CLASS(NxA::Serato, Database);
 
     public:

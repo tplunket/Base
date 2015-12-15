@@ -33,7 +33,7 @@ using namespace NxA::Serato::Internal;
 
 WAVTrackFile::WAVTrackFile(const String& path) : ID3TrackFile(path) { }
 
-#pragma mark Instance methods
+#pragma mark Instance Methods
 
 void WAVTrackFile::parseAudioProperties(const TagLib::RIFF::WAV::Properties& properties)
 {

@@ -48,7 +48,7 @@ ObjectTag::Pointer ObjectTag::tagWithMemoryAt(const byte* tagAddress)
     return result;
 }
 
-ObjectTag::Pointer ObjectTag::tagWithIdentifierAndValue(uinteger32 identifier, const Tag::Array& content)
+ObjectTag::Pointer ObjectTag::tagWithIdentifierAndValue(uinteger32 identifier, Tag::Array& content)
 {
     NXA_ASSERT_NOT_EQ(content.length(), 0);
     NXA_ASSERT_EQ((identifier & 0xFF000000) >> 24, 'o');
@@ -83,7 +83,8 @@ bool ObjectTag::operator==(const ObjectTag& other) const
         }
 
         auto& value = *(pair.second);
-        if (value != other.subTagForIdentifier(key)) {
+        auto& otherValue = other.subTagForIdentifier(key);
+        if (value != otherValue) {
             return false;
         }
     }

@@ -30,7 +30,7 @@ namespace NxA { namespace Serato {
     NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(PathTag);
 
     class PathTag : public TextTag {
-        NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_CLASS(NxA::Serato, PathTag);
+        NXA_GENERATED_DECLARATIONS_WITHOUT_OPERATOR_EQUAL_IN_NAMESPACE_FOR_CLASS(NxA::Serato, PathTag);
 
     public:
         #pragma mark Constructors
@@ -38,6 +38,6 @@ namespace NxA { namespace Serato {
         static PathTag::Pointer tagWithIdentifierAndValue(uinteger32 identifier, const String& value);
 
         #pragma mark Operators
-        bool operator==(const PathTag& other) const;
+        virtual bool operator==(const PathTag& other) const;
     };
 } }

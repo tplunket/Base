@@ -30,7 +30,6 @@ namespace NxA { namespace Serato {
     NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(OGGTrackFile);
 
     class OGGTrackFile : public TrackFile {
-        NXA_GENERATED_OPERATOR_EQUAL_DECLARATION_IN_NAMESPACE_FOR_CLASS(NxA::Serato, OGGTrackFile);
         NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_CLASS(NxA::Serato, OGGTrackFile);
 
     public:

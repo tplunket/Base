@@ -30,7 +30,7 @@ namespace NxA { namespace Serato {
     NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(VersionTag);
 
     class VersionTag : public TextTag {
-        NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_CLASS(NxA::Serato, VersionTag);
+        NXA_GENERATED_DECLARATIONS_WITHOUT_OPERATOR_EQUAL_IN_NAMESPACE_FOR_CLASS(NxA::Serato, VersionTag);
 
     public:
         #pragma mark Factory Methods
@@ -38,6 +38,6 @@ namespace NxA { namespace Serato {
         static VersionTag::Pointer tagWithIdentifierAndValue(uinteger32 identifier, const String& value);
 
         #pragma mark Operators
-        bool operator==(const VersionTag& other) const;
+        virtual bool operator==(const VersionTag& other) const;
     };
 } }

@@ -41,7 +41,7 @@ namespace NxA { namespace Serato { namespace Internal {
     static const character* oggKeyFieldName = "INITIALKEY";
 
     struct OGGTrackFile : public TrackFile {
-        NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTORS_FOR(NxA::Serato, OGGTrackFile);
+        NXA_GENERATED_DESTRUCTOR_FOR_CLASS(OGGTrackFile);
 
         #pragma mark Constructor & Destructors
         OGGTrackFile(const String& path);

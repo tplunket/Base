@@ -234,7 +234,7 @@ Crate::Pointer Crate::findOrAddCrateWithRelativeNameAndFullName(const String& re
     return crateFound->findOrAddCrateWithRelativeNameAndFullName(relativeName.subString(topCrateName->length() + 2), fullCrateName);
 }
 
-bool Crate::crateOrChildrenCrateContainsTracks(void)
+bool Crate::crateOrChildrenCrateContainsTracks(void) const
 {
     if (this->trackEntries()->length()) {
         return true;

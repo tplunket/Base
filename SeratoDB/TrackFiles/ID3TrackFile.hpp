@@ -30,7 +30,6 @@ namespace NxA { namespace Serato {
     NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(ID3TrackFile);
 
     class ID3TrackFile : public TrackFile {
-        NXA_GENERATED_OPERATOR_EQUAL_DECLARATION_IN_NAMESPACE_FOR_CLASS(NxA::Serato, ID3TrackFile);
         NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_CLASS(NxA::Serato, ID3TrackFile);
 
     public:

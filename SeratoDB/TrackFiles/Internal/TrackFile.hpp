@@ -37,7 +37,7 @@
 
 namespace NxA { namespace Serato { namespace Internal {
     struct TrackFile : public NxA::Internal::Object {
-        NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTORS_FOR(NxA::Serato, TrackFile);
+        NXA_GENERATED_DESTRUCTOR_FOR_CLASS(TrackFile);
 
         #pragma mark Constructor & Destructors
         TrackFile(const String& path);

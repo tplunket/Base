@@ -31,7 +31,7 @@
 
 namespace NxA { namespace Serato { namespace Internal {
     struct AIFFTrackFile : public ID3TrackFile {
-        NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTORS_FOR(NxA::Serato, AIFFTrackFile);
+        NXA_GENERATED_DESTRUCTOR_FOR_CLASS(AIFFTrackFile);
 
         #pragma mark Constructors & Destuctors
         AIFFTrackFile(const String& path);

@@ -33,7 +33,6 @@ namespace NxA { namespace Serato {
     class Crate;
 
     class TrackEntry : public Object {
-        NXA_GENERATED_OPERATOR_EQUAL_DECLARATION_IN_NAMESPACE_FOR_CLASS(NxA::Serato, TrackEntry);
         NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_CLASS(NxA::Serato, TrackEntry);
 
         friend Crate;

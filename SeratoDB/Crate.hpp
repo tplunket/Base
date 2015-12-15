@@ -32,7 +32,6 @@ namespace NxA { namespace Serato {
     class Database;
 
     class Crate : public Object {
-        NXA_GENERATED_OPERATOR_EQUAL_DECLARATION_IN_NAMESPACE_FOR_CLASS(NxA::Serato, Crate);
         NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_CLASS(NxA::Serato, Crate);
 
     public:
@@ -69,7 +68,7 @@ namespace NxA { namespace Serato {
         void removeCrate(Crate::Pointer& crate);
 
         Crate::Pointer findOrAddCrateWithRelativeNameAndFullName(const String& relativeName, const String& fullCrateName);
-        bool crateOrChildrenCrateContainsTracks(void);
+        bool crateOrChildrenCrateContainsTracks(void) const;
 
         void addTrackEntry(TrackEntry& trackEntry);
         void removeTrackEntry(TrackEntry::Pointer& trackEntry);

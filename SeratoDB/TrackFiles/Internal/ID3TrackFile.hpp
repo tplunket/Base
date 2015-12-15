@@ -48,7 +48,7 @@ namespace NxA { namespace Serato { namespace Internal {
     constexpr const character* id3MarkersFrameDescription = "Serato Markers_";
 
     struct ID3TrackFile : public TrackFile {
-        NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTORS_FOR(NxA::Serato, ID3TrackFile);
+        NXA_GENERATED_DESTRUCTOR_FOR_CLASS(ID3TrackFile);
 
         #pragma mark Constructor & Destructors
         ID3TrackFile(const String& path);

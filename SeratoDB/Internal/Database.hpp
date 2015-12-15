@@ -33,7 +33,7 @@
 
 namespace NxA { namespace Serato { namespace Internal {
     struct Database : public NxA::Internal::Object {
-        NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTORS_FOR(NxA::Serato, Database);
+        NXA_GENERATED_DESTRUCTOR_FOR_CLASS(Database);
 
         #pragma mark Constructors & Destructors
         Database(const String& pathForLocalSeratoFolder,

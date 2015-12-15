@@ -30,7 +30,7 @@ namespace NxA { namespace Serato {
     NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(UInteger32Tag);
 
     class UInteger32Tag : public Tag {
-        NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_CLASS(NxA::Serato, UInteger32Tag);
+        NXA_GENERATED_DECLARATIONS_WITHOUT_OPERATOR_EQUAL_IN_NAMESPACE_FOR_CLASS(NxA::Serato, UInteger32Tag);
 
     public:
         #pragma mark Factory Methods

@@ -27,7 +27,7 @@ namespace NxA { namespace Serato {
     NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(CueMarker);
 
     class CueMarker : public Object {
-        NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_CLASS(NxA::Serato, CueMarker);
+        NXA_GENERATED_DECLARATIONS_WITHOUT_OPERATOR_EQUAL_IN_NAMESPACE_FOR_CLASS(NxA::Serato, CueMarker);
 
     public:
         #pragma mark Factory Methods
@@ -44,7 +44,7 @@ namespace NxA { namespace Serato {
         static NxA::String::Pointer stringRepresentationForTimeInMilliseconds(uinteger32 timeInMilliseconds);
 
         #pragma mark Operators
-        bool operator==(const CueMarker& other) const;
+        virtual bool operator==(const CueMarker& other) const;
 
         #pragma mark Instance Methods
         uinteger32 positionInMilliseconds(void) const;

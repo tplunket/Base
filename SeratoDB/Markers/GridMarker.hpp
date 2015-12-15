@@ -28,7 +28,7 @@ namespace NxA { namespace Serato {
     NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(GridMarker);
 
     class GridMarker : public Object {
-        NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_CLASS(NxA::Serato, GridMarker);
+        NXA_GENERATED_DECLARATIONS_WITHOUT_OPERATOR_EQUAL_IN_NAMESPACE_FOR_CLASS(NxA::Serato, GridMarker);
 
     public:
         #pragma mark Factory Methods
@@ -42,7 +42,7 @@ namespace NxA { namespace Serato {
         static boolean gridMarkersAreValid(const GridMarker::Array& markers);
 
         #pragma mark Operators
-        bool operator==(const GridMarker& other) const;
+        virtual bool operator==(const GridMarker& other) const;
 
         #pragma mark Instance Methods
         const decimal3& positionInSeconds(void) const;

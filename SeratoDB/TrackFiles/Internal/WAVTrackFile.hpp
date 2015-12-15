@@ -31,7 +31,7 @@
 
 namespace NxA { namespace Serato { namespace Internal {
     struct WAVTrackFile : public ID3TrackFile {
-        NXA_GENERATED_INTERNAL_DECLARATIONS_WITHOUT_CONSTRUCTORS_FOR(NxA::Serato, WAVTrackFile);
+        NXA_GENERATED_DESTRUCTOR_FOR_CLASS(WAVTrackFile);
 
         #pragma mark Constructor & Destructors
         WAVTrackFile(const String& path);

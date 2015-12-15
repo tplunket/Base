@@ -74,14 +74,10 @@ namespace NxA {
         }
 
         #pragma mark Operators
-        const T& operator[] (count index) const
+        T& operator[] (count index) const
         {
             NXA_ASSERT_TRUE(index >= 0 && index < this->length());
             return *(this->std::vector<NxA::Pointer<T>>::operator[](index));
-        }
-        T& operator[] (count index)
-        {
-            return const_cast<T&>(static_cast<const ArrayContainer<T>*>(this)->operator[](index));
         }
         bool operator==(const ArrayContainer<T>& other) const
         {

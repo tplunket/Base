@@ -70,6 +70,62 @@ TEST(SeratoDB_GridMarker, markerWith_AMarkerAsSource_ReturnsACorrectMarker)
     ASSERT_STREQ("124.00", test->beatsPerMinuteAsString()->toUTF8());
 }
 
+TEST(SeratoDB_GridMarker, gridMarkersAreValid_ValidMarkers_ReturnsTrue)
+{
+    // -- Given.
+    auto marker1 = GridMarker::markerWithPositionAndBeatsPerMinute(decimal3("0.000"), decimal2("124"));
+    auto marker2 = GridMarker::markerWithPositionAndBeatsPerMinute(decimal3("7.74193548"), decimal2("124"));
+    auto marker3 = GridMarker::markerWithPositionAndBeatsPerMinute(decimal3("23.2258065"), decimal2("124"));
+    auto markers = GridMarker::Array::array();
+    markers->append(marker1);
+    markers->append(marker2);
+    markers->append(marker3);
+
+    // -- When.
+    auto result = GridMarker::gridMarkersAreValid(markers);
+
+    // -- Then.
+    ASSERT_TRUE(result);
+}
+
+TEST(SeratoDB_GridMarker, gridMarkersAreValid_InvalidMarkers_ReturnsFalse)
+{
+    // -- Given.
+    auto marker1 = GridMarker::markerWithPositionAndBeatsPerMinute(decimal3("0.000"), decimal2("124"));
+    auto marker2 = GridMarker::markerWithPositionAndBeatsPerMinute(decimal3("7.74193548"), decimal2("124"));
+    auto marker3 = GridMarker::markerWithPositionAndBeatsPerMinute(decimal3("23.0258065"), decimal2("124"));
+    auto markers = GridMarker::Array::array();
+    markers->append(marker1);
+    markers->append(marker2);
+    markers->append(marker3);
+
+    // -- When.
+    auto result = GridMarker::gridMarkersAreValid(markers);
+
+    // -- Then.
+    ASSERT_FALSE(result);
+}
+
+TEST(SeratoDB_GridMarker, gridMarkersAreValid_MarkersWithSomeAtSamePosition_ReturnsFalse)
+{
+    // -- Given.
+    auto marker1 = GridMarker::markerWithPositionAndBeatsPerMinute(decimal3("0.000"), decimal2("124"));
+    auto marker2 = GridMarker::markerWithPositionAndBeatsPerMinute(decimal3("7.74193548"), decimal2("124"));
+    auto marker3 = GridMarker::markerWithPositionAndBeatsPerMinute(decimal3("7.74193548"), decimal2("124"));
+    auto marker4 = GridMarker::markerWithPositionAndBeatsPerMinute(decimal3("23.2258065"), decimal2("124"));
+    auto markers = GridMarker::Array::array();
+    markers->append(marker1);
+    markers->append(marker2);
+    markers->append(marker3);
+    markers->append(marker4);
+
+    // -- When.
+    auto result = GridMarker::gridMarkersAreValid(markers);
+
+    // -- Then.
+    ASSERT_FALSE(result);
+}
+
 TEST(SeratoDB_GridMarker, OperatorEqual_TwoEqualMarkers_ReturnsTrue)
 {
     // -- Given.

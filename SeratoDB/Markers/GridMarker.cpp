@@ -171,7 +171,14 @@ boolean GridMarker::gridMarkersAreValid(const GridMarker::Array& markers)
             auto& nextMarker = markers[index + 1];
             decimal3 bpmDecimal3;
             bpmDecimal3.setUnbiased(marker.beatsPerMinute().getUnbiased() * 10);
-            decimal3 numberOfBeats = (bpmDecimal3 * (nextMarker.positionInSeconds() - marker.positionInSeconds())) / decimal3("60");
+
+            auto markerPosition = marker.positionInSeconds();
+            auto nextMarkerPosition = nextMarker.positionInSeconds();
+            if (nextMarkerPosition == markerPosition) {
+                return false;
+            }
+
+            decimal3 numberOfBeats = (bpmDecimal3 * (nextMarkerPosition - markerPosition)) / decimal3("60");
 
             count actualNumberOfBeats = Internal::GridMarker::actualNumberOfBeatsIfSupported(numberOfBeats);
             if (actualNumberOfBeats == 0) {

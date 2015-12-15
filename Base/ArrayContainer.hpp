@@ -33,7 +33,7 @@ namespace NxA {
     NxA::Pointer<NxA::String> descriptionOfObjectsInArray(const Object::ArrayOfConst& array, const void* originalArrayAddress);
 
     template <class T> class ArrayContainer : public Object, private std::vector<Pointer<T>> {
-        NXA_GENERATED_DECLARATIONS_WITHOUT_OVERRIDE_IN_NAMESPACE_FOR_BASE_CLASS(NxA, ArrayContainer<T>);
+        NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_BASE_CLASS(NxA, ArrayContainer<T>);
 
     public:
         using iterator = typename std::vector<NxA::Pointer<T>>::iterator;
@@ -54,7 +54,7 @@ namespace NxA {
         }
 
         #pragma mark Class Methods
-        static const character* nameOfClass(void)
+        static const character* staticClassName(void)
         {
             static std::mutex m;
             static std::unique_ptr<character[]> buffer;
@@ -63,9 +63,9 @@ namespace NxA {
 
             if (!buffer.get()) {
                 const character *format = "NxA::Array<%s>";
-                count needed = snprintf(NULL, 0, format, T::nameOfClass()) + 1;
+                count needed = snprintf(NULL, 0, format, T::staticClassName()) + 1;
                 buffer = std::make_unique<character[]>(needed);
-                snprintf(buffer.get(), needed, format, T::nameOfClass());
+                snprintf(buffer.get(), needed, format, T::staticClassName());
             }
 
             m.unlock();
@@ -99,6 +99,10 @@ namespace NxA {
             }
 
             return true;
+        }
+        bool operator!=(const ArrayContainer<T>& other) const
+        {
+            return !this->operator==(other);
         }
 
         #pragma mark Instance Methods
@@ -196,7 +200,7 @@ namespace NxA {
         }
 
         #pragma mark Overridden Object Instance Methods
-        virtual NxA::Pointer<NxA::String> description(void) const
+        virtual NxA::Pointer<NxA::String> description(void) const override
         {
             auto tempArray = Object::ArrayOfConst::array();
             for (auto& item : *this) {

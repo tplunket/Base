@@ -36,9 +36,8 @@ namespace NxA {
     template <typename Tkey, typename Tvalue>
     class Map<Tkey, Tvalue, typename std::enable_if<std::is_fundamental<Tvalue>::value>::type> :
     public Object, private std::map<const Tkey, Tvalue> {
-        NXA_GENERATED_OPERATOR_EQUAL_DECLARATION_IN_NAMESPACE_FOR_CLASS(NxA, Map<Tkey, Tvalue>);
-        NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_SPECIALIZED_BASE_CLASS(NxA, Map<Tkey, Tvalue>);
-        
+        NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_BASE_CLASS(NxA, Map<Tkey, Tvalue>);
+
     public:
         using iterator = typename std::map<const Tkey, Tvalue>::iterator;
         using const_iterator = typename std::map<const Tkey, Tvalue>::const_iterator;
@@ -50,7 +49,7 @@ namespace NxA {
         }
         
         #pragma mark Class Methods
-        static const character* nameOfClass(void)
+        static const character* staticClassName(void)
         {
             static std::mutex m;
             static std::unique_ptr<character[]> buffer;
@@ -82,12 +81,35 @@ namespace NxA {
         {
             (*this)[key] = value;
         }
-        
-        using std::map<const Tkey, Tvalue>::begin;
-        using std::map<const Tkey, Tvalue>::end;
-        using std::map<const Tkey, Tvalue>::cbegin;
-        using std::map<const Tkey, Tvalue>::cend;
-        using std::map<const Tkey, Tvalue>::erase;
+
+        iterator begin(void)
+        {
+            return this->std::map<const Tkey, Tvalue>::begin();
+        }
+        const_iterator begin(void) const
+        {
+            return this->std::map<const Tkey, Tvalue>::begin();
+        }
+        const_iterator cbegin(void) const
+        {
+            return this->std::map<const Tkey, Tvalue>::cbegin();
+        }
+        iterator end(void)
+        {
+            return this->std::map<const Tkey, Tvalue>::end();
+        }
+        const_iterator end(void) const
+        {
+            return this->std::map<const Tkey, Tvalue>::end();
+        }
+        const_iterator cend(void) const
+        {
+            return this->std::map<const Tkey, Tvalue>::cend();
+        }
+        void erase(const Tkey& key)
+        {
+            this->std::map<const Tkey, Tvalue>::erase(key);
+        }
 
         count length(void) const
         {
@@ -104,8 +126,7 @@ namespace NxA {
     template <typename Tkey, typename Tvalue>
     class Map<Tkey, Tvalue, typename std::enable_if<std::is_fundamental<Tvalue>::value == false>::type> :
     public Object, private std::map<const Tkey, std::shared_ptr<Tvalue>> {
-        NXA_GENERATED_OPERATOR_EQUAL_DECLARATION_IN_NAMESPACE_FOR_CLASS(NxA, Map<Tkey, Tvalue>);
-        NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_SPECIALIZED_BASE_CLASS(NxA, Map<Tkey, Tvalue>);
+        NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_BASE_CLASS(NxA, Map<Tkey, Tvalue>);
 
     public:
         using iterator = typename std::map<const Tkey, std::shared_ptr<Tvalue>>::iterator;
@@ -118,7 +139,7 @@ namespace NxA {
         }
 
         #pragma mark Class Methods
-        static const character* nameOfClass(void)
+        static const character* staticClassName(void)
         {
             static std::mutex m;
             static std::unique_ptr<character[]> buffer;
@@ -127,9 +148,9 @@ namespace NxA {
 
             if (!buffer.get()) {
                 const character *format = "NxA::Map<%s, %s>";
-                count needed = snprintf(NULL, 0, format, TypeName<Tkey>::get(), Tvalue::nameOfClass()) + 1;
+                count needed = snprintf(NULL, 0, format, TypeName<Tkey>::get(), Tvalue::staticClassName()) + 1;
                 buffer = std::make_unique<character[]>(needed);
-                snprintf(buffer.get(), needed, format, TypeName<Tkey>::get(), Tvalue::nameOfClass());
+                snprintf(buffer.get(), needed, format, TypeName<Tkey>::get(), Tvalue::staticClassName());
             }
 
             m.unlock();
@@ -155,11 +176,35 @@ namespace NxA {
             (*this)[key] = value.pointer().toStdSharedPointer();
         }
 
-        using std::map<const Tkey, std::shared_ptr<Tvalue>>::begin;
-        using std::map<const Tkey, std::shared_ptr<Tvalue>>::end;
-        using std::map<const Tkey, std::shared_ptr<Tvalue>>::cbegin;
-        using std::map<const Tkey, std::shared_ptr<Tvalue>>::cend;
+        iterator begin(void)
+        {
+            return this->std::map<const Tkey, std::shared_ptr<Tvalue>>::begin();
+        }
+        const_iterator begin(void) const
+        {
+            return this->std::map<const Tkey, std::shared_ptr<Tvalue>>::begin();
+        }
+        const_iterator cbegin(void) const
+        {
+            return this->std::map<Tkey, std::shared_ptr<Tvalue>>::cbegin();
+        }
+        iterator end(void)
+        {
+            return this->std::map<const Tkey, std::shared_ptr<Tvalue>>::end();
+        }
+        const_iterator end(void) const
+        {
+            return this->std::map<const Tkey, std::shared_ptr<Tvalue>>::end();
+        }
+        const_iterator cend(void) const
+        {
+            return this->std::map<const Tkey, std::shared_ptr<Tvalue>>::cend();
+        }
+
         using std::map<const Tkey, std::shared_ptr<Tvalue>>::erase;
+        //void erase(const Tkey& key)
+        //{
+        //}
 
         count length(void) const
         {

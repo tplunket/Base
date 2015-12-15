@@ -29,19 +29,34 @@ namespace NxA {
 
     class String;
 
-    class Object : private Uncopyable, public NXA_ENABLE_SHARED_FROM_THIS(Object) {
-        NXA_GENERATED_OBJECT_DECLARATIONS_WITHOUT_OVERRIDE_FOR(NxA, Object);
-        NXA_GENERATED_SHARED_BASE_OPERATOR_EQUAL_WITHOUT_OVERRIDE_WITH_OBJECT_DECLARATIONS_FOR(NxA, Object);
+    class Object : private Uncopyable, public NXA_ENABLE_OBJECT_SHARED_FROM_THIS(Object) {
+        NXA_GENERATED_OBJECT_DECLARATIONS_FOR(NxA, Object);
 
     public:
-        #pragma mark Static Methods
-        static const character* nameOfClass(void)
+        #pragma mark Class Methods
+        static const character* staticClassName(void)
         {
             return "NxA::Object";
         }
-        static uinteger32 hashOfClassName(void);
+        static uinteger32 staticClassHash(void);
+
+        #pragma mark Operators
+        virtual bool operator==(const NxA::Object& other) const
+        {
+            NXA_ALOG("Undefined operator==() for class '%s'.", this->className());
+            return false;
+        }
+        virtual bool operator!=(const NxA::Object& other) const
+        {
+            return !this->operator==(other);
+        }
 
         #pragma mark Instance Methods
+        virtual const character* className(void) const
+        {
+            return Object::staticClassName();
+        }
+
         virtual NxA::Pointer<NxA::String> description(void) const;
     };
 }

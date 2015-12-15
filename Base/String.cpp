@@ -213,6 +213,11 @@ bool String::operator==(const String& other) const
     return stdStringThis == stdStringOther;
 }
 
+bool String::operator!=(const String& other) const
+{
+    return !this->String::operator==(other);
+}
+
 bool String::operator==(const char* other) const
 {
     NXA_ASSERT_NOT_NULL(other);

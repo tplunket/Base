@@ -25,6 +25,7 @@
 namespace NxA {
 
 #pragma mark Overridden Object Instance Methods
+    
 NxA::Pointer<NxA::String> descriptionOfObjectsInArray(const Object::ArrayOfConst& array, const void* originalArrayAddress)
 {
     auto result = String::stringWithFormat("Array at %08p with %ld elements:", originalArrayAddress, array.length());

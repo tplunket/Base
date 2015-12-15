@@ -67,11 +67,7 @@ namespace NxA {
         }
         operator T&() const
         {
-            return this->operator*();
-        }
-        operator T&()
-        {
-            return this->operator*();
+            return *this->get();
         }
         T* operator->() const
         {

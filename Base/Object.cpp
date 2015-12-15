@@ -23,15 +23,23 @@
 #include "Base/String.hpp"
 #include "Base/Internal/Object.hpp"
 
-NXA_GENERATED_OBJECT_IMPLEMENTATION_FOR(NxA, Object);
-
 using namespace NxA;
+
+#pragma mark Constructors
+
+Object::Object(NxA::Pointer<NxA::Internal::Object> initial_internal) : internalImplementation(initial_internal),
+                                                                       internal(&(*initial_internal)) { }
 
 #pragma mark Static Methods
 
-uinteger32 Object::hashOfClassName(void)
+NxA::Pointer<NxA::Internal::Object> Object::makeInternal(void)
 {
-    static uinteger32 hash = String::hashFor(nameOfClass());
+    return NxA::Pointer<NxA::Internal::Object>::dynamicCastFrom(Internal::Object::makeShared());
+}
+
+uinteger32 Object::staticClassHash(void)
+{
+    static uinteger32 hash = String::hashFor(Object::staticClassName());
     return hash;
 }
 

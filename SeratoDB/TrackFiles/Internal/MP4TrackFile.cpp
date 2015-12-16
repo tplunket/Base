@@ -253,16 +253,21 @@ void MP4TrackFile::parseTag(const TagLib::MP4::Tag& tag)
 
 void MP4TrackFile::updateArtworkInTag(TagLib::MP4::Tag& tag) const
 {
-    TagLib::ByteVector data(*this->artwork->data(), this->artwork->size());
-    TagLib::MP4::CoverArt newCoverArt(TagLib::MP4::CoverArt::Unknown, data);
-    TagLib::MP4::CoverArtList newCoverArtList;
-    newCoverArtList.append(newCoverArt);
+    if (this->artwork->size()) {
+        TagLib::ByteVector data(*this->artwork->data(), this->artwork->size());
+        TagLib::MP4::CoverArt newCoverArt(TagLib::MP4::CoverArt::Unknown, data);
+        TagLib::MP4::CoverArtList newCoverArtList;
+        newCoverArtList.append(newCoverArt);
 
-    TagLib::MP4::Item newItem(newCoverArtList);
-    // -- TODO: This needs to be set to the correct type.
-    newItem.setAtomDataType(TagLib::MP4::AtomDataType::TypePNG);
+        TagLib::MP4::Item newItem(newCoverArtList);
+        // -- TODO: This needs to be set to the correct type.
+        newItem.setAtomDataType(TagLib::MP4::AtomDataType::TypePNG);
 
-    tag.setItem(Internal::mp4ArtworkItemName, newItem);
+        tag.setItem(mp4ArtworkItemName, newItem);
+    }
+    else {
+        tag.removeItem(mp4ArtworkItemName);
+    }
 }
 
 void MP4TrackFile::updateTag(TagLib::MP4::Tag& tag) const

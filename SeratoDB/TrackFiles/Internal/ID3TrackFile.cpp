@@ -391,15 +391,17 @@ void ID3TrackFile::updateArtworkInTag(TagLib::ID3v2::Tag& tag) const
 {
     ID3TrackFile::removeArtworkInTag(tag);
 
-    TagLib::ByteVector data(*this->artwork->data(), this->artwork->size());
+    if (this->artwork->size()) {
+        TagLib::ByteVector data(*this->artwork->data(), this->artwork->size());
 
-    auto* newFrame = new TagLib::ID3v2::AttachedPictureFrame;
-    newFrame->setData(data);
-    newFrame->setType(TagLib::ID3v2::AttachedPictureFrame::FrontCover);
-    newFrame->setDescription("");
-    newFrame->setTextEncoding(TagLib::String::Latin1);
-
-    tag.addFrame(newFrame);
+        auto* newFrame = new TagLib::ID3v2::AttachedPictureFrame;
+        newFrame->setData(data);
+        newFrame->setType(TagLib::ID3v2::AttachedPictureFrame::FrontCover);
+        newFrame->setDescription("");
+        newFrame->setTextEncoding(TagLib::String::Latin1);
+        
+        tag.addFrame(newFrame);
+    }
 }
 
 void ID3TrackFile::updateTag(TagLib::ID3v2::Tag& tag) const

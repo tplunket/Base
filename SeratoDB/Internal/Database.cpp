@@ -149,7 +149,7 @@ void Database::addCratesNamesAtTheStartOfUnlessAlreadyThere(String::ArrayOfConst
     }
 }
 
-#if NXA_PRINT_DEBUG_INFO
+#if NXA_PRINT_SERATO_DEBUG_INFO
 void Database::debugListCrate(Serato::Crate& crate,
                               const String& spacing)
 {
@@ -220,7 +220,7 @@ void Database::parseAnyDatabaseFilesIn(const String& pathForLocalSeratoFolder,
 
     boolean firstPath = true;
 
-#if NXA_PRINT_DEBUG_INFO
+#if NXA_PRINT_SERATO_DEBUG_INFO
     count previousTrackCount = 0;
     count previousOtherTagsCount = 0;
 #endif
@@ -253,7 +253,7 @@ void Database::parseAnyDatabaseFilesIn(const String& pathForLocalSeratoFolder,
             this->otherTagsPerPath->append(NxA::Serato::Tag::ArrayOfConst::array());
         }
 
-#if NXA_PRINT_DEBUG_INFO
+#if NXA_PRINT_SERATO_DEBUG_INFO
         printf("  found %ld tracks and %ld other tags.\n",
                this->tracks->length() - previousTrackCount,
                this->otherTagsPerPath->length() - previousOtherTagsCount);
@@ -267,7 +267,7 @@ void Database::parseAnyDatabaseFilesIn(const String& pathForLocalSeratoFolder,
         this->smartCrateNamesPerPath->append(*smartCrateNames);
     }
 
-#if NXA_PRINT_DEBUG_INFO
+#if NXA_PRINT_SERATO_DEBUG_INFO
     debugListCrate(this->rootCrate, String::string());
 #endif
 

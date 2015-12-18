@@ -40,7 +40,7 @@ Track::Pointer Track::trackWithTagLocatedOnVolume(ObjectTag& trackTag, const Str
     auto internalObject = Internal::Track::Pointer(std::make_shared<Internal::Track>(trackTag, volumePath));
     auto newTrack = Track::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
 
-#if NXA_PRINT_TRACK_DEBUG_INFO
+#if NXA_PRINT_SERATO_TRACK_DEBUG_INFO
     printf("Reading track ----------------------------------------\n");
     Track::debugPrint(*newTrack);
 #endif
@@ -114,7 +114,7 @@ Track::Pointer Track::trackWithFilePathLocatedOnVolume(const String& trackFilePa
 
 #pragma mark Class Methods
 
-#if NXA_PRINT_TRACK_DEBUG_INFO
+#if NXA_PRINT_SERATO_TRACK_DEBUG_INFO
 void Track::debugPrintString(const String& text, const String& name)
 {
     printf("%s '%s'\n", name.toUTF8(), text.toUTF8());
@@ -133,7 +133,7 @@ void Track::debugPrintDate(timestamp value, const String& name)
 
 void Track::debugPrint(const Serato::Track& track)
 {
-#if NXA_PRINT_TAG_DEBUG_INFO
+#if NXA_PRINT_SERATO_TAG_DEBUG_INFO
     track.internal->trackTag->debugPrint();
 #endif
 

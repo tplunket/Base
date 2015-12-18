@@ -41,7 +41,7 @@ ObjectTag::Pointer ObjectTag::tagWithMemoryAt(const byte* tagAddress)
     auto result = ObjectTag::tagWithIdentifierAndValue(Tag::identifierForTagAt(tagAddress),
                                                        subTags);
 
-#if NXA_PRINT_TAG_DEBUG_INFO
+#if NXA_PRINT_SERATO_TAG_DEBUG_INFO
     result->debugPrint();
 #endif
 
@@ -94,7 +94,7 @@ bool ObjectTag::operator==(const ObjectTag& other) const
 
 #pragma mark Instance Methods
 
-#if NXA_PRINT_TAG_DEBUG_INFO
+#if NXA_PRINT_SERATO_TAG_DEBUG_INFO
 void ObjectTag::debugPrint(void) const
 {
     printf("Found identifiers:\n");

@@ -23,6 +23,7 @@
 #pragma once
 
 #include <SeratoDb/Tags/ObjectTag.hpp>
+#include <SeratoDb/DebugFlags.hpp>
 
 #include <Base/Base.hpp>
 
@@ -40,7 +41,7 @@ namespace NxA { namespace Serato {
         static Track::Pointer trackWithFilePathLocatedOnVolume(const String& trackFilePath, const String& volumePath);
 
         #pragma mark Class Methods
-#if NXA_PRINT_TRACK_DEBUG_INFO
+#if NXA_PRINT_SERATO_TRACK_DEBUG_INFO
         static void debugPrintString(const String& text, const String& name);
         static void debugPrintUint(uinteger32 value, const String& name);
         static void debugPrintTimeFromMilliseconds(uinteger32 value, const String& name);

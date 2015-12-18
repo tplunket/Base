@@ -27,6 +27,8 @@
 #include <SeratoDB/Tags/Tag.hpp>
 #include <SeratoDB/Tags/ObjectTag.hpp>
 
+#include <SeratoDb/DebugFlags.hpp>
+
 #include <Base/Base.hpp>
 #include <Base/Internal/Object.hpp>
 
@@ -56,7 +58,7 @@ namespace NxA { namespace Serato { namespace Internal {
         static void addCratesNamesAtTheStartOfUnlessAlreadyThere(String::ArrayOfConst& cratesToAddTo,
                                                                  const String::ArrayOfConst& cratesToAdd);
 
-#if NXA_PRINT_DEBUG_INFO
+#if NXA_PRINT_SERATO_DEBUG_INFO
         static void debugListCrate(Serato::Crate& crate,
                                    const String& spacing);
 #endif

@@ -20,6 +20,7 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#include "SeratoDB/Database.hpp"
 #include "Internal/Database.hpp"
 #include "Tags/DatabaseV2Tags.hpp"
 #include "Tags/TagFactory.hpp"

@@ -22,11 +22,10 @@
 
 #pragma once
 
-#include "SeratoDB/Database.hpp"
-#include "SeratoDB/Track.hpp"
-#include "SeratoDB/Crate.hpp"
-#include "Tags/Tag.hpp"
-#include "Tags/ObjectTag.hpp"
+#include <SeratoDB/Track.hpp>
+#include <SeratoDB/Crate.hpp>
+#include <SeratoDB/Tags/Tag.hpp>
+#include <SeratoDB/Tags/ObjectTag.hpp>
 
 #include <Base/Base.hpp>
 #include <Base/Internal/Object.hpp>

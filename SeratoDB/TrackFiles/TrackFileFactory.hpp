@@ -23,6 +23,7 @@
 #pragma once
 
 #include <SeratoDb/TrackFiles/TrackFile.hpp>
+
 #include <Base/Base.hpp>
 
 namespace NxA { namespace Serato {

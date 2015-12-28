@@ -36,6 +36,8 @@ namespace NxA {
         static Blob::Pointer blobWithCapacity(count size);
         static Blob::Pointer blobWithMemoryAndSize(const byte* other, count size);
         static Blob::Pointer blobWithBase64String(const String& str);
+        static Blob::Pointer blobWithStringWithTerminator(const String& str);
+        static Blob::Pointer blobWithStringWithoutTerminator(const String& str);
         static Blob::Pointer blobWith(const Blob& other);
 
         #pragma mark Class Methods
@@ -75,5 +77,7 @@ namespace NxA {
         void append(const character other);
 
         void removeAll(void);
+
+        void padToAlignment(integer32 alignment);
     };
 }

@@ -142,7 +142,7 @@ namespace NxA {
 
         h1 += h2;
         h2 += h1;
-        
+
         ((uint64_t*)out)[0] = h1;
         ((uint64_t*)out)[1] = h2;
     }
@@ -405,6 +405,20 @@ Blob::Pointer Blob::blobWithBase64String(const String& str)
     return newBlob;
 }
 
+Blob::Pointer Blob::blobWithStringWithTerminator(const String& str)
+{
+    auto newBlob = Blob::makeShared();
+    newBlob->appendWithStringTermination(str.toUTF8());
+    return newBlob;
+}
+
+Blob::Pointer Blob::blobWithStringWithoutTerminator(const String& str)
+{
+    auto newBlob = Blob::makeShared();
+    newBlob->appendWithoutStringTermination(str.toUTF8());
+    return newBlob;
+}
+
 Blob::Pointer Blob::blobWith(const Blob& other)
 {
     auto newBlob = Blob::makeShared();
@@ -510,4 +524,13 @@ void Blob::append(const character other)
 void Blob::removeAll(void)
 {
     this->std::vector<byte>::clear();
+}
+
+void Blob::padToAlignment(integer32 alignment)
+{
+    count paddingSize = (((this->size() + alignment - 1) / alignment) * alignment) - this->size();
+    if (paddingSize > 0)
+    {
+        this->append(Blob::blobWithCapacity(paddingSize));
+    }
 }

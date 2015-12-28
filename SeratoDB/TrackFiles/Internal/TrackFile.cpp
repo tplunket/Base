@@ -25,10 +25,16 @@
 namespace NxA { namespace Serato { namespace Internal {
     #pragma mark Structures
     typedef struct {
-        unsigned char majorVersion;
-        unsigned char minorVersion;
-        unsigned char data[0];
-    } MarkerHeaderStruct;
+        byte majorVersion;
+        byte minorVersion;
+        byte data[0];
+    } MarkerV2HeaderStruct;
+
+    typedef struct {
+        byte markerCount[4];
+        byte data[0];
+    } MarkerV1HeaderStruct;
+
 } } }
 
 using namespace NxA;
@@ -163,7 +169,7 @@ void TrackFile::parseMarkersV2FromBase64String(const byte* markerV2Data, count t
     auto decodedData = Blob::blobWithBase64String(String::stringWith(reinterpret_cast<const character*>(markerV2Data),
                                                                      totalSize));
 
-    auto markerStruct = reinterpret_cast<MarkerHeaderStruct*>(decodedData->data());
+    auto markerStruct = reinterpret_cast<MarkerV2HeaderStruct*>(decodedData->data());
     if ((markerStruct->majorVersion != 1) || (markerStruct->minorVersion != 1)) {
         return;
     }
@@ -183,6 +189,146 @@ void TrackFile::parseGridMarkersFrom(const byte* gridMarkerData)
     this->gridMarkers = Serato::GridMarker::markersWithMemoryAt(gridMarkerData);
 }
 
+Blob::Pointer TrackFile::rawBlobFromMarkersV1(void) const
+{
+    NXA_ASSERT_FALSE(this->markersWereIgnored);
+
+    auto blobData = Blob::blob();
+
+    MarkerV1HeaderStruct markersHeader;
+    markersHeader.markerCount[0] = 0;
+    markersHeader.markerCount[1] = 0;
+    markersHeader.markerCount[2] = 0;
+    markersHeader.markerCount[3] = 14;
+
+    auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<byte*>(&markersHeader), sizeof(MarkerV1HeaderStruct));
+    blobData->append(headerData);
+
+    // files with >5 cues are saved with all cues empty in V1 by serato
+    if (this->cueMarkers->length() > 5)
+    {
+        for (int i = 0; i < 5; ++i) {
+            Serato::CueMarker::addEmptyRawMarkerV1TagTo(blobData);
+        }
+    }
+    else
+    {
+        for (int i = 0; i < 5; ++i) {
+            // Find the cue with this index
+            bool cueFound = false;
+            for (auto& cue : *this->cueMarkers)
+            {
+                if (cue->index() == i) {
+                    cue->addRawMarkerV1TagTo(blobData);
+                    cueFound = true;
+                    break;
+                }
+            }
+
+            // Otherwise, write an empty cue
+            if (!cueFound) {
+                Serato::CueMarker::addEmptyRawMarkerV1TagTo(blobData);
+            }
+        }
+    }
+
+    for (int i = 0; i < 9; ++i) {
+        // Find the loop with this index
+        bool loopFound = false;
+        for (auto& loop : *this->loopMarkers)
+        {
+            if (loop->index() == i) {
+                loop->addRawMarkerV1TagTo(blobData);
+                loopFound = true;
+                break;
+            }
+        }
+
+        // Otherwise, write an empty loop
+        if (!loopFound) {
+            Serato::LoopMarker::addEmptyRawMarkerV1TagTo(blobData);
+        }
+    }
+
+    // -- This marks the end of tags.
+    blobData->append(0x00);
+    blobData->append(0xFF);
+    blobData->append(0xFF);
+    blobData->append(0xFF);
+
+    return blobData;
+}
+
+Blob::Pointer TrackFile::id3EncodedBlobFromMarkersV1(void) const
+{
+    NXA_ASSERT_FALSE(this->markersWereIgnored);
+
+    auto blobData = Blob::blob();
+
+    MarkerV1HeaderStruct markersHeader;
+    markersHeader.markerCount[0] = 0;
+    markersHeader.markerCount[1] = 0;
+    markersHeader.markerCount[2] = 0;
+    markersHeader.markerCount[3] = 14;
+
+    auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<byte*>(&markersHeader), sizeof(MarkerV1HeaderStruct));
+    blobData->append(headerData);
+
+    // files with >5 cues are saved with all cues empty in V1 by serato
+    if (this->cueMarkers->length() > 5)
+    {
+        for (int i = 0; i < 5; ++i) {
+            Serato::CueMarker::addEmptyEncodedMarkerV1TagTo(blobData);
+        }
+    }
+    else
+    {
+        for (int i = 0; i < 5; ++i) {
+            // Find the cue with this index
+            bool cueFound = false;
+            for (auto& cue : *this->cueMarkers)
+            {
+                if (cue->index() == i) {
+                    cue->addEncodedMarkerV1TagTo(blobData);
+                    cueFound = true;
+                    break;
+                }
+            }
+
+            // Otherwise, write an empty cue
+            if (!cueFound) {
+                Serato::CueMarker::addEmptyEncodedMarkerV1TagTo(blobData);
+            }
+        }
+    }
+
+    for (int i = 0; i < 9; ++i) {
+        // Find the loop with this index
+        bool loopFound = false;
+        for (auto& loop : *this->loopMarkers)
+        {
+            if (loop->index() == i) {
+                loop->addEncodedMarkerV1TagTo(blobData);
+                loopFound = true;
+                break;
+            }
+        }
+
+        // Otherwise, write an empty loop
+        if (!loopFound) {
+            Serato::LoopMarker::addEmptyEncodedMarkerV1TagTo(blobData);
+        }
+    }
+
+    // -- This marks the end of tags.
+    blobData->append(0x07);
+    blobData->append(0x7F);
+    blobData->append(0x7F);
+    blobData->append(0x7F);
+    
+    return blobData;
+}
+
 String::Pointer TrackFile::base64StringFromMarkersV2(void) const
 {
     NXA_ASSERT_FALSE(this->markersWereIgnored);
@@ -193,19 +339,19 @@ String::Pointer TrackFile::base64StringFromMarkersV2(void) const
 
     auto decodedData = Blob::blob();
 
-    MarkerHeaderStruct markersHeader;
+    MarkerV2HeaderStruct markersHeader;
     markersHeader.majorVersion = 1;
     markersHeader.minorVersion = 1;
 
-    auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<byte*>(&markersHeader), sizeof(MarkerHeaderStruct));
+    auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<byte*>(&markersHeader), sizeof(MarkerV2HeaderStruct));
     decodedData->append(headerData);
 
     for (auto& marker : *this->cueMarkers) {
-        marker->addId3TagTo(decodedData);
+        marker->addMarkerV2TagTo(decodedData);
     }
 
     for (auto& marker : *this->loopMarkers) {
-        marker->addId3TagTo(decodedData);
+        marker->addMarkerV2TagTo(decodedData);
     }
 
     for (auto& tagData : *this->otherTags) {

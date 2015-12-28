@@ -46,9 +46,10 @@ namespace NxA { namespace Serato { namespace Internal {
         void parseTag(const TagLib::ID3v2::Tag& id3v2Tag);
         void parseComment(const TagLib::Ogg::XiphComment& oggComment);
         void parseMarkersInComment(const TagLib::Ogg::XiphComment& oggComment);
+        void updateMarkersInComment(TagLib::Ogg::XiphComment& oggComment) const;
+        void updateMarkersV1ItemInComment(TagLib::Ogg::XiphComment& oggComment) const;
         void updateMarkersV2ItemInComment(TagLib::Ogg::XiphComment& oggComment) const;
         void updateGridMarkersItemInComment(TagLib::Ogg::XiphComment& oggComment) const;
-        void updateMarkersInComment(TagLib::Ogg::XiphComment& oggComment) const;
         void updateTag(TagLib::ID3v2::Tag& tag) const;
         void updateComment(TagLib::Ogg::XiphComment& oggComment) const;
 

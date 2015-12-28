@@ -45,6 +45,13 @@ namespace NxA { namespace Serato { namespace Internal {
 
         #pragma mark Instance Methods
         void parseMarkersInTag(const TagLib::MP4::Tag& tag);
+        void replaceFrameNamedWithDataAndVersionInTag(const character* frameName,
+                                                      const character* frameDescription,
+                                                      const Blob& frameData,
+                                                      integer majorVersion,
+                                                      integer minorVersion,
+                                                      TagLib::MP4::Tag& tag) const;
+        void replaceMarkersV1ItemInTag(TagLib::MP4::Tag& tag) const;
         void replaceMarkersV2ItemInTag(TagLib::MP4::Tag& tag) const;
         void replaceGridMarkersItemInTag(TagLib::MP4::Tag& tag) const;
         void updateMarkersInTag(TagLib::MP4::Tag& tag) const;

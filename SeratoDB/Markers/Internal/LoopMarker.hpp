@@ -23,12 +23,12 @@
 #pragma once
 
 #include "Markers/LoopMarker.hpp"
+#include "Markers/Internal/Marker.hpp"
 
 #include <Base/Base.hpp>
-#include <Base/Internal/Object.hpp>
 
 namespace NxA { namespace Serato { namespace Internal {
-    struct LoopMarker : public NxA::Internal::Object {
+    struct LoopMarker : public NxA::Serato::Internal::Marker {
         NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, LoopMarker);
 
         #pragma mark Instance Variable

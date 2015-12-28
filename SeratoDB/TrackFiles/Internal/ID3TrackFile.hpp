@@ -45,8 +45,6 @@ namespace NxA { namespace Serato { namespace Internal {
     constexpr const character* id3RecordingTimeFrameName = "TDRC";
     constexpr const character* id3ReleaseTimeFrameName = "TDRL";
 
-    constexpr const character* id3MarkersFrameDescription = "Serato Markers_";
-
     struct ID3TrackFile : public TrackFile {
         NXA_GENERATED_DESTRUCTOR_FOR_CLASS(ID3TrackFile);
 
@@ -65,7 +63,9 @@ namespace NxA { namespace Serato { namespace Internal {
         static void setRatingValueForRatingFrameInTag(integer value, TagLib::ID3v2::Tag& tag);
         static void removeGEOBFrameNamedInTag(const String& name, TagLib::ID3v2::Tag& tag);
         static void parseMarkersInTagToTrackFile(const TagLib::ID3v2::Tag& tag, TrackFile& trackFile);
-        static void replaceMarkersFrameInTagWithEmptyFrame(TagLib::ID3v2::Tag& tag);
+        static void replaceFrameNamedInTagWithDataAndVersion(const String& frameName, TagLib::ID3v2::Tag& tag,
+                                                             const Blob& frameData, int majorVersion, int minorVersion);
+        static void replaceMarkersV1FrameInTagWith(TagLib::ID3v2::Tag& tag, const Blob& markersV1Data);
         static void replaceMarkersV2FrameInTagWith(TagLib::ID3v2::Tag& tag, const String& base64MarkersData);
         static void replaceGridMarkersFrameInTagWith(TagLib::ID3v2::Tag& tag, const Blob& gridMarkersData);
         static void updateMarkersInTagFromTrackFile(TagLib::ID3v2::Tag& tag, const TrackFile& trackFile);

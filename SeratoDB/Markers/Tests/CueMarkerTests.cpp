@@ -248,20 +248,92 @@ TEST(SeratoDB_CueMarker, OperatorUnequal_TwoUnequalMarkersDifferentBlue_ReturnsT
     ASSERT_TRUE(*test != *other);
 }
 
-TEST(SeratoDB_CueMarker, addId3TagTo_AMarkerWithData_WritesTheCorrectData)
+TEST(SeratoDB_CueMarker, addMarkerV2TagTo_AMarkerWithData_WritesTheCorrectData)
 {
     // -- Given.
     auto destination = Blob::blob();
     auto test = CueMarker::markerWithLabelPositionIndexAndColor(String::stringWith("TEST"), 187750, 1, 0x45, 0xdc, 0x02);
-
+    
     // -- When.
-    test->addId3TagTo(destination);
-
+    test->addMarkerV2TagTo(destination);
+    
     // -- Then.
     auto data = destination->data();
     constexpr byte expectedData[] = {
         0x43, 0x55, 0x45, 0x00, 0x00, 0x00, 0x00, 0x11, 0x00, 0x01, 0x00,
         0x02, 0xDD, 0x66, 0x00, 0x45, 0xdc, 0x02, 0x00, 0x00, 0x54, 0x45, 0x53, 0x54, 0x00
+    };
+    ASSERT_EQ(sizeof(expectedData), destination->size());
+    ASSERT_EQ(0, ::memcmp(expectedData, data, sizeof(expectedData)));
+}
+
+TEST(SeratoDB_CueMarker, addEmptyEncodedMarkerV1TagTo_AMarkerWithData_WritesTheCorrectData)
+{
+    // -- Given.
+    auto destination = Blob::blob();
+    
+    // -- When.
+    CueMarker::addEmptyEncodedMarkerV1TagTo(destination);
+    
+    // -- Then.
+    auto data = destination->data();
+    constexpr byte expectedData[] = {
+        0x7F, 0x7F, 0x7F, 0x7F, 0x7F, 0x7F, 0x7F, 0x7F, 0x7F, 0x7F, 0,
+        0x7F, 0x7F, 0x7F, 0x7F, 0x7F, 0, 0, 0, 0, 0, 0
+    };
+    ASSERT_EQ(sizeof(expectedData), destination->size());
+    ASSERT_EQ(0, ::memcmp(expectedData, data, sizeof(expectedData)));
+}
+
+TEST(SeratoDB_CueMarker, addEncodedMarkerV1TagTo_AMarkerWithData_WritesTheCorrectData)
+{
+    // -- Given.
+    auto destination = Blob::blob();
+    auto test = CueMarker::markerWithLabelPositionIndexAndColor(String::stringWith("TEST"), 187750, 1, 0x45, 0xdc, 0x02);
+    
+    // -- When.
+    test->addEncodedMarkerV1TagTo(destination);
+    
+    // -- Then.
+    auto data = destination->data();
+    constexpr byte expectedData[] = {
+        0, 0, 11, 58, 102, 127, 127, 127, 127, 127, 0, 127, 127, 127, 127, 127, 2, 23, 56, 2, 1, 0
+    };
+    ASSERT_EQ(sizeof(expectedData), destination->size());
+    ASSERT_EQ(0, ::memcmp(expectedData, data, sizeof(expectedData)));
+}
+
+TEST(SeratoDB_CueMarker, addEmptyRawMarkerV1TagTo_AMarkerWithData_WritesTheCorrectData)
+{
+    // -- Given.
+    auto destination = Blob::blob();
+    
+    // -- When.
+    CueMarker::addEmptyRawMarkerV1TagTo(destination);
+    
+    // -- Then.
+    auto data = destination->data();
+    constexpr byte expectedData[] = {
+        0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0,
+        0xFF, 0xFF, 0xFF, 0xFF, 0, 0, 0, 0, 0, 0
+    };
+    ASSERT_EQ(sizeof(expectedData), destination->size());
+    ASSERT_EQ(0, ::memcmp(expectedData, data, sizeof(expectedData)));
+}
+
+TEST(SeratoDB_CueMarker, addRawMarkerV1TagTo_AMarkerWithData_WritesTheCorrectData)
+{
+    // -- Given.
+    auto destination = Blob::blob();
+    auto test = CueMarker::markerWithLabelPositionIndexAndColor(String::stringWith("TEST"), 187750, 1, 0x45, 0xdc, 0x02);
+    
+    // -- When.
+    test->addRawMarkerV1TagTo(destination);
+    
+    // -- Then.
+    auto data = destination->data();
+    constexpr byte expectedData[] = {
+        0, 2, 221, 102, 255, 255, 255, 255, 0, 255, 255, 255, 255, 0, 69, 220, 2, 1, 0
     };
     ASSERT_EQ(sizeof(expectedData), destination->size());
     ASSERT_EQ(0, ::memcmp(expectedData, data, sizeof(expectedData)));

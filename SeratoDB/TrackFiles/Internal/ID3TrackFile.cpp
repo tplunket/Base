@@ -47,6 +47,7 @@ namespace NxA { namespace Serato { namespace Internal {
     } GeobObjectStruct;
 
     #pragma mark Constants
+    constexpr const character* id3MarkersV1FrameDescription = "Serato Markers_";
     constexpr const character* id3MarkersV2FrameDescription = "Serato Markers2";
     constexpr const character* id3BeatgridFrameDescription = "Serato BeatGrid";
 } } }
@@ -210,19 +211,40 @@ void ID3TrackFile::parseMarkersInTagToTrackFile(const TagLib::ID3v2::Tag& tag, T
     }
 }
 
-void ID3TrackFile::replaceMarkersFrameInTagWithEmptyFrame(TagLib::ID3v2::Tag& tag)
+void ID3TrackFile::replaceFrameNamedInTagWithDataAndVersion(const String& frameName, TagLib::ID3v2::Tag& id3v2Tag,
+                                                            const Blob& frameData, int majorVersion, int minorVersion)
 {
-    ID3TrackFile::removeGEOBFrameNamedInTag(String::stringWith(id3MarkersFrameDescription), tag);
+    ID3TrackFile::removeGEOBFrameNamedInTag(frameName, id3v2Tag);
+
+    if (!frameData.size()) {
+        return;
+    }
+
+    auto objectData = Blob::blob();
+
+    GeobObjectStruct header;
+    header.majorVersion = majorVersion;
+    header.minorVersion = minorVersion;
+    auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<const byte*>(&header), sizeof(header));
+    objectData->append(headerData);
+    objectData->append(frameData);
+
+    TagLib::ByteVector newData((char*)objectData->data(), objectData->size());
 
     auto newFrame = new TagLib::ID3v2::GeneralEncapsulatedObjectFrame();
-    TagLib::ByteVector newData;
     newFrame->setObject(newData);
     newFrame->setTextEncoding(TagLib::String::Latin1);
     newFrame->setMimeType("application/octet-stream");
     newFrame->setFileName("");
-    newFrame->setDescription(id3MarkersFrameDescription);
+    newFrame->setDescription(frameName.toUTF8());
 
-    tag.addFrame(newFrame);
+    id3v2Tag.addFrame(newFrame);
+}
+
+void ID3TrackFile::replaceMarkersV1FrameInTagWith(TagLib::ID3v2::Tag& id3v2Tag, const Blob& markersV1Data)
+{
+    auto frameName = String::stringWith(id3MarkersV1FrameDescription);
+    ID3TrackFile::replaceFrameNamedInTagWithDataAndVersion(frameName, id3v2Tag, markersV1Data, 2, 5);
 }
 
 void ID3TrackFile::replaceMarkersV2FrameInTagWith(TagLib::ID3v2::Tag& tag, const String& base64MarkersData)
@@ -285,8 +307,7 @@ void ID3TrackFile::replaceGridMarkersFrameInTagWith(TagLib::ID3v2::Tag& tag, con
 
 void ID3TrackFile::updateMarkersInTagFromTrackFile(TagLib::ID3v2::Tag& tag, const TrackFile& trackFile)
 {
-    ID3TrackFile::replaceMarkersFrameInTagWithEmptyFrame(tag);
-
+    ID3TrackFile::replaceMarkersV1FrameInTagWith(tag, trackFile.id3EncodedBlobFromMarkersV1());
     ID3TrackFile::replaceMarkersV2FrameInTagWith(tag, trackFile.base64StringFromMarkersV2());
     ID3TrackFile::replaceGridMarkersFrameInTagWith(tag, trackFile.gridMarkerDataFromGridMarkers());
 }
@@ -330,7 +351,7 @@ Blob::Pointer ID3TrackFile::artworkInTag(const TagLib::ID3v2::Tag& tag)
             else if (pic->type() == TagLib::ID3v2::AttachedPictureFrame::Other) {
                 artworkFrame = pic;
             }
-        }
+}
 
         if (artworkFrame) {
             auto picture = artworkFrame->picture();
@@ -339,8 +360,8 @@ Blob::Pointer ID3TrackFile::artworkInTag(const TagLib::ID3v2::Tag& tag)
                 char *artworkData = picture.data();
                 return Blob::blobWithMemoryAndSize(reinterpret_cast<byte *>(artworkData), size);
             }
-        }
-    }
+}
+}
 
     return Blob::blob();
 }
@@ -399,7 +420,7 @@ void ID3TrackFile::updateArtworkInTag(TagLib::ID3v2::Tag& tag) const
         newFrame->setType(TagLib::ID3v2::AttachedPictureFrame::FrontCover);
         newFrame->setDescription("");
         newFrame->setTextEncoding(TagLib::String::Latin1);
-        
+
         tag.addFrame(newFrame);
     }
 }

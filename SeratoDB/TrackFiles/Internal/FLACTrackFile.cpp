@@ -40,7 +40,7 @@ namespace NxA { namespace Serato { namespace Internal {
     } FLACMarkersHeaderStruct;
 
     #pragma mark Constants
-    constexpr const character* flacMarkersItemName = "SERATO_MARKERS";
+    constexpr const character* flacMarkersV1ItemName = "SERATO_MARKERS";
     constexpr const character* flacMarkersV2ItemName = "SERATO_MARKERS_V2";
     constexpr const character* flacBeatgridItemName = "SERATO_BEATGRID";
 } } }
@@ -120,6 +120,19 @@ void FLACTrackFile::parseMarkersInComment(const TagLib::Ogg::XiphComment& oggCom
     }
 }
 
+void FLACTrackFile::updateMarkersInComment(TagLib::Ogg::XiphComment& oggComment) const
+{
+    this->updateMarkersV1ItemInComment(oggComment);
+    this->updateMarkersV2ItemInComment(oggComment);
+    this->updateGridMarkersItemInComment(oggComment);
+}
+
+void FLACTrackFile::updateMarkersV1ItemInComment(TagLib::Ogg::XiphComment& oggComment) const
+{
+    oggComment.removeField(flacMarkersV1ItemName);
+    oggComment.addField(flacMarkersV1ItemName, TagLib::String());
+}
+
 void FLACTrackFile::updateMarkersV2ItemInComment(TagLib::Ogg::XiphComment& oggComment) const
 {
     oggComment.removeField(flacMarkersV2ItemName);
@@ -171,15 +184,6 @@ void FLACTrackFile::updateGridMarkersItemInComment(TagLib::Ogg::XiphComment& ogg
 
     auto encodedData = Blob::base64StringFor(decodedData->data(), decodedData->size());
     oggComment.addField(flacBeatgridItemName, TagLib::String(encodedData->toUTF8()));
-}
-
-void FLACTrackFile::updateMarkersInComment(TagLib::Ogg::XiphComment& oggComment) const
-{
-    oggComment.removeField(flacMarkersItemName);
-    oggComment.addField(flacMarkersItemName, TagLib::String());
-
-    this->updateMarkersV2ItemInComment(oggComment);
-    this->updateGridMarkersItemInComment(oggComment);
 }
 
 void FLACTrackFile::updateTag(TagLib::ID3v2::Tag& tag) const
@@ -268,8 +272,8 @@ void FLACTrackFile::updateAndSaveFile(void) const
     if (this->metadataWasModified) {
         if (oggComment) {
             this->updateComment(*oggComment);
-        }
-        else {
+    }
+    else {
             this->updateTag(*id3v2Tag);
         }
     }

@@ -90,6 +90,8 @@ namespace NxA { namespace Serato { namespace Internal {
         const byte* parseMarkerAtAndAdvanceToNextTag(const byte* tagStart);
         void parseMarkersV2FromBase64String(const byte* markerV2Data, count totalSize);
         void parseGridMarkersFrom(const byte* gridMarkerData);
+        Blob::Pointer rawBlobFromMarkersV1(void) const;
+        Blob::Pointer id3EncodedBlobFromMarkersV1(void) const;
         String::Pointer base64StringFromMarkersV2(void) const;
         Blob::Pointer gridMarkerDataFromGridMarkers(void) const;
     };

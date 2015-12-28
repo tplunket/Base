@@ -23,12 +23,12 @@
 #pragma once
 
 #include "Markers/CueMarker.hpp"
+#include "Markers/Internal/Marker.hpp"
 
 #include <Base/Base.hpp>
-#include <Base/Internal/Object.hpp>
 
 namespace NxA { namespace Serato { namespace Internal {
-    struct CueMarker : public NxA::Internal::Object {
+    struct CueMarker : public NxA::Serato::Internal::Marker {
         NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, CueMarker);
 
         #pragma mark Instance Variables

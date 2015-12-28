@@ -39,7 +39,7 @@ namespace NxA { namespace Serato { namespace Internal {
     } MP4MarkersHeaderStruct;
 
     #pragma mark Constants
-    constexpr const character* mp4MarkersItemName = "----:com.serato.dj:markersv2";
+    constexpr const character* mp4MarkersV1ItemName = "----:com.serato.dj:markers";
     constexpr const character* mp4MarkersV2ItemName = "----:com.serato.dj:markersv2";
     constexpr const character* mp4BeatgridItemName = "----:com.serato.dj:beatgrid";
     constexpr const character* mp4KeyItemName = "----:com.apple.iTunes:initialkey";
@@ -50,6 +50,7 @@ namespace NxA { namespace Serato { namespace Internal {
     constexpr const character* mp4BpmItemName = "tmpo";
     constexpr const character* mp4ArtworkItemName = "covr";
 
+    constexpr const character* mp4MarkersV1FrameDescription = "Serato Markers_";
     constexpr const character* mp4MarkersV2FrameDescription = "Serato Markers2";
     constexpr const character* mp4BeatgridFrameDescription = "Serato Beatgrid";
 } } }
@@ -153,6 +154,49 @@ void MP4TrackFile::parseMarkersInTag(const TagLib::MP4::Tag& tag)
     }
 }
 
+void MP4TrackFile::replaceFrameNamedWithDataAndVersionInTag(const character* frameName,
+                                                            const character* frameDescription,
+                                                            const Blob& frameData,
+                                                            integer majorVersion,
+                                                            integer minorVersion,
+                                                            TagLib::MP4::Tag& tag) const
+{
+    tag.removeItem(frameName);
+
+    if (!frameData.size()) {
+        return;
+    }
+
+    auto decodedData = Blob::blob();
+
+    MP4MarkersHeaderStruct header;
+    memcpy(header.mimeType, "application/octet-stream", 25);
+    header.filename[0] = 0;
+    memcpy(header.description, frameDescription, 16);
+    header.majorVersion = majorVersion;
+    header.minorVersion = minorVersion;
+
+    auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<byte*>(&header), sizeof(header));
+    decodedData->append(headerData);
+    decodedData->append(frameData);
+
+    auto encodedData = Blob::base64StringFor(decodedData->data(), decodedData->size());
+    TagLib::String newString(encodedData->toUTF8(), TagLib::String::UTF8);
+    TagLib::StringList newList(newString);
+
+    TagLib::MP4::Item newItem(newList);
+    newItem.setAtomDataType(TagLib::MP4::AtomDataType::TypeUTF8);
+    NXA_ASSERT_TRUE(newItem.isValid());
+
+    tag.setItem(frameName, newItem);
+}
+
+void MP4TrackFile::replaceMarkersV1ItemInTag(TagLib::MP4::Tag& tag) const
+{
+    auto markerData = this->rawBlobFromMarkersV1();
+    this->replaceFrameNamedWithDataAndVersionInTag(mp4MarkersV1ItemName, mp4MarkersV1FrameDescription, markerData, 2, 5, tag);
+}
+
 void MP4TrackFile::replaceMarkersV2ItemInTag(TagLib::MP4::Tag& tag) const
 {
     tag.removeItem(mp4MarkersV2ItemName);
@@ -226,15 +270,7 @@ void MP4TrackFile::replaceGridMarkersItemInTag(TagLib::MP4::Tag& tag) const
 
 void MP4TrackFile::updateMarkersInTag(TagLib::MP4::Tag& tag) const
 {
-    tag.removeItem(mp4MarkersItemName);
-    TagLib::String newString;
-    TagLib::StringList newList(newString);
-
-    TagLib::MP4::Item newItem(newList);
-    newItem.setAtomDataType(TagLib::MP4::AtomDataType::TypeUTF8);
-    NXA_ASSERT_TRUE(newItem.isValid());
-    tag.setItem(mp4MarkersItemName, newItem);
-
+    this->replaceMarkersV1ItemInTag(tag);
     this->replaceMarkersV2ItemInTag(tag);
     this->replaceGridMarkersItemInTag(tag);
 }

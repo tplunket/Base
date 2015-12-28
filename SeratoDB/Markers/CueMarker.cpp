@@ -23,14 +23,14 @@
 #include "Markers/CueMarker.hpp"
 #include "Markers/Internal/CueMarker.hpp"
 
-NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, CueMarker, Object);
+NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, CueMarker, Marker);
 
 namespace NxA { namespace Serato {
     #pragma mark Structures
     typedef struct {
         byte tag[4];
         byte size[4];
-    } SeratoCueTagHeaderStruct;
+    } SeratoCueTagV2HeaderStruct;
 
     typedef struct {
         byte tag[4];
@@ -41,7 +41,7 @@ namespace NxA { namespace Serato {
         byte loop_enabled;
         byte loop_locked;
         byte label[0];
-    } SeratoCueTagStruct;
+    } SeratoCueTagV2Struct;
 } }
 
 using namespace NxA;
@@ -51,7 +51,7 @@ using namespace NxA::Serato;
 
 CueMarker::Pointer CueMarker::markerWithMemoryAt(const byte* id3TagStart)
 {
-    auto tagStruct = reinterpret_cast<const SeratoCueTagStruct*>(id3TagStart);
+    auto tagStruct = reinterpret_cast<const SeratoCueTagV2Struct*>(id3TagStart);
 
     NXA_ASSERT_TRUE(*String::stringWith(reinterpret_cast<const character*>(tagStruct->tag)) == "CUE");
 
@@ -160,12 +160,12 @@ byte CueMarker::colorBlueComponent(void) const
     return internal->colorBlueComponent;
 }
 
-void CueMarker::addId3TagTo(Blob& data) const
+void CueMarker::addMarkerV2TagTo(Blob& data) const
 {
-    SeratoCueTagStruct header;
+    SeratoCueTagV2Struct header;
 
     memcpy(header.tag, "CUE", 4);
-    count size = sizeof(SeratoCueTagStruct) + this->label().length() + 1 - sizeof(SeratoCueTagHeaderStruct);
+    count size = sizeof(SeratoCueTagV2Struct) + this->label().length() + 1 - sizeof(SeratoCueTagV2HeaderStruct);
     Platform::writeBigEndianUInteger32ValueAt(static_cast<uinteger32>(size), header.size);
     Platform::writeBigEndianUInteger16ValueAt(this->index(), header.index);
     Platform::writeBigEndianUInteger32ValueAt(this->positionInMilliseconds(), header.position);
@@ -176,10 +176,49 @@ void CueMarker::addId3TagTo(Blob& data) const
     header.loop_enabled = 0;
     header.loop_locked = 0;
 
-    auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<const byte*>(&header), sizeof(SeratoCueTagStruct));
+    auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<const byte*>(&header), sizeof(SeratoCueTagV2Struct));
     data.append(headerData);
     data.appendWithStringTermination(this->label().toUTF8());
 }
+
+void CueMarker::addRawMarkerV1TagTo(Blob& data) const
+{
+    internal->addRawMarkerV1TagWithFieldsTo(Internal::Marker::eCueMarker,
+                                            this->positionInMilliseconds(),
+                                            0xFFFFFFFF,
+                                            0xFFFFFFFF,
+                                            this->colorRedComponent(),
+                                            this->colorGreenComponent(),
+                                            this->colorBlueComponent(),
+                                            data);
+}
+
+void CueMarker::addEncodedMarkerV1TagTo(Blob& data) const
+{
+    internal->addEncodedMarkerV1TagWithFieldsTo(Internal::Marker::eCueMarker,
+                                                this->positionInMilliseconds(),
+                                                0xFFFFFFFF,
+                                                0xFFFFFFFF,
+                                                this->colorRedComponent(),
+                                                this->colorGreenComponent(),
+                                                this->colorBlueComponent(),
+                                                data);
+}
+
+void CueMarker::addEmptyRawMarkerV1TagTo(Blob& data)
+{
+    Internal::Marker::addRawMarkerV1TagWithFieldsTo(Internal::Marker::eEmptyMarker,
+                                                    0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+                                                    0, 0, 0, data);
+}
+
+void CueMarker::addEmptyEncodedMarkerV1TagTo(Blob& data)
+{
+    Internal::Marker::addEncodedMarkerV1TagWithFieldsTo(Internal::Marker::eEmptyMarker,
+                                                        0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+                                                        0, 0, 0, data);
+}
+
 
 #pragma mark Overriden Object Instance Methods
 

@@ -23,12 +23,12 @@
 #pragma once
 
 #include "Markers/GridMarker.hpp"
+#include "Markers/Internal/Marker.hpp"
 
 #include <Base/Base.hpp>
-#include <Base/Internal/Object.hpp>
 
 namespace NxA { namespace Serato { namespace Internal {
-    struct GridMarker : public NxA::Internal::Object {
+    struct GridMarker : public NxA::Serato::Internal::Marker {
         NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, GridMarker);
 
         #pragma mark Class Methods

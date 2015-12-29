@@ -113,6 +113,7 @@ namespace NxA { namespace Serato {
         
         // -- TODO: Look into adding discNumber and numberOfAlbumTracks if they are available.
 
+        boolean hasModificationsToSave(void);
         boolean saveIfModified(void);
     };
 } }

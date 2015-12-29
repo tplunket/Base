@@ -341,9 +341,14 @@ void TrackFile::setGridMarkers(const GridMarker::Array& markers)
     }
 }
 
+boolean TrackFile::hasModificationsToSave(void)
+{
+    return internal->metadataWasModified || internal->markersWereModified;
+}
+
 boolean TrackFile::saveIfModified(void)
 {
-    if (!internal->metadataWasModified && !internal->markersWereModified) {
+    if (!this->hasModificationsToSave()) {
         return false;
     }
 

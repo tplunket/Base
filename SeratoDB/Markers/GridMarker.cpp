@@ -94,7 +94,7 @@ GridMarker::Array::Pointer GridMarker::markersWithMemoryAt(const byte* id3TagSta
 
             decimal3 numberOfBeats(Platform::bigEndianUInteger32ValueAt(gridMarker->beatsPerMinute));
             decimal3 bpmAsDecimal3 = (numberOfBeats * decimal3("60.0")) / (nextPosition - position);
-            bpm.setUnbiased((bpmAsDecimal3.getUnbiased() + 5) / 10);
+            bpm.setUnbiased((bpmAsDecimal3.getUnbiased() + 3) / 10);
         }
         else {
             bpm.setUnbiased(::roundf(Platform::bigEndianFloatValueAt(gridMarker->beatsPerMinute) * 100.0f));

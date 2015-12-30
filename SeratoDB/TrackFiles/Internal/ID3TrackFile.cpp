@@ -351,7 +351,7 @@ Blob::Pointer ID3TrackFile::artworkInTag(const TagLib::ID3v2::Tag& tag)
             else if (pic->type() == TagLib::ID3v2::AttachedPictureFrame::Other) {
                 artworkFrame = pic;
             }
-}
+        }
 
         if (artworkFrame) {
             auto picture = artworkFrame->picture();
@@ -360,8 +360,8 @@ Blob::Pointer ID3TrackFile::artworkInTag(const TagLib::ID3v2::Tag& tag)
                 char *artworkData = picture.data();
                 return Blob::blobWithMemoryAndSize(reinterpret_cast<byte *>(artworkData), size);
             }
-}
-}
+        }
+    }
 
     return Blob::blob();
 }

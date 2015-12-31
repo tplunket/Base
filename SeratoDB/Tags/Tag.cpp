@@ -55,3 +55,17 @@ uinteger32 Tag::identifier(void) const
 {
     return internal->identifier;
 }
+
+#pragma mark Overridden Object Instance Methods
+NxA::Pointer<NxA::String> Tag::description(void) const
+{
+    uinteger32 identifier = this->identifier();
+
+    return String::stringWithFormat("Tag at 0x%8p with identifier '%c%c%c%c'.",
+                                    this,
+                                    (identifier >> 24) & 0xff,
+                                    (identifier >> 16) & 0xff,
+                                    (identifier >> 16) & 0xff,
+                                    (identifier) & 0xff
+                                    );
+}

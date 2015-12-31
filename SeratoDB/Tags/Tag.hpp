@@ -40,5 +40,8 @@ namespace NxA { namespace Serato {
         uinteger32 identifier(void) const;
 
         virtual void addTo(Blob& destination) const = 0;
+
+        #pragma mark Overridden Object Instance Methods
+        virtual NxA::Pointer<NxA::String> description(void) const override;
     };
 } }

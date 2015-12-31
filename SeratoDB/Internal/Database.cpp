@@ -44,7 +44,8 @@ Database::Database(const String& pathForLocalSeratoFolder,
                    volumePathsPerPath(String::ArrayOfConst::array()),
                    otherTagsPerPath(Serato::Tag::ArrayOfConst::Array::array()),
                    smartCrateNamesPerPath(String::ArrayOfConst::Array::array()),
-                   databaseIsValid(false)
+                   databaseIsValid(false),
+                   databaseTracksWereModified(false)
 {
     this->parseAnyDatabaseFilesIn(pathForLocalSeratoFolder, pathsForExternalSeratoFolders);
 }

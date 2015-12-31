@@ -76,6 +76,7 @@ namespace NxA { namespace Serato { namespace Internal {
         String::ArrayOfConst::Array::Pointer smartCrateNamesPerPath;
 
         boolean databaseIsValid;
+        boolean databaseTracksWereModified;
 
         #pragma mark Instance Methods
         Serato::Tag::ArrayOfConst::Pointer parseDatabaseFileAtLocatedOnVolumeAndReturnOtherTags(const String& databasePath,

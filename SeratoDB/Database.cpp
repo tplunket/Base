@@ -156,6 +156,8 @@ Track::Array::Pointer Database::removeAndReturnTracks(void)
     auto tracks = internal->tracks;
     internal->tracks = Track::Array::array();
 
+    internal->databaseTracksWereModified = true;
+
     return tracks;
 }
 
@@ -202,11 +204,13 @@ void Database::removeCrate(Crate::Pointer& crate)
 void Database::addTrack(Track& track)
 {
     internal->tracks->append(track);
+    internal->databaseTracksWereModified = true;
 }
 
 void Database::removeTrack(Track& track)
 {
     internal->tracks->remove(track);
+    internal->databaseTracksWereModified = true;
 }
 
 void Database::saveIfModifiedAndMarkAsModifiedOn(timestamp modificationTimesSince1970) const
@@ -229,14 +233,19 @@ void Database::saveIfModifiedAndMarkAsModifiedOn(timestamp modificationTimesSinc
                                                                                                             seratoFolderPath);
 
             boolean needsToUpdateDatabaseFile = false;
-            for (auto& track : *(internal->tracks)) {
-                if (track->volumePath() != volumePath) {
-                    continue;
-                }
+            if (internal->databaseTracksWereModified) {
+                needsToUpdateDatabaseFile = true;
+            }
+            else {
+                for (auto& track : *(internal->tracks)) {
+                    if (track->volumePath() != volumePath) {
+                        continue;
+                    }
 
-                if (track->needsToUpdateDatabaseFile()) {
-                    needsToUpdateDatabaseFile = true;
-                    break;
+                    if (track->needsToUpdateDatabaseFile()) {
+                        needsToUpdateDatabaseFile = true;
+                        break;
+                    }
                 }
             }
 
@@ -251,6 +260,8 @@ void Database::saveIfModifiedAndMarkAsModifiedOn(timestamp modificationTimesSinc
                     if (track->volumePath() != volumePath) {
                         continue;
                     }
+
+                    printf("Track '%s'\n", track->trackFilePath()->toUTF8());
 
                     track->addTo(outputData);
                 }
@@ -268,6 +279,8 @@ void Database::saveIfModifiedAndMarkAsModifiedOn(timestamp modificationTimesSinc
 
             Internal::Database::setDatabaseFilesInSeratoFolderAsModifedOnDateInSecondsSince1970(seratoFolderPath, modificationTimesSince1970);
         }
+
+        internal->databaseTracksWereModified = false;
     }
     catch (FileError& e) {
         // -- This should log something.

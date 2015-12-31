@@ -76,6 +76,8 @@ namespace NxA { namespace Serato { namespace Internal {
         integer rating;
         String::Pointer releaseDate;
 
+        boolean beatGridIsLocked;
+        
         Serato::CueMarker::Array::Pointer cueMarkers;
         Serato::LoopMarker::Array::Pointer loopMarkers;
         Serato::GridMarker::Array::Pointer gridMarkers;

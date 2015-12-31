@@ -101,7 +101,10 @@ namespace NxA { namespace Serato {
         virtual boolean hasBitDepth(void) const;
         uinteger32 bitDepthInBits(void) const;
         uinteger32 sampleRateInSamplesPerSecond(void) const;
-        
+
+        boolean beatGridIsLocked(void) const;
+        void setBeatGridAsLocked(boolean locked);
+
         const CueMarker::Array& cueMarkers(void) const;
         void setCueMarkers(const CueMarker::Array& markers);
 

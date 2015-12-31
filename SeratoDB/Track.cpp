@@ -280,6 +280,11 @@ timestamp Track::dateAddedInSecondsSinceJanuary1st1970(void) const
     return internal->uint32ForSubTagForIdentifier(trackDateAddedTagIdentifier);
 }
 
+boolean Track::beatGridIsLocked(void) const
+{
+    return internal->booleanForSubTagForIdentifier(trackBeatGridIsLockedTagIdentifier);
+}
+
 void Track::setTitle(const String& title)
 {
     internal->setStringForSubTagForIdentifier(title, trackTitleTagIdentifier);
@@ -423,6 +428,12 @@ void Track::setDateAddedInSecondsSinceJanuary1st1970(timestamp dateAdded)
     // TODO: Should make sure the cast doesn't chop off anything.
     internal->setUInt32ForSubTagForIdentifier(static_cast<uinteger32>(dateAdded), trackDateAddedTagIdentifier);
     internal->setStringForSubTagForIdentifier(dateAsString, trackDateAddedStringTagIdentifier);
+    internal->needsToUpdateDatabaseFile = true;
+}
+
+void Track::setBeatGridIsLocked(boolean locked)
+{
+    internal->setBooleanForSubTagForIdentifier(locked, trackBeatGridIsLockedTagIdentifier);
     internal->needsToUpdateDatabaseFile = true;
 }
 

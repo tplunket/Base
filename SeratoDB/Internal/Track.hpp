@@ -46,6 +46,7 @@ namespace NxA { namespace Serato { namespace Internal {
         const String& stringForSubTagForIdentifier(uinteger32 identifier) const;
         const String& pathForSubTagForIdentifier(uinteger32 identifier) const;
         uinteger32 uint32ForSubTagForIdentifier(uinteger32 identifier) const;
+        boolean booleanForSubTagForIdentifier(uinteger32 identifier) const;
 
         void setStringForSubTagForIdentifier(const String& value, uinteger32 identifier);
         void setPathForSubTagForIdentifier(const String& value, uinteger32 identifier);

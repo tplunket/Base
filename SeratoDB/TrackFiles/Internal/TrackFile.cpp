@@ -35,6 +35,11 @@ namespace NxA { namespace Serato { namespace Internal {
         byte data[0];
     } MarkerV1HeaderStruct;
 
+    typedef struct {
+        byte tag[8];
+        byte size[4];
+        byte locked;
+    } SeratoBpmLockTagStruct;
 } } }
 
 using namespace NxA;
@@ -93,7 +98,6 @@ Blob::Pointer TrackFile::markerV2TagDataFrom(const byte* tagStart)
 
     auto sizePosition = tagStart + sizeOfNameField;
     count tagSize = Platform::bigEndianUInteger32ValueAt(sizePosition) + sizeOfNameField + sizeOfSizeField;
-
     return Blob::blobWithMemoryAndSize(tagStart, tagSize);
 }
 
@@ -146,6 +150,10 @@ const byte* TrackFile::parseMarkerAtAndAdvanceToNextTag(const byte* tagStart)
         }
         else if (*tagName == "LOOP") {
             this->loopMarkers->append(Serato::LoopMarker::markerWithMemoryAt(tagStart));
+        }
+        else if (*tagName == "BPMLOCK") {
+            SeratoBpmLockTagStruct* bpmLockData = (SeratoBpmLockTagStruct *)tagStart;
+            this->beatGridIsLocked = (bpmLockData->locked != 0);
         }
         else {
             this->otherTags->append(markerV2TagDataFrom(tagStart));
@@ -354,6 +362,13 @@ String::Pointer TrackFile::base64StringFromMarkersV2(void) const
         marker->addMarkerV2TagTo(decodedData);
     }
 
+    SeratoBpmLockTagStruct bpmLockStruct;
+    memcpy(bpmLockStruct.tag, "BPMLOCK", 8);
+    Platform::writeBigEndianUInteger32ValueAt(1, bpmLockStruct.size);
+    bpmLockStruct.locked = this->beatGridIsLocked ? 1 : 0;
+
+    auto bpmLockData = Blob::blobWithMemoryAndSize(reinterpret_cast<const byte*>(&bpmLockStruct), sizeof(bpmLockStruct));
+    decodedData->append(bpmLockData);
     for (auto& tagData : *this->otherTags) {
         decodedData->append(tagData);
     }

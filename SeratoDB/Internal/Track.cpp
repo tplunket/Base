@@ -82,6 +82,17 @@ uinteger32 Track::uint32ForSubTagForIdentifier(uinteger32 identifier) const
     return 0;
 }
 
+boolean Track::booleanForSubTagForIdentifier(uinteger32 identifier) const
+{
+    auto& trackObjectTag = *this->trackTag;
+    if (trackObjectTag.hasSubTagForIdentifier(identifier)) {
+        auto& booleanTag = dynamic_cast<Serato::BooleanTag&>(trackObjectTag.subTagForIdentifier(identifier));
+        return booleanTag.value();
+    }
+
+    return false;
+}
+
 void Track::setStringForSubTagForIdentifier(const String& value, uinteger32 identifier)
 {
     auto& trackObjectTag = *this->trackTag;

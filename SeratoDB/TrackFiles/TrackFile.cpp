@@ -300,6 +300,19 @@ const CueMarker::Array& TrackFile::cueMarkers(void) const
     return internal->cueMarkers;
 }
 
+boolean TrackFile::beatGridIsLocked(void) const
+{
+    return internal->beatGridIsLocked;
+}
+
+void TrackFile::setBeatGridAsLocked(boolean locked)
+{
+    if (locked != internal->beatGridIsLocked) {
+        internal->beatGridIsLocked = locked;
+        internal->metadataWasModified = true;
+    }
+}
+
 void TrackFile::setCueMarkers(const CueMarker::Array& markers)
 {
     NXA_ASSERT_FALSE(internal->markersWereIgnored);

@@ -68,13 +68,13 @@ namespace NxA { namespace Serato {
         const String& length(void) const;
         const String& bitRate(void) const;
         const String& sampleRate(void) const;
-
         const String& bpm(void) const;
         const String& year(void) const;
         count trackNumber(void) const;
         count discNumber(void) const;
         timestamp dateModifiedInSecondsSinceJanuary1st1970(void) const;
         timestamp dateAddedInSecondsSinceJanuary1st1970(void) const;
+        boolean beatGridIsLocked(void) const;
 
         void setTitle(const String& title);
         void setArtist(const String& artist);
@@ -92,6 +92,7 @@ namespace NxA { namespace Serato {
         void setDiscNumber(count discNumber);
         void setDateModifiedInSecondsSinceJanuary1st1970(timestamp dateModified);
         void setDateAddedInSecondsSinceJanuary1st1970(timestamp dateAdded);
+        void setBeatGridIsLocked(boolean locked);
 
         void setSizeInBytes(count size);
         void setLengthInMilliseconds(uinteger32 length);

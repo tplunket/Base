@@ -121,7 +121,6 @@ timestamp Database::databaseModificationDateInSecondsSince1970(void) const
 
 timestamp Database::rootCrateModificationDateInSecondsSince1970(void) const
 {
-    // -- If we don't have crate files yet, we return a very old date.
     timestamp latestTimestamp = 0;
 
     for (auto& path : *internal->pathsForSeratoDirectories) {
@@ -136,6 +135,12 @@ timestamp Database::rootCrateModificationDateInSecondsSince1970(void) const
         if (newTimestamp > latestTimestamp) {
             latestTimestamp = newTimestamp;
         }
+    }
+
+    if (!latestTimestamp) {
+        // -- If we couldn't find a modification date for any crate order files, we return
+        // -- the database's modification date.
+        latestTimestamp = Database::databaseModificationDateInSecondsSince1970();
     }
 
     return latestTimestamp;

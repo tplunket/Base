@@ -224,7 +224,7 @@ void LoopMarker::addEmptyEncodedMarkerV1TagTo(Blob& data)
 
 NxA::String::Pointer LoopMarker::description(void) const
 {
-    return NxA::String::stringWithFormat("Loop Marker at %s ends at %s with index %d label '%s' and color 0x%02x 0x%02x 0x%02x.",
+    return NxA::String::stringWithFormat("Loop Marker at %s ends at %s with index %d label '%s' and color 0x%02x%02x%02x00.",
                                          CueMarker::stringRepresentationForTimeInMilliseconds(this->startPositionInMilliseconds())->toUTF8(),
                                          CueMarker::stringRepresentationForTimeInMilliseconds(this->endPositionInMilliseconds())->toUTF8(),
                                          this->index(),

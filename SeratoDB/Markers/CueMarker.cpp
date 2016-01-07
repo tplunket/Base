@@ -224,7 +224,7 @@ void CueMarker::addEmptyEncodedMarkerV1TagTo(Blob& data)
 
 NxA::String::Pointer CueMarker::description(void) const
 {
-    return NxA::String::stringWithFormat("Cue Marker at %s with index %d label '%s' and color 0x%02x 0x%02x 0x%02x.",
+    return NxA::String::stringWithFormat("Cue Marker at %s with index %d label '%s' and color 0x%02x%02x%02x00.",
                                          CueMarker::stringRepresentationForTimeInMilliseconds(this->positionInMilliseconds())->toUTF8(),
                                          this->index(),
                                          this->label().toUTF8(),

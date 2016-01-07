@@ -266,8 +266,6 @@ void Database::saveIfModifiedAndMarkAsModifiedOn(timestamp modificationTimesSinc
                         continue;
                     }
 
-                    printf("Track '%s'\n", track->trackFilePath()->toUTF8());
-
                     track->addTo(outputData);
                 }
 

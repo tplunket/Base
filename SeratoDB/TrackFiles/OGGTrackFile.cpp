@@ -41,6 +41,14 @@ OGGTrackFile::Pointer OGGTrackFile::fileWithFileAt(const String& path, TrackFile
     return newFile;
 }
 
+#pragma mark Instance Methods
+
+void OGGTrackFile::removeFieldNamed(const String& name)
+{
+    internal->nameOfFieldsToRemove->append(name);
+    internal->metadataWasModified = true;
+}
+
 #pragma mark Overriden TrackFile Instance Methods
 
 boolean OGGTrackFile::hasRecordLabel(void) const

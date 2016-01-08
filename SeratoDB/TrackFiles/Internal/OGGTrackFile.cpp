@@ -40,7 +40,8 @@ using namespace NxA::Serato::Internal;
 
 #pragma mark Constructors & Destructors
 
-OGGTrackFile::OGGTrackFile(const String& path) : TrackFile(path) { }
+OGGTrackFile::OGGTrackFile(const String& path) : TrackFile(path),
+                                                 nameOfFieldsToRemove(String::ArrayOfConst::array()) { }
 
 #pragma mark Class Methods
 
@@ -70,7 +71,12 @@ void OGGTrackFile::setReleaseDateInComment(const String& date, TagLib::Ogg::Xiph
     OGGTrackFile::setStringValueForFieldNamedInComment(date, oggDateFieldName, oggComment);
 
     auto components = date.splitBySeperator('-');
-    OGGTrackFile::setStringValueForFieldNamedInComment(components->firstObject(), oggYearFieldName, oggComment);
+    if (components->length()) {
+        OGGTrackFile::setStringValueForFieldNamedInComment(components->firstObject(), oggYearFieldName, oggComment);
+    }
+    else {
+        OGGTrackFile::setStringValueForFieldNamedInComment(String::stringWith(""), oggYearFieldName, oggComment);
+    }
 }
 
 #pragma mark Instance Methods
@@ -173,17 +179,27 @@ void OGGTrackFile::parseComment(TagLib::Ogg::XiphComment& oggComment)
 
 void OGGTrackFile::updateComment(TagLib::Ogg::XiphComment& oggComment) const
 {
-    this->TrackFile::updateTag(oggComment);
+    if (this->nameOfFieldsToRemove->length()) {
+        for (auto name : *this->nameOfFieldsToRemove) {
+            oggComment.removeField(name->toUTF8());
+        }
 
-    OGGTrackFile::setReleaseDateInComment(this->releaseDate, oggComment);
+        this->nameOfFieldsToRemove->emptyAll();
+    }
+    
+    if (this->metadataWasModified) {
+        this->TrackFile::updateTag(oggComment);
 
-    OGGTrackFile::setStringValueForFieldNamedInComment(this->composer, Internal::oggComposerFieldName, oggComment);
-    OGGTrackFile::setStringValueForFieldNamedInComment(this->grouping, Internal::oggGroupingFieldName, oggComment);
-    OGGTrackFile::setStringValueForFieldNamedInComment(this->bpm, Internal::oggBpmFieldName, oggComment);
-    OGGTrackFile::setStringValueForFieldNamedInComment(this->recordLabel, Internal::oggRecordLabelFieldName, oggComment);
-    OGGTrackFile::setStringValueForFieldNamedInComment(this->remixer, Internal::oggRemixerFieldName, oggComment);
-    // -- TODO: Rating to be implemented.
-    // -- TODO: Artwork to be implemented.
+        OGGTrackFile::setReleaseDateInComment(this->releaseDate, oggComment);
+
+        OGGTrackFile::setStringValueForFieldNamedInComment(this->composer, Internal::oggComposerFieldName, oggComment);
+        OGGTrackFile::setStringValueForFieldNamedInComment(this->grouping, Internal::oggGroupingFieldName, oggComment);
+        OGGTrackFile::setStringValueForFieldNamedInComment(this->bpm, Internal::oggBpmFieldName, oggComment);
+        OGGTrackFile::setStringValueForFieldNamedInComment(this->recordLabel, Internal::oggRecordLabelFieldName, oggComment);
+        OGGTrackFile::setStringValueForFieldNamedInComment(this->remixer, Internal::oggRemixerFieldName, oggComment);
+        // -- TODO: Rating to be implemented.
+        // -- TODO: Artwork to be implemented.
+    }
 }
 
 #pragma mark Overridden TrackFile Instance Methods
@@ -228,9 +244,7 @@ void OGGTrackFile::updateAndSaveFile(void) const
         throw TrackFileError::exceptionWith("Error reading tags from track file '%s'.", this->filePath->toUTF8());
     }
 
-    if (this->metadataWasModified) {
-        this->updateComment(*oggComment);
-    }
+    this->updateComment(*oggComment);
 
     if (this->markersWereModified) {
         NXA_ASSERT_FALSE(this->markersWereIgnored);

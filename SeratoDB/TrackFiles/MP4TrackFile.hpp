@@ -36,6 +36,9 @@ namespace NxA { namespace Serato {
         #pragma mark Factory Methods
         static MP4TrackFile::Pointer fileWithFileAt(const String& path, TrackFile::Flags flags);
 
+        #pragma mark Instance Methods
+        void removeItemNamed(const String& name);
+
         #pragma mark Overriden TrackFile Instance Methods
         virtual boolean hasKey(void) const override;
         virtual boolean hasRecordLabel(void) const override;

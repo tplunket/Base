@@ -26,6 +26,7 @@
 #include <attachedpictureframe.h>
 #include <textidentificationframe.h>
 #include <popularimeterframe.h>
+#include <privateframe.h>
 
 // -- Generated internal implementation ommitted because this class does not use the default contructor.
 
@@ -57,7 +58,8 @@ using namespace NxA::Serato::Internal;
 
 #pragma mark Constructors & Destructors
 
-ID3TrackFile::ID3TrackFile(const String& path) : TrackFile(path) { }
+ID3TrackFile::ID3TrackFile(const String& path) : TrackFile(path),
+                                                 ownersOfPrivateFramesToRemove(String::ArrayOfConst::array()) { }
 
 #pragma mark Class Methods
 
@@ -158,6 +160,33 @@ void ID3TrackFile::setRatingValueForRatingFrameInTag(integer value, TagLib::ID3v
     popFrame->setCounter(counter);
 
     tag.addFrame(popFrame);
+}
+
+void ID3TrackFile::removePrivateFramesNamedInTag(const String& name, TagLib::ID3v2::Tag& tag)
+{
+    auto framesList = tag.frameList("PRIV");
+    if (!framesList.size()) {
+        return;
+    }
+
+    TagLib::ID3v2::FrameList framesToRemove;
+
+    for (auto frame : framesList) {
+        auto *privateFrame = dynamic_cast<TagLib::ID3v2::PrivateFrame *>(frame);
+        if (privateFrame) {
+            if (privateFrame->owner() == name.toUTF8()) {
+                framesToRemove.append(frame);
+            }
+        }
+    }
+
+    if (!framesToRemove.size()) {
+        return;
+    }
+
+    for (auto frame : framesToRemove) {
+        tag.removeFrame(frame);
+    }
 }
 
 void ID3TrackFile::removeGEOBFrameNamedInTag(const String& name, TagLib::ID3v2::Tag& tag)
@@ -427,17 +456,27 @@ void ID3TrackFile::updateArtworkInTag(TagLib::ID3v2::Tag& tag) const
 
 void ID3TrackFile::updateTag(TagLib::ID3v2::Tag& tag) const
 {
-    this->TrackFile::updateTag(tag);
+    if (this->ownersOfPrivateFramesToRemove->length()) {
+        for (auto name : *this->ownersOfPrivateFramesToRemove) {
+            ID3TrackFile::removePrivateFramesNamedInTag(name, tag);
+        }
 
-    ID3TrackFile::setReleaseDateInTag(this->releaseDate, tag);
+        this->ownersOfPrivateFramesToRemove->emptyAll();
+    }
 
-    ID3TrackFile::setStringValueForFrameNamedInTag(this->key, Internal::id3KeyFrameName, tag);
-    ID3TrackFile::setStringValueForFrameNamedInTag(this->composer, Internal::id3ComposerFrameName, tag);
-    ID3TrackFile::setStringValueForFrameNamedInTag(this->grouping, Internal::id3GroupingFrameName, tag);
-    ID3TrackFile::setStringValueForFrameNamedInTag(this->bpm, Internal::id3BpmFrameName, tag);
-    ID3TrackFile::setStringValueForFrameNamedInTag(this->recordLabel, Internal::id3RecordLabelFrameName, tag);
-    ID3TrackFile::setStringValueForFrameNamedInTag(this->remixer, Internal::id3RemixerFrameName, tag);
-    ID3TrackFile::setRatingValueForRatingFrameInTag(this->rating, tag);
+    if (this->metadataWasModified) {
+        this->TrackFile::updateTag(tag);
 
-    this->updateArtworkInTag(tag);
+        ID3TrackFile::setReleaseDateInTag(this->releaseDate, tag);
+
+        ID3TrackFile::setStringValueForFrameNamedInTag(this->key, Internal::id3KeyFrameName, tag);
+        ID3TrackFile::setStringValueForFrameNamedInTag(this->composer, Internal::id3ComposerFrameName, tag);
+        ID3TrackFile::setStringValueForFrameNamedInTag(this->grouping, Internal::id3GroupingFrameName, tag);
+        ID3TrackFile::setStringValueForFrameNamedInTag(this->bpm, Internal::id3BpmFrameName, tag);
+        ID3TrackFile::setStringValueForFrameNamedInTag(this->recordLabel, Internal::id3RecordLabelFrameName, tag);
+        ID3TrackFile::setStringValueForFrameNamedInTag(this->remixer, Internal::id3RemixerFrameName, tag);
+        ID3TrackFile::setRatingValueForRatingFrameInTag(this->rating, tag);
+        
+        this->updateArtworkInTag(tag);
+    }
 }

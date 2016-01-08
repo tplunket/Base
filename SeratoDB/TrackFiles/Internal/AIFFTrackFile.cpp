@@ -84,9 +84,7 @@ void AIFFTrackFile::updateAndSaveFile(void) const
         throw TrackFileError::exceptionWith("Error reading tags from track file '%s'.", this->filePath->toUTF8());
     }
 
-    if (this->metadataWasModified) {
-        this->ID3TrackFile::updateTag(*tag);
-    }
+    this->ID3TrackFile::updateTag(*tag);
 
     if (this->markersWereModified) {
         NXA_ASSERT_FALSE(this->markersWereIgnored);

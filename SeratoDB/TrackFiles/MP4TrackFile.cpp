@@ -41,6 +41,14 @@ MP4TrackFile::Pointer MP4TrackFile::fileWithFileAt(const String& path, TrackFile
     return newFile;
 }
 
+#pragma mark Instance Methods
+
+void MP4TrackFile::removeItemNamed(const String& name)
+{
+    internal->nameOfItemsToRemove->append(name);
+    internal->metadataWasModified = true;
+}
+
 #pragma mark Overriden TrackFile Instance Methods
 
 boolean MP4TrackFile::hasKey(void) const

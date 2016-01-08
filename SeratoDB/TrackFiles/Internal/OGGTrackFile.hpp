@@ -52,6 +52,9 @@ namespace NxA { namespace Serato { namespace Internal {
         static String::Pointer releaseDateInComment(const TagLib::Ogg::XiphComment& oggComment);
         static void setReleaseDateInComment(const String& date, TagLib::Ogg::XiphComment& oggComment);
 
+        #pragma mark Instance Variables
+        String::ArrayOfConst::Pointer nameOfFieldsToRemove;
+
         #pragma mark Instance Methods
         void parseMarkersInComment(const TagLib::Ogg::XiphComment& oggComment);
         void replaceGridMarkersFieldInComment(TagLib::Ogg::XiphComment& oggComment) const;

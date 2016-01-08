@@ -39,6 +39,8 @@ namespace NxA { namespace Serato { namespace Internal {
         FLACTrackFile(const String& path);
 
         #pragma mark Instance Variables
+        String::ArrayOfConst::Pointer nameOfFieldsOrOwnersOfPrivateFramesToRemove;
+
         boolean hasRating;
 
         #pragma mark Instance Methods

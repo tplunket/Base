@@ -61,6 +61,7 @@ namespace NxA { namespace Serato { namespace Internal {
         static void setStringValueForFrameNamedInTag(const String& value, const character* name, TagLib::ID3v2::Tag& tag);
         static void setIntegerValueForFrameNamedInTag(integer value, const character* name, TagLib::ID3v2::Tag& tag);
         static void setRatingValueForRatingFrameInTag(integer value, TagLib::ID3v2::Tag& tag);
+        static void removePrivateFramesNamedInTag(const String& name, TagLib::ID3v2::Tag& tag);
         static void removeGEOBFrameNamedInTag(const String& name, TagLib::ID3v2::Tag& tag);
         static void parseMarkersInTagToTrackFile(const TagLib::ID3v2::Tag& tag, TrackFile& trackFile);
         static void replaceFrameNamedInTagWithDataAndVersion(const String& frameName, TagLib::ID3v2::Tag& tag,
@@ -73,6 +74,9 @@ namespace NxA { namespace Serato { namespace Internal {
         static void setReleaseDateInTag(const String& date, TagLib::ID3v2::Tag& tag);
         static Blob::Pointer artworkInTag(const TagLib::ID3v2::Tag& tag);
         static void removeArtworkInTag(TagLib::ID3v2::Tag& tag);
+
+        #pragma mark Instance Variables
+        String::ArrayOfConst::Pointer ownersOfPrivateFramesToRemove;
 
         #pragma mark Instance Methods
         void parseTag(const TagLib::ID3v2::Tag& tag);

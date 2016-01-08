@@ -51,6 +51,7 @@ using namespace NxA::Serato::Internal;
 #pragma mark Constructors & Destructors
 
 FLACTrackFile::FLACTrackFile(const String& path) : TrackFile(path),
+                                                   nameOfFieldsOrOwnersOfPrivateFramesToRemove(String::ArrayOfConst::array()),
                                                    hasRating(false) { }
 
 #pragma mark Instance Methods
@@ -188,29 +189,49 @@ void FLACTrackFile::updateGridMarkersItemInComment(TagLib::Ogg::XiphComment& ogg
 
 void FLACTrackFile::updateTag(TagLib::ID3v2::Tag& tag) const
 {
-    this->TrackFile::updateTag(tag);
+    if (this->nameOfFieldsOrOwnersOfPrivateFramesToRemove->length()) {
+        for (auto name : *this->nameOfFieldsOrOwnersOfPrivateFramesToRemove) {
+            ID3TrackFile::removePrivateFramesNamedInTag(name, tag);
+        }
 
-    ID3TrackFile::setReleaseDateInTag(this->releaseDate, tag);
+        this->nameOfFieldsOrOwnersOfPrivateFramesToRemove->emptyAll();
+    }
 
-    ID3TrackFile::setStringValueForFrameNamedInTag(this->key, Internal::id3KeyFrameName, tag);
-    ID3TrackFile::setStringValueForFrameNamedInTag(this->composer, Internal::id3ComposerFrameName, tag);
-    ID3TrackFile::setStringValueForFrameNamedInTag(this->grouping, Internal::id3GroupingFrameName, tag);
-    ID3TrackFile::setStringValueForFrameNamedInTag(this->bpm, Internal::id3BpmFrameName, tag);
-    ID3TrackFile::setRatingValueForRatingFrameInTag(this->rating, tag);
-    // -- TODO: Artwork to be implemented.
+    if (this->metadataWasModified) {
+        this->TrackFile::updateTag(tag);
+
+        ID3TrackFile::setReleaseDateInTag(this->releaseDate, tag);
+
+        ID3TrackFile::setStringValueForFrameNamedInTag(this->key, Internal::id3KeyFrameName, tag);
+        ID3TrackFile::setStringValueForFrameNamedInTag(this->composer, Internal::id3ComposerFrameName, tag);
+        ID3TrackFile::setStringValueForFrameNamedInTag(this->grouping, Internal::id3GroupingFrameName, tag);
+        ID3TrackFile::setStringValueForFrameNamedInTag(this->bpm, Internal::id3BpmFrameName, tag);
+        ID3TrackFile::setRatingValueForRatingFrameInTag(this->rating, tag);
+        // -- TODO: Artwork to be implemented.
+    }
 }
 
 void FLACTrackFile::updateComment(TagLib::Ogg::XiphComment& oggComment) const
 {
-    this->TrackFile::updateTag(oggComment);
+    if (this->nameOfFieldsOrOwnersOfPrivateFramesToRemove->length()) {
+        for (auto name : *this->nameOfFieldsOrOwnersOfPrivateFramesToRemove) {
+            oggComment.removeField(name->toUTF8());
+        }
 
-    OGGTrackFile::setReleaseDateInComment(this->releaseDate, oggComment);
+        this->nameOfFieldsOrOwnersOfPrivateFramesToRemove->emptyAll();
+    }
+    
+    if (this->metadataWasModified) {
+        this->TrackFile::updateTag(oggComment);
 
-    OGGTrackFile::setStringValueForFieldNamedInComment(this->key, Internal::oggKeyFieldName, oggComment);
-    OGGTrackFile::setStringValueForFieldNamedInComment(this->composer, Internal::oggComposerFieldName, oggComment);
-    OGGTrackFile::setStringValueForFieldNamedInComment(this->grouping, Internal::oggGroupingFieldName, oggComment);
-    OGGTrackFile::setStringValueForFieldNamedInComment(this->bpm, Internal::oggBpmFieldName, oggComment);
-    // -- TODO: Artwork to be implemented.
+        OGGTrackFile::setReleaseDateInComment(this->releaseDate, oggComment);
+
+        OGGTrackFile::setStringValueForFieldNamedInComment(this->key, Internal::oggKeyFieldName, oggComment);
+        OGGTrackFile::setStringValueForFieldNamedInComment(this->composer, Internal::oggComposerFieldName, oggComment);
+        OGGTrackFile::setStringValueForFieldNamedInComment(this->grouping, Internal::oggGroupingFieldName, oggComment);
+        OGGTrackFile::setStringValueForFieldNamedInComment(this->bpm, Internal::oggBpmFieldName, oggComment);
+        // -- TODO: Artwork to be implemented.
+    }
 }
 
 #pragma mark Overridden TrackFile Instance Methods
@@ -269,13 +290,11 @@ void FLACTrackFile::updateAndSaveFile(void) const
         throw TrackFileError::exceptionWith("Error reading tags from track file '%s'.", this->filePath->toUTF8());
     }
 
-    if (this->metadataWasModified) {
-        if (oggComment) {
-            this->updateComment(*oggComment);
+    if (oggComment) {
+        this->updateComment(*oggComment);
     }
     else {
-            this->updateTag(*id3v2Tag);
-        }
+        this->updateTag(*id3v2Tag);
     }
 
     if (this->markersWereModified) {

@@ -43,6 +43,14 @@ FLACTrackFile::Pointer FLACTrackFile::fileWithFileAt(const String& path, TrackFi
     return newFile;
 }
 
+#pragma mark Instance Methods
+
+void FLACTrackFile::removeFieldNamedOrPrivateFramesOwnedBy(const String& name)
+{
+    internal->nameOfFieldsOrOwnersOfPrivateFramesToRemove->append(name);
+    internal->metadataWasModified = true;
+}
+
 #pragma mark Overriden TrackFile Instance Methods
 
 boolean FLACTrackFile::hasKey(void) const

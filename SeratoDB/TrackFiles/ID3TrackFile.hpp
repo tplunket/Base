@@ -33,6 +33,9 @@ namespace NxA { namespace Serato {
         NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_CLASS(NxA::Serato, ID3TrackFile);
 
     public:
+        #pragma mark Instance Methods
+        void removePrivateFramesOwnedBy(const String& owner);
+
         #pragma mark Overriden TrackFile Instance Methods
         virtual boolean hasKey(void) const override;
         virtual boolean hasRecordLabel(void) const override;

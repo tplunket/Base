@@ -43,6 +43,9 @@ namespace NxA { namespace Serato { namespace Internal {
         static void setStringValueForItemNamedInTag(const String& value, const character* name, TagLib::MP4::Tag& tag);
         Blob::Pointer artworkInTag(const TagLib::MP4::Tag& tag);
 
+        #pragma mark Instance Variables
+        String::ArrayOfConst::Pointer nameOfItemsToRemove;
+
         #pragma mark Instance Methods
         void parseMarkersInTag(const TagLib::MP4::Tag& tag);
         void replaceFrameNamedWithDataAndVersionInTag(const character* frameName,

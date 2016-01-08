@@ -28,6 +28,14 @@ NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, ID3
 using namespace NxA;
 using namespace NxA::Serato;
 
+#pragma mark Instance Methods
+
+void ID3TrackFile::removePrivateFramesOwnedBy(const String& owner)
+{
+    internal->ownersOfPrivateFramesToRemove->append(owner);
+    internal->metadataWasModified = true;
+}
+
 #pragma mark Overriden TrackFile Instance Methods
 
 boolean ID3TrackFile::hasKey(void) const

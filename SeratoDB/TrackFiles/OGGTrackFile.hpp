@@ -36,6 +36,9 @@ namespace NxA { namespace Serato {
         #pragma mark Factory Methods
         static OGGTrackFile::Pointer fileWithFileAt(const String& path, TrackFile::Flags flags);
 
+        #pragma mark Instance Methods
+        void removeFieldNamed(const String& name);
+
         #pragma mark Overriden TrackFile Instance Methods
         virtual boolean hasRecordLabel(void) const override;
         virtual boolean hasRemixer(void) const override;

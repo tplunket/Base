@@ -60,7 +60,8 @@ using namespace NxA::Serato::Internal;
 
 #pragma mark Constructors & Destructors
 
-MP4TrackFile::MP4TrackFile(const String& path) : TrackFile(path) { }
+MP4TrackFile::MP4TrackFile(const String& path) : TrackFile(path),
+                                                 nameOfItemsToRemove(String::ArrayOfConst::array()) { }
 
 #pragma mark Class Methods
 
@@ -308,16 +309,26 @@ void MP4TrackFile::updateArtworkInTag(TagLib::MP4::Tag& tag) const
 
 void MP4TrackFile::updateTag(TagLib::MP4::Tag& tag) const
 {
-    this->TrackFile::updateTag(tag);
+    if (this->nameOfItemsToRemove->length()) {
+        for (auto name : *this->nameOfItemsToRemove) {
+            tag.removeItem(name->toUTF8());
+        }
 
-    MP4TrackFile::setStringValueForItemNamedInTag(this->key, Internal::mp4KeyItemName, tag);
-    MP4TrackFile::setStringValueForItemNamedInTag(this->composer, Internal::mp4ComposerItemName, tag);
-    MP4TrackFile::setStringValueForItemNamedInTag(this->grouping, Internal::mp4GroupingItemName, tag);
-    MP4TrackFile::setIntegerValueForItemNamedInTag(this->bpm->integerValue(), Internal::mp4BpmItemName, tag);
-    MP4TrackFile::setStringValueForItemNamedInTag(this->recordLabel, Internal::mp4LabelItemName, tag);
-    MP4TrackFile::setStringValueForItemNamedInTag(this->recordLabel, Internal::mp4PublisherItemName, tag);
+        this->nameOfItemsToRemove->emptyAll();
+    }
 
-    this->updateArtworkInTag(tag);
+    if (this->metadataWasModified) {
+        this->TrackFile::updateTag(tag);
+
+        MP4TrackFile::setStringValueForItemNamedInTag(this->key, Internal::mp4KeyItemName, tag);
+        MP4TrackFile::setStringValueForItemNamedInTag(this->composer, Internal::mp4ComposerItemName, tag);
+        MP4TrackFile::setStringValueForItemNamedInTag(this->grouping, Internal::mp4GroupingItemName, tag);
+        MP4TrackFile::setIntegerValueForItemNamedInTag(this->bpm->integerValue(), Internal::mp4BpmItemName, tag);
+        MP4TrackFile::setStringValueForItemNamedInTag(this->recordLabel, Internal::mp4LabelItemName, tag);
+        MP4TrackFile::setStringValueForItemNamedInTag(this->recordLabel, Internal::mp4PublisherItemName, tag);
+        
+        this->updateArtworkInTag(tag);
+    }
 }
 
 #pragma mark Overridden TrackFile Instance Methods
@@ -362,9 +373,7 @@ void MP4TrackFile::updateAndSaveFile(void) const
         throw TrackFileError::exceptionWith("Error reading tags from track file '%s'.", this->filePath->toUTF8());
     }
 
-    if (this->metadataWasModified) {
-        this->updateTag(*tag);
-    }
+    this->updateTag(*tag);
 
     if (this->markersWereModified) {
         NXA_ASSERT_FALSE(this->markersWereIgnored);

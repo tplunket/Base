@@ -333,7 +333,7 @@ void MP4TrackFile::updateTag(TagLib::MP4::Tag& tag) const
         MP4TrackFile::setStringValueForItemNamedInTag(this->recordLabel, Internal::mp4LabelItemName, tag);
         MP4TrackFile::setStringValueForItemNamedInTag(this->recordLabel, Internal::mp4PublisherItemName, tag);
         
-        this->updateArtworkInTag(tag);
+        // -- TODO: Re-enable arwork outputting.
     }
 }
 

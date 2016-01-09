@@ -486,7 +486,7 @@ void ID3TrackFile::updateTag(TagLib::ID3v2::Tag& tag) const
         ID3TrackFile::setStringValueForFrameNamedInTag(this->recordLabel, Internal::id3RecordLabelFrameName, tag);
         ID3TrackFile::setStringValueForFrameNamedInTag(this->remixer, Internal::id3RemixerFrameName, tag);
         ID3TrackFile::setRatingValueForRatingFrameInTag(this->rating, tag);
-        
-        this->updateArtworkInTag(tag);
+
+        // -- TODO: Re-enable arwork outputting.
     }
 }

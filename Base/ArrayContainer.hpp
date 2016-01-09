@@ -184,7 +184,10 @@ namespace NxA {
         }
         void remove(const T& object)
         {
-            this->std::vector<NxA::Pointer<T>>::erase(this->find(object));
+            auto position = this->find(object);
+            if (position != this->cend()) {
+                this->erase(position);
+            }
         }
 
         #pragma mark Overridden Object Instance Methods

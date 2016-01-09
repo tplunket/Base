@@ -61,6 +61,7 @@ using namespace NxA::Serato::Internal;
 #pragma mark Constructors & Destructors
 
 MP4TrackFile::MP4TrackFile(const String& path) : TrackFile(path),
+                                                 nameOfItems(String::ArrayOfConst::array()),
                                                  nameOfItemsToRemove(String::ArrayOfConst::array()) { }
 
 #pragma mark Class Methods
@@ -280,6 +281,10 @@ void MP4TrackFile::parseTag(const TagLib::MP4::Tag& tag)
 {
     this->TrackFile::parseTag(tag);
 
+    for (auto pair : tag.itemMap()) {
+        this->nameOfItems->append(String::stringWith(pair.first.toCString()));
+    }
+
     this->key = MP4TrackFile::stringValueForItemNamedInTag(Internal::mp4KeyItemName, tag);
     this->composer = MP4TrackFile::stringValueForItemNamedInTag(Internal::mp4ComposerItemName, tag);
     this->grouping = MP4TrackFile::stringValueForItemNamedInTag(Internal::mp4GroupingItemName, tag);
@@ -312,6 +317,7 @@ void MP4TrackFile::updateTag(TagLib::MP4::Tag& tag) const
     if (this->nameOfItemsToRemove->length()) {
         for (auto name : *this->nameOfItemsToRemove) {
             tag.removeItem(name->toUTF8());
+            this->nameOfItems->remove(name);
         }
 
         this->nameOfItemsToRemove->emptyAll();

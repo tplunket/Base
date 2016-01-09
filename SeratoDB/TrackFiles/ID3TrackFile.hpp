@@ -34,6 +34,7 @@ namespace NxA { namespace Serato {
 
     public:
         #pragma mark Instance Methods
+        boolean hasPrivateFramesOwnedBy(const String& owner);
         void removePrivateFramesOwnedBy(const String& owner);
 
         #pragma mark Overriden TrackFile Instance Methods

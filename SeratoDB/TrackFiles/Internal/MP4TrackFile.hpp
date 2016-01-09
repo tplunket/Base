@@ -44,6 +44,7 @@ namespace NxA { namespace Serato { namespace Internal {
         Blob::Pointer artworkInTag(const TagLib::MP4::Tag& tag);
 
         #pragma mark Instance Variables
+        String::ArrayOfConst::Pointer nameOfItems;
         String::ArrayOfConst::Pointer nameOfItemsToRemove;
 
         #pragma mark Instance Methods

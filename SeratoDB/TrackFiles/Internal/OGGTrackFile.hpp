@@ -53,6 +53,7 @@ namespace NxA { namespace Serato { namespace Internal {
         static void setReleaseDateInComment(const String& date, TagLib::Ogg::XiphComment& oggComment);
 
         #pragma mark Instance Variables
+        String::ArrayOfConst::Pointer nameOfFields;
         String::ArrayOfConst::Pointer nameOfFieldsToRemove;
 
         #pragma mark Instance Methods

@@ -43,8 +43,16 @@ MP4TrackFile::Pointer MP4TrackFile::fileWithFileAt(const String& path, TrackFile
 
 #pragma mark Instance Methods
 
+boolean MP4TrackFile::hasItemNamed(const String& name)
+{
+    return internal->nameOfItems->contains(name);
+}
+
 void MP4TrackFile::removeItemNamed(const String& name)
 {
+    // -- For MP4 files we don't check if the item is there or not because we might to remove an item that
+    // -- does not get loaded properly and therefore is not there but will also no get saved if the
+    // -- metadata is marked as modified, thus achieving the same result for now. This will be fixed
     internal->nameOfItemsToRemove->append(name);
     internal->metadataWasModified = true;
 }

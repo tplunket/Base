@@ -76,6 +76,7 @@ namespace NxA { namespace Serato { namespace Internal {
         static void removeArtworkInTag(TagLib::ID3v2::Tag& tag);
 
         #pragma mark Instance Variables
+        String::ArrayOfConst::Pointer ownersOfPrivateFrames;
         String::ArrayOfConst::Pointer ownersOfPrivateFramesToRemove;
 
         #pragma mark Instance Methods

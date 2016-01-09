@@ -45,9 +45,33 @@ FLACTrackFile::Pointer FLACTrackFile::fileWithFileAt(const String& path, TrackFi
 
 #pragma mark Instance Methods
 
-void FLACTrackFile::removeFieldNamedOrPrivateFramesOwnedBy(const String& name)
+boolean FLACTrackFile::hasFieldNamed(const String& name)
 {
-    internal->nameOfFieldsOrOwnersOfPrivateFramesToRemove->append(name);
+    return internal->nameOfFields->contains(name);
+}
+
+void FLACTrackFile::removeFieldNamed(const String& name)
+{
+    if (!this->hasFieldNamed(name)) {
+        return;
+    }
+
+    internal->nameOfFieldsToRemove->append(name);
+    internal->metadataWasModified = true;
+}
+
+boolean FLACTrackFile::hasPrivateFramesOwnedBy(const String& owner)
+{
+    return internal->ownersOfPrivateFrames->contains(owner);
+}
+
+void FLACTrackFile::removePrivateFramesOwnedBy(const String& owner)
+{
+    if (!this->hasPrivateFramesOwnedBy(owner)) {
+        return;
+    }
+
+    internal->ownersOfPrivateFramesToRemove->append(owner);
     internal->metadataWasModified = true;
 }
 

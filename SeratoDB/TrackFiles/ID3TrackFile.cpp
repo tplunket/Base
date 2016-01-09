@@ -30,8 +30,17 @@ using namespace NxA::Serato;
 
 #pragma mark Instance Methods
 
+boolean ID3TrackFile::hasPrivateFramesOwnedBy(const String& owner)
+{
+    return internal->ownersOfPrivateFrames->contains(owner);
+}
+
 void ID3TrackFile::removePrivateFramesOwnedBy(const String& owner)
 {
+    if (!this->hasPrivateFramesOwnedBy(owner)) {
+        return;
+    }
+
     internal->ownersOfPrivateFramesToRemove->append(owner);
     internal->metadataWasModified = true;
 }

@@ -37,7 +37,10 @@ namespace NxA { namespace Serato {
         static FLACTrackFile::Pointer fileWithFileAt(const String& path, TrackFile::Flags flags);
 
         #pragma mark Instance Methods
-        void removeFieldNamedOrPrivateFramesOwnedBy(const String& name);
+        boolean hasFieldNamed(const String& name);
+        void removeFieldNamed(const String& name);
+        boolean hasPrivateFramesOwnedBy(const String& owner);
+        void removePrivateFramesOwnedBy(const String& owner);
 
         #pragma mark Overriden TrackFile Instance Methods
         virtual boolean hasKey(void) const override;

@@ -25,6 +25,7 @@
 #include "TrackFiles/Internal/OGGTrackFile.hpp"
 
 #include <flacfile.h>
+#include <privateframe.h>
 
 // -- Generated internal implementation ommitted because this class does not use the default contructor.
 
@@ -51,7 +52,10 @@ using namespace NxA::Serato::Internal;
 #pragma mark Constructors & Destructors
 
 FLACTrackFile::FLACTrackFile(const String& path) : TrackFile(path),
-                                                   nameOfFieldsOrOwnersOfPrivateFramesToRemove(String::ArrayOfConst::array()),
+                                                   nameOfFields(String::ArrayOfConst::array()),
+                                                   nameOfFieldsToRemove(String::ArrayOfConst::array()),
+                                                   ownersOfPrivateFrames(String::ArrayOfConst::array()),
+                                                   ownersOfPrivateFramesToRemove(String::ArrayOfConst::array()),
                                                    hasRating(false) { }
 
 #pragma mark Instance Methods
@@ -67,6 +71,14 @@ void FLACTrackFile::parseTag(const TagLib::ID3v2::Tag& tag)
 {
     this->TrackFile::parseTag(tag);
 
+    auto privateFrames = tag.frameList("PRIV");
+    for (auto frame : privateFrames) {
+        auto *privateFrame = dynamic_cast<TagLib::ID3v2::PrivateFrame *>(frame);
+        if (privateFrame) {
+            this->ownersOfPrivateFrames->append(String::stringWith(privateFrame->owner().toCString()));
+        }
+    }
+
     this->releaseDate = ID3TrackFile::releaseDateFromTag(tag);
 
     this->key = ID3TrackFile::stringValueForFrameNamedInTag(Internal::id3KeyFrameName, tag);
@@ -80,6 +92,10 @@ void FLACTrackFile::parseTag(const TagLib::ID3v2::Tag& tag)
 void FLACTrackFile::parseComment(const TagLib::Ogg::XiphComment& oggComment)
 {
     this->TrackFile::parseTag(oggComment);
+
+    for (auto pair : oggComment.fieldListMap()) {
+        this->nameOfFields->append(String::stringWith(pair.first.toCString()));
+    }
 
     this->releaseDate = OGGTrackFile::releaseDateInComment(oggComment);
 
@@ -189,12 +205,13 @@ void FLACTrackFile::updateGridMarkersItemInComment(TagLib::Ogg::XiphComment& ogg
 
 void FLACTrackFile::updateTag(TagLib::ID3v2::Tag& tag) const
 {
-    if (this->nameOfFieldsOrOwnersOfPrivateFramesToRemove->length()) {
-        for (auto name : *this->nameOfFieldsOrOwnersOfPrivateFramesToRemove) {
+    if (this->ownersOfPrivateFramesToRemove->length()) {
+        for (auto name : *this->ownersOfPrivateFramesToRemove) {
             ID3TrackFile::removePrivateFramesNamedInTag(name, tag);
+            this->ownersOfPrivateFrames->remove(name);
         }
 
-        this->nameOfFieldsOrOwnersOfPrivateFramesToRemove->emptyAll();
+        this->ownersOfPrivateFramesToRemove->emptyAll();
     }
 
     if (this->metadataWasModified) {
@@ -213,14 +230,15 @@ void FLACTrackFile::updateTag(TagLib::ID3v2::Tag& tag) const
 
 void FLACTrackFile::updateComment(TagLib::Ogg::XiphComment& oggComment) const
 {
-    if (this->nameOfFieldsOrOwnersOfPrivateFramesToRemove->length()) {
-        for (auto name : *this->nameOfFieldsOrOwnersOfPrivateFramesToRemove) {
+    if (this->nameOfFieldsToRemove->length()) {
+        for (auto name : *this->nameOfFieldsToRemove) {
             oggComment.removeField(name->toUTF8());
+            this->nameOfFields->remove(name);
         }
 
-        this->nameOfFieldsOrOwnersOfPrivateFramesToRemove->emptyAll();
+        this->nameOfFieldsToRemove->emptyAll();
     }
-    
+
     if (this->metadataWasModified) {
         this->TrackFile::updateTag(oggComment);
 

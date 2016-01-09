@@ -41,6 +41,7 @@ using namespace NxA::Serato::Internal;
 #pragma mark Constructors & Destructors
 
 OGGTrackFile::OGGTrackFile(const String& path) : TrackFile(path),
+                                                 nameOfFields(String::ArrayOfConst::array()),
                                                  nameOfFieldsToRemove(String::ArrayOfConst::array()) { }
 
 #pragma mark Class Methods
@@ -166,6 +167,10 @@ void OGGTrackFile::parseComment(TagLib::Ogg::XiphComment& oggComment)
 {
     this->TrackFile::parseTag(oggComment);
 
+    for (auto pair : oggComment.fieldListMap()) {
+        this->nameOfFields->append(String::stringWith(pair.first.toCString()));
+    }
+
     this->releaseDate = OGGTrackFile::releaseDateInComment(oggComment);
 
     this->composer = OGGTrackFile::stringValueForFieldNamedInComment(Internal::oggComposerFieldName, oggComment);
@@ -182,6 +187,7 @@ void OGGTrackFile::updateComment(TagLib::Ogg::XiphComment& oggComment) const
     if (this->nameOfFieldsToRemove->length()) {
         for (auto name : *this->nameOfFieldsToRemove) {
             oggComment.removeField(name->toUTF8());
+            this->nameOfFields->remove(name);
         }
 
         this->nameOfFieldsToRemove->emptyAll();

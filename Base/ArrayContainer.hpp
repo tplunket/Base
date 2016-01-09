@@ -118,17 +118,9 @@ namespace NxA {
         {
             return this->std::vector<NxA::Pointer<T>>::end();
         }
-        iterator cbegin() noexcept
-        {
-            return this->std::vector<NxA::Pointer<T>>::cbegin();
-        }
         const_iterator cbegin() const noexcept
         {
             return this->std::vector<NxA::Pointer<T>>::cbegin();
-        }
-        iterator cend() noexcept
-        {
-            return this->std::vector<NxA::Pointer<T>>::cend();
         }
         const_iterator cend() const noexcept
         {

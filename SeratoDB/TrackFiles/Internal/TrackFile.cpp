@@ -34,6 +34,10 @@ namespace NxA { namespace Serato { namespace Internal {
         byte markerCount[4];
         byte data[0];
     } MarkerV1HeaderStruct;
+    
+    typedef struct {
+        byte footer[4];
+    } MarkerV1FooterStruct;
 
 } } }
 
@@ -156,6 +160,70 @@ const byte* TrackFile::parseMarkerAtAndAdvanceToNextTag(const byte* tagStart)
     }
 
     return nextTagPositionAfterTagNamed(tagName, tagStart);
+}
+
+void TrackFile::parseMarkersV1FromRawByteArray(const byte* markerData, count totalSize)
+{
+    NXA_ASSERT_FALSE(this->markersWereIgnored);
+
+    NXA_ASSERT_TRUE(totalSize == sizeof(MarkerV1HeaderStruct) +
+                                 Serato::CueMarker::sizeOfV1RawMarker() * 5 +
+                                 Serato::LoopMarker::sizeOfV1RawMarker() * 9 +
+                                 sizeof(MarkerV1FooterStruct));
+    
+    auto markerPos = markerData + sizeof(MarkerV1HeaderStruct);
+    
+    for (int i = 0; i < 5; ++i)
+    {
+        if (Serato::CueMarker::isValidV1RawMarker(markerPos))
+        {
+            this->cueMarkers->append(Serato::CueMarker::markerV1WithIndexAndRawMemoryAt(i, markerPos));
+        }
+        
+        markerPos += Serato::CueMarker::sizeOfV1RawMarker();
+    }
+    
+    for (int i = 0; i < 9; ++i)
+    {
+        if (Serato::LoopMarker::isValidV1RawMarker(markerPos))
+        {
+            this->loopMarkers->append(Serato::LoopMarker::markerV1WithIndexAndRawMemoryAt(i, markerPos));
+        }
+        
+        markerPos += Serato::LoopMarker::sizeOfV1RawMarker();
+    }
+}
+
+void TrackFile::parseMarkersV1FromEncodedByteArray(const byte* markerData, count totalSize)
+{
+    NXA_ASSERT_FALSE(this->markersWereIgnored);
+
+    NXA_ASSERT_TRUE(totalSize == sizeof(MarkerV1HeaderStruct) +
+                                 Serato::CueMarker::sizeOfV1EncodedMarker() * 5 +
+                                 Serato::LoopMarker::sizeOfV1EncodedMarker() * 9 +
+                                 sizeof(MarkerV1FooterStruct));
+    
+    auto markerPos = markerData + sizeof(MarkerV1HeaderStruct);
+    
+    for (int i = 0; i < 5; ++i)
+    {
+        if (Serato::CueMarker::isValidV1EncodedMarker(markerPos))
+        {
+            this->cueMarkers->append(Serato::CueMarker::markerV1WithIndexAndEncodedMemoryAt(i, markerPos));
+        }
+        
+        markerPos += Serato::CueMarker::sizeOfV1EncodedMarker();
+    }
+    
+    for (int i = 0; i < 9; ++i)
+    {
+        if (Serato::LoopMarker::isValidV1EncodedMarker(markerPos))
+        {
+            this->loopMarkers->append(Serato::LoopMarker::markerV1WithIndexAndEncodedMemoryAt(i, markerPos));
+        }
+        
+        markerPos += Serato::LoopMarker::sizeOfV1EncodedMarker();
+    }
 }
 
 void TrackFile::parseMarkersV2FromBase64String(const byte* markerV2Data, count totalSize)

@@ -30,6 +30,26 @@ namespace NxA { namespace Serato { namespace Internal {
     struct Marker : public NxA::Internal::Object {
         NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, Marker);
         
+        typedef struct {
+            byte position[4];
+            byte loopPosition[4];
+            byte zero;
+            byte loopIterations[4];
+            byte color[4];
+            byte type;
+            byte locked;
+        } SeratoRawTagV1Struct;
+    
+        typedef struct {
+            byte position[5];
+            byte loopPosition[5];
+            byte zero;
+            byte loopIterations[5];
+            byte color[4];
+            byte type;
+            byte locked;
+        } SeratoEncodedTagV1Struct;
+    
         enum MarkerType
         {
             eCueMarker = 1,
@@ -42,5 +62,7 @@ namespace NxA { namespace Serato { namespace Internal {
         
         static void addEncodedMarkerV1TagWithFieldsTo(MarkerType type, integer32 position, integer32 loopPos, integer32 loopIterations,
                                                       byte red, byte green, byte blue, Blob& data);
-    };
+
+        static void rawV1TagFromEncodedV1TagStruct(SeratoRawTagV1Struct& rawTag, const SeratoEncodedTagV1Struct& encodedTag);
+};
 } } }

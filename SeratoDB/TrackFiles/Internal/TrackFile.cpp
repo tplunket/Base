@@ -212,31 +212,21 @@ Blob::Pointer TrackFile::rawBlobFromMarkersV1(void) const
     auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<byte*>(&markersHeader), sizeof(MarkerV1HeaderStruct));
     blobData->append(headerData);
 
-    // files with >5 cues are saved with all cues empty in V1 by serato
-    if (this->cueMarkers->length() > 5)
-    {
-        for (int i = 0; i < 5; ++i) {
-            Serato::CueMarker::addEmptyRawMarkerV1TagTo(blobData);
+    for (int i = 0; i < 5; ++i) {
+        // Find the cue with this index
+        bool cueFound = false;
+        for (auto& cue : *this->cueMarkers)
+        {
+            if (cue->index() == i) {
+                cue->addRawMarkerV1TagTo(blobData);
+                cueFound = true;
+                break;
+            }
         }
-    }
-    else
-    {
-        for (int i = 0; i < 5; ++i) {
-            // Find the cue with this index
-            bool cueFound = false;
-            for (auto& cue : *this->cueMarkers)
-            {
-                if (cue->index() == i) {
-                    cue->addRawMarkerV1TagTo(blobData);
-                    cueFound = true;
-                    break;
-                }
-            }
 
-            // Otherwise, write an empty cue
-            if (!cueFound) {
-                Serato::CueMarker::addEmptyRawMarkerV1TagTo(blobData);
-            }
+        // Otherwise, write an empty cue
+        if (!cueFound) {
+            Serato::CueMarker::addEmptyRawMarkerV1TagTo(blobData);
         }
     }
 
@@ -282,31 +272,21 @@ Blob::Pointer TrackFile::id3EncodedBlobFromMarkersV1(void) const
     auto headerData = Blob::blobWithMemoryAndSize(reinterpret_cast<byte*>(&markersHeader), sizeof(MarkerV1HeaderStruct));
     blobData->append(headerData);
 
-    // files with >5 cues are saved with all cues empty in V1 by serato
-    if (this->cueMarkers->length() > 5)
-    {
-        for (int i = 0; i < 5; ++i) {
-            Serato::CueMarker::addEmptyEncodedMarkerV1TagTo(blobData);
+    for (int i = 0; i < 5; ++i) {
+        // Find the cue with this index
+        bool cueFound = false;
+        for (auto& cue : *this->cueMarkers)
+        {
+            if (cue->index() == i) {
+                cue->addEncodedMarkerV1TagTo(blobData);
+                cueFound = true;
+                break;
+            }
         }
-    }
-    else
-    {
-        for (int i = 0; i < 5; ++i) {
-            // Find the cue with this index
-            bool cueFound = false;
-            for (auto& cue : *this->cueMarkers)
-            {
-                if (cue->index() == i) {
-                    cue->addEncodedMarkerV1TagTo(blobData);
-                    cueFound = true;
-                    break;
-                }
-            }
 
-            // Otherwise, write an empty cue
-            if (!cueFound) {
-                Serato::CueMarker::addEmptyEncodedMarkerV1TagTo(blobData);
-            }
+        // Otherwise, write an empty cue
+        if (!cueFound) {
+            Serato::CueMarker::addEmptyEncodedMarkerV1TagTo(blobData);
         }
     }
 

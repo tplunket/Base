@@ -224,6 +224,22 @@ void ID3TrackFile::parseMarkersInTagToTrackFile(const TagLib::ID3v2::Tag& tag, T
             }
         }
     }
+    else {
+        framePos = ID3TrackFile::frameInListWithDescription(framesList, String::stringWith(id3MarkersV1FrameDescription));
+        if (framePos != framesList.end()) {
+            auto frame = dynamic_cast<const TagLib::ID3v2::GeneralEncapsulatedObjectFrame*>(*framePos);
+            if (isAValidGeobFrame(*frame)) {
+                auto frameObject = frame->object();
+                auto headerStruct = reinterpret_cast<GeobObjectStruct*>(frameObject.data());
+                if ((headerStruct->majorVersion == 2) && (headerStruct->minorVersion == 5)) {
+                    count size = frameObject.size() - sizeof(GeobObjectStruct);
+                    if (size) {
+                        trackFile.parseMarkersV1FromEncodedByteArray(headerStruct->data, size);
+                    }
+                }
+            }
+        }
+    }
 
     framePos = ID3TrackFile::frameInListWithDescription(framesList, String::stringWith(id3BeatgridFrameDescription));
     if (framePos != framesList.end()) {

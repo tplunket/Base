@@ -90,6 +90,8 @@ namespace NxA { namespace Serato { namespace Internal {
         void updateTag(TagLib::Tag& tag) const;
         void parseAudioProperties(const TagLib::AudioProperties& properties);
         const byte* parseMarkerAtAndAdvanceToNextTag(const byte* tagStart);
+        void parseMarkersV1FromRawByteArray(const byte* markerData, count totalSize);
+        void parseMarkersV1FromEncodedByteArray(const byte* markerData, count totalSize);
         void parseMarkersV2FromBase64String(const byte* markerV2Data, count totalSize);
         void parseGridMarkersFrom(const byte* gridMarkerData);
         Blob::Pointer rawBlobFromMarkersV1(void) const;

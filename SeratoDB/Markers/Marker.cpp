@@ -17,3 +17,32 @@ NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, Mar
 
 using namespace NxA;
 using namespace NxA::Serato;
+
+#pragma mark Class Methods
+
+bool Marker::isValidV1RawMarker(const byte* tagStart)
+{
+    auto tagStruct = reinterpret_cast<const Internal::Marker::SeratoRawTagV1Struct*>(tagStart);
+    return (Platform::bigEndianUInteger32ValueAt(tagStruct->position) != 0xffffffff);
+}
+
+bool Marker::isValidV1EncodedMarker(const byte* tagStart)
+{
+    auto encodedStruct = reinterpret_cast<const Internal::Marker::SeratoEncodedTagV1Struct*>(tagStart);
+
+    Internal::Marker::SeratoRawTagV1Struct rawStruct;
+    Internal::Marker::rawV1TagFromEncodedV1TagStruct(rawStruct, *encodedStruct);
+
+    return (Platform::bigEndianUInteger32ValueAt(rawStruct.position) != 0xffffffff);
+}
+
+integer32 Marker::sizeOfV1RawMarker(void)
+{
+    return sizeof(Internal::Marker::SeratoRawTagV1Struct);
+}
+
+integer32 Marker::sizeOfV1EncodedMarker(void)
+{
+    return sizeof(Internal::Marker::SeratoEncodedTagV1Struct);
+}
+

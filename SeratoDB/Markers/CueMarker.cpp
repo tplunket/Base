@@ -63,6 +63,30 @@ CueMarker::Pointer CueMarker::markerWithMemoryAt(const byte* id3TagStart)
                                                            tagStruct->color[3]);
 }
 
+CueMarker::Pointer CueMarker::markerV1WithIndexAndRawMemoryAt(uinteger16 index, const byte* id3TagStart)
+{
+    auto tagStruct = reinterpret_cast<const Internal::Marker::SeratoRawTagV1Struct*>(id3TagStart);
+
+    NXA_ASSERT_TRUE(tagStruct->type == Internal::Marker::eCueMarker);
+
+    return CueMarker::markerWithLabelPositionIndexAndColor(String::stringWith(""),
+                                                           Platform::bigEndianUInteger32ValueAt(tagStruct->position),
+                                                           index,
+                                                           tagStruct->color[1],
+                                                           tagStruct->color[2],
+                                                           tagStruct->color[3]);
+}
+
+CueMarker::Pointer CueMarker::markerV1WithIndexAndEncodedMemoryAt(uinteger16 index, const byte* id3TagStart)
+{
+    auto encodedStruct = reinterpret_cast<const Internal::Marker::SeratoEncodedTagV1Struct*>(id3TagStart);
+
+    Internal::Marker::SeratoRawTagV1Struct rawStruct;
+    Internal::Marker::rawV1TagFromEncodedV1TagStruct(rawStruct, *encodedStruct);
+
+    return markerV1WithIndexAndRawMemoryAt(index, reinterpret_cast<const byte*>(&rawStruct));
+}
+
 CueMarker::Pointer CueMarker::markerWithLabelPositionIndexAndColor(const String& label,
                                                                    uinteger32 positionInMilliseconds,
                                                                    uinteger16 index,

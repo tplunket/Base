@@ -137,6 +137,23 @@ void MP4TrackFile::parseMarkersInTag(const TagLib::MP4::Tag& tag)
             }
         }
     }
+    else {
+        auto markersV1Item = tag.item(mp4MarkersV1ItemName);
+        if (markersV1Item.isValid() && (markersV1Item.atomDataType() == TagLib::MP4::AtomDataType::TypeUTF8)) {
+            auto encodedData = markersV1Item.toStringList().toString();
+        
+            auto encodedDataSize = encodedData.size();
+            if (encodedDataSize) {
+                
+                auto decodedData = Blob::blobWithBase64String(String::stringWith(encodedData.data(TagLib::String::UTF8).data(),
+                                                                                 encodedDataSize));
+                auto headerStruct = reinterpret_cast<const MP4MarkersHeaderStruct*>(decodedData->data());
+                if ((headerStruct->majorVersion == 2) && (headerStruct->minorVersion == 5)) {
+                    this->parseMarkersV1FromRawByteArray(headerStruct->data, decodedData->size() - sizeof(MP4MarkersHeaderStruct));
+                }
+            }
+        }
+    }
 
     auto beatgridItem = tag.item(mp4BeatgridItemName);
     if (beatgridItem.isValid() && (beatgridItem.atomDataType() == TagLib::MP4::AtomDataType::TypeUTF8)) {

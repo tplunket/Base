@@ -67,6 +67,31 @@ LoopMarker::Pointer LoopMarker::markerWithMemoryAt(const byte* id3TagStart)
                                                                      tagStruct->color[3]);
 }
 
+LoopMarker::Pointer LoopMarker::markerV1WithIndexAndRawMemoryAt(uinteger16 index, const byte* id3TagStart)
+{
+    auto tagStruct = reinterpret_cast<const Internal::Marker::SeratoRawTagV1Struct*>(id3TagStart);
+
+    NXA_ASSERT_TRUE(tagStruct->type == Internal::Marker::eLoopMarker);
+
+    return LoopMarker::markerWithLabelStartEndPositionsIndexAndColor(String::stringWith(""),
+                                                                     Platform::bigEndianUInteger32ValueAt(tagStruct->position),
+                                                                     Platform::bigEndianUInteger32ValueAt(tagStruct->loopPosition),
+                                                                     index,
+                                                                     tagStruct->color[1],
+                                                                     tagStruct->color[2],
+                                                                     tagStruct->color[3]);
+}
+
+LoopMarker::Pointer LoopMarker::markerV1WithIndexAndEncodedMemoryAt(uinteger16 index, const byte* id3TagStart)
+{
+    auto encodedStruct = reinterpret_cast<const Internal::Marker::SeratoEncodedTagV1Struct*>(id3TagStart);
+
+    Internal::Marker::SeratoRawTagV1Struct rawStruct;
+    Internal::Marker::rawV1TagFromEncodedV1TagStruct(rawStruct, *encodedStruct);
+
+    return markerV1WithIndexAndRawMemoryAt(index, reinterpret_cast<const byte*>(&rawStruct));
+}
+
 LoopMarker::Pointer LoopMarker::markerWithLabelStartEndPositionsIndexAndColor(const String& label,
                                                                               uinteger32 startPositionInMilliseconds,
                                                                               uinteger32 endPositionInMilliseconds,

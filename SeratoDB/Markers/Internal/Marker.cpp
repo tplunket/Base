@@ -26,26 +26,25 @@ using namespace NxA::Serato::Internal;
 #pragma mark Constructors & Destructors
 
 namespace NxA { namespace Serato {
-    typedef struct {
-        byte position[4];
-        byte loopPosition[4];
-        byte zero;
-        byte loopIterations[4];
-        byte color[4];
-        byte type;
-        byte locked;
-    } SeratoRawTagV1Struct;
+
+    inline uinteger32 unpackUInteger32(const byte packed[5])
+    {
+        uinteger32 result = 0;
+        result |= (packed[4] & 0x7f);
+        result |= (packed[3] & 0x7f) << 7;
+        result |= (packed[2] & 0x7f) << 14;
+        result |= (packed[1] & 0x7f) << 21;
+        result |= (packed[0] & 0x7f) << 28;
+        return result;
+    }
     
-    typedef struct {
-        byte position[5];
-        byte loopPosition[5];
-        byte zero;
-        byte loopIterations[5];
-        byte color[4];
-        byte type;
-        byte locked;
-    } SeratoEncodedTagV1Struct;
-    
+    inline void unpackColor(const byte packed[4], byte& r, byte& g, byte& b)
+    {
+        r = ((packed[1] & 0x1f) >> 2) | ((packed[0] & 0x07) << 5);
+        g = ((packed[2] & 0x3f) >> 1) | ((packed[1] & 0x03) << 6);
+        b = ((packed[3] & 0x7f) >> 0) | ((packed[2] & 0x01) << 7);
+    }
+
     inline void packUInteger32(uinteger32 input, byte packed[5])
     {
         if (input == 0xFFFFFFFF)
@@ -73,14 +72,22 @@ namespace NxA { namespace Serato {
 
 Marker::Marker() {}
 
-
-enum MarkerType
+void Marker::rawV1TagFromEncodedV1TagStruct(SeratoRawTagV1Struct& rawTag,
+                                            const SeratoEncodedTagV1Struct& encodedTag)
 {
-    eCueMarker = 1,
-    eTagMarker = 3,
-    eEmptyMarker = 0,
-};
+    integer32 position = unpackUInteger32(encodedTag.position);
+    integer32 loopPosition = unpackUInteger32(encodedTag.loopPosition);
+    integer32 loopIterations = unpackUInteger32(encodedTag.loopIterations);
 
+    Platform::writeBigEndianUInteger32ValueAt(position, rawTag.position);
+    Platform::writeBigEndianUInteger32ValueAt(loopPosition, rawTag.loopPosition);
+    Platform::writeBigEndianUInteger32ValueAt(loopIterations, rawTag.loopIterations);
+    rawTag.color[0] = 0;
+    unpackColor(encodedTag.color, rawTag.color[1], rawTag.color[2], rawTag.color[3]);
+    rawTag.locked = 0;
+    rawTag.type = encodedTag.type;
+    rawTag.zero = 0;
+}
 
 void Marker::addRawMarkerV1TagWithFieldsTo(MarkerType type, integer32 position,
                                            integer32 loopPosition, integer32 loopIterations,
@@ -119,5 +126,4 @@ void Marker::addEncodedMarkerV1TagWithFieldsTo(MarkerType type, integer32 positi
     
     auto tagData = Blob::blobWithMemoryAndSize(reinterpret_cast<const byte*>(&tag), sizeof(SeratoEncodedTagV1Struct));
     data.append(tagData);
-
 }

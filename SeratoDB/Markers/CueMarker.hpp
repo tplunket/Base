@@ -33,6 +33,8 @@ namespace NxA { namespace Serato {
     public:
         #pragma mark Factory Methods
         static CueMarker::Pointer markerWithMemoryAt(const byte* id3TagStart);
+        static CueMarker::Pointer markerV1WithIndexAndRawMemoryAt(uinteger16 index, const byte* tagStart);
+        static CueMarker::Pointer markerV1WithIndexAndEncodedMemoryAt(uinteger16 index, const byte* tagStart);
         static CueMarker::Pointer markerWithLabelPositionIndexAndColor(const String& label,
                                                                        uinteger32 positionInMilliseconds,
                                                                        uinteger16 index,

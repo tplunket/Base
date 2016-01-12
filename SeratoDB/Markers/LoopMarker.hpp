@@ -36,6 +36,8 @@ namespace NxA { namespace Serato {
     public:
         #pragma mark Factory Methods
         static LoopMarker::Pointer markerWithMemoryAt(const byte* id3TagStart);
+        static LoopMarker::Pointer markerV1WithIndexAndRawMemoryAt(uinteger16 index, const byte* tagStart);
+        static LoopMarker::Pointer markerV1WithIndexAndEncodedMemoryAt(uinteger16 index, const byte* tagStart);
         static LoopMarker::Pointer markerWithLabelStartEndPositionsIndexAndColor(const String& label,
                                                                                  uinteger32 startPositionInMilliseconds,
                                                                                  uinteger32 endPositionInMilliseconds,

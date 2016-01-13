@@ -1,5 +1,5 @@
 //
-//  Copyright (c) 2015 Next Audio Labs, LLC. All rights reserved.
+//  Copyright (c) 2015-2016 Next Audio Labs, LLC. All rights reserved.
 //
 //  This file contains confidential and proprietary information of Serato
 //  Inc. LLP ("Serato"). No use is permitted without express written

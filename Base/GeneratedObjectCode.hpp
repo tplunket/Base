@@ -151,11 +151,10 @@ namespace NxA {
         NXA_GENERATED_DESTRUCTOR_FOR_CLASS(class_name) \
         NXA_GENERATED_POINTER_METHODS_IN_NAMESPACE_FOR_CLASS(namespace_name, class_name) \
         NXA_GENERATED_MAKE_SHARED_METHOD_IN_NAMESPACE_FOR_CLASS(namespace_name, class_name) \
-        public: \
-            virtual const character* className(void) const override \
-            { \
-                return namespace_name::class_name::staticClassName(); \
-            }
+        virtual const character* className(void) const override \
+        { \
+            return namespace_name::class_name::staticClassName(); \
+        }
 
 // -- Generated declarations and implementations for the Object class.
 // -- This should only be directly used by the NxA::Object class.
@@ -202,6 +201,10 @@ namespace NxA {
             explicit class_name(const namespace_name::class_name::constructor_access&, NxA::Pointer<NxA::Internal::Object>& initial_internal) : class_name(initial_internal) { } \
         public: \
             friend namespace_name::Internal::class_name; \
+            virtual const character* className(void) const override \
+            { \
+                return namespace_name::class_name::staticClassName(); \
+            } \
         private: \
             namespace_name::Internal::class_name* internal; \
         private: \

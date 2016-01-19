@@ -21,7 +21,6 @@ namespace NxA { namespace Serato {
         NXA_GENERATED_DECLARATIONS_WITHOUT_OPERATOR_EQUAL_IN_NAMESPACE_FOR_CLASS(NxA::Serato, Marker);
 
         #pragma mark Class Methods
-
         static bool isValidV1RawMarker(const byte* tagStart);
         static bool isValidV1EncodedMarker(const byte* tagStart);
         static integer32 sizeOfV1RawMarker(void);

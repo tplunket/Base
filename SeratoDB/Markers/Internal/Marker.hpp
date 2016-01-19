@@ -50,8 +50,7 @@ namespace NxA { namespace Serato { namespace Internal {
             byte locked;
         } SeratoEncodedTagV1Struct;
     
-        enum MarkerType
-        {
+        enum MarkerType {
             eCueMarker = 1,
             eLoopMarker = 3,
             eEmptyMarker = 0,

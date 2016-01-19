@@ -75,7 +75,7 @@ void FLACTrackFile::parseTag(const TagLib::ID3v2::Tag& tag)
     for (auto frame : privateFrames) {
         auto *privateFrame = dynamic_cast<TagLib::ID3v2::PrivateFrame *>(frame);
         if (privateFrame) {
-            this->ownersOfPrivateFrames->append(String::stringWith(privateFrame->owner().toCString()));
+            this->ownersOfPrivateFrames->append(String::stringWith(privateFrame->owner().to8Bit(true).c_str()));
         }
     }
 
@@ -94,7 +94,7 @@ void FLACTrackFile::parseComment(const TagLib::Ogg::XiphComment& oggComment)
     this->TrackFile::parseTag(oggComment);
 
     for (auto pair : oggComment.fieldListMap()) {
-        this->nameOfFields->append(String::stringWith(pair.first.toCString()));
+        this->nameOfFields->append(String::stringWith(pair.first.to8Bit(true).c_str()));
     }
 
     this->releaseDate = OGGTrackFile::releaseDateInComment(oggComment);

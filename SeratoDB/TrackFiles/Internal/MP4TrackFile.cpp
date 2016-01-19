@@ -87,7 +87,7 @@ String::Pointer MP4TrackFile::stringValueForItemNamedInTag(const character* name
     }
 
     NXA_ASSERT_EQ(stringList.size(), 1);
-    return String::stringWith(stringList.front().toCString());
+    return String::stringWith(stringList.front().to8Bit(true).c_str());
 }
 
 void MP4TrackFile::setIntegerValueForItemNamedInTag(integer value, const character* name, TagLib::MP4::Tag& tag)
@@ -299,7 +299,7 @@ void MP4TrackFile::parseTag(const TagLib::MP4::Tag& tag)
     this->TrackFile::parseTag(tag);
 
     for (auto pair : tag.itemMap()) {
-        this->nameOfItems->append(String::stringWith(pair.first.toCString()));
+        this->nameOfItems->append(String::stringWith(pair.first.to8Bit(true).c_str()));
     }
 
     this->key = MP4TrackFile::stringValueForItemNamedInTag(Internal::mp4KeyItemName, tag);

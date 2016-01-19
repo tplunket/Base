@@ -118,11 +118,11 @@ void TrackFile::parseAudioProperties(const TagLib::AudioProperties& properties)
 
 void TrackFile::parseTag(const TagLib::Tag& tag)
 {
-    this->title = String::stringWith(tag.title().toCString());
-    this->artist = String::stringWith(tag.artist().toCString());
-    this->genre = String::stringWith(tag.genre().toCString());
-    this->comments = String::stringWith(tag.comment().toCString());
-    this->album = String::stringWith(tag.album().toCString());
+    this->title = String::stringWith(tag.title().to8Bit(true).c_str());
+    this->artist = String::stringWith(tag.artist().to8Bit(true).c_str());
+    this->genre = String::stringWith(tag.genre().to8Bit(true).c_str());
+    this->comments = String::stringWith(tag.comment().to8Bit(true).c_str());
+    this->album = String::stringWith(tag.album().to8Bit(true).c_str());
     this->trackNumber = tag.track();
 
     integer year = tag.year();

@@ -100,7 +100,7 @@ String::Pointer ID3TrackFile::stringValueForFrameNamedInTag(const character* nam
         if (frame) {
             auto stringValue = frame->toString();
             if (stringValue.length()) {
-                return String::stringWith(stringValue.toCString());
+                return String::stringWith(stringValue.to8Bit(true).c_str());
             }
         }
     }
@@ -451,7 +451,7 @@ void ID3TrackFile::parseTag(const TagLib::ID3v2::Tag& tag)
     for (auto frame : privateFrames) {
         auto *privateFrame = dynamic_cast<TagLib::ID3v2::PrivateFrame *>(frame);
         if (privateFrame) {
-            this->ownersOfPrivateFrames->append(String::stringWith(privateFrame->owner().toCString()));
+            this->ownersOfPrivateFrames->append(String::stringWith(privateFrame->owner().to8Bit(true).c_str()));
         }
     }
 

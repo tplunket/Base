@@ -54,7 +54,7 @@ String::Pointer OGGTrackFile::stringValueForFieldNamedInComment(const character*
     }
 
     NXA_ASSERT_EQ(stringList.size(), 1);
-    return String::stringWith(stringList.front().toCString());
+    return String::stringWith(stringList.front().to8Bit(true).c_str());
 }
 
 void OGGTrackFile::setStringValueForFieldNamedInComment(const String& value, const character* name, TagLib::Ogg::XiphComment& oggComment)
@@ -106,8 +106,8 @@ void OGGTrackFile::parseMarkersInComment(const TagLib::Ogg::XiphComment& oggComm
                     auto values = markerString.split(",");
                     auto bpm = values[1].substr(0, values[1].length() - 1);
 
-                    this->gridMarkers->append(Serato::GridMarker::markerWithPositionAndBeatsPerMinute(decimal3(values[0].toCString()),
-                                                                                                      decimal2(bpm.toCString())));
+                    this->gridMarkers->append(Serato::GridMarker::markerWithPositionAndBeatsPerMinute(decimal3(values[0].to8Bit(true).c_str()),
+                                                                                                      decimal2(bpm.to8Bit(true).c_str())));
                 }
             }
         }
@@ -168,7 +168,7 @@ void OGGTrackFile::parseComment(TagLib::Ogg::XiphComment& oggComment)
     this->TrackFile::parseTag(oggComment);
 
     for (auto pair : oggComment.fieldListMap()) {
-        this->nameOfFields->append(String::stringWith(pair.first.toCString()));
+        this->nameOfFields->append(String::stringWith(pair.first.to8Bit(true).c_str()));
     }
 
     this->releaseDate = OGGTrackFile::releaseDateInComment(oggComment);

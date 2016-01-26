@@ -53,7 +53,6 @@ String::Pointer OGGTrackFile::stringValueForFieldNamedInComment(const character*
         return String::string();
     }
 
-    NXA_ASSERT_EQ(stringList.size(), 1);
     return String::stringWith(stringList.front().to8Bit(true).c_str());
 }
 

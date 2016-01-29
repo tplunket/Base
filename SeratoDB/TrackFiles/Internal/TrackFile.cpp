@@ -181,20 +181,16 @@ void TrackFile::parseMarkersV1FromRawByteArray(const byte* markerData, count tot
     
     auto markerPos = markerData + sizeof(MarkerV1HeaderStruct);
     
-    for (int i = 0; i < 5; ++i)
-    {
-        if (Serato::CueMarker::isValidV1RawMarker(markerPos))
-        {
+    for (int i = 0; i < 5; ++i) {
+        if (Serato::CueMarker::isValidV1RawMarker(markerPos)) {
             this->cueMarkers->append(Serato::CueMarker::markerV1WithIndexAndRawMemoryAt(i, markerPos));
         }
         
         markerPos += Serato::CueMarker::sizeOfV1RawMarker();
     }
     
-    for (int i = 0; i < 9; ++i)
-    {
-        if (Serato::LoopMarker::isValidV1RawMarker(markerPos))
-        {
+    for (int i = 0; i < 9; ++i) {
+        if (Serato::LoopMarker::isValidV1RawMarker(markerPos)) {
             this->loopMarkers->append(Serato::LoopMarker::markerV1WithIndexAndRawMemoryAt(i, markerPos));
         }
         
@@ -213,20 +209,16 @@ void TrackFile::parseMarkersV1FromEncodedByteArray(const byte* markerData, count
     
     auto markerPos = markerData + sizeof(MarkerV1HeaderStruct);
     
-    for (int i = 0; i < 5; ++i)
-    {
-        if (Serato::CueMarker::isValidV1EncodedMarker(markerPos))
-        {
+    for (int i = 0; i < 5; ++i) {
+        if (Serato::CueMarker::isValidV1EncodedMarker(markerPos)) {
             this->cueMarkers->append(Serato::CueMarker::markerV1WithIndexAndEncodedMemoryAt(i, markerPos));
         }
         
         markerPos += Serato::CueMarker::sizeOfV1EncodedMarker();
     }
     
-    for (int i = 0; i < 9; ++i)
-    {
-        if (Serato::LoopMarker::isValidV1EncodedMarker(markerPos))
-        {
+    for (int i = 0; i < 9; ++i) {
+        if (Serato::LoopMarker::isValidV1EncodedMarker(markerPos)) {
             this->loopMarkers->append(Serato::LoopMarker::markerV1WithIndexAndEncodedMemoryAt(i, markerPos));
         }
         
@@ -283,8 +275,7 @@ Blob::Pointer TrackFile::rawBlobFromMarkersV1(void) const
     for (int i = 0; i < 5; ++i) {
         // Find the cue with this index
         bool cueFound = false;
-        for (auto& cue : *this->cueMarkers)
-        {
+        for (auto& cue : *this->cueMarkers) {
             if (cue->index() == i) {
                 cue->addRawMarkerV1TagTo(blobData);
                 cueFound = true;
@@ -301,8 +292,7 @@ Blob::Pointer TrackFile::rawBlobFromMarkersV1(void) const
     for (int i = 0; i < 9; ++i) {
         // Find the loop with this index
         bool loopFound = false;
-        for (auto& loop : *this->loopMarkers)
-        {
+        for (auto& loop : *this->loopMarkers) {
             if (loop->index() == i) {
                 loop->addRawMarkerV1TagTo(blobData);
                 loopFound = true;
@@ -343,8 +333,7 @@ Blob::Pointer TrackFile::id3EncodedBlobFromMarkersV1(void) const
     for (int i = 0; i < 5; ++i) {
         // Find the cue with this index
         bool cueFound = false;
-        for (auto& cue : *this->cueMarkers)
-        {
+        for (auto& cue : *this->cueMarkers) {
             if (cue->index() == i) {
                 cue->addEncodedMarkerV1TagTo(blobData);
                 cueFound = true;
@@ -361,8 +350,7 @@ Blob::Pointer TrackFile::id3EncodedBlobFromMarkersV1(void) const
     for (int i = 0; i < 9; ++i) {
         // Find the loop with this index
         bool loopFound = false;
-        for (auto& loop : *this->loopMarkers)
-        {
+        for (auto& loop : *this->loopMarkers) {
             if (loop->index() == i) {
                 loop->addEncodedMarkerV1TagTo(blobData);
                 loopFound = true;

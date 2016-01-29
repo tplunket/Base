@@ -102,7 +102,7 @@ LoopMarker::Pointer LoopMarker::markerWithLabelStartEndPositionsIndexAndColor(co
 
 {
     if (startPositionInMilliseconds >= endPositionInMilliseconds) {
-        throw LoopMarkerError::exceptionWith("Invalid loop maker start/end positions (%d and %d ms).", startPositionInMilliseconds, endPositionInMilliseconds);
+        throw LoopMarkerError::exceptionWith("Invalid loop marker start/end positions (%d and %d ms).", startPositionInMilliseconds, endPositionInMilliseconds);
     }
 
     auto newMarker = LoopMarker::makeShared();

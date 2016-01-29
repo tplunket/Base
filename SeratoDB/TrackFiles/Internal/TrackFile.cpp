@@ -163,7 +163,7 @@ const byte* TrackFile::parseMarkerAtAndAdvanceToNextTag(const byte* tagStart)
             this->otherTags->append(markerV2TagDataFrom(tagStart));
         }
     }
-    catch (LoopMarkerError exception) {
+    catch (MarkerError exception) {
         // TODO: This should be a logging call instead.
     }
 

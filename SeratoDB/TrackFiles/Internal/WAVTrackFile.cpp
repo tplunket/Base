@@ -66,7 +66,12 @@ void WAVTrackFile::loadAndParseFile(void)
     this->parseAudioProperties(*audioProperties);
 
     if (!this->markersWereIgnored) {
-        this->ID3TrackFile::parseMarkersInTagToTrackFile(*tag, *this);
+        try {
+            this->ID3TrackFile::parseMarkersInTagToTrackFile(*tag, *this);
+        }
+        catch (Serato::MarkerError& exception) {
+            throw TrackFileError::exceptionWith("Error reading markers '%s'.", exception.what());
+        }
     }
 }
 

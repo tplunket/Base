@@ -231,7 +231,12 @@ void OGGTrackFile::loadAndParseFile(void)
     this->parseAudioProperties(*audioProperties);
     
     if (!this->markersWereIgnored) {
-        this->parseMarkersInComment(*oggComment);
+        try {
+            this->parseMarkersInComment(*oggComment);
+        }
+        catch (Serato::MarkerError& exception) {
+            throw TrackFileError::exceptionWith("Error reading markers '%s'.", exception.what());
+        }
     }
 }
 

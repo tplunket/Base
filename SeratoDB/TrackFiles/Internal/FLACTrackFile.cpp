@@ -283,11 +283,16 @@ void FLACTrackFile::loadAndParseFile(void)
     this->parseAudioProperties(*audioProperties);
 
     if (!this->markersWereIgnored) {
-        if (oggComment) {
-            this->parseMarkersInComment(*oggComment);
+        try {
+            if (oggComment) {
+                this->parseMarkersInComment(*oggComment);
+            }
+            else {
+                ID3TrackFile::parseMarkersInTagToTrackFile(*id3v2Tag, *this);
+            }
         }
-        else {
-            ID3TrackFile::parseMarkersInTagToTrackFile(*id3v2Tag, *this);
+        catch (Serato::MarkerError& exception) {
+            throw TrackFileError::exceptionWith("Error reading markers '%s'.", exception.what());
         }
     }
 }

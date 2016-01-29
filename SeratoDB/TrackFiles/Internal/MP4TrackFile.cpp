@@ -378,7 +378,12 @@ void MP4TrackFile::loadAndParseFile(void)
     this->parseAudioProperties(*audioProperties);
 
     if (!this->markersWereIgnored) {
-        this->parseMarkersInTag(*tag);
+        try {
+            this->parseMarkersInTag(*tag);
+        }
+        catch (Serato::MarkerError& exception) {
+            throw TrackFileError::exceptionWith("Error reading markers '%s'.", exception.what());
+        }
     }
 }
 

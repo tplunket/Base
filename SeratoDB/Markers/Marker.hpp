@@ -15,6 +15,7 @@
 #include <Base/Base.hpp>
 
 namespace NxA { namespace Serato {
+    NXA_EXCEPTION_NAMED_WITH_PARENT(MarkerError, NxA::Exception);
     NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(Marker);
 
     class Marker : public Object {

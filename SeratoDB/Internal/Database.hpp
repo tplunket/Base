@@ -43,15 +43,15 @@ namespace NxA { namespace Serato { namespace Internal {
         #pragma mark Class Methods
         static String::Pointer pathForCrateOrderFileInSeratoFolder(const String& seratoFolderPath);
 
-        static void addCratesFoundInSeratoFolderOnVolumeToRootCrate(const String& seratoFolderPath,
-                                                                    const String& volumePath,
-                                                                    Serato::Crate& rootCrate,
-                                                                    String::ArrayOfConst& SmartCrateNames);
+        static void addCratesFoundInSeratoFolderOnVolumeToRootFolder(const String& seratoFolderPath,
+                                                                     const String& volumePath,
+                                                                     Serato::Crate& rootFolder,
+                                                                     String::ArrayOfConst& SmartCrateNames);
 
-        static void saveContentOfRootCrateIfModifiedAndOnVolumeAndSmartCrateNamesToSeratoFolder(const Serato::Crate& rootCrate,
-                                                                                                const String& volumePath,
-                                                                                                const String::ArrayOfConst& smartCrateNames,
-                                                                                                const String& seratoFolderPath);
+        static void saveContentOfRootFolderIfModifiedAndOnVolumeAndSmartCrateNamesToSeratoFolder(const Serato::Crate& rootFolder,
+                                                                                                 const String& volumePath,
+                                                                                                 const String::ArrayOfConst& smartCrateNames,
+                                                                                                 const String& seratoFolderPath);
 
         static void setDatabaseFilesInSeratoFolderAsModifedOnDateInSecondsSince1970(const String& folderPath, timestamp dateModified);
 
@@ -67,7 +67,7 @@ namespace NxA { namespace Serato { namespace Internal {
         static const char* databaseFileCurrentVersionString;
 
         #pragma mark Instance Variables
-        Serato::Crate::Pointer rootCrate;
+        Serato::Crate::Pointer rootFolder;
         Serato::Track::Array::Pointer tracks;
 
         String::ArrayOfConst::Pointer pathsForSeratoDirectories;

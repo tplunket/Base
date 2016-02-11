@@ -38,7 +38,7 @@ const char* Database::databaseFileCurrentVersionString = "2.0/Serato Scratch LIV
 
 Database::Database(const String& pathForLocalSeratoFolder,
                    const String::ArrayOfConst& pathsForExternalSeratoFolders) :
-                   rootCrate(Serato::Crate::crateWithName(String::string())),
+                   rootFolder(Serato::Crate::crateWithName(String::string())),
                    tracks(Serato::Track::Array::array()),
                    pathsForSeratoDirectories(String::ArrayOfConst::array()),
                    volumePathsPerPath(String::ArrayOfConst::array()),
@@ -58,10 +58,10 @@ NxA::String::Pointer Database::pathForCrateOrderFileInSeratoFolder(const String&
     return joinedPath;
 }
 
-void Database::addCratesFoundInSeratoFolderOnVolumeToRootCrate(const String& seratoFolderPath,
-                                                               const String& volumePath,
-                                                               Serato::Crate& rootCrate,
-                                                               String::ArrayOfConst& smartCrateNames)
+void Database::addCratesFoundInSeratoFolderOnVolumeToRootFolder(const String& seratoFolderPath,
+                                                                const String& volumePath,
+                                                                Serato::Crate& rootFolder,
+                                                                String::ArrayOfConst& smartCrateNames)
 {
     auto crateOrderFilePath = Internal::Database::pathForCrateOrderFileInSeratoFolder(seratoFolderPath);
     auto cratesInOrder = Serato::Crate::readCratesNamesInCrateOrderFile(crateOrderFilePath);
@@ -73,19 +73,19 @@ void Database::addCratesFoundInSeratoFolderOnVolumeToRootCrate(const String& ser
     Serato::Crate::parseCratesInSeratoFolderOnVolumeAddToCrateAndSaveSmartCrateNamesIn(cratesInOrder,
                                                                                        seratoFolderPath,
                                                                                        volumePath,
-                                                                                       rootCrate,
+                                                                                       rootFolder,
                                                                                        smartCrateNames);
 
-    rootCrate.resetModificationFlags();
+    rootFolder.resetModificationFlags();
 }
 
-void Database::saveContentOfRootCrateIfModifiedAndOnVolumeAndSmartCrateNamesToSeratoFolder(const Serato::Crate& rootCrate,
-                                                                                           const String& volumePath,
-                                                                                           const String::ArrayOfConst& smartCrateNames,
-                                                                                           const String& seratoFolderPath)
+void Database::saveContentOfRootFolderIfModifiedAndOnVolumeAndSmartCrateNamesToSeratoFolder(const Serato::Crate& rootFolder,
+                                                                                            const String& volumePath,
+                                                                                            const String::ArrayOfConst& smartCrateNames,
+                                                                                            const String& seratoFolderPath)
 {
     try {
-        if (!rootCrate.childrenCratesWereModified()) {
+        if (!rootFolder.childrenCratesWereModified()) {
             return;
         }
 
@@ -97,11 +97,11 @@ void Database::saveContentOfRootCrateIfModifiedAndOnVolumeAndSmartCrateNamesToSe
             }
         }
 
-        rootCrate.saveIfOnVolumeAndRecurseToChildren(volumePath, seratoFolderPath);
+        rootFolder.saveIfOnVolumeAndRecurseToChildren(volumePath, seratoFolderPath);
 
         auto result = String::string();
         result->append("[begin record]\n");
-        rootCrate.addFullCrateNameWithPrefixForCratesOnVolumeAndRecurseToChildren(result, "[crate]", volumePath);
+        rootFolder.addFullCrateNameWithPrefixForCratesOnVolumeAndRecurseToChildren(result, "[crate]", volumePath);
         for (auto& crateName : smartCrateNames) {
             result->append("[crate]");
             result->append(crateName);
@@ -245,10 +245,10 @@ void Database::parseAnyDatabaseFilesIn(const String& pathForLocalSeratoFolder,
             auto otherTags = Database::parseDatabaseFileAtLocatedOnVolumeAndReturnOtherTags(databasePath, volumePath);
             this->otherTagsPerPath->append(otherTags);
 
-            Database::addCratesFoundInSeratoFolderOnVolumeToRootCrate(seratoFolderPath,
-                                                                      volumePath,
-                                                                      this->rootCrate,
-                                                                      smartCrateNames);
+            Database::addCratesFoundInSeratoFolderOnVolumeToRootFolder(seratoFolderPath,
+                                                                       volumePath,
+                                                                       this->rootFolder,
+                                                                       smartCrateNames);
         }
         else {
             this->otherTagsPerPath->append(NxA::Serato::Tag::ArrayOfConst::array());
@@ -269,7 +269,7 @@ void Database::parseAnyDatabaseFilesIn(const String& pathForLocalSeratoFolder,
     }
 
 #if NXA_PRINT_SERATO_DEBUG_INFO
-    debugListCrate(this->rootCrate, String::string());
+    debugListCrate(this->rootFolder, String::string());
 #endif
 
     databaseIsValid = true;

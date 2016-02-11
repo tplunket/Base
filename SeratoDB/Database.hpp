@@ -51,9 +51,9 @@ namespace NxA { namespace Serato {
 
         #pragma mark Instance Methods
         timestamp databaseModificationDateInSecondsSince1970(void) const;
-        timestamp rootCrateModificationDateInSecondsSince1970(void) const;
+        timestamp rootFolderModificationDateInSecondsSince1970(void) const;
 
-        Crate& rootCrate(void) const;
+        Crate& rootFolder(void) const;
         const Track::Array& tracks(void) const;
         Track::Array::Pointer removeAndReturnTracks(void);
         const String& volumePathForTrackFilePath(const String& trackFilePath) const;

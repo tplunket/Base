@@ -119,7 +119,7 @@ timestamp Database::databaseModificationDateInSecondsSince1970(void) const
     return latestTimestamp;
 }
 
-timestamp Database::rootCrateModificationDateInSecondsSince1970(void) const
+timestamp Database::rootFolderModificationDateInSecondsSince1970(void) const
 {
     timestamp latestTimestamp = 0;
 
@@ -146,9 +146,9 @@ timestamp Database::rootCrateModificationDateInSecondsSince1970(void) const
     return latestTimestamp;
 }
 
-Crate& Database::rootCrate(void) const
+Crate& Database::rootFolder(void) const
 {
-    return internal->rootCrate;
+    return internal->rootFolder;
 }
 
 const Track::Array& Database::tracks(void) const
@@ -232,10 +232,10 @@ void Database::saveIfModifiedAndMarkAsModifiedOn(timestamp modificationTimesSinc
             auto& smartCrateNames = (*internal->smartCrateNamesPerPath)[pathIndex];
             auto& volumePath = (*internal->volumePathsPerPath)[pathIndex];
 
-            Internal::Database::saveContentOfRootCrateIfModifiedAndOnVolumeAndSmartCrateNamesToSeratoFolder(internal->rootCrate,
-                                                                                                            volumePath,
-                                                                                                            smartCrateNames,
-                                                                                                            seratoFolderPath);
+            Internal::Database::saveContentOfRootFolderIfModifiedAndOnVolumeAndSmartCrateNamesToSeratoFolder(internal->rootFolder,
+                                                                                                             volumePath,
+                                                                                                             smartCrateNames,
+                                                                                                             seratoFolderPath);
 
             boolean needsToUpdateDatabaseFile = false;
             if (internal->databaseTracksWereModified) {

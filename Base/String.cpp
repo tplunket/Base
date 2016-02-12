@@ -170,8 +170,8 @@ String::Pointer String::stringWithUTF16(const Blob& other)
 
 void String::p_initDefaultLocale(void)
 {
-    boost::locale::generator gen;
-    std::locale defaultLocale = gen("");
+    boost::locale::generator generator;
+    std::locale defaultLocale = generator.generate("UTF-8");
     std::locale::global(defaultLocale);
     std::wcout.imbue(defaultLocale);
 }

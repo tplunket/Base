@@ -22,7 +22,7 @@
 
 #include "Markers/GridMarker.hpp"
 #include "Markers/CueMarker.hpp"
-#include "Markers/Internal/GridMarker.hpp"
+#include "Markers/Internal/InternalGridMarker.hpp"
 
 #include <math.h>
 
@@ -135,7 +135,7 @@ void GridMarker::addMarkersTo(const GridMarker::Array& markers, NxA::Blob& data)
             bpmDecimal3.setUnbiased(marker.beatsPerMinute().getUnbiased() * 10);
             decimal3 numberOfBeats = (bpmDecimal3 * (nextMarker.positionInSeconds() - marker.positionInSeconds())) / decimal3("60");
 
-            count actualNumberOfBeats = Internal::GridMarker::actualNumberOfBeatsIfSupported(numberOfBeats);
+            count actualNumberOfBeats = InternalGridMarker::actualNumberOfBeatsIfSupported(numberOfBeats);
             if (!actualNumberOfBeats) {
                 data.removeAll();
                 return;
@@ -176,7 +176,7 @@ boolean GridMarker::gridMarkersAreValid(const GridMarker::Array& markers)
 
             decimal3 numberOfBeats = (bpmDecimal3 * (nextMarkerPosition - markerPosition)) / decimal3("60");
 
-            count actualNumberOfBeats = Internal::GridMarker::actualNumberOfBeatsIfSupported(numberOfBeats);
+            count actualNumberOfBeats = InternalGridMarker::actualNumberOfBeatsIfSupported(numberOfBeats);
             if (actualNumberOfBeats == 0) {
                 return false;
             }

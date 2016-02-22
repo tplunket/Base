@@ -21,7 +21,7 @@
 //
 
 #include "TrackFiles/ID3TrackFile.hpp"
-#include "TrackFiles/Internal/ID3TrackFile.hpp"
+#include "TrackFiles/Internal/InternalID3TrackFile.hpp"
 
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, ID3TrackFile, TrackFile);
 

@@ -21,9 +21,9 @@
 //
 
 #include "TrackFiles/FLACTrackFile.hpp"
-#include "TrackFiles/Internal/FLACTrackFile.hpp"
-#include "TrackFiles/Internal/OGGTrackFile.hpp"
-#include "TrackFiles/Internal/ID3TrackFile.hpp"
+#include "TrackFiles/Internal/InternalFLACTrackFile.hpp"
+#include "TrackFiles/Internal/InternalOGGTrackFile.hpp"
+#include "TrackFiles/Internal/InternalID3TrackFile.hpp"
 
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, FLACTrackFile, TrackFile);
 
@@ -34,8 +34,8 @@ using namespace NxA::Serato;
 
 FLACTrackFile::Pointer FLACTrackFile::fileWithFileAt(const String& path, TrackFile::Flags flags)
 {
-    auto internalObject = Internal::FLACTrackFile::Pointer(std::make_shared<Internal::FLACTrackFile>(path));
-    auto newFile = FLACTrackFile::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
+    auto internalObject = InternalFLACTrackFile::Pointer(std::make_shared<InternalFLACTrackFile>(path));
+    auto newFile = FLACTrackFile::makeSharedWithInternal(InternalObject::Pointer::dynamicCastFrom(internalObject));
 
     newFile->internal->markersWereIgnored = (flags & TrackFile::Flags::IgnoreMarkers);
     newFile->internal->loadAndParseFile();

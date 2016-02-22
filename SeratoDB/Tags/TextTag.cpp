@@ -21,7 +21,7 @@
 //
 
 #include "Tags/TextTag.hpp"
-#include "Tags/Internal/TextTag.hpp"
+#include "Tags/Internal/InternalTextTag.hpp"
 
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, TextTag, Tag);
 
@@ -33,7 +33,7 @@ using namespace NxA::Serato;
 TextTag::Pointer TextTag::tagWithMemoryAt(const byte* tagAddress)
 {
     count size = Tag::dataSizeForTagAt(tagAddress);
-    auto text = size ? String::stringWithUTF16(Blob::blobWithMemoryAndSize(Internal::Tag::dataForTagAt(tagAddress), size)) : String::string();
+    auto text = size ? String::stringWithUTF16(Blob::blobWithMemoryAndSize(InternalTag::dataForTagAt(tagAddress), size)) : String::string();
 
     return TextTag::tagWithIdentifierAndValue(Tag::identifierForTagAt(tagAddress), text);
 }
@@ -76,11 +76,11 @@ void TextTag::addTo(Blob& destination) const
 {
     auto utf16Value = internal->value->toUTF16();
     count dataSize = utf16Value->size();
-    auto memoryRepresentation = Blob::blobWithCapacity(Internal::Tag::memoryNeededForTagHeader());
+    auto memoryRepresentation = Blob::blobWithCapacity(InternalTag::memoryNeededForTagHeader());
 
     byte* tagAddress = memoryRepresentation->data();
-    Internal::Tag::setIdentifierForTagAt(this->identifier(), tagAddress);
-    Internal::Tag::setDataSizeForTagAt(dataSize, tagAddress);
+    InternalTag::setIdentifierForTagAt(this->identifier(), tagAddress);
+    InternalTag::setDataSizeForTagAt(dataSize, tagAddress);
 
     destination.append(memoryRepresentation);
     destination.append(utf16Value);

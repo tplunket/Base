@@ -21,7 +21,7 @@
 //
 
 #include "Tags/UInteger16Tag.hpp"
-#include "Tags/Internal/UInteger16Tag.hpp"
+#include "Tags/Internal/InternalUInteger16Tag.hpp"
 
 #include "Base/Base.hpp"
 
@@ -34,7 +34,7 @@ using namespace NxA::Serato;
 
 UInteger16Tag::Pointer UInteger16Tag::tagWithMemoryAt(const byte* tagAddress)
 {
-    const byte* tagData = Internal::Tag::dataForTagAt(tagAddress);
+    const byte* tagData = InternalTag::dataForTagAt(tagAddress);
     NXA_ASSERT_EQ(Tag::dataSizeForTagAt(tagAddress), 2);
 
     return UInteger16Tag::tagWithIdentifierAndValue(Tag::identifierForTagAt(tagAddress),
@@ -78,12 +78,12 @@ void UInteger16Tag::setValue(uinteger16 value)
 void UInteger16Tag::addTo(Blob& destination) const
 {
     size_t dataSize = 2;
-    auto memoryRepresentation = Blob::blobWithCapacity(Internal::Tag::memoryNeededForTagHeader() + dataSize);
+    auto memoryRepresentation = Blob::blobWithCapacity(InternalTag::memoryNeededForTagHeader() + dataSize);
 
     byte* tagAddress = memoryRepresentation->data();
-    Internal::Tag::setIdentifierForTagAt(this->identifier(), tagAddress);
-    Internal::Tag::setDataSizeForTagAt(dataSize, tagAddress);
-    Platform::writeBigEndianUInteger16ValueAt(this->value(), Internal::Tag::dataForTagAt(tagAddress));
+    InternalTag::setIdentifierForTagAt(this->identifier(), tagAddress);
+    InternalTag::setDataSizeForTagAt(dataSize, tagAddress);
+    Platform::writeBigEndianUInteger16ValueAt(this->value(), InternalTag::dataForTagAt(tagAddress));
 
     destination.append(memoryRepresentation);
 }

@@ -21,7 +21,7 @@
 //
 
 #include "SeratoDB/Track.hpp"
-#include "SeratoDB/Internal/Track.hpp"
+#include "SeratoDB/Internal/InternalTrack.hpp"
 #include "TrackFiles/TrackFileFactory.hpp"
 #include "Tags/PathTag.hpp"
 #include "Tags/DatabaseV2Tags.hpp"
@@ -37,8 +37,8 @@ using namespace NxA::Serato;
 
 Track::Pointer Track::trackWithTagLocatedOnVolume(ObjectTag& trackTag, const String& volumePath)
 {
-    auto internalObject = Internal::Track::Pointer(std::make_shared<Internal::Track>(trackTag, volumePath));
-    auto newTrack = Track::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
+    auto internalObject = InternalTrack::Pointer(std::make_shared<InternalTrack>(trackTag, volumePath));
+    auto newTrack = Track::makeSharedWithInternal(InternalObject::Pointer::dynamicCastFrom(internalObject));
 
 #if NXA_PRINT_SERATO_TRACK_DEBUG_INFO
     printf("Reading track ----------------------------------------\n");
@@ -56,9 +56,9 @@ Track::Pointer Track::trackWithFilePathLocatedOnVolume(const String& trackFilePa
     tags->append(Tag::Pointer::dynamicCastFrom(PathTag::tagWithIdentifierAndValue(trackFilePathTagIdentifier, relativePath)));
 
     auto trackTag = ObjectTag::tagWithIdentifierAndValue(trackObjectTagIdentifier, tags);
-    auto internalObject = Internal::Track::Pointer(std::make_shared<Internal::Track>(trackTag, volumePath));
+    auto internalObject = InternalTrack::Pointer(std::make_shared<InternalTrack>(trackTag, volumePath));
 
-    auto newTrack = Track::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
+    auto newTrack = Track::makeSharedWithInternal(InternalObject::Pointer::dynamicCastFrom(internalObject));
     newTrack->internal->setBooleanForSubTagForIdentifier(false, trackBeatGridIsLockedTagIdentifier);
     newTrack->internal->setBooleanForSubTagForIdentifier(false, trackIsCorruptedTagIdentifier);
     newTrack->internal->setBooleanForSubTagForIdentifier(true, trackMetadataWasReadTagIdentifier);

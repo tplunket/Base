@@ -21,7 +21,7 @@
 //
 
 #include "Markers/CueMarker.hpp"
-#include "Markers/Internal/CueMarker.hpp"
+#include "Markers/Internal/InternalCueMarker.hpp"
 
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, CueMarker, Marker);
 
@@ -65,9 +65,9 @@ CueMarker::Pointer CueMarker::markerWithMemoryAt(const byte* id3TagStart)
 
 CueMarker::Pointer CueMarker::markerV1WithIndexAndRawMemoryAt(uinteger16 index, const byte* id3TagStart)
 {
-    auto tagStruct = reinterpret_cast<const Internal::Marker::SeratoRawTagV1Struct*>(id3TagStart);
+    auto tagStruct = reinterpret_cast<const InternalMarker::SeratoRawTagV1Struct*>(id3TagStart);
 
-    NXA_ASSERT_TRUE(tagStruct->type == Internal::Marker::eCueMarker);
+    NXA_ASSERT_TRUE(tagStruct->type == InternalMarker::eCueMarker);
 
     return CueMarker::markerWithLabelPositionIndexAndColor(String::stringWith(""),
                                                            Platform::bigEndianUInteger32ValueAt(tagStruct->position),
@@ -79,10 +79,10 @@ CueMarker::Pointer CueMarker::markerV1WithIndexAndRawMemoryAt(uinteger16 index, 
 
 CueMarker::Pointer CueMarker::markerV1WithIndexAndEncodedMemoryAt(uinteger16 index, const byte* id3TagStart)
 {
-    auto encodedStruct = reinterpret_cast<const Internal::Marker::SeratoEncodedTagV1Struct*>(id3TagStart);
+    auto encodedStruct = reinterpret_cast<const InternalMarker::SeratoEncodedTagV1Struct*>(id3TagStart);
 
-    Internal::Marker::SeratoRawTagV1Struct rawStruct;
-    Internal::Marker::rawV1TagFromEncodedV1TagStruct(rawStruct, *encodedStruct);
+    InternalMarker::SeratoRawTagV1Struct rawStruct;
+    InternalMarker::rawV1TagFromEncodedV1TagStruct(rawStruct, *encodedStruct);
 
     return markerV1WithIndexAndRawMemoryAt(index, reinterpret_cast<const byte*>(&rawStruct));
 }
@@ -207,7 +207,7 @@ void CueMarker::addMarkerV2TagTo(Blob& data) const
 
 void CueMarker::addRawMarkerV1TagTo(Blob& data) const
 {
-    internal->addRawMarkerV1TagWithFieldsTo(Internal::Marker::eCueMarker,
+    internal->addRawMarkerV1TagWithFieldsTo(InternalMarker::eCueMarker,
                                             this->positionInMilliseconds(),
                                             0xFFFFFFFF,
                                             0xFFFFFFFF,
@@ -219,7 +219,7 @@ void CueMarker::addRawMarkerV1TagTo(Blob& data) const
 
 void CueMarker::addEncodedMarkerV1TagTo(Blob& data) const
 {
-    internal->addEncodedMarkerV1TagWithFieldsTo(Internal::Marker::eCueMarker,
+    internal->addEncodedMarkerV1TagWithFieldsTo(InternalMarker::eCueMarker,
                                                 this->positionInMilliseconds(),
                                                 0xFFFFFFFF,
                                                 0xFFFFFFFF,
@@ -231,16 +231,16 @@ void CueMarker::addEncodedMarkerV1TagTo(Blob& data) const
 
 void CueMarker::addEmptyRawMarkerV1TagTo(Blob& data)
 {
-    Internal::Marker::addRawMarkerV1TagWithFieldsTo(Internal::Marker::eEmptyMarker,
-                                                    0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-                                                    0, 0, 0, data);
+    InternalMarker::addRawMarkerV1TagWithFieldsTo(InternalMarker::eEmptyMarker,
+                                                  0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+                                                  0, 0, 0, data);
 }
 
 void CueMarker::addEmptyEncodedMarkerV1TagTo(Blob& data)
 {
-    Internal::Marker::addEncodedMarkerV1TagWithFieldsTo(Internal::Marker::eEmptyMarker,
-                                                        0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-                                                        0, 0, 0, data);
+    InternalMarker::addEncodedMarkerV1TagWithFieldsTo(InternalMarker::eEmptyMarker,
+                                                      0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+                                                      0, 0, 0, data);
 }
 
 

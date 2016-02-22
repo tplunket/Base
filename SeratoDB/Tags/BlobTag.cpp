@@ -21,7 +21,7 @@
 //
 
 #include "Tags/BlobTag.hpp"
-#include "Tags/Internal/BlobTag.hpp"
+#include "Tags/Internal/InternalBlobTag.hpp"
 
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, BlobTag, Tag);
 
@@ -33,7 +33,7 @@ using namespace NxA::Serato;
 BlobTag::Pointer BlobTag::tagWithMemoryAt(const byte* tagAddress)
 {
     return BlobTag::tagWithIdentifierAndValue(Tag::identifierForTagAt(tagAddress),
-                                              Blob::blobWithMemoryAndSize(Internal::Tag::dataForTagAt(tagAddress),
+                                              Blob::blobWithMemoryAndSize(InternalTag::dataForTagAt(tagAddress),
                                                                           Tag::dataSizeForTagAt(tagAddress)));
 }
 
@@ -74,13 +74,13 @@ void BlobTag::setValue(const Blob& newValue)
 void BlobTag::addTo(Blob& destination) const
 {
     count dataSize = internal->value->size();
-    count totalSizeNeeded = Internal::Tag::memoryNeededForTagHeader() + dataSize;
+    count totalSizeNeeded = InternalTag::memoryNeededForTagHeader() + dataSize;
     auto memoryRepresentation = Blob::blobWithCapacity(totalSizeNeeded);
 
     byte* tagAddress = memoryRepresentation->data();
-    Internal::Tag::setIdentifierForTagAt(this->identifier(), tagAddress);
-    Internal::Tag::setDataSizeForTagAt(dataSize, tagAddress);
-    memcpy(Internal::Tag::dataForTagAt(tagAddress), this->value().data(), this->value().size());
+    InternalTag::setIdentifierForTagAt(this->identifier(), tagAddress);
+    InternalTag::setDataSizeForTagAt(dataSize, tagAddress);
+    memcpy(InternalTag::dataForTagAt(tagAddress), this->value().data(), this->value().size());
 
     destination.append(memoryRepresentation);
 }

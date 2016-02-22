@@ -21,7 +21,7 @@
 //
 
 #include "SeratoDB/Crate.hpp"
-#include "SeratoDB/Internal/Crate.hpp"
+#include "SeratoDB/Internal/InternalCrate.hpp"
 #include "Base/Test.hpp"
 
 using namespace testing;

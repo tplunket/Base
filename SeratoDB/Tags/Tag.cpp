@@ -21,7 +21,7 @@
 //
 
 #include "Tags/Tag.hpp"
-#include "Tags/Internal/BlobTag.hpp"
+#include "Tags/Internal/InternalBlobTag.hpp"
 
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_PURE_VIRTUAL_CLASS_WITH_PARENT(NxA::Serato, Tag, Object);
 

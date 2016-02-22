@@ -21,7 +21,7 @@
 //
 
 #include "Tags/UInteger32Tag.hpp"
-#include "Tags/Internal/UInteger32Tag.hpp"
+#include "Tags/Internal/InternalUInteger32Tag.hpp"
 
 #include "Base/Base.hpp"
 
@@ -34,7 +34,7 @@ using namespace NxA::Serato;
 
 UInteger32Tag::Pointer UInteger32Tag::tagWithMemoryAt(const byte* tagAddress)
 {
-    const byte* tagData = Internal::Tag::dataForTagAt(tagAddress);
+    const byte* tagData = InternalTag::dataForTagAt(tagAddress);
     NXA_ASSERT_EQ(Tag::dataSizeForTagAt(tagAddress), 4);
 
     return UInteger32Tag::tagWithIdentifierAndValue(Tag::identifierForTagAt(tagAddress),
@@ -78,12 +78,12 @@ void UInteger32Tag::setValue(uinteger32 value)
 void UInteger32Tag::addTo(Blob& destination) const
 {
     size_t dataSize = 4;
-    auto memoryRepresentation = Blob::blobWithCapacity(Internal::Tag::memoryNeededForTagHeader() + dataSize);
+    auto memoryRepresentation = Blob::blobWithCapacity(InternalTag::memoryNeededForTagHeader() + dataSize);
 
     byte* tagAddress = memoryRepresentation->data();
-    Internal::Tag::setIdentifierForTagAt(this->identifier(), tagAddress);
-    Internal::Tag::setDataSizeForTagAt(dataSize, tagAddress);
-    Platform::writeBigEndianUInteger32ValueAt(this->value(), Internal::Tag::dataForTagAt(tagAddress));
+    InternalTag::setIdentifierForTagAt(this->identifier(), tagAddress);
+    InternalTag::setDataSizeForTagAt(dataSize, tagAddress);
+    Platform::writeBigEndianUInteger32ValueAt(this->value(), InternalTag::dataForTagAt(tagAddress));
 
     destination.append(memoryRepresentation);
 }

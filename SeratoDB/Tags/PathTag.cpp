@@ -21,7 +21,7 @@
 //
 
 #include "Tags/PathTag.hpp"
-#include "Tags/Internal/PathTag.hpp"
+#include "Tags/Internal/InternalPathTag.hpp"
 
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, PathTag, TextTag);
 
@@ -33,7 +33,7 @@ using namespace NxA::Serato;
 PathTag::Pointer PathTag::tagWithMemoryAt(const byte* tagAddress)
 {
     count size = Tag::dataSizeForTagAt(tagAddress);
-    auto text = String::stringWithUTF16(Blob::blobWithMemoryAndSize(Internal::Tag::dataForTagAt(tagAddress), size));
+    auto text = String::stringWithUTF16(Blob::blobWithMemoryAndSize(InternalTag::dataForTagAt(tagAddress), size));
 
     return PathTag::tagWithIdentifierAndValue(Tag::identifierForTagAt(tagAddress), text);
 }

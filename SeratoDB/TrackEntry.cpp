@@ -21,7 +21,7 @@
 //
 
 #include "SeratoDB/TrackEntry.hpp"
-#include "SeratoDB/Internal/TrackEntry.hpp"
+#include "SeratoDB/Internal/InternalTrackEntry.hpp"
 #include "SeratoDB/Crate.hpp"
 #include "Tags/PathTag.hpp"
 #include "Tags/ObjectTag.hpp"
@@ -38,8 +38,8 @@ TrackEntry::Pointer TrackEntry::entryWithTagOnVolume(const ObjectTag& tag, const
 {
     NXA_ASSERT_TRUE(volumePath.length() != 0);
 
-    auto internalObject = Internal::TrackEntry::Pointer(std::make_shared<Internal::TrackEntry>(tag, volumePath));
-    auto newTrackEntry = TrackEntry::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
+    auto internalObject = InternalTrackEntry::Pointer(std::make_shared<InternalTrackEntry>(tag, volumePath));
+    auto newTrackEntry = TrackEntry::makeSharedWithInternal(InternalObject::Pointer::dynamicCastFrom(internalObject));
     return newTrackEntry;
 }
 

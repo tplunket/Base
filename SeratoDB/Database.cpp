@@ -21,7 +21,7 @@
 //
 
 #include "SeratoDB/Database.hpp"
-#include "SeratoDB/Internal/Database.hpp"
+#include "SeratoDB/Internal/InternalDatabase.hpp"
 #include "Tags/DatabaseV2Tags.hpp"
 #include "Tags/TagFactory.hpp"
 #include "Tags/VersionTag.hpp"
@@ -36,8 +36,8 @@ using namespace NxA::Serato;
 Database::Pointer Database::databaseWithPathsForLocalAndExternalSeratoDirectories(const String& pathForLocalSeratoFolder,
                                                                                   const String::ArrayOfConst& pathsForExternalSeratoFolders)
 {
-    auto internalObject = Internal::Database::Pointer(std::make_shared<Internal::Database>(pathForLocalSeratoFolder, pathsForExternalSeratoFolders));
-    auto newDatabase = Database::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
+    auto internalObject = InternalDatabase::Pointer(std::make_shared<InternalDatabase>(pathForLocalSeratoFolder, pathsForExternalSeratoFolders));
+    auto newDatabase = Database::makeSharedWithInternal(InternalObject::Pointer::dynamicCastFrom(internalObject));
     return newDatabase;
 }
 
@@ -125,7 +125,7 @@ timestamp Database::rootFolderModificationDateInSecondsSince1970(void) const
 
     for (auto& path : *internal->pathsForSeratoDirectories) {
         auto seratoFolderPath = Database::seratoFolderPathForFolder(path);
-        auto crateOrderFilePath = Internal::Database::pathForCrateOrderFileInSeratoFolder(seratoFolderPath);
+        auto crateOrderFilePath = InternalDatabase::pathForCrateOrderFileInSeratoFolder(seratoFolderPath);
 
         if (!File::fileExistsAt(crateOrderFilePath)) {
             continue;
@@ -232,10 +232,10 @@ void Database::saveIfModifiedAndMarkAsModifiedOn(timestamp modificationTimesSinc
             auto& smartCrateNames = (*internal->smartCrateNamesPerPath)[pathIndex];
             auto& volumePath = (*internal->volumePathsPerPath)[pathIndex];
 
-            Internal::Database::saveContentOfRootFolderIfModifiedAndOnVolumeAndSmartCrateNamesToSeratoFolder(internal->rootFolder,
-                                                                                                             volumePath,
-                                                                                                             smartCrateNames,
-                                                                                                             seratoFolderPath);
+            InternalDatabase::saveContentOfRootFolderIfModifiedAndOnVolumeAndSmartCrateNamesToSeratoFolder(internal->rootFolder,
+                                                                                                           volumePath,
+                                                                                                           smartCrateNames,
+                                                                                                           seratoFolderPath);
 
             boolean needsToUpdateDatabaseFile = false;
             if (internal->databaseTracksWereModified) {
@@ -258,7 +258,7 @@ void Database::saveIfModifiedAndMarkAsModifiedOn(timestamp modificationTimesSinc
                 auto outputData = Blob::blob();
 
                 auto versionTag = VersionTag::tagWithIdentifierAndValue(databaseVersionTagIdentifier,
-                                                                        String::stringWith(Internal::Database::databaseFileCurrentVersionString));
+                                                                        String::stringWith(InternalDatabase::databaseFileCurrentVersionString));
                 versionTag->addTo(outputData);
 
                 for (auto& track : *(internal->tracks)) {
@@ -280,7 +280,7 @@ void Database::saveIfModifiedAndMarkAsModifiedOn(timestamp modificationTimesSinc
                 File::writeBlobToFileAt(outputData, databaseFilePath);
             }
 
-            Internal::Database::setDatabaseFilesInSeratoFolderAsModifedOnDateInSecondsSince1970(seratoFolderPath, modificationTimesSince1970);
+            InternalDatabase::setDatabaseFilesInSeratoFolderAsModifedOnDateInSecondsSince1970(seratoFolderPath, modificationTimesSince1970);
         }
 
         internal->databaseTracksWereModified = false;

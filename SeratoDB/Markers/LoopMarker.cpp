@@ -22,7 +22,7 @@
 
 #include "Markers/LoopMarker.hpp"
 #include "Markers/CueMarker.hpp"
-#include "Markers/Internal/LoopMarker.hpp"
+#include "Markers/Internal/InternalLoopMarker.hpp"
 
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, LoopMarker, Marker);
 
@@ -69,9 +69,9 @@ LoopMarker::Pointer LoopMarker::markerWithMemoryAt(const byte* id3TagStart)
 
 LoopMarker::Pointer LoopMarker::markerV1WithIndexAndRawMemoryAt(uinteger16 index, const byte* id3TagStart)
 {
-    auto tagStruct = reinterpret_cast<const Internal::Marker::SeratoRawTagV1Struct*>(id3TagStart);
+    auto tagStruct = reinterpret_cast<const InternalMarker::SeratoRawTagV1Struct*>(id3TagStart);
 
-    NXA_ASSERT_TRUE(tagStruct->type == Internal::Marker::eLoopMarker);
+    NXA_ASSERT_TRUE(tagStruct->type == InternalMarker::eLoopMarker);
 
     return LoopMarker::markerWithLabelStartEndPositionsIndexAndColor(String::stringWith(""),
                                                                      Platform::bigEndianUInteger32ValueAt(tagStruct->position),
@@ -84,10 +84,10 @@ LoopMarker::Pointer LoopMarker::markerV1WithIndexAndRawMemoryAt(uinteger16 index
 
 LoopMarker::Pointer LoopMarker::markerV1WithIndexAndEncodedMemoryAt(uinteger16 index, const byte* id3TagStart)
 {
-    auto encodedStruct = reinterpret_cast<const Internal::Marker::SeratoEncodedTagV1Struct*>(id3TagStart);
+    auto encodedStruct = reinterpret_cast<const InternalMarker::SeratoEncodedTagV1Struct*>(id3TagStart);
 
-    Internal::Marker::SeratoRawTagV1Struct rawStruct;
-    Internal::Marker::rawV1TagFromEncodedV1TagStruct(rawStruct, *encodedStruct);
+    InternalMarker::SeratoRawTagV1Struct rawStruct;
+    InternalMarker::rawV1TagFromEncodedV1TagStruct(rawStruct, *encodedStruct);
 
     return markerV1WithIndexAndRawMemoryAt(index, reinterpret_cast<const byte*>(&rawStruct));
 }
@@ -207,7 +207,7 @@ void LoopMarker::addMarkerV2TagTo(Blob& data) const
 
 void LoopMarker::addRawMarkerV1TagTo(Blob& data) const
 {
-    internal->addRawMarkerV1TagWithFieldsTo(Internal::Marker::eLoopMarker,
+    internal->addRawMarkerV1TagWithFieldsTo(InternalMarker::eLoopMarker,
                                             this->startPositionInMilliseconds(),
                                             this->endPositionInMilliseconds(),
                                             0xFFFFFFFF,
@@ -219,7 +219,7 @@ void LoopMarker::addRawMarkerV1TagTo(Blob& data) const
 
 void LoopMarker::addEncodedMarkerV1TagTo(Blob& data) const
 {
-    internal->addEncodedMarkerV1TagWithFieldsTo(Internal::Marker::eLoopMarker,
+    internal->addEncodedMarkerV1TagWithFieldsTo(InternalMarker::eLoopMarker,
                                                 this->startPositionInMilliseconds(),
                                                 this->endPositionInMilliseconds(),
                                                 0xFFFFFFFF,
@@ -232,17 +232,17 @@ void LoopMarker::addEncodedMarkerV1TagTo(Blob& data) const
 void LoopMarker::addEmptyRawMarkerV1TagTo(Blob& data)
 {
     // Note: serato saves empty V1 loops with the 'loop' type (3) rather than empty (0)
-    Internal::Marker::addRawMarkerV1TagWithFieldsTo(Internal::Marker::eLoopMarker,
-                                                    0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-                                                    0, 0, 0, data);
+    InternalMarker::addRawMarkerV1TagWithFieldsTo(InternalMarker::eLoopMarker,
+                                                  0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+                                                  0, 0, 0, data);
 }
 
 void LoopMarker::addEmptyEncodedMarkerV1TagTo(Blob& data)
 {
     // Note: serato saves empty V1 loops with the 'loop' type (3) rather than empty (0)
-    Internal::Marker::addEncodedMarkerV1TagWithFieldsTo(Internal::Marker::eLoopMarker,
-                                                        0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-                                                        0, 0, 0, data);
+    InternalMarker::addEncodedMarkerV1TagWithFieldsTo(InternalMarker::eLoopMarker,
+                                                      0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+                                                      0, 0, 0, data);
 }
 
 #pragma mark Overriden Object Instance Methods

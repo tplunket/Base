@@ -23,7 +23,7 @@
 #include "Tags/TagFactory.hpp"
 
 #include "Tags/ObjectTag.hpp"
-#include "Tags/Internal/ObjectTag.hpp"
+#include "Tags/Internal/InternalObjectTag.hpp"
 
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, ObjectTag, Tag);
 
@@ -35,7 +35,7 @@ using namespace NxA::Serato;
 ObjectTag::Pointer ObjectTag::tagWithMemoryAt(const byte* tagAddress)
 {
     auto dataSize = Tag::dataSizeForTagAt(tagAddress);
-    auto tagData = Internal::Tag::dataForTagAt(tagAddress);
+    auto tagData = InternalTag::dataForTagAt(tagAddress);
     auto subTags = TagFactory::parseTagsAt(tagData, dataSize);
 
     auto result = ObjectTag::tagWithIdentifierAndValue(Tag::identifierForTagAt(tagAddress),
@@ -162,11 +162,11 @@ void ObjectTag::addInSeratoTrackOrderTo(Blob& destination) const
         tag.addTo(subTagsRepresentation);
     }
 
-    auto sizeNeededForHeader = Internal::Tag::memoryNeededForTagHeader();
+    auto sizeNeededForHeader = InternalTag::memoryNeededForTagHeader();
     auto headerRepresentation = Blob::blobWithCapacity(sizeNeededForHeader);
     auto tagAddress = headerRepresentation->data();
-    Internal::Tag::setIdentifierForTagAt(this->identifier(), tagAddress);
-    Internal::Tag::setDataSizeForTagAt(subTagsRepresentation->size(), tagAddress);
+    InternalTag::setIdentifierForTagAt(this->identifier(), tagAddress);
+    InternalTag::setDataSizeForTagAt(subTagsRepresentation->size(), tagAddress);
 
     destination.append(headerRepresentation);
     destination.append(subTagsRepresentation);
@@ -179,11 +179,11 @@ void ObjectTag::addTo(Blob& destination) const
         identifierAndTag.second->addTo(subTagsRepresentation);
     }
 
-    auto sizeNeededForHeader = Internal::Tag::memoryNeededForTagHeader();
+    auto sizeNeededForHeader = InternalTag::memoryNeededForTagHeader();
     auto headerRepresentation = Blob::blobWithCapacity(sizeNeededForHeader);
     auto tagAddress = headerRepresentation->data();
-    Internal::Tag::setIdentifierForTagAt(this->identifier(), tagAddress);
-    Internal::Tag::setDataSizeForTagAt(subTagsRepresentation->size(), tagAddress);
+    InternalTag::setIdentifierForTagAt(this->identifier(), tagAddress);
+    InternalTag::setDataSizeForTagAt(subTagsRepresentation->size(), tagAddress);
 
     destination.append(headerRepresentation);
     destination.append(subTagsRepresentation);

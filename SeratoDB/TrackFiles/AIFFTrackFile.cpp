@@ -21,7 +21,7 @@
 //
 
 #include "TrackFiles/AIFFTrackFile.hpp"
-#include "TrackFiles/Internal/AIFFTrackFile.hpp"
+#include "TrackFiles/Internal/InternalAIFFTrackFile.hpp"
 
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, AIFFTrackFile, ID3TrackFile);
 
@@ -32,8 +32,8 @@ using namespace NxA::Serato;
 
 AIFFTrackFile::Pointer AIFFTrackFile::fileWithFileAt(const String& path, TrackFile::Flags flags)
 {
-    auto internalObject = Internal::AIFFTrackFile::Pointer(std::make_shared<Internal::AIFFTrackFile>(path));
-    auto newFile = AIFFTrackFile::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
+    auto internalObject = InternalAIFFTrackFile::Pointer(std::make_shared<InternalAIFFTrackFile>(path));
+    auto newFile = AIFFTrackFile::makeSharedWithInternal(InternalObject::Pointer::dynamicCastFrom(internalObject));
 
     newFile->internal->markersWereIgnored = (flags & TrackFile::Flags::IgnoreMarkers);
     newFile->internal->loadAndParseFile();

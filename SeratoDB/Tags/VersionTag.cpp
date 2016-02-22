@@ -21,7 +21,7 @@
 //
 
 #include "Tags/VersionTag.hpp"
-#include "Tags/Internal/VersionTag.hpp"
+#include "Tags/Internal/InternalVersionTag.hpp"
 
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, VersionTag, TextTag);
 
@@ -33,7 +33,7 @@ using namespace NxA::Serato;
 VersionTag::Pointer VersionTag::tagWithMemoryAt(const byte* tagAddress)
 {
     count size = Tag::dataSizeForTagAt(tagAddress);
-    auto text = String::stringWithUTF16(Blob::blobWithMemoryAndSize(Internal::Tag::dataForTagAt(tagAddress), size));
+    auto text = String::stringWithUTF16(Blob::blobWithMemoryAndSize(InternalTag::dataForTagAt(tagAddress), size));
 
     return VersionTag::tagWithIdentifierAndValue(Tag::identifierForTagAt(tagAddress), text);
 }

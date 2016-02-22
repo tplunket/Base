@@ -21,7 +21,7 @@
 //
 
 #include "TrackFiles/OGGTrackFile.hpp"
-#include "TrackFiles/Internal/OGGTrackFile.hpp"
+#include "TrackFiles/Internal/InternalOGGTrackFile.hpp"
 
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, OGGTrackFile, TrackFile);
 
@@ -32,8 +32,8 @@ using namespace NxA::Serato;
 
 OGGTrackFile::Pointer OGGTrackFile::fileWithFileAt(const String& path, TrackFile::Flags flags)
 {
-    auto internalObject = Internal::OGGTrackFile::Pointer(std::make_shared<Internal::OGGTrackFile>(path));
-    auto newFile = OGGTrackFile::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
+    auto internalObject = InternalOGGTrackFile::Pointer(std::make_shared<InternalOGGTrackFile>(path));
+    auto newFile = OGGTrackFile::makeSharedWithInternal(InternalObject::Pointer::dynamicCastFrom(internalObject));
 
     newFile->internal->markersWereIgnored = (flags & TrackFile::Flags::IgnoreMarkers);
     newFile->internal->loadAndParseFile();

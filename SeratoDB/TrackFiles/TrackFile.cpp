@@ -23,7 +23,7 @@
 #include "SeratoDB/Tags/ObjectTag.hpp"
 
 #include "TrackFiles/TrackFile.hpp"
-#include "TrackFiles/Internal/TrackFile.hpp"
+#include "TrackFiles/Internal/InternalTrackFile.hpp"
 
 #include <tpropertymap.h>
 #include <generalencapsulatedobjectframe.h>

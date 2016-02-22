@@ -21,7 +21,7 @@
 //
 
 #include "TrackFiles/WAVTrackFile.hpp"
-#include "TrackFiles/Internal/WAVTrackFile.hpp"
+#include "TrackFiles/Internal/InternalWAVTrackFile.hpp"
 
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, WAVTrackFile, ID3TrackFile);
 
@@ -32,8 +32,8 @@ using namespace NxA::Serato;
 
 WAVTrackFile::Pointer WAVTrackFile::fileWithFileAt(const String& path, TrackFile::Flags flags)
 {
-    auto internalObject = Internal::WAVTrackFile::Pointer(std::make_shared<Internal::WAVTrackFile>(path));
-    auto newFile = WAVTrackFile::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
+    auto internalObject = InternalWAVTrackFile::Pointer(std::make_shared<InternalWAVTrackFile>(path));
+    auto newFile = WAVTrackFile::makeSharedWithInternal(InternalObject::Pointer::dynamicCastFrom(internalObject));
 
     newFile->internal->markersWereIgnored = (flags & TrackFile::Flags::IgnoreMarkers);
     newFile->internal->loadAndParseFile();

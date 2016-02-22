@@ -21,7 +21,7 @@
 //
 
 #include "TrackFiles/MPEGTrackFile.hpp"
-#include "TrackFiles/Internal/MPEGTrackFile.hpp"
+#include "TrackFiles/Internal/InternalMPEGTrackFile.hpp"
 
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, MPEGTrackFile, ID3TrackFile);
 
@@ -32,8 +32,8 @@ using namespace NxA::Serato;
 
 MPEGTrackFile::Pointer MPEGTrackFile::fileWithFileAt(const String& path, TrackFile::Flags flags)
 {
-    auto internalObject = Internal::MPEGTrackFile::Pointer(std::make_shared<Internal::MPEGTrackFile>(path));
-    auto newFile = MPEGTrackFile::makeSharedWithInternal(NxA::Internal::Object::Pointer::dynamicCastFrom(internalObject));
+    auto internalObject = InternalMPEGTrackFile::Pointer(std::make_shared<InternalMPEGTrackFile>(path));
+    auto newFile = MPEGTrackFile::makeSharedWithInternal(InternalObject::Pointer::dynamicCastFrom(internalObject));
 
     newFile->internal->markersWereIgnored = (flags & TrackFile::Flags::IgnoreMarkers);
     newFile->internal->loadAndParseFile();

@@ -21,7 +21,7 @@
 //
 
 #include "Tags/BooleanTag.hpp"
-#include "Tags/Internal/BooleanTag.hpp"
+#include "Tags/Internal/InternalBooleanTag.hpp"
 
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, BooleanTag, Tag);
 
@@ -32,7 +32,7 @@ using namespace NxA::Serato;
 
 BooleanTag::Pointer BooleanTag::tagWithMemoryAt(const byte* tagAddress)
 {
-    const byte* tagData = Internal::Tag::dataForTagAt(tagAddress);
+    const byte* tagData = InternalTag::dataForTagAt(tagAddress);
     NXA_ASSERT_EQ(Tag::dataSizeForTagAt(tagAddress), 1);
 
     return BooleanTag::tagWithIdentifierAndValue(Tag::identifierForTagAt(tagAddress),
@@ -76,13 +76,13 @@ void BooleanTag::setValue(boolean newValue)
 void BooleanTag::addTo(Blob& destination) const
 {
     count dataSize = 1;
-    count totalSizeNeeded = Internal::Tag::memoryNeededForTagHeader() + dataSize;
+    count totalSizeNeeded = InternalTag::memoryNeededForTagHeader() + dataSize;
     auto memoryRepresentation = Blob::blobWithCapacity(totalSizeNeeded);
 
     byte* tagAddress = memoryRepresentation->data();
-    Internal::Tag::setIdentifierForTagAt(this->identifier(), tagAddress);
-    Internal::Tag::setDataSizeForTagAt(dataSize, tagAddress);
-    byte* tagData = Internal::Tag::dataForTagAt(tagAddress);
+    InternalTag::setIdentifierForTagAt(this->identifier(), tagAddress);
+    InternalTag::setDataSizeForTagAt(dataSize, tagAddress);
+    byte* tagData = InternalTag::dataForTagAt(tagAddress);
     *tagData = this->value() ? 1 : 0;
 
     destination.append(memoryRepresentation);

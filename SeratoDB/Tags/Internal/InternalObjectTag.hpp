@@ -27,13 +27,17 @@
 
 #include <Base/Base.hpp>
 
-namespace NxA { namespace Serato {
-    using IdentifierToTagMap = Map<uinteger32, Serato::Tag>;
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
 
-    struct InternalObjectTag : public InternalTag {
-        NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, InternalObjectTag);
+using IdentifierToTagMap = Map<uinteger32, Serato::Tag>;
 
-        #pragma mark Instance Variables
-        IdentifierToTagMap::Pointer subTagForIdentifier;
-    };
-} }
+struct InternalObjectTag : public InternalTag {
+    NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, InternalObjectTag);
+
+    #pragma mark Instance Variables
+    IdentifierToTagMap::Pointer subTagForIdentifier;
+};
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;

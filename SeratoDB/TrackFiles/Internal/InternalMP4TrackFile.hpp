@@ -29,42 +29,46 @@
 
 #include <mp4tag.h>
 
-namespace NxA { namespace Serato {
-    struct InternalMP4TrackFile : public InternalTrackFile {
-        NXA_GENERATED_DESTRUCTOR_FOR_CLASS(InternalMP4TrackFile);
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
 
-        #pragma mark Constructor & Destructors
-        InternalMP4TrackFile(const String& path);
+struct InternalMP4TrackFile : public InternalTrackFile {
+    NXA_GENERATED_DESTRUCTOR_FOR_CLASS(InternalMP4TrackFile);
 
-        #pragma mark Class Methods
-        static integer integerValueForItemNamedInTag(const character* name, const TagLib::MP4::Tag& tag);
-        static String::Pointer stringValueForItemNamedInTag(const character* name, const TagLib::MP4::Tag& tag);
-        static void setIntegerValueForItemNamedInTag(integer value, const character* name, TagLib::MP4::Tag& tag);
-        static void setStringValueForItemNamedInTag(const String& value, const character* name, TagLib::MP4::Tag& tag);
-        Blob::Pointer artworkInTag(const TagLib::MP4::Tag& tag);
+    #pragma mark Constructor & Destructors
+    InternalMP4TrackFile(const String& path);
 
-        #pragma mark Instance Variables
-        String::ArrayOfConst::Pointer nameOfItems;
-        String::ArrayOfConst::Pointer nameOfItemsToRemove;
+    #pragma mark Class Methods
+    static integer integerValueForItemNamedInTag(const character* name, const TagLib::MP4::Tag& tag);
+    static String::Pointer stringValueForItemNamedInTag(const character* name, const TagLib::MP4::Tag& tag);
+    static void setIntegerValueForItemNamedInTag(integer value, const character* name, TagLib::MP4::Tag& tag);
+    static void setStringValueForItemNamedInTag(const String& value, const character* name, TagLib::MP4::Tag& tag);
+    Blob::Pointer artworkInTag(const TagLib::MP4::Tag& tag);
 
-        #pragma mark Instance Methods
-        void parseMarkersInTag(const TagLib::MP4::Tag& tag);
-        void replaceFrameNamedWithDataAndVersionInTag(const character* frameName,
-                                                      const character* frameDescription,
-                                                      const Blob& frameData,
-                                                      integer majorVersion,
-                                                      integer minorVersion,
-                                                      TagLib::MP4::Tag& tag) const;
-        void replaceMarkersV1ItemInTag(TagLib::MP4::Tag& tag) const;
-        void replaceMarkersV2ItemInTag(TagLib::MP4::Tag& tag) const;
-        void replaceGridMarkersItemInTag(TagLib::MP4::Tag& tag) const;
-        void updateMarkersInTag(TagLib::MP4::Tag& tag) const;
-        void parseTag(const TagLib::MP4::Tag& tag);
-        void updateArtworkInTag(TagLib::MP4::Tag& tag) const;
-        void updateTag(TagLib::MP4::Tag& tag) const;
+    #pragma mark Instance Variables
+    String::ArrayOfConst::Pointer nameOfItems;
+    String::ArrayOfConst::Pointer nameOfItemsToRemove;
 
-        #pragma mark Overridden TrackFile Instance Methods
-        virtual void loadAndParseFile(void) override;
-        virtual void updateAndSaveFile(void) const override;
-    };
-} }
+    #pragma mark Instance Methods
+    void parseMarkersInTag(const TagLib::MP4::Tag& tag);
+    void replaceFrameNamedWithDataAndVersionInTag(const character* frameName,
+                                                  const character* frameDescription,
+                                                  const Blob& frameData,
+                                                  integer majorVersion,
+                                                  integer minorVersion,
+                                                  TagLib::MP4::Tag& tag) const;
+    void replaceMarkersV1ItemInTag(TagLib::MP4::Tag& tag) const;
+    void replaceMarkersV2ItemInTag(TagLib::MP4::Tag& tag) const;
+    void replaceGridMarkersItemInTag(TagLib::MP4::Tag& tag) const;
+    void updateMarkersInTag(TagLib::MP4::Tag& tag) const;
+    void parseTag(const TagLib::MP4::Tag& tag);
+    void updateArtworkInTag(TagLib::MP4::Tag& tag) const;
+    void updateTag(TagLib::MP4::Tag& tag) const;
+
+    #pragma mark Overridden TrackFile Instance Methods
+    virtual void loadAndParseFile(void) override;
+    virtual void updateAndSaveFile(void) const override;
+};
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;

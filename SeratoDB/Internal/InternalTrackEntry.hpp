@@ -29,18 +29,22 @@
 #include <Base/Base.hpp>
 #include <Base/Internal/InternalObject.hpp>
 
-namespace NxA { namespace Serato {
-    struct InternalTrackEntry : public InternalObject {
-        NXA_GENERATED_DESTRUCTOR_FOR_CLASS(InternalTrackEntry);
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
 
-        #pragma mark Constructors & Destructors
-        InternalTrackEntry(const Tag& tag,
-                           const String& newVolumePath);
+struct InternalTrackEntry : public InternalObject {
+    NXA_GENERATED_DESTRUCTOR_FOR_CLASS(InternalTrackEntry);
 
-        #pragma mark Instance Variable
-        Crate::WeakPointer parentCrate;
+    #pragma mark Constructors & Destructors
+    InternalTrackEntry(const Tag& tag,
+                       const String& newVolumePath);
 
-        Tag::PointerToConst trackEntryTag;
-        String::PointerToConst volumePath;
-    };
-} }
+    #pragma mark Instance Variable
+    Crate::WeakPointer parentCrate;
+
+    Tag::PointerToConst trackEntryTag;
+    String::PointerToConst volumePath;
+};
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;

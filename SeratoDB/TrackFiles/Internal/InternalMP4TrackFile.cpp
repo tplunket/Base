@@ -27,33 +27,37 @@
 
 // -- Generated internal implementation ommitted because this class does not use the default contructor.
 
-namespace NxA { namespace Serato {
-    #pragma mark Structures
-    typedef struct {
-        byte mimeType[25];
-        byte filename[1];
-        byte description[16];
-        byte majorVersion;
-        byte minorVersion;
-        byte data[0];
-    } MP4MarkersHeaderStruct;
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
 
-    #pragma mark Constants
-    constexpr const character* mp4MarkersV1ItemName = "----:com.serato.dj:markers";
-    constexpr const character* mp4MarkersV2ItemName = "----:com.serato.dj:markersv2";
-    constexpr const character* mp4BeatgridItemName = "----:com.serato.dj:beatgrid";
-    constexpr const character* mp4KeyItemName = "----:com.apple.iTunes:initialkey";
-    constexpr const character* mp4PublisherItemName = "----:com.apple.iTunes:publisher";
-    constexpr const character* mp4LabelItemName = "----:com.apple.iTunes:LABEL";
-    constexpr const character* mp4ComposerItemName = "\251wrt";
-    constexpr const character* mp4GroupingItemName = "\251grp";
-    constexpr const character* mp4BpmItemName = "tmpo";
-    constexpr const character* mp4ArtworkItemName = "covr";
+#pragma mark Structures
+typedef struct {
+    byte mimeType[25];
+    byte filename[1];
+    byte description[16];
+    byte majorVersion;
+    byte minorVersion;
+    byte data[0];
+} MP4MarkersHeaderStruct;
 
-    constexpr const character* mp4MarkersV1FrameDescription = "Serato Markers_";
-    constexpr const character* mp4MarkersV2FrameDescription = "Serato Markers2";
-    constexpr const character* mp4BeatgridFrameDescription = "Serato Beatgrid";
-} }
+#pragma mark Constants
+constexpr const character* mp4MarkersV1ItemName = "----:com.serato.dj:markers";
+constexpr const character* mp4MarkersV2ItemName = "----:com.serato.dj:markersv2";
+constexpr const character* mp4BeatgridItemName = "----:com.serato.dj:beatgrid";
+constexpr const character* mp4KeyItemName = "----:com.apple.iTunes:initialkey";
+constexpr const character* mp4PublisherItemName = "----:com.apple.iTunes:publisher";
+constexpr const character* mp4LabelItemName = "----:com.apple.iTunes:LABEL";
+constexpr const character* mp4ComposerItemName = "\251wrt";
+constexpr const character* mp4GroupingItemName = "\251grp";
+constexpr const character* mp4BpmItemName = "tmpo";
+constexpr const character* mp4ArtworkItemName = "covr";
+
+constexpr const character* mp4MarkersV1FrameDescription = "Serato Markers_";
+constexpr const character* mp4MarkersV2FrameDescription = "Serato Markers2";
+constexpr const character* mp4BeatgridFrameDescription = "Serato Beatgrid";
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;
 
 using namespace NxA;
 using namespace NxA::Serato;

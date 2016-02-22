@@ -27,19 +27,23 @@
 
 #include <Base/Base.hpp>
 
-namespace NxA { namespace Serato {
-    struct InternalCueMarker : public InternalMarker {
-        NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, InternalCueMarker);
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
 
-        #pragma mark Instance Variables
-        uinteger32 positionInMilliseconds;
+struct InternalCueMarker : public InternalMarker {
+    NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, InternalCueMarker);
 
-        uinteger16 index;
+    #pragma mark Instance Variables
+    uinteger32 positionInMilliseconds;
 
-        String::PointerToConst label;
+    uinteger16 index;
 
-        byte colorRedComponent;
-        byte colorGreenComponent;
-        byte colorBlueComponent;
-    };
-} }
+    String::PointerToConst label;
+
+    byte colorRedComponent;
+    byte colorGreenComponent;
+    byte colorBlueComponent;
+};
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;

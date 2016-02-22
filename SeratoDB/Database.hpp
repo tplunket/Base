@@ -27,43 +27,47 @@
 
 #include <Base/Base.hpp>
 
-namespace NxA { namespace Serato {
-    NXA_EXCEPTION_NAMED_WITH_PARENT(DatabaseError, NxA::Exception);
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
 
-    NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(Database);
+NXA_EXCEPTION_NAMED_WITH_PARENT(DatabaseError, NxA::Exception);
 
-    class TrackEntry;
+NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(Database);
 
-    class Database : public Object {
-        NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_CLASS(NxA::Serato, Database);
+class TrackEntry;
 
-    public:
-        #pragma mark Factory Methods
-        static Database::Pointer databaseWithPathsForLocalAndExternalSeratoDirectories(const String& pathForLocalSeratoFolder,
-                                                                                       const String::ArrayOfConst& pathsForExternalSeratoFolders);
+class Database : public Object {
+    NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_CLASS(NxA::Serato, Database);
 
-        #pragma mark Class Methods
-        static String::Pointer versionAsStringForDatabaseIn(const String& seratoFolderPath);
-        static String::Pointer seratoFolderPathForFolder(const String& folderPath);
-        static String::Pointer databaseFilePathForSeratoFolder(const String& seratoFolderPath);
-        static boolean containsAValidSeratoFolder(const String& folderPath);
-        static void createSeratoFolderIfDoesNotExists(const String& seratoFolderPath);
+public:
+    #pragma mark Factory Methods
+    static Database::Pointer databaseWithPathsForLocalAndExternalSeratoDirectories(const String& pathForLocalSeratoFolder,
+                                                                                   const String::ArrayOfConst& pathsForExternalSeratoFolders);
 
-        #pragma mark Instance Methods
-        timestamp databaseModificationDateInSecondsSince1970(void) const;
-        timestamp rootFolderModificationDateInSecondsSince1970(void) const;
+    #pragma mark Class Methods
+    static String::Pointer versionAsStringForDatabaseIn(const String& seratoFolderPath);
+    static String::Pointer seratoFolderPathForFolder(const String& folderPath);
+    static String::Pointer databaseFilePathForSeratoFolder(const String& seratoFolderPath);
+    static boolean containsAValidSeratoFolder(const String& folderPath);
+    static void createSeratoFolderIfDoesNotExists(const String& seratoFolderPath);
 
-        Crate& rootFolder(void) const;
-        const Track::Array& tracks(void) const;
-        Track::Array::Pointer removeAndReturnTracks(void);
-        const String& volumePathForTrackFilePath(const String& trackFilePath) const;
+    #pragma mark Instance Methods
+    timestamp databaseModificationDateInSecondsSince1970(void) const;
+    timestamp rootFolderModificationDateInSecondsSince1970(void) const;
 
-        void removeTrackEntry(TrackEntry::Pointer& trackEntry);
-        void removeCrate(Crate::Pointer& crate);
+    Crate& rootFolder(void) const;
+    const Track::Array& tracks(void) const;
+    Track::Array::Pointer removeAndReturnTracks(void);
+    const String& volumePathForTrackFilePath(const String& trackFilePath) const;
 
-        void addTrack(Track& track);
-        void removeTrack(Track& track);
+    void removeTrackEntry(TrackEntry::Pointer& trackEntry);
+    void removeCrate(Crate::Pointer& crate);
 
-        void saveIfModifiedAndMarkAsModifiedOn(timestamp modificationTimesSince1970) const;
-    };
-} }
+    void addTrack(Track& track);
+    void removeTrack(Track& track);
+
+    void saveIfModifiedAndMarkAsModifiedOn(timestamp modificationTimesSince1970) const;
+};
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;

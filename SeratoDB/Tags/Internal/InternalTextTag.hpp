@@ -27,11 +27,15 @@
 
 #include <Base/Base.hpp>
 
-namespace NxA { namespace Serato {
-    struct InternalTextTag : public InternalTag {
-        NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, InternalTextTag);
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
 
-        #pragma mark Instance Variables
-        String::PointerToConst value;
-    };
-} }
+struct InternalTextTag : public InternalTag {
+    NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, InternalTextTag);
+
+    #pragma mark Instance Variables
+    String::PointerToConst value;
+};
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;

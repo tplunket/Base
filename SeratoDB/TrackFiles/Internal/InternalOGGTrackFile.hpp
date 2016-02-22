@@ -29,43 +29,47 @@
 
 #include <xiphcomment.h>
 
-namespace NxA { namespace Serato {
-    #pragma mark Constants
-    static const character* oggComposerFieldName = "COMPOSER";
-    static const character* oggGroupingFieldName = "GROUPING";
-    static const character* oggBpmFieldName = "BPM";
-    static const character* oggRecordLabelFieldName = "LABEL";
-    static const character* oggRemixerFieldName = "REMIXER";
-    static const character* oggDateFieldName = "DATE";
-    static const character* oggYearFieldName = "YEAR";
-    static const character* oggKeyFieldName = "INITIALKEY";
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
 
-    struct InternalOGGTrackFile : public InternalTrackFile {
-        NXA_GENERATED_DESTRUCTOR_FOR_CLASS(InternalOGGTrackFile);
+#pragma mark Constants
+static const character* oggComposerFieldName = "COMPOSER";
+static const character* oggGroupingFieldName = "GROUPING";
+static const character* oggBpmFieldName = "BPM";
+static const character* oggRecordLabelFieldName = "LABEL";
+static const character* oggRemixerFieldName = "REMIXER";
+static const character* oggDateFieldName = "DATE";
+static const character* oggYearFieldName = "YEAR";
+static const character* oggKeyFieldName = "INITIALKEY";
 
-        #pragma mark Constructor & Destructors
-        InternalOGGTrackFile(const String& path);
+struct InternalOGGTrackFile : public InternalTrackFile {
+    NXA_GENERATED_DESTRUCTOR_FOR_CLASS(InternalOGGTrackFile);
 
-        #pragma mark Class Methods
-        static String::Pointer stringValueForFieldNamedInComment(const character* name, const TagLib::Ogg::XiphComment& oggComment);
-        static void setStringValueForFieldNamedInComment(const String& value, const character* name, TagLib::Ogg::XiphComment& oggComment);
-        static String::Pointer releaseDateInComment(const TagLib::Ogg::XiphComment& oggComment);
-        static void setReleaseDateInComment(const String& date, TagLib::Ogg::XiphComment& oggComment);
+    #pragma mark Constructor & Destructors
+    InternalOGGTrackFile(const String& path);
 
-        #pragma mark Instance Variables
-        String::ArrayOfConst::Pointer nameOfFields;
-        String::ArrayOfConst::Pointer nameOfFieldsToRemove;
+    #pragma mark Class Methods
+    static String::Pointer stringValueForFieldNamedInComment(const character* name, const TagLib::Ogg::XiphComment& oggComment);
+    static void setStringValueForFieldNamedInComment(const String& value, const character* name, TagLib::Ogg::XiphComment& oggComment);
+    static String::Pointer releaseDateInComment(const TagLib::Ogg::XiphComment& oggComment);
+    static void setReleaseDateInComment(const String& date, TagLib::Ogg::XiphComment& oggComment);
 
-        #pragma mark Instance Methods
-        void parseMarkersInComment(const TagLib::Ogg::XiphComment& oggComment);
-        void replaceGridMarkersFieldInComment(TagLib::Ogg::XiphComment& oggComment) const;
-        void replaceMarkersV2FieldInComment(TagLib::Ogg::XiphComment& oggComment) const;
-        void updateMarkersInComment(TagLib::Ogg::XiphComment& oggComment) const;
-        void parseComment(TagLib::Ogg::XiphComment& oggComment);
-        void updateComment(TagLib::Ogg::XiphComment& oggComment) const;
+    #pragma mark Instance Variables
+    String::ArrayOfConst::Pointer nameOfFields;
+    String::ArrayOfConst::Pointer nameOfFieldsToRemove;
 
-        #pragma mark Overridden TrackFile Instance Methods
-        virtual void loadAndParseFile(void) override;
-        virtual void updateAndSaveFile(void) const override;
-    };
-} }
+    #pragma mark Instance Methods
+    void parseMarkersInComment(const TagLib::Ogg::XiphComment& oggComment);
+    void replaceGridMarkersFieldInComment(TagLib::Ogg::XiphComment& oggComment) const;
+    void replaceMarkersV2FieldInComment(TagLib::Ogg::XiphComment& oggComment) const;
+    void updateMarkersInComment(TagLib::Ogg::XiphComment& oggComment) const;
+    void parseComment(TagLib::Ogg::XiphComment& oggComment);
+    void updateComment(TagLib::Ogg::XiphComment& oggComment) const;
+
+    #pragma mark Overridden TrackFile Instance Methods
+    virtual void loadAndParseFile(void) override;
+    virtual void updateAndSaveFile(void) const override;
+};
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;

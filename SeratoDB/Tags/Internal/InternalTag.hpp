@@ -27,24 +27,29 @@
 #include <Base/Base.hpp>
 #include <Base/Internal/InternalObject.hpp>
 
-namespace NxA { namespace Serato {
-    typedef struct {
-        byte identifier[4];
-        byte length[4];
-        byte data[0];
-    } TagStruct;
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
 
-    struct InternalTag : public InternalObject {
-        NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, InternalTag);
+#pragma mark Structures
+typedef struct {
+    byte identifier[4];
+    byte length[4];
+    byte data[0];
+} TagStruct;
 
-        #pragma mark Class Methods
-        static void setIdentifierForTagAt(uinteger32 identifier, byte* tagAddress);
-        static void setDataSizeForTagAt(count dataSize, byte* tagAddress);
-        static const byte* dataForTagAt(const byte* tagAddress);
-        static byte* dataForTagAt(byte* tagAddress);
-        static count memoryNeededForTagHeader(void);
+struct InternalTag : public InternalObject {
+    NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, InternalTag);
 
-        #pragma mark Instance Variables
-        uinteger32 identifier;
-    };
-} }
+    #pragma mark Class Methods
+    static void setIdentifierForTagAt(uinteger32 identifier, byte* tagAddress);
+    static void setDataSizeForTagAt(count dataSize, byte* tagAddress);
+    static const byte* dataForTagAt(const byte* tagAddress);
+    static byte* dataForTagAt(byte* tagAddress);
+    static count memoryNeededForTagHeader(void);
+
+    #pragma mark Instance Variables
+    uinteger32 identifier;
+};
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;

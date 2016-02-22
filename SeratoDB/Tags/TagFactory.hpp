@@ -26,16 +26,19 @@
 
 #include <Base/Base.hpp>
 
-namespace NxA { namespace Serato {
-    class TagFactory : public Uncopyable
-    {
-    public:
-        #pragma mark Constructors & Destructors
-        TagFactory() = delete;
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
 
-        #pragma mark Class Methods
-        static Tag::Pointer tagForTagAt(const byte* tagAddress);
+class TagFactory : public Uncopyable {
+public:
+    #pragma mark Constructors & Destructors
+    TagFactory() = delete;
 
-        static Tag::Array::Pointer parseTagsAt(const byte* firstTagAddress, count sizeFromFirstTag);
-    };
-} }
+    #pragma mark Class Methods
+    static Tag::Pointer tagForTagAt(const byte* tagAddress);
+
+    static Tag::Array::Pointer parseTagsAt(const byte* firstTagAddress, count sizeFromFirstTag);
+};
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;

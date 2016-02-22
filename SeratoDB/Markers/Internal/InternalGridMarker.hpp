@@ -27,16 +27,20 @@
 
 #include <Base/Base.hpp>
 
-namespace NxA { namespace Serato {
-    struct InternalGridMarker : public InternalMarker {
-        NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, InternalGridMarker);
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
 
-        #pragma mark Class Methods
-        static count actualNumberOfBeatsIfSupported(const decimal3& numberOfBeats);
+struct InternalGridMarker : public InternalMarker {
+    NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, InternalGridMarker);
 
-        #pragma mark Instance Variables
-        decimal3 positionInSeconds;
+    #pragma mark Class Methods
+    static count actualNumberOfBeatsIfSupported(const decimal3& numberOfBeats);
 
-        decimal2 beatsPerMinute;
-    };
-} }
+    #pragma mark Instance Variables
+    decimal3 positionInSeconds;
+
+    decimal2 beatsPerMinute;
+};
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;

@@ -26,24 +26,28 @@
 
 #include <Base/Base.hpp>
 
-namespace NxA { namespace Serato {
-    NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(MP4TrackFile);
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
 
-    class MP4TrackFile : public TrackFile {
-        NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_CLASS(NxA::Serato, MP4TrackFile);
+NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(MP4TrackFile);
 
-    public:
-        #pragma mark Factory Methods
-        static MP4TrackFile::Pointer fileWithFileAt(const String& path, TrackFile::Flags flags);
+class MP4TrackFile : public TrackFile {
+    NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_CLASS(NxA::Serato, MP4TrackFile);
 
-        #pragma mark Instance Methods
-        boolean hasItemNamed(const String& name);
-        void removeItemNamed(const String& name);
+public:
+    #pragma mark Factory Methods
+    static MP4TrackFile::Pointer fileWithFileAt(const String& path, TrackFile::Flags flags);
 
-        #pragma mark Overriden TrackFile Instance Methods
-        virtual boolean hasKey(void) const override;
-        virtual boolean hasRecordLabel(void) const override;
-        virtual void setBpm(const String& bpm) override;
-        virtual void setReleaseDate(const String& date) override;
-    };
-} }
+    #pragma mark Instance Methods
+    boolean hasItemNamed(const String& name);
+    void removeItemNamed(const String& name);
+
+    #pragma mark Overriden TrackFile Instance Methods
+    virtual boolean hasKey(void) const override;
+    virtual boolean hasRecordLabel(void) const override;
+    virtual void setBpm(const String& bpm) override;
+    virtual void setReleaseDate(const String& date) override;
+};
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;

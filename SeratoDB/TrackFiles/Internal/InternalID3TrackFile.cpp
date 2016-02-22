@@ -30,28 +30,32 @@
 
 // -- Generated internal implementation ommitted because this class does not use the default contructor.
 
-namespace NxA { namespace Serato {
-    #pragma mark Structures
-    typedef struct {
-        byte dummy;
-        byte mimeType[25];
-        byte filename;
-        byte description[16];
-        byte majorVersion;
-        byte minorVersion;
-    } GeobBodyHeaderStruct;
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
 
-    typedef struct {
-        byte majorVersion;
-        byte minorVersion;
-        byte data[0];
-    } GeobObjectStruct;
+#pragma mark Structures
+typedef struct {
+    byte dummy;
+    byte mimeType[25];
+    byte filename;
+    byte description[16];
+    byte majorVersion;
+    byte minorVersion;
+} GeobBodyHeaderStruct;
 
-    #pragma mark Constants
-    constexpr const character* id3MarkersV1FrameDescription = "Serato Markers_";
-    constexpr const character* id3MarkersV2FrameDescription = "Serato Markers2";
-    constexpr const character* id3BeatgridFrameDescription = "Serato BeatGrid";
-} }
+typedef struct {
+    byte majorVersion;
+    byte minorVersion;
+    byte data[0];
+} GeobObjectStruct;
+
+#pragma mark Constants
+constexpr const character* id3MarkersV1FrameDescription = "Serato Markers_";
+constexpr const character* id3MarkersV2FrameDescription = "Serato Markers2";
+constexpr const character* id3BeatgridFrameDescription = "Serato BeatGrid";
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;
 
 using namespace NxA;
 using namespace NxA::Serato;

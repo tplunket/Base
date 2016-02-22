@@ -22,29 +22,33 @@
 
 #include "TrackFiles/Internal/InternalTrackFile.hpp"
 
-namespace NxA { namespace Serato {
-    #pragma mark Structures
-    typedef struct {
-        byte majorVersion;
-        byte minorVersion;
-        byte data[0];
-    } MarkerV2HeaderStruct;
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
 
-    typedef struct {
-        byte markerCount[4];
-        byte data[0];
-    } MarkerV1HeaderStruct;
-    
-    typedef struct {
-        byte footer[4];
-    } MarkerV1FooterStruct;
+#pragma mark Structures
+typedef struct {
+    byte majorVersion;
+    byte minorVersion;
+    byte data[0];
+} MarkerV2HeaderStruct;
 
-    typedef struct {
-        byte tag[8];
-        byte size[4];
-        byte locked;
-    } SeratoBpmLockTagStruct;
-} }
+typedef struct {
+    byte markerCount[4];
+    byte data[0];
+} MarkerV1HeaderStruct;
+
+typedef struct {
+    byte footer[4];
+} MarkerV1FooterStruct;
+
+typedef struct {
+    byte tag[8];
+    byte size[4];
+    byte locked;
+} SeratoBpmLockTagStruct;
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;
 
 using namespace NxA;
 using namespace NxA::Serato;

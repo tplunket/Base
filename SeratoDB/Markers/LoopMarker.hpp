@@ -25,48 +25,52 @@
 #include <Base/Base.hpp>
 #include "Markers/Marker.hpp"
 
-namespace NxA { namespace Serato {
-    NXA_EXCEPTION_NAMED_WITH_PARENT(LoopMarkerError, MarkerError);
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
 
-    NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(LoopMarker);
+NXA_EXCEPTION_NAMED_WITH_PARENT(LoopMarkerError, MarkerError);
 
-    class LoopMarker : public Marker {
-        NXA_GENERATED_DECLARATIONS_WITHOUT_OPERATOR_EQUAL_IN_NAMESPACE_FOR_CLASS(NxA::Serato, LoopMarker);
-        
-    public:
-        #pragma mark Factory Methods
-        static LoopMarker::Pointer markerWithMemoryAt(const byte* id3TagStart);
-        static LoopMarker::Pointer markerV1WithIndexAndRawMemoryAt(uinteger16 index, const byte* tagStart);
-        static LoopMarker::Pointer markerV1WithIndexAndEncodedMemoryAt(uinteger16 index, const byte* tagStart);
-        static LoopMarker::Pointer markerWithLabelStartEndPositionsIndexAndColor(const String& label,
-                                                                                 uinteger32 startPositionInMilliseconds,
-                                                                                 uinteger32 endPositionInMilliseconds,
-                                                                                 uinteger16 index,
-                                                                                 byte colorRedComponent,
-                                                                                 byte colorGreenComponent,
-                                                                                 byte colorBlueComponent);
-        static LoopMarker::Pointer markerWith(const LoopMarker& other);
+NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(LoopMarker);
 
-        #pragma mark Operators
-        virtual bool operator==(const LoopMarker& other) const;
+class LoopMarker : public Marker {
+    NXA_GENERATED_DECLARATIONS_WITHOUT_OPERATOR_EQUAL_IN_NAMESPACE_FOR_CLASS(NxA::Serato, LoopMarker);
 
-        #pragma mark Instance Methods
-        uinteger32 startPositionInMilliseconds(void) const;
-        uinteger32 endPositionInMilliseconds(void) const;
-        uinteger16 index(void) const;
-        const String& label(void) const;
-        byte colorRedComponent(void) const;
-        byte colorGreenComponent(void) const;
-        byte colorBlueComponent(void) const;
+public:
+    #pragma mark Factory Methods
+    static LoopMarker::Pointer markerWithMemoryAt(const byte* id3TagStart);
+    static LoopMarker::Pointer markerV1WithIndexAndRawMemoryAt(uinteger16 index, const byte* tagStart);
+    static LoopMarker::Pointer markerV1WithIndexAndEncodedMemoryAt(uinteger16 index, const byte* tagStart);
+    static LoopMarker::Pointer markerWithLabelStartEndPositionsIndexAndColor(const String& label,
+                                                                             uinteger32 startPositionInMilliseconds,
+                                                                             uinteger32 endPositionInMilliseconds,
+                                                                             uinteger16 index,
+                                                                             byte colorRedComponent,
+                                                                             byte colorGreenComponent,
+                                                                             byte colorBlueComponent);
+    static LoopMarker::Pointer markerWith(const LoopMarker& other);
 
-        void addMarkerV2TagTo(Blob& data) const;
-        
-        void addRawMarkerV1TagTo(Blob& data) const;
-        void addEncodedMarkerV1TagTo(Blob& data) const;
-        static void addEmptyRawMarkerV1TagTo(Blob& data);
-        static void addEmptyEncodedMarkerV1TagTo(Blob& data);
+    #pragma mark Operators
+    virtual bool operator==(const LoopMarker& other) const;
 
-        #pragma mark Overidden Object Instance Methods
-        virtual NxA::String::Pointer description(void) const override;
-    };
-} }
+    #pragma mark Instance Methods
+    uinteger32 startPositionInMilliseconds(void) const;
+    uinteger32 endPositionInMilliseconds(void) const;
+    uinteger16 index(void) const;
+    const String& label(void) const;
+    byte colorRedComponent(void) const;
+    byte colorGreenComponent(void) const;
+    byte colorBlueComponent(void) const;
+
+    void addMarkerV2TagTo(Blob& data) const;
+
+    void addRawMarkerV1TagTo(Blob& data) const;
+    void addEncodedMarkerV1TagTo(Blob& data) const;
+    static void addEmptyRawMarkerV1TagTo(Blob& data);
+    static void addEmptyEncodedMarkerV1TagTo(Blob& data);
+
+    #pragma mark Overidden Object Instance Methods
+    virtual NxA::String::Pointer description(void) const override;
+};
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;

@@ -27,37 +27,41 @@
 
 #include <Base/Base.hpp>
 
-namespace NxA { namespace Serato {
-    NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(ObjectTag);
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
 
-    class ObjectTag : public Tag {
-        NXA_GENERATED_DECLARATIONS_WITHOUT_OPERATOR_EQUAL_IN_NAMESPACE_FOR_CLASS(NxA::Serato, ObjectTag);
+NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(ObjectTag);
 
-    public:
-        #pragma mark Factory Methods
-        static ObjectTag::Pointer tagWithMemoryAt(const byte* tagAddress);
-        static ObjectTag::Pointer tagWithIdentifierAndValue(uinteger32 identifier, Tag::Array& content);
+class ObjectTag : public Tag {
+    NXA_GENERATED_DECLARATIONS_WITHOUT_OPERATOR_EQUAL_IN_NAMESPACE_FOR_CLASS(NxA::Serato, ObjectTag);
 
-        #pragma mark Operators
-        virtual bool operator==(const ObjectTag& other) const;
+public:
+    #pragma mark Factory Methods
+    static ObjectTag::Pointer tagWithMemoryAt(const byte* tagAddress);
+    static ObjectTag::Pointer tagWithIdentifierAndValue(uinteger32 identifier, Tag::Array& content);
 
-        #pragma mark Instance Methods
+    #pragma mark Operators
+    virtual bool operator==(const ObjectTag& other) const;
+
+    #pragma mark Instance Methods
 #if NXA_PRINT_SERATO_TAG_DEBUG_INFO
-        void debugPrint(void) const;
+    void debugPrint(void) const;
 #endif
 
-        boolean hasSubTagForIdentifier(uinteger32 identifier) const;
+    boolean hasSubTagForIdentifier(uinteger32 identifier) const;
 
-        const Tag& subTagForIdentifier(uinteger32 identifier) const;
-        Tag& subTagForIdentifier(uinteger32 identifier);
+    const Tag& subTagForIdentifier(uinteger32 identifier) const;
+    Tag& subTagForIdentifier(uinteger32 identifier);
 
-        void setSubTag(Tag& tag);
+    void setSubTag(Tag& tag);
 
-        count numberOfSubTags(void) const;
+    count numberOfSubTags(void) const;
 
-        void addInSeratoTrackOrderTo(Blob& destination) const;
+    void addInSeratoTrackOrderTo(Blob& destination) const;
 
-        #pragma mark Overriden Tag Methods
-        virtual void addTo(Blob& destination) const override;
-    };
-} }
+    #pragma mark Overriden Tag Methods
+    virtual void addTo(Blob& destination) const override;
+};
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;

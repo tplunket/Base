@@ -26,25 +26,29 @@
 
 #include <Base/Base.hpp>
 
-namespace NxA { namespace Serato {
-    NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(FLACTrackFile);
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
 
-    class FLACTrackFile : public TrackFile {
-        NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_CLASS(NxA::Serato, FLACTrackFile);
+NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(FLACTrackFile);
 
-    public:
-        #pragma mark Factory Methods
-        static FLACTrackFile::Pointer fileWithFileAt(const String& path, TrackFile::Flags flags);
+class FLACTrackFile : public TrackFile {
+    NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_CLASS(NxA::Serato, FLACTrackFile);
 
-        #pragma mark Instance Methods
-        boolean hasFieldNamed(const String& name);
-        void removeFieldNamed(const String& name);
-        boolean hasPrivateFramesOwnedBy(const String& owner);
-        void removePrivateFramesOwnedBy(const String& owner);
+public:
+    #pragma mark Factory Methods
+    static FLACTrackFile::Pointer fileWithFileAt(const String& path, TrackFile::Flags flags);
 
-        #pragma mark Overriden TrackFile Instance Methods
-        virtual boolean hasKey(void) const override;
-        virtual boolean hasBitDepth(void) const override;
-        virtual boolean hasRating(void) const override;
-    };
-} }
+    #pragma mark Instance Methods
+    boolean hasFieldNamed(const String& name);
+    void removeFieldNamed(const String& name);
+    boolean hasPrivateFramesOwnedBy(const String& owner);
+    void removePrivateFramesOwnedBy(const String& owner);
+
+    #pragma mark Overriden TrackFile Instance Methods
+    virtual boolean hasKey(void) const override;
+    virtual boolean hasBitDepth(void) const override;
+    virtual boolean hasRating(void) const override;
+};
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;

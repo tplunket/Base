@@ -26,25 +26,29 @@
 
 #include <Base/Base.hpp>
 
-namespace NxA { namespace Serato {
-    NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(BooleanTag);
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
 
-    class BooleanTag : public Tag {
-        NXA_GENERATED_DECLARATIONS_WITHOUT_OPERATOR_EQUAL_IN_NAMESPACE_FOR_CLASS(NxA::Serato, BooleanTag);
+NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(BooleanTag);
 
-    public:
-        #pragma mark Factory Methods
-        static BooleanTag::Pointer tagWithMemoryAt(const byte* tagAddress);
-        static BooleanTag::Pointer tagWithIdentifierAndValue(uinteger32 identifier, boolean value);
+class BooleanTag : public Tag {
+    NXA_GENERATED_DECLARATIONS_WITHOUT_OPERATOR_EQUAL_IN_NAMESPACE_FOR_CLASS(NxA::Serato, BooleanTag);
 
-        #pragma mark Overriden Object Operators
-        virtual bool operator==(const BooleanTag& other) const;
+public:
+    #pragma mark Factory Methods
+    static BooleanTag::Pointer tagWithMemoryAt(const byte* tagAddress);
+    static BooleanTag::Pointer tagWithIdentifierAndValue(uinteger32 identifier, boolean value);
 
-        #pragma mark Instance Methods
-        boolean value(void) const;
-        void setValue(boolean newValue);
+    #pragma mark Overriden Object Operators
+    virtual bool operator==(const BooleanTag& other) const;
 
-        #pragma mark Overriden Tag Methods
-        virtual void addTo(Blob& destination) const override;
-    };
-} }
+    #pragma mark Instance Methods
+    boolean value(void) const;
+    void setValue(boolean newValue);
+
+    #pragma mark Overriden Tag Methods
+    virtual void addTo(Blob& destination) const override;
+};
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;

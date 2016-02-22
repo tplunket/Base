@@ -26,18 +26,22 @@
 
 #include <Base/Base.hpp>
 
-namespace NxA { namespace Serato {
-    NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(VersionTag);
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
 
-    class VersionTag : public TextTag {
-        NXA_GENERATED_DECLARATIONS_WITHOUT_OPERATOR_EQUAL_IN_NAMESPACE_FOR_CLASS(NxA::Serato, VersionTag);
+NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(VersionTag);
 
-    public:
-        #pragma mark Factory Methods
-        static VersionTag::Pointer tagWithMemoryAt(const byte* tagAddress);
-        static VersionTag::Pointer tagWithIdentifierAndValue(uinteger32 identifier, const String& value);
+class VersionTag : public TextTag {
+    NXA_GENERATED_DECLARATIONS_WITHOUT_OPERATOR_EQUAL_IN_NAMESPACE_FOR_CLASS(NxA::Serato, VersionTag);
 
-        #pragma mark Operators
-        virtual bool operator==(const VersionTag& other) const;
-    };
-} }
+public:
+    #pragma mark Factory Methods
+    static VersionTag::Pointer tagWithMemoryAt(const byte* tagAddress);
+    static VersionTag::Pointer tagWithIdentifierAndValue(uinteger32 identifier, const String& value);
+
+    #pragma mark Operators
+    virtual bool operator==(const VersionTag& other) const;
+};
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;

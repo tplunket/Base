@@ -26,25 +26,29 @@
 
 #include <Base/Base.hpp>
 
-namespace NxA { namespace Serato {
-    NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(UInteger32Tag);
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
 
-    class UInteger32Tag : public Tag {
-        NXA_GENERATED_DECLARATIONS_WITHOUT_OPERATOR_EQUAL_IN_NAMESPACE_FOR_CLASS(NxA::Serato, UInteger32Tag);
+NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(UInteger32Tag);
 
-    public:
-        #pragma mark Factory Methods
-        static UInteger32Tag::Pointer tagWithMemoryAt(const byte* tagAddress);
-        static UInteger32Tag::Pointer tagWithIdentifierAndValue(uinteger32 identifier, uinteger32 value);
+class UInteger32Tag : public Tag {
+    NXA_GENERATED_DECLARATIONS_WITHOUT_OPERATOR_EQUAL_IN_NAMESPACE_FOR_CLASS(NxA::Serato, UInteger32Tag);
 
-        #pragma mark Operators
-        virtual bool operator==(const UInteger32Tag& other) const;
+public:
+    #pragma mark Factory Methods
+    static UInteger32Tag::Pointer tagWithMemoryAt(const byte* tagAddress);
+    static UInteger32Tag::Pointer tagWithIdentifierAndValue(uinteger32 identifier, uinteger32 value);
 
-        #pragma mark Instance Methods
-        uinteger32 value(void) const;
-        void setValue(uinteger32 value);
+    #pragma mark Operators
+    virtual bool operator==(const UInteger32Tag& other) const;
 
-        #pragma mark Overriden Tag Methods
-        virtual void addTo(Blob& destination) const override;
-    };
-} }
+    #pragma mark Instance Methods
+    uinteger32 value(void) const;
+    void setValue(uinteger32 value);
+
+    #pragma mark Overriden Tag Methods
+    virtual void addTo(Blob& destination) const override;
+};
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;

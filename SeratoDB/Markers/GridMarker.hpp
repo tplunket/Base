@@ -25,33 +25,37 @@
 #include <Base/Base.hpp>
 #include "Markers/Marker.hpp"
 
-namespace NxA { namespace Serato {
-    NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(GridMarker);
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
 
-    class GridMarker : public Marker {
-        NXA_GENERATED_DECLARATIONS_WITHOUT_OPERATOR_EQUAL_IN_NAMESPACE_FOR_CLASS(NxA::Serato, GridMarker);
+NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(GridMarker);
 
-    public:
-        #pragma mark Factory Methods
-        static GridMarker::Pointer markerWithPositionAndBeatsPerMinute(const decimal3& positionInSeconds,
-                                                                       const decimal2& beatsPerMinute);
-        static GridMarker::Pointer markerWith(const GridMarker& other);
+class GridMarker : public Marker {
+    NXA_GENERATED_DECLARATIONS_WITHOUT_OPERATOR_EQUAL_IN_NAMESPACE_FOR_CLASS(NxA::Serato, GridMarker);
 
-        #pragma mark Class Methods
-        static GridMarker::Array::Pointer markersWithMemoryAt(const byte* id3TagStart);
-        static void addMarkersTo(const GridMarker::Array& markers, Blob& data);
-        static boolean gridMarkersAreValid(const GridMarker::Array& markers);
+public:
+    #pragma mark Factory Methods
+    static GridMarker::Pointer markerWithPositionAndBeatsPerMinute(const decimal3& positionInSeconds,
+                                                                   const decimal2& beatsPerMinute);
+    static GridMarker::Pointer markerWith(const GridMarker& other);
 
-        #pragma mark Operators
-        virtual bool operator==(const GridMarker& other) const;
+    #pragma mark Class Methods
+    static GridMarker::Array::Pointer markersWithMemoryAt(const byte* id3TagStart);
+    static void addMarkersTo(const GridMarker::Array& markers, Blob& data);
+    static boolean gridMarkersAreValid(const GridMarker::Array& markers);
 
-        #pragma mark Instance Methods
-        const decimal3& positionInSeconds(void) const;
-        String::Pointer positionInSecondsAsString(void) const;
-        const decimal2& beatsPerMinute(void) const;
-        String::Pointer beatsPerMinuteAsString(void) const;
+    #pragma mark Operators
+    virtual bool operator==(const GridMarker& other) const;
 
-        #pragma mark Overidden Object Instance Methods
-        virtual NxA::String::Pointer description(void) const override;
-    };
-} }
+    #pragma mark Instance Methods
+    const decimal3& positionInSeconds(void) const;
+    String::Pointer positionInSecondsAsString(void) const;
+    const decimal2& beatsPerMinute(void) const;
+    String::Pointer beatsPerMinuteAsString(void) const;
+
+    #pragma mark Overidden Object Instance Methods
+    virtual NxA::String::Pointer description(void) const override;
+};
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;

@@ -26,25 +26,29 @@
 
 #include <Base/Base.hpp>
 
-namespace NxA { namespace Serato {
-    NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(BlobTag);
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
 
-    class BlobTag : public Tag {
-        NXA_GENERATED_DECLARATIONS_WITHOUT_OPERATOR_EQUAL_IN_NAMESPACE_FOR_CLASS(NxA::Serato, BlobTag);
+NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(BlobTag);
 
-    public:
-        #pragma mark Factory Methods
-        static BlobTag::Pointer tagWithMemoryAt(const byte* tagAddress);
-        static BlobTag::Pointer tagWithIdentifierAndValue(uint32_t identifier, const Blob& value);
+class BlobTag : public Tag {
+    NXA_GENERATED_DECLARATIONS_WITHOUT_OPERATOR_EQUAL_IN_NAMESPACE_FOR_CLASS(NxA::Serato, BlobTag);
 
-        #pragma mark Operators
-        virtual bool operator==(const BlobTag& other) const;
+public:
+    #pragma mark Factory Methods
+    static BlobTag::Pointer tagWithMemoryAt(const byte* tagAddress);
+    static BlobTag::Pointer tagWithIdentifierAndValue(uint32_t identifier, const Blob& value);
 
-        #pragma mark Instance Methods
-        const Blob& value(void) const;
-        void setValue(const Blob& newValue);
+    #pragma mark Operators
+    virtual bool operator==(const BlobTag& other) const;
 
-        #pragma mark Overriden Tag Methods
-        virtual void addTo(Blob& destination) const override;
-    };
-} }
+    #pragma mark Instance Methods
+    const Blob& value(void) const;
+    void setValue(const Blob& newValue);
+
+    #pragma mark Overriden Tag Methods
+    virtual void addTo(Blob& destination) const override;
+};
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;

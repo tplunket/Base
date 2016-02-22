@@ -28,12 +28,16 @@
 
 // -- Generated internal implementation ommitted because this class does not use the default contructor.
 
-namespace NxA { namespace Serato {
-    #pragma mark Constants
-    constexpr const character* oggMarkersItemName = "SERATO_MARKERS";
-    constexpr const character* oggMarkersV2ItemName = "SERATO_MARKERS2";
-    constexpr const character* oggBeatgridItemName = "SERATO_BEATGRID";
-} }
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
+
+#pragma mark Constants
+constexpr const character* oggMarkersItemName = "SERATO_MARKERS";
+constexpr const character* oggMarkersV2ItemName = "SERATO_MARKERS2";
+constexpr const character* oggBeatgridItemName = "SERATO_BEATGRID";
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;
 
 using namespace NxA;
 using namespace NxA::Serato;

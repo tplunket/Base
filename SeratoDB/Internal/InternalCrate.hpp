@@ -30,44 +30,48 @@
 #include <Base/Base.hpp>
 #include <Base/Internal/InternalObject.hpp>
 
-namespace NxA { namespace Serato {
-    struct InternalCrate : public InternalObject {
-        NXA_GENERATED_DESTRUCTOR_FOR_CLASS(InternalCrate);
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
 
-        #pragma mark Constructors & Destructors
-        InternalCrate(const String& crateName);
+struct InternalCrate : public InternalObject {
+    NXA_GENERATED_DESTRUCTOR_FOR_CLASS(InternalCrate);
 
-        #pragma mark Class Methods
-        static String::Pointer crateNameIfValidCrateOrEmptyIfNot(const String& name);
-        static String::Pointer escapedNameFromCrateName(const String& crateName);
-        static String::Pointer crateNameFromEscapedName(const String& escapedName);
-        static String::Pointer topParentCrateNameFromFullCrateName(const String& fullCrateName);
-        static String::Pointer smartCratesDirectoryPathInSeratoFolder(const String& seratoFolderPath);
-        static String::Pointer crateFilePathForFullCrateNameInSeratoFolder(const String& crateName,
-                                                                           const String& seratoFolderPath);
-        static String::Pointer crateFilePathForFullSmartCrateNameInSeratoFolder(const String& fullCrateName,
-                                                                                const String& seratoFolderPath);
-        static String::Pointer fullCrateNameFromFilename(const String& fileName);
+    #pragma mark Constructors & Destructors
+    InternalCrate(const String& crateName);
 
-        #pragma mark Instance Variables
-        String::PointerToConst name;
+    #pragma mark Class Methods
+    static String::Pointer crateNameIfValidCrateOrEmptyIfNot(const String& name);
+    static String::Pointer escapedNameFromCrateName(const String& crateName);
+    static String::Pointer crateNameFromEscapedName(const String& escapedName);
+    static String::Pointer topParentCrateNameFromFullCrateName(const String& fullCrateName);
+    static String::Pointer smartCratesDirectoryPathInSeratoFolder(const String& seratoFolderPath);
+    static String::Pointer crateFilePathForFullCrateNameInSeratoFolder(const String& crateName,
+                                                                       const String& seratoFolderPath);
+    static String::Pointer crateFilePathForFullSmartCrateNameInSeratoFolder(const String& fullCrateName,
+                                                                            const String& seratoFolderPath);
+    static String::Pointer fullCrateNameFromFilename(const String& fileName);
 
-        boolean tracksWereModified;
-        boolean cratesWereModified;
+    #pragma mark Instance Variables
+    String::PointerToConst name;
 
-        Crate::WeakPointer parentCrate;
-        Crate::Array::Pointer childrenCrates;
+    boolean tracksWereModified;
+    boolean cratesWereModified;
 
-        String::ArrayOfConst::Pointer volumePaths;
-        TrackEntry::Array::Array::Pointer trackEntriesPerPath;
-        Tag::ArrayOfConst::Array::Pointer otherTagsPerPath;
+    Crate::WeakPointer parentCrate;
+    Crate::Array::Pointer childrenCrates;
 
-        #pragma mark Instance Methods
-        NxA::count indexOfVolumePath(const String& volumePath);
-        NxA::count indexOfVolumePathAndAddIfNotPresent(const String& volumePath);
+    String::ArrayOfConst::Pointer volumePaths;
+    TrackEntry::Array::Array::Pointer trackEntriesPerPath;
+    Tag::ArrayOfConst::Array::Pointer otherTagsPerPath;
 
-        void markCratesAsModified(void);
+    #pragma mark Instance Methods
+    NxA::count indexOfVolumePath(const String& volumePath);
+    NxA::count indexOfVolumePathAndAddIfNotPresent(const String& volumePath);
 
-        void saveDataToCrateFileInSeratoFolder(const Blob& data, const String& seratoFolderPath, const String& fullCrateName);
-    };
-} }
+    void markCratesAsModified(void);
+
+    void saveDataToCrateFileInSeratoFolder(const Blob& data, const String& seratoFolderPath, const String& fullCrateName);
+};
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;

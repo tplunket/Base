@@ -35,68 +35,72 @@
 #include <tpropertymap.h>
 #include <audioproperties.h>
 
-namespace NxA { namespace Serato {
-    struct InternalTrackFile : public InternalObject {
-        NXA_GENERATED_DESTRUCTOR_FOR_CLASS(InternalTrackFile);
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
 
-        #pragma mark Constructor & Destructors
-        InternalTrackFile(const String& path);
+struct InternalTrackFile : public InternalObject {
+    NXA_GENERATED_DESTRUCTOR_FOR_CLASS(InternalTrackFile);
 
-        #pragma mark Class Methods
-        static const byte* nextTagPositionAfterTagNamed(const String& tagName, const byte* currentTagPosition);
-        static Blob::Pointer markerV2TagDataFrom(const byte* tagStart);
+    #pragma mark Constructor & Destructors
+    InternalTrackFile(const String& path);
 
-        #pragma mark Instance Variables
-        String::PointerToConst filePath;
-        boolean markersWereIgnored;
-        boolean markersWereModified;
-        boolean metadataWasModified;
+    #pragma mark Class Methods
+    static const byte* nextTagPositionAfterTagNamed(const String& tagName, const byte* currentTagPosition);
+    static Blob::Pointer markerV2TagDataFrom(const byte* tagStart);
 
-        String::Pointer title;
-        String::Pointer artist;
-        String::Pointer genre;
-        String::Pointer key;
-        String::Pointer comments;
-        String::Pointer album;
-        String::Pointer composer;
-        String::Pointer grouping;
-        String::Pointer bpm;
-        count trackNumber;
+    #pragma mark Instance Variables
+    String::PointerToConst filePath;
+    boolean markersWereIgnored;
+    boolean markersWereModified;
+    boolean metadataWasModified;
 
-        count audioDataSizeInBytes;
-        uinteger32 lengthInMilliseconds;
-        uinteger32 bitRateInKiloBitsPerSecond;
-        boolean hasBitDepth;
-        uinteger32 bitDepthInBits;
-        uinteger32 sampleRateInSamplesPerSecond;
-        Blob::Pointer artwork;
+    String::Pointer title;
+    String::Pointer artist;
+    String::Pointer genre;
+    String::Pointer key;
+    String::Pointer comments;
+    String::Pointer album;
+    String::Pointer composer;
+    String::Pointer grouping;
+    String::Pointer bpm;
+    count trackNumber;
 
-        String::Pointer recordLabel;
-        String::Pointer remixer;
-        integer rating;
-        String::Pointer releaseDate;
+    count audioDataSizeInBytes;
+    uinteger32 lengthInMilliseconds;
+    uinteger32 bitRateInKiloBitsPerSecond;
+    boolean hasBitDepth;
+    uinteger32 bitDepthInBits;
+    uinteger32 sampleRateInSamplesPerSecond;
+    Blob::Pointer artwork;
 
-        boolean beatGridIsLocked;
-        
-        CueMarker::Array::Pointer cueMarkers;
-        LoopMarker::Array::Pointer loopMarkers;
-        GridMarker::Array::Pointer gridMarkers;
-        Blob::Array::Pointer otherTags;
+    String::Pointer recordLabel;
+    String::Pointer remixer;
+    integer rating;
+    String::Pointer releaseDate;
 
-        #pragma mark Instance Methods
-        virtual void loadAndParseFile(void) = 0;
-        virtual void updateAndSaveFile(void) const = 0;
-        void parseTag(const TagLib::Tag& tag);
-        void updateTag(TagLib::Tag& tag) const;
-        void parseAudioProperties(const TagLib::AudioProperties& properties);
-        const byte* parseMarkerAtAndAdvanceToNextTag(const byte* tagStart);
-        void parseMarkersV1FromRawByteArray(const byte* markerData, count totalSize);
-        void parseMarkersV1FromEncodedByteArray(const byte* markerData, count totalSize);
-        void parseMarkersV2FromBase64String(const byte* markerV2Data, count totalSize);
-        void parseGridMarkersFrom(const byte* gridMarkerData);
-        Blob::Pointer rawBlobFromMarkersV1(void) const;
-        Blob::Pointer id3EncodedBlobFromMarkersV1(void) const;
-        String::Pointer base64StringFromMarkersV2(void) const;
-        Blob::Pointer gridMarkerDataFromGridMarkers(void) const;
-    };
-} }
+    boolean beatGridIsLocked;
+
+    CueMarker::Array::Pointer cueMarkers;
+    LoopMarker::Array::Pointer loopMarkers;
+    GridMarker::Array::Pointer gridMarkers;
+    Blob::Array::Pointer otherTags;
+
+    #pragma mark Instance Methods
+    virtual void loadAndParseFile(void) = 0;
+    virtual void updateAndSaveFile(void) const = 0;
+    void parseTag(const TagLib::Tag& tag);
+    void updateTag(TagLib::Tag& tag) const;
+    void parseAudioProperties(const TagLib::AudioProperties& properties);
+    const byte* parseMarkerAtAndAdvanceToNextTag(const byte* tagStart);
+    void parseMarkersV1FromRawByteArray(const byte* markerData, count totalSize);
+    void parseMarkersV1FromEncodedByteArray(const byte* markerData, count totalSize);
+    void parseMarkersV2FromBase64String(const byte* markerV2Data, count totalSize);
+    void parseGridMarkersFrom(const byte* gridMarkerData);
+    Blob::Pointer rawBlobFromMarkersV1(void) const;
+    Blob::Pointer id3EncodedBlobFromMarkersV1(void) const;
+    String::Pointer base64StringFromMarkersV2(void) const;
+    Blob::Pointer gridMarkerDataFromGridMarkers(void) const;
+};
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;

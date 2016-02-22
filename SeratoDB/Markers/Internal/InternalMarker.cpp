@@ -26,50 +26,53 @@ using namespace NxA::Serato;
 
 #pragma mark Constructors & Destructors
 
-namespace NxA { namespace Serato {
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
 
-    inline uinteger32 unpackUInteger32(const byte packed[5])
-    {
-        uinteger32 result = 0;
-        result |= (packed[4] & 0x7f);
-        result |= (packed[3] & 0x7f) << 7;
-        result |= (packed[2] & 0x7f) << 14;
-        result |= (packed[1] & 0x7f) << 21;
-        result |= (packed[0] & 0x7f) << 28;
-        return result;
-    }
-    
-    inline void unpackColor(const byte packed[4], byte& r, byte& g, byte& b)
-    {
-        r = ((packed[1] & 0x1f) >> 2) | ((packed[0] & 0x07) << 5);
-        g = ((packed[2] & 0x3f) >> 1) | ((packed[1] & 0x03) << 6);
-        b = ((packed[3] & 0x7f) >> 0) | ((packed[2] & 0x01) << 7);
-    }
+inline uinteger32 unpackUInteger32(const byte packed[5])
+{
+    uinteger32 result = 0;
+    result |= (packed[4] & 0x7f);
+    result |= (packed[3] & 0x7f) << 7;
+    result |= (packed[2] & 0x7f) << 14;
+    result |= (packed[1] & 0x7f) << 21;
+    result |= (packed[0] & 0x7f) << 28;
+    return result;
+}
 
-    inline void packUInteger32(uinteger32 input, byte packed[5])
+inline void unpackColor(const byte packed[4], byte& r, byte& g, byte& b)
+{
+    r = ((packed[1] & 0x1f) >> 2) | ((packed[0] & 0x07) << 5);
+    g = ((packed[2] & 0x3f) >> 1) | ((packed[1] & 0x03) << 6);
+    b = ((packed[3] & 0x7f) >> 0) | ((packed[2] & 0x01) << 7);
+}
+
+inline void packUInteger32(uinteger32 input, byte packed[5])
+{
+    if (input == 0xFFFFFFFF)
     {
-        if (input == 0xFFFFFFFF)
-        {
-            packed[4] = packed[3] = packed[2] = packed[1] = packed[0] = 0x7f;
-        }
-        else
-        {
-            packed[4] = (input & 0x0000007f);
-            packed[3] = (input & 0x00003f80) >> 7;
-            packed[2] = (input & 0x001fc000) >> 14;
-            packed[1] = (input & 0x0fe00000) >> 21;
-            packed[0] = (input & 0xf0000000) >> 28;
-        }
+        packed[4] = packed[3] = packed[2] = packed[1] = packed[0] = 0x7f;
     }
-    
-    inline void packColor(byte r, byte g, byte b, byte packed[4])
+    else
     {
-        packed[3] = (b & 0x7f);
-        packed[2] = ((b & 0x80) >> 7) | ((g & 0x3f) << 1);
-        packed[1] = ((g & 0xc0) >> 6) | ((r & 0x1f) << 2);
-        packed[0] = ((r & 0xe0) >> 5);
+        packed[4] = (input & 0x0000007f);
+        packed[3] = (input & 0x00003f80) >> 7;
+        packed[2] = (input & 0x001fc000) >> 14;
+        packed[1] = (input & 0x0fe00000) >> 21;
+        packed[0] = (input & 0xf0000000) >> 28;
     }
-} }
+}
+
+inline void packColor(byte r, byte g, byte b, byte packed[4])
+{
+    packed[3] = (b & 0x7f);
+    packed[2] = ((b & 0x80) >> 7) | ((g & 0x3f) << 1);
+    packed[1] = ((g & 0xc0) >> 6) | ((r & 0x1f) << 2);
+    packed[0] = ((r & 0xe0) >> 5);
+}
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;
 
 InternalMarker::InternalMarker()
 {

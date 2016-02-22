@@ -27,20 +27,24 @@
 
 #include <Base/Base.hpp>
 
-namespace NxA { namespace Serato {
-    struct InternalLoopMarker : public InternalMarker {
-        NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, InternalLoopMarker);
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
 
-        #pragma mark Instance Variable
-        uinteger32 startPositionInMilliseconds;
-        uinteger32 endPositionInMilliseconds;
+struct InternalLoopMarker : public InternalMarker {
+    NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, InternalLoopMarker);
 
-        uinteger16 index;
+    #pragma mark Instance Variable
+    uinteger32 startPositionInMilliseconds;
+    uinteger32 endPositionInMilliseconds;
 
-        String::PointerToConst label;
+    uinteger16 index;
 
-        byte colorRedComponent;
-        byte colorGreenComponent;
-        byte colorBlueComponent;
-    };
-} }
+    String::PointerToConst label;
+
+    byte colorRedComponent;
+    byte colorGreenComponent;
+    byte colorBlueComponent;
+};
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;

@@ -29,28 +29,32 @@
 #include <Base/Base.hpp>
 #include <Base/Internal/InternalObject.hpp>
 
-namespace NxA { namespace Serato {
-    struct InternalTrack : public InternalObject {
-        NXA_GENERATED_DESTRUCTOR_FOR_CLASS(InternalTrack);
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
 
-        #pragma mark Constructors & Destructors
-        InternalTrack(ObjectTag& tag, const String& volumePath);
+struct InternalTrack : public InternalObject {
+    NXA_GENERATED_DESTRUCTOR_FOR_CLASS(InternalTrack);
 
-        #pragma mark Instance Variables
-        Serato::ObjectTag::Pointer trackTag;
-        String::PointerToConst volumePath;
+    #pragma mark Constructors & Destructors
+    InternalTrack(ObjectTag& tag, const String& volumePath);
 
-        boolean needsToUpdateDatabaseFile;
+    #pragma mark Instance Variables
+    ObjectTag::Pointer trackTag;
+    String::PointerToConst volumePath;
 
-        #pragma mark Instance Methods
-        const String& stringForSubTagForIdentifier(uinteger32 identifier) const;
-        const String& pathForSubTagForIdentifier(uinteger32 identifier) const;
-        uinteger32 uint32ForSubTagForIdentifier(uinteger32 identifier) const;
-        boolean booleanForSubTagForIdentifier(uinteger32 identifier) const;
+    boolean needsToUpdateDatabaseFile;
 
-        void setStringForSubTagForIdentifier(const String& value, uinteger32 identifier);
-        void setPathForSubTagForIdentifier(const String& value, uinteger32 identifier);
-        void setUInt32ForSubTagForIdentifier(uinteger32 value, uinteger32 identifier);
-        void setBooleanForSubTagForIdentifier(boolean value, uinteger32 identifier);
-    };
-} }
+    #pragma mark Instance Methods
+    const String& stringForSubTagForIdentifier(uinteger32 identifier) const;
+    const String& pathForSubTagForIdentifier(uinteger32 identifier) const;
+    uinteger32 uint32ForSubTagForIdentifier(uinteger32 identifier) const;
+    boolean booleanForSubTagForIdentifier(uinteger32 identifier) const;
+
+    void setStringForSubTagForIdentifier(const String& value, uinteger32 identifier);
+    void setPathForSubTagForIdentifier(const String& value, uinteger32 identifier);
+    void setUInt32ForSubTagForIdentifier(uinteger32 value, uinteger32 identifier);
+    void setBooleanForSubTagForIdentifier(boolean value, uinteger32 identifier);
+};
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;

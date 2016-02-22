@@ -29,22 +29,26 @@
 
 // -- Generated internal implementation ommitted because this class does not use the default contructor.
 
-namespace NxA { namespace Serato {
-    #pragma mark Structures
-    typedef struct {
-        unsigned char mimeType[25];
-        unsigned char filename[1];
-        unsigned char description[16];
-        unsigned char majorVersion;
-        unsigned char minorVersion;
-        unsigned char data[0];
-    } FLACMarkersHeaderStruct;
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
 
-    #pragma mark Constants
-    constexpr const character* flacMarkersV1ItemName = "SERATO_MARKERS";
-    constexpr const character* flacMarkersV2ItemName = "SERATO_MARKERS_V2";
-    constexpr const character* flacBeatgridItemName = "SERATO_BEATGRID";
-} }
+#pragma mark Structures
+typedef struct {
+    unsigned char mimeType[25];
+    unsigned char filename[1];
+    unsigned char description[16];
+    unsigned char majorVersion;
+    unsigned char minorVersion;
+    unsigned char data[0];
+} FLACMarkersHeaderStruct;
+
+#pragma mark Constants
+constexpr const character* flacMarkersV1ItemName = "SERATO_MARKERS";
+constexpr const character* flacMarkersV2ItemName = "SERATO_MARKERS_V2";
+constexpr const character* flacBeatgridItemName = "SERATO_BEATGRID";
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;
 
 using namespace NxA;
 using namespace NxA::Serato;

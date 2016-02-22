@@ -27,8 +27,12 @@
 
 #include <Base/Base.hpp>
 
-namespace NxA { namespace Serato {
-    struct InternalVersionTag : public InternalTextTag {
-        NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, InternalVersionTag);
-    };
-} }
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
+
+struct InternalVersionTag : public InternalTextTag {
+    NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, InternalVersionTag);
+};
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;

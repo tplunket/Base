@@ -29,18 +29,22 @@
 
 #include <aiffproperties.h>
 
-namespace NxA { namespace Serato {
-    struct InternalAIFFTrackFile : public InternalID3TrackFile {
-        NXA_GENERATED_DESTRUCTOR_FOR_CLASS(InternalAIFFTrackFile);
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
 
-        #pragma mark Constructors & Destuctors
-        InternalAIFFTrackFile(const String& path);
+struct InternalAIFFTrackFile : public InternalID3TrackFile {
+    NXA_GENERATED_DESTRUCTOR_FOR_CLASS(InternalAIFFTrackFile);
 
-        #pragma mark Instance methods
-        void parseAudioProperties(const TagLib::RIFF::AIFF::Properties& properties);
+    #pragma mark Constructors & Destuctors
+    InternalAIFFTrackFile(const String& path);
 
-        #pragma mark Overridden TrackFile Instance methods
-        virtual void loadAndParseFile(void) override;
-        virtual void updateAndSaveFile(void) const override;
-    };
-} }
+    #pragma mark Instance methods
+    void parseAudioProperties(const TagLib::RIFF::AIFF::Properties& properties);
+
+    #pragma mark Overridden TrackFile Instance methods
+    virtual void loadAndParseFile(void) override;
+    virtual void updateAndSaveFile(void) const override;
+};
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;

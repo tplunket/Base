@@ -26,18 +26,22 @@
 
 #include <Base/Base.hpp>
 
-namespace NxA { namespace Serato {
-    NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(PathTag);
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
 
-    class PathTag : public TextTag {
-        NXA_GENERATED_DECLARATIONS_WITHOUT_OPERATOR_EQUAL_IN_NAMESPACE_FOR_CLASS(NxA::Serato, PathTag);
+NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(PathTag);
 
-    public:
-        #pragma mark Constructors
-        static PathTag::Pointer tagWithMemoryAt(const byte* tagAddress);
-        static PathTag::Pointer tagWithIdentifierAndValue(uinteger32 identifier, const String& value);
+class PathTag : public TextTag {
+    NXA_GENERATED_DECLARATIONS_WITHOUT_OPERATOR_EQUAL_IN_NAMESPACE_FOR_CLASS(NxA::Serato, PathTag);
 
-        #pragma mark Operators
-        virtual bool operator==(const PathTag& other) const;
-    };
-} }
+public:
+    #pragma mark Constructors
+    static PathTag::Pointer tagWithMemoryAt(const byte* tagAddress);
+    static PathTag::Pointer tagWithIdentifierAndValue(uinteger32 identifier, const String& value);
+
+    #pragma mark Operators
+    virtual bool operator==(const PathTag& other) const;
+};
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;

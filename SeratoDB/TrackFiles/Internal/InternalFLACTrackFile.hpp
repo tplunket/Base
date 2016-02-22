@@ -31,35 +31,39 @@
 #include <xiphcomment.h>
 #include <flacproperties.h>
 
-namespace NxA { namespace Serato {
-    struct InternalFLACTrackFile : public InternalTrackFile {
-        NXA_GENERATED_DESTRUCTOR_FOR_CLASS(InternalFLACTrackFile);
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
 
-        #pragma mark Constructor & Destructors
-        InternalFLACTrackFile(const String& path);
+struct InternalFLACTrackFile : public InternalTrackFile {
+    NXA_GENERATED_DESTRUCTOR_FOR_CLASS(InternalFLACTrackFile);
 
-        #pragma mark Instance Variables
-        String::ArrayOfConst::Pointer nameOfFields;
-        String::ArrayOfConst::Pointer nameOfFieldsToRemove;
-        String::ArrayOfConst::Pointer ownersOfPrivateFrames;
-        String::ArrayOfConst::Pointer ownersOfPrivateFramesToRemove;
+    #pragma mark Constructor & Destructors
+    InternalFLACTrackFile(const String& path);
 
-        boolean hasRating;
+    #pragma mark Instance Variables
+    String::ArrayOfConst::Pointer nameOfFields;
+    String::ArrayOfConst::Pointer nameOfFieldsToRemove;
+    String::ArrayOfConst::Pointer ownersOfPrivateFrames;
+    String::ArrayOfConst::Pointer ownersOfPrivateFramesToRemove;
 
-        #pragma mark Instance Methods
-        void parseAudioProperties(const TagLib::FLAC::Properties& properties);
-        void parseTag(const TagLib::ID3v2::Tag& id3v2Tag);
-        void parseComment(const TagLib::Ogg::XiphComment& oggComment);
-        void parseMarkersInComment(const TagLib::Ogg::XiphComment& oggComment);
-        void updateMarkersInComment(TagLib::Ogg::XiphComment& oggComment) const;
-        void updateMarkersV1ItemInComment(TagLib::Ogg::XiphComment& oggComment) const;
-        void updateMarkersV2ItemInComment(TagLib::Ogg::XiphComment& oggComment) const;
-        void updateGridMarkersItemInComment(TagLib::Ogg::XiphComment& oggComment) const;
-        void updateTag(TagLib::ID3v2::Tag& tag) const;
-        void updateComment(TagLib::Ogg::XiphComment& oggComment) const;
+    boolean hasRating;
 
-        #pragma mark Overridden TrackFile Instance Methods
-        virtual void loadAndParseFile(void) override;
-        virtual void updateAndSaveFile(void) const override;
-    };
-} }
+    #pragma mark Instance Methods
+    void parseAudioProperties(const TagLib::FLAC::Properties& properties);
+    void parseTag(const TagLib::ID3v2::Tag& id3v2Tag);
+    void parseComment(const TagLib::Ogg::XiphComment& oggComment);
+    void parseMarkersInComment(const TagLib::Ogg::XiphComment& oggComment);
+    void updateMarkersInComment(TagLib::Ogg::XiphComment& oggComment) const;
+    void updateMarkersV1ItemInComment(TagLib::Ogg::XiphComment& oggComment) const;
+    void updateMarkersV2ItemInComment(TagLib::Ogg::XiphComment& oggComment) const;
+    void updateGridMarkersItemInComment(TagLib::Ogg::XiphComment& oggComment) const;
+    void updateTag(TagLib::ID3v2::Tag& tag) const;
+    void updateComment(TagLib::Ogg::XiphComment& oggComment) const;
+
+    #pragma mark Overridden TrackFile Instance Methods
+    virtual void loadAndParseFile(void) override;
+    virtual void updateAndSaveFile(void) const override;
+};
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;

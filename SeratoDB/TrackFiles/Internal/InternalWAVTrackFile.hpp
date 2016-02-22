@@ -29,18 +29,22 @@
 
 #include <wavproperties.h>
 
-namespace NxA { namespace Serato {
-    struct InternalWAVTrackFile : public InternalID3TrackFile {
-        NXA_GENERATED_DESTRUCTOR_FOR_CLASS(InternalWAVTrackFile);
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
 
-        #pragma mark Constructor & Destructors
-        InternalWAVTrackFile(const String& path);
+struct InternalWAVTrackFile : public InternalID3TrackFile {
+    NXA_GENERATED_DESTRUCTOR_FOR_CLASS(InternalWAVTrackFile);
 
-        #pragma mark Instance Methods
-        void parseAudioProperties(const TagLib::RIFF::WAV::Properties& properties);
+    #pragma mark Constructor & Destructors
+    InternalWAVTrackFile(const String& path);
 
-        #pragma mark Overridden TrackFile Instance Methods
-        virtual void loadAndParseFile(void) override;
-        virtual void updateAndSaveFile(void) const override;
-    };
-} }
+    #pragma mark Instance Methods
+    void parseAudioProperties(const TagLib::RIFF::WAV::Properties& properties);
+
+    #pragma mark Overridden TrackFile Instance Methods
+    virtual void loadAndParseFile(void) override;
+    virtual void updateAndSaveFile(void) const override;
+};
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;

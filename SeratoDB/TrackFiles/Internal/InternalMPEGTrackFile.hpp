@@ -27,15 +27,19 @@
 
 #include <Base/Base.hpp>
 
-namespace NxA { namespace Serato {
-    struct InternalMPEGTrackFile : public InternalID3TrackFile {
-        NXA_GENERATED_DESTRUCTOR_FOR_CLASS(InternalMPEGTrackFile);
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
 
-        #pragma mark Constructor & Destructors
-        InternalMPEGTrackFile(const String& path);
+struct InternalMPEGTrackFile : public InternalID3TrackFile {
+    NXA_GENERATED_DESTRUCTOR_FOR_CLASS(InternalMPEGTrackFile);
 
-        #pragma mark Overridden TrackFile Instance Methods
-        virtual void loadAndParseFile(void) override;
-        virtual void updateAndSaveFile(void) const override;
-    };
-} }
+    #pragma mark Constructor & Destructors
+    InternalMPEGTrackFile(const String& path);
+
+    #pragma mark Overridden TrackFile Instance Methods
+    virtual void loadAndParseFile(void) override;
+    virtual void updateAndSaveFile(void) const override;
+};
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;

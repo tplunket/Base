@@ -26,17 +26,21 @@
 
 #include <Base/Base.hpp>
 
-namespace NxA { namespace Serato {
-    NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(WAVTrackFile);
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
 
-    class WAVTrackFile : public ID3TrackFile {
-        NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_CLASS(NxA::Serato, WAVTrackFile);
+NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(WAVTrackFile);
 
-    public:
-        #pragma mark Factory Methods
-        static WAVTrackFile::Pointer fileWithFileAt(const String& path, TrackFile::Flags flags);
-        
-        #pragma mark Overriden TrackFile Instance Methods
-        virtual boolean hasBitDepth(void) const override;
-    };
-} }
+class WAVTrackFile : public ID3TrackFile {
+    NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_CLASS(NxA::Serato, WAVTrackFile);
+
+public:
+    #pragma mark Factory Methods
+    static WAVTrackFile::Pointer fileWithFileAt(const String& path, TrackFile::Flags flags);
+
+    #pragma mark Overriden TrackFile Instance Methods
+    virtual boolean hasBitDepth(void) const override;
+};
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;

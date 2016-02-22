@@ -26,21 +26,25 @@
 
 #include <Base/Base.hpp>
 
-namespace NxA { namespace Serato {
-    NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(ID3TrackFile);
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
 
-    class ID3TrackFile : public TrackFile {
-        NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_CLASS(NxA::Serato, ID3TrackFile);
+NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(ID3TrackFile);
 
-    public:
-        #pragma mark Instance Methods
-        boolean hasPrivateFramesOwnedBy(const String& owner);
-        void removePrivateFramesOwnedBy(const String& owner);
+class ID3TrackFile : public TrackFile {
+    NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_CLASS(NxA::Serato, ID3TrackFile);
 
-        #pragma mark Overriden TrackFile Instance Methods
-        virtual boolean hasKey(void) const override;
-        virtual boolean hasRecordLabel(void) const override;
-        virtual boolean hasRemixer(void) const override;
-        virtual boolean hasRating(void) const override;
-    };
-} }
+public:
+    #pragma mark Instance Methods
+    boolean hasPrivateFramesOwnedBy(const String& owner);
+    void removePrivateFramesOwnedBy(const String& owner);
+
+    #pragma mark Overriden TrackFile Instance Methods
+    virtual boolean hasKey(void) const override;
+    virtual boolean hasRecordLabel(void) const override;
+    virtual boolean hasRemixer(void) const override;
+    virtual boolean hasRating(void) const override;
+};
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;

@@ -26,22 +26,26 @@
 
 #include <Base/Base.hpp>
 
-namespace NxA { namespace Serato {
-    NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(OGGTrackFile);
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
 
-    class OGGTrackFile : public TrackFile {
-        NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_CLASS(NxA::Serato, OGGTrackFile);
+NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(OGGTrackFile);
 
-    public:
-        #pragma mark Factory Methods
-        static OGGTrackFile::Pointer fileWithFileAt(const String& path, TrackFile::Flags flags);
+class OGGTrackFile : public TrackFile {
+    NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_CLASS(NxA::Serato, OGGTrackFile);
 
-        #pragma mark Instance Methods
-        boolean hasFieldNamed(const String& name);
-        void removeFieldNamed(const String& name);
+public:
+    #pragma mark Factory Methods
+    static OGGTrackFile::Pointer fileWithFileAt(const String& path, TrackFile::Flags flags);
 
-        #pragma mark Overriden TrackFile Instance Methods
-        virtual boolean hasRecordLabel(void) const override;
-        virtual boolean hasRemixer(void) const override;
-    };
-} }
+    #pragma mark Instance Methods
+    boolean hasFieldNamed(const String& name);
+    void removeFieldNamed(const String& name);
+
+    #pragma mark Overriden TrackFile Instance Methods
+    virtual boolean hasRecordLabel(void) const override;
+    virtual boolean hasRemixer(void) const override;
+};
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;

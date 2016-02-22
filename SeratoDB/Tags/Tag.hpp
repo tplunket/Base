@@ -24,24 +24,28 @@
 
 #include <Base/Base.hpp>
 
-namespace NxA { namespace Serato {
-    NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(Tag);
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
 
-    class Tag : public Object {
-        NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_PURE_VIRTUAL_CLASS(NxA::Serato, Tag);
+NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(Tag);
 
-    public:
-        #pragma mark Class Methods
-        static uinteger32 identifierForTagAt(const byte* tagAddress);
-        static const byte* nextTagAfterTagAt(const byte* tagAddress);
-        static count dataSizeForTagAt(const byte* tagAddress);
+class Tag : public Object {
+    NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_PURE_VIRTUAL_CLASS(NxA::Serato, Tag);
 
-        #pragma mark Instance Methods
-        uinteger32 identifier(void) const;
+public:
+    #pragma mark Class Methods
+    static uinteger32 identifierForTagAt(const byte* tagAddress);
+    static const byte* nextTagAfterTagAt(const byte* tagAddress);
+    static count dataSizeForTagAt(const byte* tagAddress);
 
-        virtual void addTo(Blob& destination) const = 0;
+    #pragma mark Instance Methods
+    uinteger32 identifier(void) const;
 
-        #pragma mark Overridden Object Instance Methods
-        virtual NxA::Pointer<NxA::String> description(void) const override;
-    };
-} }
+    virtual void addTo(Blob& destination) const = 0;
+
+    #pragma mark Overridden Object Instance Methods
+    virtual NxA::Pointer<NxA::String> description(void) const override;
+};
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;

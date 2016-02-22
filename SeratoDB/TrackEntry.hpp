@@ -26,29 +26,33 @@
 
 #include <Base/Base.hpp>
 
-namespace NxA { namespace Serato {
-    NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(TrackEntry);
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
 
-    class Tag;
-    class Crate;
+NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(TrackEntry);
 
-    class TrackEntry : public Object {
-        NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_CLASS(NxA::Serato, TrackEntry);
+class Tag;
+class Crate;
 
-        friend Crate;
+class TrackEntry : public Object {
+    NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_CLASS(NxA::Serato, TrackEntry);
 
-    public:
-        #pragma mark Factory Methods
-        static TrackEntry::Pointer entryWithTagOnVolume(const ObjectTag& tag, const String& volumePath);
-        static TrackEntry::Pointer entryWithTrackFileAtOnVolume(const String& path, const String& volumePath);
+    friend Crate;
 
-        #pragma mark Instance Methods
-        String::Pointer trackFilePath(void) const;
-        const String& volumePath(void) const;
+public:
+    #pragma mark Factory Methods
+    static TrackEntry::Pointer entryWithTagOnVolume(const ObjectTag& tag, const String& volumePath);
+    static TrackEntry::Pointer entryWithTrackFileAtOnVolume(const String& path, const String& volumePath);
 
-        boolean hasParentCrate(void) const;
-        Crate& parentCrate(void);
-        
-        const Tag& tagForEntry(void) const;
-    };
-} }
+    #pragma mark Instance Methods
+    String::Pointer trackFilePath(void) const;
+    const String& volumePath(void) const;
+
+    boolean hasParentCrate(void) const;
+    Crate& parentCrate(void);
+
+    const Tag& tagForEntry(void) const;
+};
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;

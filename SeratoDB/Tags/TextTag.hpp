@@ -26,25 +26,29 @@
 
 #include <Base/Base.hpp>
 
-namespace NxA { namespace Serato {
-    NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(TextTag);
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
 
-    class TextTag : public Tag {
-        NXA_GENERATED_DECLARATIONS_WITHOUT_OPERATOR_EQUAL_IN_NAMESPACE_FOR_CLASS(NxA::Serato, TextTag);
+NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(TextTag);
 
-    public:
-        #pragma mark Factory Methods
-        static TextTag::Pointer tagWithMemoryAt(const byte* tagAddress);
-        static TextTag::Pointer tagWithIdentifierAndValue(uinteger32 identifier, const String& value);
+class TextTag : public Tag {
+    NXA_GENERATED_DECLARATIONS_WITHOUT_OPERATOR_EQUAL_IN_NAMESPACE_FOR_CLASS(NxA::Serato, TextTag);
 
-        #pragma mark Operators
-        virtual bool operator==(const TextTag& other) const;
+public:
+    #pragma mark Factory Methods
+    static TextTag::Pointer tagWithMemoryAt(const byte* tagAddress);
+    static TextTag::Pointer tagWithIdentifierAndValue(uinteger32 identifier, const String& value);
 
-        #pragma mark Instance Methods
-        const String& value(void) const;
-        void setValue(const String& value);
+    #pragma mark Operators
+    virtual bool operator==(const TextTag& other) const;
 
-        #pragma mark Overriden Tag Methods
-        virtual void addTo(Blob& destination) const override;
-    };
-} }
+    #pragma mark Instance Methods
+    const String& value(void) const;
+    void setValue(const String& value);
+
+    #pragma mark Overriden Tag Methods
+    virtual void addTo(Blob& destination) const override;
+};
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;

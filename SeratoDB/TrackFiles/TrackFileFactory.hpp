@@ -26,28 +26,31 @@
 
 #include <Base/Base.hpp>
 
-namespace NxA { namespace Serato {
-    class TrackFileFactory : public Uncopyable
-    {
-    public:
-        #pragma mark Constants
-        enum AudioFileType {
-            Unknown,
-            AIFF,
-            MP3,
-            WAV,
-            OGG,
-            MP4,
-            FLAC,
-            WMA,
-        };
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
 
-        #pragma mark Constructors & Destructors
-        TrackFileFactory() = delete;
-
-        #pragma mark Class Methods
-        static AudioFileType audioFileTypeForPath(const String& trackFilePath);
-
-        static NxA::Serato::TrackFile::Pointer trackFileForPath(const String& trackFilePath, TrackFile::Flags flags = TrackFile::Flags::NoFlag);
+class TrackFileFactory : public Uncopyable {
+public:
+    #pragma mark Constants
+    enum AudioFileType {
+        Unknown,
+        AIFF,
+        MP3,
+        WAV,
+        OGG,
+        MP4,
+        FLAC,
+        WMA,
     };
-} }
+
+    #pragma mark Constructors & Destructors
+    TrackFileFactory() = delete;
+
+    #pragma mark Class Methods
+    static AudioFileType audioFileTypeForPath(const String& trackFilePath);
+
+    static NxA::Serato::TrackFile::Pointer trackFileForPath(const String& trackFilePath, TrackFile::Flags flags = TrackFile::Flags::NoFlag);
+};
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;

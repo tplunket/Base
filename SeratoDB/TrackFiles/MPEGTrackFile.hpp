@@ -26,14 +26,18 @@
 
 #include <Base/Base.hpp>
 
-namespace NxA { namespace Serato {
-    NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(MPEGTrackFile);
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
 
-    class MPEGTrackFile : public ID3TrackFile {
-        NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_CLASS(NxA::Serato, MPEGTrackFile);
+NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(MPEGTrackFile);
 
-    public:
-        #pragma mark Factory Methods
-        static MPEGTrackFile::Pointer fileWithFileAt(const String& path, TrackFile::Flags flags);
-    };
-} }
+class MPEGTrackFile : public ID3TrackFile {
+    NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_CLASS(NxA::Serato, MPEGTrackFile);
+
+public:
+    #pragma mark Factory Methods
+    static MPEGTrackFile::Pointer fileWithFileAt(const String& path, TrackFile::Flags flags);
+};
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;

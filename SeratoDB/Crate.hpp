@@ -26,66 +26,70 @@
 
 #include <Base/Base.hpp>
 
-namespace NxA { namespace Serato {
-    NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(Crate);
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
 
-    class Database;
+NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(Crate);
 
-    class Crate : public Object {
-        NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_CLASS(NxA::Serato, Crate);
+class Database;
 
-    public:
-        #pragma mark Factory Methods
-        static Crate::Pointer crateWithName(const String& crateName);
+class Crate : public Object {
+    NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_CLASS(NxA::Serato, Crate);
 
-        #pragma mark Class Methods
-        static String::Pointer subCratesDirectoryPathInSeratoFolder(const String& seratoFolderPath);
-        static String::ArrayOfConst::Pointer readCratesNamesInCrateOrderFile(const String& crateOrderFilePath);
-        static boolean filenameIsAValidCrateName(const String& fileName);
-        static String::ArrayOfConst::Pointer cratesInSubCratesDirectory(const String& directory);
-        static boolean isAnExistingFullCrateName(const String& fullCrateName,
-                                                 const String& seratoFolderPath);
-        static boolean isAnExistingFullSmartCrateName(const String& fullCrateName,
-                                                      const String& seratoFolderPath);
-        static void parseCratesInSeratoFolderOnVolumeAddToCrateAndSaveSmartCrateNamesIn(String::ArrayOfConst& cratesInOrder,
-                                                                                        const String& seratoFolderPath,
-                                                                                        const String& volumePath,
-                                                                                        Serato::Crate& parentCrate,
-                                                                                        String::ArrayOfConst& smartCrateNames);
+public:
+    #pragma mark Factory Methods
+    static Crate::Pointer crateWithName(const String& crateName);
 
-        #pragma mark Instance Methods
-        const String& name(void) const;
-        String::Pointer fullCrateName(void) const;
+    #pragma mark Class Methods
+    static String::Pointer subCratesDirectoryPathInSeratoFolder(const String& seratoFolderPath);
+    static String::ArrayOfConst::Pointer readCratesNamesInCrateOrderFile(const String& crateOrderFilePath);
+    static boolean filenameIsAValidCrateName(const String& fileName);
+    static String::ArrayOfConst::Pointer cratesInSubCratesDirectory(const String& directory);
+    static boolean isAnExistingFullCrateName(const String& fullCrateName,
+                                             const String& seratoFolderPath);
+    static boolean isAnExistingFullSmartCrateName(const String& fullCrateName,
+                                                  const String& seratoFolderPath);
+    static void parseCratesInSeratoFolderOnVolumeAddToCrateAndSaveSmartCrateNamesIn(String::ArrayOfConst& cratesInOrder,
+                                                                                    const String& seratoFolderPath,
+                                                                                    const String& volumePath,
+                                                                                    Serato::Crate& parentCrate,
+                                                                                    String::ArrayOfConst& smartCrateNames);
 
-        void addFullCrateNameWithPrefixForCratesOnVolumeAndRecurseToChildren(String& destination,
-                                                                             const char* prefix,
-                                                                             const String& volumePath) const;
+    #pragma mark Instance Methods
+    const String& name(void) const;
+    String::Pointer fullCrateName(void) const;
 
-        TrackEntry::Array::Pointer trackEntries(void) const;
-        const Crate::Array& crates(void) const;
+    void addFullCrateNameWithPrefixForCratesOnVolumeAndRecurseToChildren(String& destination,
+                                                                         const char* prefix,
+                                                                         const String& volumePath) const;
 
-        void addCrate(Crate& crate);
-        void removeCrate(Crate::Pointer& crate);
+    TrackEntry::Array::Pointer trackEntries(void) const;
+    const Crate::Array& crates(void) const;
 
-        Crate::Pointer findOrAddCrateWithRelativeNameAndFullName(const String& relativeName, const String& fullCrateName);
-        bool crateOrChildrenCrateContainsTracks(void) const;
+    void addCrate(Crate& crate);
+    void removeCrate(Crate::Pointer& crate);
 
-        void addTrackEntry(TrackEntry& trackEntry);
-        void removeTrackEntry(TrackEntry::Pointer& trackEntry);
+    Crate::Pointer findOrAddCrateWithRelativeNameAndFullName(const String& relativeName, const String& fullCrateName);
+    bool crateOrChildrenCrateContainsTracks(void) const;
 
-        boolean hasParentCrate(void) const;
-        Crate& parentCrate(void);
+    void addTrackEntry(TrackEntry& trackEntry);
+    void removeTrackEntry(TrackEntry::Pointer& trackEntry);
 
-        void resetModificationFlags();
+    boolean hasParentCrate(void) const;
+    Crate& parentCrate(void);
 
-        void readFromFolderInVolume(const String& seratoFolderPath, const String& volumePath);
-        void saveIfOnVolumeAndRecurseToChildren(const String& volumePath, const String& seratoFolderPath) const;
-        boolean childrenCratesWereModified(void) const;
+    void resetModificationFlags();
 
-        TrackEntry::Array::Pointer removeAndReturnTrackEntries(void);
-        Crate::Array::Pointer removeAndReturnChildrenCrates(void);
+    void readFromFolderInVolume(const String& seratoFolderPath, const String& volumePath);
+    void saveIfOnVolumeAndRecurseToChildren(const String& volumePath, const String& seratoFolderPath) const;
+    boolean childrenCratesWereModified(void) const;
 
-        #pragma mark Overridden Object Instance Methods
-        virtual String::Pointer description(void) const override;
-    };
-} }
+    TrackEntry::Array::Pointer removeAndReturnTrackEntries(void);
+    Crate::Array::Pointer removeAndReturnChildrenCrates(void);
+
+    #pragma mark Overridden Object Instance Methods
+    virtual String::Pointer description(void) const override;
+};
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;

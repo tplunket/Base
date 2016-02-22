@@ -26,26 +26,30 @@
 
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, LoopMarker, Marker);
 
-namespace NxA { namespace Serato {
-    #pragma mark Structures
-    typedef struct {
-        byte tag[5];
-        byte size[4];
-    } SeratoLoopTagV2HeaderStruct;
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
 
-    typedef struct {
-        byte tag[5];
-        byte size[4];
-        byte index[2];
-        byte position[4];
-        byte loopPosition[4];
-        byte loopIterations[4];
-        byte color[4];
-        byte loop_enabled;
-        byte loop_locked;
-        byte label[0];
-    } SeratoLoopTagV2Struct;
-} }
+#pragma mark Structures
+typedef struct {
+    byte tag[5];
+    byte size[4];
+} SeratoLoopTagV2HeaderStruct;
+
+typedef struct {
+    byte tag[5];
+    byte size[4];
+    byte index[2];
+    byte position[4];
+    byte loopPosition[4];
+    byte loopIterations[4];
+    byte color[4];
+    byte loop_enabled;
+    byte loop_locked;
+    byte label[0];
+} SeratoLoopTagV2Struct;
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;
 
 using namespace NxA;
 using namespace NxA::Serato;

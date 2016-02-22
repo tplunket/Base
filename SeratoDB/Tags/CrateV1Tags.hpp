@@ -26,16 +26,20 @@
 
 #pragma mark Constants
 
-namespace NxA { namespace Serato {
-    // -- Known crate tag identifiers.
-    constexpr uinteger32 crateVersionTagIdentifier                      = 'vrsn';
-    constexpr uinteger32 trackEntryTagIdentifier                        = 'otrk';
-    constexpr uinteger32 trackEntryPathTagIdentifier                    = 'ptrk';
-    constexpr uinteger32 crateRemoveTrackActionTagIdentifier            = 'ortk';
-    constexpr uinteger32 crateColumnSortingTagIdentifier                = 'osrt';
-    constexpr uinteger32 crateColumnNameTag                             = 'tvcn';
-    constexpr uinteger32 crateColumnSortDirectionTagIdentifier          = 'brev';
-    constexpr uinteger32 cateColumnVisibilityTagIdentifier              = 'ovct';
-    constexpr uinteger32 crateColumnWidthTagIdentifier                  = 'tvcw';
-    constexpr uinteger32 crateRemoveColumnVisibilityActionTagIdentifier = 'orvc';
-} }
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
+
+// -- Known crate tag identifiers.
+constexpr uinteger32 crateVersionTagIdentifier                      = 'vrsn';
+constexpr uinteger32 trackEntryTagIdentifier                        = 'otrk';
+constexpr uinteger32 trackEntryPathTagIdentifier                    = 'ptrk';
+constexpr uinteger32 crateRemoveTrackActionTagIdentifier            = 'ortk';
+constexpr uinteger32 crateColumnSortingTagIdentifier                = 'osrt';
+constexpr uinteger32 crateColumnNameTag                             = 'tvcn';
+constexpr uinteger32 crateColumnSortDirectionTagIdentifier          = 'brev';
+constexpr uinteger32 cateColumnVisibilityTagIdentifier              = 'ovct';
+constexpr uinteger32 crateColumnWidthTagIdentifier                  = 'tvcw';
+constexpr uinteger32 crateRemoveColumnVisibilityActionTagIdentifier = 'orvc';
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;

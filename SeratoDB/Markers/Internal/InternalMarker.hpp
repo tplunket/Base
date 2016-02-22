@@ -27,42 +27,46 @@
 #include <Base/Base.hpp>
 #include <Base/Internal/InternalObject.hpp>
 
-namespace NxA { namespace Serato {
-    struct InternalMarker : public InternalObject {
-        NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, InternalMarker);
-        
-        typedef struct {
-            byte position[4];
-            byte loopPosition[4];
-            byte zero;
-            byte loopIterations[4];
-            byte color[4];
-            byte type;
-            byte locked;
-        } SeratoRawTagV1Struct;
-    
-        typedef struct {
-            byte position[5];
-            byte loopPosition[5];
-            byte zero;
-            byte loopIterations[5];
-            byte color[4];
-            byte type;
-            byte locked;
-        } SeratoEncodedTagV1Struct;
-    
-        enum MarkerType {
-            eCueMarker = 1,
-            eLoopMarker = 3,
-            eEmptyMarker = 0,
-        };
-        
-        static void addRawMarkerV1TagWithFieldsTo(MarkerType type, integer32 position, integer32 loopPos, integer32 loopIterations,
-                                                  byte red, byte green, byte blue, Blob& data);
-        
-        static void addEncodedMarkerV1TagWithFieldsTo(MarkerType type, integer32 position, integer32 loopPos, integer32 loopIterations,
-                                                      byte red, byte green, byte blue, Blob& data);
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
 
-        static void rawV1TagFromEncodedV1TagStruct(SeratoRawTagV1Struct& rawTag, const SeratoEncodedTagV1Struct& encodedTag);
+struct InternalMarker : public InternalObject {
+    NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, InternalMarker);
+
+    typedef struct {
+        byte position[4];
+        byte loopPosition[4];
+        byte zero;
+        byte loopIterations[4];
+        byte color[4];
+        byte type;
+        byte locked;
+    } SeratoRawTagV1Struct;
+
+    typedef struct {
+        byte position[5];
+        byte loopPosition[5];
+        byte zero;
+        byte loopIterations[5];
+        byte color[4];
+        byte type;
+        byte locked;
+    } SeratoEncodedTagV1Struct;
+
+    enum MarkerType {
+        eCueMarker = 1,
+        eLoopMarker = 3,
+        eEmptyMarker = 0,
     };
-} }
+
+    static void addRawMarkerV1TagWithFieldsTo(MarkerType type, integer32 position, integer32 loopPos, integer32 loopIterations,
+                                              byte red, byte green, byte blue, Blob& data);
+
+    static void addEncodedMarkerV1TagWithFieldsTo(MarkerType type, integer32 position, integer32 loopPos, integer32 loopIterations,
+                                                  byte red, byte green, byte blue, Blob& data);
+
+    static void rawV1TagFromEncodedV1TagStruct(SeratoRawTagV1Struct& rawTag, const SeratoEncodedTagV1Struct& encodedTag);
+};
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;

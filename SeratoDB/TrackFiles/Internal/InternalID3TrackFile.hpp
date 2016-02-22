@@ -31,57 +31,61 @@
 #include <id3v2tag.h>
 #include <generalencapsulatedobjectframe.h>
 
-namespace NxA { namespace Serato {
-    #pragma mark Constants
-    constexpr const character* id3KeyFrameName = "TKEY";
-    constexpr const character* id3ComposerFrameName = "TCOM";
-    constexpr const character* id3GroupingFrameName = "TIT1";
-    constexpr const character* id3BpmFrameName = "TBPM";
-    constexpr const character* id3RecordLabelFrameName = "TPUB";
-    constexpr const character* id3RemixerFrameName = "TPE4";
-    constexpr const character* id3RatingFrameName = "POPM";
-    constexpr const character* id3ArtworkFrameName = "APIC";
-    constexpr const character* id3OriginalReleaseTimeFrameName = "TDOR";
-    constexpr const character* id3RecordingTimeFrameName = "TDRC";
-    constexpr const character* id3ReleaseTimeFrameName = "TDRL";
+NXA_ENTER_NAMESPACE(NxA);
+NXA_ENTER_NAMESPACE(Serato);
 
-    struct InternalID3TrackFile : public InternalTrackFile {
-        NXA_GENERATED_DESTRUCTOR_FOR_CLASS(InternalID3TrackFile);
+#pragma mark Constants
+constexpr const character* id3KeyFrameName = "TKEY";
+constexpr const character* id3ComposerFrameName = "TCOM";
+constexpr const character* id3GroupingFrameName = "TIT1";
+constexpr const character* id3BpmFrameName = "TBPM";
+constexpr const character* id3RecordLabelFrameName = "TPUB";
+constexpr const character* id3RemixerFrameName = "TPE4";
+constexpr const character* id3RatingFrameName = "POPM";
+constexpr const character* id3ArtworkFrameName = "APIC";
+constexpr const character* id3OriginalReleaseTimeFrameName = "TDOR";
+constexpr const character* id3RecordingTimeFrameName = "TDRC";
+constexpr const character* id3ReleaseTimeFrameName = "TDRL";
 
-        #pragma mark Constructor & Destructors
-        InternalID3TrackFile(const String& path);
+struct InternalID3TrackFile : public InternalTrackFile {
+    NXA_GENERATED_DESTRUCTOR_FOR_CLASS(InternalID3TrackFile);
 
-        #pragma mark Class Methods
-        static boolean isAValidGeobFrame(const TagLib::ID3v2::GeneralEncapsulatedObjectFrame& frame);
-        static TagLib::ID3v2::FrameList::Iterator frameInListWithDescription(TagLib::ID3v2::FrameList& list,
-                                                                             const String& description);
-        static String::Pointer stringValueForFrameNamedInTag(const character* name, const TagLib::ID3v2::Tag& tag);
-        static integer integerValueForFrameNamedInTag(const character* name, const TagLib::ID3v2::Tag& tag);
-        static integer ratingValueForRatingFrameInTag(const TagLib::ID3v2::Tag& tag);
-        static void setStringValueForFrameNamedInTag(const String& value, const character* name, TagLib::ID3v2::Tag& tag);
-        static void setIntegerValueForFrameNamedInTag(integer value, const character* name, TagLib::ID3v2::Tag& tag);
-        static void setRatingValueForRatingFrameInTag(integer value, TagLib::ID3v2::Tag& tag);
-        static void removePrivateFramesNamedInTag(const String& name, TagLib::ID3v2::Tag& tag);
-        static void removeGEOBFrameNamedInTag(const String& name, TagLib::ID3v2::Tag& tag);
-        static void parseMarkersInTagToTrackFile(const TagLib::ID3v2::Tag& tag, InternalTrackFile& trackFile);
-        static void replaceFrameNamedInTagWithDataAndVersion(const String& frameName, TagLib::ID3v2::Tag& tag,
-                                                             const Blob& frameData, int majorVersion, int minorVersion);
-        static void replaceMarkersV1FrameInTagWith(TagLib::ID3v2::Tag& tag, const Blob& markersV1Data);
-        static void replaceMarkersV2FrameInTagWith(TagLib::ID3v2::Tag& tag, const String& base64MarkersData);
-        static void replaceGridMarkersFrameInTagWith(TagLib::ID3v2::Tag& tag, const Blob& gridMarkersData);
-        static void updateMarkersInTagFromTrackFile(TagLib::ID3v2::Tag& tag, const InternalTrackFile& trackFile);
-        static String::Pointer releaseDateFromTag(const TagLib::ID3v2::Tag& tag);
-        static void setReleaseDateInTag(const String& date, TagLib::ID3v2::Tag& tag);
-        static Blob::Pointer artworkInTag(const TagLib::ID3v2::Tag& tag);
-        static void removeArtworkInTag(TagLib::ID3v2::Tag& tag);
+    #pragma mark Constructor & Destructors
+    InternalID3TrackFile(const String& path);
 
-        #pragma mark Instance Variables
-        String::ArrayOfConst::Pointer ownersOfPrivateFrames;
-        String::ArrayOfConst::Pointer ownersOfPrivateFramesToRemove;
+    #pragma mark Class Methods
+    static boolean isAValidGeobFrame(const TagLib::ID3v2::GeneralEncapsulatedObjectFrame& frame);
+    static TagLib::ID3v2::FrameList::Iterator frameInListWithDescription(TagLib::ID3v2::FrameList& list,
+                                                                         const String& description);
+    static String::Pointer stringValueForFrameNamedInTag(const character* name, const TagLib::ID3v2::Tag& tag);
+    static integer integerValueForFrameNamedInTag(const character* name, const TagLib::ID3v2::Tag& tag);
+    static integer ratingValueForRatingFrameInTag(const TagLib::ID3v2::Tag& tag);
+    static void setStringValueForFrameNamedInTag(const String& value, const character* name, TagLib::ID3v2::Tag& tag);
+    static void setIntegerValueForFrameNamedInTag(integer value, const character* name, TagLib::ID3v2::Tag& tag);
+    static void setRatingValueForRatingFrameInTag(integer value, TagLib::ID3v2::Tag& tag);
+    static void removePrivateFramesNamedInTag(const String& name, TagLib::ID3v2::Tag& tag);
+    static void removeGEOBFrameNamedInTag(const String& name, TagLib::ID3v2::Tag& tag);
+    static void parseMarkersInTagToTrackFile(const TagLib::ID3v2::Tag& tag, InternalTrackFile& trackFile);
+    static void replaceFrameNamedInTagWithDataAndVersion(const String& frameName, TagLib::ID3v2::Tag& tag,
+                                                         const Blob& frameData, int majorVersion, int minorVersion);
+    static void replaceMarkersV1FrameInTagWith(TagLib::ID3v2::Tag& tag, const Blob& markersV1Data);
+    static void replaceMarkersV2FrameInTagWith(TagLib::ID3v2::Tag& tag, const String& base64MarkersData);
+    static void replaceGridMarkersFrameInTagWith(TagLib::ID3v2::Tag& tag, const Blob& gridMarkersData);
+    static void updateMarkersInTagFromTrackFile(TagLib::ID3v2::Tag& tag, const InternalTrackFile& trackFile);
+    static String::Pointer releaseDateFromTag(const TagLib::ID3v2::Tag& tag);
+    static void setReleaseDateInTag(const String& date, TagLib::ID3v2::Tag& tag);
+    static Blob::Pointer artworkInTag(const TagLib::ID3v2::Tag& tag);
+    static void removeArtworkInTag(TagLib::ID3v2::Tag& tag);
 
-        #pragma mark Instance Methods
-        void parseTag(const TagLib::ID3v2::Tag& tag);
-        void updateArtworkInTag(TagLib::ID3v2::Tag& tag) const;
-        void updateTag(TagLib::ID3v2::Tag& tag) const;
-    };
-} }
+    #pragma mark Instance Variables
+    String::ArrayOfConst::Pointer ownersOfPrivateFrames;
+    String::ArrayOfConst::Pointer ownersOfPrivateFramesToRemove;
+
+    #pragma mark Instance Methods
+    void parseTag(const TagLib::ID3v2::Tag& tag);
+    void updateArtworkInTag(TagLib::ID3v2::Tag& tag) const;
+    void updateTag(TagLib::ID3v2::Tag& tag) const;
+};
+
+NXA_EXIT_NAMESPACE;
+NXA_EXIT_NAMESPACE;

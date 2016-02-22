@@ -66,7 +66,7 @@ namespace NxA {
     public:
 #pragma mark Constructors & Destructors
         Exception() = delete;
-        explicit Exception(const character* reason) : std::runtime_error(reason) { };
+        explicit Exception(const character* reason) : std::runtime_error(reason) { }
         virtual ~Exception() { }
     };
 }

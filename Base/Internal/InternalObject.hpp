@@ -19,10 +19,13 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include "Base/Internal/Object.hpp"
+#pragma once
 
-using namespace NxA::Internal;
+#include "Base/Uncopyable.hpp"
+#include "Base/Object.hpp"
 
-#pragma mark Constructors & Destructors
-
-Object::Object() { }
+namespace NxA {
+    struct InternalObject : private Uncopyable {
+        NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA, InternalObject);
+    };
+}

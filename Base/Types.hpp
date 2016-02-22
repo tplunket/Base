@@ -57,10 +57,8 @@ namespace NxA {
     using decimal3 = dec::decimal<3>;
 
     // -- Template used by default to produce the name of unknown types.
-    template <typename T> struct TypeName
-    {
-        static const character* get()
-        {
+    template <typename T> struct TypeName {
+        static const character* get() {
             return typeid(T).name();
         }
     };

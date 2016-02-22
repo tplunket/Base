@@ -30,8 +30,8 @@ namespace NxA {
     template <class T> class NullablePointer : protected Pointer<T> {
     public:
         #pragma mark Constructors & Destructors
-        NullablePointer() { };
-        NullablePointer(const Pointer<T>& other) : Pointer<T>(other) { };
+        NullablePointer() { }
+        NullablePointer(const Pointer<T>& other) : Pointer<T>(other) { }
         ~NullablePointer() = default;
 
         #pragma mark Operators

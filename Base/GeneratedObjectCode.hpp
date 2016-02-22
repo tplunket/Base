@@ -32,10 +32,8 @@
 
 namespace NxA {
     class String;
+    class InternalObject;
     template <class T> class ArrayContainer;
-    namespace Internal {
-        class Object;
-    }
 }
 
 #pragma mark Macros
@@ -125,7 +123,7 @@ namespace NxA {
 
 // -- Generated declarations and implementations for internal objects.
 // -- Internal objects contain the private variables and implementation of an Object.
-// -- They are derived from NxA::Internal::Object
+// -- They are derived from NxA::InternalObject
 
 #define NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(namespace_name, class_name...) \
         NXA_GENERATED_DESTRUCTOR_FOR_CLASS(class_name) \
@@ -133,12 +131,12 @@ namespace NxA {
             struct constructor_access { }; \
             class_name(); \
         public: \
-            explicit class_name(const namespace_name::Internal::class_name::constructor_access&) : class_name() { } \
-            using Pointer = NxA::Pointer<namespace_name::Internal::class_name>; \
+            explicit class_name(const namespace_name::class_name::constructor_access&) : class_name() { } \
+            using Pointer = NxA::Pointer<namespace_name::class_name>; \
             friend class namespace_name::class_name; \
-            static NxA::Pointer<namespace_name::Internal::class_name> makeShared(void) \
+            static NxA::Pointer<namespace_name::class_name> makeShared(void) \
             { \
-                return NxA::Pointer<namespace_name::Internal::class_name>(std::make_shared<namespace_name::Internal::class_name>(namespace_name::Internal::class_name::constructor_access())); \
+                return NxA::Pointer<namespace_name::class_name>(std::make_shared<namespace_name::class_name>(namespace_name::class_name::constructor_access())); \
             }
 
 // -- Generated declarations and implementations for base objects.
@@ -170,23 +168,21 @@ namespace NxA {
         public: \
             explicit class_name(const namespace_name::class_name::constructor_access&) : class_name(namespace_name::class_name::makeInternal()) { } \
         protected: \
-            explicit class_name(NxA::Pointer<NxA::Internal::Object> initial_internal); \
+            explicit class_name(NxA::Pointer<NxA::InternalObject> initial_internal); \
         public: \
-            friend namespace_name::Internal::class_name; \
+            friend namespace_name::Internal ## class_name; \
         protected: \
-            static NxA::Pointer<NxA::Internal::Object> makeInternal(void); \
+            static NxA::Pointer<NxA::InternalObject> makeInternal(void); \
         private: \
-            NxA::Pointer<NxA::Internal::Object> internalImplementation; \
-            namespace_name::Internal::class_name* internal;
+            NxA::Pointer<NxA::InternalObject> internalImplementation; \
+            namespace_name::Internal ## class_name* internal;
 
 // -- Generated declarations and implementations for regular objects.
 // -- Regular objects are derived from NxA::Object and contain an internal implementation object
-// -- derived from NxA::Internal::Object;
+// -- derived from NxA::InternalObject;
 
 #define NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(class_name...) \
-        namespace Internal { \
-            class class_name; \
-        }
+        class Internal ## class_name;
 
 #define NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_PURE_VIRTUAL_CLASS(namespace_name, class_name...) \
         NXA_GENERATED_TYPES_IN_NAMESPACE_FOR_BASE_CLASS(namespace_name, class_name) \
@@ -196,27 +192,27 @@ namespace NxA {
         protected: \
             explicit class_name() : class_name(namespace_name::class_name::makeInternal()) { } \
         protected: \
-            explicit class_name(NxA::Pointer<NxA::Internal::Object> initial_internal); \
+            explicit class_name(NxA::Pointer<NxA::InternalObject> initial_internal); \
         public: \
             explicit class_name(const namespace_name::class_name::constructor_access&) : class_name(namespace_name::class_name::makeInternal()) { } \
-            explicit class_name(const namespace_name::class_name::constructor_access&, NxA::Pointer<NxA::Internal::Object>& initial_internal) : class_name(initial_internal) { } \
+            explicit class_name(const namespace_name::class_name::constructor_access&, NxA::Pointer<NxA::InternalObject>& initial_internal) : class_name(initial_internal) { } \
         public: \
-            friend namespace_name::Internal::class_name; \
+            friend namespace_name::Internal ## class_name; \
             virtual const character* className(void) const override \
             { \
                 return namespace_name::class_name::staticClassName(); \
             } \
         private: \
-            namespace_name::Internal::class_name* internal; \
+            namespace_name::Internal ## class_name* internal; \
         private: \
             using super = class_name;
 
 #define NXA_GENERATED_DECLARATIONS_WITHOUT_OPERATOR_EQUAL_IN_NAMESPACE_FOR_CLASS(namespace_name, class_name...) \
         NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_PURE_VIRTUAL_CLASS(namespace_name, class_name) \
         protected: \
-            static NxA::Pointer<NxA::Internal::Object> makeInternal(void); \
+            static NxA::Pointer<NxA::InternalObject> makeInternal(void); \
         protected: \
-            static NxA::Pointer<class_name> makeSharedWithInternal(NxA::Pointer<NxA::Internal::Object> initial_internal); \
+            static NxA::Pointer<class_name> makeSharedWithInternal(NxA::Pointer<NxA::InternalObject> initial_internal); \
         NXA_GENERATED_MAKE_SHARED_METHOD_IN_NAMESPACE_FOR_CLASS(namespace_name, class_name) \
         NXA_GENERATED_CLASS_IDENTIFIER_METHODS_FOR(namespace_name, class_name)
 
@@ -225,17 +221,17 @@ namespace NxA {
         NXA_GENERATED_OPERATOR_EQUAL_DECLARATION_IN_NAMESPACE_FOR_CLASS(namespace_name, class_name)
 
 #define NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_PURE_VIRTUAL_CLASS_WITH_PARENT(namespace_name, class_name, parent_class) \
-        namespace_name::class_name::class_name(NxA::Pointer<NxA::Internal::Object> initial_internal) : \
+        namespace_name::class_name::class_name(NxA::Pointer<NxA::InternalObject> initial_internal) : \
                                                parent_class(initial_internal), \
-                                               internal(dynamic_cast<namespace_name::Internal::class_name*>(&(*initial_internal))) { };
+                                               internal(dynamic_cast<namespace_name::Internal ## class_name*>(&(*initial_internal))) { };
 
 #define NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(namespace_name, class_name, parent_class) \
         NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_PURE_VIRTUAL_CLASS_WITH_PARENT(namespace_name, class_name, parent_class) \
-        NxA::Pointer<NxA::Internal::Object> namespace_name::class_name::makeInternal(void) \
+        NxA::Pointer<NxA::InternalObject> namespace_name::class_name::makeInternal(void) \
         { \
-            return NxA::Pointer<NxA::Internal::Object>::dynamicCastFrom(namespace_name::Internal::class_name::makeShared()); \
+            return NxA::Pointer<NxA::InternalObject>::dynamicCastFrom(namespace_name::Internal ## class_name::makeShared()); \
         } \
-        NxA::Pointer<namespace_name::class_name> namespace_name::class_name::makeSharedWithInternal(NxA::Pointer<NxA::Internal::Object> initial_internal) \
+        NxA::Pointer<namespace_name::class_name> namespace_name::class_name::makeSharedWithInternal(NxA::Pointer<NxA::InternalObject> initial_internal) \
         { \
             return NxA::Pointer<namespace_name::class_name>(std::make_shared<namespace_name::class_name>(namespace_name::class_name::constructor_access(), initial_internal)); \
         }

@@ -21,20 +21,23 @@
 
 #include "Base/Object.hpp"
 #include "Base/String.hpp"
-#include "Base/Internal/Object.hpp"
+#include "Base/Internal/InternalObject.hpp"
 
 using namespace NxA;
 
 #pragma mark Constructors
 
-Object::Object(NxA::Pointer<NxA::Internal::Object> initial_internal) : internalImplementation(initial_internal),
-                                                                       internal(&(*initial_internal)) { }
+Object::Object(NxA::Pointer<InternalObject> initial_internal) :
+    internalImplementation(initial_internal),
+    internal(&(*initial_internal))
+{
+}
 
 #pragma mark Static Methods
 
-NxA::Pointer<NxA::Internal::Object> Object::makeInternal(void)
+Pointer<InternalObject> Object::makeInternal(void)
 {
-    return NxA::Pointer<NxA::Internal::Object>::dynamicCastFrom(Internal::Object::makeShared());
+    return NxA::Pointer<InternalObject>::dynamicCastFrom(InternalObject::makeShared());
 }
 
 uinteger32 Object::staticClassHash(void)

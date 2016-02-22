@@ -24,39 +24,41 @@
 #include "Base/Uncopyable.hpp"
 #include "Base/GeneratedObjectCode.hpp"
 
-namespace NxA {
-    NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(Object);
+NXA_ENTER_NAMESPACE(NxA);
 
-    class String;
+NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(Object);
 
-    class Object : private Uncopyable, public NXA_ENABLE_OBJECT_SHARED_FROM_THIS(Object) {
-        NXA_GENERATED_OBJECT_DECLARATIONS_FOR(NxA, Object);
+class String;
 
-    public:
-        #pragma mark Class Methods
-        static const character* staticClassName(void)
-        {
-            return "NxA::Object";
-        }
-        static uinteger32 staticClassHash(void);
+class Object : private Uncopyable, public NXA_ENABLE_OBJECT_SHARED_FROM_THIS(Object) {
+    NXA_GENERATED_OBJECT_DECLARATIONS_FOR(NxA, Object);
 
-        #pragma mark Operators
-        virtual bool operator==(const NxA::Object& other) const
-        {
-            NXA_ALOG("Undefined operator==() for class '%s'.", this->className());
-            return false;
-        }
-        virtual bool operator!=(const NxA::Object& other) const
-        {
-            return !this->operator==(other);
-        }
+public:
+    #pragma mark Class Methods
+    static const character* staticClassName(void)
+    {
+        return "NxA::Object";
+    }
+    static uinteger32 staticClassHash(void);
 
-        #pragma mark Instance Methods
-        virtual const character* className(void) const
-        {
-            return Object::staticClassName();
-        }
+    #pragma mark Operators
+    virtual bool operator==(const NxA::Object& other) const
+    {
+        NXA_ALOG("Undefined operator==() for class '%s'.", this->className());
+        return false;
+    }
+    virtual bool operator!=(const NxA::Object& other) const
+    {
+        return !this->operator==(other);
+    }
 
-        virtual NxA::Pointer<NxA::String> description(void) const;
-    };
-}
+    #pragma mark Instance Methods
+    virtual const character* className(void) const
+    {
+        return Object::staticClassName();
+    }
+
+    virtual NxA::Pointer<NxA::String> description(void) const;
+};
+
+NXA_EXIT_NAMESPACE;

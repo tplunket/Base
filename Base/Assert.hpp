@@ -24,9 +24,9 @@
 #include "Base/Debugger.hpp"
 #include "Base/Exception.hpp"
 
-namespace NxA {
-    NXA_EXCEPTION_NAMED_WITH_PARENT(AssertionFailed, NxA::Exception);
-}
+NXA_ENTER_NAMESPACE(NxA);
+NXA_EXCEPTION_NAMED_WITH_PARENT(AssertionFailed, NxA::Exception);
+NXA_EXIT_NAMESPACE;
 
 #ifdef DEBUG
 // -- Replacement for printf, but only prints its message in DEBUG builds. Otherwise it compiles down to a NO-OP.

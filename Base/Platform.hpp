@@ -25,59 +25,61 @@
 #include "Base/Blob.hpp"
 #include "Base/Uncopyable.hpp"
 
-namespace NxA {
-    class Platform : private Uncopyable {
-    public:
-        #pragma mark Constructors & Desctructors
-        Platform() = delete;
+NXA_ENTER_NAMESPACE(NxA);
 
-        #pragma mark Constants
-        static constexpr uinteger OSX       = 1;
-        static constexpr uinteger Windows   = 2;
-        static constexpr uinteger Unknown   = 23;
+class Platform : private Uncopyable {
+public:
+    #pragma mark Constructors & Desctructors
+    Platform() = delete;
 
-        static constexpr uinteger32 LitleEndian   = 1;
-        static constexpr uinteger32 BigEndian     = 2;
-        static constexpr uinteger32 PdpEndian     = 3;
-        static constexpr uinteger32 UnknownEndian = 23;
+    #pragma mark Constants
+    static constexpr uinteger OSX       = 1;
+    static constexpr uinteger Windows   = 2;
+    static constexpr uinteger Unknown   = 23;
 
-        static constexpr uinteger platform =
+    static constexpr uinteger32 LitleEndian   = 1;
+    static constexpr uinteger32 BigEndian     = 2;
+    static constexpr uinteger32 PdpEndian     = 3;
+    static constexpr uinteger32 UnknownEndian = 23;
+
+    static constexpr uinteger platform =
 #ifndef _Windows
 #if defined(_WIN32) || defined(WIN32) || defined(__Win32__) || defined(__WIN32__) || defined(_WINDOWS)
-        Platform::Windows;
+    Platform::Windows;
 #else
 #if defined(__APPLE__) && defined(__MACH__)
-        Platform::OSX;
+    Platform::OSX;
 #else
-        Platform::Unknown;
+    Platform::Unknown;
 #endif
 #endif
 #else
 #if defined(__Win32__) || defined (_WIN32)
-        Platform::Windows;
+    Platform::Windows;
 #else
 #if defined(__APPLE__) && defined(__MACH__)
-        Platform::OSX;
+    Platform::OSX;
 #else
-        Platform::Unknown;
+    Platform::Unknown;
 #endif
 #endif
 #endif
 
-        static constexpr uinteger32 endianOrder =
-            ((1 & 0xFFFFFFFF) == Platform::LitleEndian) ? Platform::LitleEndian
-          : ((1 & 0xFFFFFFFF) == Platform::BigEndian) ? Platform::BigEndian
-          : ((1 & 0xFFFFFFFF) == Platform::PdpEndian) ? Platform::PdpEndian
-          : Platform::UnknownEndian;
+    static constexpr uinteger32 endianOrder =
+          ((1 & 0xFFFFFFFF) == Platform::LitleEndian) ? Platform::LitleEndian
+        : ((1 & 0xFFFFFFFF) == Platform::BigEndian) ? Platform::BigEndian
+        : ((1 & 0xFFFFFFFF) == Platform::PdpEndian) ? Platform::PdpEndian
+        : Platform::UnknownEndian;
 
-        #pragma mark Class Methods
-        static float bigEndianFloatValueAt(const byte* ptr);
-        static uinteger32 bigEndianUInteger32ValueAt(const byte* ptr);
-        static uinteger16 bigEndianUInteger16ValueAt(const byte* ptr);
-        static void writeBigEndianFloatValueAt(float value, byte* ptr);
-        static void writeBigEndianUInteger32ValueAt(uinteger32 value, byte* ptr);
-        static void writeBigEndianUInteger16ValueAt(uinteger16 value, byte* ptr);
+    #pragma mark Class Methods
+    static float bigEndianFloatValueAt(const byte* ptr);
+    static uinteger32 bigEndianUInteger32ValueAt(const byte* ptr);
+    static uinteger16 bigEndianUInteger16ValueAt(const byte* ptr);
+    static void writeBigEndianFloatValueAt(float value, byte* ptr);
+    static void writeBigEndianUInteger32ValueAt(uinteger32 value, byte* ptr);
+    static void writeBigEndianUInteger16ValueAt(uinteger16 value, byte* ptr);
 
-        static Blob::Pointer convertEndiannessOfUInteger16From(const NxA::Blob& other);
-    };
-}
+    static Blob::Pointer convertEndiannessOfUInteger16From(const NxA::Blob& other);
+};
+
+NXA_EXIT_NAMESPACE;

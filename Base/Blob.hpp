@@ -24,60 +24,61 @@
 #include "Base/Types.hpp"
 #include "Base/Object.hpp"
 
-namespace NxA {
-    class String;
+NXA_ENTER_NAMESPACE(NxA);
 
-    class Blob : public Object, private std::vector<byte> {
-        NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_BASE_CLASS(NxA, Blob);
+class String;
 
-    public:
-        #pragma mark Factory Methods
-        static Blob::Pointer blob(void);
-        static Blob::Pointer blobWithCapacity(count size);
-        static Blob::Pointer blobWithMemoryAndSize(const byte* other, count size);
-        static Blob::Pointer blobWithBase64String(const String& str);
-        static Blob::Pointer blobWithStringWithTerminator(const String& str);
-        static Blob::Pointer blobWithStringWithoutTerminator(const String& str);
-        static Blob::Pointer blobWith(const Blob& other);
+class Blob : public Object, private std::vector<byte> {
+    NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_BASE_CLASS(NxA, Blob);
 
-        #pragma mark Class Methods
-        static const character* staticClassName(void)
-        {
-            return "NxA::Blob";
-        }
+public:
+    static Blob::Pointer blob(void);
+    static Blob::Pointer blobWithCapacity(count size);
+    static Blob::Pointer blobWithMemoryAndSize(const byte* other, count size);
+    static Blob::Pointer blobWithBase64String(const String& str);
+    static Blob::Pointer blobWithStringWithTerminator(const String& str);
+    static Blob::Pointer blobWithStringWithoutTerminator(const String& str);
+    static Blob::Pointer blobWith(const Blob& other);
 
-        static Blob::Pointer hashFor(const byte* memory, count size);
-        static NxA::Pointer<NxA::String> base64StringFor(const byte* memory, count size);
+    #pragma mark Class Methods
+    static const character* staticClassName(void)
+    {
+        return "NxA::Blob";
+    }
 
-        #pragma mark Operators
-        const byte& operator[] (integer index) const;
-        byte& operator[] (integer index)
-        {
-            return const_cast<uinteger8&>(static_cast<const Blob*>(this)->operator[](index));
-        }
-        bool operator==(const Blob& other) const;
+    static Blob::Pointer hashFor(const byte* memory, count size);
+    static NxA::Pointer<NxA::String> base64StringFor(const byte* memory, count size);
 
-        #pragma mark Instance Methods
-        count size(void) const;
+    #pragma mark Operators
+    const byte& operator[] (integer index) const;
+    byte& operator[] (integer index)
+    {
+        return const_cast<uinteger8&>(static_cast<const Blob*>(this)->operator[](index));
+    }
+    bool operator==(const Blob& other) const;
 
-        const byte* data(void) const;
-        byte* data(void)
-        {
-            return const_cast<byte*>(static_cast<const Blob*>(this)->data());
-        }
+    #pragma mark Instance Methods
+    count size(void) const;
 
-        void fillWithZeros(void);
+    const byte* data(void) const;
+    byte* data(void)
+    {
+        return const_cast<byte*>(static_cast<const Blob*>(this)->data());
+    }
 
-        Blob::Pointer hash(void);
-        NxA::Pointer<NxA::String> base64String(void);
+    void fillWithZeros(void);
 
-        void append(const Blob& other);
-        void appendWithStringTermination(const character* other);
-        void appendWithoutStringTermination(const character* other);
-        void append(const character other);
+    Blob::Pointer hash(void);
+    NxA::Pointer<NxA::String> base64String(void);
 
-        void removeAll(void);
+    void append(const Blob& other);
+    void appendWithStringTermination(const character* other);
+    void appendWithoutStringTermination(const character* other);
+    void append(const character other);
 
-        void padToAlignment(integer32 alignment);
-    };
-}
+    void removeAll(void);
+
+    void padToAlignment(integer32 alignment);
+};
+
+NXA_EXIT_NAMESPACE;

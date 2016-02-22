@@ -58,15 +58,17 @@
 
 #pragma mark Public Interface
 
-namespace NxA {
-    class String;
-    template <class T> class Pointer;
+NXA_ENTER_NAMESPACE(NxA);
 
-    class Exception : public std::runtime_error {
-    public:
-#pragma mark Constructors & Destructors
-        Exception() = delete;
-        explicit Exception(const character* reason) : std::runtime_error(reason) { }
-        virtual ~Exception() { }
-    };
-}
+class String;
+template <class T> class Pointer;
+
+class Exception : public std::runtime_error {
+public:
+    #pragma mark Constructors & Destructors
+    Exception() = delete;
+    explicit Exception(const character* reason) : std::runtime_error(reason) { }
+    virtual ~Exception() { }
+};
+
+NXA_EXIT_NAMESPACE;

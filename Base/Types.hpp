@@ -26,74 +26,77 @@
 #include <memory>
 #include <typeinfo>
 
+#include "Base/Namespace.hpp"
 #include "Base/Internal/decimal.h"
 
-namespace NxA {
-    // -- Types used by the codebase.
-    using boolean = bool;
-    
-    using uinteger = unsigned int;
-    using integer = int;
+NXA_ENTER_NAMESPACE(NxA);
 
-    using uinteger8 = uint8_t;
-    using integer8 = int8_t;
-    using uinteger16 = uint16_t;
-    using integer16 = int16_t;
-    using uinteger32 = uint32_t;
-    using integer32 = int32_t;
-    using uinteger64 = uint64_t;
-    using integer64 = int64_t;
+// -- Types used by the codebase.
+using boolean = bool;
 
-    using byte = uint8_t;
-    using character = char;
+using uinteger = unsigned int;
+using integer = int;
 
-    using count = std::size_t;
+using uinteger8 = uint8_t;
+using integer8 = int8_t;
+using uinteger16 = uint16_t;
+using integer16 = int16_t;
+using uinteger32 = uint32_t;
+using integer32 = int32_t;
+using uinteger64 = uint64_t;
+using integer64 = int64_t;
 
-    using timestamp = std::time_t;
+using byte = uint8_t;
+using character = char;
 
-    using decimal = double;
+using count = std::size_t;
 
-    using decimal2 = dec::decimal<2>;
-    using decimal3 = dec::decimal<3>;
+using timestamp = std::time_t;
 
-    // -- Template used by default to produce the name of unknown types.
-    template <typename T> struct TypeName {
-        static const character* get() {
-            return typeid(T).name();
-        }
-    };
+using decimal = double;
 
-    // -- Specialization for each type we support.
-    #define NXA_STR_VALUE_FOR_TYPE(arg...) #arg
+using decimal2 = dec::decimal<2>;
+using decimal3 = dec::decimal<3>;
 
-    #define NXA_SPECIALIZE_TYPENAME_FOR_TYPE(name) \
-        template <> struct TypeName<name> \
-        { \
-            static const character* get() \
-            { \
-                return NXA_STR_VALUE_FOR_TYPE(name); \
-            } \
-        };
+// -- Template used by default to produce the name of unknown types.
+template <typename T> struct TypeName {
+    static const character* get() {
+        return typeid(T).name();
+    }
+};
 
-    NXA_SPECIALIZE_TYPENAME_FOR_TYPE(boolean);
+// -- Specialization for each type we support.
+#define NXA_STR_VALUE_FOR_TYPE(arg...) #arg
 
-    // -- Placeholder for NXA_SPECIALIZE_TYPENAME_FOR_TYPE(uinteger) which is the same specialization as uinteger32 on OSX;
-    // -- Placeholder for NXA_SPECIALIZE_TYPENAME_FOR_TYPE(integer) which is the same specialization as uinteger32 on OSX;
+#define NXA_SPECIALIZE_TYPENAME_FOR_TYPE(name) \
+template <> struct TypeName<name> \
+{ \
+    static const character* get() \
+    { \
+        return NXA_STR_VALUE_FOR_TYPE(name); \
+    } \
+};
 
-    NXA_SPECIALIZE_TYPENAME_FOR_TYPE(integer8);
-    NXA_SPECIALIZE_TYPENAME_FOR_TYPE(uinteger16);
-    NXA_SPECIALIZE_TYPENAME_FOR_TYPE(integer16);
-    NXA_SPECIALIZE_TYPENAME_FOR_TYPE(uinteger32);
-    NXA_SPECIALIZE_TYPENAME_FOR_TYPE(integer32);
-    NXA_SPECIALIZE_TYPENAME_FOR_TYPE(uinteger64);
-    NXA_SPECIALIZE_TYPENAME_FOR_TYPE(integer64);
+NXA_SPECIALIZE_TYPENAME_FOR_TYPE(boolean);
 
-    NXA_SPECIALIZE_TYPENAME_FOR_TYPE(byte);
-    NXA_SPECIALIZE_TYPENAME_FOR_TYPE(character);
+// -- Placeholder for NXA_SPECIALIZE_TYPENAME_FOR_TYPE(uinteger) which is the same specialization as uinteger32 on OSX;
+// -- Placeholder for NXA_SPECIALIZE_TYPENAME_FOR_TYPE(integer) which is the same specialization as uinteger32 on OSX;
 
-    NXA_SPECIALIZE_TYPENAME_FOR_TYPE(count);
+NXA_SPECIALIZE_TYPENAME_FOR_TYPE(integer8);
+NXA_SPECIALIZE_TYPENAME_FOR_TYPE(uinteger16);
+NXA_SPECIALIZE_TYPENAME_FOR_TYPE(integer16);
+NXA_SPECIALIZE_TYPENAME_FOR_TYPE(uinteger32);
+NXA_SPECIALIZE_TYPENAME_FOR_TYPE(integer32);
+NXA_SPECIALIZE_TYPENAME_FOR_TYPE(uinteger64);
+NXA_SPECIALIZE_TYPENAME_FOR_TYPE(integer64);
 
-    NXA_SPECIALIZE_TYPENAME_FOR_TYPE(timestamp);
+NXA_SPECIALIZE_TYPENAME_FOR_TYPE(byte);
+NXA_SPECIALIZE_TYPENAME_FOR_TYPE(character);
 
-    NXA_SPECIALIZE_TYPENAME_FOR_TYPE(decimal);
-}
+NXA_SPECIALIZE_TYPENAME_FOR_TYPE(count);
+
+NXA_SPECIALIZE_TYPENAME_FOR_TYPE(timestamp);
+
+NXA_SPECIALIZE_TYPENAME_FOR_TYPE(decimal);
+
+NXA_EXIT_NAMESPACE;

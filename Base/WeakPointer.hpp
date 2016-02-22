@@ -25,34 +25,38 @@
 
 #include <memory>
 
-namespace NxA {
-    template <class T> class WeakPointer : protected std::weak_ptr<T> {
-    public:
-        #pragma mark Constructors & Destructors
-        WeakPointer() = default;
-        WeakPointer(const Pointer<T>& other) : std::weak_ptr<T>(other) { }
-        WeakPointer(const WeakPointer<T>& other) : std::weak_ptr<T>(other) { }
-        ~WeakPointer() = default;
+NXA_ENTER_NAMESPACE(NxA);
 
-        #pragma mark Instance Methods
-        boolean isValid(void) const {
-            return !this->expired();
-        }
+template <class T> class WeakPointer : protected std::weak_ptr<T> {
+public:
+    #pragma mark Constructors & Destructors
+    WeakPointer() = default;
+    WeakPointer(const Pointer<T>& other) : std::weak_ptr<T>(other) { }
+    WeakPointer(const WeakPointer<T>& other) : std::weak_ptr<T>(other) { }
+    ~WeakPointer() = default;
 
-        void release(void) {
-            NXA_ASSERT_TRUE(this->isValid());
-            this->std::weak_ptr<T>::reset();
-        }
+    #pragma mark Instance Methods
+    boolean isValid(void) const
+    {
+        return !this->expired();
+    }
 
-        Pointer<T> pointer(void) const
-        {
-            NXA_ASSERT_TRUE(this->isValid());
-            return Pointer<T>(std::shared_ptr<T>(*this));
-        }
-        Pointer<const T> pointerToConst(void) const
-        {
-            NXA_ASSERT_TRUE(this->isValid());
-            return Pointer<T>(std::shared_ptr<const T>(*this));
-        }
-    };
-}
+    void release(void)
+    {
+        NXA_ASSERT_TRUE(this->isValid());
+        this->std::weak_ptr<T>::reset();
+    }
+
+    Pointer<T> pointer(void) const
+    {
+        NXA_ASSERT_TRUE(this->isValid());
+        return Pointer<T>(std::shared_ptr<T>(*this));
+    }
+    Pointer<const T> pointerToConst(void) const
+    {
+        NXA_ASSERT_TRUE(this->isValid());
+        return Pointer<T>(std::shared_ptr<const T>(*this));
+    }
+};
+
+NXA_EXIT_NAMESPACE;

@@ -30,11 +30,13 @@
 
 #pragma mark Forward Declarations
 
-namespace NxA {
-    class String;
-    class InternalObject;
-    template <class T> class ArrayContainer;
-}
+NXA_ENTER_NAMESPACE(NxA);
+
+class String;
+class InternalObject;
+template <class T> class ArrayContainer;
+
+NXA_EXIT_NAMESPACE;
 
 #pragma mark Macros
 

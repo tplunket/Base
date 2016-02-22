@@ -25,13 +25,15 @@
 #include "Base/Object.hpp"
 #include "Base/String.hpp"
 
-namespace NxA {
-    class Date : public Object {
-        NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_BASE_CLASS(NxA, Date);
-        NXA_GENERATED_CLASS_IDENTIFIER_METHODS_FOR(NxA, Date);
+NXA_ENTER_NAMESPACE(NxA);
 
-    public:
-        #pragma mark Class Methods
-        static String::Pointer formattedStringWithTimestampAndFormat(timestamp time, const character *format);
-    };
-}
+class Date : public Object {
+    NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_BASE_CLASS(NxA, Date);
+    NXA_GENERATED_CLASS_IDENTIFIER_METHODS_FOR(NxA, Date);
+
+public:
+    #pragma mark Class Methods
+    static String::Pointer formattedStringWithTimestampAndFormat(timestamp time, const character *format);
+};
+
+NXA_EXIT_NAMESPACE;

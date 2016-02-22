@@ -24,8 +24,10 @@
 #include "Base/Uncopyable.hpp"
 #include "Base/Object.hpp"
 
-namespace NxA {
-    struct InternalObject : private Uncopyable {
-        NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA, InternalObject);
-    };
-}
+NXA_ENTER_NAMESPACE(NxA);
+
+struct InternalObject : private Uncopyable {
+    NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA, InternalObject);
+};
+
+NXA_EXIT_NAMESPACE;

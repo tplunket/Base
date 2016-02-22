@@ -23,88 +23,90 @@
 
 #include "Base/Pointer.hpp"
 
-namespace NxA {
-    // -- NOTE: This pointer type should only be used internally inside internal classes or inside methods.
-    // --       It should NEVER be used as argument types to methods. It should be used as little as possible
-    // --       and the regular Pointer should always be prefered to this solution.
-    template <class T> class NullablePointer : protected Pointer<T> {
-    public:
-        #pragma mark Constructors & Destructors
-        NullablePointer() { }
-        NullablePointer(const Pointer<T>& other) : Pointer<T>(other) { }
-        ~NullablePointer() = default;
+NXA_ENTER_NAMESPACE(NxA);
 
-        #pragma mark Operators
-        operator Pointer<const T>() const
-        {
-            NXA_ASSERT_FALSE(this->isNull());
-            return Pointer<T>::operator Pointer<const T>();
-        }
-        bool operator==(const Pointer<T>& other) const
-        {
-            NXA_ASSERT_FALSE(this->isNull());
-            return Pointer<T>::operator==(other);
-        }
-        bool operator==(const T& other) const
-        {
-            NXA_ASSERT_FALSE(this->isNull());
-            return Pointer<T>::operator==(other);
-        }
-        bool operator!=(const Pointer<T>& other) const
-        {
-            NXA_ASSERT_FALSE(this->isNull());
-            return Pointer<T>::operator!=(other);
-        }
-        bool operator!=(const T& other) const
-        {
-            NXA_ASSERT_FALSE(this->isNull());
-            return Pointer<T>::operator!=(other);
-        }
-        operator T&() const
-        {
-            NXA_ASSERT_FALSE(this->isNull());
-            return Pointer<T>::operator T&();
-        }
-        operator T&()
-        {
-            NXA_ASSERT_FALSE(this->isNull());
-            return Pointer<T>::operator T&();
-        }
-        T* operator->() const
-        {
-            NXA_ASSERT_FALSE(this->isNull());
-            return Pointer<T>::operator->();
-        }
-        T* operator->()
-        {
-            NXA_ASSERT_FALSE(this->isNull());
-            return Pointer<T>::operator->();
-        }
-        T& operator*() const
-        {
-            NXA_ASSERT_FALSE(this->isNull());
-            return Pointer<T>::operator*();
-        }
-        T& operator*()
-        {
-            NXA_ASSERT_FALSE(this->isNull());
-            return Pointer<T>::operator*();
-        }
+// -- NOTE: This pointer type should only be used internally inside internal classes or inside methods.
+// --       It should NEVER be used as argument types to methods. It should be used as little as possible
+// --       and the regular Pointer should always be prefered to this solution.
+template <class T> class NullablePointer : protected Pointer<T> {
+public:
+    #pragma mark Constructors & Destructors
+    NullablePointer() { }
+    NullablePointer(const Pointer<T>& other) : Pointer<T>(other) { }
+    ~NullablePointer() = default;
 
-        #pragma mark Instance Methods
-        boolean isNull(void) const
-        {
-            return this->get() == nullptr;
-        }
-        void setToNull(void)
-        {
-            this->std::shared_ptr<T>::reset();
-        }
+    #pragma mark Operators
+    operator Pointer<const T>() const
+    {
+        NXA_ASSERT_FALSE(this->isNull());
+        return Pointer<T>::operator Pointer<const T>();
+    }
+    bool operator==(const Pointer<T>& other) const
+    {
+        NXA_ASSERT_FALSE(this->isNull());
+        return Pointer<T>::operator==(other);
+    }
+    bool operator==(const T& other) const
+    {
+        NXA_ASSERT_FALSE(this->isNull());
+        return Pointer<T>::operator==(other);
+    }
+    bool operator!=(const Pointer<T>& other) const
+    {
+        NXA_ASSERT_FALSE(this->isNull());
+        return Pointer<T>::operator!=(other);
+    }
+    bool operator!=(const T& other) const
+    {
+        NXA_ASSERT_FALSE(this->isNull());
+        return Pointer<T>::operator!=(other);
+    }
+    operator T&() const
+    {
+        NXA_ASSERT_FALSE(this->isNull());
+        return Pointer<T>::operator T&();
+    }
+    operator T&()
+    {
+        NXA_ASSERT_FALSE(this->isNull());
+        return Pointer<T>::operator T&();
+    }
+    T* operator->() const
+    {
+        NXA_ASSERT_FALSE(this->isNull());
+        return Pointer<T>::operator->();
+    }
+    T* operator->()
+    {
+        NXA_ASSERT_FALSE(this->isNull());
+        return Pointer<T>::operator->();
+    }
+    T& operator*() const
+    {
+        NXA_ASSERT_FALSE(this->isNull());
+        return Pointer<T>::operator*();
+    }
+    T& operator*()
+    {
+        NXA_ASSERT_FALSE(this->isNull());
+        return Pointer<T>::operator*();
+    }
 
-        const std::shared_ptr<T>& toStdSharedPointer(void) const
-        {
-            NXA_ASSERT_FALSE(this->isNull());
-            return Pointer<T>::toStdSharedPointer();
-        }
-    };
-}
+    #pragma mark Instance Methods
+    boolean isNull(void) const
+    {
+        return this->get() == nullptr;
+    }
+    void setToNull(void)
+    {
+        this->std::shared_ptr<T>::reset();
+    }
+
+    const std::shared_ptr<T>& toStdSharedPointer(void) const
+    {
+        NXA_ASSERT_FALSE(this->isNull());
+        return Pointer<T>::toStdSharedPointer();
+    }
+};
+
+NXA_EXIT_NAMESPACE;

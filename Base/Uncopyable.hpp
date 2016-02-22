@@ -21,18 +21,20 @@
 
 #pragma once
 
-namespace NxA {
-    class Uncopyable {
-    public:
-        #pragma mark Constructors & Destructors
-        Uncopyable(const Uncopyable&) = delete;
-        virtual ~Uncopyable() = default;
+NXA_ENTER_NAMESPACE(NxA);
 
-        #pragma mark Operators
-        Uncopyable& operator=(const Uncopyable&) = delete;
+class Uncopyable {
+public:
+    #pragma mark Constructors & Destructors
+    Uncopyable(const Uncopyable&) = delete;
+    virtual ~Uncopyable() = default;
 
-    protected:
-        #pragma mark Constructors & Destructors
-        Uncopyable() = default;
-    };
-}
+    #pragma mark Operators
+    Uncopyable& operator=(const Uncopyable&) = delete;
+
+protected:
+    #pragma mark Constructors & Destructors
+    Uncopyable() = default;
+};
+
+NXA_EXIT_NAMESPACE;

@@ -23,68 +23,70 @@
 
 #include "Base/Assert.hpp"
 
-namespace NxA {
-    template <class T> class WeakPointer;
+NXA_ENTER_NAMESPACE(NxA);
 
-    template <class T> class Pointer : protected std::shared_ptr<T> {
-        friend class WeakPointer<T>;
+template <class T> class WeakPointer;
 
-    public:
-        #pragma mark Constructors & Destructors
-        Pointer(const std::shared_ptr<T>& other) : std::shared_ptr<T>(other) { }
-        Pointer(const Pointer<T>& other) : std::shared_ptr<T>(other) { }
-        ~Pointer() = default;
+template <class T> class Pointer : protected std::shared_ptr<T> {
+    friend class WeakPointer<T>;
 
-        #pragma mark Class Methods
-        template <class Tfrom>
-        static Pointer<T> dynamicCastFrom(const Pointer<Tfrom>& other)
-        {
-            Pointer<T> result = Pointer(std::shared_ptr<T>(std::dynamic_pointer_cast<T>(other.toStdSharedPointer())));
-            NXA_ASSERT_NOT_NULL(result.get());
-            return result;
-        }
+public:
+    #pragma mark Constructors & Destructors
+    Pointer(const std::shared_ptr<T>& other) : std::shared_ptr<T>(other) { }
+    Pointer(const Pointer<T>& other) : std::shared_ptr<T>(other) { }
+    ~Pointer() = default;
 
-        #pragma mark Operators
-        operator Pointer<const T>() const
-        {
-            return Pointer<const T>(this->toStdSharedPointer());
-        }
-        bool operator==(const Pointer<T>& other) const
-        {
-            return *(this->get()) == *other;
-        }
-        bool operator==(const T& other) const
-        {
-            return *(this->get()) == other;
-        }
-        bool operator!=(const Pointer<T>& other) const
-        {
-            return *(this->get()) != *other;
-        }
-        bool operator!=(const T& other) const
-        {
-            return *(this->get()) != other;
-        }
-        operator T&() const
-        {
-            return *this->get();
-        }
-        T* operator->() const
-        {
-            return this->get();
-        }
-        T& operator*() const
-        {
-            return *this->get();
-        }
+    #pragma mark Class Methods
+    template <class Tfrom>
+    static Pointer<T> dynamicCastFrom(const Pointer<Tfrom>& other)
+    {
+        Pointer<T> result = Pointer(std::shared_ptr<T>(std::dynamic_pointer_cast<T>(other.toStdSharedPointer())));
+        NXA_ASSERT_NOT_NULL(result.get());
+        return result;
+    }
 
-        #pragma mark Instance Methods
-        const std::shared_ptr<T>& toStdSharedPointer(void) const
-        {
-            return *this;
-        }
+    #pragma mark Operators
+    operator Pointer<const T>() const
+    {
+        return Pointer<const T>(this->toStdSharedPointer());
+    }
+    bool operator==(const Pointer<T>& other) const
+    {
+        return *(this->get()) == *other;
+    }
+    bool operator==(const T& other) const
+    {
+        return *(this->get()) == other;
+    }
+    bool operator!=(const Pointer<T>& other) const
+    {
+        return *(this->get()) != *other;
+    }
+    bool operator!=(const T& other) const
+    {
+        return *(this->get()) != other;
+    }
+    operator T&() const
+    {
+        return *this->get();
+    }
+    T* operator->() const
+    {
+        return this->get();
+    }
+    T& operator*() const
+    {
+        return *this->get();
+    }
 
-    protected:
-        Pointer() = default;
-    };
-}
+    #pragma mark Instance Methods
+    const std::shared_ptr<T>& toStdSharedPointer(void) const
+    {
+        return *this;
+    }
+
+protected:
+    Pointer() = default;
+};
+
+NXA_EXIT_NAMESPACE;

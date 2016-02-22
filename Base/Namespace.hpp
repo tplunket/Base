@@ -21,26 +21,8 @@
 
 #pragma once
 
-#include "Base/Uncopyable.hpp"
-
-#include <cstdio>
-
-// -- Macro used to stop the app in the debugger if a certain condition is met, and only in DEBUG builds.
-#if DEBUG
-#define NXA_LAUNCH_DEBUGGER_IF(condition) do { if (condition) { ::printf("Entering the Debugger.\n"); NxA::Debugger::launch(); }} while(0)
-#else
-#define NXA_LAUNCH_DEBUGGER_IF(condition, ...) do { } while (0)
-#endif
-
-NXA_ENTER_NAMESPACE(NxA);
-
-class Debugger : public Uncopyable {
-public:
-    #pragma mark Constructors & Destructors
-    Debugger() = delete;
-
-    #pragma mark Class Methods
-    static boolean launch(void);
-};
-
-NXA_EXIT_NAMESPACE;
+// -- This is used mainly as a workaround for Xcode's editor
+// -- which indents on every open bracket. Using this prevents
+// -- this from happening.
+#define NXA_ENTER_NAMESPACE(name)      namespace name {
+#define NXA_EXIT_NAMESPACE             }

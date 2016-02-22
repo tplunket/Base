@@ -26,33 +26,35 @@
 #include "Base/Types.hpp"
 #include "Base/Uncopyable.hpp"
 
-namespace NxA {
-    NXA_EXCEPTION_NAMED_WITH_PARENT(FileError, NxA::Exception);
+NXA_ENTER_NAMESPACE(NxA);
 
-    class File : private Uncopyable {
-    public:
-        #pragma mark Constructors & Destructors
-        File() = delete;
+NXA_EXCEPTION_NAMED_WITH_PARENT(FileError, NxA::Exception);
 
-        #pragma mark Class Methods
-        static Blob::Pointer readFileAt(const String& path);
-        static void writeBlobToFileAt(const Blob& content,
-                                      const String& path);
-        static void deleteFileAt(const String& path);
+class File : private Uncopyable {
+public:
+    #pragma mark Constructors & Destructors
+    File() = delete;
 
-        static String::Pointer joinPaths(const String& first,
-                                         const String& second);
-        static String::Pointer removePrefixFromPath(const String& prefix,
-                                                    const String& path);
+    #pragma mark Class Methods
+    static Blob::Pointer readFileAt(const String& path);
+    static void writeBlobToFileAt(const Blob& content,
+                                  const String& path);
+    static void deleteFileAt(const String& path);
 
-        static boolean fileExistsAt(const String& path);
-        static boolean directoryExistsAt(const String& path);
-        static count sizeOfFileAt(const String& path);
+    static String::Pointer joinPaths(const String& first,
+                                     const String& second);
+    static String::Pointer removePrefixFromPath(const String& prefix,
+                                                const String& path);
 
-        static void createDirectoryAt(const String& path);
-        static String::Array::Pointer pathsForFilesInDirectory(const String& path);
+    static boolean fileExistsAt(const String& path);
+    static boolean directoryExistsAt(const String& path);
+    static count sizeOfFileAt(const String& path);
 
-        static timestamp modificationDateInSecondsSince1970ForFile(const String& path);
-        static void setModificationDateInSecondsSince1970ForFile(timestamp modificationDateInSeconds, const String& path);
-    };
-}
+    static void createDirectoryAt(const String& path);
+    static String::Array::Pointer pathsForFilesInDirectory(const String& path);
+
+    static timestamp modificationDateInSecondsSince1970ForFile(const String& path);
+    static void setModificationDateInSecondsSince1970ForFile(timestamp modificationDateInSeconds, const String& path);
+};
+
+NXA_EXIT_NAMESPACE;

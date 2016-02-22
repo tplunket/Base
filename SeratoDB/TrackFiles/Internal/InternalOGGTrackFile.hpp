@@ -33,14 +33,14 @@ NXA_ENTER_NAMESPACE(NxA);
 NXA_ENTER_NAMESPACE(Serato);
 
 #pragma mark Constants
-static const character* oggComposerFieldName = "COMPOSER";
-static const character* oggGroupingFieldName = "GROUPING";
-static const character* oggBpmFieldName = "BPM";
-static const character* oggRecordLabelFieldName = "LABEL";
-static const character* oggRemixerFieldName = "REMIXER";
-static const character* oggDateFieldName = "DATE";
-static const character* oggYearFieldName = "YEAR";
-static const character* oggKeyFieldName = "INITIALKEY";
+constexpr const character* oggComposerFieldName = "COMPOSER";
+constexpr const character* oggGroupingFieldName = "GROUPING";
+constexpr const character* oggBpmFieldName = "BPM";
+constexpr const character* oggRecordLabelFieldName = "LABEL";
+constexpr const character* oggRemixerFieldName = "REMIXER";
+constexpr const character* oggDateFieldName = "DATE";
+constexpr const character* oggYearFieldName = "YEAR";
+constexpr const character* oggKeyFieldName = "INITIALKEY";
 
 struct InternalOGGTrackFile : public InternalTrackFile {
     NXA_GENERATED_DESTRUCTOR_FOR_CLASS(InternalOGGTrackFile);

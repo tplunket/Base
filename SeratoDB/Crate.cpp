@@ -35,7 +35,7 @@ using namespace NxA::Serato;
 
 #pragma mark Constants
 
-static const character* crateFileCurrentVersionString = "1.0/Serato ScratchLive Crate";
+constexpr const character* crateFileCurrentVersionString = "1.0/Serato ScratchLive Crate";
 
 #pragma mark Factory Methods
 

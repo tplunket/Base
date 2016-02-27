@@ -36,24 +36,23 @@ using namespace NxA::Serato;
 
 TrackFileFactory::AudioFileType TrackFileFactory::audioFileTypeForPath(const String& trackFilePath)
 {
-    auto lowerCaseString = trackFilePath.lowerCaseString();
-    
-    if (lowerCaseString->hasPostfix(".aiff") || lowerCaseString->hasPostfix(".aif")) {
+    auto extension = File::extensionForFilePath(trackFilePath)->lowerCaseString();
+    if ((*extension == ".aiff") || (*extension == ".aif")) {
         return AudioFileType::AIFF;
     }
-    else if (lowerCaseString->hasPostfix(".mp3")) {
+    else if (*extension == ".mp3") {
         return AudioFileType::MP3;
     }
-    else if (lowerCaseString->hasPostfix(".m4a") || lowerCaseString->hasPostfix(".mp4") || lowerCaseString->hasPostfix("m4v")) {
+    else if ((*extension == ".m4a") || (*extension == ".mp4") || (*extension == ".m4v")) {
         return AudioFileType::MP4;
     }
-    else if (lowerCaseString->hasPostfix(".flac")) {
+    else if (*extension == ".flac") {
         return AudioFileType::FLAC;
     }
-    else if (lowerCaseString->hasPostfix(".ogg")) {
+    else if (*extension == ".ogg") {
         return AudioFileType::OGG;
     }
-    else if (lowerCaseString->hasPostfix(".wav")) {
+    else if (*extension == ".wav") {
         return AudioFileType::WAV;
     }
     else {

@@ -45,6 +45,7 @@ public:
                                      const String& second);
     static String::Pointer removePrefixFromPath(const String& prefix,
                                                 const String& path);
+    static String::Pointer extensionForFilePath(const String& path);
 
     static boolean fileExistsAt(const String& path);
     static boolean directoryExistsAt(const String& path);

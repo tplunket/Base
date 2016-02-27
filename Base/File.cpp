@@ -132,6 +132,12 @@ String::Pointer File::removePrefixFromPath(const String& prefix,
     return path.subString(lengthToCrop);
 }
 
+String::Pointer File::extensionForFilePath(const String& path)
+{
+    boost::filesystem::path boostPath(path.toUTF8());
+    return String::stringWith(boost::filesystem::extension(boostPath).c_str());
+}
+
 boolean File::fileExistsAt(const String& path)
 {
     boost::filesystem::path boostPath(path.toUTF8());

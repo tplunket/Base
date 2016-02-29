@@ -219,6 +219,8 @@ void InternalOGGTrackFile::updateComment(TagLib::Ogg::XiphComment& oggComment) c
 
 void InternalOGGTrackFile::loadAndParseFile(void)
 {
+    NXA_ASSERT_TRUE(this->filePath->length() > 0);
+
     TagLib::Vorbis::File file(this->filePath->toUTF8(),
                               true,
                               TagLib::AudioProperties::ReadStyle::Fast);

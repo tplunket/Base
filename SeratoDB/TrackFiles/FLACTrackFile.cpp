@@ -34,6 +34,8 @@ using namespace NxA::Serato;
 
 FLACTrackFile::Pointer FLACTrackFile::fileWithFileAt(const String& path, TrackFile::Flags flags)
 {
+    NXA_ASSERT_TRUE(path.length() > 0);
+
     auto internalObject = InternalFLACTrackFile::Pointer(std::make_shared<InternalFLACTrackFile>(path));
     auto newFile = FLACTrackFile::makeSharedWithInternal(InternalObject::Pointer::dynamicCastFrom(internalObject));
 

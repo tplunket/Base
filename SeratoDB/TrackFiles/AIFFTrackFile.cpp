@@ -32,6 +32,8 @@ using namespace NxA::Serato;
 
 AIFFTrackFile::Pointer AIFFTrackFile::fileWithFileAt(const String& path, TrackFile::Flags flags)
 {
+    NXA_ASSERT_TRUE(path.length() > 0);
+
     auto internalObject = InternalAIFFTrackFile::Pointer(std::make_shared<InternalAIFFTrackFile>(path));
     auto newFile = AIFFTrackFile::makeSharedWithInternal(InternalObject::Pointer::dynamicCastFrom(internalObject));
 

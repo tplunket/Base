@@ -32,6 +32,8 @@ using namespace NxA::Serato;
 
 WAVTrackFile::Pointer WAVTrackFile::fileWithFileAt(const String& path, TrackFile::Flags flags)
 {
+    NXA_ASSERT_TRUE(path.length() > 0);
+
     auto internalObject = InternalWAVTrackFile::Pointer(std::make_shared<InternalWAVTrackFile>(path));
     auto newFile = WAVTrackFile::makeSharedWithInternal(InternalObject::Pointer::dynamicCastFrom(internalObject));
 

@@ -41,6 +41,8 @@ InternalMPEGTrackFile::InternalMPEGTrackFile(const String& path) :
 
 void InternalMPEGTrackFile::loadAndParseFile(void)
 {
+    NXA_ASSERT_TRUE(this->filePath->length() > 0);
+
     TagLib::MPEG::File file(this->filePath->toUTF8(),
                             true,
                             TagLib::AudioProperties::ReadStyle::Fast);

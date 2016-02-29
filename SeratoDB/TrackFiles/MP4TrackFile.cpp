@@ -32,6 +32,8 @@ using namespace NxA::Serato;
 
 MP4TrackFile::Pointer MP4TrackFile::fileWithFileAt(const String& path, TrackFile::Flags flags)
 {
+    NXA_ASSERT_TRUE(path.length() > 0);
+
     auto internalObject = InternalMP4TrackFile::Pointer(std::make_shared<InternalMP4TrackFile>(path));
     auto newFile = MP4TrackFile::makeSharedWithInternal(InternalObject::Pointer::dynamicCastFrom(internalObject));
 

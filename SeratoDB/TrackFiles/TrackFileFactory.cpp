@@ -62,6 +62,8 @@ TrackFileFactory::AudioFileType TrackFileFactory::audioFileTypeForPath(const Str
 
 TrackFile::Pointer TrackFileFactory::trackFileForPath(const String& trackFilePath, TrackFile::Flags flags)
 {
+    NXA_ASSERT_TRUE(trackFilePath.length() > 0);
+
     switch (TrackFileFactory::audioFileTypeForPath(trackFilePath)) {
         case AudioFileType::AIFF: {
             return TrackFile::Pointer::dynamicCastFrom(AIFFTrackFile::fileWithFileAt(trackFilePath, flags));

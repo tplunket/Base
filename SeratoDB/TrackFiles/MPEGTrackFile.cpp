@@ -32,6 +32,8 @@ using namespace NxA::Serato;
 
 MPEGTrackFile::Pointer MPEGTrackFile::fileWithFileAt(const String& path, TrackFile::Flags flags)
 {
+    NXA_ASSERT_TRUE(path.length() > 0);
+
     auto internalObject = InternalMPEGTrackFile::Pointer(std::make_shared<InternalMPEGTrackFile>(path));
     auto newFile = MPEGTrackFile::makeSharedWithInternal(InternalObject::Pointer::dynamicCastFrom(internalObject));
 

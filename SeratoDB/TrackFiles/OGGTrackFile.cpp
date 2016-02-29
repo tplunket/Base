@@ -32,6 +32,8 @@ using namespace NxA::Serato;
 
 OGGTrackFile::Pointer OGGTrackFile::fileWithFileAt(const String& path, TrackFile::Flags flags)
 {
+    NXA_ASSERT_TRUE(path.length() > 0);
+
     auto internalObject = InternalOGGTrackFile::Pointer(std::make_shared<InternalOGGTrackFile>(path));
     auto newFile = OGGTrackFile::makeSharedWithInternal(InternalObject::Pointer::dynamicCastFrom(internalObject));
 

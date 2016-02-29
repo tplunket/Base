@@ -263,6 +263,8 @@ void InternalFLACTrackFile::updateComment(TagLib::Ogg::XiphComment& oggComment) 
 
 void InternalFLACTrackFile::loadAndParseFile(void)
 {
+    NXA_ASSERT_TRUE(this->filePath->length() > 0);
+
     TagLib::FLAC::File file(this->filePath->toUTF8(),
                             true,
                             TagLib::AudioProperties::ReadStyle::Fast);

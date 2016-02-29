@@ -49,6 +49,8 @@ void InternalWAVTrackFile::parseAudioProperties(const TagLib::RIFF::WAV::Propert
 
 void InternalWAVTrackFile::loadAndParseFile(void)
 {
+    NXA_ASSERT_TRUE(this->filePath->length() > 0);
+
     TagLib::RIFF::WAV::File file(this->filePath->toUTF8(),
                                  true,
                                  TagLib::AudioProperties::ReadStyle::Fast);

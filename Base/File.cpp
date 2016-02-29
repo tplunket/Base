@@ -37,6 +37,8 @@ using namespace std;
 
 Blob::Pointer File::readFileAt(const String& path)
 {
+    NXA_ASSERT_TRUE(path.length() > 0);
+
     byte* fileData = nullptr;
 
     count fileSize = File::sizeOfFileAt(path);
@@ -84,6 +86,8 @@ void File::writeBlobToFileAt(const Blob& content, const String& path)
 
 void File::deleteFileAt(const String& path)
 {
+    NXA_ASSERT_TRUE(path.length() > 0);
+
     ::remove(path.toUTF8());
 }
 
@@ -125,7 +129,6 @@ String::Pointer File::removePrefixFromPath(const String& prefix,
         fullPrefix->append(seperator);
     }
 
-
     NXA_ASSERT_TRUE(path.hasPrefix(fullPrefix));
 
     count lengthToCrop = fullPrefix->length();
@@ -140,24 +143,38 @@ String::Pointer File::extensionForFilePath(const String& path)
 
 boolean File::fileExistsAt(const String& path)
 {
+    if(!path.length()) {
+        return false;
+    }
+
     boost::filesystem::path boostPath(path.toUTF8());
     return (boost::filesystem::exists(boostPath) && boost::filesystem::is_regular_file(boostPath));
 }
 
 boolean File::directoryExistsAt(const String& path)
 {
+    if(!path.length()) {
+        return false;
+    }
+
     boost::filesystem::path boostPath(path.toUTF8());
     return (boost::filesystem::exists(boostPath) && boost::filesystem::is_directory(boostPath));
 }
 
 NxA::count File::sizeOfFileAt(const String& path)
 {
+    if(!path.length()) {
+        return 0;
+    }
+
     boost::filesystem::path boostPath(path.toUTF8());
     return (boost::filesystem::file_size(boostPath));
 }
 
 void File::createDirectoryAt(const String& path)
 {
+    NXA_ASSERT_TRUE(path.length() > 0);
+
     try {
         boost::filesystem::path boostPath(path.toUTF8());
         boost::filesystem::create_directory(boostPath);
@@ -168,6 +185,8 @@ void File::createDirectoryAt(const String& path)
 
 String::Array::Pointer File::pathsForFilesInDirectory(const String& path)
 {
+    NXA_ASSERT_TRUE(path.length() > 0);
+
     auto pathsFound = String::Array::array();
 
     if (File::directoryExistsAt(path)) {
@@ -188,12 +207,16 @@ String::Array::Pointer File::pathsForFilesInDirectory(const String& path)
 
 timestamp File::modificationDateInSecondsSince1970ForFile(const String& path)
 {
+    NXA_ASSERT_TRUE(path.length() > 0);
+
     boost::filesystem::path boostPath(path.toUTF8());
     return (boost::filesystem::last_write_time(boostPath));
 }
 
 void File::setModificationDateInSecondsSince1970ForFile(timestamp modificationDateInSeconds, const String& path)
 {
+    NXA_ASSERT_TRUE(path.length() > 0);
+
     try {
         boost::filesystem::path boostPath(path.toUTF8());
         if (boost::filesystem::exists(boostPath)) {

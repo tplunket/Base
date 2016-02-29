@@ -49,22 +49,26 @@ void InternalAIFFTrackFile::parseAudioProperties(const TagLib::RIFF::AIFF::Prope
 
 void InternalAIFFTrackFile::loadAndParseFile(void)
 {
-    TagLib::RIFF::AIFF::File file(this->filePath->toUTF8(),
+    NXA_ASSERT_TRUE(this->filePath->length() > 0);
+
+    auto test = String::string();
+
+    TagLib::RIFF::AIFF::File file(test->toUTF8(),
                                   true,
                                   TagLib::AudioProperties::ReadStyle::Fast);
     if (!file.isValid()) {
-        throw TrackFileError::exceptionWith("Error loading track file '%s'.", this->filePath->toUTF8());
+        throw TrackFileError::exceptionWith("Error loading track file.");
     }
 
     auto tag = file.tag();
     if (!tag) {
-        throw TrackFileError::exceptionWith("Error reading tags from track file '%s'.", this->filePath->toUTF8());
+        throw TrackFileError::exceptionWith("Error reading tags from track file.");
     }
     this->parseTag(*tag);
 
     auto audioProperties = file.audioProperties();
     if (!audioProperties) {
-        throw TrackFileError::exceptionWith("Error reading audio properties from track file '%s'.", this->filePath->toUTF8());
+        throw TrackFileError::exceptionWith("Error reading audio properties from track.");
     }
     this->parseAudioProperties(*audioProperties);
 
@@ -84,12 +88,12 @@ void InternalAIFFTrackFile::updateAndSaveFile(void) const
                                   true,
                                   TagLib::AudioProperties::ReadStyle::Fast);
     if (!file.isValid()) {
-        throw TrackFileError::exceptionWith("Error loading track file '%s'.", this->filePath->toUTF8());
+        throw TrackFileError::exceptionWith("Error loading track file.");
     }
 
     auto tag = file.tag();
     if (!tag) {
-        throw TrackFileError::exceptionWith("Error reading tags from track file '%s'.", this->filePath->toUTF8());
+        throw TrackFileError::exceptionWith("Error reading tags from track file.");
     }
 
     this->InternalID3TrackFile::updateTag(*tag);

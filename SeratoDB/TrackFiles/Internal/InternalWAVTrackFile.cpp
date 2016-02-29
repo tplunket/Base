@@ -55,18 +55,18 @@ void InternalWAVTrackFile::loadAndParseFile(void)
                                  true,
                                  TagLib::AudioProperties::ReadStyle::Fast);
     if (!file.isValid()) {
-        throw TrackFileError::exceptionWith("Error loading track file '%s'.", this->filePath->toUTF8());
+        throw TrackFileError::exceptionWith("Error loading track file.");
     }
 
     auto tag = file.tag();
     if (!tag) {
-        throw TrackFileError::exceptionWith("Error reading tags from track file '%s'.", this->filePath->toUTF8());
+        throw TrackFileError::exceptionWith("Error reading tags from track file.");
     }
     this->parseTag(*tag);
 
     auto audioProperties = file.audioProperties();
     if (!audioProperties) {
-        throw TrackFileError::exceptionWith("Error reading audio properties from track file '%s'.", this->filePath->toUTF8());
+        throw TrackFileError::exceptionWith("Error reading audio properties from track file.");
     }
     this->parseAudioProperties(*audioProperties);
 
@@ -86,12 +86,12 @@ void InternalWAVTrackFile::updateAndSaveFile(void) const
                                  true,
                                  TagLib::AudioProperties::ReadStyle::Fast);
     if (!file.isValid()) {
-        throw TrackFileError::exceptionWith("Error loading track file '%s'.", this->filePath->toUTF8());
+        throw TrackFileError::exceptionWith("Error loading track file.");
     }
 
     auto tag = file.tag();
     if (!tag) {
-        throw TrackFileError::exceptionWith("Error reading tags from track file '%s'.", this->filePath->toUTF8());
+        throw TrackFileError::exceptionWith("Error reading tags from track file.");
     }
 
     this->updateTag(*tag);

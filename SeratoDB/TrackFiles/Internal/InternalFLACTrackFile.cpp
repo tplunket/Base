@@ -270,13 +270,13 @@ void InternalFLACTrackFile::loadAndParseFile(void)
                             TagLib::AudioProperties::ReadStyle::Fast);
 
     if (!file.isValid()) {
-        throw TrackFileError::exceptionWith("Error loading track file '%s'.", this->filePath->toUTF8());
+        throw TrackFileError::exceptionWith("Error loading track file.");
     }
 
     auto id3v2Tag = file.hasID3v2Tag() ? file.ID3v2Tag() : nullptr;
     auto oggComment = file.hasXiphComment() ? file.xiphComment() : nullptr;
     if (!id3v2Tag && !oggComment) {
-        throw TrackFileError::exceptionWith("Error reading tags from track file '%s'.", this->filePath->toUTF8());
+        throw TrackFileError::exceptionWith("Error reading tags from track file.");
     }
     if (oggComment) {
         this->parseComment(*oggComment);
@@ -287,7 +287,7 @@ void InternalFLACTrackFile::loadAndParseFile(void)
 
     auto audioProperties = file.audioProperties();
     if (!audioProperties) {
-        throw TrackFileError::exceptionWith("Error reading audio properties from track file '%s'.", this->filePath->toUTF8());
+        throw TrackFileError::exceptionWith("Error reading audio properties from track file.");
     }
     this->parseAudioProperties(*audioProperties);
 
@@ -313,13 +313,13 @@ void InternalFLACTrackFile::updateAndSaveFile(void) const
                             TagLib::AudioProperties::ReadStyle::Fast);
 
     if (!file.isValid()) {
-        throw TrackFileError::exceptionWith("Error loading track file '%s'.", this->filePath->toUTF8());
+        throw TrackFileError::exceptionWith("Error loading track file.");
     }
 
     auto id3v2Tag = file.hasID3v2Tag() ? file.ID3v2Tag() : nullptr;
     auto oggComment = file.hasXiphComment() ? file.xiphComment() : nullptr;
     if (!id3v2Tag && !oggComment) {
-        throw TrackFileError::exceptionWith("Error reading tags from track file '%s'.", this->filePath->toUTF8());
+        throw TrackFileError::exceptionWith("Error reading tags from track file.");
     }
 
     if (oggComment) {

@@ -225,18 +225,18 @@ void InternalOGGTrackFile::loadAndParseFile(void)
                               true,
                               TagLib::AudioProperties::ReadStyle::Fast);
     if (!file.isValid()) {
-        throw TrackFileError::exceptionWith("Error loading track file '%s'.", this->filePath->toUTF8());
+        throw TrackFileError::exceptionWith("Error loading track file.");
     }
 
     auto oggComment = file.tag();
     if (!oggComment) {
-        throw TrackFileError::exceptionWith("Error reading tags from track file '%s'.", this->filePath->toUTF8());
+        throw TrackFileError::exceptionWith("Error reading tags from track file.");
     }
     this->parseComment(*oggComment);
 
     auto audioProperties = file.audioProperties();
     if (!audioProperties) {
-        throw TrackFileError::exceptionWith("Error reading audio properties from track file '%s'.", this->filePath->toUTF8());
+        throw TrackFileError::exceptionWith("Error reading audio properties from track file.");
     }
     this->parseAudioProperties(*audioProperties);
     
@@ -256,12 +256,12 @@ void InternalOGGTrackFile::updateAndSaveFile(void) const
                               true,
                               TagLib::AudioProperties::ReadStyle::Fast);
     if (!file.isValid()) {
-        throw TrackFileError::exceptionWith("Error loading track file '%s'.", this->filePath->toUTF8());
+        throw TrackFileError::exceptionWith("Error loading track file.");
     }
 
     auto oggComment = file.tag();
     if (!oggComment) {
-        throw TrackFileError::exceptionWith("Error reading tags from track file '%s'.", this->filePath->toUTF8());
+        throw TrackFileError::exceptionWith("Error reading tags from track file.");
     }
 
     this->updateComment(*oggComment);

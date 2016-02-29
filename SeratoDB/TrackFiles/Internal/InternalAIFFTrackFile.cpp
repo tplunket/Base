@@ -51,9 +51,7 @@ void InternalAIFFTrackFile::loadAndParseFile(void)
 {
     NXA_ASSERT_TRUE(this->filePath->length() > 0);
 
-    auto test = String::string();
-
-    TagLib::RIFF::AIFF::File file(test->toUTF8(),
+    TagLib::RIFF::AIFF::File file(this->filePath->toUTF8(),
                                   true,
                                   TagLib::AudioProperties::ReadStyle::Fast);
     if (!file.isValid()) {

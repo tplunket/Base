@@ -246,9 +246,11 @@ void InternalMP4TrackFile::replaceMarkersV2ItemInTag(TagLib::MP4::Tag& tag) cons
 
     decodedData->appendWithoutStringTermination(base64String->toUTF8());
 
-    constexpr integer paddingMulptipleOf = 256;
-    count paddingSize = (((base64String->length() + paddingMulptipleOf - 1) / paddingMulptipleOf) * paddingMulptipleOf) - base64String->length();
-    decodedData->append(Blob::blobWithCapacity(paddingSize));
+    constexpr integer paddingMultipleOf = 256;
+    count paddingSize = (((base64String->length() + paddingMultipleOf - 1) / paddingMultipleOf) * paddingMultipleOf) - base64String->length();
+    if (paddingSize) {
+        decodedData->append(Blob::blobWithCapacity(paddingSize));
+    }
 
     auto encodedData = Blob::base64StringFor(decodedData->data(), decodedData->size());
     TagLib::String newString(encodedData->toUTF8(), TagLib::String::UTF8);

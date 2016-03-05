@@ -71,10 +71,10 @@ void InternalDatabase::addCratesFoundInSeratoFolderOnVolumeToRootFolder(const St
     InternalDatabase::addCratesNamesAtTheStartOfUnlessAlreadyThere(*cratesInOrder, *subCratesFound);
 
     Crate::parseCratesInSeratoFolderOnVolumeAddToCrateAndSaveSmartCrateNamesIn(cratesInOrder,
-                                                                                       seratoFolderPath,
-                                                                                       volumePath,
-                                                                                       rootFolder,
-                                                                                       smartCrateNames);
+                                                                               seratoFolderPath,
+                                                                               volumePath,
+                                                                               rootFolder,
+                                                                               smartCrateNames);
 
     rootFolder.resetModificationFlags();
 }

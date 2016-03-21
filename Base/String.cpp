@@ -331,7 +331,7 @@ String::Pointer String::lowerCaseString(void) const
     return newString;
 }
 
-String::Pointer String::uppperCaseString(void) const
+String::Pointer String::upperCaseString(void) const
 {
     if (!defaultLocaleWasInitialized) {
         String::p_initDefaultLocale();

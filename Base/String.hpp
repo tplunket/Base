@@ -84,7 +84,7 @@ public:
     String::Array::Pointer splitBySeperator(char seperator) const;
     String::Pointer subString(count start, count end = -1) const;
     String::Pointer lowerCaseString(void) const;
-    String::Pointer uppperCaseString(void) const;
+    String::Pointer upperCaseString(void) const;
 
     boolean hasPrefix(const String& prefix) const;
     boolean hasPostfix(const String& postfix) const;

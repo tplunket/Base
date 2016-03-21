@@ -22,6 +22,7 @@
 #include "Base/String.hpp"
 #include "Base/Test.hpp"
 
+
 using namespace testing;
 using namespace NxA;
 
@@ -452,13 +453,42 @@ TEST(Base_String, Substring_FromAnIndexAndToAnotherInInverserOrderTheEndOfTheStr
     ASSERT_THROW(test->subString(244, 25), NxA::Exception);
 }
 
+
+TEST(Base_String, LowerCaseString_StringWithUpperCaseCharacters_ReturnsOneWithLowerCaseUTFCharacters)
+{
+    // -- Given.
+    auto test = String::stringWith("Mp3 grüßEN");
+    
+    // -- When.
+    auto result = test->lowerCaseString();
+    
+    // -- Then.
+    ASSERT_STREQ("mp3 grüßen", result->toUTF8());
+}
+
+
+
+
+TEST(Base_String, UpperCaseString_StringWithLowerCaseCharacters_ReturnsOneWithUpperCaseUTFCharacters)
+{
+    // -- Given.
+    auto test = String::stringWith("Mp3 grüßENß");
+    
+    // -- When.
+    auto result = test->upperCaseString();
+    
+    // -- Then.
+    ASSERT_STREQ("MP3 GRÜSSENSS", result->toUTF8());
+}
+
+
 TEST(Base_String, UpperCaseString_StringWithLowerCaseCharacters_ReturnsOneWithUpperCaseCharacters)
 {
     // -- Given.
     auto test = String::stringWith("Mp3 grEN");
 
     // -- When.
-    auto result = test->uppperCaseString();
+    auto result = test->upperCaseString();
 
     // -- Then.
     ASSERT_STREQ("MP3 GREN", result->toUTF8());

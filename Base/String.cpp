@@ -24,7 +24,7 @@
 #include "Base/Platform.hpp"
 #include "Base/Exception.hpp"
 
-#include "utf8rewind/include/utf8rewind/utf8rewind.h"
+#include <utf8rewind/include/utf8rewind/utf8rewind.h>
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdocumentation"
@@ -289,13 +289,12 @@ String::Array::Pointer String::splitBySeperator(char seperator) const
     return results;
 }
 
-
 String::Pointer String::utfSeek(count skip) const
 {
     NXA_ASSERT_TRUE(skip >= 0);
 
     if (skip > this->length()) {
-        skip = this->length();
+        return String::string();
     }
 
     auto rawPtr = this->c_str();
@@ -303,7 +302,6 @@ String::Pointer String::utfSeek(count skip) const
 
     return String::stringWith(startPtr);
 }
-
 
 String::Pointer String::subString(count start, count end) const
 {
@@ -327,15 +325,18 @@ String::Pointer String::lowerCaseString(void) const
 {
     auto input = this->c_str();
     auto inputLength = this->length();
-    auto outputLength = inputLength * 2; // worst case
+    auto worstCaseOutputLength = inputLength * 2;
+    char output[worstCaseOutputLength];
+    memset(output, 0, worstCaseOutputLength);
+    
     int32_t errors;
-    char output[outputLength];
-    memset(output, 0, outputLength);
-    auto converted_size = utf8tolower(input, inputLength, output, outputLength, &errors);
+    auto converted_size = utf8tolower(input, inputLength, output, worstCaseOutputLength, &errors);
     NXA_ASSERT_TRUE(errors == UTF8_ERR_NONE);
+    
     if (converted_size == 0) {
         return String::string();
     }
+    
     return String::stringWith(output);
 }
 
@@ -343,15 +344,18 @@ String::Pointer String::upperCaseString(void) const
 {
     auto input = this->c_str();
     auto inputLength = this->length();
-    auto outputLength = inputLength * 2; // worst case
+    auto worstCaseOutputLength = inputLength * 2;
+    char output[worstCaseOutputLength];
+    memset(output, 0, worstCaseOutputLength);
+    
     int32_t errors;
-    char output[outputLength];
-    memset(output, 0, outputLength);
-    auto converted_size = utf8toupper(input, inputLength, output, outputLength, &errors);
+    auto converted_size = utf8toupper(input, inputLength, output, worstCaseOutputLength, &errors);
     NXA_ASSERT_TRUE(errors == UTF8_ERR_NONE);
+    
     if (converted_size == 0) {
         return String::string();
     }
+    
     return String::stringWith(output);
 }
 

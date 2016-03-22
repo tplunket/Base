@@ -24,6 +24,8 @@
 #include "Base/Platform.hpp"
 #include "Base/Exception.hpp"
 
+#include "utf8rewind/include/utf8rewind/utf8rewind.h"
+
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdocumentation"
 #include <boost/locale.hpp>
@@ -75,7 +77,7 @@ const uinteger32 SBoxTable[256] = {
     0x02ee4662, 0x5f1943ff, 0x252d9d1c, 0x6b718887, 0xe052f724, 0x4cefa30b, 0xdcc31a00, 0xe4d0024d,
     0xdbb4534a, 0xce01f5c8, 0x0c072b61, 0x5d59736a, 0x60291da4, 0x1fbe2c71, 0x2f11d09c, 0x9dce266a,
 };
- 
+
 inline uinteger32 SBox(const byte *key, count len, uinteger32 seed) {
     uinteger32 h = seed + (uinteger32)len;
     for ( ; len & ~1; len -= 2, key += 2 )
@@ -86,9 +88,6 @@ inline uinteger32 SBox(const byte *key, count len, uinteger32 seed) {
     return h;
 }
 
-#pragma mark Private Static Variables
-
-static boolean defaultLocaleWasInitialized = false;
 
 #pragma mark Factory Methods
 
@@ -167,14 +166,6 @@ String::Pointer String::stringWithUTF16(const Blob& other)
 }
 
 #pragma mark Class Methods
-
-void String::p_initDefaultLocale(void)
-{
-    boost::locale::generator generator;
-    std::locale defaultLocale = generator.generate("UTF-8");
-    std::locale::global(defaultLocale);
-    std::wcout.imbue(defaultLocale);
-}
 
 uinteger32 String::hashFor(String::Pointer str)
 {
@@ -300,6 +291,22 @@ String::Array::Pointer String::splitBySeperator(char seperator) const
     return results;
 }
 
+
+String::Pointer String::utfSeek(count skip) const
+{
+    NXA_ASSERT_TRUE(skip >= 0);
+
+    if (skip > this->length()) {
+        skip = this->length();
+    }
+
+    auto rawPtr = this->c_str();
+    auto startPtr = utf8seek(rawPtr, this->length(), rawPtr, skip, SEEK_SET);
+
+    return String::stringWith(startPtr);
+}
+
+
 String::Pointer String::subString(count start, count end) const
 {
     NXA_ASSERT_TRUE(start <= end);
@@ -314,34 +321,40 @@ String::Pointer String::subString(count start, count end) const
 
     auto newString = String::makeShared();
     newString->std::string::operator=(this->substr(start, end - start));
-    
+
     return newString;
 }
 
 String::Pointer String::lowerCaseString(void) const
 {
-    if (!defaultLocaleWasInitialized) {
-        String::p_initDefaultLocale();
-        defaultLocaleWasInitialized = true;
+    auto input = this->c_str();
+    auto inputLength = this->length();
+    auto outputLength = inputLength * 2; // worst case
+    int32_t errors;
+    char output[outputLength];
+    memset(output, 0, outputLength);
+    auto converted_size = utf8tolower(input, inputLength, output, outputLength, &errors);
+    NXA_ASSERT_TRUE(errors == UTF8_ERR_NONE);
+    if (converted_size == 0) {
+        return String::string();
     }
-    
-    auto result = boost::locale::to_lower(*this);
-    auto newString = String::stringWith(result.c_str());
-
-    return newString;
+    return String::stringWith(output);
 }
 
 String::Pointer String::upperCaseString(void) const
 {
-    if (!defaultLocaleWasInitialized) {
-        String::p_initDefaultLocale();
-        defaultLocaleWasInitialized = true;
+    auto input = this->c_str();
+    auto inputLength = this->length();
+    auto outputLength = inputLength * 2; // worst case
+    int32_t errors;
+    char output[outputLength];
+    memset(output, 0, outputLength);
+    auto converted_size = utf8toupper(input, inputLength, output, outputLength, &errors);
+    NXA_ASSERT_TRUE(errors == UTF8_ERR_NONE);
+    if (converted_size == 0) {
+        return String::string();
     }
-
-    auto result = boost::locale::to_upper(*this);
-    auto newString = String::stringWith(result.c_str());
-
-    return newString;
+    return String::stringWith(output);
 }
 
 boolean String::hasPrefix(const String& prefix) const

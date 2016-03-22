@@ -35,8 +35,6 @@ class String : public Object, private std::string {
     NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_BASE_CLASS(NxA, String);
     NXA_GENERATED_CLASS_IDENTIFIER_METHODS_FOR(NxA, String);
 
-    #pragma mark Private Class Methods
-    static void p_initDefaultLocale(void);
 
 public:
     #pragma mark Factory Methods
@@ -83,6 +81,7 @@ public:
 
     String::Array::Pointer splitBySeperator(char seperator) const;
     String::Pointer subString(count start, count end = -1) const;
+    String::Pointer utfSeek(count at) const;
     String::Pointer lowerCaseString(void) const;
     String::Pointer upperCaseString(void) const;
 

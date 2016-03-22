@@ -28,13 +28,11 @@
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdocumentation"
-#include <boost/locale.hpp>
 #include <boost/algorithm/string/replace.hpp>
 #pragma clang diagnostic pop
 
 #include <cstdio>
 #include <codecvt>
-#include <locale>
 #include <sstream>
 
 using namespace NxA;

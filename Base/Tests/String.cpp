@@ -372,6 +372,19 @@ TEST(Base_String, Substring_FromAnIndex_ReturnsCorrectValue)
     ASSERT_EQ("This Is A Test.", *result);
 }
 
+
+TEST(Base_String, Substring_FromAnIndex_UTFReturnsCorrectValue)
+{
+    // -- Given.
+    auto test = String::stringWith("Ἀριστοτέλης");
+    
+    // -- When.
+    auto result = test->utfSeek(6);
+    
+    // -- Then.
+    ASSERT_EQ("τέλης", *result);
+}
+
 TEST(Base_String, Substring_FromAnIndexAtTheEndOfTheString_ReturnsEmptyString)
 {
     // -- Given.

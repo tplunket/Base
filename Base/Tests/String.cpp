@@ -22,7 +22,6 @@
 #include "Base/String.hpp"
 #include "Base/Test.hpp"
 
-
 using namespace testing;
 using namespace NxA;
 
@@ -372,7 +371,6 @@ TEST(Base_String, Substring_FromAnIndex_ReturnsCorrectValue)
     ASSERT_EQ("This Is A Test.", *result);
 }
 
-
 TEST(Base_String, Substring_FromAnIndex_UTFReturnsCorrectValue)
 {
     // -- Given.
@@ -466,7 +464,6 @@ TEST(Base_String, Substring_FromAnIndexAndToAnotherInInverserOrderTheEndOfTheStr
     ASSERT_THROW(test->subString(244, 25), NxA::Exception);
 }
 
-
 TEST(Base_String, LowerCaseString_StringWithUpperCaseCharacters_ReturnsOneWithLowerCaseUTFCharacters)
 {
     // -- Given.
@@ -478,9 +475,6 @@ TEST(Base_String, LowerCaseString_StringWithUpperCaseCharacters_ReturnsOneWithLo
     // -- Then.
     ASSERT_STREQ("mp3 grüßen", result->toUTF8());
 }
-
-
-
 
 TEST(Base_String, UpperCaseString_StringWithLowerCaseCharacters_ReturnsOneWithUpperCaseUTFCharacters)
 {

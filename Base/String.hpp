@@ -35,7 +35,6 @@ class String : public Object, private std::string {
     NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_BASE_CLASS(NxA, String);
     NXA_GENERATED_CLASS_IDENTIFIER_METHODS_FOR(NxA, String);
 
-
 public:
     #pragma mark Factory Methods
     static String::Pointer string(void);

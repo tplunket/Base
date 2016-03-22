@@ -297,10 +297,10 @@ String::Pointer String::utfSeek(count skip) const
         return String::string();
     }
 
-    auto rawPtr = this->c_str();
-    auto startPtr = utf8seek(rawPtr, this->length(), rawPtr, skip, SEEK_SET);
+    auto rawPointer = this->c_str();
+    auto startPointer = utf8seek(rawPointer, this->length(), rawPointer, skip, SEEK_SET);
 
-    return String::stringWith(startPtr);
+    return String::stringWith(startPointer);
 }
 
 String::Pointer String::subString(count start, count end) const

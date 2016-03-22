@@ -86,7 +86,6 @@ inline uinteger32 SBox(const byte *key, count len, uinteger32 seed) {
     return h;
 }
 
-
 #pragma mark Factory Methods
 
 String::Pointer String::string(void)

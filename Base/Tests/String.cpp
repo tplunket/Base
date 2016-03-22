@@ -494,31 +494,6 @@ TEST(Base_String, UpperCaseString_StringWithLowerCaseCharacters_ReturnsOneWithUp
     ASSERT_STREQ("MP3 GRÜSSENSS", result->toUTF8());
 }
 
-
-TEST(Base_String, UpperCaseString_StringWithLowerCaseCharacters_ReturnsOneWithUpperCaseCharacters)
-{
-    // -- Given.
-    auto test = String::stringWith("Mp3 grEN");
-
-    // -- When.
-    auto result = test->upperCaseString();
-
-    // -- Then.
-    ASSERT_STREQ("MP3 GREN", result->toUTF8());
-}
-
-TEST(Base_String, LowerCaseString_StringWithUpperCaseCharacters_ReturnsOneWithLowerCaseCharacters)
-{
-    // -- Given.
-    auto test = String::stringWith("MP3 GREN");
-
-    // -- When.
-    auto result = test->lowerCaseString();
-
-    // -- Then.
-    ASSERT_STREQ("mp3 gren", result->toUTF8());
-}
-
 TEST(Base_String, HasPrefix_StringWithAGivenPrefix_ReturnsTrue)
 {
     // -- Given.

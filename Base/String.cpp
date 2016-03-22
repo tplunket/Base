@@ -330,10 +330,10 @@ String::Pointer String::lowerCaseString(void) const
     memset(output, 0, worstCaseOutputLength);
     
     int32_t errors;
-    auto converted_size = utf8tolower(input, inputLength, output, worstCaseOutputLength, &errors);
+    auto convertedSize = utf8tolower(input, inputLength, output, worstCaseOutputLength, &errors);
     NXA_ASSERT_TRUE(errors == UTF8_ERR_NONE);
     
-    if (converted_size == 0) {
+    if (convertedSize == 0) {
         return String::string();
     }
     
@@ -349,10 +349,10 @@ String::Pointer String::upperCaseString(void) const
     memset(output, 0, worstCaseOutputLength);
     
     int32_t errors;
-    auto converted_size = utf8toupper(input, inputLength, output, worstCaseOutputLength, &errors);
+    auto convertedSize = utf8toupper(input, inputLength, output, worstCaseOutputLength, &errors);
     NXA_ASSERT_TRUE(errors == UTF8_ERR_NONE);
     
-    if (converted_size == 0) {
+    if (convertedSize == 0) {
         return String::string();
     }
     

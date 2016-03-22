@@ -81,7 +81,7 @@ public:
 
     String::Array::Pointer splitBySeperator(char seperator) const;
     String::Pointer subString(count start, count end = -1) const;
-    String::Pointer utfSeek(count at) const;
+    String::Pointer utfSeek(count skip) const;
     String::Pointer lowerCaseString(void) const;
     String::Pointer upperCaseString(void) const;
 

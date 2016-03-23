@@ -22,14 +22,14 @@
 
 #pragma once
 
-#include "TrackFiles/ID3TrackFile.hpp"
-#include "TrackFiles/Internal/InternalTrackFile.hpp"
+#include "SeratoDB/TrackFiles/ID3TrackFile.hpp"
+#include "SeratoDB/TrackFiles/Internal/InternalTrackFile.hpp"
 
 #include <Base/Base.hpp>
 
-#include <tag.h>
-#include <id3v2tag.h>
-#include <generalencapsulatedobjectframe.h>
+#include "tag.h"
+#include "id3v2tag.h"
+#include "generalencapsulatedobjectframe.h"
 
 NXA_ENTER_NAMESPACE(NxA);
 NXA_ENTER_NAMESPACE(Serato);

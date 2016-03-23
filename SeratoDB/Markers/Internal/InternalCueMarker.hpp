@@ -22,8 +22,8 @@
 
 #pragma once
 
-#include "Markers/CueMarker.hpp"
-#include "Markers/Internal/InternalMarker.hpp"
+#include "SeratoDB/Markers/CueMarker.hpp"
+#include "SeratoDB/Markers/Internal/InternalMarker.hpp"
 
 #include <Base/Base.hpp>
 

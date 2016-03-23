@@ -20,15 +20,15 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include "Tags/TagFactory.hpp"
-#include "Tags/BooleanTag.hpp"
-#include "Tags/PathTag.hpp"
-#include "Tags/TextTag.hpp"
-#include "Tags/VersionTag.hpp"
-#include "Tags/BlobTag.hpp"
-#include "Tags/ObjectTag.hpp"
-#include "Tags/UInteger16Tag.hpp"
-#include "Tags/UInteger32Tag.hpp"
+#include "SeratoDB/Tags/TagFactory.hpp"
+#include "SeratoDB/Tags/BooleanTag.hpp"
+#include "SeratoDB/Tags/PathTag.hpp"
+#include "SeratoDB/Tags/TextTag.hpp"
+#include "SeratoDB/Tags/VersionTag.hpp"
+#include "SeratoDB/Tags/BlobTag.hpp"
+#include "SeratoDB/Tags/ObjectTag.hpp"
+#include "SeratoDB/Tags/UInteger16Tag.hpp"
+#include "SeratoDB/Tags/UInteger32Tag.hpp"
 
 using namespace NxA::Serato;
 using namespace std;

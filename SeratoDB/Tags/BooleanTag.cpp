@@ -20,8 +20,8 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include "Tags/BooleanTag.hpp"
-#include "Tags/Internal/InternalBooleanTag.hpp"
+#include "SeratoDB/Tags/BooleanTag.hpp"
+#include "SeratoDB/Tags/Internal/InternalBooleanTag.hpp"
 
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, BooleanTag, Tag);
 

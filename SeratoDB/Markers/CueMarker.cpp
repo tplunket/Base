@@ -20,8 +20,8 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include "Markers/CueMarker.hpp"
-#include "Markers/Internal/InternalCueMarker.hpp"
+#include "SeratoDB/Markers/CueMarker.hpp"
+#include "SeratoDB/Markers/Internal/InternalCueMarker.hpp"
 
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, CueMarker, Marker);
 

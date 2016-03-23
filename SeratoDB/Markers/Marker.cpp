@@ -20,8 +20,8 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include "Markers/Marker.hpp"
-#include "Markers/Internal/InternalMarker.hpp"
+#include "SeratoDB/Markers/Marker.hpp"
+#include "SeratoDB/Markers/Internal/InternalMarker.hpp"
 
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, Marker, Object);
 

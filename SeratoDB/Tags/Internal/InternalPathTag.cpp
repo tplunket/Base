@@ -20,7 +20,7 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include "Tags/Internal/InternalPathTag.hpp"
+#include "SeratoDB/Tags/Internal/InternalPathTag.hpp"
 
 using namespace NxA::Serato;
 

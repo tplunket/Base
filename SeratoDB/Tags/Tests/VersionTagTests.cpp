@@ -20,8 +20,9 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include "Tags/VersionTag.hpp"
 #include "Base/Test.hpp"
+
+#include "SeratoDB/Tags/VersionTag.hpp"
 
 using namespace testing;
 using namespace NxA;

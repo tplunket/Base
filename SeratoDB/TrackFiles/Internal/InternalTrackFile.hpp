@@ -24,16 +24,16 @@
 
 #include <Base/Internal/InternalObject.hpp>
 
-#include "TrackFiles/TrackFile.hpp"
-#include "Markers/CueMarker.hpp"
-#include "Markers/LoopMarker.hpp"
-#include "Markers/GridMarker.hpp"
+#include "SeratoDB/TrackFiles/TrackFile.hpp"
+#include "SeratoDB/Markers/CueMarker.hpp"
+#include "SeratoDB/Markers/LoopMarker.hpp"
+#include "SeratoDB/Markers/GridMarker.hpp"
 
 #include <Base/Base.hpp>
 
-#include <tfile.h>
-#include <tpropertymap.h>
-#include <audioproperties.h>
+#include "tfile.h"
+#include "tpropertymap.h"
+#include "audioproperties.h"
 
 NXA_ENTER_NAMESPACE(NxA);
 NXA_ENTER_NAMESPACE(Serato);

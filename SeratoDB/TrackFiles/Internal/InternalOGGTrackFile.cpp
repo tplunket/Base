@@ -20,11 +20,11 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include "TrackFiles/Internal/InternalOGGTrackFile.hpp"
-#include "Markers/GridMarker.hpp"
+#include "SeratoDB/TrackFiles/Internal/InternalOGGTrackFile.hpp"
+#include "SeratoDB/Markers/GridMarker.hpp"
 
 #include <string>
-#include <vorbisfile.h>
+#include "vorbisfile.h"
 
 // -- Generated internal implementation ommitted because this class does not use the default contructor.
 

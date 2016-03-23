@@ -20,8 +20,8 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include "TrackFiles/ID3TrackFile.hpp"
-#include "TrackFiles/Internal/InternalID3TrackFile.hpp"
+#include "SeratoDB/TrackFiles/ID3TrackFile.hpp"
+#include "SeratoDB/TrackFiles/Internal/InternalID3TrackFile.hpp"
 
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, ID3TrackFile, TrackFile);
 

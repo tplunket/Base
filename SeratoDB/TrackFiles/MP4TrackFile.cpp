@@ -20,8 +20,8 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include "TrackFiles/MP4TrackFile.hpp"
-#include "TrackFiles/Internal/InternalMP4TrackFile.hpp"
+#include "SeratoDB/TrackFiles/MP4TrackFile.hpp"
+#include "SeratoDB/TrackFiles/Internal/InternalMP4TrackFile.hpp"
 
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, MP4TrackFile, TrackFile);
 

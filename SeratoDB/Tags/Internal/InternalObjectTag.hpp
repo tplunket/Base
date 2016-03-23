@@ -22,8 +22,8 @@
 
 #pragma once
 
-#include "Tags/ObjectTag.hpp"
-#include "Tags/Internal/InternalTag.hpp"
+#include "SeratoDB/Tags/ObjectTag.hpp"
+#include "SeratoDB/Tags/Internal/InternalTag.hpp"
 
 #include <Base/Base.hpp>
 

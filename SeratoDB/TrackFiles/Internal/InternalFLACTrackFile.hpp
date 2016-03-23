@@ -22,14 +22,14 @@
 
 #pragma once
 
-#include "TrackFiles/FLACTrackFile.hpp"
-#include "TrackFiles/Internal/InternalTrackFile.hpp"
+#include "SeratoDB/TrackFiles/FLACTrackFile.hpp"
+#include "SeratoDB/TrackFiles/Internal/InternalTrackFile.hpp"
 
 #include <Base/Base.hpp>
 
-#include <id3v2tag.h>
-#include <xiphcomment.h>
-#include <flacproperties.h>
+#include "id3v2tag.h"
+#include "xiphcomment.h"
+#include "flacproperties.h"
 
 NXA_ENTER_NAMESPACE(NxA);
 NXA_ENTER_NAMESPACE(Serato);

@@ -20,14 +20,14 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include "Internal/InternalTrack.hpp"
-#include "TrackFiles/TrackFileFactory.hpp"
-#include "Tags/ObjectTag.hpp"
-#include "Tags/TextTag.hpp"
-#include "Tags/BooleanTag.hpp"
-#include "Tags/PathTag.hpp"
-#include "Tags/UInteger32Tag.hpp"
-#include "Tags/DatabaseV2Tags.hpp"
+#include "SeratoDB/Internal/InternalTrack.hpp"
+#include "SeratoDB/TrackFiles/TrackFileFactory.hpp"
+#include "SeratoDB/Tags/ObjectTag.hpp"
+#include "SeratoDB/Tags/TextTag.hpp"
+#include "SeratoDB/Tags/BooleanTag.hpp"
+#include "SeratoDB/Tags/PathTag.hpp"
+#include "SeratoDB/Tags/UInteger32Tag.hpp"
+#include "SeratoDB/Tags/DatabaseV2Tags.hpp"
 
 // -- Generated internal implementation ommitted because this class does not use the default contructor.
 

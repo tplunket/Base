@@ -20,9 +20,9 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include "TrackFiles/Internal/InternalWAVTrackFile.hpp"
+#include "SeratoDB/TrackFiles/Internal/InternalWAVTrackFile.hpp"
 
-#include <wavfile.h>
+#include "wavfile.h"
 
 // -- Generated internal implementation ommitted because this class does not use the default contructor.
 

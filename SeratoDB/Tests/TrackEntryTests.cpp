@@ -20,12 +20,13 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#include "Base/Test.hpp"
+
 #include "SeratoDB/TrackEntry.hpp"
 #include "SeratoDB/Crate.hpp"
-#include "Tags/ObjectTag.hpp"
-#include "Tags/PathTag.hpp"
-#include "Tags/CrateV1Tags.hpp"
-#include "Base/Test.hpp"
+#include "SeratoDB/Tags/ObjectTag.hpp"
+#include "SeratoDB/Tags/PathTag.hpp"
+#include "SeratoDB/Tags/CrateV1Tags.hpp"
 
 using namespace testing;
 using namespace NxA;

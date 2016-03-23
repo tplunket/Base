@@ -20,8 +20,9 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include "Markers/CueMarker.hpp"
 #include "Base/Test.hpp"
+
+#include "SeratoDB/Markers/CueMarker.hpp"
 
 using namespace testing;
 using namespace NxA;

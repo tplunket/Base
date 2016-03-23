@@ -21,12 +21,11 @@
 //
 
 #include "SeratoDB/Tags/ObjectTag.hpp"
+#include "SeratoDB/TrackFiles/TrackFile.hpp"
+#include "SeratoDB/TrackFiles/Internal/InternalTrackFile.hpp"
 
-#include "TrackFiles/TrackFile.hpp"
-#include "TrackFiles/Internal/InternalTrackFile.hpp"
-
-#include <tpropertymap.h>
-#include <generalencapsulatedobjectframe.h>
+#include "tpropertymap.h"
+#include "generalencapsulatedobjectframe.h"
 
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_PURE_VIRTUAL_CLASS_WITH_PARENT(NxA::Serato, TrackFile, Object);
 

@@ -22,12 +22,12 @@
 
 #pragma once
 
-#include "TrackFiles/OGGTrackFile.hpp"
-#include "TrackFiles/Internal/InternalTrackFile.hpp"
+#include "SeratoDB/TrackFiles/OGGTrackFile.hpp"
+#include "SeratoDB/TrackFiles/Internal/InternalTrackFile.hpp"
 
 #include <Base/Base.hpp>
 
-#include <xiphcomment.h>
+#include "xiphcomment.h"
 
 NXA_ENTER_NAMESPACE(NxA);
 NXA_ENTER_NAMESPACE(Serato);

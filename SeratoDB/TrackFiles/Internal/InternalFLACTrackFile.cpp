@@ -20,12 +20,12 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include "TrackFiles/Internal/InternalFLACTrackFile.hpp"
-#include "TrackFiles/Internal/InternalID3TrackFile.hpp"
-#include "TrackFiles/Internal/InternalOGGTrackFile.hpp"
+#include "SeratoDB/TrackFiles/Internal/InternalFLACTrackFile.hpp"
+#include "SeratoDB/TrackFiles/Internal/InternalID3TrackFile.hpp"
+#include "SeratoDB/TrackFiles/Internal/InternalOGGTrackFile.hpp"
 
-#include <flacfile.h>
-#include <privateframe.h>
+#include "flacfile.h"
+#include "privateframe.h"
 
 // -- Generated internal implementation ommitted because this class does not use the default contructor.
 

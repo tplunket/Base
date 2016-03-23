@@ -22,8 +22,8 @@
 
 #pragma once
 
-#include "TrackFiles/MPEGTrackFile.hpp"
-#include "TrackFiles/Internal/InternalID3TrackFile.hpp"
+#include "SeratoDB/TrackFiles/MPEGTrackFile.hpp"
+#include "SeratoDB/TrackFiles/Internal/InternalID3TrackFile.hpp"
 
 #include <Base/Base.hpp>
 

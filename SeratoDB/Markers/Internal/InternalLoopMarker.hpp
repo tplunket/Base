@@ -22,8 +22,8 @@
 
 #pragma once
 
-#include "Markers/LoopMarker.hpp"
-#include "Markers/Internal/InternalMarker.hpp"
+#include "SeratoDB/Markers/LoopMarker.hpp"
+#include "SeratoDB/Markers/Internal/InternalMarker.hpp"
 
 #include <Base/Base.hpp>
 

@@ -22,12 +22,12 @@
 
 #pragma once
 
-#include "TrackFiles/Internal/InternalID3TrackFile.hpp"
-#include "TrackFiles/AIFFTrackFile.hpp"
+#include "SeratoDB/TrackFiles/Internal/InternalID3TrackFile.hpp"
+#include "SeratoDB/TrackFiles/AIFFTrackFile.hpp"
 
 #include <Base/Base.hpp>
 
-#include <aiffproperties.h>
+#include "aiffproperties.h"
 
 NXA_ENTER_NAMESPACE(NxA);
 NXA_ENTER_NAMESPACE(Serato);

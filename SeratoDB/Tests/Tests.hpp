@@ -23,8 +23,9 @@
 #pragma once
 
 #include "Base/Test.hpp"
-#include "Tags/Tests/Tests.hpp"
-#include "Markers/Tests/Tests.hpp"
+
+#include "SeratoDB/Tags/Tests/Tests.hpp"
+#include "SeratoDB/Markers/Tests/Tests.hpp"
 
 // -- This forces the linker to link the object files where these tests
 // -- are defined. Otherwise they would get stripped out.

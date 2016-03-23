@@ -21,10 +21,10 @@
 //
 
 #include "SeratoDB/Database.hpp"
-#include "Internal/InternalDatabase.hpp"
-#include "Tags/DatabaseV2Tags.hpp"
-#include "Tags/TagFactory.hpp"
-#include "Tags/VersionTag.hpp"
+#include "SeratoDB/Internal/InternalDatabase.hpp"
+#include "SeratoDB/Tags/DatabaseV2Tags.hpp"
+#include "SeratoDB/Tags/TagFactory.hpp"
+#include "SeratoDB/Tags/VersionTag.hpp"
 
 // -- Generated internal implementation ommitted because this class does not use the default contructor.
 

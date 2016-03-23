@@ -20,10 +20,10 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include "TrackFiles/FLACTrackFile.hpp"
-#include "TrackFiles/Internal/InternalFLACTrackFile.hpp"
-#include "TrackFiles/Internal/InternalOGGTrackFile.hpp"
-#include "TrackFiles/Internal/InternalID3TrackFile.hpp"
+#include "SeratoDB/TrackFiles/FLACTrackFile.hpp"
+#include "SeratoDB/TrackFiles/Internal/InternalFLACTrackFile.hpp"
+#include "SeratoDB/TrackFiles/Internal/InternalOGGTrackFile.hpp"
+#include "SeratoDB/TrackFiles/Internal/InternalID3TrackFile.hpp"
 
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, FLACTrackFile, TrackFile);
 

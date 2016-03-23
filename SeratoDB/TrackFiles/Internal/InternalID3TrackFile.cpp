@@ -20,13 +20,13 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include "TrackFiles/Internal/InternalID3TrackFile.hpp"
+#include "SeratoDB/TrackFiles/Internal/InternalID3TrackFile.hpp"
 
-#include <mpegfile.h>
-#include <attachedpictureframe.h>
-#include <textidentificationframe.h>
-#include <popularimeterframe.h>
-#include <privateframe.h>
+#include "mpegfile.h"
+#include "attachedpictureframe.h"
+#include "textidentificationframe.h"
+#include "popularimeterframe.h"
+#include "privateframe.h"
 
 // -- Generated internal implementation ommitted because this class does not use the default contructor.
 

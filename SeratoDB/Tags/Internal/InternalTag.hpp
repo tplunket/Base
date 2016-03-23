@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include "Tags/Tag.hpp"
+#include "SeratoDB/Tags/Tag.hpp"
 
 #include <Base/Base.hpp>
 #include <Base/Internal/InternalObject.hpp>

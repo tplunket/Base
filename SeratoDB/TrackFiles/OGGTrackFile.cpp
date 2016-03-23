@@ -20,8 +20,8 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include "TrackFiles/OGGTrackFile.hpp"
-#include "TrackFiles/Internal/InternalOGGTrackFile.hpp"
+#include "SeratoDB/TrackFiles/OGGTrackFile.hpp"
+#include "SeratoDB/TrackFiles/Internal/InternalOGGTrackFile.hpp"
 
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, OGGTrackFile, TrackFile);
 

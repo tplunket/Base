@@ -22,8 +22,8 @@
 
 #pragma once
 
-#include "Tags/UInteger16Tag.hpp"
-#include "Tags/Internal/InternalTag.hpp"
+#include "SeratoDB/Tags/UInteger16Tag.hpp"
+#include "SeratoDB/Tags/Internal/InternalTag.hpp"
 
 #include <Base/Base.hpp>
 

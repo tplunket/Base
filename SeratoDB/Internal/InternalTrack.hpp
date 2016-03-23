@@ -23,8 +23,8 @@
 #pragma once
 
 #include <SeratoDB/Track.hpp>
-#include <Tags/ObjectTag.hpp>
-#include <TrackFiles/TrackFile.hpp>
+#include <SeratoDB/Tags/ObjectTag.hpp>
+#include <SeratoDB/TrackFiles/TrackFile.hpp>
 
 #include <Base/Base.hpp>
 #include <Base/Internal/InternalObject.hpp>

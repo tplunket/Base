@@ -20,10 +20,9 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include "Tags/TagFactory.hpp"
-
-#include "Tags/ObjectTag.hpp"
-#include "Tags/Internal/InternalObjectTag.hpp"
+#include "SeratoDB/Tags/TagFactory.hpp"
+#include "SeratoDB/Tags/ObjectTag.hpp"
+#include "SeratoDB/Tags/Internal/InternalObjectTag.hpp"
 
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, ObjectTag, Tag);
 

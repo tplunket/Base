@@ -20,8 +20,8 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include "Tags/UInteger16Tag.hpp"
-#include "Tags/Internal/InternalUInteger16Tag.hpp"
+#include "SeratoDB/Tags/UInteger16Tag.hpp"
+#include "SeratoDB/Tags/Internal/InternalUInteger16Tag.hpp"
 
 #include "Base/Base.hpp"
 

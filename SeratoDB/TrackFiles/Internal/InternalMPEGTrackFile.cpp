@@ -20,10 +20,10 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include "TrackFiles/Internal/InternalMPEGTrackFile.hpp"
+#include "SeratoDB/TrackFiles/Internal/InternalMPEGTrackFile.hpp"
 
-#include <mpegfile.h>
-#include <mpegproperties.h>
+#include "mpegfile.h"
+#include "mpegproperties.h"
 
 // -- Generated internal implementation ommitted because this class does not use the default contructor.
 

@@ -22,8 +22,8 @@
 
 #pragma once
 
-#include "Markers/GridMarker.hpp"
-#include "Markers/Internal/InternalMarker.hpp"
+#include "SeratoDB/Markers/GridMarker.hpp"
+#include "SeratoDB/Markers/Internal/InternalMarker.hpp"
 
 #include <Base/Base.hpp>
 

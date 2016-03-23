@@ -20,9 +20,9 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include "TrackFiles/Internal/InternalAIFFTrackFile.hpp"
+#include "SeratoDB/TrackFiles/Internal/InternalAIFFTrackFile.hpp"
 
-#include <aifffile.h>
+#include "aifffile.h"
 
 // -- Generated internal implementation ommitted because this class does not use the default contructor.
 

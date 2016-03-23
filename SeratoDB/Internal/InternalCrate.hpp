@@ -24,8 +24,8 @@
 
 #include "SeratoDB/Crate.hpp"
 #include "SeratoDB/TrackEntry.hpp"
-#include "Tags/Tag.hpp"
-#include "Tags/ObjectTag.hpp"
+#include "SeratoDB/Tags/Tag.hpp"
+#include "SeratoDB/Tags/ObjectTag.hpp"
 
 #include <Base/Base.hpp>
 #include <Base/Internal/InternalObject.hpp>

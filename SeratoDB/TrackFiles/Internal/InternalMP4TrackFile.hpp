@@ -22,12 +22,12 @@
 
 #pragma once
 
-#include "TrackFiles/MP4TrackFile.hpp"
-#include "TrackFiles/Internal/InternalTrackFile.hpp"
+#include "SeratoDB/TrackFiles/MP4TrackFile.hpp"
+#include "SeratoDB/TrackFiles/Internal/InternalTrackFile.hpp"
 
 #include <Base/Base.hpp>
 
-#include <mp4tag.h>
+#include "mp4tag.h"
 
 NXA_ENTER_NAMESPACE(NxA);
 NXA_ENTER_NAMESPACE(Serato);

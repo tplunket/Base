@@ -20,8 +20,8 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include "Tags/BlobTag.hpp"
-#include "Tags/Internal/InternalBlobTag.hpp"
+#include "SeratoDB/Tags/BlobTag.hpp"
+#include "SeratoDB/Tags/Internal/InternalBlobTag.hpp"
 
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, BlobTag, Tag);
 

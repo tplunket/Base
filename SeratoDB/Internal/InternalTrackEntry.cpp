@@ -20,7 +20,7 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include "Internal/InternalTrackEntry.hpp"
+#include "SeratoDB/Internal/InternalTrackEntry.hpp"
 
 // -- Generated internal implementation ommitted because this class does not use the default contructor.
 

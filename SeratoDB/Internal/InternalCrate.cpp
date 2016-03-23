@@ -20,7 +20,7 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include "Internal/InternalCrate.hpp"
+#include "SeratoDB/Internal/InternalCrate.hpp"
 #include "SeratoDB/Database.hpp"
 
 // -- Generated internal implementation ommitted because this class does not use the default contructor.

@@ -20,9 +20,9 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include "Markers/GridMarker.hpp"
-#include "Markers/CueMarker.hpp"
-#include "Markers/Internal/InternalGridMarker.hpp"
+#include "SeratoDB/Markers/GridMarker.hpp"
+#include "SeratoDB/Markers/CueMarker.hpp"
+#include "SeratoDB/Markers/Internal/InternalGridMarker.hpp"
 
 #include <math.h>
 

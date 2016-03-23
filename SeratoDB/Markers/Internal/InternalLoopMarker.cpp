@@ -20,7 +20,7 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include "Markers/Internal/InternalLoopMarker.hpp"
+#include "SeratoDB/Markers/Internal/InternalLoopMarker.hpp"
 
 using namespace NxA::Serato;
 

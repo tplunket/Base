@@ -20,7 +20,7 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include "Markers/Internal/InternalCueMarker.hpp"
+#include "SeratoDB/Markers/Internal/InternalCueMarker.hpp"
 
 using namespace NxA::Serato;
 

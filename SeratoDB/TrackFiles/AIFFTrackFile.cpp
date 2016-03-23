@@ -20,8 +20,8 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include "TrackFiles/AIFFTrackFile.hpp"
-#include "TrackFiles/Internal/InternalAIFFTrackFile.hpp"
+#include "SeratoDB/TrackFiles/AIFFTrackFile.hpp"
+#include "SeratoDB/TrackFiles/Internal/InternalAIFFTrackFile.hpp"
 
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, AIFFTrackFile, ID3TrackFile);
 

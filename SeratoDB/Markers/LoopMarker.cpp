@@ -20,9 +20,9 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include "Markers/LoopMarker.hpp"
-#include "Markers/CueMarker.hpp"
-#include "Markers/Internal/InternalLoopMarker.hpp"
+#include "SeratoDB/Markers/LoopMarker.hpp"
+#include "SeratoDB/Markers/CueMarker.hpp"
+#include "SeratoDB/Markers/Internal/InternalLoopMarker.hpp"
 
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, LoopMarker, Marker);
 

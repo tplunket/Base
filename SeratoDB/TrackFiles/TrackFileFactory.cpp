@@ -20,13 +20,13 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include "TrackFiles/TrackFileFactory.hpp"
-#include "TrackFiles/AIFFTrackFile.hpp"
-#include "TrackFiles/MPEGTrackFile.hpp"
-#include "TrackFiles/MP4TrackFile.hpp"
-#include "TrackFiles/WavTrackFile.hpp"
-#include "TrackFiles/OGGTrackFile.hpp"
-#include "TrackFiles/FLACTrackFile.hpp"
+#include "SeratoDB/TrackFiles/TrackFileFactory.hpp"
+#include "SeratoDB/TrackFiles/AIFFTrackFile.hpp"
+#include "SeratoDB/TrackFiles/MPEGTrackFile.hpp"
+#include "SeratoDB/TrackFiles/MP4TrackFile.hpp"
+#include "SeratoDB/TrackFiles/WavTrackFile.hpp"
+#include "SeratoDB/TrackFiles/OGGTrackFile.hpp"
+#include "SeratoDB/TrackFiles/FLACTrackFile.hpp"
 
 #include "mp4file.h"
 

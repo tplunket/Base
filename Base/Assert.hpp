@@ -21,7 +21,6 @@
 
 #pragma once
 
-#include "Base/Debugger.hpp"
 #include "Base/Exception.hpp"
 
 NXA_ENTER_NAMESPACE(NxA);
@@ -33,7 +32,7 @@ NXA_EXIT_NAMESPACE;
 #define NXA_DLOG(...) { printf("%s: ", __PRETTY_FUNCTION__); printf(__VA_ARGS__); }
 
 // -- Prints a message and throws an exception in all builds but also breaks into the debugger in DEBUG builds.
-#define NXA_ALOG(...) { printf("%s: ", __PRETTY_FUNCTION__); printf(__VA_ARGS__); printf("\n");NxA::Debugger::launch();throw NxA::AssertionFailed::exceptionWith(__VA_ARGS__); }
+#define NXA_ALOG(...) { throw NxA::AssertionFailed::exceptionWith(__VA_ARGS__); }
 
 // -- NXA_ALOG_DEBUG does the same thing as ALog in DEBUG builds.
 #define NXA_ALOG_DEBUG NXA_ALOG

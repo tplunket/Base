@@ -74,6 +74,7 @@ public:
     const String& year(void) const;
     count trackNumber(void) const;
     count discNumber(void) const;
+    uinteger32 rgbaColor(void) const;
     timestamp dateModifiedInSecondsSinceJanuary1st1970(void) const;
     timestamp dateAddedInSecondsSinceJanuary1st1970(void) const;
     boolean beatGridIsLocked(void) const;
@@ -92,6 +93,7 @@ public:
     void setYear(const String& year);
     void setTrackNumber(count trackNumber);
     void setDiscNumber(count discNumber);
+    void rgbaColor(uinteger32 rgbaColor);
     void setDateModifiedInSecondsSinceJanuary1st1970(timestamp dateModified);
     void setDateAddedInSecondsSinceJanuary1st1970(timestamp dateAdded);
     void setBeatGridIsLocked(boolean locked);

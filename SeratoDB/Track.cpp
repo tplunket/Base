@@ -270,6 +270,11 @@ count Track::discNumber(void) const
     return internal->uint32ForSubTagForIdentifier(trackDiscNumberTagIdentifier);
 }
 
+uinteger32 Track::rgbaColor(void) const
+{
+    return internal->uint32ForSubTagForIdentifier(trackLabelColorTagIdentifier);
+}
+
 timestamp Track::dateModifiedInSecondsSinceJanuary1st1970(void) const
 {
     return internal->uint32ForSubTagForIdentifier(trackDateModifiedTagIdentifier);
@@ -413,6 +418,13 @@ void Track::setDiscNumber(count discNumber)
     internal->setUInt32ForSubTagForIdentifier(static_cast<uinteger32>(discNumber), trackDiscNumberTagIdentifier);
     internal->needsToUpdateDatabaseFile = true;
 }
+
+void Track::rgbaColor(uinteger32 rgbaColor)
+{
+    internal->setUInt32ForSubTagForIdentifier(rgbaColor, trackLabelColorTagIdentifier);
+    internal->needsToUpdateDatabaseFile = true;
+}
+
 
 void Track::setDateModifiedInSecondsSinceJanuary1st1970(timestamp dateModified)
 {

@@ -71,4 +71,12 @@ public:
     virtual ~Exception() { }
 };
 
+class FatalException : public std::logic_error {
+public:
+    #pragma mark Constructors & Destructors
+    FatalException() = delete;
+    explicit FatalException(const character* reason) : std::logic_error(reason) { }
+    virtual ~FatalException() { }
+};
+
 NXA_EXIT_NAMESPACE;

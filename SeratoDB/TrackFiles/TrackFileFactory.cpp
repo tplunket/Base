@@ -64,7 +64,10 @@ TrackFileFactory::AudioFileType TrackFileFactory::audioFileTypeForPath(const cha
         case '3':
         case '4': {
             if (e1 == 'p' && e2 == 'm' && e3 == '.') {
-                if (e0 == '3') return AudioFileType::MP3;
+                if (e0 == '3') {
+                    return AudioFileType::MP3;
+                }
+
                 return AudioFileType::MP4;
             }
             break;
@@ -102,28 +105,7 @@ TrackFileFactory::AudioFileType TrackFileFactory::audioFileTypeForPath(const cha
 
 TrackFileFactory::AudioFileType TrackFileFactory::audioFileTypeForPath(const String& trackFilePath)
 {
-    auto extension = File::extensionForFilePath(trackFilePath)->lowerCaseString();
-    if ((*extension == ".aiff") || (*extension == ".aif")) {
-        return AudioFileType::AIFF;
-    }
-    else if (*extension == ".mp3") {
-        return AudioFileType::MP3;
-    }
-    else if ((*extension == ".m4a") || (*extension == ".mp4") || (*extension == ".m4v")) {
-        return AudioFileType::MP4;
-    }
-    else if (*extension == ".flac") {
-        return AudioFileType::FLAC;
-    }
-    else if (*extension == ".ogg") {
-        return AudioFileType::OGG;
-    }
-    else if (*extension == ".wav") {
-        return AudioFileType::WAV;
-    }
-    else {
-        return AudioFileType::Unknown;
-    }
+    return TrackFileFactory::audioFileTypeForPath(trackFilePath.toUTF8());
 }
 
 TrackFile::Pointer TrackFileFactory::trackFileForPath(const String& trackFilePath, TrackFile::Flags flags)

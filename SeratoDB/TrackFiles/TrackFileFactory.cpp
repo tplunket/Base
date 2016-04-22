@@ -34,6 +34,72 @@ using namespace NxA::Serato;
 
 #pragma mark Class Methods
 
+
+TrackFileFactory::AudioFileType TrackFileFactory::audioFileTypeForPath(const character *start)
+{
+    const character *end = start;
+    while (*end != '\0') {
+        ++end;
+    }
+
+    int length = end - start;
+    if (length < 4) return AudioFileType::Unknown;
+
+    end -= 1;
+    auto e0 = tolower(*(end - 0));
+    auto e1 = tolower(*(end - 1));
+    auto e2 = tolower(*(end - 2));
+    auto e3 = tolower(*(end - 3));
+
+    switch (e0) {
+        case 'f':{
+            if (length >= 5 && e1 == 'f' && e2 == 'i' && e3 == 'a' && *(end - 4) == '.') {
+                return AudioFileType::AIFF;
+            }
+            if (e1 == 'i' && e2 == 'a' && e3 == '.') {
+                return AudioFileType::AIFF;
+            }
+            break;
+        }
+        case '3':
+        case '4': {
+            if (e1 == 'p' && e2 == 'm' && e3 == '.') {
+                if (e0 == '3') return AudioFileType::MP3;
+                return AudioFileType::MP4;
+            }
+            break;
+        }
+        case 'a': {
+            if (e1 == '4' && e2 == 'm' && e3 == '.') {
+                return AudioFileType::MP4;
+            }
+            break;
+        }
+        case 'v': {
+            if (e1 == '4' && e2 == 'm' && e3 == '.') {
+                return AudioFileType::MP4;
+            }
+            if (e1 == 'a' && e2 == 'w' && e3 == '.') {
+                return AudioFileType::WAV;
+            }
+            break;
+        }
+        case 'c': {
+            if (length >= 5 && e1 == 'a' && e2 == 'l' && e3 == 'f' && *(end - 4) == '.') {
+                return AudioFileType::FLAC;
+            }
+            break;
+        }
+        case 'g': {
+            if (e1 == 'g' && e2 == 'o' && e3 == '.') {
+                return AudioFileType::WAV;
+            }
+            break;
+        }
+    }
+    return AudioFileType::Unknown;
+}
+
 TrackFileFactory::AudioFileType TrackFileFactory::audioFileTypeForPath(const String& trackFilePath)
 {
     auto extension = File::extensionForFilePath(trackFilePath)->lowerCaseString();

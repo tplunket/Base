@@ -41,6 +41,7 @@ public:
     static GridMarker::Pointer markerWith(const GridMarker& other);
 
     #pragma mark Class Methods
+    static boolean sizeIsCorrectForMarkerData(count size);
     static GridMarker::Array::Pointer markersWithMemoryAt(const byte* id3TagStart);
     static void addMarkersTo(const GridMarker::Array& markers, Blob& data);
     static boolean gridMarkersAreValid(const GridMarker::Array& markers);

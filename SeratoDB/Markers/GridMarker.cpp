@@ -62,6 +62,11 @@ GridMarker::Pointer GridMarker::markerWith(const GridMarker& other)
 
 #pragma mark Class Methods
 
+boolean GridMarker::sizeIsCorrectForMarkerData(count size)
+{
+    return (size != 0) && !((size - 4) % sizeof(GridMarkerStruct));
+}
+
 GridMarker::Array::Pointer GridMarker::markersWithMemoryAt(const byte* id3TagStart)
 {
     auto result = GridMarker::Array::array();

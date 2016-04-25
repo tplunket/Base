@@ -34,14 +34,23 @@ using namespace NxA::Serato;
 
 #pragma mark Class Methods
 
-TrackFileFactory::AudioFileType TrackFileFactory::audioFileTypeForPath(const character *trackFilePath, count trackFilePathLength)
+TrackFileFactory::AudioFileType TrackFileFactory::audioFileTypeForPath(const character *trackFilePath)
 {
-    NXA_ASSERT_TRUE(trackFilePath > 0);
+    NXA_ASSERT_NOT_NULL(trackFilePath);
+
+    const character *endOfTrackFilePath = trackFilePath;
+    while (*endOfTrackFilePath) {
+        ++endOfTrackFilePath;
+    }
+    --endOfTrackFilePath;
+
+    count trackFilePathLength = endOfTrackFilePath - trackFilePath;
+    NXA_ASSERT_TRUE(trackFilePathLength > 0);
+
     if (trackFilePathLength < 4) {
         return AudioFileType::Unknown;
     }
 
-    const character *endOfTrackFilePath = (trackFilePath + trackFilePathLength) - 1;
     auto lastCharacter = tolower(*endOfTrackFilePath);
     auto nextToLast = tolower(*(endOfTrackFilePath - 1));
     auto secondToLast = tolower(*(endOfTrackFilePath - 2));

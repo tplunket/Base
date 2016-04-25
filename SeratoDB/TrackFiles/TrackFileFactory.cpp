@@ -98,12 +98,13 @@ TrackFileFactory::AudioFileType TrackFileFactory::audioFileTypeForPath(const cha
             break;
         }
     }
+
     return AudioFileType::Unknown;
 }
 
 TrackFileFactory::AudioFileType TrackFileFactory::audioFileTypeForPath(const String& trackFilePath)
 {
-    return TrackFileFactory::audioFileTypeForPath(trackFilePath.toUTF8(), trackFilePath.length());
+    return TrackFileFactory::audioFileTypeForPath(trackFilePath.toUTF8());
 }
 
 TrackFile::Pointer TrackFileFactory::trackFileForPath(const String& trackFilePath, TrackFile::Flags flags)

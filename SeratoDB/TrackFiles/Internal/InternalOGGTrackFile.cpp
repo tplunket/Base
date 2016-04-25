@@ -107,14 +107,16 @@ void InternalOGGTrackFile::parseMarkersInComment(const TagLib::Ogg::XiphComment&
         auto minorVersion = beatGridEncodedData.substr(8, 8).toInt();
         if ((majorVersion == 1) && (minorVersion == 0)) {
             auto numberOfGridMarkers = beatGridEncodedData.substr(16, 8).toInt();
-            auto markerStrings = beatGridEncodedData.substr(25).split("(");
-            if (markerStrings.size() == numberOfGridMarkers) {
-                for (auto& markerString : markerStrings) {
-                    auto values = markerString.split(",");
-                    auto bpm = values[1].substr(0, values[1].length() - 1);
+            if (numberOfGridMarkers) {
+                auto markerStrings = beatGridEncodedData.substr(25).split("(");
+                if (markerStrings.size() == numberOfGridMarkers) {
+                    for (auto& markerString : markerStrings) {
+                        auto values = markerString.split(",");
+                        auto bpm = values[1].substr(0, values[1].length() - 1);
 
-                    this->gridMarkers->append(GridMarker::markerWithPositionAndBeatsPerMinute(decimal3(values[0].to8Bit(true).c_str()),
-                                                                                              decimal2(bpm.to8Bit(true).c_str())));
+                        this->gridMarkers->append(GridMarker::markerWithPositionAndBeatsPerMinute(decimal3(values[0].to8Bit(true).c_str()),
+                                                                                                  decimal2(bpm.to8Bit(true).c_str())));
+                    }
                 }
             }
         }

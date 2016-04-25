@@ -260,8 +260,8 @@ void InternalID3TrackFile::parseMarkersInTagToTrackFile(const TagLib::ID3v2::Tag
             if (frameObject.size()) {
                 auto headerStruct = reinterpret_cast<GeobObjectStruct*>(frameObject.data());
                 if ((headerStruct->majorVersion == 1) && (headerStruct->minorVersion == 0)) {
-                    count size = frame->size() - sizeof(GeobObjectStruct);
-                    if (size) {
+                    count size = frameObject.size() - sizeof(GeobObjectStruct);
+                    if (GridMarker::sizeIsCorrectForMarkerData(size)) {
                         trackFile.parseGridMarkersFrom(headerStruct->data);
                     }
                 }

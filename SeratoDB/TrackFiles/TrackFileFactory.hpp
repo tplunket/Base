@@ -47,7 +47,7 @@ public:
     TrackFileFactory() = delete;
 
     #pragma mark Class Methods
-    static AudioFileType audioFileTypeForPath(const character *start);
+    static AudioFileType audioFileTypeForPath(const character *trackFilePath, count length);
     static AudioFileType audioFileTypeForPath(const String& trackFilePath);
 
     static NxA::Serato::TrackFile::Pointer trackFileForPath(const String& trackFilePath, TrackFile::Flags flags = TrackFile::Flags::NoFlag);

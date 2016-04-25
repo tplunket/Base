@@ -34,37 +34,34 @@ using namespace NxA::Serato;
 
 #pragma mark Class Methods
 
-
-TrackFileFactory::AudioFileType TrackFileFactory::audioFileTypeForPath(const character *start)
+TrackFileFactory::AudioFileType TrackFileFactory::audioFileTypeForPath(const character *trackFilePath, count trackFilePathLength)
 {
-    const character *end = start;
-    while (*end != '\0') {
-        ++end;
+    NXA_ASSERT_TRUE(trackFilePath > 0);
+    if (trackFilePathLength < 4) {
+        return AudioFileType::Unknown;
     }
 
-    int length = end - start;
-    if (length < 4) return AudioFileType::Unknown;
+    const character *endOfTrackFilePath = (trackFilePath + trackFilePathLength) - 1;
+    auto lastCharacter = tolower(*endOfTrackFilePath);
+    auto nextToLast = tolower(*(endOfTrackFilePath - 1));
+    auto secondToLast = tolower(*(endOfTrackFilePath - 2));
+    auto thirdToLast = tolower(*(endOfTrackFilePath - 3));
 
-    end -= 1;
-    auto e0 = tolower(*(end - 0));
-    auto e1 = tolower(*(end - 1));
-    auto e2 = tolower(*(end - 2));
-    auto e3 = tolower(*(end - 3));
-
-    switch (e0) {
+    switch (lastCharacter) {
         case 'f':{
-            if (length >= 5 && e1 == 'f' && e2 == 'i' && e3 == 'a' && *(end - 4) == '.') {
+            if (trackFilePathLength >= 5 && nextToLast == 'f' && secondToLast == 'i' && thirdToLast == 'a' && *(endOfTrackFilePath - 4) == '.') {
                 return AudioFileType::AIFF;
             }
-            if (e1 == 'i' && e2 == 'a' && e3 == '.') {
+
+            if (nextToLast == 'i' && secondToLast == 'a' && thirdToLast == '.') {
                 return AudioFileType::AIFF;
             }
             break;
         }
         case '3':
         case '4': {
-            if (e1 == 'p' && e2 == 'm' && e3 == '.') {
-                if (e0 == '3') {
+            if (nextToLast == 'p' && secondToLast == 'm' && thirdToLast == '.') {
+                if (lastCharacter == '3') {
                     return AudioFileType::MP3;
                 }
 
@@ -73,28 +70,29 @@ TrackFileFactory::AudioFileType TrackFileFactory::audioFileTypeForPath(const cha
             break;
         }
         case 'a': {
-            if (e1 == '4' && e2 == 'm' && e3 == '.') {
+            if (nextToLast == '4' && secondToLast == 'm' && thirdToLast == '.') {
                 return AudioFileType::MP4;
             }
             break;
         }
         case 'v': {
-            if (e1 == '4' && e2 == 'm' && e3 == '.') {
+            if (nextToLast == '4' && secondToLast == 'm' && thirdToLast == '.') {
                 return AudioFileType::MP4;
             }
-            if (e1 == 'a' && e2 == 'w' && e3 == '.') {
+
+            if (nextToLast == 'a' && secondToLast == 'w' && thirdToLast == '.') {
                 return AudioFileType::WAV;
             }
             break;
         }
         case 'c': {
-            if (length >= 5 && e1 == 'a' && e2 == 'l' && e3 == 'f' && *(end - 4) == '.') {
+            if (trackFilePathLength >= 5 && nextToLast == 'a' && secondToLast == 'l' && thirdToLast == 'f' && *(endOfTrackFilePath - 4) == '.') {
                 return AudioFileType::FLAC;
             }
             break;
         }
         case 'g': {
-            if (e1 == 'g' && e2 == 'o' && e3 == '.') {
+            if (nextToLast == 'g' && secondToLast == 'o' && thirdToLast == '.') {
                 return AudioFileType::WAV;
             }
             break;
@@ -105,7 +103,7 @@ TrackFileFactory::AudioFileType TrackFileFactory::audioFileTypeForPath(const cha
 
 TrackFileFactory::AudioFileType TrackFileFactory::audioFileTypeForPath(const String& trackFilePath)
 {
-    return TrackFileFactory::audioFileTypeForPath(trackFilePath.toUTF8());
+    return TrackFileFactory::audioFileTypeForPath(trackFilePath.toUTF8(), trackFilePath.length());
 }
 
 TrackFile::Pointer TrackFileFactory::trackFileForPath(const String& trackFilePath, TrackFile::Flags flags)

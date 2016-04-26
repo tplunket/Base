@@ -67,7 +67,7 @@ Tag::Pointer TagFactory::tagForTagAt(const byte* tagAddress)
         }
     }
 
-    NXA_ALOG("Illegal Serato tag type.");
+    NXA_ALOG("Illegal Serato tag type '%c%c%c%c'.", (identifier >> 24) & 0xff, (identifier >> 16) & 0xff, (identifier >> 8) & 0xff, identifier & 0xff);
 }
 
 Tag::Array::Pointer TagFactory::parseTagsAt(const byte* firstTagAddress, count sizeFromFirstTag)

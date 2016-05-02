@@ -151,7 +151,6 @@ void InternalMP4TrackFile::parseMarkersInTag(const TagLib::MP4::Tag& tag)
         
             auto encodedDataSize = encodedData.size();
             if (encodedDataSize) {
-                
                 auto decodedData = Blob::blobWithBase64String(String::stringWith(encodedData.data(TagLib::String::UTF8).data(),
                                                                                  encodedDataSize));
                 auto headerStruct = reinterpret_cast<const MP4MarkersHeaderStruct*>(decodedData->data());

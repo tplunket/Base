@@ -147,8 +147,12 @@ boolean File::fileExistsAt(const String& path)
         return false;
     }
 
-    boost::filesystem::path boostPath(path.toUTF8());
-    return (boost::filesystem::exists(boostPath) && boost::filesystem::is_regular_file(boostPath));
+    try {
+        boost::filesystem::path boostPath(path.toUTF8());
+        return (boost::filesystem::exists(boostPath) && boost::filesystem::is_regular_file(boostPath));
+    } catch (const boost::filesystem::filesystem_error &e) {
+        return false;
+    }
 }
 
 boolean File::directoryExistsAt(const String& path)

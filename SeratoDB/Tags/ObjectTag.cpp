@@ -35,7 +35,7 @@ ObjectTag::Pointer ObjectTag::tagWithMemoryAt(const byte* tagAddress)
 {
     auto dataSize = Tag::dataSizeForTagAt(tagAddress);
     auto tagData = InternalTag::dataForTagAt(tagAddress);
-    auto subTags = TagFactory::parseTagsAt(tagData, dataSize);
+    auto subTags = TagFactory::parseTagsAt(tagData, dataSize, String::stringWith("-memory-"));
 
     auto result = ObjectTag::tagWithIdentifierAndValue(Tag::identifierForTagAt(tagAddress),
                                                        subTags);

@@ -35,9 +35,9 @@ public:
     TagFactory() = delete;
 
     #pragma mark Class Methods
-    static Tag::Pointer tagForTagAt(const byte* tagAddress);
+    static Tag::Pointer tagForTagAt(const byte *tagAddress, const String &source);
 
-    static Tag::Array::Pointer parseTagsAt(const byte* firstTagAddress, count sizeFromFirstTag);
+    static Tag::Array::Pointer parseTagsAt(const byte *firstTagAddress, count sizeFromFirstTag, const String &source);
 };
 
 NXA_EXIT_NAMESPACE;

@@ -182,7 +182,7 @@ Tag::ArrayOfConst::Pointer InternalDatabase::parseDatabaseFileAtLocatedOnVolumeA
     try {
         auto databaseFile = File::readFileAt(databasePath);
 
-        auto tags = TagFactory::parseTagsAt(databaseFile->data(), databaseFile->size());
+        auto tags = TagFactory::parseTagsAt(databaseFile->data(), databaseFile->size(), databasePath);
         for (auto& tag : *tags) {
             switch (tag->identifier()) {
                 case trackObjectTagIdentifier: {

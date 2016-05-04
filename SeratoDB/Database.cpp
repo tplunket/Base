@@ -55,7 +55,7 @@ String::Pointer Database::versionAsStringForDatabaseIn(const String& seratoFolde
         while (tagAddress < endOfTagsAddress) {
             if ((Tag::dataSizeForTagAt(tagAddress) > 0) &&
                 (Tag::identifierForTagAt(tagAddress) == databaseVersionTagIdentifier)) {
-                auto tag = TagFactory::tagForTagAt(tagAddress);
+                auto tag = TagFactory::tagForTagAt(tagAddress, databaseFilePath);
                 auto& textTag = dynamic_cast<VersionTag&>(*tag);
                 return String::stringWith(textTag.value());
             }

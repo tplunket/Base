@@ -35,7 +35,7 @@ using namespace std;
 
 #pragma mark Class Methods
 
-Tag::Pointer TagFactory::tagForTagAt(const byte* tagAddress)
+Tag::Pointer TagFactory::tagForTagAt(const byte *tagAddress, const String &source)
 {
     uinteger32 identifier = Tag::identifierForTagAt(tagAddress);
     char typeIdentifier = (identifier >> 24) & 0xff;
@@ -67,10 +67,10 @@ Tag::Pointer TagFactory::tagForTagAt(const byte* tagAddress)
         }
     }
 
-    NXA_ALOG("Illegal Serato tag type '%c%c%c%c'.", (identifier >> 24) & 0xff, (identifier >> 16) & 0xff, (identifier >> 8) & 0xff, identifier & 0xff);
+    NXA_ALOG("Illegal Serato tag type in '%s'. identifier:0x%08x, (char)0x%02x == '%c'.", source.toUTF8(), identifier, typeIdentifier, typeIdentifier);
 }
 
-Tag::Array::Pointer TagFactory::parseTagsAt(const byte* firstTagAddress, count sizeFromFirstTag)
+Tag::Array::Pointer TagFactory::parseTagsAt(const byte *firstTagAddress, count sizeFromFirstTag, const String &source)
 {
     const byte* tagAddress = firstTagAddress;
     const byte* endOfTagsAddress = firstTagAddress + sizeFromFirstTag;
@@ -79,7 +79,7 @@ Tag::Array::Pointer TagFactory::parseTagsAt(const byte* firstTagAddress, count s
 
     while (tagAddress < endOfTagsAddress) {
         if (Tag::dataSizeForTagAt(tagAddress) > 0) {
-            auto tag = TagFactory::tagForTagAt(tagAddress);
+            auto tag = TagFactory::tagForTagAt(tagAddress, source);
             newTags->append(tag);
         }
 

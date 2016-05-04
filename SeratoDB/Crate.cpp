@@ -291,7 +291,7 @@ void Crate::readFromFolderInVolume(const String& seratoFolderPath, const String&
         auto filePath = InternalCrate::crateFilePathForFullCrateNameInSeratoFolder(this->fullCrateName(), seratoFolderPath);
 
         auto crateFileData = File::readFileAt(filePath);
-        auto tags = TagFactory::parseTagsAt(crateFileData->data(), crateFileData->size());
+        auto tags = TagFactory::parseTagsAt(crateFileData->data(), crateFileData->size(), filePath);
         if (!tags->length()) {
             return;
         }

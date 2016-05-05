@@ -220,7 +220,6 @@ const String& TrackFile::remixer(void) const
     return internal->remixer;
 }
 
-
 void TrackFile::setRemixer(const String& remixer)
 {
     NXA_ASSERT_TRUE(this->hasRemixer());

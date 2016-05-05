@@ -180,13 +180,15 @@ void InternalTrackFile::parseMarkersV1FromRawByteArray(const byte* markerData, c
 {
     NXA_ASSERT_FALSE(this->markersWereIgnored);
 
-    NXA_ASSERT_TRUE(totalSize == sizeof(MarkerV1HeaderStruct) +
-                                 CueMarker::sizeOfV1RawMarker() * 5 +
-                                 LoopMarker::sizeOfV1RawMarker() * 9 +
-                                 sizeof(MarkerV1FooterStruct));
-    
+    if(totalSize != sizeof(MarkerV1HeaderStruct) +
+       CueMarker::sizeOfV1RawMarker() * 5 +
+       LoopMarker::sizeOfV1RawMarker() * 9 +
+       sizeof(MarkerV1FooterStruct)) {
+        throw TrackFileError::exceptionWith("Invalid raw V1 marker data in '%s'.", this->filePath->toUTF8());
+    }
+
     auto markerPos = markerData + sizeof(MarkerV1HeaderStruct);
-    
+
     for (int i = 0; i < 5; ++i) {
         if (CueMarker::isValidV1RawMarker(markerPos)) {
             this->cueMarkers->append(CueMarker::markerV1WithIndexAndRawMemoryAt(i, markerPos));
@@ -208,13 +210,15 @@ void InternalTrackFile::parseMarkersV1FromEncodedByteArray(const byte* markerDat
 {
     NXA_ASSERT_FALSE(this->markersWereIgnored);
 
-    NXA_ASSERT_TRUE(totalSize == sizeof(MarkerV1HeaderStruct) +
-                                 CueMarker::sizeOfV1EncodedMarker() * 5 +
-                                 LoopMarker::sizeOfV1EncodedMarker() * 9 +
-                                 sizeof(MarkerV1FooterStruct));
-    
+    if (totalSize != sizeof(MarkerV1HeaderStruct) +
+        CueMarker::sizeOfV1EncodedMarker() * 5 +
+        LoopMarker::sizeOfV1EncodedMarker() * 9 +
+        sizeof(MarkerV1FooterStruct)) {
+        throw TrackFileError::exceptionWith("Invalid encoded V1 marker data in '%s'.", this->filePath->toUTF8());
+    }
+
     auto markerPos = markerData + sizeof(MarkerV1HeaderStruct);
-    
+
     for (int i = 0; i < 5; ++i) {
         if (CueMarker::isValidV1EncodedMarker(markerPos)) {
             this->cueMarkers->append(CueMarker::markerV1WithIndexAndEncodedMemoryAt(i, markerPos));

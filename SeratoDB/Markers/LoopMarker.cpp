@@ -23,6 +23,7 @@
 #include "SeratoDB/Markers/LoopMarker.hpp"
 #include "SeratoDB/Markers/CueMarker.hpp"
 #include "SeratoDB/Markers/Internal/InternalLoopMarker.hpp"
+#include "SeratoDB/Exceptions.hpp"
 
 NXA_GENERATED_IMPLEMENTATION_IN_NAMESPACE_FOR_CLASS_WITH_PARENT(NxA::Serato, LoopMarker, Marker);
 
@@ -60,7 +61,10 @@ LoopMarker::Pointer LoopMarker::markerWithMemoryAt(const byte* id3TagStart)
 {
     auto tagStruct = reinterpret_cast<const SeratoLoopTagV2Struct*>(id3TagStart);
 
-    NXA_ASSERT_TRUE(*String::stringWith(reinterpret_cast<const character*>(tagStruct->tag)) == "LOOP");
+    auto tagName = String::stringWith(reinterpret_cast<const character*>(tagStruct->tag));
+    if (*tagName != "LOOP") {
+        throw MarkerError::exceptionWith("Invalid loop marker tag name '%s'", tagName->toUTF8());
+    }
 
     return LoopMarker::markerWithLabelStartEndPositionsIndexAndColor(String::stringWith(reinterpret_cast<const character*>(tagStruct->label)),
                                                                      Platform::bigEndianUInteger32ValueAt(tagStruct->position),
@@ -75,7 +79,9 @@ LoopMarker::Pointer LoopMarker::markerV1WithIndexAndRawMemoryAt(uinteger16 index
 {
     auto tagStruct = reinterpret_cast<const InternalMarker::SeratoRawTagV1Struct*>(id3TagStart);
 
-    NXA_ASSERT_TRUE(tagStruct->type == InternalMarker::eLoopMarker);
+    if (tagStruct->type != InternalMarker::eLoopMarker) {
+        throw MarkerError::exceptionWith("Invalid loop marker type %d", tagStruct->type);
+    }
 
     return LoopMarker::markerWithLabelStartEndPositionsIndexAndColor(String::stringWith(""),
                                                                      Platform::bigEndianUInteger32ValueAt(tagStruct->position),
@@ -106,7 +112,7 @@ LoopMarker::Pointer LoopMarker::markerWithLabelStartEndPositionsIndexAndColor(co
 
 {
     if (startPositionInMilliseconds >= endPositionInMilliseconds) {
-        throw LoopMarkerError::exceptionWith("Invalid loop marker start/end positions (%d and %d ms).", startPositionInMilliseconds, endPositionInMilliseconds);
+        throw MarkerError::exceptionWith("Invalid loop marker start/end positions (%d and %d ms)", startPositionInMilliseconds, endPositionInMilliseconds);
     }
 
     auto newMarker = LoopMarker::makeShared();

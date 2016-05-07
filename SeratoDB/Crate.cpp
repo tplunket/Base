@@ -21,6 +21,7 @@
 //
 
 #include "SeratoDB/Database.hpp"
+#include "SeratoDB/Exceptions.hpp"
 #include "SeratoDB/Crate.hpp"
 #include "Internal/InternalCrate.hpp"
 #include "Internal/InternalTrackEntry.hpp"

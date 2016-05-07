@@ -23,6 +23,7 @@
 #include "Base/Test.hpp"
 
 #include "SeratoDB/Markers/LoopMarker.hpp"
+#include "SeratoDB/Exceptions.hpp"
 
 using namespace testing;
 using namespace NxA;

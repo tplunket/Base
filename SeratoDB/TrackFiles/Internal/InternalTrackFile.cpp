@@ -21,6 +21,7 @@
 //
 
 #include "SeratoDB/TrackFiles/Internal/InternalTrackFile.hpp"
+#include "SeratoDB/Exceptions.hpp"
 
 NXA_ENTER_NAMESPACE(NxA);
 NXA_ENTER_NAMESPACE(Serato);

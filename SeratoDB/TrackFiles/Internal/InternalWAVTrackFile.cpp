@@ -21,6 +21,7 @@
 //
 
 #include "SeratoDB/TrackFiles/Internal/InternalWAVTrackFile.hpp"
+#include "SeratoDB/Exceptions.hpp"
 
 #include "wavfile.h"
 

@@ -21,6 +21,7 @@
 //
 
 #include "SeratoDB/Database.hpp"
+#include "SeratoDB/Exceptions.hpp"
 #include "SeratoDB/Internal/InternalDatabase.hpp"
 #include "SeratoDB/Tags/DatabaseV2Tags.hpp"
 #include "SeratoDB/Tags/TagFactory.hpp"

@@ -27,17 +27,12 @@
 NXA_ENTER_NAMESPACE(NxA);
 NXA_ENTER_NAMESPACE(Serato);
 
-NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(Marker);
+NXA_EXCEPTION_NAMED_WITH_PARENT(DatabaseError, NxA::Exception);
 
-class Marker : public Object {
-    NXA_GENERATED_DECLARATIONS_WITHOUT_OPERATOR_EQUAL_IN_NAMESPACE_FOR_CLASS(NxA::Serato, Marker);
+NXA_EXCEPTION_NAMED_WITH_PARENT(TrackFileError, NxA::Exception);
+NXA_EXCEPTION_NAMED_WITH_PARENT(TrackFileNotFound, TrackFileError);
 
-    #pragma mark Class Methods
-    static bool isValidV1RawMarker(const byte* tagStart);
-    static bool isValidV1EncodedMarker(const byte* tagStart);
-    static integer32 sizeOfV1RawMarker(void);
-    static integer32 sizeOfV1EncodedMarker(void);
-};
+NXA_EXCEPTION_NAMED_WITH_PARENT(MarkerError, TrackFileError);
 
 NXA_EXIT_NAMESPACE;
 NXA_EXIT_NAMESPACE;

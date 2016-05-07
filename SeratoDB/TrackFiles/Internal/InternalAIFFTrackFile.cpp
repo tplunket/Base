@@ -21,6 +21,7 @@
 //
 
 #include "SeratoDB/TrackFiles/Internal/InternalAIFFTrackFile.hpp"
+#include "SeratoDB/Exceptions.hpp"
 
 #include "aifffile.h"
 

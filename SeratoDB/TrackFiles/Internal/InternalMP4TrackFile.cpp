@@ -21,6 +21,7 @@
 //
 
 #include "SeratoDB/TrackFiles/Internal/InternalMP4TrackFile.hpp"
+#include "SeratoDB/Exceptions.hpp"
 
 #include "mp4tag.h"
 #include "mp4file.h"

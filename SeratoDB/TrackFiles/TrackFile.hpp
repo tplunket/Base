@@ -31,9 +31,6 @@
 NXA_ENTER_NAMESPACE(NxA);
 NXA_ENTER_NAMESPACE(Serato);
 
-NXA_EXCEPTION_NAMED_WITH_PARENT(TrackFileError, NxA::Exception);
-NXA_EXCEPTION_NAMED_WITH_PARENT(TrackFileNotFound, NxA::Exception);
-
 NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(TrackFile);
 
 class TrackFile : public Object {

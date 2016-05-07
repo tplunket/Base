@@ -29,8 +29,6 @@
 NXA_ENTER_NAMESPACE(NxA);
 NXA_ENTER_NAMESPACE(Serato);
 
-NXA_EXCEPTION_NAMED_WITH_PARENT(LoopMarkerError, MarkerError);
-
 NXA_GENERATED_FORWARD_DECLARATIONS_FOR_CLASS(LoopMarker);
 
 class LoopMarker : public Marker {

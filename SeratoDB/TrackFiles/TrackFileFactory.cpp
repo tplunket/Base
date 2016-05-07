@@ -27,6 +27,7 @@
 #include "SeratoDB/TrackFiles/WavTrackFile.hpp"
 #include "SeratoDB/TrackFiles/OGGTrackFile.hpp"
 #include "SeratoDB/TrackFiles/FLACTrackFile.hpp"
+#include "SeratoDB/Exceptions.hpp"
 
 #include "mp4file.h"
 

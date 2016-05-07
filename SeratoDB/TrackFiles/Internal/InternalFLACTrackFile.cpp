@@ -23,6 +23,7 @@
 #include "SeratoDB/TrackFiles/Internal/InternalFLACTrackFile.hpp"
 #include "SeratoDB/TrackFiles/Internal/InternalID3TrackFile.hpp"
 #include "SeratoDB/TrackFiles/Internal/InternalOGGTrackFile.hpp"
+#include "SeratoDB/Exceptions.hpp"
 
 #include "flacfile.h"
 #include "privateframe.h"

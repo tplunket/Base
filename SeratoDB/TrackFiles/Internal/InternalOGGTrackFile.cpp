@@ -22,6 +22,7 @@
 
 #include "SeratoDB/TrackFiles/Internal/InternalOGGTrackFile.hpp"
 #include "SeratoDB/Markers/GridMarker.hpp"
+#include "SeratoDB/Exceptions.hpp"
 
 #include <string>
 #include "vorbisfile.h"

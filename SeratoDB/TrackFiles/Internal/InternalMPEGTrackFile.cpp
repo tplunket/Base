@@ -21,6 +21,7 @@
 //
 
 #include "SeratoDB/TrackFiles/Internal/InternalMPEGTrackFile.hpp"
+#include "SeratoDB/Exceptions.hpp"
 
 #include "mpegfile.h"
 #include "mpegproperties.h"

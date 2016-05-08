@@ -62,7 +62,7 @@ TEST(SeratoDB_LoopMarker, markerWithMemoryAt_ASeratoMarkerTagWithAnInvalidTagNam
 
     // -- When.
     // -- Then.
-    ASSERT_THROW(LoopMarker::markerWithMemoryAt(data), NxA::AssertionFailed);
+    ASSERT_THROW(LoopMarker::markerWithMemoryAt(data), NxA::Serato::MarkerError);
 }
 
 TEST(SeratoDB_LoopMarker, markerWithLabelStartEndPositionsIndexAndColor_AMarkerWithInitialValues_ReturnsACorrectMarker)
@@ -86,7 +86,7 @@ TEST(SeratoDB_LoopMarker, markerWithLabelStartEndPositionsIndexAndColor_AMarkerW
     // -- Given.
     // -- When.
     // -- Then.
-    ASSERT_THROW(LoopMarker::markerWithLabelStartEndPositionsIndexAndColor(String::stringWith("TEST"), 159847, 143718, 0, 0x22, 0xff, 0xcc), NxA::Serato::LoopMarkerError);
+    ASSERT_THROW(LoopMarker::markerWithLabelStartEndPositionsIndexAndColor(String::stringWith("TEST"), 159847, 143718, 0, 0x22, 0xff, 0xcc), NxA::Serato::MarkerError);
 }
 
 TEST(SeratoDB_LoopMarker, markerWith_AMarkerAsSource_ReturnsACorrectMarker)

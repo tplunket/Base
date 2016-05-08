@@ -32,6 +32,7 @@ NXA_ENTER_NAMESPACE(NxA);
 NXA_ENTER_NAMESPACE(Serato);
 
 #pragma mark Structures
+
 typedef struct {
     byte mimeType[25];
     byte filename[1];
@@ -42,6 +43,7 @@ typedef struct {
 } MP4MarkersHeaderStruct;
 
 #pragma mark Constants
+
 constexpr const character* mp4MarkersV1ItemName = "----:com.serato.dj:markers";
 constexpr const character* mp4MarkersV2ItemName = "----:com.serato.dj:markersv2";
 constexpr const character* mp4BeatgridItemName = "----:com.serato.dj:beatgrid";

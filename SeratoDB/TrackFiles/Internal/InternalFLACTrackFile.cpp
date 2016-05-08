@@ -34,6 +34,7 @@ NXA_ENTER_NAMESPACE(NxA);
 NXA_ENTER_NAMESPACE(Serato);
 
 #pragma mark Structures
+
 typedef struct {
     unsigned char mimeType[25];
     unsigned char filename[1];
@@ -44,6 +45,7 @@ typedef struct {
 } FLACMarkersHeaderStruct;
 
 #pragma mark Constants
+
 constexpr const character* flacMarkersV1ItemName = "SERATO_MARKERS";
 constexpr const character* flacMarkersV2ItemName = "SERATO_MARKERS_V2";
 constexpr const character* flacBeatgridItemName = "SERATO_BEATGRID";

@@ -33,6 +33,7 @@ NXA_ENTER_NAMESPACE(NxA);
 NXA_ENTER_NAMESPACE(Serato);
 
 #pragma mark Constants
+
 constexpr const character* oggComposerFieldName = "COMPOSER";
 constexpr const character* oggGroupingFieldName = "GROUPING";
 constexpr const character* oggBpmFieldName = "BPM";

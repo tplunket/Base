@@ -33,6 +33,7 @@ NXA_ENTER_NAMESPACE(NxA);
 NXA_ENTER_NAMESPACE(Serato);
 
 #pragma mark Constants
+
 constexpr const character* oggMarkersItemName = "SERATO_MARKERS";
 constexpr const character* oggMarkersV2ItemName = "SERATO_MARKERS2";
 constexpr const character* oggBeatgridItemName = "SERATO_BEATGRID";

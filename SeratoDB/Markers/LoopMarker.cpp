@@ -31,6 +31,7 @@ NXA_ENTER_NAMESPACE(NxA);
 NXA_ENTER_NAMESPACE(Serato);
 
 #pragma mark Structures
+
 typedef struct {
     byte tag[5];
     byte size[4];

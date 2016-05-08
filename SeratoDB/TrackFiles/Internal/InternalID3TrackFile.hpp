@@ -35,6 +35,7 @@ NXA_ENTER_NAMESPACE(NxA);
 NXA_ENTER_NAMESPACE(Serato);
 
 #pragma mark Constants
+
 constexpr const character* id3KeyFrameName = "TKEY";
 constexpr const character* id3ComposerFrameName = "TCOM";
 constexpr const character* id3GroupingFrameName = "TIT1";

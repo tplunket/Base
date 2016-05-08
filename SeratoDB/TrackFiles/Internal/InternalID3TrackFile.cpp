@@ -34,6 +34,7 @@ NXA_ENTER_NAMESPACE(NxA);
 NXA_ENTER_NAMESPACE(Serato);
 
 #pragma mark Structures
+
 typedef struct {
     byte dummy;
     byte mimeType[25];
@@ -50,6 +51,7 @@ typedef struct {
 } GeobObjectStruct;
 
 #pragma mark Constants
+
 constexpr const character* id3MarkersV1FrameDescription = "Serato Markers_";
 constexpr const character* id3MarkersV2FrameDescription = "Serato Markers2";
 constexpr const character* id3BeatgridFrameDescription = "Serato BeatGrid";

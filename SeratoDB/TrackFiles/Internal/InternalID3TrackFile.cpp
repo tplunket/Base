@@ -489,13 +489,13 @@ void InternalID3TrackFile::updateArtworkInTag(TagLib::ID3v2::Tag& tag) const
     if (this->artwork->size()) {
         TagLib::ByteVector data(*this->artwork->data(), this->artwork->size());
 
-        auto* newFrame = new TagLib::ID3v2::AttachedPictureFrame;
+        auto newFrame = std::make_unique<TagLib::ID3v2::AttachedPictureFrame>();
         newFrame->setData(data);
         newFrame->setType(TagLib::ID3v2::AttachedPictureFrame::FrontCover);
         newFrame->setDescription("");
         newFrame->setTextEncoding(TagLib::String::Latin1);
 
-        tag.addFrame(newFrame);
+        tag.addFrame(newFrame.release());
     }
 }
 

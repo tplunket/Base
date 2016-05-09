@@ -156,23 +156,18 @@ const byte* InternalTrackFile::parseMarkerAtAndAdvanceToNextTag(const byte* tagS
 
     auto tagName = String::stringWith(reinterpret_cast<const character*>(tagStart));
 
-    try {
-        if (*tagName == "CUE") {
-            this->cueMarkers->append(CueMarker::markerWithMemoryAt(tagStart));
-        }
-        else if (*tagName == "LOOP") {
-            this->loopMarkers->append(LoopMarker::markerWithMemoryAt(tagStart));
-        }
-        else if (*tagName == "BPMLOCK") {
-            SeratoBpmLockTagStruct* bpmLockData = (SeratoBpmLockTagStruct *)tagStart;
-            this->beatGridIsLocked = (bpmLockData->locked != 0);
-        }
-        else {
-            this->otherTags->append(markerV2TagDataFrom(tagStart));
-        }
+    if (*tagName == "CUE") {
+        this->cueMarkers->append(CueMarker::markerWithMemoryAt(tagStart));
     }
-    catch (MarkerError exception) {
-        // TODO: This should be a logging call instead.
+    else if (*tagName == "LOOP") {
+        this->loopMarkers->append(LoopMarker::markerWithMemoryAt(tagStart));
+    }
+    else if (*tagName == "BPMLOCK") {
+        SeratoBpmLockTagStruct* bpmLockData = (SeratoBpmLockTagStruct *)tagStart;
+        this->beatGridIsLocked = (bpmLockData->locked != 0);
+    }
+    else {
+        this->otherTags->append(markerV2TagDataFrom(tagStart));
     }
 
     return nextTagPositionAfterTagNamed(tagName, tagStart);
@@ -186,7 +181,7 @@ void InternalTrackFile::parseMarkersV1FromRawByteArray(const byte* markerData, c
        CueMarker::sizeOfV1RawMarker() * 5 +
        LoopMarker::sizeOfV1RawMarker() * 9 +
        sizeof(MarkerV1FooterStruct)) {
-        throw TrackFileError::exceptionWith("Invalid raw V1 marker data in '%s'.", this->filePath->toUTF8());
+        throw TrackFileError::exceptionWith("Invalid raw V1 marker data");
     }
 
     auto markerPos = markerData + sizeof(MarkerV1HeaderStruct);
@@ -216,7 +211,7 @@ void InternalTrackFile::parseMarkersV1FromEncodedByteArray(const byte* markerDat
         CueMarker::sizeOfV1EncodedMarker() * 5 +
         LoopMarker::sizeOfV1EncodedMarker() * 9 +
         sizeof(MarkerV1FooterStruct)) {
-        throw TrackFileError::exceptionWith("Invalid encoded V1 marker data in '%s'.", this->filePath->toUTF8());
+        throw TrackFileError::exceptionWith("Invalid encoded V1 marker data");
     }
 
     auto markerPos = markerData + sizeof(MarkerV1HeaderStruct);

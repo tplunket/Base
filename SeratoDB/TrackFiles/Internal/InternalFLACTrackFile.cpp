@@ -273,13 +273,13 @@ void InternalFLACTrackFile::loadAndParseFile(void)
                             TagLib::AudioProperties::ReadStyle::Fast);
 
     if (!file.isValid()) {
-        throw TrackFileError::exceptionWith("Error loading track file.");
+        throw TrackFileError::exceptionWith("Error loading");
     }
 
     auto id3v2Tag = file.hasID3v2Tag() ? file.ID3v2Tag() : nullptr;
     auto oggComment = file.hasXiphComment() ? file.xiphComment() : nullptr;
     if (!id3v2Tag && !oggComment) {
-        throw TrackFileError::exceptionWith("Error reading tags from track file.");
+        throw TrackFileError::exceptionWith("Error reading tags");
     }
     if (oggComment) {
         this->parseComment(*oggComment);
@@ -290,21 +290,16 @@ void InternalFLACTrackFile::loadAndParseFile(void)
 
     auto audioProperties = file.audioProperties();
     if (!audioProperties) {
-        throw TrackFileError::exceptionWith("Error reading audio properties from track file.");
+        throw TrackFileError::exceptionWith("Error reading audio properties");
     }
     this->parseAudioProperties(*audioProperties);
 
     if (!this->markersWereIgnored) {
-        try {
-            if (oggComment) {
-                this->parseMarkersInComment(*oggComment);
-            }
-            else {
-                InternalID3TrackFile::parseMarkersInTagToTrackFile(*id3v2Tag, *this);
-            }
+        if (oggComment) {
+            this->parseMarkersInComment(*oggComment);
         }
-        catch (MarkerError& exception) {
-            throw TrackFileError::exceptionWith("Error reading markers '%s'.", exception.what());
+        else {
+            InternalID3TrackFile::parseMarkersInTagToTrackFile(*id3v2Tag, *this);
         }
     }
 }
@@ -316,13 +311,13 @@ void InternalFLACTrackFile::updateAndSaveFile(void) const
                             TagLib::AudioProperties::ReadStyle::Fast);
 
     if (!file.isValid()) {
-        throw TrackFileError::exceptionWith("Error loading track file.");
+        throw TrackFileError::exceptionWith("Error loading");
     }
 
     auto id3v2Tag = file.hasID3v2Tag() ? file.ID3v2Tag() : nullptr;
     auto oggComment = file.hasXiphComment() ? file.xiphComment() : nullptr;
     if (!id3v2Tag && !oggComment) {
-        throw TrackFileError::exceptionWith("Error reading tags from track file.");
+        throw TrackFileError::exceptionWith("Error reading tags");
     }
 
     if (oggComment) {

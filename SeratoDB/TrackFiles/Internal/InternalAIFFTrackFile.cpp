@@ -56,28 +56,23 @@ void InternalAIFFTrackFile::loadAndParseFile(void)
                                   true,
                                   TagLib::AudioProperties::ReadStyle::Fast);
     if (!file.isValid()) {
-        throw TrackFileError::exceptionWith("Error loading track file.");
+        throw TrackFileError::exceptionWith("Error loading");
     }
 
     auto tag = file.tag();
     if (!tag) {
-        throw TrackFileError::exceptionWith("Error reading tags from track file.");
+        throw TrackFileError::exceptionWith("Error reading tags");
     }
     this->parseTag(*tag);
 
     auto audioProperties = file.audioProperties();
     if (!audioProperties) {
-        throw TrackFileError::exceptionWith("Error reading audio properties from track.");
+        throw TrackFileError::exceptionWith("Error reading audio properties");
     }
     this->parseAudioProperties(*audioProperties);
 
     if (!this->markersWereIgnored) {
-        try {
-            this->InternalID3TrackFile::parseMarkersInTagToTrackFile(*tag, *this);
-        }
-        catch (MarkerError& exception) {
-            throw TrackFileError::exceptionWith("Error reading markers '%s'.", exception.what());
-        }
+        this->InternalID3TrackFile::parseMarkersInTagToTrackFile(*tag, *this);
     }
 }
 
@@ -87,12 +82,12 @@ void InternalAIFFTrackFile::updateAndSaveFile(void) const
                                   true,
                                   TagLib::AudioProperties::ReadStyle::Fast);
     if (!file.isValid()) {
-        throw TrackFileError::exceptionWith("Error loading track file.");
+        throw TrackFileError::exceptionWith("Error loading");
     }
 
     auto tag = file.tag();
     if (!tag) {
-        throw TrackFileError::exceptionWith("Error reading tags from track file.");
+        throw TrackFileError::exceptionWith("Error reading tags");
     }
 
     this->InternalID3TrackFile::updateTag(*tag);

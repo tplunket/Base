@@ -122,7 +122,7 @@ TrackFile::Pointer TrackFileFactory::trackFileForPath(const String& trackFilePat
     NXA_ASSERT_TRUE(trackFilePath.length() > 0);
 
     if (!File::fileExistsAt(trackFilePath)) {
-        throw TrackFileNotFound::exceptionWith("Missing file '%s'.", trackFilePath.toUTF8());
+        throw TrackFileNotFound::exceptionWith("Missing file");
     }
 
     switch (TrackFileFactory::audioFileTypeForPath(trackFilePath)) {
@@ -145,7 +145,7 @@ TrackFile::Pointer TrackFileFactory::trackFileForPath(const String& trackFilePat
             return TrackFile::Pointer::dynamicCastFrom(WAVTrackFile::fileWithFileAt(trackFilePath, flags));
         }
         default: {
-            throw TrackFileError::exceptionWith("Unknown file extension for file '%s'.", trackFilePath.toUTF8());
+            throw TrackFileError::exceptionWith("Unknown file extension");
         }
     }
 }

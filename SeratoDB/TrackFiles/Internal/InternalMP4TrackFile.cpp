@@ -96,7 +96,10 @@ String::Pointer InternalMP4TrackFile::stringValueForItemNamedInTag(const charact
         return String::string();
     }
 
-    NXA_ASSERT_EQ(stringList.size(), 1);
+    if (stringList.size() != 1) {
+        throw TrackFileError::exceptionWith("Too many strings for item '%s'", name);
+    }
+
     return String::stringWith(stringList.front().to8Bit(true).c_str());
 }
 
@@ -375,28 +378,23 @@ void InternalMP4TrackFile::loadAndParseFile(void)
                            true,
                            TagLib::AudioProperties::ReadStyle::Fast);
     if (!file.isValid()) {
-        throw TrackFileError::exceptionWith("Error loading track file.");
+        throw TrackFileError::exceptionWith("Error loading");
     }
 
     auto tag = file.tag();
     if (!tag) {
-        throw TrackFileError::exceptionWith("Error reading tags from track file.");
+        throw TrackFileError::exceptionWith("Error reading tags");
     }
     this->parseTag(*tag);
 
     auto audioProperties = file.audioProperties();
     if (!audioProperties) {
-        throw TrackFileError::exceptionWith("Error reading audio properties from track file.");
+        throw TrackFileError::exceptionWith("Error reading audio properties");
     }
     this->parseAudioProperties(*audioProperties);
 
     if (!this->markersWereIgnored) {
-        try {
-            this->parseMarkersInTag(*tag);
-        }
-        catch (MarkerError& exception) {
-            throw TrackFileError::exceptionWith("Error reading markers '%s'.", exception.what());
-        }
+        this->parseMarkersInTag(*tag);
     }
 }
 
@@ -406,12 +404,12 @@ void InternalMP4TrackFile::updateAndSaveFile(void) const
                            true,
                            TagLib::AudioProperties::ReadStyle::Fast);
     if (!file.isValid()) {
-        throw TrackFileError::exceptionWith("Error loading track file.");
+        throw TrackFileError::exceptionWith("Error loading");
     }
 
     auto tag = file.tag();
     if (!tag) {
-        throw TrackFileError::exceptionWith("Error reading tags from track file.");
+        throw TrackFileError::exceptionWith("Error reading tags");
     }
 
     this->updateTag(*tag);

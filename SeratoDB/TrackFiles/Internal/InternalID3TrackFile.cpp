@@ -222,7 +222,7 @@ void InternalID3TrackFile::parseMarkersInTagToTrackFile(const TagLib::ID3v2::Tag
     auto framePos = InternalID3TrackFile::frameInListWithDescription(framesList, String::stringWith(id3MarkersV2FrameDescription));
     if (framePos != framesList.end()) {
         auto frame = dynamic_cast<const TagLib::ID3v2::GeneralEncapsulatedObjectFrame*>(*framePos);
-        if (isAValidGeobFrame(*frame)) {
+        if (frame && isAValidGeobFrame(*frame)) {
             auto frameObject = frame->object();
             if (frameObject.size()) {
                 auto headerStruct = reinterpret_cast<GeobObjectStruct*>(frameObject.data());
@@ -239,7 +239,7 @@ void InternalID3TrackFile::parseMarkersInTagToTrackFile(const TagLib::ID3v2::Tag
         framePos = InternalID3TrackFile::frameInListWithDescription(framesList, String::stringWith(id3MarkersV1FrameDescription));
         if (framePos != framesList.end()) {
             auto frame = dynamic_cast<const TagLib::ID3v2::GeneralEncapsulatedObjectFrame*>(*framePos);
-            if (isAValidGeobFrame(*frame)) {
+            if (frame && isAValidGeobFrame(*frame)) {
                 auto frameObject = frame->object();
                 if (frameObject.size()) {
                     auto headerStruct = reinterpret_cast<GeobObjectStruct*>(frameObject.data());
@@ -257,7 +257,7 @@ void InternalID3TrackFile::parseMarkersInTagToTrackFile(const TagLib::ID3v2::Tag
     framePos = InternalID3TrackFile::frameInListWithDescription(framesList, String::stringWith(id3BeatgridFrameDescription));
     if (framePos != framesList.end()) {
         auto frame = dynamic_cast<const TagLib::ID3v2::GeneralEncapsulatedObjectFrame*>(*framePos);
-        if (isAValidGeobFrame(*frame)) {
+        if (frame && isAValidGeobFrame(*frame)) {
             auto frameObject = frame->object();
             if (frameObject.size()) {
                 auto headerStruct = reinterpret_cast<GeobObjectStruct*>(frameObject.data());
@@ -405,7 +405,10 @@ Blob::Pointer InternalID3TrackFile::artworkInTag(const TagLib::ID3v2::Tag& tag)
 
         for (const TagLib::ID3v2::Frame* frame : frameList) {
             auto pic = dynamic_cast<const TagLib::ID3v2::AttachedPictureFrame*>(frame);
-            if (pic->type() == TagLib::ID3v2::AttachedPictureFrame::FrontCover) {
+            if (!pic) {
+                continue;
+            }
+            else if (pic->type() == TagLib::ID3v2::AttachedPictureFrame::FrontCover) {
                 artworkFrame = pic;
                 break;
             }
@@ -433,9 +436,11 @@ void InternalID3TrackFile::removeArtworkInTag(TagLib::ID3v2::Tag& tag)
     auto frameToRemove = frameList.end();
     if (frameList.size()) {
         for (auto it = frameList.begin(); it != frameList.end(); ++it) {
-            auto* pic = dynamic_cast<TagLib::ID3v2::AttachedPictureFrame*>(*it);
-
-            if (pic->type() == TagLib::ID3v2::AttachedPictureFrame::FrontCover) {
+            auto pic = dynamic_cast<TagLib::ID3v2::AttachedPictureFrame*>(*it);
+            if (!pic) {
+                continue;
+            }
+            else if (pic->type() == TagLib::ID3v2::AttachedPictureFrame::FrontCover) {
                 frameToRemove = it;
                 break;
             }

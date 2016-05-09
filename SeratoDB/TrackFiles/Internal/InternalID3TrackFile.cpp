@@ -129,7 +129,7 @@ integer InternalID3TrackFile::ratingValueForRatingFrameInTag(const TagLib::ID3v2
     auto frameList = id3v2Tag.frameList(id3RatingFrameName);
     auto frame = frameList.front();
     if (frame) {
-        TagLib::ID3v2::PopularimeterFrame* popFrame = dynamic_cast<TagLib::ID3v2::PopularimeterFrame*>(frameList.front());
+        auto popFrame = dynamic_cast<TagLib::ID3v2::PopularimeterFrame*>(frameList.front());
         if (popFrame) {
             rating = popFrame->rating();
         }
@@ -157,7 +157,7 @@ void InternalID3TrackFile::setRatingValueForRatingFrameInTag(integer value, TagL
     auto frameList = tag.frameList(id3RatingFrameName);
     auto frame = frameList.front();
     if (frame) {
-        TagLib::ID3v2::PopularimeterFrame* popFrame = dynamic_cast<TagLib::ID3v2::PopularimeterFrame*>(frameList.front());
+        auto popFrame = dynamic_cast<TagLib::ID3v2::PopularimeterFrame*>(frameList.front());
         if (popFrame) {
             counter = popFrame->counter();
         }

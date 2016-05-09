@@ -83,7 +83,7 @@ void InternalFLACTrackFile::parseTag(const TagLib::ID3v2::Tag& tag)
 
     auto privateFrames = tag.frameList("PRIV");
     for (auto frame : privateFrames) {
-        auto *privateFrame = dynamic_cast<TagLib::ID3v2::PrivateFrame *>(frame);
+        auto privateFrame = dynamic_cast<TagLib::ID3v2::PrivateFrame *>(frame);
         if (privateFrame) {
             this->ownersOfPrivateFrames->append(String::stringWith(privateFrame->owner().to8Bit(true).c_str()));
         }

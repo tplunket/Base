@@ -182,7 +182,7 @@ void InternalID3TrackFile::removePrivateFramesNamedInTag(const String& name, Tag
     TagLib::ID3v2::FrameList framesToRemove;
 
     for (auto frame : framesList) {
-        auto *privateFrame = dynamic_cast<TagLib::ID3v2::PrivateFrame *>(frame);
+        auto privateFrame = dynamic_cast<TagLib::ID3v2::PrivateFrame *>(frame);
         if (privateFrame) {
             if (privateFrame->owner() == name.toUTF8()) {
                 framesToRemove.append(frame);
@@ -458,7 +458,7 @@ void InternalID3TrackFile::parseTag(const TagLib::ID3v2::Tag& tag)
 
     auto privateFrames = tag.frameList("PRIV");
     for (auto frame : privateFrames) {
-        auto *privateFrame = dynamic_cast<TagLib::ID3v2::PrivateFrame *>(frame);
+        auto privateFrame = dynamic_cast<TagLib::ID3v2::PrivateFrame*>(frame);
         if (privateFrame) {
             this->ownersOfPrivateFrames->append(String::stringWith(privateFrame->owner().to8Bit(true).c_str()));
         }

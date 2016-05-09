@@ -429,7 +429,7 @@ Blob::Pointer InternalID3TrackFile::artworkInTag(const TagLib::ID3v2::Tag& tag)
 
 void InternalID3TrackFile::removeArtworkInTag(TagLib::ID3v2::Tag& tag)
 {
-    auto frameList = tag.frameList("APIC");
+    auto frameList = tag.frameList(id3ArtworkFrameName);
     auto frameToRemove = frameList.end();
     if (frameList.size()) {
         for (auto it = frameList.begin(); it != frameList.end(); ++it) {

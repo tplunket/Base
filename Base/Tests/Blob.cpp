@@ -211,9 +211,9 @@ TEST(Base_Blob, OperatorSquareBrackets_OutOfBoundsAccess_ThrowsAnException)
     auto test = Blob::blobWithMemoryAndSize(testData, sizeof(testData));
 
     // -- Then.
-    ASSERT_THROW((*test)[-2], NxA::Exception);
-    ASSERT_THROW((*test)[sizeof(testData)], NxA::Exception);
-    ASSERT_THROW((*test)[sizeof(testData) + 46], NxA::Exception);
+    ASSERT_THROW((*test)[-2], NxA::AssertionFailed);
+    ASSERT_THROW((*test)[sizeof(testData)], NxA::AssertionFailed);
+    ASSERT_THROW((*test)[sizeof(testData) + 46], NxA::AssertionFailed);
 }
 
 TEST(Base_Blob, OperatorSquareBrackets_OutOfBoundsAccessOnConstantBlob_ThrowsAnException)
@@ -223,9 +223,9 @@ TEST(Base_Blob, OperatorSquareBrackets_OutOfBoundsAccessOnConstantBlob_ThrowsAnE
     auto test = Blob::PointerToConst(Blob::blobWithMemoryAndSize(testData, sizeof(testData)));
 
     // -- Then.
-    ASSERT_THROW((*test)[-2], NxA::Exception);
-    ASSERT_THROW((*test)[sizeof(testData)], NxA::Exception);
-    ASSERT_THROW((*test)[sizeof(testData) + 46], NxA::Exception);
+    ASSERT_THROW((*test)[-2], NxA::AssertionFailed);
+    ASSERT_THROW((*test)[sizeof(testData)], NxA::AssertionFailed);
+    ASSERT_THROW((*test)[sizeof(testData) + 46], NxA::AssertionFailed);
 }
 
 TEST(Base_Blob, Data_BlobIsEmpty_ThrowsAnException)
@@ -235,7 +235,7 @@ TEST(Base_Blob, Data_BlobIsEmpty_ThrowsAnException)
     auto test = Blob::blob();
 
     // -- Then.
-    ASSERT_THROW(test->data(), NxA::Exception);
+    ASSERT_THROW(test->data(), NxA::AssertionFailed);
 }
 
 TEST(Base_Blob, Data_ConstantBlobIsEmpty_ThrowsAnException)
@@ -245,7 +245,7 @@ TEST(Base_Blob, Data_ConstantBlobIsEmpty_ThrowsAnException)
     auto test = Blob::PointerToConst(Blob::blob());
 
     // -- Then.
-    ASSERT_THROW(test->data(), NxA::Exception);
+    ASSERT_THROW(test->data(), NxA::AssertionFailed);
 }
 
 TEST(Base_Blob, OperatorEqual_TwoEqualBlobs_ReturnsTrue)

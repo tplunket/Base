@@ -461,7 +461,7 @@ TEST(Base_String, Substring_FromAnIndexAndToAnotherInInverserOrderTheEndOfTheStr
     auto test = String::stringWith("Hello This Is A Test.");
 
     // -- When/Then.
-    ASSERT_THROW(test->subString(244, 25), NxA::Exception);
+    ASSERT_THROW(test->subString(244, 25), NxA::AssertionFailed);
 }
 
 TEST(Base_String, LowerCaseString_StringWithUpperCaseCharacters_ReturnsOneWithLowerCaseUTFCharacters)

@@ -102,9 +102,9 @@ TEST(Base_ArrayContainer, OperatorSquareBrackets_OutOfBoundsAccess_ThrowsExcepti
     test->append(String::stringWith("Test"));
 
     // -- Then.
-    ASSERT_THROW((*test)[-1], NxA::Exception);
-    ASSERT_THROW((*test)[1], NxA::Exception);
-    ASSERT_THROW((*test)[132], NxA::Exception);
+    ASSERT_THROW((*test)[-1], NxA::AssertionFailed);
+    ASSERT_THROW((*test)[1], NxA::AssertionFailed);
+    ASSERT_THROW((*test)[132], NxA::AssertionFailed);
 }
 
 TEST(Base_ArrayContainer, OperatorSquareBrackets_OutOfBoundsAccessOnConstantArray_ThrowsException)
@@ -116,9 +116,9 @@ TEST(Base_ArrayContainer, OperatorSquareBrackets_OutOfBoundsAccessOnConstantArra
     auto constTest = String::Array::PointerToConst(test);
 
     // -- Then.
-    ASSERT_THROW((*constTest)[-1], NxA::Exception);
-    ASSERT_THROW((*constTest)[1], NxA::Exception);
-    ASSERT_THROW((*constTest)[132], NxA::Exception);
+    ASSERT_THROW((*constTest)[-1], NxA::AssertionFailed);
+    ASSERT_THROW((*constTest)[1], NxA::AssertionFailed);
+    ASSERT_THROW((*constTest)[132], NxA::AssertionFailed);
 }
 
 TEST(Base_ArrayContainer, Append_AddingOneObject_AddsObjectCorrectly)

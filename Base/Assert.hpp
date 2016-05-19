@@ -24,7 +24,7 @@
 #include "Base/Exception.hpp"
 
 NXA_ENTER_NAMESPACE(NxA);
-NXA_EXCEPTION_NAMED_WITH_PARENT(AssertionFailed, NxA::Exception);
+NXA_EXCEPTION_NAMED_WITH_PARENT(AssertionFailed, NxA::FatalException);
 NXA_EXIT_NAMESPACE;
 
 #ifdef DEBUG

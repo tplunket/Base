@@ -78,6 +78,8 @@ public:
     boolean hasParentCrate(void) const;
     Crate& parentCrate(void);
 
+    boolean isEmpty(void) const;
+
     void resetModificationFlags();
 
     void readFromFolderInVolume(const String& seratoFolderPath, const String& volumePath);

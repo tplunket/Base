@@ -341,6 +341,21 @@ Crate& Crate::parentCrate(void)
     return *(internal->parentCrate.pointer());
 }
 
+boolean Crate::isEmpty(void) const
+{
+    if (internal->childrenCrates->length()) {
+        return false;
+    }
+
+    for (auto& entries : *(internal->trackEntriesPerPath)) {
+        if (entries->length()) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 void Crate::resetModificationFlags()
 {
     internal->cratesWereModified = false;

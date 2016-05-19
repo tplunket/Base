@@ -19,7 +19,7 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include "Base/String.hpp"
+#include "Base/ArrayContainer.hpp"
 #include "Base/Test.hpp"
 
 using namespace testing;

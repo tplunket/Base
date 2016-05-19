@@ -60,7 +60,7 @@ TEST(SeratoDB_CueMarker, markerWithMemoryAt_ASeratoMarkerTagWithAnInvalidTagName
 
     // -- When.
     // -- Then.
-    ASSERT_THROW(CueMarker::markerWithMemoryAt(data), NxA::Exception);
+    ASSERT_THROW(CueMarker::markerWithMemoryAt(data), NxA::AssertionFailed);
 }
 
 TEST(SeratoDB_CueMarker, markerWithLabelPositionIndexAndColor_AMarkerWithInitialValues_ReturnsACorrectMarker)

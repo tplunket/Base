@@ -78,7 +78,7 @@ TEST(SeratoDB_Crate, AddCrate_AddingACrateWhichAlreadyHasAParent_ThrowsAnExcepti
 
     // -- When.
     // -- Then.
-    ASSERT_THROW(crate1->addCrate(crate3), NxA::Exception);
+    ASSERT_THROW(crate1->addCrate(crate3), NxA::AssertionFailed);
 }
 
 TEST(SeratoDB_Crate, RemoveCrate_ACrateWithTwoCrates_RemovesCrateCorrectly)
@@ -135,7 +135,7 @@ TEST(SeratoDB_Crate, AddTrackEntry_ACrateAndATrackEntryAlreadyInAnotherCrate_Thr
 
     // -- When.
     // -- Then.
-    ASSERT_THROW(crate1->addTrackEntry(entry), NxA::Exception);
+    ASSERT_THROW(crate1->addTrackEntry(entry), NxA::AssertionFailed);
 }
 
 TEST(SeratoDB_Crate, RemoveTrackEntry_ACrateAndATwoTrackEntried_AddsEntryCorrectly)
@@ -215,7 +215,7 @@ TEST(SeratoDB_Crate, ParentCrate_ACrateWithoutAParent_ThrowsException)
 
     // -- When.
     // -- Then.
-    ASSERT_THROW(crate2->parentCrate(), NxA::Exception);
+    ASSERT_THROW(crate2->parentCrate(), NxA::AssertionFailed);
 }
 
 // -- TDOO: Add test for crateFilePath()

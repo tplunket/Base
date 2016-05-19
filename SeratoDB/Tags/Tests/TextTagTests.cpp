@@ -48,7 +48,7 @@ TEST(SeratoDB_TextTag, TagWithIdentifierAndValue_IncorrectIdentifier_ThrowsExcep
     // -- Given.
     // -- When.
     // -- Then.
-    ASSERT_THROW(TextTag::tagWithIdentifierAndValue('stst', text), NxA::Exception);
+    ASSERT_THROW(TextTag::tagWithIdentifierAndValue('stst', text), NxA::AssertionFailed);
 }
 
 TEST(SeratoDB_TextTag, TagWithMemoryAt_TagCreated_TagHasCorrectValue)
@@ -76,7 +76,7 @@ TEST(SeratoDB_TextTag, TagWithMemoryAt_IncorrectIdentifier_ThrowsException)
     };
 
     // -- When.
-    ASSERT_THROW(TextTag::tagWithMemoryAt(data), NxA::Exception);
+    ASSERT_THROW(TextTag::tagWithMemoryAt(data), NxA::AssertionFailed);
 }
 
 TEST(SeratoDB_TextTag, OperatorEqual_TwoEqualTags_ReturnsTrue)

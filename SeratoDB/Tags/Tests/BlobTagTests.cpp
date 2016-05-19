@@ -67,7 +67,7 @@ TEST(SeratoDB_BlobTag, TagWithIdentifierAndValue_IncorrectIdentifier_ThrowsExcep
     // -- Given.
     // -- When.
     // -- Then.
-    ASSERT_THROW(BlobTag::tagWithIdentifierAndValue('stst', testBlob), NxA::Exception);
+    ASSERT_THROW(BlobTag::tagWithIdentifierAndValue('stst', testBlob), NxA::AssertionFailed);
 }
 
 TEST(SeratoDB_BlobTag, TagWithMemoryAt_TagCreated_TagHasCorrectValue)
@@ -110,7 +110,7 @@ TEST(SeratoDB_BlobTag, TagWithMemoryAt_IncorrectIdentifier_ThrowsException)
 
     // -- When.
     // -- Then.
-    ASSERT_THROW(BlobTag::tagWithMemoryAt(data), NxA::Exception);
+    ASSERT_THROW(BlobTag::tagWithMemoryAt(data), NxA::AssertionFailed);
 }
 
 TEST(SeratoDB_BlobTag, OperatorEqual_TwoEqualBlobs_ReturnsTrue)

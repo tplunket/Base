@@ -116,7 +116,7 @@ TEST(SeratoDB_TrackEntry, ParentCrate_EntryWithoutAParentCrate_ThrowsException)
 
     // -- When.
     // -- Then.
-    ASSERT_THROW(entry->parentCrate(), NxA::Exception);
+    ASSERT_THROW(entry->parentCrate(), NxA::AssertionFailed);
 }
 
 TEST(SeratoDB_TrackEntry, TagForEntry_AnEntryWithValues_ReturnsTheCorrectTag)

@@ -103,7 +103,7 @@ TEST(SeratoDB_ObjectTag, TagWithIdentifierAndValue_IncorrectIdentifier_ThrowsExc
 
     // -- When.
     // -- Then.
-    ASSERT_THROW(ObjectTag::tagWithIdentifierAndValue('stst', tags), NxA::Exception);
+    ASSERT_THROW(ObjectTag::tagWithIdentifierAndValue('stst', tags), NxA::AssertionFailed);
 }
 
 TEST(SeratoDB_ObjectTag, TagFromAnEmptyArray_ThrowsException)
@@ -113,7 +113,7 @@ TEST(SeratoDB_ObjectTag, TagFromAnEmptyArray_ThrowsException)
 
     // -- When.
     // -- Then.
-    ASSERT_THROW(ObjectTag::tagWithIdentifierAndValue('otst', tags), NxA::Exception);
+    ASSERT_THROW(ObjectTag::tagWithIdentifierAndValue('otst', tags), NxA::AssertionFailed);
 }
 
 TEST(SeratoDB_ObjectTag, TagWithMemoryAt_TagCreated_TagHasCorrectValue)
@@ -178,7 +178,7 @@ TEST(SeratoDB_ObjectTag, TagWithMemoryAt_IncorrectIdentifier_ThrowsException)
     };
 
     // -- When.
-    ASSERT_THROW(ObjectTag::tagWithMemoryAt(data), NxA::Exception);
+    ASSERT_THROW(ObjectTag::tagWithMemoryAt(data), NxA::AssertionFailed);
 }
 
 TEST(SeratoDB_ObjectTag, OperatorEqual_TwoEqualTags_ReturnsTrue)

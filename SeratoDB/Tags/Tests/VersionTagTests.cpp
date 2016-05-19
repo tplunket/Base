@@ -48,7 +48,7 @@ TEST(SeratoDB_VersionTag, TagWithIdentifierAndValue_IncorrectIdentifier_ThrowsEx
     // -- Given.
     // -- When.
     // -- Then.
-    ASSERT_THROW(VersionTag::tagWithIdentifierAndValue('stst', version), NxA::Exception);
+    ASSERT_THROW(VersionTag::tagWithIdentifierAndValue('stst', version), NxA::AssertionFailed);
 }
 
 TEST(SeratoDB_VersionTag, TagWithMemoryAt_TagCreated_TagHasCorrectValue)
@@ -76,7 +76,7 @@ TEST(SeratoDB_VersionTag, TagWithMemoryAt_IncorrectIdentifier_ThrowsException)
     };
 
     // -- When.
-    ASSERT_THROW(VersionTag::tagWithMemoryAt(data), NxA::Exception);
+    ASSERT_THROW(VersionTag::tagWithMemoryAt(data), NxA::AssertionFailed);
 }
 
 TEST(SeratoDB_VersionTag, OperatorEqual_TwoEqualTags_ReturnsTrue)

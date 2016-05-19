@@ -46,7 +46,7 @@ TEST(SeratoDB_UInteger32Tag, TagWithIdentifierAndValue_IncorrectIdentifier_Throw
     // -- Given.
     // -- When.
     // -- Then.
-    ASSERT_THROW(UInteger32Tag::tagWithIdentifierAndValue('stst', 0xDEADBEEF), NxA::Exception);
+    ASSERT_THROW(UInteger32Tag::tagWithIdentifierAndValue('stst', 0xDEADBEEF), NxA::AssertionFailed);
 }
 
 TEST(SeratoDB_UInteger32Tag, TagWithMemoryAt_TagCreated_TagHasCorrectValue)
@@ -68,7 +68,7 @@ TEST(SeratoDB_UInteger32Tag, TagWithMemoryAt_IncorrectIdentifier_ThrowsException
     constexpr byte data[] = { 0x12, 0x74, 0x73, 0x74, 0x00, 0x00, 0x00, 0x04, 0x54, 0xCA, 0x84, 0xAB };
 
     // -- When.
-    ASSERT_THROW(UInteger32Tag::tagWithMemoryAt(data), NxA::Exception);
+    ASSERT_THROW(UInteger32Tag::tagWithMemoryAt(data), NxA::AssertionFailed);
 }
 
 TEST(SeratoDB_UInteger32Tag, TagWithMemoryAt_TagCreatedFromDataWithIncorrectSize_ThrowsException)
@@ -78,7 +78,7 @@ TEST(SeratoDB_UInteger32Tag, TagWithMemoryAt_TagCreatedFromDataWithIncorrectSize
 
     // -- When.
     // -- Then.
-    ASSERT_THROW(UInteger32Tag::tagWithMemoryAt(data), NxA::Exception);
+    ASSERT_THROW(UInteger32Tag::tagWithMemoryAt(data), NxA::AssertionFailed);
 }
 
 TEST(SeratoDB_UInteger32Tag, OperatorEqual_TwoEqualTags_ReturnsTrue)

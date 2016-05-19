@@ -48,7 +48,7 @@ TEST(SeratoDB_PathTag, TagWithIdentifierAndValue_IncorrectIdentifier_ThrowsExcep
     // -- Given.
     // -- When.
     // -- Then.
-    ASSERT_THROW(PathTag::tagWithIdentifierAndValue('stst', path), NxA::Exception);
+    ASSERT_THROW(PathTag::tagWithIdentifierAndValue('stst', path), NxA::AssertionFailed);
 }
 
 TEST(SeratoDB_PathTag, TagWithMemoryAt_TagCreated_TagHasCorrectValue)
@@ -78,7 +78,7 @@ TEST(SeratoDB_PathTag, TagWithMemoryAt_IncorrectIdentifier_ThrowsException)
     };
 
     // -- When.
-    ASSERT_THROW(PathTag::tagWithMemoryAt(data), NxA::Exception);
+    ASSERT_THROW(PathTag::tagWithMemoryAt(data), NxA::AssertionFailed);
 }
 
 TEST(SeratoDB_PathTag, OperatorEqual_TwoEqualTags_ReturnsTrue)

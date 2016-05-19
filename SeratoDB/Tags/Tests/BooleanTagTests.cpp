@@ -57,7 +57,7 @@ TEST(SeratoDB_BooleanTag, TagWithIdentifierAndValue_IncorrectIdentifier_ThrowsEx
     // -- Given.
     // -- When.
     // -- Then.
-    ASSERT_THROW(BooleanTag::tagWithIdentifierAndValue('stst', true), NxA::Exception);
+    ASSERT_THROW(BooleanTag::tagWithIdentifierAndValue('stst', true), NxA::AssertionFailed);
 }
 
 TEST(SeratoDB_BooleanTag, TagWithMemoryAt_TagCreated_TagHasCorrectValue)
@@ -79,7 +79,7 @@ TEST(SeratoDB_BooleanTag, TagWithMemoryAt_IncorrectIdentifier_ThrowsException)
     constexpr byte data[] = { 0x64, 0x74, 0x73, 0x74, 0x00, 0x00, 0x00, 0x01, 0x01 };
 
     // -- When.
-    ASSERT_THROW(BooleanTag::tagWithMemoryAt(data), NxA::Exception);
+    ASSERT_THROW(BooleanTag::tagWithMemoryAt(data), NxA::AssertionFailed);
 }
 
 TEST(SeratoDB_BooleanTag, TagWithMemoryAt_TagCreatedFromDataWithIncorrectSize_ThrowsException)
@@ -89,7 +89,7 @@ TEST(SeratoDB_BooleanTag, TagWithMemoryAt_TagCreatedFromDataWithIncorrectSize_Th
 
     // -- When.
     // -- Then.
-    ASSERT_THROW(BooleanTag::tagWithMemoryAt(data), NxA::Exception);
+    ASSERT_THROW(BooleanTag::tagWithMemoryAt(data), NxA::AssertionFailed);
 }
 
 TEST(SeratoDB_BooleanTag, OperatorEqual_TwoEqualTags_ReturnsTrue)

@@ -41,6 +41,10 @@ public:
         NXA_ASSERT_FALSE(this->isNull());
         return Pointer<T>::operator Pointer<const T>();
     }
+    explicit operator bool() const
+    {
+        return !this->isNull();
+    }
     bool operator==(const Pointer<T>& other) const
     {
         NXA_ASSERT_FALSE(this->isNull());

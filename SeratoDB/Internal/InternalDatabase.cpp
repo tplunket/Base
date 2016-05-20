@@ -98,16 +98,20 @@ void InternalDatabase::saveContentOfRootFolderIfModifiedAndOnVolumeAndSmartCrate
             }
         }
 
-        rootFolder.saveIfOnVolumeAndRecurseToChildren(volumePath, seratoFolderPath);
-
         auto result = String::string();
         result->append("[begin record]\n");
-        rootFolder.addFullCrateNameWithPrefixForCratesOnVolumeAndRecurseToChildren(result, "[crate]", volumePath);
+
+        for (auto& crate : rootFolder.crates()) {
+            crate->saveIfOnVolumeAndRecurseToChildren(volumePath, seratoFolderPath);
+            crate->addFullCrateNameWithPrefixForCratesOnVolumeAndRecurseToChildren(result, "[crate]", volumePath);
+        }
+
         for (auto& crateName : smartCrateNames) {
             result->append("[crate]");
             result->append(crateName);
             result->append("\n");
         }
+
         result->append("[end record]\n");
 
         auto crateOrderFilePath = InternalDatabase::pathForCrateOrderFileInSeratoFolder(seratoFolderPath);

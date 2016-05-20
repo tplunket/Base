@@ -54,7 +54,6 @@ struct InternalCrate : public InternalObject {
     #pragma mark Instance Variables
     String::PointerToConst name;
 
-    boolean tracksWereModified;
     boolean cratesWereModified;
 
     Crate::WeakPointer parentCrate;

@@ -31,7 +31,6 @@ using namespace NxA::Serato;
 
 InternalCrate::InternalCrate(const String& crateName) :
     name(crateName.pointer()),
-    tracksWereModified(true),
     cratesWereModified(false),
     childrenCrates(Crate::Array::array()),
     volumePaths(String::ArrayOfConst::array()),

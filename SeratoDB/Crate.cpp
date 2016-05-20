@@ -159,14 +159,16 @@ NxA::String::Pointer Crate::fullCrateName(void) const
 void Crate::addFullCrateNameWithPrefixForCratesOnVolumeAndRecurseToChildren(String& destination, const char* prefix, const String& volumePath) const
 {
     auto fullCrateName = this->fullCrateName();
-    if (fullCrateName->length()) {
-        count volumePathIndex = internal->indexOfVolumePath(volumePath);
-        if (volumePathIndex != internal->volumePaths->length()) {
-            destination.append(prefix);
-            destination.append(*fullCrateName);
-            destination.append("\n");
-        }
+    NXA_ASSERT_TRUE(fullCrateName->length() != 0);
+
+    if (!internal->childrenCrates->length() ||
+        (internal->indexOfVolumePath(volumePath) != internal->volumePaths->length())) {
+        return;
     }
+
+    destination.append(prefix);
+    destination.append(*fullCrateName);
+    destination.append("\n");
 
     for (auto& crate : *internal->childrenCrates) {
         crate->addFullCrateNameWithPrefixForCratesOnVolumeAndRecurseToChildren(destination, prefix, volumePath);
@@ -262,7 +264,7 @@ void Crate::addTrackEntry(Serato::TrackEntry& trackEntry)
     count volumePathIndex = internal->indexOfVolumePathAndAddIfNotPresent(trackEntry.volumePath());
     (*internal->trackEntriesPerPath)[volumePathIndex].append(trackEntry);
 
-    internal->tracksWereModified = true;
+    internal->markCratesAsModified();
 }
 
 void Crate::removeTrackEntry(TrackEntry::Pointer& trackEntry)
@@ -279,7 +281,7 @@ void Crate::removeTrackEntry(TrackEntry::Pointer& trackEntry)
     auto position = trackEntries.find(trackEntry);
     if (position != trackEntries.end()) {
         trackEntries.removeObjectAt(position);
-        internal->tracksWereModified = true;
+        internal->markCratesAsModified();
     }
 }
 
@@ -359,7 +361,6 @@ boolean Crate::isEmpty(void) const
 void Crate::resetModificationFlags()
 {
     internal->cratesWereModified = false;
-    internal->tracksWereModified = false;
 }
 
 boolean Crate::childrenCratesWereModified(void) const
@@ -369,36 +370,41 @@ boolean Crate::childrenCratesWereModified(void) const
 
 void Crate::saveIfOnVolumeAndRecurseToChildren(const String& volumePath, const String& seratoFolderPath) const
 {
-    count numberOfPaths = internal->volumePaths->length();
-    for (count pathIndex = 0; pathIndex < numberOfPaths; ++pathIndex) {
-        auto& path = (*internal->volumePaths)[pathIndex];
-        if (path == volumePath) {
-            auto& trackEntries = (*internal->trackEntriesPerPath)[pathIndex];
-            if (!trackEntries.length()) {
-                // -- Serato deletes empty crates anyway so we don't even save them.
+    count pathIndex = -1;
+
+    boolean crateIsEmpty = this->isEmpty();
+    if (!crateIsEmpty) {
+        for (count pathIndexLookup = 0; pathIndexLookup < internal->volumePaths->length(); ++pathIndexLookup) {
+            if ((*internal->volumePaths)[pathIndexLookup] == volumePath) {
+                pathIndex = pathIndexLookup;
                 break;
             }
+        }
 
-            auto outputData = Blob::blob();
-
-            auto versionTag = VersionTag::tagWithIdentifierAndValue(crateVersionTagIdentifier,
-                                                                    String::stringWith(crateFileCurrentVersionString));
-            versionTag->addTo(outputData);
-
-            for (auto& trackEntry : trackEntries) {
-                trackEntry->tagForEntry().addTo(outputData);
-            }
-
-            auto& otherTags = (*internal->otherTagsPerPath)[pathIndex];
-            for (auto& tag : otherTags) {
-                tag->addTo(outputData);
-            }
-
-            internal->saveDataToCrateFileInSeratoFolder(outputData, seratoFolderPath, this->fullCrateName());
-
-            break;
+        if (pathIndex == -1) {
+            return;
         }
     }
+
+    auto outputData = Blob::blob();
+
+    auto versionTag = VersionTag::tagWithIdentifierAndValue(crateVersionTagIdentifier,
+                                                            String::stringWith(crateFileCurrentVersionString));
+    versionTag->addTo(outputData);
+
+    if (!crateIsEmpty) {
+        auto& trackEntries = (*internal->trackEntriesPerPath)[pathIndex];
+        for (auto& trackEntry : trackEntries) {
+            trackEntry->tagForEntry().addTo(outputData);
+        }
+
+        auto& otherTags = (*internal->otherTagsPerPath)[pathIndex];
+        for (auto& tag : otherTags) {
+            tag->addTo(outputData);
+        }
+    }
+
+    internal->saveDataToCrateFileInSeratoFolder(outputData, seratoFolderPath, this->fullCrateName());
 
     for (auto& crate : *internal->childrenCrates) {
         crate->saveIfOnVolumeAndRecurseToChildren(volumePath, seratoFolderPath);
@@ -413,7 +419,7 @@ TrackEntry::Array::Pointer Crate::removeAndReturnTrackEntries(void)
         this->removeTrackEntry(entryPointer);
     }
 
-    internal->tracksWereModified = true;
+    internal->markCratesAsModified();
 
     return entries;
 }

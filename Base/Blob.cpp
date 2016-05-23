@@ -443,6 +443,10 @@ Blob::Pointer Blob::hashFor(const byte* memory, count size)
 
 String::Pointer Blob::base64StringFor(const byte* memory, count size)
 {
+    if (size == 0) {
+        return String::string();
+    }
+
     base64_encodestate encodeState;
     base64_init_encodestate(&encodeState);
 
@@ -483,7 +487,7 @@ count Blob::size(void) const
 
 const byte* Blob::data(void) const
 {
-    NXA_ASSERT_TRUE(this->size() > 0);
+    NXA_ASSERT_TRUE(this->size() >= 0);
     return this->std::vector<byte>::data();
 }
 

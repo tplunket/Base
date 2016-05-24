@@ -394,10 +394,13 @@ Blob::Pointer Blob::blobWithMemoryAndSize(const byte* other, count size)
 
 Blob::Pointer Blob::blobWithBase64String(const String& str)
 {
+    count lengthIn = str.length();
+    if (lengthIn == 0) {
+        return Blob::blob();
+    }
     base64_decodestate decodeState;
     base64_init_decodestate(&decodeState);
 
-    count lengthIn = str.length();
     char codeOut[lengthIn];
     int codeLength = base64_decode_block(str.toUTF8(), static_cast<int>(str.length()), codeOut, &decodeState);
     NXA_ASSERT_TRUE(codeLength <= sizeof(codeOut));
@@ -487,23 +490,23 @@ count Blob::size(void) const
 
 const byte* Blob::data(void) const
 {
-    NXA_ASSERT_TRUE(this->size() >= 0);
+    NXA_ASSERT_TRUE(this->size() > 0);
     return this->std::vector<byte>::data();
 }
 
 void Blob::fillWithZeros(void)
 {
-    std::memset(this->data(), 0, this->size());
+    std::memset(this->std::vector<byte>::data(), 0, this->size());
 }
 
 Blob::Pointer Blob::hash(void)
 {
-    return Blob::hashFor(this->data(), this->size());
+    return Blob::hashFor(this->std::vector<byte>::data(), this->size());
 }
 
 String::Pointer Blob::base64String(void)
 {
-    return Blob::base64StringFor(this->data(), this->size());
+    return Blob::base64StringFor(this->std::vector<byte>::data(), this->size());
 }
 
 void Blob::append(const Blob& other)

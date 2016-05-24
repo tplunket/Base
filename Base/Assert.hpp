@@ -29,17 +29,17 @@ NXA_EXIT_NAMESPACE;
 
 #ifdef DEBUG
 // -- Replacement for printf, but only prints its message in DEBUG builds. Otherwise it compiles down to a NO-OP.
-#define NXA_DLOG(...) { printf("%s: ", __PRETTY_FUNCTION__); printf(__VA_ARGS__); }
+#define NXA_DLOG(...) do { printf("%s: ", __PRETTY_FUNCTION__); printf(__VA_ARGS__); printf("\n"); } while (0)
 
 // -- Prints a message and throws an exception in all builds but also breaks into the debugger in DEBUG builds.
-#define NXA_ALOG(...) { throw NxA::AssertionFailed::exceptionWith(__VA_ARGS__); }
+#define NXA_ALOG(...) do { throw NxA::AssertionFailed::exceptionWith(__VA_ARGS__); } while (0)
 
 // -- NXA_ALOG_DEBUG does the same thing as ALog in DEBUG builds.
 #define NXA_ALOG_DEBUG NXA_ALOG
 #else
 #define NXA_DLOG(...) do { } while (0)
-#define NXA_ALOG(...) { printf("%s: ", __PRETTY_FUNCTION__); printf(__VA_ARGS__);throw NxA::AssertionFailed::exceptionWith(__VA_ARGS__); }
-#define NXA_ALOG_DEBUG(...) { printf("%s: ", __PRETTY_FUNCTION__); printf(__VA_ARGS__); }
+#define NXA_ALOG(...) do { printf("%s: ", __PRETTY_FUNCTION__); printf(__VA_ARGS__);throw NxA::AssertionFailed::exceptionWith(__VA_ARGS__); } while (0)
+#define NXA_ALOG_DEBUG(...) do { printf("%s: ", __PRETTY_FUNCTION__); printf(__VA_ARGS__); } while (0)
 #endif
 
 // -- Replacements for assert which use NXA_ALOG().

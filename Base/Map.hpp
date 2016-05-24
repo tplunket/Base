@@ -120,6 +120,11 @@ public:
     {
         return this->find(keyValue) != this->std::map<const Tkey, Tvalue>::end();
     }
+
+    String::Pointer description() const override
+    {
+        return String::stringWithFormat("%s: {%d Elements}", Map::staticClassName(), length());
+    }
 };
 
 // -- Implementation for NxA::Object values stored by shared_ptr
@@ -211,6 +216,11 @@ public:
     boolean containsValueForKey(const Tkey& keyValue) const
     {
         return this->find(keyValue) != this->std::map<const Tkey, std::shared_ptr<Tvalue>>::end();
+    }
+
+    String::Pointer description() const override
+    {
+        return String::stringWithFormat("%s: {%d Elements}", Map::staticClassName(), length());
     }
 };
 

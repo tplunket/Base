@@ -33,6 +33,7 @@ public:
     #pragma mark Constructors & Destructors
     NullablePointer() { }
     NullablePointer(const Pointer<T>& other) : Pointer<T>(other) { }
+    NullablePointer(std::nullptr_t other) : Pointer<T>() { }
     ~NullablePointer() = default;
 
     #pragma mark Operators

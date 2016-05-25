@@ -370,6 +370,15 @@ boolean Crate::childrenCratesWereModified(void) const
 
 void Crate::saveIfOnVolumeAndRecurseToChildren(const String& volumePath, const String& seratoFolderPath) const
 {
+    auto& childrenCrates = internal->childrenCrates;
+    if (childrenCrates->length()) {
+        for (auto& crate : *childrenCrates) {
+            crate->saveIfOnVolumeAndRecurseToChildren(volumePath, seratoFolderPath);
+        }
+
+        return;
+    }
+
     count pathIndex = -1;
 
     boolean crateIsEmpty = this->isEmpty();
@@ -405,10 +414,6 @@ void Crate::saveIfOnVolumeAndRecurseToChildren(const String& volumePath, const S
     }
 
     internal->saveDataToCrateFileInSeratoFolder(outputData, seratoFolderPath, this->fullCrateName());
-
-    for (auto& crate : *internal->childrenCrates) {
-        crate->saveIfOnVolumeAndRecurseToChildren(volumePath, seratoFolderPath);
-    }
 }
 
 TrackEntry::Array::Pointer Crate::removeAndReturnTrackEntries(void)

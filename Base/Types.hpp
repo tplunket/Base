@@ -25,6 +25,7 @@
 #include <cstdint>
 #include <memory>
 #include <typeinfo>
+#include <experimental/optional>
 
 #include "Base/Namespace.hpp"
 #include "Base/Internal/decimal.h"
@@ -57,6 +58,17 @@ using decimal = double;
 
 using decimal2 = dec::decimal<2>;
 using decimal3 = dec::decimal<3>;
+
+// -- Provide an optional type based on std::experimental::optional
+template <typename T>
+using Optional = std::experimental::optional<T>;
+using NullOpt = std::experimental::nullopt_t;
+constexpr NullOpt nullopt{0};
+template <typename T>
+inline constexpr Optional<typename std::decay<T>::type>
+makeOptional(T&& v) {
+    return Optional<typename std::decay<T>::type>(std::forward<T>(v));
+}
 
 // -- Template used by default to produce the name of unknown types.
 template <typename T> struct TypeName {

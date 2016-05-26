@@ -34,7 +34,7 @@ using namespace NxA::Serato;
 #pragma mark Factory Methods
 
 NxA::Pointer<Database> Database::databaseWithPathsForLocalAndExternalSeratoDirectories(const String& pathForLocalSeratoFolder,
-                                                                                       const String::ArrayOfConst& pathsForExternalSeratoFolders)
+                                                                                       const Array<const String>& pathsForExternalSeratoFolders)
 {
     auto internalObject = NxA::Pointer<InternalDatabase>(std::make_shared<InternalDatabase>(pathForLocalSeratoFolder, pathsForExternalSeratoFolders));
     auto newDatabase = Database::makeSharedWithInternal(NxA::Pointer<InternalObject>::dynamicCastFrom(internalObject));
@@ -151,15 +151,15 @@ Crate& Database::rootFolder(void) const
     return internal->rootFolder;
 }
 
-const Track::Array& Database::tracks(void) const
+const Array<Track>& Database::tracks(void) const
 {
     return internal->tracks;
 }
 
-NxA::Pointer<Track::Array> Database::removeAndReturnTracks(void)
+NxA::Pointer<Array<Track>> Database::removeAndReturnTracks(void)
 {
     auto tracks = internal->tracks;
-    internal->tracks = Track::Array::array();
+    internal->tracks = Array<Track>::array();
 
     internal->databaseTracksWereModified = true;
 
@@ -199,7 +199,7 @@ void Database::removeCrate(NxA::Pointer<Crate>& crate)
         crate->parentCrate().removeCrate(crate);
     }
 
-    auto crates = Crate::Array::arrayWith(crate->crates());
+    auto crates = Array<Crate>::arrayWith(crate->crates());
     for (auto& childrenCrate : *crates) {
         auto childrenCratePointer = childrenCrate->pointer();
         this->removeCrate(childrenCratePointer);

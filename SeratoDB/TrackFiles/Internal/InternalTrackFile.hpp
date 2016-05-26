@@ -80,10 +80,10 @@ struct InternalTrackFile : public InternalObject {
 
     boolean beatGridIsLocked;
 
-    NxA::Pointer<CueMarker::Array> cueMarkers;
-    NxA::Pointer<LoopMarker::Array> loopMarkers;
-    NxA::Pointer<GridMarker::Array> gridMarkers;
-    NxA::Pointer<Blob::Array> otherTags;
+    NxA::Pointer<Array<CueMarker>> cueMarkers;
+    NxA::Pointer<Array<LoopMarker>> loopMarkers;
+    NxA::Pointer<Array<GridMarker>> gridMarkers;
+    NxA::Pointer<Array<Blob>> otherTags;
 
     #pragma mark Instance Methods
     virtual void loadAndParseFile(void) = 0;

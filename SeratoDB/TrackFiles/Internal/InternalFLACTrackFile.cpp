@@ -60,10 +60,10 @@ using namespace NxA::Serato;
 
 InternalFLACTrackFile::InternalFLACTrackFile(const String& path) :
     InternalTrackFile(path),
-    nameOfFields(String::ArrayOfConst::array()),
-    nameOfFieldsToRemove(String::ArrayOfConst::array()),
-    ownersOfPrivateFrames(String::ArrayOfConst::array()),
-    ownersOfPrivateFramesToRemove(String::ArrayOfConst::array()),
+    nameOfFields(Array<const String>::array()),
+    nameOfFieldsToRemove(Array<const String>::array()),
+    ownersOfPrivateFrames(Array<const String>::array()),
+    ownersOfPrivateFramesToRemove(Array<const String>::array()),
     hasRating(false)
 {
 }

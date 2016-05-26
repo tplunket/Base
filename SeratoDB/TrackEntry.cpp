@@ -50,7 +50,7 @@ NxA::Pointer<TrackEntry> TrackEntry::entryWithTrackFileAtOnVolume(const String& 
 
     auto entryPath = File::removePrefixFromPath(volumePath, path);
 
-    auto tags = Tag::Array::array();
+    auto tags = Array<Tag>::array();
     tags->append(NxA::Pointer<Serato::Tag>::dynamicCastFrom(PathTag::tagWithIdentifierAndValue(trackEntryPathTagIdentifier, entryPath)));
 
     auto trackEntryTag = ObjectTag::tagWithIdentifierAndValue(trackEntryTagIdentifier, tags);

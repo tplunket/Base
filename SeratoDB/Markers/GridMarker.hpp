@@ -42,9 +42,9 @@ public:
 
     #pragma mark Class Methods
     static boolean sizeIsCorrectForMarkerData(count size);
-    static Pointer<GridMarker::Array> markersWithMemoryAt(const byte* id3TagStart);
-    static void addMarkersTo(const GridMarker::Array& markers, Blob& data);
-    static boolean gridMarkersAreValid(const GridMarker::Array& markers);
+    static Pointer<Array<GridMarker>> markersWithMemoryAt(const byte* id3TagStart);
+    static void addMarkersTo(const Array<GridMarker>& markers, Blob& data);
+    static boolean gridMarkersAreValid(const Array<GridMarker>& markers);
 
     #pragma mark Operators
     virtual bool operator==(const GridMarker& other) const;

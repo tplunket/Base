@@ -40,7 +40,7 @@ struct InternalDatabase : public InternalObject {
 
     #pragma mark Constructors & Destructors
     InternalDatabase(const String& pathForLocalSeratoFolder,
-                     const String::ArrayOfConst& pathsForExternalSeratoFolders);
+                     const Array<const String>& pathsForExternalSeratoFolders);
 
     #pragma mark Class Methods
     static NxA::Pointer<String> pathForCrateOrderFileInSeratoFolder(const String& seratoFolderPath);
@@ -48,17 +48,17 @@ struct InternalDatabase : public InternalObject {
     static void addCratesFoundInSeratoFolderOnVolumeToRootFolder(const String& seratoFolderPath,
                                                                  const String& volumePath,
                                                                  Crate& rootFolder,
-                                                                 String::ArrayOfConst& SmartCrateNames);
+                                                                 Array<const String>& SmartCrateNames);
 
     static void saveContentOfRootFolderIfModifiedAndOnVolumeAndSmartCrateNamesToSeratoFolder(const Serato::Crate& rootFolder,
                                                                                              const String& volumePath,
-                                                                                             const String::ArrayOfConst& smartCrateNames,
+                                                                                             const Array<const String>& smartCrateNames,
                                                                                              const String& seratoFolderPath);
 
     static void setDatabaseFilesInSeratoFolderAsModifedOnDateInSecondsSince1970(const String& folderPath, timestamp dateModified);
 
-    static void addCratesNamesAtTheStartOfUnlessAlreadyThere(String::ArrayOfConst& cratesToAddTo,
-                                                             const String::ArrayOfConst& cratesToAdd);
+    static void addCratesNamesAtTheStartOfUnlessAlreadyThere(Array<const String>& cratesToAddTo,
+                                                             const Array<const String>& cratesToAdd);
 
 #if NXA_PRINT_SERATO_DEBUG_INFO
     static void debugListCrate(Serato::Crate& crate,
@@ -70,21 +70,21 @@ struct InternalDatabase : public InternalObject {
 
     #pragma mark Instance Variables
     NxA::Pointer<Crate> rootFolder;
-    NxA::Pointer<Track::Array> tracks;
+    NxA::Pointer<Array<Track>> tracks;
 
-    NxA::Pointer<String::ArrayOfConst> pathsForSeratoDirectories;
-    NxA::Pointer<String::ArrayOfConst> volumePathsPerPath;
-    NxA::Pointer<Tag::ArrayOfConst::Array> otherTagsPerPath;
-    NxA::Pointer<String::ArrayOfConst::Array> smartCrateNamesPerPath;
+    NxA::Pointer<Array<const String>> pathsForSeratoDirectories;
+    NxA::Pointer<Array<const String>> volumePathsPerPath;
+    NxA::Pointer<Array<Array<const Tag>>> otherTagsPerPath;
+    NxA::Pointer<Array<Array<const String>>> smartCrateNamesPerPath;
 
     boolean databaseIsValid;
     boolean databaseTracksWereModified;
 
     #pragma mark Instance Methods
-    NxA::Pointer<Tag::ArrayOfConst> parseDatabaseFileAtLocatedOnVolumeAndReturnOtherTags(const String& databasePath,
+    NxA::Pointer<Array<const Tag>> parseDatabaseFileAtLocatedOnVolumeAndReturnOtherTags(const String& databasePath,
                                                                                          const String& volumePath);
     void parseAnyDatabaseFilesIn(const String& pathForLocalSeratoFolder,
-                                 const String::ArrayOfConst& pathsForExternalSeratoFolders);
+                                 const Array<const String>& pathsForExternalSeratoFolders);
 
     void storeTrackTagLocatedOnVolume(ObjectTag& tag, const String& volumePath);
 };

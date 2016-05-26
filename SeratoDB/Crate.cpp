@@ -56,9 +56,9 @@ NxA::Pointer<String> Crate::subCratesDirectoryPathInSeratoFolder(const String& s
     return joinedPath;
 }
 
-NxA::Pointer<String::ArrayOfConst> Crate::readCratesNamesInCrateOrderFile(const String& crateOrderFilePath)
+NxA::Pointer<NxA::Array<const String>> Crate::readCratesNamesInCrateOrderFile(const String& crateOrderFilePath)
 {
-    auto cratesInOrder = String::ArrayOfConst::array();
+    auto cratesInOrder = Array<const String>::array();
 
     try {
         if (File::fileExistsAt(crateOrderFilePath)) {
@@ -87,10 +87,10 @@ NxA::boolean Crate::filenameIsAValidCrateName(const String& fileName)
     return !fileName.hasPrefix(".") && fileName.hasPostfix(".crate");
 }
 
-NxA::Pointer<NxA::String::ArrayOfConst> Crate::cratesInSubCratesDirectory(const String& directory)
+NxA::Pointer<NxA::Array<const String>> Crate::cratesInSubCratesDirectory(const String& directory)
 {
     auto cratePathsFound = File::pathsForFilesInDirectory(directory);
-    auto crateNamesFound = String::ArrayOfConst::array();
+    auto crateNamesFound = Array<const String>::array();
 
     for (auto& path : *cratePathsFound) {
         auto fileName = File::removePrefixFromPath(directory, path);
@@ -115,11 +115,11 @@ boolean Crate::isAnExistingFullSmartCrateName(const String& fullCrateName, const
     return File::fileExistsAt(crateFilePath);
 }
 
-void Crate::parseCratesInSeratoFolderOnVolumeAddToCrateAndSaveSmartCrateNamesIn(String::ArrayOfConst& cratesInOrder,
+void Crate::parseCratesInSeratoFolderOnVolumeAddToCrateAndSaveSmartCrateNamesIn(Array<const String>& cratesInOrder,
                                                                                 const String& seratoFolderPath,
                                                                                 const String& volumePath,
                                                                                 Serato::Crate& parentCrate,
-                                                                                String::ArrayOfConst& smartCrateNames)
+                                                                                Array<const String>& smartCrateNames)
 {
     for (auto fullEntryName : cratesInOrder) {
         if (!Serato::Crate::isAnExistingFullCrateName(fullEntryName, seratoFolderPath)) {
@@ -175,9 +175,9 @@ void Crate::addFullCrateNameWithPrefixForCratesOnVolumeAndRecurseToChildren(Stri
     }
 }
 
-NxA::Pointer<TrackEntry::Array> Crate::trackEntries(void) const
+NxA::Pointer<Array<TrackEntry>> Crate::trackEntries(void) const
 {
-    auto allEntries = TrackEntry::Array::array();
+    auto allEntries = Array<TrackEntry>::array();
 
     for (auto& entries : *(internal->trackEntriesPerPath)) {
         allEntries->append(entries);
@@ -186,7 +186,7 @@ NxA::Pointer<TrackEntry::Array> Crate::trackEntries(void) const
     return allEntries;
 }
 
-const Crate::Array& Crate::crates(void) const
+const Array<Crate>& Crate::crates(void) const
 {
     return *(internal->childrenCrates);
 }
@@ -287,8 +287,8 @@ void Crate::removeTrackEntry(NxA::Pointer<TrackEntry>& trackEntry)
 
 void Crate::readFromFolderInVolume(const String& seratoFolderPath, const String& volumePath)
 {
-    auto otherTags = Serato::Tag::ArrayOfConst::array();
-    auto trackEntries = Serato::TrackEntry::Array::array();
+    auto otherTags = Array<const Serato::Tag>::array();
+    auto trackEntries = Array<Serato::TrackEntry>::array();
 
     try {
         auto filePath = InternalCrate::crateFilePathForFullCrateNameInSeratoFolder(this->fullCrateName(), seratoFolderPath);
@@ -416,9 +416,9 @@ void Crate::saveIfOnVolumeAndRecurseToChildren(const String& volumePath, const S
     internal->saveDataToCrateFileInSeratoFolder(outputData, seratoFolderPath, this->fullCrateName());
 }
 
-NxA::Pointer<TrackEntry::Array> Crate::removeAndReturnTrackEntries(void)
+NxA::Pointer<Array<TrackEntry>> Crate::removeAndReturnTrackEntries(void)
 {
-    auto entries = TrackEntry::Array::arrayWith(this->trackEntries());
+    auto entries = Array<TrackEntry>::arrayWith(this->trackEntries());
     for (auto& entry : *entries) {
         auto entryPointer = entry->pointer();
         this->removeTrackEntry(entryPointer);
@@ -429,9 +429,9 @@ NxA::Pointer<TrackEntry::Array> Crate::removeAndReturnTrackEntries(void)
     return entries;
 }
 
-NxA::Pointer<Crate::Array> Crate::removeAndReturnChildrenCrates(void)
+NxA::Pointer<Array<Crate>> Crate::removeAndReturnChildrenCrates(void)
 {
-    auto crates = Crate::Array::arrayWith(this->crates());
+    auto crates = Array<Crate>::arrayWith(this->crates());
     for (auto& crate : *crates) {
         auto cratePointer = crate->pointer();
         this->removeCrate(cratePointer);

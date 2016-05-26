@@ -82,10 +82,10 @@ InternalTrackFile::InternalTrackFile(const String& path) :
     remixer(String::string()),
     rating(0),
     releaseDate(String::string()),
-    cueMarkers(CueMarker::Array::array()),
-    loopMarkers(LoopMarker::Array::array()),
-    gridMarkers(GridMarker::Array::array()),
-    otherTags(Blob::Array::array())
+    cueMarkers(Array<CueMarker>::array()),
+    loopMarkers(Array<LoopMarker>::array()),
+    gridMarkers(Array<GridMarker>::array()),
+    otherTags(Array<Blob>::array())
 {
 }
 

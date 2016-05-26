@@ -38,7 +38,7 @@ class ObjectTag : public Tag {
 public:
     #pragma mark Factory Methods
     static Pointer<ObjectTag> tagWithMemoryAt(const byte* tagAddress);
-    static Pointer<ObjectTag> tagWithIdentifierAndValue(uinteger32 identifier, Tag::Array& content);
+    static Pointer<ObjectTag> tagWithIdentifierAndValue(uinteger32 identifier, Array<Tag>& content);
 
     #pragma mark Operators
     virtual bool operator==(const ObjectTag& other) const;

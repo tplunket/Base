@@ -38,13 +38,13 @@ const char* InternalDatabase::databaseFileCurrentVersionString = "2.0/Serato Scr
 #pragma mark Constructors & Destructors
 
 InternalDatabase::InternalDatabase(const String& pathForLocalSeratoFolder,
-                                   const String::ArrayOfConst& pathsForExternalSeratoFolders) :
+                                   const Array<const String>& pathsForExternalSeratoFolders) :
     rootFolder(Crate::crateWithName(String::string())),
-    tracks(Track::Array::array()),
-    pathsForSeratoDirectories(String::ArrayOfConst::array()),
-    volumePathsPerPath(String::ArrayOfConst::array()),
-    otherTagsPerPath(Tag::ArrayOfConst::Array::array()),
-    smartCrateNamesPerPath(String::ArrayOfConst::Array::array()),
+    tracks(Array<Track>::array()),
+    pathsForSeratoDirectories(Array<const String>::array()),
+    volumePathsPerPath(Array<const String>::array()),
+    otherTagsPerPath(Array<Array<const Tag>>::array()),
+    smartCrateNamesPerPath(Array<Array<const String>>::array()),
     databaseIsValid(false),
     databaseTracksWereModified(false)
 {
@@ -62,7 +62,7 @@ NxA::Pointer<NxA::String> InternalDatabase::pathForCrateOrderFileInSeratoFolder(
 void InternalDatabase::addCratesFoundInSeratoFolderOnVolumeToRootFolder(const String& seratoFolderPath,
                                                                         const String& volumePath,
                                                                         Crate& rootFolder,
-                                                                        String::ArrayOfConst& smartCrateNames)
+                                                                        Array<const String>& smartCrateNames)
 {
     auto crateOrderFilePath = InternalDatabase::pathForCrateOrderFileInSeratoFolder(seratoFolderPath);
     auto cratesInOrder = Crate::readCratesNamesInCrateOrderFile(crateOrderFilePath);
@@ -82,7 +82,7 @@ void InternalDatabase::addCratesFoundInSeratoFolderOnVolumeToRootFolder(const St
 
 void InternalDatabase::saveContentOfRootFolderIfModifiedAndOnVolumeAndSmartCrateNamesToSeratoFolder(const Crate& rootFolder,
                                                                                                     const String& volumePath,
-                                                                                                    const String::ArrayOfConst& smartCrateNames,
+                                                                                                    const Array<const String>& smartCrateNames,
                                                                                                     const String& seratoFolderPath)
 {
     try {
@@ -139,8 +139,8 @@ void InternalDatabase::setDatabaseFilesInSeratoFolderAsModifedOnDateInSecondsSin
     }
 }
 
-void InternalDatabase::addCratesNamesAtTheStartOfUnlessAlreadyThere(String::ArrayOfConst& cratesToAddTo,
-                                                                    const String::ArrayOfConst& cratesToAdd)
+void InternalDatabase::addCratesNamesAtTheStartOfUnlessAlreadyThere(Array<const String>& cratesToAddTo,
+                                                                    const Array<const String>& cratesToAdd)
 {
     count insertionIndex = 0;
     for (auto& crateName : cratesToAdd) {
@@ -179,10 +179,10 @@ void InternalDatabase::debugListCrate(Crate& crate,
 
 #pragma mark Instance Methods
 
-NxA::Pointer<Tag::ArrayOfConst> InternalDatabase::parseDatabaseFileAtLocatedOnVolumeAndReturnOtherTags(const String& databasePath,
-                                                                                                  const String& volumePath)
+NxA::Pointer<NxA::Array<const Tag>> InternalDatabase::parseDatabaseFileAtLocatedOnVolumeAndReturnOtherTags(const String& databasePath,
+                                                                                                      const String& volumePath)
 {
-    auto otherTags = Tag::ArrayOfConst::array();
+    auto otherTags = Array<const Tag>::array();
 
     try {
         auto databaseFile = File::readFileAt(databasePath);
@@ -219,7 +219,7 @@ NxA::Pointer<Tag::ArrayOfConst> InternalDatabase::parseDatabaseFileAtLocatedOnVo
 }
 
 void InternalDatabase::parseAnyDatabaseFilesIn(const String& pathForLocalSeratoFolder,
-                                               const String::ArrayOfConst& pathsForExternalSeratoFolders)
+                                               const Array<const String>& pathsForExternalSeratoFolders)
 {
     this->pathsForSeratoDirectories->append(pathForLocalSeratoFolder);
     this->pathsForSeratoDirectories->append(pathsForExternalSeratoFolders);
@@ -232,7 +232,7 @@ void InternalDatabase::parseAnyDatabaseFilesIn(const String& pathForLocalSeratoF
 #endif
 
     for (auto& path : *(this->pathsForSeratoDirectories)) {
-        auto smartCrateNames = String::ArrayOfConst::array();
+        auto smartCrateNames = Array<const String>::array();
         NxA::Pointer<const String> volumePath(path);
 
         if (Database::containsAValidSeratoFolder(path)) {
@@ -256,7 +256,7 @@ void InternalDatabase::parseAnyDatabaseFilesIn(const String& pathForLocalSeratoF
                                                                                smartCrateNames);
         }
         else {
-            this->otherTagsPerPath->append(Tag::ArrayOfConst::array());
+            this->otherTagsPerPath->append(Array<const Tag>::array());
         }
 
 #if NXA_PRINT_SERATO_DEBUG_INFO

@@ -66,8 +66,8 @@ using namespace NxA::Serato;
 
 InternalID3TrackFile::InternalID3TrackFile(const String& path) :
     InternalTrackFile(path),
-    ownersOfPrivateFrames(String::ArrayOfConst::array()),
-    ownersOfPrivateFramesToRemove(String::ArrayOfConst::array())
+    ownersOfPrivateFrames(Array<const String>::array()),
+    ownersOfPrivateFramesToRemove(Array<const String>::array())
 {
 }
 

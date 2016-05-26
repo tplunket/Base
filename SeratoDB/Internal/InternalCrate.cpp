@@ -33,10 +33,10 @@ using namespace NxA::Serato;
 InternalCrate::InternalCrate(const String& crateName) :
     name(crateName.pointer()),
     cratesWereModified(false),
-    childrenCrates(Crate::Array::array()),
-    volumePaths(String::ArrayOfConst::array()),
-    trackEntriesPerPath(TrackEntry::Array::Array::array()),
-    otherTagsPerPath(Tag::ArrayOfConst::Array::array())
+    childrenCrates(Array<Crate>::array()),
+    volumePaths(Array<const String>::array()),
+    trackEntriesPerPath(Array<Array<TrackEntry>>::array()),
+    otherTagsPerPath(Array<Array<const Tag>>::array())
 {
 }
 
@@ -139,8 +139,8 @@ count InternalCrate::indexOfVolumePathAndAddIfNotPresent(const String& volumePat
     count pathIndex = this->indexOfVolumePath(volumePath);
     if (pathIndex == this->volumePaths->length()) {
         this->volumePaths->append(volumePath);
-        this->trackEntriesPerPath->append(TrackEntry::Array::array());
-        this->otherTagsPerPath->append(Tag::ArrayOfConst::array());
+        this->trackEntriesPerPath->append(Array<TrackEntry>::array());
+        this->otherTagsPerPath->append(Array<const Tag>::array());
     }
 
     return pathIndex;

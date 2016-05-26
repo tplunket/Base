@@ -46,8 +46,8 @@ struct InternalMP4TrackFile : public InternalTrackFile {
     NxA::Pointer<Blob> artworkInTag(const TagLib::MP4::Tag& tag);
 
     #pragma mark Instance Variables
-    NxA::Pointer<String::ArrayOfConst> nameOfItems;
-    NxA::Pointer<String::ArrayOfConst> nameOfItemsToRemove;
+    NxA::Pointer<Array<const String>> nameOfItems;
+    NxA::Pointer<Array<const String>> nameOfItemsToRemove;
 
     #pragma mark Instance Methods
     void parseMarkersInTag(const TagLib::MP4::Tag& tag);

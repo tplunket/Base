@@ -48,8 +48,8 @@ using namespace NxA::Serato;
 
 InternalOGGTrackFile::InternalOGGTrackFile(const String& path) :
     InternalTrackFile(path),
-    nameOfFields(String::ArrayOfConst::array()),
-    nameOfFieldsToRemove(String::ArrayOfConst::array())
+    nameOfFields(Array<const String>::array()),
+    nameOfFieldsToRemove(Array<const String>::array())
 {
 }
 

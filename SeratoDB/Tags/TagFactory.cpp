@@ -70,12 +70,12 @@ NxA::Pointer<Tag> TagFactory::tagForTagAt(const byte *tagAddress, const String &
     NXA_ALOG("Illegal Serato tag type in '%s'. identifier:0x%08x, (char)0x%02x == '%c'.", source.toUTF8(), identifier, typeIdentifier, typeIdentifier);
 }
 
-NxA::Pointer<Tag::Array> TagFactory::parseTagsAt(const byte *firstTagAddress, count sizeFromFirstTag, const String &source)
+NxA::Pointer<NxA::Array<Tag>> TagFactory::parseTagsAt(const byte *firstTagAddress, count sizeFromFirstTag, const String &source)
 {
     const byte* tagAddress = firstTagAddress;
     const byte* endOfTagsAddress = firstTagAddress + sizeFromFirstTag;
 
-    auto newTags = Tag::Array::array();
+    auto newTags = Array<Tag>::array();
 
     while (tagAddress < endOfTagsAddress) {
         if (Tag::dataSizeForTagAt(tagAddress) > 0) {

@@ -52,7 +52,7 @@ NxA::Pointer<Track> Track::trackWithFilePathLocatedOnVolume(const String& trackF
 {
     auto relativePath = File::removePrefixFromPath(String::stringWith(volumePath),
                                                    String::stringWith(trackFilePath));
-    auto tags = Tag::Array::array();
+    auto tags = Array<Tag>::array();
     tags->append(NxA::Pointer<Tag>::dynamicCastFrom(PathTag::tagWithIdentifierAndValue(trackFilePathTagIdentifier, relativePath)));
 
     auto trackTag = ObjectTag::tagWithIdentifierAndValue(trackObjectTagIdentifier, tags);

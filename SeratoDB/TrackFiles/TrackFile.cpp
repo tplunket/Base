@@ -293,7 +293,7 @@ uinteger32 TrackFile::sampleRateInSamplesPerSecond(void) const
     return internal->sampleRateInSamplesPerSecond;
 }
 
-const CueMarker::Array& TrackFile::cueMarkers(void) const
+const Array<CueMarker>& TrackFile::cueMarkers(void) const
 {
     return internal->cueMarkers;
 }
@@ -311,43 +311,43 @@ void TrackFile::setBeatGridAsLocked(boolean locked)
     }
 }
 
-void TrackFile::setCueMarkers(const CueMarker::Array& markers)
+void TrackFile::setCueMarkers(const Array<CueMarker>& markers)
 {
     NXA_ASSERT_FALSE(internal->markersWereIgnored);
 
     if (markers != internal->cueMarkers) {
-        internal->cueMarkers = CueMarker::Array::arrayWith(markers);
+        internal->cueMarkers = Array<CueMarker>::arrayWith(markers);
         internal->markersWereModified = true;
     }
 }
 
-const LoopMarker::Array& TrackFile::loopMarkers(void) const
+const Array<LoopMarker>& TrackFile::loopMarkers(void) const
 {
     return internal->loopMarkers;
 }
 
-void TrackFile::setLoopMarkers(const LoopMarker::Array& markers)
+void TrackFile::setLoopMarkers(const Array<LoopMarker>& markers)
 {
     NXA_ASSERT_FALSE(internal->markersWereIgnored);
 
     if (markers != internal->loopMarkers) {
-        internal->loopMarkers = LoopMarker::Array::arrayWith(markers);
+        internal->loopMarkers = Array<LoopMarker>::arrayWith(markers);
         internal->markersWereModified = true;
     }
 }
 
-const GridMarker::Array& TrackFile::gridMarkers(void) const
+const Array<GridMarker>& TrackFile::gridMarkers(void) const
 {
     return internal->gridMarkers;
 }
 
-void TrackFile::setGridMarkers(const GridMarker::Array& markers)
+void TrackFile::setGridMarkers(const Array<GridMarker>& markers)
 {
     NXA_ASSERT_FALSE(internal->markersWereIgnored);
     NXA_ASSERT_TRUE(GridMarker::gridMarkersAreValid(markers));
 
     if (markers != this->gridMarkers()) {
-        internal->gridMarkers = GridMarker::Array::arrayWith(markers);
+        internal->gridMarkers = Array<GridMarker>::arrayWith(markers);
         internal->markersWereModified = true;
     }
 }

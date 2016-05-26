@@ -47,7 +47,7 @@ Pointer<ObjectTag> ObjectTag::tagWithMemoryAt(const byte* tagAddress)
     return result;
 }
 
-Pointer<ObjectTag> ObjectTag::tagWithIdentifierAndValue(uinteger32 identifier, Tag::Array& content)
+Pointer<ObjectTag> ObjectTag::tagWithIdentifierAndValue(uinteger32 identifier, Array<Tag>& content)
 {
     NXA_ASSERT_NOT_EQ(content.length(), 0);
     NXA_ASSERT_EQ((identifier & 0xFF000000) >> 24, 'o');

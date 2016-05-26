@@ -56,8 +56,8 @@ struct InternalOGGTrackFile : public InternalTrackFile {
     static void setReleaseDateInComment(const String& date, TagLib::Ogg::XiphComment& oggComment);
 
     #pragma mark Instance Variables
-    NxA::Pointer<String::ArrayOfConst> nameOfFields;
-    NxA::Pointer<String::ArrayOfConst> nameOfFieldsToRemove;
+    NxA::Pointer<Array<const String>> nameOfFields;
+    NxA::Pointer<Array<const String>> nameOfFieldsToRemove;
 
     #pragma mark Instance Methods
     void parseMarkersInComment(const TagLib::Ogg::XiphComment& oggComment);

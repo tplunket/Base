@@ -105,14 +105,14 @@ public:
     boolean beatGridIsLocked(void) const;
     void setBeatGridAsLocked(boolean locked);
 
-    const CueMarker::Array& cueMarkers(void) const;
-    void setCueMarkers(const CueMarker::Array& markers);
+    const Array<CueMarker>& cueMarkers(void) const;
+    void setCueMarkers(const Array<CueMarker>& markers);
 
-    const LoopMarker::Array& loopMarkers(void) const;
-    void setLoopMarkers(const LoopMarker::Array& markers);
+    const Array<LoopMarker>& loopMarkers(void) const;
+    void setLoopMarkers(const Array<LoopMarker>& markers);
 
-    const GridMarker::Array& gridMarkers(void) const;
-    void setGridMarkers(const GridMarker::Array& markers);
+    const Array<GridMarker>& gridMarkers(void) const;
+    void setGridMarkers(const Array<GridMarker>& markers);
 
     // -- TODO: Look into adding discNumber and numberOfAlbumTracks if they are available.
 

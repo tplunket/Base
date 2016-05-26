@@ -67,9 +67,9 @@ boolean GridMarker::sizeIsCorrectForMarkerData(count size)
     return (size != 0) && !((size - 4) % sizeof(GridMarkerStruct));
 }
 
-Pointer<GridMarker::Array> GridMarker::markersWithMemoryAt(const byte* id3TagStart)
+Pointer<Array<GridMarker>> GridMarker::markersWithMemoryAt(const byte* id3TagStart)
 {
-    auto result = GridMarker::Array::array();
+    auto result = Array<GridMarker>::array();
 
     auto numberOfMarkers = Platform::bigEndianUInteger32ValueAt(id3TagStart);
     if (!numberOfMarkers) {
@@ -119,7 +119,7 @@ Pointer<GridMarker::Array> GridMarker::markersWithMemoryAt(const byte* id3TagSta
     return result;
 }
 
-void GridMarker::addMarkersTo(const GridMarker::Array& markers, NxA::Blob& data)
+void GridMarker::addMarkersTo(const Array<GridMarker>& markers, NxA::Blob& data)
 {
     uinteger32 numberOfMarkers = static_cast<uinteger32>(markers.length());
 
@@ -162,7 +162,7 @@ void GridMarker::addMarkersTo(const GridMarker::Array& markers, NxA::Blob& data)
     data.append('\0');
 }
 
-boolean GridMarker::gridMarkersAreValid(const GridMarker::Array& markers)
+boolean GridMarker::gridMarkersAreValid(const Array<GridMarker>& markers)
 {
     // -- Serato doesn't support very flexible grid markers, the ones we end up writing
     // -- might not be exactly the ones we wanted to write so we test them

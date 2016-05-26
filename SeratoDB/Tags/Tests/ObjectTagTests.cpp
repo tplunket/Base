@@ -48,7 +48,7 @@ static NxA::Pointer<const NxA::String> version = String::stringWith("Cool Versio
 TEST(SeratoDB_ObjectTag, TagWithIdentifierAndValue_TagCreated_TagHasCorrectValue)
 {
     // -- Given.
-    auto tags = Tag::Array::array();
+    auto tags = Array<Tag>::array();
     tags->append(BlobTag::tagWithIdentifierAndValue('atst', testBlob));
     tags->append(BooleanTag::tagWithIdentifierAndValue('btst', true));
     tags->append(PathTag::tagWithIdentifierAndValue('ptst', path));
@@ -98,7 +98,7 @@ TEST(SeratoDB_ObjectTag, TagWithIdentifierAndValue_TagCreated_TagHasCorrectValue
 TEST(SeratoDB_ObjectTag, TagWithIdentifierAndValue_IncorrectIdentifier_ThrowsException)
 {
     // -- Given.
-    auto tags = Tag::Array::array();
+    auto tags = Array<Tag>::array();
     tags->append(BlobTag::tagWithIdentifierAndValue('atst', testBlob));
 
     // -- When.
@@ -109,7 +109,7 @@ TEST(SeratoDB_ObjectTag, TagWithIdentifierAndValue_IncorrectIdentifier_ThrowsExc
 TEST(SeratoDB_ObjectTag, TagFromAnEmptyArray_ThrowsException)
 {
     // -- Given.
-    auto tags = Tag::Array::array();
+    auto tags = Array<Tag>::array();
 
     // -- When.
     // -- Then.
@@ -184,12 +184,12 @@ TEST(SeratoDB_ObjectTag, TagWithMemoryAt_IncorrectIdentifier_ThrowsException)
 TEST(SeratoDB_ObjectTag, OperatorEqual_TwoEqualTags_ReturnsTrue)
 {
     // -- Given.
-    auto tags = Tag::Array::array();
+    auto tags = Array<Tag>::array();
     tags->append(BlobTag::tagWithIdentifierAndValue('atst', testBlob));
     tags->append(BooleanTag::tagWithIdentifierAndValue('btst', true));
     tags->append(PathTag::tagWithIdentifierAndValue('ptst', path));
     auto tag = ObjectTag::tagWithIdentifierAndValue('otst', tags);
-    auto otherTags = Tag::Array::array();
+    auto otherTags = Array<Tag>::array();
     otherTags->append(BlobTag::tagWithIdentifierAndValue('atst', testBlob));
     otherTags->append(BooleanTag::tagWithIdentifierAndValue('btst', true));
     otherTags->append(PathTag::tagWithIdentifierAndValue('ptst', path));
@@ -203,7 +203,7 @@ TEST(SeratoDB_ObjectTag, OperatorEqual_TwoEqualTags_ReturnsTrue)
 TEST(SeratoDB_ObjectTag, OperatorEqual_TwoEqualTagsSameObject_ReturnsTrue)
 {
     // -- Given.
-    auto tags = Tag::Array::array();
+    auto tags = Array<Tag>::array();
     tags->append(BlobTag::tagWithIdentifierAndValue('atst', testBlob));
     tags->append(BooleanTag::tagWithIdentifierAndValue('btst', true));
     tags->append(PathTag::tagWithIdentifierAndValue('ptst', path));
@@ -217,12 +217,12 @@ TEST(SeratoDB_ObjectTag, OperatorEqual_TwoEqualTagsSameObject_ReturnsTrue)
 TEST(SeratoDB_ObjectTag, OperatorEqual_TwoUnEqualTagsDifferentNumberOfSubtags_Returnsfalse)
 {
     // -- Given.
-    auto tags = Tag::Array::array();
+    auto tags = Array<Tag>::array();
     tags->append(BlobTag::tagWithIdentifierAndValue('atst', testBlob));
     tags->append(BooleanTag::tagWithIdentifierAndValue('btst', true));
     tags->append(PathTag::tagWithIdentifierAndValue('ptst', path));
     auto tag = ObjectTag::tagWithIdentifierAndValue('otst', tags);
-    auto otherTags = Tag::Array::array();
+    auto otherTags = Array<Tag>::array();
     otherTags->append(BlobTag::tagWithIdentifierAndValue('atst', testBlob));
     otherTags->append(BooleanTag::tagWithIdentifierAndValue('btst', true));
     auto otherTag = ObjectTag::tagWithIdentifierAndValue('otst', otherTags);
@@ -235,12 +235,12 @@ TEST(SeratoDB_ObjectTag, OperatorEqual_TwoUnEqualTagsDifferentNumberOfSubtags_Re
 TEST(SeratoDB_ObjectTag, OperatorEqual_TwoUnEqualTagsDifferentSubtags_Returnsfalse)
 {
     // -- Given.
-    auto tags = Tag::Array::array();
+    auto tags = Array<Tag>::array();
     tags->append(BlobTag::tagWithIdentifierAndValue('atst', testBlob));
     tags->append(BooleanTag::tagWithIdentifierAndValue('btst', true));
     tags->append(PathTag::tagWithIdentifierAndValue('ptst', path));
     auto tag = ObjectTag::tagWithIdentifierAndValue('otst', tags);
-    auto otherTags = Tag::Array::array();
+    auto otherTags = Array<Tag>::array();
     otherTags->append(BlobTag::tagWithIdentifierAndValue('atst', testBlob));
     otherTags->append(BooleanTag::tagWithIdentifierAndValue('btst', true));
     tags->append(UInteger16Tag::tagWithIdentifierAndValue('stst', 0xBEEF));
@@ -254,12 +254,12 @@ TEST(SeratoDB_ObjectTag, OperatorEqual_TwoUnEqualTagsDifferentSubtags_Returnsfal
 TEST(SeratoDB_ObjectTag, OperatorEqual_TwoUnEqualTagsDifferentSubtagsValues_Returnsfalse)
 {
     // -- Given.
-    auto tags = Tag::Array::array();
+    auto tags = Array<Tag>::array();
     tags->append(BlobTag::tagWithIdentifierAndValue('atst', testBlob));
     tags->append(BooleanTag::tagWithIdentifierAndValue('btst', true));
     tags->append(PathTag::tagWithIdentifierAndValue('ptst', path));
     auto tag = ObjectTag::tagWithIdentifierAndValue('otst', tags);
-    auto otherTags = Tag::Array::array();
+    auto otherTags = Array<Tag>::array();
     otherTags->append(BlobTag::tagWithIdentifierAndValue('atst', testBlob));
     otherTags->append(BooleanTag::tagWithIdentifierAndValue('btst', false));
     otherTags->append(PathTag::tagWithIdentifierAndValue('ptst', path));
@@ -273,7 +273,7 @@ TEST(SeratoDB_ObjectTag, OperatorEqual_TwoUnEqualTagsDifferentSubtagsValues_Retu
 TEST(SeratoDB_ObjectTag, SetSubTag_TagWithExistingSubTagForThatIdentifier_SetsTheValueCorrectly)
 {
     // -- Given.
-    auto tags = Tag::Array::array();
+    auto tags = Array<Tag>::array();
     tags->append(BlobTag::tagWithIdentifierAndValue('atst', testBlob));
     tags->append(BooleanTag::tagWithIdentifierAndValue('btst', true));
     tags->append(PathTag::tagWithIdentifierAndValue('ptst', path));
@@ -304,7 +304,7 @@ TEST(SeratoDB_ObjectTag, SetSubTag_TagWithExistingSubTagForThatIdentifier_SetsTh
 TEST(SeratoDB_ObjectTag, SetSubTag_TagWithSubTagForANewIdentifier_SetsTheValueCorrectly)
 {
     // -- Given.
-    auto tags = Tag::Array::array();
+    auto tags = Array<Tag>::array();
     tags->append(BlobTag::tagWithIdentifierAndValue('atst', testBlob));
     tags->append(PathTag::tagWithIdentifierAndValue('ptst', path));
     auto tag = ObjectTag::tagWithIdentifierAndValue('otst', tags);
@@ -334,7 +334,7 @@ TEST(SeratoDB_ObjectTag, SetSubTag_TagWithSubTagForANewIdentifier_SetsTheValueCo
 TEST(SeratoDB_ObjectTag, AddTo_TagWrittenToBlob_WriteCorrectData)
 {
     // -- Given.
-    auto tags = Tag::Array::array();
+    auto tags = Array<Tag>::array();
     tags->append(BlobTag::tagWithIdentifierAndValue('atst', testBlob));
     tags->append(BooleanTag::tagWithIdentifierAndValue('btst', true));
     tags->append(PathTag::tagWithIdentifierAndValue('ptst', path));

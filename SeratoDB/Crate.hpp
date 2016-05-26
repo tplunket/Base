@@ -42,18 +42,18 @@ public:
 
     #pragma mark Class Methods
     static NxA::Pointer<String> subCratesDirectoryPathInSeratoFolder(const String& seratoFolderPath);
-    static NxA::Pointer<String::ArrayOfConst> readCratesNamesInCrateOrderFile(const String& crateOrderFilePath);
+    static NxA::Pointer<Array<const String>> readCratesNamesInCrateOrderFile(const String& crateOrderFilePath);
     static boolean filenameIsAValidCrateName(const String& fileName);
-    static NxA::Pointer<String::ArrayOfConst> cratesInSubCratesDirectory(const String& directory);
+    static NxA::Pointer<Array<const String>> cratesInSubCratesDirectory(const String& directory);
     static boolean isAnExistingFullCrateName(const String& fullCrateName,
                                              const String& seratoFolderPath);
     static boolean isAnExistingFullSmartCrateName(const String& fullCrateName,
                                                   const String& seratoFolderPath);
-    static void parseCratesInSeratoFolderOnVolumeAddToCrateAndSaveSmartCrateNamesIn(String::ArrayOfConst& cratesInOrder,
+    static void parseCratesInSeratoFolderOnVolumeAddToCrateAndSaveSmartCrateNamesIn(Array<const String>& cratesInOrder,
                                                                                     const String& seratoFolderPath,
                                                                                     const String& volumePath,
                                                                                     Serato::Crate& parentCrate,
-                                                                                    String::ArrayOfConst& smartCrateNames);
+                                                                                    Array<const String>& smartCrateNames);
 
     #pragma mark Instance Methods
     const String& name(void) const;
@@ -63,8 +63,8 @@ public:
                                                                          const char* prefix,
                                                                          const String& volumePath) const;
 
-    NxA::Pointer<TrackEntry::Array> trackEntries(void) const;
-    const Crate::Array& crates(void) const;
+    NxA::Pointer<Array<TrackEntry>> trackEntries(void) const;
+    const Array<Crate>& crates(void) const;
 
     void addCrate(Crate& crate);
     void removeCrate(NxA::Pointer<Crate>& crate);
@@ -86,8 +86,8 @@ public:
     void saveIfOnVolumeAndRecurseToChildren(const String& volumePath, const String& seratoFolderPath) const;
     boolean childrenCratesWereModified(void) const;
 
-    NxA::Pointer<TrackEntry::Array> removeAndReturnTrackEntries(void);
-    NxA::Pointer<Crate::Array> removeAndReturnChildrenCrates(void);
+    NxA::Pointer<Array<TrackEntry>> removeAndReturnTrackEntries(void);
+    NxA::Pointer<Array<Crate>> removeAndReturnChildrenCrates(void);
 
     #pragma mark Overridden Object Instance Methods
     virtual NxA::Pointer<String> description(void) const override;

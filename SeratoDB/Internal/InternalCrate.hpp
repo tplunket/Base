@@ -57,11 +57,11 @@ struct InternalCrate : public InternalObject {
     boolean cratesWereModified;
 
     NxA::WeakPointer<Crate> parentCrate;
-    NxA::Pointer<Crate::Array> childrenCrates;
+    NxA::Pointer<Array<Crate>> childrenCrates;
 
-    NxA::Pointer<String::ArrayOfConst> volumePaths;
-    NxA::Pointer<TrackEntry::Array::Array> trackEntriesPerPath;
-    NxA::Pointer<Tag::ArrayOfConst::Array> otherTagsPerPath;
+    NxA::Pointer<Array<const String>> volumePaths;
+    NxA::Pointer<Array<Array<TrackEntry>>> trackEntriesPerPath;
+    NxA::Pointer<Array<Array<const Tag>>> otherTagsPerPath;
 
     #pragma mark Instance Methods
     NxA::count indexOfVolumePath(const String& volumePath);

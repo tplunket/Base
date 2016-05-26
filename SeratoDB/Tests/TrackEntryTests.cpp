@@ -37,7 +37,7 @@ NXA_CONTAINS_TEST_SUITE_NAMED(SeratoDB_TrackEntry_Tests);
 TEST(SeratoDB_TrackEntry, EntryWithTagOnVolume_EntryWithInitialValues_ReturnsAValidEntry)
 {
     // -- Given.
-    auto tags = Tag::Array::array();
+    auto tags = Array<Tag>::array();
     tags->append(PathTag::tagWithIdentifierAndValue(trackEntryPathTagIdentifier, String::stringWith("Users/didier/Music/Gigs/02 Money On My Mind (MK Remix).m4a")));
     auto tag = ObjectTag::tagWithIdentifierAndValue(trackEntryTagIdentifier, tags);
     auto volumePath = String::stringWith("/");

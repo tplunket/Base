@@ -79,8 +79,8 @@ struct InternalID3TrackFile : public InternalTrackFile {
     static void removeArtworkInTag(TagLib::ID3v2::Tag& tag);
 
     #pragma mark Instance Variables
-    NxA::Pointer<String::ArrayOfConst> ownersOfPrivateFrames;
-    NxA::Pointer<String::ArrayOfConst> ownersOfPrivateFramesToRemove;
+    NxA::Pointer<Array<const String>> ownersOfPrivateFrames;
+    NxA::Pointer<Array<const String>> ownersOfPrivateFramesToRemove;
 
     #pragma mark Instance Methods
     void parseTag(const TagLib::ID3v2::Tag& tag);

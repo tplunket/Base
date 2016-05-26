@@ -40,7 +40,7 @@ class Database : public Object {
 public:
     #pragma mark Factory Methods
     static Pointer<Database> databaseWithPathsForLocalAndExternalSeratoDirectories(const String& pathForLocalSeratoFolder,
-                                                                                   const String::ArrayOfConst& pathsForExternalSeratoFolders);
+                                                                                   const Array<const String>& pathsForExternalSeratoFolders);
 
     #pragma mark Class Methods
     static Pointer<String> versionAsStringForDatabaseIn(const String& seratoFolderPath);
@@ -54,8 +54,8 @@ public:
     timestamp rootFolderModificationDateInSecondsSince1970(void) const;
 
     Crate& rootFolder(void) const;
-    const Track::Array& tracks(void) const;
-    Pointer<Track::Array> removeAndReturnTracks(void);
+    const Array<Track>& tracks(void) const;
+    Pointer<Array<Track>> removeAndReturnTracks(void);
     const String& volumePathForTrackFilePath(const String& trackFilePath) const;
 
     void removeTrackEntry(Pointer<TrackEntry>& trackEntry);

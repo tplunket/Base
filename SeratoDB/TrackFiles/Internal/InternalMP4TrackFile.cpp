@@ -69,8 +69,8 @@ using namespace NxA::Serato;
 
 InternalMP4TrackFile::InternalMP4TrackFile(const String& path) :
     InternalTrackFile(path),
-    nameOfItems(String::ArrayOfConst::array()),
-    nameOfItemsToRemove(String::ArrayOfConst::array())
+    nameOfItems(Array<const String>::array()),
+    nameOfItemsToRemove(Array<const String>::array())
 {
 }
 

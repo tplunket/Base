@@ -37,7 +37,7 @@ public:
     #pragma mark Class Methods
     static NxA::Pointer<Tag> tagForTagAt(const byte *tagAddress, const String &source);
 
-    static NxA::Pointer<Tag::Array> parseTagsAt(const byte *firstTagAddress, count sizeFromFirstTag, const String &source);
+    static NxA::Pointer<Array<Tag>> parseTagsAt(const byte *firstTagAddress, count sizeFromFirstTag, const String &source);
 };
 
 NXA_EXIT_NAMESPACE;

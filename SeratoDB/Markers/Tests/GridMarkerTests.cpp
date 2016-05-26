@@ -77,7 +77,7 @@ TEST(SeratoDB_GridMarker, gridMarkersAreValid_ValidMarkers_ReturnsTrue)
     auto marker1 = GridMarker::markerWithPositionAndBeatsPerMinute(decimal3("0.000"), decimal2("124"));
     auto marker2 = GridMarker::markerWithPositionAndBeatsPerMinute(decimal3("7.74193548"), decimal2("124"));
     auto marker3 = GridMarker::markerWithPositionAndBeatsPerMinute(decimal3("23.2258065"), decimal2("124"));
-    auto markers = GridMarker::Array::array();
+    auto markers = Array<GridMarker>::array();
     markers->append(marker1);
     markers->append(marker2);
     markers->append(marker3);
@@ -95,7 +95,7 @@ TEST(SeratoDB_GridMarker, gridMarkersAreValid_InvalidMarkers_ReturnsFalse)
     auto marker1 = GridMarker::markerWithPositionAndBeatsPerMinute(decimal3("0.000"), decimal2("124"));
     auto marker2 = GridMarker::markerWithPositionAndBeatsPerMinute(decimal3("7.74193548"), decimal2("124"));
     auto marker3 = GridMarker::markerWithPositionAndBeatsPerMinute(decimal3("23.0258065"), decimal2("124"));
-    auto markers = GridMarker::Array::array();
+    auto markers = Array<GridMarker>::array();
     markers->append(marker1);
     markers->append(marker2);
     markers->append(marker3);
@@ -114,7 +114,7 @@ TEST(SeratoDB_GridMarker, gridMarkersAreValid_MarkersWithSomeAtSamePosition_Retu
     auto marker2 = GridMarker::markerWithPositionAndBeatsPerMinute(decimal3("7.74193548"), decimal2("124"));
     auto marker3 = GridMarker::markerWithPositionAndBeatsPerMinute(decimal3("7.74193548"), decimal2("124"));
     auto marker4 = GridMarker::markerWithPositionAndBeatsPerMinute(decimal3("23.2258065"), decimal2("124"));
-    auto markers = GridMarker::Array::array();
+    auto markers = Array<GridMarker>::array();
     markers->append(marker1);
     markers->append(marker2);
     markers->append(marker3);
@@ -198,7 +198,7 @@ TEST(SeratoDB_GridMarker, addDataTo_AMarkerWithData_WritesTheCorrectData)
     // -- Given.
     auto destination = Blob::blob();
     auto marker = GridMarker::markerWithPositionAndBeatsPerMinute(decimal3("0.0083560086786746978"), decimal2("124"));
-    auto test = GridMarker::Array::array();
+    auto test = Array<GridMarker>::array();
     test->append(marker);
 
     // -- When.

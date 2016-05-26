@@ -23,7 +23,7 @@
 
 #include "Base/Object.hpp"
 #include "Base/Types.hpp"
-#include "Base/ArrayContainer.hpp"
+#include "Base/Array.hpp"
 
 #include <string>
 
@@ -78,7 +78,7 @@ public:
     void append(const String& other);
     void append(const character* other);
 
-    Pointer<String::Array> splitBySeperator(char seperator) const;
+    Pointer<Array<String>> splitBySeperator(char seperator) const;
     Pointer<String> subString(count start, count end = -1) const;
     Pointer<String> utfSeek(count skip) const;
     Pointer<String> lowerCaseString(void) const;

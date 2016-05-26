@@ -52,7 +52,7 @@ public:
     static count sizeOfFileAt(const String& path);
 
     static void createDirectoryAt(const String& path);
-    static Pointer<String::Array> pathsForFilesInDirectory(const String& path);
+    static Pointer<Array<String>> pathsForFilesInDirectory(const String& path);
 
     static timestamp modificationDateInSecondsSince1970ForFile(const String& path);
     static void setModificationDateInSecondsSince1970ForFile(timestamp modificationDateInSeconds, const String& path);

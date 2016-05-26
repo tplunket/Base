@@ -34,7 +34,6 @@ NXA_ENTER_NAMESPACE(NxA);
 
 class String;
 class InternalObject;
-template <class T> class ArrayContainer;
 
 NXA_EXIT_NAMESPACE;
 
@@ -43,13 +42,6 @@ NXA_EXIT_NAMESPACE;
 #define NXA_STR_VALUE_FOR(arg...) #arg
 
 // -- Common macros used by other macros below.
-
-#define NXA_GENERATED_TYPES_IN_NAMESPACE_FOR_BASE_CLASS(namespace_name, class_name...) \
-        protected: \
-            struct constructor_access { }; \
-        public: \
-            using Array = NxA::ArrayContainer<namespace_name::class_name>; \
-            using ArrayOfConst = NxA::ArrayContainer<const namespace_name::class_name>;
 
 #define NXA_GENERATED_CONSTRUCTOR_IN_NAMESPACE_FOR_CLASS(namespace_name, class_name...) \
         public: \
@@ -140,7 +132,8 @@ NXA_EXIT_NAMESPACE;
 // -- but are derived from NxA::Object and externally behave like a regular object.
 
 #define NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_BASE_CLASS(namespace_name, class_name...) \
-        NXA_GENERATED_TYPES_IN_NAMESPACE_FOR_BASE_CLASS(namespace_name, class_name) \
+        protected: \
+            struct constructor_access { }; \
         NXA_GENERATED_CONSTRUCTOR_IN_NAMESPACE_FOR_CLASS(namespace_name, class_name) \
         NXA_GENERATED_DESTRUCTOR_FOR_CLASS(class_name) \
         NXA_GENERATED_POINTER_METHODS_IN_NAMESPACE_FOR_CLASS(namespace_name, class_name) \
@@ -157,7 +150,8 @@ NXA_EXIT_NAMESPACE;
 #define NXA_ENABLE_OBJECT_SHARED_FROM_THIS(class_name) std::enable_shared_from_this<class_name>
 
 #define NXA_GENERATED_OBJECT_DECLARATIONS_FOR(namespace_name, class_name...) \
-        NXA_GENERATED_TYPES_IN_NAMESPACE_FOR_BASE_CLASS(namespace_name, class_name) \
+        protected: \
+            struct constructor_access { }; \
         NXA_GENERATED_DESTRUCTOR_FOR_CLASS(class_name) \
         NXA_GENERATED_POINTER_METHODS_IN_NAMESPACE_FOR_CLASS(namespace_name, class_name) \
         NXA_GENERATED_MAKE_SHARED_METHOD_IN_NAMESPACE_FOR_CLASS(namespace_name, class_name) \
@@ -181,7 +175,8 @@ NXA_EXIT_NAMESPACE;
         class Internal ## class_name;
 
 #define NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_PURE_VIRTUAL_CLASS(namespace_name, class_name...) \
-        NXA_GENERATED_TYPES_IN_NAMESPACE_FOR_BASE_CLASS(namespace_name, class_name) \
+        protected: \
+            struct constructor_access { }; \
         NXA_GENERATED_DESTRUCTOR_FOR_CLASS(class_name) \
         NXA_GENERATED_POINTER_METHODS_IN_NAMESPACE_FOR_CLASS(namespace_name, class_name) \
         NXA_GENERATED_OPERATOR_EQUAL_TO_OBJECT_DECLARATION_IN_NAMESPACE_FOR_CLASS(namespace_name, class_name) \

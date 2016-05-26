@@ -30,28 +30,32 @@
 
 NXA_ENTER_NAMESPACE(NxA);
 
+#pragma mark Forward Declarations
+
+template <class T> class Array;
+
 #pragma mark Methods
 
 // -- This is a utility function to return the description of the content of an array.
-NxA::Pointer<NxA::String> descriptionOfObjectsInArray(const Object::ArrayOfConst& array, const void* originalArrayAddress);
+NxA::Pointer<NxA::String> descriptionOfObjectsInArray(const Array<const Object>& array, const void* originalArrayAddress);
 
 #pragma mark Class
 
-template <class T> class ArrayContainer : public Object, private std::vector<Pointer<T>> {
-    NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_BASE_CLASS(NxA, ArrayContainer<T>);
+template <class T> class Array : public Object, private std::vector<Pointer<T>> {
+    NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_BASE_CLASS(NxA, Array<T>);
 
 public:
     using iterator = typename std::vector<NxA::Pointer<T>>::iterator;
     using const_iterator = typename std::vector<NxA::Pointer<T>>::const_iterator;
 
     #pragma mark Factory Methods
-    static NxA::Pointer<ArrayContainer<T>> array(void)
+    static NxA::Pointer<Array<T>> array(void)
     {
-        return ArrayContainer<T>::makeShared();
+        return Array<T>::makeShared();
     }
-    static NxA::Pointer<ArrayContainer<T>> arrayWith(const ArrayContainer& other)
+    static NxA::Pointer<Array<T>> arrayWith(const Array& other)
     {
-        auto result = ArrayContainer<T>::array();
+        auto result = Array<T>::array();
         for (auto& object : other) {
             result->append(object);
         }
@@ -84,7 +88,7 @@ public:
         NXA_ASSERT_TRUE(index >= 0 && index < this->length());
         return *(this->std::vector<NxA::Pointer<T>>::operator[](index));
     }
-    bool operator==(const ArrayContainer<T>& other) const
+    bool operator==(const Array<T>& other) const
     {
         if (this == &other) {
             return true;
@@ -94,14 +98,14 @@ public:
         }
 
         for (count i = 0; i < this->length(); ++i) {
-            if (!(this->ArrayContainer<T>::operator[](i).T::operator==(other.ArrayContainer<T>::operator[](i)))) {
+            if (!(this->Array<T>::operator[](i).T::operator==(other.Array<T>::operator[](i)))) {
                 return false;
             }
         }
 
         return true;
     }
-    bool operator!=(const ArrayContainer<T>& other) const
+    bool operator!=(const Array<T>& other) const
     {
         return !this->operator==(other);
     }
@@ -145,7 +149,7 @@ public:
     {
         this->push_back(object.pointer());
     }
-    void append(const ArrayContainer<T>& other)
+    void append(const Array<T>& other)
     {
         for (auto& object : other) {
             this->append(object);
@@ -159,7 +163,7 @@ public:
     }
     T& firstObject(void)
     {
-        return const_cast<T&>((static_cast<const ArrayContainer<T>*>(this))->firstObject());
+        return const_cast<T&>((static_cast<const Array<T>*>(this))->firstObject());
     }
     const T& lastObject(void) const
     {
@@ -169,7 +173,7 @@ public:
     }
     T& lastObject(void)
     {
-        return const_cast<T&>((static_cast<const ArrayContainer<T>*>(this))->lastObject());
+        return const_cast<T&>((static_cast<const Array<T>*>(this))->lastObject());
     }
     void insertAt(T& object, const_iterator pos)
     {
@@ -198,7 +202,7 @@ public:
     #pragma mark Overridden Object Instance Methods
     virtual NxA::Pointer<NxA::String> description(void) const override
     {
-        auto tempArray = Object::ArrayOfConst::array();
+        auto tempArray = Array<const Object>::array();
         for (auto& item : *this) {
             tempArray->append(item->pointer());
         }

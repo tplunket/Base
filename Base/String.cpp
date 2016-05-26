@@ -275,9 +275,9 @@ void String::append(const character* other)
     this->std::string::append(other);
 }
 
-Pointer<String::Array> String::splitBySeperator(char seperator) const
+Pointer<Array<String>> String::splitBySeperator(char seperator) const
 {
-    auto results = String::Array::array();
+    auto results = Array<String>::array();
     std::stringstream stream(this->toUTF8());
     std::string line;
 

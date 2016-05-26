@@ -187,11 +187,11 @@ void File::createDirectoryAt(const String& path)
     }
 }
 
-Pointer<String::Array> File::pathsForFilesInDirectory(const String& path)
+Pointer<Array<String>> File::pathsForFilesInDirectory(const String& path)
 {
     NXA_ASSERT_TRUE(path.length() > 0);
 
-    auto pathsFound = String::Array::array();
+    auto pathsFound = Array<String>::array();
 
     if (File::directoryExistsAt(path)) {
         boost::filesystem::path boostPath(path.toUTF8());

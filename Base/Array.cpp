@@ -19,14 +19,14 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include "Base/ArrayContainer.hpp"
+#include "Base/Array.hpp"
 #include "Base/String.hpp"
 
 using namespace NxA;
 
 #pragma mark Methods
     
-NxA::Pointer<NxA::String> NxA::descriptionOfObjectsInArray(const Object::ArrayOfConst& array, const void* originalArrayAddress) {
+NxA::Pointer<NxA::String> NxA::descriptionOfObjectsInArray(const Array<const Object>& array, const void* originalArrayAddress) {
     auto result = String::stringWithFormat("Array at %08p with %ld elements:", originalArrayAddress, array.length());
     for (count index = 0; index < array.length(); ++index) {
         auto& item = array[index];

@@ -48,7 +48,7 @@ TEST(Base_Map, ClassName_MapOfUInteger32AndUInteger32_ClassNameIsReturnedCorrect
 TEST(Base_Map, ClassName_MapOfUInteger32AndMapOfBytesAndArrayOfStrings_ClassNameIsReturnedCorrectly)
 {
     // -- Given.
-    auto test = Map<uinteger32, Map<byte, String::Array>>::map();
+    auto test = Map<uinteger32, Map<byte, Array<String>>>::map();
 
     // -- When.
     auto name = test->className();
@@ -60,8 +60,8 @@ TEST(Base_Map, ClassName_MapOfUInteger32AndMapOfBytesAndArrayOfStrings_ClassName
 TEST(Base_Map, ClassName_TwoMapsOfUInteger32AndMapOfBytesAndArrayOfStrings_ClassNameIsActuallyTheSamePointer)
 {
     // -- Given.
-    auto test = Map<uinteger32, Map<byte, String::Array>>::map();
-    auto other = Map<uinteger32, Map<byte, String::Array>>::map();
+    auto test = Map<uinteger32, Map<byte, Array<String>>>::map();
+    auto other = Map<uinteger32, Map<byte, Array<String>>>::map();
 
     // -- When.
     auto name = test->className();

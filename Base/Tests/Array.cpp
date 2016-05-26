@@ -19,23 +19,23 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include "Base/ArrayContainer.hpp"
+#include "Base/Array.hpp"
 #include "Base/Test.hpp"
 
 using namespace testing;
 using namespace NxA;
 
-NXA_CONTAINS_TEST_SUITE_NAMED(Base_ArrayContainer_Tests);
+NXA_CONTAINS_TEST_SUITE_NAMED(Base_Array_Tests);
 
-TEST(Base_ArrayContainer, ArrayWith_AnArrayWithStrings_ReturnsAnArrayWithTheSameObjectsAsTheSource)
+TEST(Base_Array, ArrayWith_AnArrayWithStrings_ReturnsAnArrayWithTheSameObjectsAsTheSource)
 {
     // -- Given.
-    auto test = String::Array::array();
+    auto test = Array<String>::array();
     test->append(String::stringWith("Test"));
     test->append(String::stringWith("Test2"));
 
     // -- When.
-    auto result = String::Array::arrayWith(test);
+    auto result = Array<String>::arrayWith(test);
 
     // -- Then.
     ASSERT_EQ(2, result->length());
@@ -43,22 +43,22 @@ TEST(Base_ArrayContainer, ArrayWith_AnArrayWithStrings_ReturnsAnArrayWithTheSame
     ASSERT_EQ(&(*test)[1], &(*result)[1]);
 }
 
-TEST(Base_ArrayContainer, ArrayWith_AnEmptyArray_ReturnsAnEmptyArray)
+TEST(Base_Array, ArrayWith_AnEmptyArray_ReturnsAnEmptyArray)
 {
     // -- Given.
-    auto test = String::Array::array();
+    auto test = Array<String>::array();
 
     // -- When.
-    auto result = String::Array::arrayWith(test);
+    auto result = Array<String>::arrayWith(test);
 
     // -- Then.
     ASSERT_EQ(0, result->length());
 }
 
-TEST(Base_ArrayContainer, ClassName_ArrayContainerOfStrings_ClassNameIsReturnedCorrectly)
+TEST(Base_Array, ClassName_ArrayOfStrings_ClassNameIsReturnedCorrectly)
 {
     // -- Given.
-    auto test = String::Array::array();
+    auto test = Array<String>::array();
 
     // -- When.
     auto name = test->className();
@@ -67,11 +67,11 @@ TEST(Base_ArrayContainer, ClassName_ArrayContainerOfStrings_ClassNameIsReturnedC
     ASSERT_STREQ("NxA::Array<NxA::String>", name);
 }
 
-TEST(Base_ArrayContainer, ClassName_TwoArraysOfStrings_ClassNameIsActuallyTheSamePointer)
+TEST(Base_Array, ClassName_TwoArraysOfStrings_ClassNameIsActuallyTheSamePointer)
 {
     // -- Given.
-    auto test = String::Array::array();
-    auto other = String::Array::array();
+    auto test = Array<String>::array();
+    auto other = Array<String>::array();
 
     // -- When.
     auto name = test->className();
@@ -81,24 +81,24 @@ TEST(Base_ArrayContainer, ClassName_TwoArraysOfStrings_ClassNameIsActuallyTheSam
     ASSERT_EQ(otherName, name);
 }
 
-TEST(Base_ArrayContainer, OperatorSquareBrackets_AccessOnConstantArray_ReturnsCorrectValue)
+TEST(Base_Array, OperatorSquareBrackets_AccessOnConstantArray_ReturnsCorrectValue)
 {
     // -- Given.
     // -- When.
-    auto test = String::Array::array();
+    auto test = Array<String>::array();
     test->append(String::stringWith("Test"));
-    auto constTest = Pointer<const String::Array>(test);
+    auto constTest = Pointer<const Array<String>>(test);
 
     // -- Then.
     ASSERT_EQ(1, test->length());
     ASSERT_STREQ("Test", (*constTest)[0].toUTF8());
 }
 
-TEST(Base_ArrayContainer, OperatorSquareBrackets_OutOfBoundsAccess_ThrowsException)
+TEST(Base_Array, OperatorSquareBrackets_OutOfBoundsAccess_ThrowsException)
 {
     // -- Given.
     // -- When.
-    auto test = String::Array::array();
+    auto test = Array<String>::array();
     test->append(String::stringWith("Test"));
 
     // -- Then.
@@ -107,13 +107,13 @@ TEST(Base_ArrayContainer, OperatorSquareBrackets_OutOfBoundsAccess_ThrowsExcepti
     ASSERT_THROW((*test)[132], NxA::AssertionFailed);
 }
 
-TEST(Base_ArrayContainer, OperatorSquareBrackets_OutOfBoundsAccessOnConstantArray_ThrowsException)
+TEST(Base_Array, OperatorSquareBrackets_OutOfBoundsAccessOnConstantArray_ThrowsException)
 {
     // -- Given.
     // -- When.
-    auto test = String::Array::array();
+    auto test = Array<String>::array();
     test->append(String::stringWith("Test"));
-    auto constTest = Pointer<const String::Array>(test);
+    auto constTest = Pointer<const Array<String>>(test);
 
     // -- Then.
     ASSERT_THROW((*constTest)[-1], NxA::AssertionFailed);
@@ -121,10 +121,10 @@ TEST(Base_ArrayContainer, OperatorSquareBrackets_OutOfBoundsAccessOnConstantArra
     ASSERT_THROW((*constTest)[132], NxA::AssertionFailed);
 }
 
-TEST(Base_ArrayContainer, Append_AddingOneObject_AddsObjectCorrectly)
+TEST(Base_Array, Append_AddingOneObject_AddsObjectCorrectly)
 {
     // -- Given.
-    auto test = String::Array::array();
+    auto test = Array<String>::array();
 
     // -- When.
     test->append(String::stringWith("Test"));
@@ -134,10 +134,10 @@ TEST(Base_ArrayContainer, Append_AddingOneObject_AddsObjectCorrectly)
     ASSERT_EQ(::strcmp((*test)[0].toUTF8(), "Test"), 0);
 }
 
-TEST(Base_ArrayContainer, Append_AddingTwoObject_AddsObjectCorrectly)
+TEST(Base_Array, Append_AddingTwoObject_AddsObjectCorrectly)
 {
     // -- Given.
-    auto test = String::Array::array();
+    auto test = Array<String>::array();
 
     // -- When.
     test->append(String::stringWith("Test"));
@@ -149,13 +149,13 @@ TEST(Base_ArrayContainer, Append_AddingTwoObject_AddsObjectCorrectly)
     ASSERT_STREQ("Test2", (*test)[1].toUTF8());
 }
 
-TEST(Base_ArrayContainer, OperatorEqual_TwoDifferentArrays_ReturnFalse)
+TEST(Base_Array, OperatorEqual_TwoDifferentArrays_ReturnFalse)
 {
     // -- Given.
-    auto test = String::Array::array();
+    auto test = Array<String>::array();
     test->append(String::stringWith("Test"));
     test->append(String::stringWith("Test2"));
-    auto test2 = String::Array::array();
+    auto test2 = Array<String>::array();
     test2->append(String::stringWith("Test"));
     test2->append(String::stringWith("OtherTest2"));
 
@@ -164,13 +164,13 @@ TEST(Base_ArrayContainer, OperatorEqual_TwoDifferentArrays_ReturnFalse)
     ASSERT_FALSE(test == test2);
 }
 
-TEST(Base_ArrayContainer, OperatorEqual_TwoEqualArrays_ReturnTrue)
+TEST(Base_Array, OperatorEqual_TwoEqualArrays_ReturnTrue)
 {
     // -- Given.
-    auto test = String::Array::array();
+    auto test = Array<String>::array();
     test->append(String::stringWith("Test"));
     test->append(String::stringWith("Test2"));
-    auto test2 = String::Array::array();
+    auto test2 = Array<String>::array();
     test2->append(String::stringWith("Test"));
     test2->append(String::stringWith("Test2"));
 
@@ -179,20 +179,20 @@ TEST(Base_ArrayContainer, OperatorEqual_TwoEqualArrays_ReturnTrue)
     ASSERT_TRUE(test == test2);
 }
 
-TEST(Base_ArrayContainer, Length_EmptyArray_LengthReturnsZero)
+TEST(Base_Array, Length_EmptyArray_LengthReturnsZero)
 {
     // -- Given.
     // -- When.
-    auto test = String::Array::array();
+    auto test = Array<String>::array();
 
     // -- Then.
     ASSERT_EQ(0, test->length());
 }
 
-TEST(Base_ArrayContainer, EmptyAll_ArrayContainerWithTwoObject_RemovesAllObjects)
+TEST(Base_Array, EmptyAll_ArrayWithTwoObject_RemovesAllObjects)
 {
     // -- Given.
-    auto test = String::Array::array();
+    auto test = Array<String>::array();
     test->append(String::stringWith("Test"));
     test->append(String::stringWith("Test2"));
 
@@ -203,10 +203,10 @@ TEST(Base_ArrayContainer, EmptyAll_ArrayContainerWithTwoObject_RemovesAllObjects
     ASSERT_EQ(0, test->length());
 }
 
-TEST(Base_ArrayContainer, InsertAt_InsertingObjectAtTheBeginng_InsertsObjectCorrectly)
+TEST(Base_Array, InsertAt_InsertingObjectAtTheBeginng_InsertsObjectCorrectly)
 {
     // -- Given.
-    auto test = String::Array::array();
+    auto test = Array<String>::array();
     test->append(String::stringWith("Test"));
     test->append(String::stringWith("Test2"));
 
@@ -220,10 +220,10 @@ TEST(Base_ArrayContainer, InsertAt_InsertingObjectAtTheBeginng_InsertsObjectCorr
     ASSERT_STREQ("Test2", (*test)[2].toUTF8());
 }
 
-TEST(Base_ArrayContainer, InsertAt_InsertingObjectAtTheEnd_InsertsObjectCorrectly)
+TEST(Base_Array, InsertAt_InsertingObjectAtTheEnd_InsertsObjectCorrectly)
 {
     // -- Given.
-    auto test = String::Array::array();
+    auto test = Array<String>::array();
     test->append(String::stringWith("Test"));
     test->append(String::stringWith("Test2"));
 
@@ -237,10 +237,10 @@ TEST(Base_ArrayContainer, InsertAt_InsertingObjectAtTheEnd_InsertsObjectCorrectl
     ASSERT_STREQ("Test3", (*test)[2].toUTF8());
 }
 
-TEST(Base_ArrayContainer, InsertAt_InsertingObjectInTheMiddle_InsertsObjectCorrectly)
+TEST(Base_Array, InsertAt_InsertingObjectInTheMiddle_InsertsObjectCorrectly)
 {
     // -- Given.
-    auto test = String::Array::array();
+    auto test = Array<String>::array();
     test->append(String::stringWith("Test"));
     test->append(String::stringWith("Test2"));
 
@@ -254,10 +254,10 @@ TEST(Base_ArrayContainer, InsertAt_InsertingObjectInTheMiddle_InsertsObjectCorre
     ASSERT_STREQ("Test2", (*test)[2].toUTF8());
 }
 
-TEST(Base_ArrayContainer, Find_ObjectInTheMiddleWithSameValue_ReturnsPositionCorrectly)
+TEST(Base_Array, Find_ObjectInTheMiddleWithSameValue_ReturnsPositionCorrectly)
 {
     // -- Given.
-    auto test = String::Array::array();
+    auto test = Array<String>::array();
     auto object1 = String::stringWith("Test");
     auto object2 = String::stringWith("Test2");
     auto object3 = String::stringWith("Test3");
@@ -273,10 +273,10 @@ TEST(Base_ArrayContainer, Find_ObjectInTheMiddleWithSameValue_ReturnsPositionCor
     ASSERT_TRUE(position == test->begin() + 1);
 }
 
-TEST(Base_ArrayContainer, Contains_ObjectInTheArrayWithSameValue_ReturnsTrue)
+TEST(Base_Array, Contains_ObjectInTheArrayWithSameValue_ReturnsTrue)
 {
     // -- Given.
-    auto test = String::Array::array();
+    auto test = Array<String>::array();
     auto object1 = String::stringWith("Test");
     auto object2 = String::stringWith("Test2");
     test->append(object1);
@@ -288,10 +288,10 @@ TEST(Base_ArrayContainer, Contains_ObjectInTheArrayWithSameValue_ReturnsTrue)
     ASSERT_TRUE(test->contains(object3));
 }
 
-TEST(Base_ArrayContainer, Contains_ObjectAlreadyInTheArray_ReturnsTrue)
+TEST(Base_Array, Contains_ObjectAlreadyInTheArray_ReturnsTrue)
 {
     // -- Given.
-    auto test = String::Array::array();
+    auto test = Array<String>::array();
     auto object1 = String::stringWith("Test");
     auto object2 = String::stringWith("Test2");
     test->append(object1);
@@ -302,10 +302,10 @@ TEST(Base_ArrayContainer, Contains_ObjectAlreadyInTheArray_ReturnsTrue)
     ASSERT_TRUE(test->contains(object2));
 }
 
-TEST(Base_ArrayContainer, Contains_ObjectNotInTheArray_ReturnsFalse)
+TEST(Base_Array, Contains_ObjectNotInTheArray_ReturnsFalse)
 {
     // -- Given.
-    auto test = String::Array::array();
+    auto test = Array<String>::array();
     auto object1 = String::stringWith("Test");
     auto object2 = String::stringWith("Test2");
     test->append(object1);
@@ -317,10 +317,10 @@ TEST(Base_ArrayContainer, Contains_ObjectNotInTheArray_ReturnsFalse)
     ASSERT_FALSE(test->contains(object3));
 }
 
-TEST(Base_ArrayContainer, Find_ObjectInEndWithSameObject_ReturnsPositionCorrectly)
+TEST(Base_Array, Find_ObjectInEndWithSameObject_ReturnsPositionCorrectly)
 {
     // -- Given.
-    auto test = String::Array::array();
+    auto test = Array<String>::array();
     auto object1 = String::stringWith("Test");
     auto object2 = String::stringWith("Test2");
     auto object3 = String::stringWith("Test3");
@@ -336,10 +336,10 @@ TEST(Base_ArrayContainer, Find_ObjectInEndWithSameObject_ReturnsPositionCorrectl
     ASSERT_TRUE(position == test->begin() + 2);
 }
 
-TEST(Base_ArrayContainer, RemoveObjectAt_PositionOfObjectInTheMiddle_RemovesObjectCorrectly)
+TEST(Base_Array, RemoveObjectAt_PositionOfObjectInTheMiddle_RemovesObjectCorrectly)
 {
     // -- Given.
-    auto test = String::Array::array();
+    auto test = Array<String>::array();
     auto object1 = String::stringWith("Test");
     auto object2 = String::stringWith("Test2");
     auto object3 = String::stringWith("Test3");
@@ -356,10 +356,10 @@ TEST(Base_ArrayContainer, RemoveObjectAt_PositionOfObjectInTheMiddle_RemovesObje
     ASSERT_STREQ("Test3", (*test)[1].toUTF8());
 }
 
-TEST(Base_ArrayContainer, Remove_ObjectInTheMiddle_RemovesObjectCorrectly)
+TEST(Base_Array, Remove_ObjectInTheMiddle_RemovesObjectCorrectly)
 {
     // -- Given.
-    auto test = String::Array::array();
+    auto test = Array<String>::array();
     auto object1 = String::stringWith("Test");
     auto object2 = String::stringWith("Test2");
     auto object3 = String::stringWith("Test3");

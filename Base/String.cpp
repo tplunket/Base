@@ -88,7 +88,7 @@ inline uinteger32 SBox(const byte *key, count len, uinteger32 seed) {
 
 #pragma mark Factory Methods
 
-String::Pointer String::string(void)
+Pointer<String> String::string(void)
 {
     auto newString = String::makeShared();
     newString->std::string::operator=("");
@@ -96,7 +96,7 @@ String::Pointer String::string(void)
     return newString;
 }
 
-String::Pointer String::stringWith(const character* other)
+Pointer<String> String::stringWith(const character* other)
 {
     NXA_ASSERT_NOT_NULL(other);
 
@@ -106,7 +106,7 @@ String::Pointer String::stringWith(const character* other)
     return newString;
 }
 
-String::Pointer String::stringWith(const character* other, count length)
+Pointer<String> String::stringWith(const character* other, count length)
 {
     NXA_ASSERT_NOT_NULL(other);
 
@@ -116,7 +116,7 @@ String::Pointer String::stringWith(const character* other, count length)
     return newString;
 }
 
-String::Pointer String::stringWith(const String& other)
+Pointer<String> String::stringWith(const String& other)
 {
     auto newString = String::makeShared();
     newString->std::string::operator=(other);
@@ -124,7 +124,7 @@ String::Pointer String::stringWith(const String& other)
     return newString;
 }
 
-String::Pointer String::stringWithFormat(const character* format, ...)
+Pointer<String> String::stringWithFormat(const character* format, ...)
 {
     NXA_ASSERT_NOT_NULL(format);
 
@@ -143,7 +143,7 @@ String::Pointer String::stringWithFormat(const character* format, ...)
     return newString;
 }
 
-String::Pointer String::stringWithUTF16(const Blob& other)
+Pointer<String> String::stringWithUTF16(const Blob& other)
 {
     auto source = other.pointer();
 
@@ -164,7 +164,7 @@ String::Pointer String::stringWithUTF16(const Blob& other)
 
 #pragma mark Class Methods
 
-uinteger32 String::hashFor(String::Pointer str)
+uinteger32 String::hashFor(Pointer<String> str)
 {
     return SBox((const byte*)str->toUTF8(), str->length(), uinteger32(-1));
 }
@@ -224,7 +224,7 @@ bool String::operator!=(const char* other) const
 
 #pragma mark mark Instance Methods
 
-String::Pointer String::description(void) const
+Pointer<String> String::description(void) const
 {
     return String::stringWith(*this);
 }
@@ -249,7 +249,7 @@ const character* String::toUTF8(void) const
     return this->c_str();
 }
 
-Blob::Pointer String::toUTF16(void) const
+Pointer<Blob> String::toUTF16(void) const
 {
     std::wstring_convert<std::codecvt_utf8_utf16<char16_t>,char16_t> convert;
     std::u16string u16 = convert.from_bytes(this->c_str());
@@ -275,7 +275,7 @@ void String::append(const character* other)
     this->std::string::append(other);
 }
 
-String::Array::Pointer String::splitBySeperator(char seperator) const
+Pointer<String::Array> String::splitBySeperator(char seperator) const
 {
     auto results = String::Array::array();
     std::stringstream stream(this->toUTF8());
@@ -288,7 +288,7 @@ String::Array::Pointer String::splitBySeperator(char seperator) const
     return results;
 }
 
-String::Pointer String::utfSeek(count skip) const
+Pointer<String> String::utfSeek(count skip) const
 {
     NXA_ASSERT_TRUE(skip >= 0);
 
@@ -302,7 +302,7 @@ String::Pointer String::utfSeek(count skip) const
     return String::stringWith(startPointer);
 }
 
-String::Pointer String::subString(count start, count end) const
+Pointer<String> String::subString(count start, count end) const
 {
     NXA_ASSERT_TRUE(start <= end);
 
@@ -320,7 +320,7 @@ String::Pointer String::subString(count start, count end) const
     return newString;
 }
 
-String::Pointer String::lowerCaseString(void) const
+Pointer<String> String::lowerCaseString(void) const
 {
     auto input = this->c_str();
     auto inputLength = this->length();
@@ -339,7 +339,7 @@ String::Pointer String::lowerCaseString(void) const
     return String::stringWith(output);
 }
 
-String::Pointer String::upperCaseString(void) const
+Pointer<String> String::upperCaseString(void) const
 {
     auto input = this->c_str();
     auto inputLength = this->length();

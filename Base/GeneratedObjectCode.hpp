@@ -48,12 +48,6 @@ NXA_EXIT_NAMESPACE;
         protected: \
             struct constructor_access { }; \
         public: \
-            using Pointer = NxA::Pointer<namespace_name::class_name>; \
-            using PointerToConst = NxA::Pointer<const namespace_name::class_name>; \
-            using NullablePointer = NxA::NullablePointer<namespace_name::class_name>; \
-            using NullablePointerToConst = NxA::NullablePointer<const namespace_name::class_name>; \
-            using WeakPointer = NxA::WeakPointer<namespace_name::class_name>; \
-            using WeakPointerToConst = NxA::WeakPointer<namespace_name::class_name>; \
             using Array = NxA::ArrayContainer<namespace_name::class_name>; \
             using ArrayOfConst = NxA::ArrayContainer<const namespace_name::class_name>;
 

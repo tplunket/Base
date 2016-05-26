@@ -33,7 +33,7 @@ class Date : public Object {
 
 public:
     #pragma mark Class Methods
-    static String::Pointer formattedStringWithTimestampAndFormat(timestamp time, const character *format);
+    static Pointer<String> formattedStringWithTimestampAndFormat(timestamp time, const character *format);
 };
 
 NXA_EXIT_NAMESPACE;

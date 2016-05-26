@@ -178,7 +178,7 @@ TEST(Base_Map, ValueForKey_ConstMapWithAGivenValue_ReturnsCorrectValue)
     auto test = TestMapUInteger32ToString::map();
     test->setValueForKey(testString, 0x2323);
     test->setValueForKey(otherString, 0x2423);
-    TestMapUInteger32ToString::PointerToConst constTest = test;
+    Pointer<const TestMapUInteger32ToString> constTest = test;
 
     // -- When.
     // -- Then.
@@ -191,7 +191,7 @@ TEST(Base_Map, ValueForKey_ConstMapWithAnotherValue_ReturnsCorrectValue)
     auto test = TestMapUInteger32ToString::map();
     test->setValueForKey(testString, 0x2323);
     test->setValueForKey(otherString, 0x2423);
-    TestMapUInteger32ToString::PointerToConst constTest = test;
+    Pointer<const TestMapUInteger32ToString> constTest = test;
 
     // -- When.
     // -- Then.
@@ -204,7 +204,7 @@ TEST(Base_Map, ValueForKey_LookingForAnUnknownKeyInConstMap_ThrowsException)
     auto test = TestMapUInteger32ToString::map();
     test->setValueForKey(String::stringWith(testString), 0x2323);
     test->setValueForKey(String::stringWith(otherString), 0x2423);
-    TestMapUInteger32ToString::PointerToConst constTest = test;
+    Pointer<const TestMapUInteger32ToString> constTest = test;
 
     // -- When.
     // -- Then.

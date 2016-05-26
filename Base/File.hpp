@@ -36,23 +36,23 @@ public:
     File() = delete;
 
     #pragma mark Class Methods
-    static Blob::Pointer readFileAt(const String& path);
+    static Pointer<Blob> readFileAt(const String& path);
     static void writeBlobToFileAt(const Blob& content,
                                   const String& path);
     static void deleteFileAt(const String& path);
 
-    static String::Pointer joinPaths(const String& first,
+    static Pointer<String> joinPaths(const String& first,
                                      const String& second);
-    static String::Pointer removePrefixFromPath(const String& prefix,
+    static Pointer<String> removePrefixFromPath(const String& prefix,
                                                 const String& path);
-    static String::Pointer extensionForFilePath(const String& path);
+    static Pointer<String> extensionForFilePath(const String& path);
 
     static boolean fileExistsAt(const String& path);
     static boolean directoryExistsAt(const String& path);
     static count sizeOfFileAt(const String& path);
 
     static void createDirectoryAt(const String& path);
-    static String::Array::Pointer pathsForFilesInDirectory(const String& path);
+    static Pointer<String::Array> pathsForFilesInDirectory(const String& path);
 
     static timestamp modificationDateInSecondsSince1970ForFile(const String& path);
     static void setModificationDateInSecondsSince1970ForFile(timestamp modificationDateInSeconds, const String& path);

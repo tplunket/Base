@@ -32,13 +32,13 @@ class Blob : public Object, private std::vector<byte> {
     NXA_GENERATED_DECLARATIONS_IN_NAMESPACE_FOR_BASE_CLASS(NxA, Blob);
 
 public:
-    static Blob::Pointer blob(void);
-    static Blob::Pointer blobWithCapacity(count size);
-    static Blob::Pointer blobWithMemoryAndSize(const byte* other, count size);
-    static Blob::Pointer blobWithBase64String(const String& str);
-    static Blob::Pointer blobWithStringWithTerminator(const String& str);
-    static Blob::Pointer blobWithStringWithoutTerminator(const String& str);
-    static Blob::Pointer blobWith(const Blob& other);
+    static NxA::Pointer<Blob> blob(void);
+    static NxA::Pointer<Blob> blobWithCapacity(count size);
+    static NxA::Pointer<Blob> blobWithMemoryAndSize(const byte* other, count size);
+    static NxA::Pointer<Blob> blobWithBase64String(const String& str);
+    static NxA::Pointer<Blob> blobWithStringWithTerminator(const String& str);
+    static NxA::Pointer<Blob> blobWithStringWithoutTerminator(const String& str);
+    static NxA::Pointer<Blob> blobWith(const Blob& other);
 
     #pragma mark Class Methods
     static const character* staticClassName(void)
@@ -46,7 +46,7 @@ public:
         return "NxA::Blob";
     }
 
-    static Blob::Pointer hashFor(const byte* memory, count size);
+    static NxA::Pointer<Blob> hashFor(const byte* memory, count size);
     static NxA::Pointer<NxA::String> base64StringFor(const byte* memory, count size);
 
     #pragma mark Operators
@@ -68,7 +68,7 @@ public:
 
     void fillWithZeros(void);
 
-    Blob::Pointer hash(void);
+    NxA::Pointer<Blob> hash(void);
     NxA::Pointer<NxA::String> base64String(void);
 
     void append(const Blob& other);

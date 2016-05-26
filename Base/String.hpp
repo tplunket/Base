@@ -37,15 +37,15 @@ class String : public Object, private std::string {
 
 public:
     #pragma mark Factory Methods
-    static String::Pointer string(void);
-    static String::Pointer stringWith(const character* other);
-    static String::Pointer stringWith(const character* other, count length);
-    static String::Pointer stringWith(const String& other);
-    static String::Pointer stringWithFormat(const character* format, ...);
-    static String::Pointer stringWithUTF16(const Blob& other);
+    static Pointer<String> string(void);
+    static Pointer<String> stringWith(const character* other);
+    static Pointer<String> stringWith(const character* other, count length);
+    static Pointer<String> stringWith(const String& other);
+    static Pointer<String> stringWithFormat(const character* format, ...);
+    static Pointer<String> stringWithUTF16(const Blob& other);
 
     #pragma mark Class Methods
-    static uinteger32 hashFor(String::Pointer str);
+    static uinteger32 hashFor(Pointer<String> str);
     static uinteger32 hashFor(const character* str);
     static count lengthOf(const character* str);
 
@@ -73,16 +73,16 @@ public:
     integer integerValue(void) const;
 
     const character* toUTF8(void) const;
-    NxA::Pointer<NxA::Blob> toUTF16(void) const;
+    Pointer<NxA::Blob> toUTF16(void) const;
 
     void append(const String& other);
     void append(const character* other);
 
-    String::Array::Pointer splitBySeperator(char seperator) const;
-    String::Pointer subString(count start, count end = -1) const;
-    String::Pointer utfSeek(count skip) const;
-    String::Pointer lowerCaseString(void) const;
-    String::Pointer upperCaseString(void) const;
+    Pointer<String::Array> splitBySeperator(char seperator) const;
+    Pointer<String> subString(count start, count end = -1) const;
+    Pointer<String> utfSeek(count skip) const;
+    Pointer<String> lowerCaseString(void) const;
+    Pointer<String> upperCaseString(void) const;
 
     boolean hasPrefix(const String& prefix) const;
     boolean hasPostfix(const String& postfix) const;
@@ -97,7 +97,7 @@ public:
     void replaceOccurenceOfStringWith(const character* occurence, const character* replacement);
 
     #pragma mark Overriden Object Instance Methods
-    virtual String::Pointer description(void) const override;
+    virtual Pointer<String> description(void) const override;
 };
 
 inline bool operator==(const char* first, const String& second)

@@ -87,7 +87,7 @@ TEST(Base_ArrayContainer, OperatorSquareBrackets_AccessOnConstantArray_ReturnsCo
     // -- When.
     auto test = String::Array::array();
     test->append(String::stringWith("Test"));
-    auto constTest = String::Array::PointerToConst(test);
+    auto constTest = Pointer<const String::Array>(test);
 
     // -- Then.
     ASSERT_EQ(1, test->length());
@@ -113,7 +113,7 @@ TEST(Base_ArrayContainer, OperatorSquareBrackets_OutOfBoundsAccessOnConstantArra
     // -- When.
     auto test = String::Array::array();
     test->append(String::stringWith("Test"));
-    auto constTest = String::Array::PointerToConst(test);
+    auto constTest = Pointer<const String::Array>(test);
 
     // -- Then.
     ASSERT_THROW((*constTest)[-1], NxA::AssertionFailed);

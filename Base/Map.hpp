@@ -45,7 +45,7 @@ public:
     #pragma mark Factory Methods
     static NxA::Pointer<Map<Tkey, Tvalue>>  map(void)
     {
-        return Map::Pointer(std::make_shared<Map>(Map::constructor_access()));
+        return NxA::Pointer<Map>(std::make_shared<Map>(Map::constructor_access()));
     }
 
     #pragma mark Class Methods
@@ -135,7 +135,7 @@ public:
     #pragma mark Factory Methods
     static NxA::Pointer<Map<Tkey, Tvalue>> map(void)
     {
-        return Map::Pointer(std::make_shared<Map>(Map::constructor_access()));
+        return Pointer<Map>(std::make_shared<Map>(Map::constructor_access()));
     }
 
     #pragma mark Class Methods

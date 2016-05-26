@@ -197,7 +197,7 @@ TEST(Base_Blob, OperatorSquareBrackets_ConstantBlobWithDataInIt_ReturnsCorrectDa
 {
     // -- Given.
     // -- When.
-    auto test = Blob::PointerToConst(Blob::blobWithMemoryAndSize(testData, sizeof(testData)));
+    auto const test = Blob::blobWithMemoryAndSize(testData, sizeof(testData));
 
     // -- Then.
     ASSERT_EQ(sizeof(testData), test->size());
@@ -220,7 +220,7 @@ TEST(Base_Blob, OperatorSquareBrackets_OutOfBoundsAccessOnConstantBlob_ThrowsAnE
 {
     // -- Given.
     // -- When.
-    auto test = Blob::PointerToConst(Blob::blobWithMemoryAndSize(testData, sizeof(testData)));
+    auto const test = Blob::blobWithMemoryAndSize(testData, sizeof(testData));
 
     // -- Then.
     ASSERT_THROW((*test)[-2], NxA::AssertionFailed);
@@ -242,7 +242,7 @@ TEST(Base_Blob, Data_ConstantBlobIsEmpty_ThrowsAnException)
 {
     // -- Given.
     // -- When.
-    auto test = Blob::PointerToConst(Blob::blob());
+    auto const test = Blob::blob();
 
     // -- Then.
     ASSERT_THROW(test->data(), NxA::AssertionFailed);

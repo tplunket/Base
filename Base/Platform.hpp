@@ -79,7 +79,7 @@ public:
     static void writeBigEndianUInteger32ValueAt(uinteger32 value, byte* ptr);
     static void writeBigEndianUInteger16ValueAt(uinteger16 value, byte* ptr);
 
-    static Blob::Pointer convertEndiannessOfUInteger16From(const NxA::Blob& other);
+    static Pointer<Blob> convertEndiannessOfUInteger16From(const NxA::Blob& other);
 };
 
 NXA_EXIT_NAMESPACE;

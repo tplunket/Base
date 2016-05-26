@@ -48,7 +48,7 @@ uinteger32 Object::staticClassHash(void)
 
 #pragma mark Instance Methods
 
-String::Pointer Object::description(void) const
+Pointer<String> Object::description(void) const
 {
     return String::stringWithFormat("<%s at 0x%08lx>", this->className(), this);
 }

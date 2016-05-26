@@ -35,7 +35,7 @@ using namespace std;
 
 #pragma mark mark Class Methods
 
-Blob::Pointer File::readFileAt(const String& path)
+Pointer<Blob> File::readFileAt(const String& path)
 {
     NXA_ASSERT_TRUE(path.length() > 0);
 
@@ -91,7 +91,7 @@ void File::deleteFileAt(const String& path)
     ::remove(path.toUTF8());
 }
 
-String::Pointer File::joinPaths(const String& first,
+Pointer<String> File::joinPaths(const String& first,
                                 const String& second)
 {
     auto result = String::stringWith(first);
@@ -112,7 +112,7 @@ String::Pointer File::joinPaths(const String& first,
     return result;
 }
 
-String::Pointer File::removePrefixFromPath(const String& prefix,
+Pointer<String> File::removePrefixFromPath(const String& prefix,
                                            const String& path)
 {
     auto fullPrefix = String::stringWith(prefix);
@@ -135,7 +135,7 @@ String::Pointer File::removePrefixFromPath(const String& prefix,
     return path.subString(lengthToCrop);
 }
 
-String::Pointer File::extensionForFilePath(const String& path)
+Pointer<String> File::extensionForFilePath(const String& path)
 {
     boost::filesystem::path boostPath(path.toUTF8());
     return String::stringWith(boost::filesystem::extension(boostPath).c_str());
@@ -187,7 +187,7 @@ void File::createDirectoryAt(const String& path)
     }
 }
 
-String::Array::Pointer File::pathsForFilesInDirectory(const String& path)
+Pointer<String::Array> File::pathsForFilesInDirectory(const String& path)
 {
     NXA_ASSERT_TRUE(path.length() > 0);
 

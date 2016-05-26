@@ -369,12 +369,12 @@ using namespace NxA;
 
 #pragma mark mark Factory Methods
 
-Blob::Pointer Blob::blob(void)
+NxA::Pointer<Blob> Blob::blob(void)
 {
     return Blob::makeShared();
 }
 
-Blob::Pointer Blob::blobWithCapacity(count size)
+NxA::Pointer<Blob> Blob::blobWithCapacity(count size)
 {
     auto newBlob = Blob::makeShared();
     newBlob->resize(size);
@@ -383,7 +383,7 @@ Blob::Pointer Blob::blobWithCapacity(count size)
     return newBlob;
 }
 
-Blob::Pointer Blob::blobWithMemoryAndSize(const byte* other, count size)
+NxA::Pointer<Blob> Blob::blobWithMemoryAndSize(const byte* other, count size)
 {
     auto newBlob = Blob::makeShared();
     std::vector<byte>& blobAsVector = *newBlob;
@@ -392,7 +392,7 @@ Blob::Pointer Blob::blobWithMemoryAndSize(const byte* other, count size)
     return newBlob;
 }
 
-Blob::Pointer Blob::blobWithBase64String(const String& str)
+NxA::Pointer<Blob> Blob::blobWithBase64String(const String& str)
 {
     base64_decodestate decodeState;
     base64_init_decodestate(&decodeState);
@@ -406,21 +406,21 @@ Blob::Pointer Blob::blobWithBase64String(const String& str)
     return newBlob;
 }
 
-Blob::Pointer Blob::blobWithStringWithTerminator(const String& str)
+NxA::Pointer<Blob> Blob::blobWithStringWithTerminator(const String& str)
 {
     auto newBlob = Blob::makeShared();
     newBlob->appendWithStringTermination(str.toUTF8());
     return newBlob;
 }
 
-Blob::Pointer Blob::blobWithStringWithoutTerminator(const String& str)
+NxA::Pointer<Blob> Blob::blobWithStringWithoutTerminator(const String& str)
 {
     auto newBlob = Blob::makeShared();
     newBlob->appendWithoutStringTermination(str.toUTF8());
     return newBlob;
 }
 
-Blob::Pointer Blob::blobWith(const Blob& other)
+NxA::Pointer<Blob> Blob::blobWith(const Blob& other)
 {
     auto newBlob = Blob::makeShared();
     std::vector<byte>& blobAsVector = *newBlob;
@@ -432,7 +432,7 @@ Blob::Pointer Blob::blobWith(const Blob& other)
 
 #pragma mark Class Methods
 
-Blob::Pointer Blob::hashFor(const byte* memory, count size)
+NxA::Pointer<Blob> Blob::hashFor(const byte* memory, count size)
 {
     auto result = NxA::Blob::blobWithCapacity(16);
 
@@ -441,7 +441,7 @@ Blob::Pointer Blob::hashFor(const byte* memory, count size)
     return result;
 }
 
-String::Pointer Blob::base64StringFor(const byte* memory, count size)
+NxA::Pointer<String> Blob::base64StringFor(const byte* memory, count size)
 {
     base64_encodestate encodeState;
     base64_init_encodestate(&encodeState);
@@ -492,12 +492,12 @@ void Blob::fillWithZeros(void)
     std::memset(this->data(), 0, this->size());
 }
 
-Blob::Pointer Blob::hash(void)
+NxA::Pointer<Blob> Blob::hash(void)
 {
     return Blob::hashFor(this->data(), this->size());
 }
 
-String::Pointer Blob::base64String(void)
+NxA::Pointer<String> Blob::base64String(void)
 {
     return Blob::base64StringFor(this->data(), this->size());
 }

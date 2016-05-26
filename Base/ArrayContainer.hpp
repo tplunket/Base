@@ -45,11 +45,11 @@ public:
     using const_iterator = typename std::vector<NxA::Pointer<T>>::const_iterator;
 
     #pragma mark Factory Methods
-    static ArrayContainer<T>::Pointer array(void)
+    static NxA::Pointer<ArrayContainer<T>> array(void)
     {
         return ArrayContainer<T>::makeShared();
     }
-    static ArrayContainer<T>::Pointer arrayWith(const ArrayContainer& other)
+    static NxA::Pointer<ArrayContainer<T>> arrayWith(const ArrayContainer& other)
     {
         auto result = ArrayContainer<T>::array();
         for (auto& object : other) {

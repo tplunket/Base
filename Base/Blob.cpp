@@ -394,10 +394,13 @@ NxA::Pointer<Blob> Blob::blobWithMemoryAndSize(const byte* other, count size)
 
 NxA::Pointer<Blob> Blob::blobWithBase64String(const String& str)
 {
+    count lengthIn = str.length();
+    if (lengthIn == 0) {
+        return Blob::blob();
+    }
     base64_decodestate decodeState;
     base64_init_decodestate(&decodeState);
 
-    count lengthIn = str.length();
     char codeOut[lengthIn];
     int codeLength = base64_decode_block(str.toUTF8(), static_cast<int>(str.length()), codeOut, &decodeState);
     NXA_ASSERT_TRUE(codeLength <= sizeof(codeOut));
@@ -443,6 +446,10 @@ NxA::Pointer<Blob> Blob::hashFor(const byte* memory, count size)
 
 NxA::Pointer<String> Blob::base64StringFor(const byte* memory, count size)
 {
+    if (size == 0) {
+        return String::string();
+    }
+
     base64_encodestate encodeState;
     base64_init_encodestate(&encodeState);
 
@@ -489,17 +496,17 @@ const byte* Blob::data(void) const
 
 void Blob::fillWithZeros(void)
 {
-    std::memset(this->data(), 0, this->size());
+    std::memset(this->std::vector<byte>::data(), 0, this->size());
 }
 
 NxA::Pointer<Blob> Blob::hash(void)
 {
-    return Blob::hashFor(this->data(), this->size());
+    return Blob::hashFor(this->std::vector<byte>::data(), this->size());
 }
 
 NxA::Pointer<String> Blob::base64String(void)
 {
-    return Blob::base64StringFor(this->data(), this->size());
+    return Blob::base64StringFor(this->std::vector<byte>::data(), this->size());
 }
 
 void Blob::append(const Blob& other)

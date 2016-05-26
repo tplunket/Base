@@ -28,11 +28,12 @@ NXA_ENTER_NAMESPACE(NxA);
 // -- NOTE: This pointer type should only be used internally inside internal classes or inside methods.
 // --       It should NEVER be used as argument types to methods. It should be used as little as possible
 // --       and the regular Pointer should always be prefered to this solution.
-template <class T> class NullablePointer : protected Pointer<T> {
+template <class T> class NullablePointer : public Pointer<T> {
 public:
     #pragma mark Constructors & Destructors
     NullablePointer() { }
     NullablePointer(const Pointer<T>& other) : Pointer<T>(other) { }
+    NullablePointer(std::nullptr_t other) : Pointer<T>() { }
     ~NullablePointer() = default;
 
     #pragma mark Operators
@@ -40,6 +41,10 @@ public:
     {
         NXA_ASSERT_FALSE(this->isNull());
         return Pointer<T>::operator Pointer<const T>();
+    }
+    explicit operator bool() const
+    {
+        return !this->isNull();
     }
     bool operator==(const Pointer<T>& other) const
     {

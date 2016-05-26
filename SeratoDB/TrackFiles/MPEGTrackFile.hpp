@@ -36,7 +36,7 @@ class MPEGTrackFile : public ID3TrackFile {
 
 public:
     #pragma mark Factory Methods
-    static MPEGTrackFile::Pointer fileWithFileAt(const String& path, TrackFile::Flags flags);
+    static Pointer<MPEGTrackFile> fileWithFileAt(const String& path, TrackFile::Flags flags);
 };
 
 NXA_EXIT_NAMESPACE;

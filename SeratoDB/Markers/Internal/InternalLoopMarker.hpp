@@ -39,7 +39,7 @@ struct InternalLoopMarker : public InternalMarker {
 
     uinteger16 index;
 
-    String::PointerToConst label;
+    NxA::Pointer<const String> label;
 
     byte colorRedComponent;
     byte colorGreenComponent;

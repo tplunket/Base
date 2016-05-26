@@ -41,11 +41,11 @@ class TrackEntry : public Object {
 
 public:
     #pragma mark Factory Methods
-    static TrackEntry::Pointer entryWithTagOnVolume(const ObjectTag& tag, const String& volumePath);
-    static TrackEntry::Pointer entryWithTrackFileAtOnVolume(const String& path, const String& volumePath);
+    static NxA::Pointer<TrackEntry> entryWithTagOnVolume(const ObjectTag& tag, const String& volumePath);
+    static NxA::Pointer<TrackEntry> entryWithTrackFileAtOnVolume(const String& path, const String& volumePath);
 
     #pragma mark Instance Methods
-    String::Pointer trackFilePath(void) const;
+    NxA::Pointer<String> trackFilePath(void) const;
     const String& volumePath(void) const;
 
     boolean hasParentCrate(void) const;

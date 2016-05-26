@@ -31,7 +31,7 @@ using namespace NxA::Serato;
 
 #pragma mark Factory Methods
 
-ObjectTag::Pointer ObjectTag::tagWithMemoryAt(const byte* tagAddress)
+Pointer<ObjectTag> ObjectTag::tagWithMemoryAt(const byte* tagAddress)
 {
     auto dataSize = Tag::dataSizeForTagAt(tagAddress);
     auto tagData = InternalTag::dataForTagAt(tagAddress);
@@ -47,7 +47,7 @@ ObjectTag::Pointer ObjectTag::tagWithMemoryAt(const byte* tagAddress)
     return result;
 }
 
-ObjectTag::Pointer ObjectTag::tagWithIdentifierAndValue(uinteger32 identifier, Tag::Array& content)
+Pointer<ObjectTag> ObjectTag::tagWithIdentifierAndValue(uinteger32 identifier, Tag::Array& content)
 {
     NXA_ASSERT_NOT_EQ(content.length(), 0);
     NXA_ASSERT_EQ((identifier & 0xFF000000) >> 24, 'o');

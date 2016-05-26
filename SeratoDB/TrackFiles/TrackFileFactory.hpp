@@ -50,7 +50,7 @@ public:
     static AudioFileType audioFileTypeForPath(const character *trackFilePath);
     static AudioFileType audioFileTypeForPath(const String& trackFilePath);
 
-    static NxA::Serato::TrackFile::Pointer trackFileForPath(const String& trackFilePath, TrackFile::Flags flags = TrackFile::Flags::NoFlag);
+    static NxA::Pointer<NxA::Serato::TrackFile> trackFileForPath(const String& trackFilePath, TrackFile::Flags flags = TrackFile::Flags::NoFlag);
 };
 
 NXA_EXIT_NAMESPACE;

@@ -30,7 +30,7 @@ using namespace NxA::Serato;
 
 NXA_CONTAINS_TEST_SUITE_NAMED(SeratoDB_VersionTag_Tests);
 
-static String::PointerToConst version = String::stringWith("Cool Version");
+static NxA::Pointer<const String> version = String::stringWith("Cool Version");
 
 TEST(SeratoDB_VersionTag, TagWithIdentifierAndValue_TagCreated_TagHasCorrectValue)
 {

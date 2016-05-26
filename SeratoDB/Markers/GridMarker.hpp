@@ -36,13 +36,13 @@ class GridMarker : public Marker {
 
 public:
     #pragma mark Factory Methods
-    static GridMarker::Pointer markerWithPositionAndBeatsPerMinute(const decimal3& positionInSeconds,
+    static Pointer<GridMarker> markerWithPositionAndBeatsPerMinute(const decimal3& positionInSeconds,
                                                                    const decimal2& beatsPerMinute);
-    static GridMarker::Pointer markerWith(const GridMarker& other);
+    static Pointer<GridMarker> markerWith(const GridMarker& other);
 
     #pragma mark Class Methods
     static boolean sizeIsCorrectForMarkerData(count size);
-    static GridMarker::Array::Pointer markersWithMemoryAt(const byte* id3TagStart);
+    static Pointer<GridMarker::Array> markersWithMemoryAt(const byte* id3TagStart);
     static void addMarkersTo(const GridMarker::Array& markers, Blob& data);
     static boolean gridMarkersAreValid(const GridMarker::Array& markers);
 
@@ -51,12 +51,12 @@ public:
 
     #pragma mark Instance Methods
     const decimal3& positionInSeconds(void) const;
-    String::Pointer positionInSecondsAsString(void) const;
+    Pointer<String> positionInSecondsAsString(void) const;
     const decimal2& beatsPerMinute(void) const;
-    String::Pointer beatsPerMinuteAsString(void) const;
+    Pointer<String> beatsPerMinuteAsString(void) const;
 
     #pragma mark Overidden Object Instance Methods
-    virtual NxA::String::Pointer description(void) const override;
+    virtual NxA::Pointer<String> description(void) const override;
 };
 
 NXA_EXIT_NAMESPACE;

@@ -53,7 +53,7 @@ InternalDatabase::InternalDatabase(const String& pathForLocalSeratoFolder,
 
 #pragma mark Class Methods
 
-NxA::String::Pointer InternalDatabase::pathForCrateOrderFileInSeratoFolder(const String& seratoFolderPath)
+NxA::Pointer<NxA::String> InternalDatabase::pathForCrateOrderFileInSeratoFolder(const String& seratoFolderPath)
 {
     auto joinedPath = File::joinPaths(seratoFolderPath, String::stringWith("neworder.pref"));
     return joinedPath;
@@ -169,7 +169,7 @@ void InternalDatabase::debugListCrate(Crate& crate,
             printf("%s   Track '%s'\n", spacing.toUTF8(), trackEntry->trackFilePath()->toUTF8());
         }
 
-        String::Pointer newSpacing = String::stringWith(spacing);
+        Pointer<String> newSpacing = String::stringWith(spacing);
         newSpacing->append("   ");
 
         Database::debugListCrate(subCrate, newSpacing);
@@ -179,7 +179,7 @@ void InternalDatabase::debugListCrate(Crate& crate,
 
 #pragma mark Instance Methods
 
-Tag::ArrayOfConst::Pointer InternalDatabase::parseDatabaseFileAtLocatedOnVolumeAndReturnOtherTags(const String& databasePath,
+NxA::Pointer<Tag::ArrayOfConst> InternalDatabase::parseDatabaseFileAtLocatedOnVolumeAndReturnOtherTags(const String& databasePath,
                                                                                                   const String& volumePath)
 {
     auto otherTags = Tag::ArrayOfConst::array();
@@ -233,7 +233,7 @@ void InternalDatabase::parseAnyDatabaseFilesIn(const String& pathForLocalSeratoF
 
     for (auto& path : *(this->pathsForSeratoDirectories)) {
         auto smartCrateNames = String::ArrayOfConst::array();
-        String::PointerToConst volumePath(path);
+        NxA::Pointer<const String> volumePath(path);
 
         if (Database::containsAValidSeratoFolder(path)) {
             auto seratoFolderPath = Database::seratoFolderPathForFolder(path);

@@ -54,7 +54,7 @@ using namespace NxA::Serato;
 
 #pragma mark Factory Methods
 
-CueMarker::Pointer CueMarker::markerWithMemoryAt(const byte* id3TagStart)
+NxA::Pointer<CueMarker> CueMarker::markerWithMemoryAt(const byte* id3TagStart)
 {
     auto tagStruct = reinterpret_cast<const SeratoCueTagV2Struct*>(id3TagStart);
 
@@ -68,7 +68,7 @@ CueMarker::Pointer CueMarker::markerWithMemoryAt(const byte* id3TagStart)
                                                            tagStruct->color[3]);
 }
 
-CueMarker::Pointer CueMarker::markerV1WithIndexAndRawMemoryAt(uinteger16 index, const byte* id3TagStart)
+NxA::Pointer<CueMarker> CueMarker::markerV1WithIndexAndRawMemoryAt(uinteger16 index, const byte* id3TagStart)
 {
     auto tagStruct = reinterpret_cast<const InternalMarker::SeratoRawTagV1Struct*>(id3TagStart);
 
@@ -82,7 +82,7 @@ CueMarker::Pointer CueMarker::markerV1WithIndexAndRawMemoryAt(uinteger16 index, 
                                                            tagStruct->color[3]);
 }
 
-CueMarker::Pointer CueMarker::markerV1WithIndexAndEncodedMemoryAt(uinteger16 index, const byte* id3TagStart)
+NxA::Pointer<CueMarker> CueMarker::markerV1WithIndexAndEncodedMemoryAt(uinteger16 index, const byte* id3TagStart)
 {
     auto encodedStruct = reinterpret_cast<const InternalMarker::SeratoEncodedTagV1Struct*>(id3TagStart);
 
@@ -92,12 +92,12 @@ CueMarker::Pointer CueMarker::markerV1WithIndexAndEncodedMemoryAt(uinteger16 ind
     return markerV1WithIndexAndRawMemoryAt(index, reinterpret_cast<const byte*>(&rawStruct));
 }
 
-CueMarker::Pointer CueMarker::markerWithLabelPositionIndexAndColor(const String& label,
-                                                                   uinteger32 positionInMilliseconds,
-                                                                   uinteger16 index,
-                                                                   byte colorRedComponent,
-                                                                   byte colorGreenComponent,
-                                                                   byte colorBlueComponent)
+NxA::Pointer<CueMarker> CueMarker::markerWithLabelPositionIndexAndColor(const String& label,
+                                                                        uinteger32 positionInMilliseconds,
+                                                                        uinteger16 index,
+                                                                        byte colorRedComponent,
+                                                                        byte colorGreenComponent,
+                                                                        byte colorBlueComponent)
 {
     auto newMarker = CueMarker::makeShared();
     newMarker->internal->positionInMilliseconds = positionInMilliseconds;
@@ -110,7 +110,7 @@ CueMarker::Pointer CueMarker::markerWithLabelPositionIndexAndColor(const String&
     return newMarker;
 }
 
-CueMarker::Pointer CueMarker::markerWith(const CueMarker&other)
+NxA::Pointer<CueMarker> CueMarker::markerWith(const CueMarker&other)
 {
     return CueMarker::markerWithLabelPositionIndexAndColor(other.label(),
                                                            other.positionInMilliseconds(),
@@ -122,7 +122,7 @@ CueMarker::Pointer CueMarker::markerWith(const CueMarker&other)
 
 #pragma mark Class Methods
 
-NxA::String::Pointer CueMarker::stringRepresentationForTimeInMilliseconds(uinteger32 timeInMilliseconds)
+NxA::Pointer<NxA::String> CueMarker::stringRepresentationForTimeInMilliseconds(uinteger32 timeInMilliseconds)
 {
     uinteger32 seconds = timeInMilliseconds / 1000;
     uinteger32 minutes = seconds / 60;
@@ -251,7 +251,7 @@ void CueMarker::addEmptyEncodedMarkerV1TagTo(Blob& data)
 
 #pragma mark Overriden Object Instance Methods
 
-NxA::String::Pointer CueMarker::description(void) const
+NxA::Pointer<NxA::String> CueMarker::description(void) const
 {
     return NxA::String::stringWithFormat("Cue Marker at %s with index %d label '%s' and color 0x%02x%02x%02x00.",
                                          CueMarker::stringRepresentationForTimeInMilliseconds(this->positionInMilliseconds())->toUTF8(),

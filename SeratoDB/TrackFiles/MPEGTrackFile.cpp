@@ -30,12 +30,12 @@ using namespace NxA::Serato;
 
 #pragma mark Factory Methods
 
-MPEGTrackFile::Pointer MPEGTrackFile::fileWithFileAt(const String& path, TrackFile::Flags flags)
+Pointer<MPEGTrackFile> MPEGTrackFile::fileWithFileAt(const String& path, TrackFile::Flags flags)
 {
     NXA_ASSERT_TRUE(path.length() > 0);
 
-    auto internalObject = InternalMPEGTrackFile::Pointer(std::make_shared<InternalMPEGTrackFile>(path));
-    auto newFile = MPEGTrackFile::makeSharedWithInternal(InternalObject::Pointer::dynamicCastFrom(internalObject));
+    auto internalObject = Pointer<InternalMPEGTrackFile>(std::make_shared<InternalMPEGTrackFile>(path));
+    auto newFile = MPEGTrackFile::makeSharedWithInternal(Pointer<NxA::InternalObject>::dynamicCastFrom(internalObject));
 
     newFile->internal->markersWereIgnored = (flags & TrackFile::Flags::IgnoreMarkers);
     newFile->internal->loadAndParseFile();

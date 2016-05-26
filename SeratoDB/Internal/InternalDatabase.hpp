@@ -43,7 +43,7 @@ struct InternalDatabase : public InternalObject {
                      const String::ArrayOfConst& pathsForExternalSeratoFolders);
 
     #pragma mark Class Methods
-    static String::Pointer pathForCrateOrderFileInSeratoFolder(const String& seratoFolderPath);
+    static NxA::Pointer<String> pathForCrateOrderFileInSeratoFolder(const String& seratoFolderPath);
 
     static void addCratesFoundInSeratoFolderOnVolumeToRootFolder(const String& seratoFolderPath,
                                                                  const String& volumePath,
@@ -69,20 +69,20 @@ struct InternalDatabase : public InternalObject {
     static const char* databaseFileCurrentVersionString;
 
     #pragma mark Instance Variables
-    Crate::Pointer rootFolder;
-    Track::Array::Pointer tracks;
+    NxA::Pointer<Crate> rootFolder;
+    NxA::Pointer<Track::Array> tracks;
 
-    String::ArrayOfConst::Pointer pathsForSeratoDirectories;
-    String::ArrayOfConst::Pointer volumePathsPerPath;
-    Tag::ArrayOfConst::Array::Pointer otherTagsPerPath;
-    String::ArrayOfConst::Array::Pointer smartCrateNamesPerPath;
+    NxA::Pointer<String::ArrayOfConst> pathsForSeratoDirectories;
+    NxA::Pointer<String::ArrayOfConst> volumePathsPerPath;
+    NxA::Pointer<Tag::ArrayOfConst::Array> otherTagsPerPath;
+    NxA::Pointer<String::ArrayOfConst::Array> smartCrateNamesPerPath;
 
     boolean databaseIsValid;
     boolean databaseTracksWereModified;
 
     #pragma mark Instance Methods
-    Tag::ArrayOfConst::Pointer parseDatabaseFileAtLocatedOnVolumeAndReturnOtherTags(const String& databasePath,
-                                                                                    const String& volumePath);
+    NxA::Pointer<Tag::ArrayOfConst> parseDatabaseFileAtLocatedOnVolumeAndReturnOtherTags(const String& databasePath,
+                                                                                         const String& volumePath);
     void parseAnyDatabaseFilesIn(const String& pathForLocalSeratoFolder,
                                  const String::ArrayOfConst& pathsForExternalSeratoFolders);
 

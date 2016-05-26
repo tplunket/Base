@@ -33,17 +33,17 @@ using namespace NxA::Serato;
 
 #pragma mark Factory Methods
 
-Database::Pointer Database::databaseWithPathsForLocalAndExternalSeratoDirectories(const String& pathForLocalSeratoFolder,
-                                                                                  const String::ArrayOfConst& pathsForExternalSeratoFolders)
+NxA::Pointer<Database> Database::databaseWithPathsForLocalAndExternalSeratoDirectories(const String& pathForLocalSeratoFolder,
+                                                                                       const String::ArrayOfConst& pathsForExternalSeratoFolders)
 {
-    auto internalObject = InternalDatabase::Pointer(std::make_shared<InternalDatabase>(pathForLocalSeratoFolder, pathsForExternalSeratoFolders));
-    auto newDatabase = Database::makeSharedWithInternal(InternalObject::Pointer::dynamicCastFrom(internalObject));
+    auto internalObject = NxA::Pointer<InternalDatabase>(std::make_shared<InternalDatabase>(pathForLocalSeratoFolder, pathsForExternalSeratoFolders));
+    auto newDatabase = Database::makeSharedWithInternal(NxA::Pointer<InternalObject>::dynamicCastFrom(internalObject));
     return newDatabase;
 }
 
 #pragma mark Class Methods
 
-String::Pointer Database::versionAsStringForDatabaseIn(const String& seratoFolderPath)
+NxA::Pointer<String> Database::versionAsStringForDatabaseIn(const String& seratoFolderPath)
 {
     try {
         auto databaseFilePath = databaseFilePathForSeratoFolder(seratoFolderPath);
@@ -69,13 +69,13 @@ String::Pointer Database::versionAsStringForDatabaseIn(const String& seratoFolde
     return String::string();
 }
 
-String::Pointer Database::seratoFolderPathForFolder(const String& folderPath)
+NxA::Pointer<String> Database::seratoFolderPathForFolder(const String& folderPath)
 {
     auto joinedPath = File::joinPaths(folderPath, String::stringWith("_Serato_"));
     return joinedPath;
 }
 
-String::Pointer Database::databaseFilePathForSeratoFolder(const String& seratoFolderPath)
+NxA::Pointer<String> Database::databaseFilePathForSeratoFolder(const String& seratoFolderPath)
 {
     auto joinedPath = File::joinPaths(seratoFolderPath, String::stringWith("database V2"));
     return joinedPath;
@@ -156,7 +156,7 @@ const Track::Array& Database::tracks(void) const
     return internal->tracks;
 }
 
-Track::Array::Pointer Database::removeAndReturnTracks(void)
+NxA::Pointer<Track::Array> Database::removeAndReturnTracks(void)
 {
     auto tracks = internal->tracks;
     internal->tracks = Track::Array::array();
@@ -186,14 +186,14 @@ const String& Database::volumePathForTrackFilePath(const String& trackFilePath) 
     return (*internal->volumePathsPerPath)[0];
 }
 
-void Database::removeTrackEntry(TrackEntry::Pointer& trackEntry)
+void Database::removeTrackEntry(NxA::Pointer<TrackEntry>& trackEntry)
 {
     if (trackEntry->hasParentCrate()) {
         trackEntry->parentCrate().removeTrackEntry(trackEntry);
     }
 }
 
-void Database::removeCrate(Crate::Pointer& crate)
+void Database::removeCrate(NxA::Pointer<Crate>& crate)
 {
     if (crate->hasParentCrate()) {
         crate->parentCrate().removeCrate(crate);

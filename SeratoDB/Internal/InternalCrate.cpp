@@ -25,6 +25,7 @@
 
 // -- Generated internal implementation ommitted because this class does not use the default contructor.
 
+using namespace NxA;
 using namespace NxA::Serato;
 
 #pragma mark Constructors & Destructors
@@ -41,7 +42,7 @@ InternalCrate::InternalCrate(const String& crateName) :
 
 #pragma mark Class Methods
 
-NxA::String::Pointer InternalCrate::crateNameIfValidCrateOrEmptyIfNot(const String& name)
+Pointer<String> InternalCrate::crateNameIfValidCrateOrEmptyIfNot(const String& name)
 {
     if (name.hasPrefix("[crate]")) {
         return name.subString(7);
@@ -51,9 +52,9 @@ NxA::String::Pointer InternalCrate::crateNameIfValidCrateOrEmptyIfNot(const Stri
     }
 }
 
-NxA::String::Pointer InternalCrate::escapedNameFromCrateName(const String& crateName)
+Pointer<String> InternalCrate::escapedNameFromCrateName(const String& crateName)
 {
-    String::Pointer result = String::stringWith(crateName);
+    NxA::Pointer<String> result = String::stringWith(crateName);
 
     result->replaceOccurenceOfStringWith("?", "??");
     result->replaceOccurenceOfStringWith("%", "?pc");
@@ -63,9 +64,9 @@ NxA::String::Pointer InternalCrate::escapedNameFromCrateName(const String& crate
     return result;
 }
 
-NxA::String::Pointer InternalCrate::crateNameFromEscapedName(const String& escapedName)
+Pointer<String> InternalCrate::crateNameFromEscapedName(const String& escapedName)
 {
-    String::Pointer result = String::stringWith(escapedName);
+    NxA::Pointer<String> result = String::stringWith(escapedName);
 
     result->replaceOccurenceOfStringWith("?bs", "\\");
     result->replaceOccurenceOfStringWith("?fs", "/");
@@ -75,20 +76,20 @@ NxA::String::Pointer InternalCrate::crateNameFromEscapedName(const String& escap
     return result;
 }
 
-NxA::String::Pointer InternalCrate::topParentCrateNameFromFullCrateName(const String& fullCrateName)
+Pointer<String> InternalCrate::topParentCrateNameFromFullCrateName(const String& fullCrateName)
 {
     auto firstSeperatorIndex = fullCrateName.indexOfFirstOccurenceOf("%%");
     return fullCrateName.subString(0, firstSeperatorIndex);
 }
 
-NxA::String::Pointer InternalCrate::smartCratesDirectoryPathInSeratoFolder(const String& seratoFolderPath)
+Pointer<String> InternalCrate::smartCratesDirectoryPathInSeratoFolder(const String& seratoFolderPath)
 {
     auto joinedPath = File::joinPaths(seratoFolderPath, String::stringWith("SmartCrates"));
     return joinedPath;
 }
 
-NxA::String::Pointer InternalCrate::crateFilePathForFullCrateNameInSeratoFolder(const String& fullCrateName,
-                                                                                const String& seratoFolderPath)
+Pointer<String> InternalCrate::crateFilePathForFullCrateNameInSeratoFolder(const String& fullCrateName,
+                                                                           const String& seratoFolderPath)
 {
     NXA_ASSERT_TRUE(fullCrateName.length() != 0);
 
@@ -99,8 +100,8 @@ NxA::String::Pointer InternalCrate::crateFilePathForFullCrateNameInSeratoFolder(
     return crateFilePath;
 }
 
-NxA::String::Pointer InternalCrate::crateFilePathForFullSmartCrateNameInSeratoFolder(const String& fullCrateName,
-                                                                                     const String& seratoFolderPath)
+Pointer<String> InternalCrate::crateFilePathForFullSmartCrateNameInSeratoFolder(const String& fullCrateName,
+                                                                                const String& seratoFolderPath)
 {
     NXA_ASSERT_TRUE(fullCrateName.length() != 0);
     
@@ -111,14 +112,14 @@ NxA::String::Pointer InternalCrate::crateFilePathForFullSmartCrateNameInSeratoFo
     return crateFilePath;
 }
 
-NxA::String::Pointer InternalCrate::fullCrateNameFromFilename(const String& fileName)
+Pointer<String> InternalCrate::fullCrateNameFromFilename(const String& fileName)
 {
     return fileName.subString(0, fileName.length() - 6);
 }
 
 #pragma mark Instance Methods
 
-NxA::count InternalCrate::indexOfVolumePath(const String& volumePath)
+count InternalCrate::indexOfVolumePath(const String& volumePath)
 {
     NXA_ASSERT_TRUE(volumePath.length() != 0);
     
@@ -133,7 +134,7 @@ NxA::count InternalCrate::indexOfVolumePath(const String& volumePath)
     return numberOfPaths;
 }
 
-NxA::count InternalCrate::indexOfVolumePathAndAddIfNotPresent(const String& volumePath)
+count InternalCrate::indexOfVolumePathAndAddIfNotPresent(const String& volumePath)
 {
     count pathIndex = this->indexOfVolumePath(volumePath);
     if (pathIndex == this->volumePaths->length()) {

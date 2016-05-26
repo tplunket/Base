@@ -50,14 +50,14 @@ struct InternalOGGTrackFile : public InternalTrackFile {
     InternalOGGTrackFile(const String& path);
 
     #pragma mark Class Methods
-    static String::Pointer stringValueForFieldNamedInComment(const character* name, const TagLib::Ogg::XiphComment& oggComment);
+    static NxA::Pointer<String> stringValueForFieldNamedInComment(const character* name, const TagLib::Ogg::XiphComment& oggComment);
     static void setStringValueForFieldNamedInComment(const String& value, const character* name, TagLib::Ogg::XiphComment& oggComment);
-    static String::Pointer releaseDateInComment(const TagLib::Ogg::XiphComment& oggComment);
+    static NxA::Pointer<String> releaseDateInComment(const TagLib::Ogg::XiphComment& oggComment);
     static void setReleaseDateInComment(const String& date, TagLib::Ogg::XiphComment& oggComment);
 
     #pragma mark Instance Variables
-    String::ArrayOfConst::Pointer nameOfFields;
-    String::ArrayOfConst::Pointer nameOfFieldsToRemove;
+    NxA::Pointer<String::ArrayOfConst> nameOfFields;
+    NxA::Pointer<String::ArrayOfConst> nameOfFieldsToRemove;
 
     #pragma mark Instance Methods
     void parseMarkersInComment(const TagLib::Ogg::XiphComment& oggComment);

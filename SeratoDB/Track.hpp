@@ -39,8 +39,8 @@ class Track : public Object {
 
 public:
     #pragma mark Factory Methods
-    static Track::Pointer trackWithTagLocatedOnVolume(ObjectTag& trackTag, const String& volumePath);
-    static Track::Pointer trackWithFilePathLocatedOnVolume(const String& trackFilePath, const String& volumePath);
+    static NxA::Pointer<Track> trackWithTagLocatedOnVolume(ObjectTag& trackTag, const String& volumePath);
+    static NxA::Pointer<Track> trackWithFilePathLocatedOnVolume(const String& trackFilePath, const String& volumePath);
 
     #pragma mark Class Methods
 #if NXA_PRINT_SERATO_TRACK_DEBUG_INFO
@@ -52,7 +52,7 @@ public:
 #endif
 
     #pragma mark Instance Methods
-    String::Pointer trackFilePath(void) const;
+    NxA::Pointer<String> trackFilePath(void) const;
     const String& volumePath(void) const;
     timestamp trackFileModificationDateInSecondsSince1970(void) const;
 

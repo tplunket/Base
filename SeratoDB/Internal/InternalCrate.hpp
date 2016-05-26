@@ -40,28 +40,28 @@ struct InternalCrate : public InternalObject {
     InternalCrate(const String& crateName);
 
     #pragma mark Class Methods
-    static String::Pointer crateNameIfValidCrateOrEmptyIfNot(const String& name);
-    static String::Pointer escapedNameFromCrateName(const String& crateName);
-    static String::Pointer crateNameFromEscapedName(const String& escapedName);
-    static String::Pointer topParentCrateNameFromFullCrateName(const String& fullCrateName);
-    static String::Pointer smartCratesDirectoryPathInSeratoFolder(const String& seratoFolderPath);
-    static String::Pointer crateFilePathForFullCrateNameInSeratoFolder(const String& crateName,
-                                                                       const String& seratoFolderPath);
-    static String::Pointer crateFilePathForFullSmartCrateNameInSeratoFolder(const String& fullCrateName,
+    static NxA::Pointer<String> crateNameIfValidCrateOrEmptyIfNot(const String& name);
+    static NxA::Pointer<String> escapedNameFromCrateName(const String& crateName);
+    static NxA::Pointer<String> crateNameFromEscapedName(const String& escapedName);
+    static NxA::Pointer<String> topParentCrateNameFromFullCrateName(const String& fullCrateName);
+    static NxA::Pointer<String> smartCratesDirectoryPathInSeratoFolder(const String& seratoFolderPath);
+    static NxA::Pointer<String> crateFilePathForFullCrateNameInSeratoFolder(const String& crateName,
                                                                             const String& seratoFolderPath);
-    static String::Pointer fullCrateNameFromFilename(const String& fileName);
+    static NxA::Pointer<String> crateFilePathForFullSmartCrateNameInSeratoFolder(const String& fullCrateName,
+                                                                                 const String& seratoFolderPath);
+    static NxA::Pointer<String> fullCrateNameFromFilename(const String& fileName);
 
     #pragma mark Instance Variables
-    String::PointerToConst name;
+    NxA::Pointer<const String> name;
 
     boolean cratesWereModified;
 
-    Crate::WeakPointer parentCrate;
-    Crate::Array::Pointer childrenCrates;
+    NxA::WeakPointer<Crate> parentCrate;
+    NxA::Pointer<Crate::Array> childrenCrates;
 
-    String::ArrayOfConst::Pointer volumePaths;
-    TrackEntry::Array::Array::Pointer trackEntriesPerPath;
-    Tag::ArrayOfConst::Array::Pointer otherTagsPerPath;
+    NxA::Pointer<String::ArrayOfConst> volumePaths;
+    NxA::Pointer<TrackEntry::Array::Array> trackEntriesPerPath;
+    NxA::Pointer<Tag::ArrayOfConst::Array> otherTagsPerPath;
 
     #pragma mark Instance Methods
     NxA::count indexOfVolumePath(const String& volumePath);

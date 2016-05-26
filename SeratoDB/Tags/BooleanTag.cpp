@@ -30,7 +30,7 @@ using namespace NxA::Serato;
 
 #pragma mark Factory Methods
 
-BooleanTag::Pointer BooleanTag::tagWithMemoryAt(const byte* tagAddress)
+NxA::Pointer<BooleanTag> BooleanTag::tagWithMemoryAt(const byte* tagAddress)
 {
     const byte* tagData = InternalTag::dataForTagAt(tagAddress);
     NXA_ASSERT_EQ(Tag::dataSizeForTagAt(tagAddress), 1);
@@ -39,7 +39,7 @@ BooleanTag::Pointer BooleanTag::tagWithMemoryAt(const byte* tagAddress)
                                                  (*tagData == 1) ? true : false);
 }
 
-BooleanTag::Pointer BooleanTag::tagWithIdentifierAndValue(uinteger32 identifier, boolean value)
+NxA::Pointer<BooleanTag> BooleanTag::tagWithIdentifierAndValue(uinteger32 identifier, boolean value)
 {
     NXA_ASSERT_EQ((identifier & 0xFF000000) >> 24, 'b');
 

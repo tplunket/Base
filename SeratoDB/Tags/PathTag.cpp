@@ -30,7 +30,7 @@ using namespace NxA::Serato;
 
 #pragma mark Factory Methods
 
-PathTag::Pointer PathTag::tagWithMemoryAt(const byte* tagAddress)
+Pointer<PathTag> PathTag::tagWithMemoryAt(const byte* tagAddress)
 {
     count size = Tag::dataSizeForTagAt(tagAddress);
     auto text = String::stringWithUTF16(Blob::blobWithMemoryAndSize(InternalTag::dataForTagAt(tagAddress), size));
@@ -38,7 +38,7 @@ PathTag::Pointer PathTag::tagWithMemoryAt(const byte* tagAddress)
     return PathTag::tagWithIdentifierAndValue(Tag::identifierForTagAt(tagAddress), text);
 }
 
-PathTag::Pointer PathTag::tagWithIdentifierAndValue(uinteger32 identifier, const String& value)
+Pointer<PathTag> PathTag::tagWithIdentifierAndValue(uinteger32 identifier, const String& value)
 {
     NXA_ASSERT_EQ((identifier & 0xFF000000) >> 24, 'p');
 

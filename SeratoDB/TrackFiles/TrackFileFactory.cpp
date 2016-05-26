@@ -117,7 +117,7 @@ TrackFileFactory::AudioFileType TrackFileFactory::audioFileTypeForPath(const Str
     return TrackFileFactory::audioFileTypeForPath(trackFilePath.toUTF8());
 }
 
-TrackFile::Pointer TrackFileFactory::trackFileForPath(const String& trackFilePath, TrackFile::Flags flags)
+NxA::Pointer<TrackFile> TrackFileFactory::trackFileForPath(const String& trackFilePath, TrackFile::Flags flags)
 {
     NXA_ASSERT_TRUE(trackFilePath.length() > 0);
 
@@ -127,22 +127,22 @@ TrackFile::Pointer TrackFileFactory::trackFileForPath(const String& trackFilePat
 
     switch (TrackFileFactory::audioFileTypeForPath(trackFilePath)) {
         case AudioFileType::AIFF: {
-            return TrackFile::Pointer::dynamicCastFrom(AIFFTrackFile::fileWithFileAt(trackFilePath, flags));
+            return NxA::Pointer<TrackFile>::dynamicCastFrom(AIFFTrackFile::fileWithFileAt(trackFilePath, flags));
         }
         case AudioFileType::MP3: {
-            return TrackFile::Pointer::dynamicCastFrom(MPEGTrackFile::fileWithFileAt(trackFilePath, flags));
+            return NxA::Pointer<TrackFile>::dynamicCastFrom(MPEGTrackFile::fileWithFileAt(trackFilePath, flags));
         }
         case AudioFileType::MP4: {
-            return TrackFile::Pointer::dynamicCastFrom(MP4TrackFile::fileWithFileAt(trackFilePath, flags));
+            return NxA::Pointer<TrackFile>::dynamicCastFrom(MP4TrackFile::fileWithFileAt(trackFilePath, flags));
         }
         case AudioFileType::FLAC: {
-            return TrackFile::Pointer::dynamicCastFrom(FLACTrackFile::fileWithFileAt(trackFilePath, flags));
+            return NxA::Pointer<TrackFile>::dynamicCastFrom(FLACTrackFile::fileWithFileAt(trackFilePath, flags));
         }
         case AudioFileType::OGG: {
-            return TrackFile::Pointer::dynamicCastFrom(OGGTrackFile::fileWithFileAt(trackFilePath, flags));
+            return NxA::Pointer<TrackFile>::dynamicCastFrom(OGGTrackFile::fileWithFileAt(trackFilePath, flags));
         }
         case AudioFileType::WAV: {
-            return TrackFile::Pointer::dynamicCastFrom(WAVTrackFile::fileWithFileAt(trackFilePath, flags));
+            return NxA::Pointer<TrackFile>::dynamicCastFrom(WAVTrackFile::fileWithFileAt(trackFilePath, flags));
         }
         default: {
             throw TrackFileError::exceptionWith("Unknown file extension");

@@ -36,7 +36,7 @@ struct InternalObjectTag : public InternalTag {
     NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, InternalObjectTag);
 
     #pragma mark Instance Variables
-    IdentifierToTagMap::Pointer subTagForIdentifier;
+    NxA::Pointer<IdentifierToTagMap> subTagForIdentifier;
 };
 
 NXA_EXIT_NAMESPACE;

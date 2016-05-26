@@ -58,7 +58,7 @@ using namespace NxA::Serato;
 
 #pragma mark Factory Methods
 
-LoopMarker::Pointer LoopMarker::markerWithMemoryAt(const byte* id3TagStart)
+Pointer<LoopMarker> LoopMarker::markerWithMemoryAt(const byte* id3TagStart)
 {
     auto tagStruct = reinterpret_cast<const SeratoLoopTagV2Struct*>(id3TagStart);
 
@@ -76,7 +76,7 @@ LoopMarker::Pointer LoopMarker::markerWithMemoryAt(const byte* id3TagStart)
                                                                      tagStruct->color[3]);
 }
 
-LoopMarker::Pointer LoopMarker::markerV1WithIndexAndRawMemoryAt(uinteger16 index, const byte* id3TagStart)
+Pointer<LoopMarker> LoopMarker::markerV1WithIndexAndRawMemoryAt(uinteger16 index, const byte* id3TagStart)
 {
     auto tagStruct = reinterpret_cast<const InternalMarker::SeratoRawTagV1Struct*>(id3TagStart);
 
@@ -93,7 +93,7 @@ LoopMarker::Pointer LoopMarker::markerV1WithIndexAndRawMemoryAt(uinteger16 index
                                                                      tagStruct->color[3]);
 }
 
-LoopMarker::Pointer LoopMarker::markerV1WithIndexAndEncodedMemoryAt(uinteger16 index, const byte* id3TagStart)
+Pointer<LoopMarker> LoopMarker::markerV1WithIndexAndEncodedMemoryAt(uinteger16 index, const byte* id3TagStart)
 {
     auto encodedStruct = reinterpret_cast<const InternalMarker::SeratoEncodedTagV1Struct*>(id3TagStart);
 
@@ -103,7 +103,7 @@ LoopMarker::Pointer LoopMarker::markerV1WithIndexAndEncodedMemoryAt(uinteger16 i
     return markerV1WithIndexAndRawMemoryAt(index, reinterpret_cast<const byte*>(&rawStruct));
 }
 
-LoopMarker::Pointer LoopMarker::markerWithLabelStartEndPositionsIndexAndColor(const String& label,
+Pointer<LoopMarker> LoopMarker::markerWithLabelStartEndPositionsIndexAndColor(const String& label,
                                                                               uinteger32 startPositionInMilliseconds,
                                                                               uinteger32 endPositionInMilliseconds,
                                                                               uinteger16 index,
@@ -128,7 +128,7 @@ LoopMarker::Pointer LoopMarker::markerWithLabelStartEndPositionsIndexAndColor(co
     return newMarker;
 }
 
-LoopMarker::Pointer LoopMarker::markerWith(const LoopMarker& other)
+Pointer<LoopMarker> LoopMarker::markerWith(const LoopMarker& other)
 {
     return LoopMarker::markerWithLabelStartEndPositionsIndexAndColor(other.label(),
                                                                      other.startPositionInMilliseconds(),
@@ -258,7 +258,7 @@ void LoopMarker::addEmptyEncodedMarkerV1TagTo(Blob& data)
 
 #pragma mark Overriden Object Instance Methods
 
-NxA::String::Pointer LoopMarker::description(void) const
+Pointer<String> LoopMarker::description(void) const
 {
     return NxA::String::stringWithFormat("Loop Marker at %s ends at %s with index %d label '%s' and color 0x%02x%02x%02x00.",
                                          CueMarker::stringRepresentationForTimeInMilliseconds(this->startPositionInMilliseconds())->toUTF8(),

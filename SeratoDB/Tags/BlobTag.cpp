@@ -30,14 +30,14 @@ using namespace NxA::Serato;
 
 #pragma mark Factory Methods
 
-BlobTag::Pointer BlobTag::tagWithMemoryAt(const byte* tagAddress)
+NxA::Pointer<BlobTag> BlobTag::tagWithMemoryAt(const byte* tagAddress)
 {
     return BlobTag::tagWithIdentifierAndValue(Tag::identifierForTagAt(tagAddress),
                                               Blob::blobWithMemoryAndSize(InternalTag::dataForTagAt(tagAddress),
                                                                           Tag::dataSizeForTagAt(tagAddress)));
 }
 
-BlobTag::Pointer BlobTag::tagWithIdentifierAndValue(uinteger32 identifier, const Blob& value)
+NxA::Pointer<BlobTag> BlobTag::tagWithIdentifierAndValue(uinteger32 identifier, const Blob& value)
 {
     NXA_ASSERT_EQ((identifier & 0xFF000000) >> 24, 'a');
 

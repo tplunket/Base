@@ -36,7 +36,7 @@ class OGGTrackFile : public TrackFile {
 
 public:
     #pragma mark Factory Methods
-    static OGGTrackFile::Pointer fileWithFileAt(const String& path, TrackFile::Flags flags);
+    static Pointer<OGGTrackFile> fileWithFileAt(const String& path, TrackFile::Flags flags);
 
     #pragma mark Instance Methods
     boolean hasFieldNamed(const String& name);

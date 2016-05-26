@@ -46,7 +46,7 @@ using namespace NxA::Serato;
 
 #pragma mark Factory Methods
 
-GridMarker::Pointer GridMarker::markerWithPositionAndBeatsPerMinute(const decimal3& positionInSeconds, const decimal2& beatsPerMinute)
+Pointer<GridMarker> GridMarker::markerWithPositionAndBeatsPerMinute(const decimal3& positionInSeconds, const decimal2& beatsPerMinute)
 {
     auto newMarker = GridMarker::makeShared();
     newMarker->internal->positionInSeconds = positionInSeconds;
@@ -55,7 +55,7 @@ GridMarker::Pointer GridMarker::markerWithPositionAndBeatsPerMinute(const decima
     return newMarker;
 }
 
-GridMarker::Pointer GridMarker::markerWith(const GridMarker& other)
+Pointer<GridMarker> GridMarker::markerWith(const GridMarker& other)
 {
     return GridMarker::markerWithPositionAndBeatsPerMinute(other.positionInSeconds(), other.beatsPerMinute());
 }
@@ -67,7 +67,7 @@ boolean GridMarker::sizeIsCorrectForMarkerData(count size)
     return (size != 0) && !((size - 4) % sizeof(GridMarkerStruct));
 }
 
-GridMarker::Array::Pointer GridMarker::markersWithMemoryAt(const byte* id3TagStart)
+Pointer<GridMarker::Array> GridMarker::markersWithMemoryAt(const byte* id3TagStart)
 {
     auto result = GridMarker::Array::array();
 
@@ -215,7 +215,7 @@ const decimal3& GridMarker::positionInSeconds(void) const
     return internal->positionInSeconds;
 }
 
-String::Pointer GridMarker::positionInSecondsAsString(void) const
+Pointer<String> GridMarker::positionInSecondsAsString(void) const
 {
     integer64 integerPart = this->positionInSeconds().getUnbiased();
     integer64 decimalPart = integerPart % 1000;
@@ -228,7 +228,7 @@ const decimal2& GridMarker::beatsPerMinute(void) const
     return internal->beatsPerMinute;
 }
 
-String::Pointer GridMarker::beatsPerMinuteAsString(void) const
+Pointer<String> GridMarker::beatsPerMinuteAsString(void) const
 {
     integer64 integerPart = this->beatsPerMinute().getUnbiased();
     integer64 decimalPart = integerPart % 100;
@@ -238,7 +238,7 @@ String::Pointer GridMarker::beatsPerMinuteAsString(void) const
 
 #pragma mark Overriden Object Instance Methods
 
-String::Pointer GridMarker::description(void) const
+Pointer<String> GridMarker::description(void) const
 {
     return NxA::String::stringWithFormat("Grid Marker at %s with bpm %s.",
                                          CueMarker::stringRepresentationForTimeInMilliseconds(this->positionInSeconds().getAsDouble() * 1000.0f)->toUTF8(),

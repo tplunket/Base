@@ -34,7 +34,7 @@ struct InternalBlobTag : public InternalTag {
     NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, InternalBlobTag);
 
     #pragma mark Instance Variables
-    Blob::PointerToConst value;
+    NxA::Pointer<const NxA::Blob> value;
 };
 
 NXA_EXIT_NAMESPACE;

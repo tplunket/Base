@@ -58,7 +58,7 @@ struct InternalID3TrackFile : public InternalTrackFile {
     static boolean isAValidGeobFrame(const TagLib::ID3v2::GeneralEncapsulatedObjectFrame& frame);
     static TagLib::ID3v2::FrameList::Iterator frameInListWithDescription(TagLib::ID3v2::FrameList& list,
                                                                          const String& description);
-    static String::Pointer stringValueForFrameNamedInTag(const character* name, const TagLib::ID3v2::Tag& tag);
+    static NxA::Pointer<String> stringValueForFrameNamedInTag(const character* name, const TagLib::ID3v2::Tag& tag);
     static integer integerValueForFrameNamedInTag(const character* name, const TagLib::ID3v2::Tag& tag);
     static integer ratingValueForRatingFrameInTag(const TagLib::ID3v2::Tag& tag);
     static void setStringValueForFrameNamedInTag(const String& value, const character* name, TagLib::ID3v2::Tag& tag);
@@ -73,14 +73,14 @@ struct InternalID3TrackFile : public InternalTrackFile {
     static void replaceMarkersV2FrameInTagWith(TagLib::ID3v2::Tag& tag, const String& base64MarkersData);
     static void replaceGridMarkersFrameInTagWith(TagLib::ID3v2::Tag& tag, const Blob& gridMarkersData);
     static void updateMarkersInTagFromTrackFile(TagLib::ID3v2::Tag& tag, const InternalTrackFile& trackFile);
-    static String::Pointer releaseDateFromTag(const TagLib::ID3v2::Tag& tag);
+    static NxA::Pointer<String> releaseDateFromTag(const TagLib::ID3v2::Tag& tag);
     static void setReleaseDateInTag(const String& date, TagLib::ID3v2::Tag& tag);
-    static Blob::Pointer artworkInTag(const TagLib::ID3v2::Tag& tag);
+    static NxA::Pointer<Blob> artworkInTag(const TagLib::ID3v2::Tag& tag);
     static void removeArtworkInTag(TagLib::ID3v2::Tag& tag);
 
     #pragma mark Instance Variables
-    String::ArrayOfConst::Pointer ownersOfPrivateFrames;
-    String::ArrayOfConst::Pointer ownersOfPrivateFramesToRemove;
+    NxA::Pointer<String::ArrayOfConst> ownersOfPrivateFrames;
+    NxA::Pointer<String::ArrayOfConst> ownersOfPrivateFramesToRemove;
 
     #pragma mark Instance Methods
     void parseTag(const TagLib::ID3v2::Tag& tag);

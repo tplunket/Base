@@ -40,10 +40,10 @@ struct InternalTrackEntry : public InternalObject {
                        const String& newVolumePath);
 
     #pragma mark Instance Variable
-    Crate::WeakPointer parentCrate;
+    NxA::WeakPointer<Crate> parentCrate;
 
-    Tag::PointerToConst trackEntryTag;
-    String::PointerToConst volumePath;
+    NxA::Pointer<const Tag> trackEntryTag;
+    NxA::Pointer<const String> volumePath;
 };
 
 NXA_EXIT_NAMESPACE;

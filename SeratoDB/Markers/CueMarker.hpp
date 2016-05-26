@@ -36,19 +36,19 @@ class CueMarker : public Marker {
 
 public:
     #pragma mark Factory Methods
-    static CueMarker::Pointer markerWithMemoryAt(const byte* id3TagStart);
-    static CueMarker::Pointer markerV1WithIndexAndRawMemoryAt(uinteger16 index, const byte* tagStart);
-    static CueMarker::Pointer markerV1WithIndexAndEncodedMemoryAt(uinteger16 index, const byte* tagStart);
-    static CueMarker::Pointer markerWithLabelPositionIndexAndColor(const String& label,
-                                                                   uinteger32 positionInMilliseconds,
-                                                                   uinteger16 index,
-                                                                   byte colorRedComponent,
-                                                                   byte colorGreenComponent,
-                                                                   byte colorBlueComponent);
-    static CueMarker::Pointer markerWith(const CueMarker&other);
+    static NxA::Pointer<CueMarker> markerWithMemoryAt(const byte* id3TagStart);
+    static NxA::Pointer<CueMarker> markerV1WithIndexAndRawMemoryAt(uinteger16 index, const byte* tagStart);
+    static NxA::Pointer<CueMarker> markerV1WithIndexAndEncodedMemoryAt(uinteger16 index, const byte* tagStart);
+    static NxA::Pointer<CueMarker> markerWithLabelPositionIndexAndColor(const String& label,
+                                                                        uinteger32 positionInMilliseconds,
+                                                                        uinteger16 index,
+                                                                        byte colorRedComponent,
+                                                                        byte colorGreenComponent,
+                                                                        byte colorBlueComponent);
+    static NxA::Pointer<CueMarker> markerWith(const CueMarker&other);
 
     #pragma mark Class Methods
-    static NxA::String::Pointer stringRepresentationForTimeInMilliseconds(uinteger32 timeInMilliseconds);
+    static NxA::Pointer<NxA::String> stringRepresentationForTimeInMilliseconds(uinteger32 timeInMilliseconds);
 
     #pragma mark Operators
     virtual bool operator==(const CueMarker& other) const;
@@ -69,7 +69,7 @@ public:
     static void addEmptyEncodedMarkerV1TagTo(Blob& data);
 
     #pragma mark Overidden Object Instance Methods
-    virtual NxA::String::Pointer description(void) const override;
+    virtual NxA::Pointer<NxA::String> description(void) const override;
 };
 
 NXA_EXIT_NAMESPACE;

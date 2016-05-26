@@ -38,13 +38,13 @@ class Crate : public Object {
 
 public:
     #pragma mark Factory Methods
-    static Crate::Pointer crateWithName(const String& crateName);
+    static NxA::Pointer<Crate> crateWithName(const String& crateName);
 
     #pragma mark Class Methods
-    static String::Pointer subCratesDirectoryPathInSeratoFolder(const String& seratoFolderPath);
-    static String::ArrayOfConst::Pointer readCratesNamesInCrateOrderFile(const String& crateOrderFilePath);
+    static NxA::Pointer<String> subCratesDirectoryPathInSeratoFolder(const String& seratoFolderPath);
+    static NxA::Pointer<String::ArrayOfConst> readCratesNamesInCrateOrderFile(const String& crateOrderFilePath);
     static boolean filenameIsAValidCrateName(const String& fileName);
-    static String::ArrayOfConst::Pointer cratesInSubCratesDirectory(const String& directory);
+    static NxA::Pointer<String::ArrayOfConst> cratesInSubCratesDirectory(const String& directory);
     static boolean isAnExistingFullCrateName(const String& fullCrateName,
                                              const String& seratoFolderPath);
     static boolean isAnExistingFullSmartCrateName(const String& fullCrateName,
@@ -57,23 +57,23 @@ public:
 
     #pragma mark Instance Methods
     const String& name(void) const;
-    String::Pointer fullCrateName(void) const;
+    NxA::Pointer<String> fullCrateName(void) const;
 
     void addFullCrateNameWithPrefixForCratesOnVolumeAndRecurseToChildren(String& destination,
                                                                          const char* prefix,
                                                                          const String& volumePath) const;
 
-    TrackEntry::Array::Pointer trackEntries(void) const;
+    NxA::Pointer<TrackEntry::Array> trackEntries(void) const;
     const Crate::Array& crates(void) const;
 
     void addCrate(Crate& crate);
-    void removeCrate(Crate::Pointer& crate);
+    void removeCrate(NxA::Pointer<Crate>& crate);
 
-    Crate::Pointer findOrAddCrateWithRelativeNameAndFullName(const String& relativeName, const String& fullCrateName);
+    NxA::Pointer<Crate> findOrAddCrateWithRelativeNameAndFullName(const String& relativeName, const String& fullCrateName);
     bool crateOrChildrenCrateContainsTracks(void) const;
 
     void addTrackEntry(TrackEntry& trackEntry);
-    void removeTrackEntry(TrackEntry::Pointer& trackEntry);
+    void removeTrackEntry(NxA::Pointer<TrackEntry>& trackEntry);
 
     boolean hasParentCrate(void) const;
     Crate& parentCrate(void);
@@ -86,11 +86,11 @@ public:
     void saveIfOnVolumeAndRecurseToChildren(const String& volumePath, const String& seratoFolderPath) const;
     boolean childrenCratesWereModified(void) const;
 
-    TrackEntry::Array::Pointer removeAndReturnTrackEntries(void);
-    Crate::Array::Pointer removeAndReturnChildrenCrates(void);
+    NxA::Pointer<TrackEntry::Array> removeAndReturnTrackEntries(void);
+    NxA::Pointer<Crate::Array> removeAndReturnChildrenCrates(void);
 
     #pragma mark Overridden Object Instance Methods
-    virtual String::Pointer description(void) const override;
+    virtual NxA::Pointer<String> description(void) const override;
 };
 
 NXA_EXIT_NAMESPACE;

@@ -34,7 +34,7 @@ struct InternalTextTag : public InternalTag {
     NXA_GENERATED_INTERNAL_DECLARATIONS_FOR(NxA::Serato, InternalTextTag);
 
     #pragma mark Instance Variables
-    String::PointerToConst value;
+    NxA::Pointer<const String> value;
 };
 
 NXA_EXIT_NAMESPACE;

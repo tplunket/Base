@@ -36,17 +36,17 @@ class LoopMarker : public Marker {
 
 public:
     #pragma mark Factory Methods
-    static LoopMarker::Pointer markerWithMemoryAt(const byte* id3TagStart);
-    static LoopMarker::Pointer markerV1WithIndexAndRawMemoryAt(uinteger16 index, const byte* tagStart);
-    static LoopMarker::Pointer markerV1WithIndexAndEncodedMemoryAt(uinteger16 index, const byte* tagStart);
-    static LoopMarker::Pointer markerWithLabelStartEndPositionsIndexAndColor(const String& label,
+    static Pointer<LoopMarker> markerWithMemoryAt(const byte* id3TagStart);
+    static Pointer<LoopMarker> markerV1WithIndexAndRawMemoryAt(uinteger16 index, const byte* tagStart);
+    static Pointer<LoopMarker> markerV1WithIndexAndEncodedMemoryAt(uinteger16 index, const byte* tagStart);
+    static Pointer<LoopMarker> markerWithLabelStartEndPositionsIndexAndColor(const String& label,
                                                                              uinteger32 startPositionInMilliseconds,
                                                                              uinteger32 endPositionInMilliseconds,
                                                                              uinteger16 index,
                                                                              byte colorRedComponent,
                                                                              byte colorGreenComponent,
                                                                              byte colorBlueComponent);
-    static LoopMarker::Pointer markerWith(const LoopMarker& other);
+    static Pointer<LoopMarker> markerWith(const LoopMarker& other);
 
     #pragma mark Operators
     virtual bool operator==(const LoopMarker& other) const;
@@ -68,7 +68,7 @@ public:
     static void addEmptyEncodedMarkerV1TagTo(Blob& data);
 
     #pragma mark Overidden Object Instance Methods
-    virtual NxA::String::Pointer description(void) const override;
+    virtual Pointer<String> description(void) const override;
 };
 
 NXA_EXIT_NAMESPACE;

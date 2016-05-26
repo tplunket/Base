@@ -55,7 +55,7 @@ InternalOGGTrackFile::InternalOGGTrackFile(const String& path) :
 
 #pragma mark Class Methods
 
-String::Pointer InternalOGGTrackFile::stringValueForFieldNamedInComment(const character* name,
+Pointer<String> InternalOGGTrackFile::stringValueForFieldNamedInComment(const character* name,
                                                                         const TagLib::Ogg::XiphComment& oggComment)
 {
     auto& stringList = oggComment.fieldListMap()[name];
@@ -71,7 +71,7 @@ void InternalOGGTrackFile::setStringValueForFieldNamedInComment(const String& va
     oggComment.addField(name, TagLib::String(value.toUTF8()));
 }
 
-String::Pointer InternalOGGTrackFile::releaseDateInComment(const TagLib::Ogg::XiphComment& oggComment)
+Pointer<String> InternalOGGTrackFile::releaseDateInComment(const TagLib::Ogg::XiphComment& oggComment)
 {
     return InternalOGGTrackFile::stringValueForFieldNamedInComment(oggDateFieldName, oggComment);
 }

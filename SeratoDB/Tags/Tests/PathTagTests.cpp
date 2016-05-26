@@ -30,7 +30,7 @@ using namespace NxA::Serato;
 
 NXA_CONTAINS_TEST_SUITE_NAMED(SeratoDB_PathTag_Tests);
 
-static String::PointerToConst path = String::stringWith("Some/Cool/path.mp3");
+static Pointer<const String> path = String::stringWith("Some/Cool/path.mp3");
 
 TEST(SeratoDB_PathTag, TagWithIdentifierAndValue_TagCreated_TagHasCorrectValue)
 {

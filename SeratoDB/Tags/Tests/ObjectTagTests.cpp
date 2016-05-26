@@ -40,10 +40,10 @@ NXA_CONTAINS_TEST_SUITE_NAMED(SeratoDB_ObjectTag_Tests);
 static const byte testData[] = {
     0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F
 };
-static Blob::PointerToConst testBlob = Blob::blobWithMemoryAndSize(testData, sizeof(testData));
-static String::PointerToConst path = String::stringWith("Some/Cool/path.mp3");
-static String::PointerToConst text = String::stringWith("Some Text");
-static String::PointerToConst version = String::stringWith("Cool Version");
+static NxA::Pointer<const NxA::Blob> testBlob = Blob::blobWithMemoryAndSize(testData, sizeof(testData));
+static NxA::Pointer<const NxA::String> path = String::stringWith("Some/Cool/path.mp3");
+static NxA::Pointer<const NxA::String> text = String::stringWith("Some Text");
+static NxA::Pointer<const NxA::String> version = String::stringWith("Cool Version");
 
 TEST(SeratoDB_ObjectTag, TagWithIdentifierAndValue_TagCreated_TagHasCorrectValue)
 {

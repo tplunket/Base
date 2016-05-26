@@ -36,7 +36,7 @@ using namespace NxA::Serato;
 
 #pragma mark Constants
 
-static String::Pointer emptyString = String::string();
+static Pointer<String> emptyString = String::string();
 
 #pragma mark Constructors & Destructors
 

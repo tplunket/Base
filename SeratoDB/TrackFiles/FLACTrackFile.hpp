@@ -36,7 +36,7 @@ class FLACTrackFile : public TrackFile {
 
 public:
     #pragma mark Factory Methods
-    static FLACTrackFile::Pointer fileWithFileAt(const String& path, TrackFile::Flags flags);
+    static Pointer<FLACTrackFile> fileWithFileAt(const String& path, TrackFile::Flags flags);
 
     #pragma mark Instance Methods
     boolean hasFieldNamed(const String& name);

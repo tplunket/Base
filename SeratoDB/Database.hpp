@@ -39,13 +39,13 @@ class Database : public Object {
 
 public:
     #pragma mark Factory Methods
-    static Database::Pointer databaseWithPathsForLocalAndExternalSeratoDirectories(const String& pathForLocalSeratoFolder,
+    static Pointer<Database> databaseWithPathsForLocalAndExternalSeratoDirectories(const String& pathForLocalSeratoFolder,
                                                                                    const String::ArrayOfConst& pathsForExternalSeratoFolders);
 
     #pragma mark Class Methods
-    static String::Pointer versionAsStringForDatabaseIn(const String& seratoFolderPath);
-    static String::Pointer seratoFolderPathForFolder(const String& folderPath);
-    static String::Pointer databaseFilePathForSeratoFolder(const String& seratoFolderPath);
+    static Pointer<String> versionAsStringForDatabaseIn(const String& seratoFolderPath);
+    static Pointer<String> seratoFolderPathForFolder(const String& folderPath);
+    static Pointer<String> databaseFilePathForSeratoFolder(const String& seratoFolderPath);
     static boolean containsAValidSeratoFolder(const String& folderPath);
     static void createSeratoFolderIfDoesNotExists(const String& seratoFolderPath);
 
@@ -55,11 +55,11 @@ public:
 
     Crate& rootFolder(void) const;
     const Track::Array& tracks(void) const;
-    Track::Array::Pointer removeAndReturnTracks(void);
+    Pointer<Track::Array> removeAndReturnTracks(void);
     const String& volumePathForTrackFilePath(const String& trackFilePath) const;
 
-    void removeTrackEntry(TrackEntry::Pointer& trackEntry);
-    void removeCrate(Crate::Pointer& crate);
+    void removeTrackEntry(Pointer<TrackEntry>& trackEntry);
+    void removeCrate(Pointer<Crate>& crate);
 
     void addTrack(Track& track);
     void removeTrack(Track& track);

@@ -30,12 +30,12 @@ using namespace NxA::Serato;
 
 #pragma mark Factory Methods
 
-WAVTrackFile::Pointer WAVTrackFile::fileWithFileAt(const String& path, TrackFile::Flags flags)
+NxA::Pointer<WAVTrackFile> WAVTrackFile::fileWithFileAt(const String& path, TrackFile::Flags flags)
 {
     NXA_ASSERT_TRUE(path.length() > 0);
 
-    auto internalObject = InternalWAVTrackFile::Pointer(std::make_shared<InternalWAVTrackFile>(path));
-    auto newFile = WAVTrackFile::makeSharedWithInternal(InternalObject::Pointer::dynamicCastFrom(internalObject));
+    auto internalObject = NxA::Pointer<InternalWAVTrackFile>(std::make_shared<InternalWAVTrackFile>(path));
+    auto newFile = WAVTrackFile::makeSharedWithInternal(NxA::Pointer<InternalObject>::dynamicCastFrom(internalObject));
 
     newFile->internal->markersWereIgnored = (flags & TrackFile::Flags::IgnoreMarkers);
     newFile->internal->loadAndParseFile();

@@ -85,7 +85,7 @@ integer InternalMP4TrackFile::integerValueForItemNamedInTag(const character* nam
     return item.toInt();
 }
 
-String::Pointer InternalMP4TrackFile::stringValueForItemNamedInTag(const character* name, const TagLib::MP4::Tag& tag)
+Pointer<String> InternalMP4TrackFile::stringValueForItemNamedInTag(const character* name, const TagLib::MP4::Tag& tag)
 {
     auto item = tag.item(name);
     if (!item.isValid()) {
@@ -115,7 +115,7 @@ void InternalMP4TrackFile::setStringValueForItemNamedInTag(const String& value, 
     tag.setItem(name, *newItem);
 }
 
-Blob::Pointer InternalMP4TrackFile::artworkInTag(const TagLib::MP4::Tag& tag)
+Pointer<Blob> InternalMP4TrackFile::artworkInTag(const TagLib::MP4::Tag& tag)
 {
     auto item = tag.item(mp4ArtworkItemName);
     if (item.isValid()) {

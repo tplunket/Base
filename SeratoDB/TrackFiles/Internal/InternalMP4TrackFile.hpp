@@ -40,14 +40,14 @@ struct InternalMP4TrackFile : public InternalTrackFile {
 
     #pragma mark Class Methods
     static integer integerValueForItemNamedInTag(const character* name, const TagLib::MP4::Tag& tag);
-    static String::Pointer stringValueForItemNamedInTag(const character* name, const TagLib::MP4::Tag& tag);
+    static NxA::Pointer<String> stringValueForItemNamedInTag(const character* name, const TagLib::MP4::Tag& tag);
     static void setIntegerValueForItemNamedInTag(integer value, const character* name, TagLib::MP4::Tag& tag);
     static void setStringValueForItemNamedInTag(const String& value, const character* name, TagLib::MP4::Tag& tag);
-    Blob::Pointer artworkInTag(const TagLib::MP4::Tag& tag);
+    NxA::Pointer<Blob> artworkInTag(const TagLib::MP4::Tag& tag);
 
     #pragma mark Instance Variables
-    String::ArrayOfConst::Pointer nameOfItems;
-    String::ArrayOfConst::Pointer nameOfItemsToRemove;
+    NxA::Pointer<String::ArrayOfConst> nameOfItems;
+    NxA::Pointer<String::ArrayOfConst> nameOfItemsToRemove;
 
     #pragma mark Instance Methods
     void parseMarkersInTag(const TagLib::MP4::Tag& tag);

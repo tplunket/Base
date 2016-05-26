@@ -36,7 +36,7 @@ class MP4TrackFile : public TrackFile {
 
 public:
     #pragma mark Factory Methods
-    static MP4TrackFile::Pointer fileWithFileAt(const String& path, TrackFile::Flags flags);
+    static Pointer<MP4TrackFile> fileWithFileAt(const String& path, TrackFile::Flags flags);
 
     #pragma mark Instance Methods
     boolean hasItemNamed(const String& name);

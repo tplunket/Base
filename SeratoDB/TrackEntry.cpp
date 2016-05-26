@@ -34,16 +34,16 @@ using namespace NxA::Serato;
 
 #pragma mark Factory Methods
 
-TrackEntry::Pointer TrackEntry::entryWithTagOnVolume(const ObjectTag& tag, const String& volumePath)
+NxA::Pointer<TrackEntry> TrackEntry::entryWithTagOnVolume(const ObjectTag& tag, const String& volumePath)
 {
     NXA_ASSERT_TRUE(volumePath.length() != 0);
 
-    auto internalObject = InternalTrackEntry::Pointer(std::make_shared<InternalTrackEntry>(tag, volumePath));
-    auto newTrackEntry = TrackEntry::makeSharedWithInternal(InternalObject::Pointer::dynamicCastFrom(internalObject));
+    auto internalObject = NxA::Pointer<InternalTrackEntry>(std::make_shared<InternalTrackEntry>(tag, volumePath));
+    auto newTrackEntry = TrackEntry::makeSharedWithInternal(NxA::Pointer<InternalObject>::dynamicCastFrom(internalObject));
     return newTrackEntry;
 }
 
-TrackEntry::Pointer TrackEntry::entryWithTrackFileAtOnVolume(const String& path, const String& volumePath)
+NxA::Pointer<TrackEntry> TrackEntry::entryWithTrackFileAtOnVolume(const String& path, const String& volumePath)
 {
     NXA_ASSERT_TRUE(path.length() != 0);
     NXA_ASSERT_TRUE(volumePath.length() != 0);
@@ -51,7 +51,7 @@ TrackEntry::Pointer TrackEntry::entryWithTrackFileAtOnVolume(const String& path,
     auto entryPath = File::removePrefixFromPath(volumePath, path);
 
     auto tags = Tag::Array::array();
-    tags->append(Serato::Tag::Pointer::dynamicCastFrom(PathTag::tagWithIdentifierAndValue(trackEntryPathTagIdentifier, entryPath)));
+    tags->append(NxA::Pointer<Serato::Tag>::dynamicCastFrom(PathTag::tagWithIdentifierAndValue(trackEntryPathTagIdentifier, entryPath)));
 
     auto trackEntryTag = ObjectTag::tagWithIdentifierAndValue(trackEntryTagIdentifier, tags);
     return TrackEntry::entryWithTagOnVolume(trackEntryTag, volumePath);
@@ -59,7 +59,7 @@ TrackEntry::Pointer TrackEntry::entryWithTrackFileAtOnVolume(const String& path,
 
 #pragma mark Instance Methods
 
-String::Pointer TrackEntry::trackFilePath(void) const
+NxA::Pointer<String> TrackEntry::trackFilePath(void) const
 {
     auto& trackObjectTag = dynamic_cast<const ObjectTag&>(*internal->trackEntryTag);
     if (trackObjectTag.hasSubTagForIdentifier(trackEntryPathTagIdentifier)) {

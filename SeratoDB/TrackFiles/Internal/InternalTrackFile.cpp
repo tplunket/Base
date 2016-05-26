@@ -102,7 +102,7 @@ const byte* InternalTrackFile::nextTagPositionAfterTagNamed(const String& tagNam
     return parserPosition;
 }
 
-Blob::Pointer InternalTrackFile::markerV2TagDataFrom(const byte* tagStart)
+Pointer<Blob> InternalTrackFile::markerV2TagDataFrom(const byte* tagStart)
 {
     auto tagName = String::stringWith(reinterpret_cast<const char*>(tagStart));
     count sizeOfNameField = tagName->length() + 1;
@@ -264,7 +264,7 @@ void InternalTrackFile::parseGridMarkersFrom(const byte* gridMarkerData)
     this->gridMarkers = GridMarker::markersWithMemoryAt(gridMarkerData);
 }
 
-Blob::Pointer InternalTrackFile::rawBlobFromMarkersV1(void) const
+Pointer<Blob> InternalTrackFile::rawBlobFromMarkersV1(void) const
 {
     NXA_ASSERT_FALSE(this->markersWereIgnored);
 
@@ -322,7 +322,7 @@ Blob::Pointer InternalTrackFile::rawBlobFromMarkersV1(void) const
     return blobData;
 }
 
-Blob::Pointer InternalTrackFile::id3EncodedBlobFromMarkersV1(void) const
+Pointer<Blob> InternalTrackFile::id3EncodedBlobFromMarkersV1(void) const
 {
     NXA_ASSERT_FALSE(this->markersWereIgnored);
 
@@ -380,7 +380,7 @@ Blob::Pointer InternalTrackFile::id3EncodedBlobFromMarkersV1(void) const
     return blobData;
 }
 
-String::Pointer InternalTrackFile::base64StringFromMarkersV2(void) const
+Pointer<String> InternalTrackFile::base64StringFromMarkersV2(void) const
 {
     NXA_ASSERT_FALSE(this->markersWereIgnored);
 
@@ -423,7 +423,7 @@ String::Pointer InternalTrackFile::base64StringFromMarkersV2(void) const
     return encodedData;
 }
 
-Blob::Pointer InternalTrackFile::gridMarkerDataFromGridMarkers(void) const
+Pointer<Blob> InternalTrackFile::gridMarkerDataFromGridMarkers(void) const
 {
     NXA_ASSERT_FALSE(this->markersWereIgnored);
 

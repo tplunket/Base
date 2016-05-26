@@ -30,7 +30,7 @@ using namespace NxA::Serato;
 
 NXA_CONTAINS_TEST_SUITE_NAMED(SeratoDB_TextTag_Tests);
 
-static String::PointerToConst text = String::stringWith("Some Text");
+static NxA::Pointer<const NxA::String> text = String::stringWith("Some Text");
 
 TEST(SeratoDB_TextTag, TagWithIdentifierAndValue_TagCreated_TagHasCorrectValue)
 {

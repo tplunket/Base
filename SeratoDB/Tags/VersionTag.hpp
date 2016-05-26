@@ -36,8 +36,8 @@ class VersionTag : public TextTag {
 
 public:
     #pragma mark Factory Methods
-    static VersionTag::Pointer tagWithMemoryAt(const byte* tagAddress);
-    static VersionTag::Pointer tagWithIdentifierAndValue(uinteger32 identifier, const String& value);
+    static NxA::Pointer<VersionTag> tagWithMemoryAt(const byte* tagAddress);
+    static NxA::Pointer<VersionTag> tagWithIdentifierAndValue(uinteger32 identifier, const String& value);
 
     #pragma mark Operators
     virtual bool operator==(const VersionTag& other) const;

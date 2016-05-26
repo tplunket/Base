@@ -36,8 +36,8 @@ class BlobTag : public Tag {
 
 public:
     #pragma mark Factory Methods
-    static BlobTag::Pointer tagWithMemoryAt(const byte* tagAddress);
-    static BlobTag::Pointer tagWithIdentifierAndValue(uint32_t identifier, const Blob& value);
+    static NxA::Pointer<BlobTag> tagWithMemoryAt(const byte* tagAddress);
+    static NxA::Pointer<BlobTag> tagWithIdentifierAndValue(uint32_t identifier, const Blob& value);
 
     #pragma mark Operators
     virtual bool operator==(const BlobTag& other) const;

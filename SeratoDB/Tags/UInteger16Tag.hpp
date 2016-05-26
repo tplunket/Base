@@ -36,8 +36,8 @@ class UInteger16Tag : public Tag {
 
 public:
     #pragma mark Factory Methods
-    static UInteger16Tag::Pointer tagWithMemoryAt(const byte* tagAddress);
-    static UInteger16Tag::Pointer tagWithIdentifierAndValue(uinteger32 identifier, uinteger16 value);
+    static NxA::Pointer<UInteger16Tag> tagWithMemoryAt(const byte* tagAddress);
+    static NxA::Pointer<UInteger16Tag> tagWithIdentifierAndValue(uinteger32 identifier, uinteger16 value);
 
     #pragma mark Operators
     virtual bool operator==(const UInteger16Tag& other) const;

@@ -35,10 +35,10 @@ using namespace NxA::Serato;
 
 #pragma mark Factory Methods
 
-Track::Pointer Track::trackWithTagLocatedOnVolume(ObjectTag& trackTag, const String& volumePath)
+NxA::Pointer<Track> Track::trackWithTagLocatedOnVolume(ObjectTag& trackTag, const String& volumePath)
 {
-    auto internalObject = InternalTrack::Pointer(std::make_shared<InternalTrack>(trackTag, volumePath));
-    auto newTrack = Track::makeSharedWithInternal(InternalObject::Pointer::dynamicCastFrom(internalObject));
+    auto internalObject = NxA::Pointer<InternalTrack>(std::make_shared<InternalTrack>(trackTag, volumePath));
+    auto newTrack = Track::makeSharedWithInternal(NxA::Pointer<InternalObject>::dynamicCastFrom(internalObject));
 
 #if NXA_PRINT_SERATO_TRACK_DEBUG_INFO
     printf("Reading track ----------------------------------------\n");
@@ -48,17 +48,17 @@ Track::Pointer Track::trackWithTagLocatedOnVolume(ObjectTag& trackTag, const Str
     return newTrack;
 }
 
-Track::Pointer Track::trackWithFilePathLocatedOnVolume(const String& trackFilePath, const String& volumePath)
+NxA::Pointer<Track> Track::trackWithFilePathLocatedOnVolume(const String& trackFilePath, const String& volumePath)
 {
     auto relativePath = File::removePrefixFromPath(String::stringWith(volumePath),
                                                    String::stringWith(trackFilePath));
     auto tags = Tag::Array::array();
-    tags->append(Tag::Pointer::dynamicCastFrom(PathTag::tagWithIdentifierAndValue(trackFilePathTagIdentifier, relativePath)));
+    tags->append(NxA::Pointer<Tag>::dynamicCastFrom(PathTag::tagWithIdentifierAndValue(trackFilePathTagIdentifier, relativePath)));
 
     auto trackTag = ObjectTag::tagWithIdentifierAndValue(trackObjectTagIdentifier, tags);
-    auto internalObject = InternalTrack::Pointer(std::make_shared<InternalTrack>(trackTag, volumePath));
+    auto internalObject = NxA::Pointer<InternalTrack>(std::make_shared<InternalTrack>(trackTag, volumePath));
 
-    auto newTrack = Track::makeSharedWithInternal(InternalObject::Pointer::dynamicCastFrom(internalObject));
+    auto newTrack = Track::makeSharedWithInternal(NxA::Pointer<InternalObject>::dynamicCastFrom(internalObject));
     newTrack->internal->setBooleanForSubTagForIdentifier(false, trackBeatGridIsLockedTagIdentifier);
     newTrack->internal->setBooleanForSubTagForIdentifier(false, trackIsCorruptedTagIdentifier);
     newTrack->internal->setBooleanForSubTagForIdentifier(true, trackMetadataWasReadTagIdentifier);
@@ -163,7 +163,7 @@ void Track::debugPrint(const Serato::Track& track)
 
 #pragma mark Instance Methods
 
-String::Pointer Track::trackFilePath(void) const
+NxA::Pointer<String> Track::trackFilePath(void) const
 {
     auto& pathFromVolumePath = internal->pathForSubTagForIdentifier(trackFilePathTagIdentifier);
     return File::joinPaths(internal->volumePath, pathFromVolumePath);

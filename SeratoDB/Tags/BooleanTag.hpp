@@ -36,8 +36,8 @@ class BooleanTag : public Tag {
 
 public:
     #pragma mark Factory Methods
-    static BooleanTag::Pointer tagWithMemoryAt(const byte* tagAddress);
-    static BooleanTag::Pointer tagWithIdentifierAndValue(uinteger32 identifier, boolean value);
+    static NxA::Pointer<BooleanTag> tagWithMemoryAt(const byte* tagAddress);
+    static NxA::Pointer<BooleanTag> tagWithIdentifierAndValue(uinteger32 identifier, boolean value);
 
     #pragma mark Overriden Object Operators
     virtual bool operator==(const BooleanTag& other) const;

@@ -39,8 +39,8 @@ struct InternalTrack : public InternalObject {
     InternalTrack(ObjectTag& tag, const String& volumePath);
 
     #pragma mark Instance Variables
-    ObjectTag::Pointer trackTag;
-    String::PointerToConst volumePath;
+    NxA::Pointer<ObjectTag> trackTag;
+    NxA::Pointer<const String> volumePath;
 
     boolean needsToUpdateDatabaseFile;
 

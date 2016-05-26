@@ -30,12 +30,12 @@ using namespace NxA::Serato;
 
 #pragma mark Factory Methods
 
-AIFFTrackFile::Pointer AIFFTrackFile::fileWithFileAt(const String& path, TrackFile::Flags flags)
+Pointer<AIFFTrackFile> AIFFTrackFile::fileWithFileAt(const String& path, TrackFile::Flags flags)
 {
     NXA_ASSERT_TRUE(path.length() > 0);
 
-    auto internalObject = InternalAIFFTrackFile::Pointer(std::make_shared<InternalAIFFTrackFile>(path));
-    auto newFile = AIFFTrackFile::makeSharedWithInternal(InternalObject::Pointer::dynamicCastFrom(internalObject));
+    auto internalObject = NxA::Pointer<InternalAIFFTrackFile>(std::make_shared<InternalAIFFTrackFile>(path));
+    auto newFile = AIFFTrackFile::makeSharedWithInternal(NxA::Pointer<InternalObject>::dynamicCastFrom(internalObject));
 
     newFile->internal->markersWereIgnored = (flags & TrackFile::Flags::IgnoreMarkers);
     newFile->internal->loadAndParseFile();

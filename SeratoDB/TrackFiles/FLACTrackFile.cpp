@@ -32,12 +32,12 @@ using namespace NxA::Serato;
 
 #pragma mark Factory Methods
 
-FLACTrackFile::Pointer FLACTrackFile::fileWithFileAt(const String& path, TrackFile::Flags flags)
+Pointer<FLACTrackFile> FLACTrackFile::fileWithFileAt(const String& path, TrackFile::Flags flags)
 {
     NXA_ASSERT_TRUE(path.length() > 0);
 
-    auto internalObject = InternalFLACTrackFile::Pointer(std::make_shared<InternalFLACTrackFile>(path));
-    auto newFile = FLACTrackFile::makeSharedWithInternal(InternalObject::Pointer::dynamicCastFrom(internalObject));
+    auto internalObject = Pointer<InternalFLACTrackFile>(std::make_shared<InternalFLACTrackFile>(path));
+    auto newFile = FLACTrackFile::makeSharedWithInternal(Pointer<NxA::InternalObject>::dynamicCastFrom(internalObject));
 
     newFile->internal->markersWereIgnored = (flags & TrackFile::Flags::IgnoreMarkers);
     newFile->internal->loadAndParseFile();

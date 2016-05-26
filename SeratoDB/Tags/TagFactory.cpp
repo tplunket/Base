@@ -35,42 +35,42 @@ using namespace std;
 
 #pragma mark Class Methods
 
-Tag::Pointer TagFactory::tagForTagAt(const byte *tagAddress, const String &source)
+NxA::Pointer<Tag> TagFactory::tagForTagAt(const byte *tagAddress, const String &source)
 {
     uinteger32 identifier = Tag::identifierForTagAt(tagAddress);
     char typeIdentifier = (identifier >> 24) & 0xff;
 
     switch (typeIdentifier) {
         case 'b': {
-            return Tag::Pointer::dynamicCastFrom(BooleanTag::tagWithMemoryAt(tagAddress));
+            return NxA::Pointer<NxA::Serato::Tag>::dynamicCastFrom(BooleanTag::tagWithMemoryAt(tagAddress));
         }
         case 's': {
-            return Tag::Pointer::dynamicCastFrom(UInteger16Tag::tagWithMemoryAt(tagAddress));
+            return NxA::Pointer<NxA::Serato::Tag>::dynamicCastFrom(UInteger16Tag::tagWithMemoryAt(tagAddress));
         }
         case 'u': {
-            return Tag::Pointer::dynamicCastFrom(UInteger32Tag::tagWithMemoryAt(tagAddress));
+            return NxA::Pointer<NxA::Serato::Tag>::dynamicCastFrom(UInteger32Tag::tagWithMemoryAt(tagAddress));
         }
         case 'v': {
-            return Tag::Pointer::dynamicCastFrom(VersionTag::tagWithMemoryAt(tagAddress));
+            return NxA::Pointer<NxA::Serato::Tag>::dynamicCastFrom(VersionTag::tagWithMemoryAt(tagAddress));
         }
         case 't': {
-            return Tag::Pointer::dynamicCastFrom(TextTag::tagWithMemoryAt(tagAddress));
+            return NxA::Pointer<NxA::Serato::Tag>::dynamicCastFrom(TextTag::tagWithMemoryAt(tagAddress));
         }
         case 'p': {
-            return Tag::Pointer::dynamicCastFrom(PathTag::tagWithMemoryAt(tagAddress));
+            return NxA::Pointer<NxA::Serato::Tag>::dynamicCastFrom(PathTag::tagWithMemoryAt(tagAddress));
         }
         case 'a': {
-            return Tag::Pointer::dynamicCastFrom(BlobTag::tagWithMemoryAt(tagAddress));
+            return NxA::Pointer<NxA::Serato::Tag>::dynamicCastFrom(BlobTag::tagWithMemoryAt(tagAddress));
         }
         case 'o': {
-            return Tag::Pointer::dynamicCastFrom(ObjectTag::tagWithMemoryAt(tagAddress));
+            return NxA::Pointer<NxA::Serato::Tag>::dynamicCastFrom(ObjectTag::tagWithMemoryAt(tagAddress));
         }
     }
 
     NXA_ALOG("Illegal Serato tag type in '%s'. identifier:0x%08x, (char)0x%02x == '%c'.", source.toUTF8(), identifier, typeIdentifier, typeIdentifier);
 }
 
-Tag::Array::Pointer TagFactory::parseTagsAt(const byte *firstTagAddress, count sizeFromFirstTag, const String &source)
+NxA::Pointer<Tag::Array> TagFactory::parseTagsAt(const byte *firstTagAddress, count sizeFromFirstTag, const String &source)
 {
     const byte* tagAddress = firstTagAddress;
     const byte* endOfTagsAddress = firstTagAddress + sizeFromFirstTag;

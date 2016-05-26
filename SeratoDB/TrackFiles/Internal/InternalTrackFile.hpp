@@ -46,23 +46,23 @@ struct InternalTrackFile : public InternalObject {
 
     #pragma mark Class Methods
     static const byte* nextTagPositionAfterTagNamed(const String& tagName, const byte* currentTagPosition);
-    static Blob::Pointer markerV2TagDataFrom(const byte* tagStart);
+    static NxA::Pointer<Blob> markerV2TagDataFrom(const byte* tagStart);
 
     #pragma mark Instance Variables
-    String::PointerToConst filePath;
+    NxA::Pointer<const String> filePath;
     boolean markersWereIgnored;
     boolean markersWereModified;
     boolean metadataWasModified;
 
-    String::Pointer title;
-    String::Pointer artist;
-    String::Pointer genre;
-    String::Pointer key;
-    String::Pointer comments;
-    String::Pointer album;
-    String::Pointer composer;
-    String::Pointer grouping;
-    String::Pointer bpm;
+    NxA::Pointer<String> title;
+    NxA::Pointer<String> artist;
+    NxA::Pointer<String> genre;
+    NxA::Pointer<String> key;
+    NxA::Pointer<String> comments;
+    NxA::Pointer<String> album;
+    NxA::Pointer<String> composer;
+    NxA::Pointer<String> grouping;
+    NxA::Pointer<String> bpm;
     count trackNumber;
 
     count audioDataSizeInBytes;
@@ -71,19 +71,19 @@ struct InternalTrackFile : public InternalObject {
     boolean hasBitDepth;
     uinteger32 bitDepthInBits;
     uinteger32 sampleRateInSamplesPerSecond;
-    Blob::Pointer artwork;
+    NxA::Pointer<Blob> artwork;
 
-    String::Pointer recordLabel;
-    String::Pointer remixer;
+    NxA::Pointer<String> recordLabel;
+    NxA::Pointer<String> remixer;
     integer rating;
-    String::Pointer releaseDate;
+    NxA::Pointer<String> releaseDate;
 
     boolean beatGridIsLocked;
 
-    CueMarker::Array::Pointer cueMarkers;
-    LoopMarker::Array::Pointer loopMarkers;
-    GridMarker::Array::Pointer gridMarkers;
-    Blob::Array::Pointer otherTags;
+    NxA::Pointer<CueMarker::Array> cueMarkers;
+    NxA::Pointer<LoopMarker::Array> loopMarkers;
+    NxA::Pointer<GridMarker::Array> gridMarkers;
+    NxA::Pointer<Blob::Array> otherTags;
 
     #pragma mark Instance Methods
     virtual void loadAndParseFile(void) = 0;
@@ -96,10 +96,10 @@ struct InternalTrackFile : public InternalObject {
     void parseMarkersV1FromEncodedByteArray(const byte* markerData, count totalSize);
     void parseMarkersV2FromBase64String(const byte* markerV2Data, count totalSize);
     void parseGridMarkersFrom(const byte* gridMarkerData);
-    Blob::Pointer rawBlobFromMarkersV1(void) const;
-    Blob::Pointer id3EncodedBlobFromMarkersV1(void) const;
-    String::Pointer base64StringFromMarkersV2(void) const;
-    Blob::Pointer gridMarkerDataFromGridMarkers(void) const;
+    NxA::Pointer<Blob> rawBlobFromMarkersV1(void) const;
+    NxA::Pointer<Blob> id3EncodedBlobFromMarkersV1(void) const;
+    NxA::Pointer<String> base64StringFromMarkersV2(void) const;
+    NxA::Pointer<Blob> gridMarkerDataFromGridMarkers(void) const;
 };
 
 NXA_EXIT_NAMESPACE;

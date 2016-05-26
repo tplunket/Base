@@ -36,8 +36,8 @@ class PathTag : public TextTag {
 
 public:
     #pragma mark Constructors
-    static PathTag::Pointer tagWithMemoryAt(const byte* tagAddress);
-    static PathTag::Pointer tagWithIdentifierAndValue(uinteger32 identifier, const String& value);
+    static Pointer<PathTag> tagWithMemoryAt(const byte* tagAddress);
+    static Pointer<PathTag> tagWithIdentifierAndValue(uinteger32 identifier, const String& value);
 
     #pragma mark Operators
     virtual bool operator==(const PathTag& other) const;

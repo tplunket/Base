@@ -36,7 +36,7 @@ class WAVTrackFile : public ID3TrackFile {
 
 public:
     #pragma mark Factory Methods
-    static WAVTrackFile::Pointer fileWithFileAt(const String& path, TrackFile::Flags flags);
+    static NxA::Pointer<WAVTrackFile> fileWithFileAt(const String& path, TrackFile::Flags flags);
 
     #pragma mark Overriden TrackFile Instance Methods
     virtual boolean hasBitDepth(void) const override;

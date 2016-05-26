@@ -32,7 +32,7 @@ using namespace NxA::Serato;
 
 #pragma mark Factory Methods
 
-UInteger32Tag::Pointer UInteger32Tag::tagWithMemoryAt(const byte* tagAddress)
+NxA::Pointer<UInteger32Tag> UInteger32Tag::tagWithMemoryAt(const byte* tagAddress)
 {
     const byte* tagData = InternalTag::dataForTagAt(tagAddress);
     NXA_ASSERT_EQ(Tag::dataSizeForTagAt(tagAddress), 4);
@@ -41,7 +41,7 @@ UInteger32Tag::Pointer UInteger32Tag::tagWithMemoryAt(const byte* tagAddress)
                                                     Platform::bigEndianUInteger32ValueAt(tagData));
 }
 
-UInteger32Tag::Pointer UInteger32Tag::tagWithIdentifierAndValue(uinteger32 identifier, uinteger32 value)
+NxA::Pointer<UInteger32Tag> UInteger32Tag::tagWithIdentifierAndValue(uinteger32 identifier, uinteger32 value)
 {
     NXA_ASSERT_EQ((identifier & 0xFF000000) >> 24, 'u');
 

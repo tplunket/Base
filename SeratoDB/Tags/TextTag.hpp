@@ -36,8 +36,8 @@ class TextTag : public Tag {
 
 public:
     #pragma mark Factory Methods
-    static TextTag::Pointer tagWithMemoryAt(const byte* tagAddress);
-    static TextTag::Pointer tagWithIdentifierAndValue(uinteger32 identifier, const String& value);
+    static NxA::Pointer<TextTag> tagWithMemoryAt(const byte* tagAddress);
+    static NxA::Pointer<TextTag> tagWithIdentifierAndValue(uinteger32 identifier, const String& value);
 
     #pragma mark Operators
     virtual bool operator==(const TextTag& other) const;

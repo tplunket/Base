@@ -41,10 +41,10 @@ struct InternalFLACTrackFile : public InternalTrackFile {
     InternalFLACTrackFile(const String& path);
 
     #pragma mark Instance Variables
-    String::ArrayOfConst::Pointer nameOfFields;
-    String::ArrayOfConst::Pointer nameOfFieldsToRemove;
-    String::ArrayOfConst::Pointer ownersOfPrivateFrames;
-    String::ArrayOfConst::Pointer ownersOfPrivateFramesToRemove;
+    NxA::Pointer<String::ArrayOfConst> nameOfFields;
+    NxA::Pointer<String::ArrayOfConst> nameOfFieldsToRemove;
+    NxA::Pointer<String::ArrayOfConst> ownersOfPrivateFrames;
+    NxA::Pointer<String::ArrayOfConst> ownersOfPrivateFramesToRemove;
 
     boolean hasRating;
 

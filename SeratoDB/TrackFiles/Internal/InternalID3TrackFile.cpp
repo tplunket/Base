@@ -102,7 +102,7 @@ TagLib::ID3v2::FrameList::Iterator InternalID3TrackFile::frameInListWithDescript
     return list.end();
 }
 
-String::Pointer InternalID3TrackFile::stringValueForFrameNamedInTag(const character* name, const TagLib::ID3v2::Tag& tag)
+Pointer<String> InternalID3TrackFile::stringValueForFrameNamedInTag(const character* name, const TagLib::ID3v2::Tag& tag)
 {
     auto frameList = tag.frameList(name);
     for (auto& frame : frameList) {
@@ -373,7 +373,7 @@ void InternalID3TrackFile::updateMarkersInTagFromTrackFile(TagLib::ID3v2::Tag& t
     InternalID3TrackFile::replaceGridMarkersFrameInTagWith(tag, trackFile.gridMarkerDataFromGridMarkers());
 }
 
-String::Pointer InternalID3TrackFile::releaseDateFromTag(const TagLib::ID3v2::Tag& tag)
+Pointer<String> InternalID3TrackFile::releaseDateFromTag(const TagLib::ID3v2::Tag& tag)
 {
     auto date = InternalID3TrackFile::stringValueForFrameNamedInTag(id3ReleaseTimeFrameName, tag);
     if (!date->length()) {
@@ -397,7 +397,7 @@ void InternalID3TrackFile::setReleaseDateInTag(const String& date, TagLib::ID3v2
     InternalID3TrackFile::setStringValueForFrameNamedInTag(date, id3ReleaseTimeFrameName, tag);
 }
 
-Blob::Pointer InternalID3TrackFile::artworkInTag(const TagLib::ID3v2::Tag& tag)
+Pointer<Blob> InternalID3TrackFile::artworkInTag(const TagLib::ID3v2::Tag& tag)
 {
     auto frameList = tag.frameList(id3ArtworkFrameName);
     if (frameList.size()) {

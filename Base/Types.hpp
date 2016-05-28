@@ -62,8 +62,8 @@ using decimal3 = dec::decimal<3>;
 // -- Provide an optional type based on std::experimental::optional
 template <typename T>
 using Optional = std::experimental::optional<T>;
-using NullOpt = std::experimental::nullopt_t;
-constexpr NullOpt nullopt{0};
+using NullOptional = std::experimental::nullopt_t;
+constexpr NullOptional nothing{0};
 template <typename T>
 inline constexpr Optional<typename std::decay<T>::type>
 makeOptional(T&& v) {

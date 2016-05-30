@@ -493,6 +493,7 @@ If the code overrides any methods from parent classes, those are placed after th
 * **Increase the feature number** if the change contains new features with or without bug fixes.
 * **Increase the hotfix number** if the change only contains bug fixes.
 * **Increase the build number** at every new user-facing build.
+* **Unless you have direct push access** you should push your changes and commits via a pull request. Pull requests should only contain commits related to one task and only one task.
 
 # Development Rules
 

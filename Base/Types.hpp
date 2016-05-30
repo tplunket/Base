@@ -59,7 +59,7 @@ using decimal = double;
 using decimal2 = dec::decimal<2>;
 using decimal3 = dec::decimal<3>;
 
-// -- Provide an optional type based on std::experimental::optional
+// -- Provide an optional type based on std::experimental::optional. TODO: change to std::optional in C++1y
 template <typename T>
 using Optional = std::experimental::optional<T>;
 using NullOptional = std::experimental::nullopt_t;

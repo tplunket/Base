@@ -55,13 +55,6 @@ public:
     bool operator==(const char* other) const;
     bool operator!=(const char* other) const;
 
-    integer32 compareTo(const String& other) const
-    {
-        return 0;
-    }
-    bool operator<(const String& other) const { return compareTo(other) < 0; }
-    bool operator>(const String& other) const { return compareTo(other) > 0; }
-
     #pragma mark Instance Methods
     count length(void) const;
     boolean isEmpty(void) const

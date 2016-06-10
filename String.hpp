@@ -65,25 +65,25 @@ public:
     count lengthOf(const character* str);
 
     #pragma mark Instance Methods
-    count length(void) const;
-    boolean isEmpty(void) const
+    count length() const;
+    boolean isEmpty() const
     {
         return this->length() == 0;
     };
-    uinteger32 hash(void) const;
-    integer integerValue(void) const;
+    uinteger32 hash() const;
+    integer integerValue() const;
 
-    const std::string& asStdString(void) const;
-    const character* asUTF8(void) const;
-    Blob asUTF16(void) const;
+    const std::string& asStdString() const;
+    const character* asUTF8() const;
+    Blob asUTF16() const;
 
     String stringByAppending(const String&) const;
 
     Array<String> splitBySeparator(char) const;
     String subString(count, count = -1) const;
     String utfSeek(count) const;
-    String lowerCaseString(void) const;
-    String upperCaseString(void) const;
+    String lowerCaseString() const;
+    String upperCaseString() const;
 
     boolean hasPrefix(const String&) const;
     boolean hasPostfix(const String&) const;

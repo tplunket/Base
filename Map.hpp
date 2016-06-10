@@ -51,7 +51,7 @@ public:
     ~Map() = default;
         
     #pragma mark Class Methods
-    static const character* staticClassName(void)
+    static const character* staticClassName()
     {
         static std::mutex m;
         static std::unique_ptr<character[]> buffer;
@@ -74,24 +74,24 @@ public:
     using const_iterator = typename MapInternal<const Tkey, Tvalue>::const_iterator;
 
     #pragma mark Instance Methods
-    const_iterator begin(void) const
+    const_iterator begin() const
     {
         return internal->begin();
     }
-    const_iterator cbegin(void) const
+    const_iterator cbegin() const
     {
         return internal->cbegin();
     }
-    const_iterator end(void) const
+    const_iterator end() const
     {
         return internal->end();
     }
-    const_iterator cend(void) const
+    const_iterator cend() const
     {
         return internal->cend();
     }
 
-    count length(void) const
+    count length() const
     {
         return internal->length();
     }

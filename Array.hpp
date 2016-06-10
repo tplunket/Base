@@ -49,7 +49,7 @@ public:
     ~Array() = default;
 
     #pragma mark Class Methods
-    static const character* staticClassName(void)
+    static const character* staticClassName()
     {
         static std::mutex m;
         static std::unique_ptr<character[]> buffer;
@@ -67,7 +67,7 @@ public:
 
         return buffer.get();
     }
-    static uinteger32 staticClassHash(void)
+    static uinteger32 staticClassHash()
     {
         static uinteger32 result = String::hashFor(Array::staticClassName());
         return result;
@@ -94,11 +94,11 @@ public:
     }
 
     #pragma mark Instance Methods
-    uinteger32 classHash(void) const
+    uinteger32 classHash() const
     {
         return Array::staticClassHash();
     }
-    const character* className(void) const
+    const character* className() const
     {
         return Array::staticClassName();
     }
@@ -127,24 +127,24 @@ public:
         return internal->cend();
     }
 
-    count length(void) const
+    count length() const
     {
         return internal->length();
     }
 
-    const T& firstObject(void) const
+    const T& firstObject() const
     {
         return internal->firstObject();
     }
-    T& firstObject(void)
+    T& firstObject()
     {
         return internal->firstObject();
     }
-    const T& lastObject(void) const
+    const T& lastObject() const
     {
         return internal->lastObject();
     }
-    T& lastObject(void)
+    T& lastObject()
     {
         return internal->lastObject();
     }
@@ -157,7 +157,7 @@ public:
         return internal->find(object);
     }
 
-    String description(void) const
+    String description() const
     {
         return internal->description();
     }

@@ -50,7 +50,7 @@ public:
     ~MutableMap() = default;
         
     #pragma mark Class Methods
-    static const character* staticClassName(void)
+    static const character* staticClassName()
     {
         static std::mutex m;
         static std::unique_ptr<character[]> buffer;
@@ -84,27 +84,27 @@ public:
     }
 
     #pragma mark Instance Methods
-    iterator begin(void)
+    iterator begin()
     {
         return internal->begin();
     }
-    const_iterator begin(void) const
+    const_iterator begin() const
     {
         return internal->begin();
     }
-    const_iterator cbegin(void) const
+    const_iterator cbegin() const
     {
         return internal->cbegin();
     }
-    iterator end(void)
+    iterator end()
     {
         return internal->end();
     }
-    const_iterator end(void) const
+    const_iterator end() const
     {
         return internal->end();
     }
-    const_iterator cend(void) const
+    const_iterator cend() const
     {
         return internal->cend();
     }
@@ -113,7 +113,7 @@ public:
         return internal->erase();
     }
 
-    count length(void) const
+    count length() const
     {
         return internal->length();
     }

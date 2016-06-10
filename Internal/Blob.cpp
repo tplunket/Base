@@ -425,7 +425,7 @@ std::shared_ptr<BlobInternal> BlobInternal::blobWithStringWithoutTerminator(Stri
 
 #pragma mark Instance Methods
 
-String BlobInternal::base64String(void)
+String BlobInternal::base64String()
 {
     return BlobInternal::base64StringFor(this->data(), this->size());
 }

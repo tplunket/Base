@@ -60,27 +60,27 @@ MutableString MutableString::stringWithUTF16(Blob other)
 
 #pragma mark Instance Methods
 
-String MutableString::description(void) const
+String MutableString::description() const
 {
     return String(*internal);
 }
 
-count MutableString::length(void) const
+count MutableString::length() const
 {
     return internal->length();
 }
 
-uinteger32 MutableString::hash(void) const
+uinteger32 MutableString::hash() const
 {
     return internal->hash();
 }
 
-integer MutableString::integerValue(void) const
+integer MutableString::integerValue() const
 {
     return internal->integerValue();
 }
 
-const std::string& MutableString::asStdString(void) const
+const std::string& MutableString::asStdString() const
 {
     return internal->asStdString();
 }
@@ -90,7 +90,7 @@ const character* MutableString::asUTF8() const
     return internal->asUTF8();
 }
 
-Blob MutableString::asUTF16(void) const
+Blob MutableString::asUTF16() const
 {
     return internal->asUTF16();
 }
@@ -120,12 +120,12 @@ MutableString MutableString::subString(count start, count end) const
     return { internal->subString(start, end) };
 }
 
-MutableString MutableString::lowerCaseString(void) const
+MutableString MutableString::lowerCaseString() const
 {
     return { internal->lowerCaseString() };
 }
 
-MutableString MutableString::upperCaseString(void) const
+MutableString MutableString::upperCaseString() const
 {
     return { internal->upperCaseString() };
 }

@@ -55,27 +55,27 @@ template <typename Tkey, typename Tvalue> struct MapInternal : public Object::In
     }
 
     #pragma mark Instance Methods
-    iterator begin(void)
+    iterator begin()
     {
         return this->std::map<const Tkey, Tvalue>::begin();
     }
-    const_iterator begin(void) const
+    const_iterator begin() const
     {
         return this->std::map<const Tkey, Tvalue>::begin();
     }
-    const_iterator cbegin(void) const
+    const_iterator cbegin() const
     {
         return this->std::map<const Tkey, Tvalue>::cbegin();
     }
-    iterator end(void)
+    iterator end()
     {
         return this->std::map<const Tkey, Tvalue>::end();
     }
-    const_iterator end(void) const
+    const_iterator end() const
     {
         return this->std::map<const Tkey, Tvalue>::end();
     }
-    const_iterator cend(void) const
+    const_iterator cend() const
     {
         return this->std::map<const Tkey, Tvalue>::cend();
     }
@@ -85,7 +85,7 @@ template <typename Tkey, typename Tvalue> struct MapInternal : public Object::In
         this->std::map<const Tkey, Tvalue>::erase(key);
     }
 
-    count length(void) const
+    count length() const
     {
         return this->std::map<const Tkey, Tvalue>::size();
     }

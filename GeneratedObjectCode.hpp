@@ -56,23 +56,23 @@ class String;
             class_name(const class_name&); \
             class_name(class_name&); \
             ~class_name(); \
-            static const character* staticClassName(void) \
+            static const character* staticClassName() \
             { \
                 return NXA_STR_VALUE_FOR(class_name); \
             } \
-            static uinteger32 staticClassHash(void); \
+            static uinteger32 staticClassHash(); \
             class_name& operator=(class_name&&); \
             class_name& operator=(const class_name&); \
             boolean operator==(const class_name&) const; \
-            uinteger32 classHash(void) const \
+            uinteger32 classHash() const \
             { \
                 return class_name::staticClassHash(); \
             } \
-            const character* className(void) const \
+            const character* className() const \
             { \
                 return class_name::staticClassName(); \
             } \
-            String description(void) const; \
+            String description() const; \
         private:
 
 #define NXA_GENERATED_OBJECT_METHODS_DEFINITIONS_FOR(class_name...) \
@@ -81,7 +81,7 @@ class String;
         class_name::class_name(class_name&) = default; \
         class_name::class_name(std::shared_ptr<Internal>&& other) : internal{ std::move(other) } { } \
         class_name::~class_name() = default; \
-        uinteger32 class_name::staticClassHash(void) \
+        uinteger32 class_name::staticClassHash() \
         { \
             static uinteger32 result = String::hashFor(class_name::staticClassName()); \
             return result; \

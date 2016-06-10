@@ -71,27 +71,27 @@ const byte& MutableBlob::operator[] (integer index) const
 
 #pragma mark Instance Methods
 
-count MutableBlob::size(void) const
+count MutableBlob::size() const
 {
     return internal->size();
 }
 
-const byte* MutableBlob::data(void) const
+const byte* MutableBlob::data() const
 {
     return internal->data();
 }
 
-Blob MutableBlob::hash(void)
+Blob MutableBlob::hash()
 {
     return { internal->hash() };
 }
 
-String MutableBlob::base64String(void)
+String MutableBlob::base64String()
 {
     return internal->base64String();
 }
 
-void MutableBlob::fillWithZeros(void)
+void MutableBlob::fillWithZeros()
 {
     return internal->fillWithZeros();
 }
@@ -116,7 +116,7 @@ void MutableBlob::append(const character other)
     return internal->append(other);
 }
 
-void MutableBlob::removeAll(void)
+void MutableBlob::removeAll()
 {
     internal->removeAll();
 }

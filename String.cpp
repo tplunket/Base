@@ -135,27 +135,27 @@ count String::lengthOf(const character* str)
 
 #pragma mark Instance Methods
 
-String String::description(void) const
+String String::description() const
 {
     return *this;
 }
 
-count String::length(void) const
+count String::length() const
 {
     return internal->length();
 }
 
-uinteger32 String::hash(void) const
+uinteger32 String::hash() const
 {
     return internal->hash();
 }
 
-integer String::integerValue(void) const
+integer String::integerValue() const
 {
     return internal->integerValue();
 }
 
-const std::string& String::asStdString(void) const
+const std::string& String::asStdString() const
 {
     return internal->asStdString();
 }
@@ -165,7 +165,7 @@ const character* String::asUTF8() const
     return internal->asUTF8();
 }
 
-Blob String::asUTF16(void) const
+Blob String::asUTF16() const
 {
     return internal->asUTF16();
 }
@@ -190,12 +190,12 @@ String String::subString(count start, count end) const
     return { internal->subString(start, end) };
 }
 
-String String::lowerCaseString(void) const
+String String::lowerCaseString() const
 {
     return { internal->lowerCaseString() };
 }
 
-String String::upperCaseString(void) const
+String String::upperCaseString() const
 {
     return internal->upperCaseString();
 }

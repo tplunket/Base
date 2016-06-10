@@ -127,7 +127,7 @@ There are two types of files: The ones which are confidential and part of our in
         ...
     }
 
-    void myMethod(void)
+    void myMethod()
     {
         ...
     }

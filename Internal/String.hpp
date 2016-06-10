@@ -89,22 +89,22 @@ struct StringInternal : public Object::Internal, public std::string
     #pragma mark Instance Methods
 
     #pragma mark Instance Methods
-    count length(void) const
+    count length() const
     {
         return this->size();
     }
 
-    uinteger32 hash(void) const
+    uinteger32 hash() const
     {
         return String::hashFor(this->asUTF8());
     }
 
-    integer integerValue(void) const
+    integer integerValue() const
     {
         return ::atoi(this->c_str());
     }
 
-    const std::string& asStdString(void) const
+    const std::string& asStdString() const
     {
         return *this;
     }
@@ -114,7 +114,7 @@ struct StringInternal : public Object::Internal, public std::string
         return this->c_str();
     }
 
-    Blob asUTF16(void) const
+    Blob asUTF16() const
     {
         std::wstring_convert<std::codecvt_utf8_utf16<char16_t>,char16_t> convert;
         std::u16string u16 = convert.from_bytes(this->c_str());
@@ -185,7 +185,7 @@ struct StringInternal : public Object::Internal, public std::string
         return { std::make_shared<StringInternal>(this->substr(start, end - start)) };
     }
 
-    std::shared_ptr<StringInternal> lowerCaseString(void) const
+    std::shared_ptr<StringInternal> lowerCaseString() const
     {
         auto input = this->c_str();
         auto inputLength = this->length();
@@ -204,7 +204,7 @@ struct StringInternal : public Object::Internal, public std::string
         return { std::make_shared<StringInternal>(const_cast<const character*>(output), convertedSize) };
     }
 
-    std::shared_ptr<StringInternal> upperCaseString(void) const
+    std::shared_ptr<StringInternal> upperCaseString() const
     {
         auto input = this->c_str();
         auto inputLength = this->length();

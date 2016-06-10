@@ -38,18 +38,18 @@ public:
     ~WeakReference() = default;
 
     #pragma mark Instance Methods
-    boolean isValid(void) const
+    boolean isValid() const
     {
         return !this->expired();
     }
 
-    T get(void) const
+    T get() const
     {
         NXA_ASSERT_TRUE(this->isValid());
         return { this->std::weak_ptr<typename T::Internal>::lock() };
     }
 
-    void release(void)
+    void release()
     {
         NXA_ASSERT_TRUE(this->isValid());
         this->std::weak_ptr<typename T::Internal>::reset();

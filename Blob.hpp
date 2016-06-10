@@ -55,12 +55,12 @@ public:
     const byte& operator[] (integer) const;
 
     #pragma mark Instance Methods
-    count size(void) const;
+    count size() const;
 
-    const byte* data(void) const;
+    const byte* data() const;
 
-    Blob hash(void);
-    String base64String(void);
+    Blob hash();
+    String base64String();
 };
 
 }

@@ -82,22 +82,22 @@ const byte& Blob::operator[] (integer index) const
 
 #pragma mark Instance Methods
 
-count Blob::size(void) const
+count Blob::size() const
 {
     return internal->size();
 }
 
-const byte* Blob::data(void) const
+const byte* Blob::data() const
 {
     return internal->data();
 }
 
-Blob Blob::hash(void)
+Blob Blob::hash()
 {
     return { internal->hash() };
 }
 
-String Blob::base64String(void)
+String Blob::base64String()
 {
     return internal->base64String();
 }

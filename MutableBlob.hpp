@@ -56,25 +56,25 @@ public:
     }
 
     #pragma mark Instance Methods
-    count size(void) const;
+    count size() const;
 
-    const byte* data(void) const;
-    byte* data(void)
+    const byte* data() const;
+    byte* data()
     {
         return const_cast<byte*>(static_cast<const MutableBlob*>(this)->data());
     }
 
-    void fillWithZeros(void);
+    void fillWithZeros();
 
-    Blob hash(void);
-    String base64String(void);
+    Blob hash();
+    String base64String();
 
     void append(Blob);
     void appendWithStringTermination(const character*);
     void appendWithoutStringTermination(const character*);
     void append(const character);
 
-    void removeAll(void);
+    void removeAll();
 
     void padToAlignment(integer32);
 };

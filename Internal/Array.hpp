@@ -87,11 +87,11 @@ template <class T> struct ArrayInternal : public Object::Internal, public std::v
         return this->cend();
     }
 
-    count length(void) const
+    count length() const
     {
         return this->size();
     }
-    void emptyAll(void)
+    void emptyAll()
     {
         return this->clear();
     }
@@ -105,22 +105,22 @@ template <class T> struct ArrayInternal : public Object::Internal, public std::v
         this->push_back(other);
     }
 
-    const T& firstObject(void) const
+    const T& firstObject() const
     {
         NXA_ASSERT_TRUE(this->size() != 0);
         return this->operator[](0);
     }
-    T& firstObject(void)
+    T& firstObject()
     {
         return const_cast<T&>((static_cast<const ArrayInternal<T>*>(this))->firstObject());
     }
-    const T& lastObject(void) const
+    const T& lastObject() const
     {
         count length = this->size();
         NXA_ASSERT_TRUE(length != 0);
         return this->operator[](length - 1);
     }
-    T& lastObject(void)
+    T& lastObject()
     {
         return const_cast<T&>((static_cast<const ArrayInternal<T>*>(this))->lastObject());
     }
@@ -148,7 +148,7 @@ template <class T> struct ArrayInternal : public Object::Internal, public std::v
         }
     }
 
-    String description(void) const
+    String description() const
     {
         return descriptionOfObjectsInArray(*this);
     }

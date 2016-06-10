@@ -60,17 +60,17 @@ public:
     static MutableString stringWithUTF16(Blob);
 
     #pragma mark Instance Methods
-    count length(void) const;
-    boolean isEmpty(void) const
+    count length() const;
+    boolean isEmpty() const
     {
         return this->length() == 0;
     }
-    uinteger32 hash(void) const;
-    integer integerValue(void) const;
+    uinteger32 hash() const;
+    integer integerValue() const;
 
-    const std::string& asStdString(void) const;
-    const character* asUTF8(void) const;
-    Blob asUTF16(void) const;
+    const std::string& asStdString() const;
+    const character* asUTF8() const;
+    Blob asUTF16() const;
 
     void append(const String&);
     void append(const character*);
@@ -78,8 +78,8 @@ public:
     Array<String> splitBySeparator(char) const;
     MutableString subString(count, count = -1) const;
     MutableString utfSeek(count) const;
-    MutableString lowerCaseString(void) const;
-    MutableString upperCaseString(void) const;
+    MutableString lowerCaseString() const;
+    MutableString upperCaseString() const;
 
     boolean hasPrefix(const String&) const;
     boolean hasPostfix(const String&) const;

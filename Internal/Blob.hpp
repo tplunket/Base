@@ -77,28 +77,28 @@ struct BlobInternal : public Object::Internal, public std::vector<byte>
     }
 
     #pragma mark Instance Methods
-    count size(void) const
+    count size() const
     {
         return this->std::vector<byte>::size();
     }
 
-    byte* data(void)
+    byte* data()
     {
         NXA_ASSERT_TRUE(this->size() > 0);
         return this->std::vector<byte>::data();
     }
 
-    void fillWithZeros(void)
+    void fillWithZeros()
     {
         std::memset(this->data(), 0, this->size());
     }
 
-    std::shared_ptr<BlobInternal> hash(void)
+    std::shared_ptr<BlobInternal> hash()
     {
         return BlobInternal::hashFor(this->data(), this->size());
     }
 
-    String base64String(void);
+    String base64String();
 
     void append(BlobInternal other)
     {
@@ -120,7 +120,7 @@ struct BlobInternal : public Object::Internal, public std::vector<byte>
         this->insert(this->end(), 1, other);
     }
 
-    void removeAll(void)
+    void removeAll()
     {
         this->clear();
     }

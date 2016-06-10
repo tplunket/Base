@@ -314,8 +314,7 @@ If the code overrides any methods from parent classes, those are placed after th
 ### Namespaces
 
 * Always at least use the `NxA` namespace.
-* use `NXA_ENTER_NAMESPACE(NxA);` and `NXA_EXIT_NAMESPACE;`
- instead of `namespace { ... }`. These avoid editors like Xcode tying to indent the content of the namespace for no reason.
+* use `namespace NxA {` with no newline after the name.
 * `using namespace ...` should be placed underneath the includes and never in header files.
 
 ### Operators

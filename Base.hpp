@@ -27,6 +27,7 @@
 #include <Base/Date.hpp>
 #include <Base/Exception.hpp>
 #include <Base/File.hpp>
+#include <Base/GeneratedObjectCode.hpp>
 #include <Base/Map.hpp>
 #include <Base/MutableArray.hpp>
 #include <Base/MutableBlob.hpp>

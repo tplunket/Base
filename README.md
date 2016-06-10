@@ -7,4 +7,4 @@ Basic unit test support using GoogleMock is provided. All classes will have 100%
 
 This library is released under the MIT license.
 
-Copyright (c) 2015 Next Audio Labs, LLC. All rights reserved.
+Copyright (c) 2015-2016 Next Audio Labs, LLC. All rights reserved.

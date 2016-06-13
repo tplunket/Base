@@ -101,12 +101,12 @@ class String;
             String description() const; \
         private:
 
-#define NXA_GENERATED_UNCOPYABLE_OBJECT_METHODS_DECLARATIONS_WITHOUT_INTERNAL_OBJECT_FOR(class_name...) \
+#define NXA_GENERATED_UNIQUE_OBJECT_METHODS_DECLARATIONS_WITHOUT_INTERNAL_OBJECT_FOR(class_name...) \
         public: \
             class_name(const class_name&) = delete; \
         NXA_GENERATED_COMMON_OBJECT_METHODS_DECLARATIONS_WITHOUT_INTERNAL_OBJECT_FOR(class_name) \
 
-#define NXA_GENERATED_UNCOPYABLE_OBJECT_METHODS_DECLARATIONS_FOR(class_name...) \
+#define NXA_GENERATED_UNIQUE_OBJECT_METHODS_DECLARATIONS_FOR(class_name...) \
         protected: \
             std::shared_ptr<Internal> internal; \
         public: \
@@ -154,7 +154,7 @@ class String;
         class_name::class_name(const class_name&) = default; \
         NXA_GENERATED_OBJECT_METHODS_DEFINITIONS_WITH_INTERNAL_STORED_IN_FOR(internal_location, class_name)
 
-#define NXA_GENERATED_UNCOPYABLE_OBJECT_METHODS_DEFINITIONS_WITH_INTERNAL_STORED_IN_FOR(internal_location, class_name...) \
+#define NXA_GENERATED_UNIQUE_OBJECT_METHODS_DEFINITIONS_WITH_INTERNAL_STORED_IN_FOR(internal_location, class_name...) \
         NXA_GENERATED_OBJECT_METHODS_DEFINITIONS_WITH_INTERNAL_STORED_IN_FOR(internal_location, class_name)
 
 #define NXA_GENERATED_MUTABLE_OBJECT_METHODS_DEFINITIONS_FOR(class_name...) \
@@ -165,5 +165,5 @@ class String;
         class_name::class_name(const class_name&) = default; \
         NXA_GENERATED_OBJECT_METHODS_DEFINITIONS_WITH_INTERNAL_STORED_IN_FOR(internal, class_name)
 
-#define NXA_GENERATED_UNCOPYABLE_OBJECT_METHODS_DEFINITIONS_FOR(class_name...) \
+#define NXA_GENERATED_UNIQUE_OBJECT_METHODS_DEFINITIONS_FOR(class_name...) \
         NXA_GENERATED_OBJECT_METHODS_DEFINITIONS_WITH_INTERNAL_STORED_IN_FOR(internal, class_name)

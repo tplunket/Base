@@ -27,17 +27,7 @@
 
 using namespace NxA;
 
-NXA_GENERATED_OBJECT_METHODS_DEFINITIONS_FOR(Blob);
-
-#pragma mark Constructors/Destructors
-
-Blob::Blob() : internal{ std::make_shared<Internal>() } { }
-
-Blob::Blob(MutableBlob&& other) : internal{ std::move(other.internal) }
-{
-    // -- If we're moving this other mutable, it can't be referred to by anyone else.
-    NXA_ASSERT_TRUE(internal.use_count() == 1);
-}
+NXA_GENERATED_IMMUTABLE_OBJECT_METHODS_DEFINITIONS_FOR(Blob);
 
 #pragma mark mark Factory Methods
 
@@ -71,6 +61,16 @@ Blob Blob::hashFor(const byte* memory, count size)
 String Blob::base64StringFor(const byte* memory, count size)
 {
     return { Internal::base64StringFor(memory, size) } ;
+}
+
+#pragma mark Constructors/Destructors
+
+Blob::Blob() : internal{ std::make_shared<Internal>() } { }
+
+Blob::Blob(MutableBlob&& other) : internal{ std::move(other.internal) }
+{
+    // -- If we're moving this other mutable, it can't be referred to by anyone else.
+    NXA_ASSERT_TRUE(internal.use_count() == 1);
 }
 
 #pragma mark Operators

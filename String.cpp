@@ -79,13 +79,15 @@ inline NxA::uinteger32 SBox(const NxA::byte* key, NxA::count len, NxA::uinteger3
 
 using namespace NxA;
 
-NXA_GENERATED_OBJECT_METHODS_DEFINITIONS_FOR(String);
+NXA_GENERATED_IMMUTABLE_OBJECT_METHODS_DEFINITIONS_FOR(String);
 
 #pragma mark Constructors/Destructors
 
 String::String() : internal{ std::make_shared<Internal>() } { }
 
 String::String(const std::string& other) : internal{ std::make_shared<Internal>(other) } { }
+
+String::String(const std::string&& other) : internal{ std::make_shared<Internal>(std::move(other)) } { }
 
 String::String(const character* other, size_t size) : internal{ std::make_shared<Internal>(other, size) } { }
 
@@ -131,6 +133,13 @@ count String::lengthOf(const character* str)
     }
 
     return end - str;
+}
+
+#pragma mark Operators
+
+bool String::operator==(const character* other) const
+{
+    return internal->operator==(other);
 }
 
 #pragma mark Instance Methods

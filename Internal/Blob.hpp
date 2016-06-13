@@ -54,9 +54,9 @@ struct BlobInternal : public Object::Internal, public std::vector<byte>
     {
         return std::make_shared<BlobInternal>(std::vector<byte>(other, other + size));
     }
-    static std::shared_ptr<BlobInternal> blobWithBase64String(String);
-    static std::shared_ptr<BlobInternal> blobWithStringWithTerminator(String);
-    static std::shared_ptr<BlobInternal> blobWithStringWithoutTerminator(String);
+    static std::shared_ptr<BlobInternal> blobWithBase64String(const String&);
+    static std::shared_ptr<BlobInternal> blobWithStringWithTerminator(const String&);
+    static std::shared_ptr<BlobInternal> blobWithStringWithoutTerminator(const String&);
 
     #pragma mark Class Methods
     static std::shared_ptr<BlobInternal> hashFor(const byte* memory, count size)

@@ -396,7 +396,7 @@ String BlobInternal::base64StringFor(const byte* memory, count size)
 
 #pragma mark Factory Methods
 
-std::shared_ptr<BlobInternal> BlobInternal::blobWithBase64String(String string)
+std::shared_ptr<BlobInternal> BlobInternal::blobWithBase64String(const String& string)
 {
     base64_decodestate decodeState;
     base64_init_decodestate(&decodeState);
@@ -409,14 +409,14 @@ std::shared_ptr<BlobInternal> BlobInternal::blobWithBase64String(String string)
     return BlobInternal::blobWithMemoryAndSize(reinterpret_cast<byte*>(codeOut), codeLength);
 }
 
-std::shared_ptr<BlobInternal> BlobInternal::blobWithStringWithTerminator(String string)
+std::shared_ptr<BlobInternal> BlobInternal::blobWithStringWithTerminator(const String& string)
 {
     auto newInternal = std::make_shared<BlobInternal>();
     newInternal->appendWithStringTermination(string.asUTF8());
     return newInternal;
 }
 
-std::shared_ptr<BlobInternal> BlobInternal::blobWithStringWithoutTerminator(String string)
+std::shared_ptr<BlobInternal> BlobInternal::blobWithStringWithoutTerminator(const String& string)
 {
     auto newInternal = std::make_shared<BlobInternal>();
     newInternal->appendWithoutStringTermination(string.asUTF8());

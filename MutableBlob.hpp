@@ -44,9 +44,9 @@ public:
     #pragma mark Factory Methods
     static MutableBlob blobWithCapacity(count);
     static MutableBlob blobWithMemoryAndSize(const byte*, count);
-    static MutableBlob blobWithBase64String(String);
-    static MutableBlob blobWithStringWithTerminator(String);
-    static MutableBlob blobWithStringWithoutTerminator(String);
+    static MutableBlob blobWithBase64String(const String&);
+    static MutableBlob blobWithStringWithTerminator(const String&);
+    static MutableBlob blobWithStringWithoutTerminator(const String&);
 
     #pragma mark Operators
     const byte& operator[] (integer) const;
@@ -69,7 +69,7 @@ public:
     Blob hash();
     String base64String();
 
-    void append(Blob);
+    void append(const Blob&);
     void appendWithStringTermination(const character*);
     void appendWithoutStringTermination(const character*);
     void append(const character);

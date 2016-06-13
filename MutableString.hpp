@@ -57,7 +57,14 @@ public:
     {
         return { other, strlen(other) };
     }
-    static MutableString stringWithUTF16(Blob);
+    static MutableString stringWithUTF16(const Blob&);
+
+    #pragma mark Operators
+    bool operator==(const character*) const;
+    bool operator!=(const character* other) const
+    {
+        return !this->operator==(other);
+    }
 
     #pragma mark Instance Methods
     count length() const;

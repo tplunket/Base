@@ -31,7 +31,7 @@ template <class T> String descriptionOfObjectsInArrayAtAddress(const ArrayIntern
     auto result = String::stringWithFormat("Array at %08p with %ld elements:", &array, array.length());
     for (count index = 0; index < array.length(); ++index) {
         auto& item = array[index];
-        result->append(String::stringWithFormat("\n  %ld: %s", index, item.description()->toUTF8()));
+        result->append(String::stringWithFormat("\n  %ld: %s", index, item.description()->asUTF8()));
     }
 
     return result;

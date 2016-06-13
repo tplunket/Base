@@ -76,7 +76,7 @@ NXA_CONTAINS_TEST_SUITE_NAMED(Base_Blob_Tests);
 TEST(Base_Blob, ClassName_ABlob_ClassNameIsReturnedCorrectly)
 {
     // -- Given.
-    auto test = Blob::blob();
+    Blob test;
 
     // -- When.
     auto name = test->className();
@@ -88,8 +88,8 @@ TEST(Base_Blob, ClassName_ABlob_ClassNameIsReturnedCorrectly)
 TEST(Base_Blob, ClassName_TwoBlobs_ClassNameIsActuallyTheSamePointer)
 {
     // -- Given.
-    auto test = Blob::blob();
-    auto other = Blob::blob();
+    Blob test;
+    Blob other;
 
     // -- When.
     auto name = test->className();
@@ -103,7 +103,7 @@ TEST(Base_Blob, Blob_CallConstructor_BlobCreatedCorrectly)
 {
     // -- Given.
     // -- When.
-    auto test = Blob::blob();
+    Blob test;
 
     // -- Then.
     ASSERT_EQ(0, test->size());
@@ -232,7 +232,7 @@ TEST(Base_Blob, Data_BlobIsEmpty_ThrowsAnException)
 {
     // -- Given.
     // -- When.
-    auto test = Blob::blob();
+    Blob test;
 
     // -- Then.
     ASSERT_THROW(test->data(), NxA::AssertionFailed);
@@ -242,7 +242,7 @@ TEST(Base_Blob, Data_ConstantBlobIsEmpty_ThrowsAnException)
 {
     // -- Given.
     // -- When.
-    auto const test = Blob::blob();
+    Blob test;
 
     // -- Then.
     ASSERT_THROW(test->data(), NxA::AssertionFailed);
@@ -266,7 +266,7 @@ TEST(Base_Blob, OperatorEqual_TwoUnequalBlobs_ReturnsFalse)
     auto source = Blob::blobWithMemoryAndSize(testData, sizeof(testData));
 
     // -- When.
-    auto test = Blob::blob();
+    Blob test;
 
     // -- Then.
     ASSERT_FALSE(source == test);
@@ -317,7 +317,7 @@ TEST(Base_Blob, base64String_ABlobWithBinaryData_ReturnsTheCorrectBase64String)
 TEST(Base_Blob, Append_AnEmptyBlobAndBlobWithContent_AppendTheContentCorrectly)
 {
     // -- Given.
-    auto test = Blob::blob();
+    Blob test;
     auto test2 = Blob::blobWithMemoryAndSize(testData, sizeof(testData));
 
     // -- When.
@@ -347,7 +347,7 @@ TEST(Base_Blob, Append_ABlobWithContentAndEmptyBlob_AppendTheContentCorrectly)
 {
     // -- Given.
     auto test = Blob::blobWithMemoryAndSize(testData, sizeof(testData));
-    auto test2 = Blob::blob();
+    Blob test2;
 
     // -- When.
     test->append(test2);
@@ -360,8 +360,8 @@ TEST(Base_Blob, Append_ABlobWithContentAndEmptyBlob_AppendTheContentCorrectly)
 TEST(Base_Blob, Append_TwoEmptyBlobs_LeavesTheBlobEmpty)
 {
     // -- Given.
-    auto test = Blob::blob();
-    auto test2 = Blob::blob();
+    Blob test;
+    Blob test2;
 
     // -- When.
     test->append(test2);
@@ -373,7 +373,7 @@ TEST(Base_Blob, Append_TwoEmptyBlobs_LeavesTheBlobEmpty)
 TEST(Base_Blob, AppendWithStringTermination_AnEmptyBlobAndAString_AppendTheStringCorrectly)
 {
     // -- Given.
-    auto test = Blob::blob();
+    Blob test;
 
     // -- When.
     test->appendWithStringTermination("Hello");
@@ -392,7 +392,7 @@ TEST(Base_Blob, AppendWithStringTermination_AnEmptyBlobAndAString_AppendTheStrin
 TEST(Base_Blob, AppendWithoutStringTermination_AnEmptyBlobAndAString_AppendTheStringCorrectly)
 {
     // -- Given.
-    auto test = Blob::blob();
+    Blob test;
 
     // -- When.
     test->appendWithoutStringTermination("Hello");
@@ -410,7 +410,7 @@ TEST(Base_Blob, AppendWithoutStringTermination_AnEmptyBlobAndAString_AppendTheSt
 TEST(Base_Blob, AppendWithStringTermination_AnEmptyBlobAndAnEmptyString_OnlyAppendsAStringTerminatorCharacter)
 {
     // -- Given.
-    auto test = Blob::blob();
+    Blob test;
 
     // -- When.
     test->appendWithStringTermination("");
@@ -424,7 +424,7 @@ TEST(Base_Blob, AppendWithStringTermination_AnEmptyBlobAndAnEmptyString_OnlyAppe
 TEST(Base_Blob, AppendWithoutStringTermination_AnEmptyBlobAndAnEmptyString_OnlyAppendsAStringTerminatorCharacter)
 {
     // -- Given.
-    auto test = Blob::blob();
+    Blob test;
 
     // -- When.
     test->appendWithoutStringTermination("");
@@ -436,7 +436,7 @@ TEST(Base_Blob, AppendWithoutStringTermination_AnEmptyBlobAndAnEmptyString_OnlyA
 TEST(Base_Blob, Append_AnEmptyBlobAndACharacter_AppendsTheCharacter)
 {
     // -- Given.
-    auto test = Blob::blob();
+    Blob test;
 
     // -- When.
     test->append('G');

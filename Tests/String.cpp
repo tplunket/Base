@@ -41,12 +41,12 @@ static const byte utf16String[] = {
     0x00, 0x7A, 0x00, 0x7B, 0x00, 0x7C, 0x00, 0x7D, 0x00, 0x7E
 };
 
-constexpr const character *utf8String = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
+constexpr const character* utf8String = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
 
 TEST(Base_String, ClassName_AString_ClassNameIsReturnedCorrectly)
 {
     // -- Given.
-    auto test = String::string();
+    String test;
 
     // -- When.
     auto name = test->className();
@@ -58,8 +58,8 @@ TEST(Base_String, ClassName_AString_ClassNameIsReturnedCorrectly)
 TEST(Base_String, ClassName_TwoStrings_ClassNameIsActuallyTheSamePointer)
 {
     // -- Given.
-    auto test = String::string();
-    auto other = String::string();
+    String test;
+    String other;
 
     // -- When.
     auto name = test->className();
@@ -76,7 +76,7 @@ TEST(Base_String, StringContructorAndToUTF8_StringCreatedFromCharPointer_ToUTF8R
     auto test = String::stringWith(utf8String);
 
     // -- Then.
-    ASSERT_STREQ(utf8String, test->toUTF8());
+    ASSERT_STREQ(utf8String, test->asUTF8());
 }
 
 TEST(Base_String, StringContructorAndToUTF8_StringCreatedFromOtherString_ToUTF8ReturnsContainsCorrectValue)
@@ -88,7 +88,7 @@ TEST(Base_String, StringContructorAndToUTF8_StringCreatedFromOtherString_ToUTF8R
     auto otherTest = String::stringWith(test);
 
     // -- Then.
-    ASSERT_STREQ(utf8String, otherTest->toUTF8());
+    ASSERT_STREQ(utf8String, otherTest->asUTF8());
 }
 
 TEST(Base_String, StringWithUTF16_StringCreatedFromUTF16String_ContainsCorrectValue)
@@ -100,7 +100,7 @@ TEST(Base_String, StringWithUTF16_StringCreatedFromUTF16String_ContainsCorrectVa
     auto test = String::stringWithUTF16(blob);
     
     // -- Then.
-    ASSERT_STREQ(utf8String, test->toUTF8());
+    ASSERT_STREQ(utf8String, test->asUTF8());
 }
 
 TEST(Base_String, Description_StringWithAValue_ReturnsCorrectValue)
@@ -110,7 +110,7 @@ TEST(Base_String, Description_StringWithAValue_ReturnsCorrectValue)
 
     // -- When.
     // -- Then.
-    ASSERT_STREQ(utf8String, test->description()->toUTF8());
+    ASSERT_STREQ(utf8String, test->description()->asUTF8());
 }
 
 TEST(Base_String, OperatorEqual_TwoEqualStrings_ReturnsTrue)
@@ -257,7 +257,7 @@ TEST(Base_String, Length_StringWithEmptyString_ReturnsCorrectValue)
 {
     // -- Given.
     // -- When.
-    auto test = String::string();
+    String test;
 
     // -- Then.
     ASSERT_EQ(test->length(), 0);
@@ -287,7 +287,7 @@ TEST(Base_String, IsEmpty_StringWithEmptyString_ReturnsTrue)
 {
     // -- Given.
     // -- When.
-    auto test = String::string();
+    String test;
 
     // -- Then.
     ASSERT_TRUE(test->isEmpty());
@@ -327,7 +327,7 @@ TEST(Base_String, Append_AStringToAString_ReturnsCorrectValue)
     test1->append(test2);
 
     // -- Then.
-    ASSERT_STREQ("Hello This Is A Test.", test1->toUTF8());
+    ASSERT_STREQ("Hello This Is A Test.", test1->asUTF8());
 }
 
 TEST(Base_String, Append_AStringToACharacterPointer_ReturnsCorrectValue)
@@ -339,7 +339,7 @@ TEST(Base_String, Append_AStringToACharacterPointer_ReturnsCorrectValue)
     test->append("Is A Test.");
 
     // -- Then.
-    ASSERT_STREQ("Hello This Is A Test.", test->toUTF8());
+    ASSERT_STREQ("Hello This Is A Test.", test->asUTF8());
 }
 
 TEST(Base_String, SplitBySeperator_StringSeperatedBySpacesSpaces_ReturnsCorrectValue)
@@ -473,7 +473,7 @@ TEST(Base_String, LowerCaseString_StringWithUpperCaseCharacters_ReturnsOneWithLo
     auto result = test->lowerCaseString();
     
     // -- Then.
-    ASSERT_STREQ("mp3 grüßen", result->toUTF8());
+    ASSERT_STREQ("mp3 grüßen", result->asUTF8());
 }
 
 TEST(Base_String, UpperCaseString_StringWithLowerCaseCharacters_ReturnsOneWithUpperCaseUTFCharacters)
@@ -485,7 +485,7 @@ TEST(Base_String, UpperCaseString_StringWithLowerCaseCharacters_ReturnsOneWithUp
     auto result = test->upperCaseString();
     
     // -- Then.
-    ASSERT_STREQ("MP3 GRÜSSENSS", result->toUTF8());
+    ASSERT_STREQ("MP3 GRÜSSENSS", result->asUTF8());
 }
 
 TEST(Base_String, HasPrefix_StringWithAGivenPrefix_ReturnsTrue)

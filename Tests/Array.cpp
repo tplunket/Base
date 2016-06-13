@@ -91,7 +91,7 @@ TEST(Base_Array, OperatorSquareBrackets_AccessOnConstantArray_ReturnsCorrectValu
 
     // -- Then.
     ASSERT_EQ(1, test->length());
-    ASSERT_STREQ("Test", (*constTest)[0].toUTF8());
+    ASSERT_STREQ("Test", (*constTest)[0].asUTF8());
 }
 
 TEST(Base_Array, OperatorSquareBrackets_OutOfBoundsAccess_ThrowsException)
@@ -131,7 +131,7 @@ TEST(Base_Array, Append_AddingOneObject_AddsObjectCorrectly)
 
     // -- Then.
     ASSERT_EQ(1, test->length());
-    ASSERT_EQ(::strcmp((*test)[0].toUTF8(), "Test"), 0);
+    ASSERT_EQ(::strcmp((*test)[0].asUTF8(), "Test"), 0);
 }
 
 TEST(Base_Array, Append_AddingTwoObject_AddsObjectCorrectly)
@@ -145,8 +145,8 @@ TEST(Base_Array, Append_AddingTwoObject_AddsObjectCorrectly)
 
     // -- Then.
     ASSERT_EQ(2, test->length());
-    ASSERT_STREQ("Test", (*test)[0].toUTF8());
-    ASSERT_STREQ("Test2", (*test)[1].toUTF8());
+    ASSERT_STREQ("Test", (*test)[0].asUTF8());
+    ASSERT_STREQ("Test2", (*test)[1].asUTF8());
 }
 
 TEST(Base_Array, OperatorEqual_TwoDifferentArrays_ReturnFalse)
@@ -215,9 +215,9 @@ TEST(Base_Array, InsertAt_InsertingObjectAtTheBeginng_InsertsObjectCorrectly)
 
     // -- Then.
     ASSERT_EQ(3, test->length());
-    ASSERT_STREQ("Test3", (*test)[0].toUTF8());
-    ASSERT_STREQ("Test", (*test)[1].toUTF8());
-    ASSERT_STREQ("Test2", (*test)[2].toUTF8());
+    ASSERT_STREQ("Test3", (*test)[0].asUTF8());
+    ASSERT_STREQ("Test", (*test)[1].asUTF8());
+    ASSERT_STREQ("Test2", (*test)[2].asUTF8());
 }
 
 TEST(Base_Array, InsertAt_InsertingObjectAtTheEnd_InsertsObjectCorrectly)
@@ -232,9 +232,9 @@ TEST(Base_Array, InsertAt_InsertingObjectAtTheEnd_InsertsObjectCorrectly)
 
     // -- Then.
     ASSERT_EQ(3, test->length());
-    ASSERT_STREQ("Test", (*test)[0].toUTF8());
-    ASSERT_STREQ("Test2", (*test)[1].toUTF8());
-    ASSERT_STREQ("Test3", (*test)[2].toUTF8());
+    ASSERT_STREQ("Test", (*test)[0].asUTF8());
+    ASSERT_STREQ("Test2", (*test)[1].asUTF8());
+    ASSERT_STREQ("Test3", (*test)[2].asUTF8());
 }
 
 TEST(Base_Array, InsertAt_InsertingObjectInTheMiddle_InsertsObjectCorrectly)
@@ -249,9 +249,9 @@ TEST(Base_Array, InsertAt_InsertingObjectInTheMiddle_InsertsObjectCorrectly)
 
     // -- Then.
     ASSERT_EQ(3, test->length());
-    ASSERT_STREQ("Test", (*test)[0].toUTF8());
-    ASSERT_STREQ("Test3", (*test)[1].toUTF8());
-    ASSERT_STREQ("Test2", (*test)[2].toUTF8());
+    ASSERT_STREQ("Test", (*test)[0].asUTF8());
+    ASSERT_STREQ("Test3", (*test)[1].asUTF8());
+    ASSERT_STREQ("Test2", (*test)[2].asUTF8());
 }
 
 TEST(Base_Array, Find_ObjectInTheMiddleWithSameValue_ReturnsPositionCorrectly)
@@ -352,8 +352,8 @@ TEST(Base_Array, RemoveObjectAt_PositionOfObjectInTheMiddle_RemovesObjectCorrect
 
     // -- Then.
     ASSERT_EQ(2, test->length());
-    ASSERT_STREQ("Test", (*test)[0].toUTF8());
-    ASSERT_STREQ("Test3", (*test)[1].toUTF8());
+    ASSERT_STREQ("Test", (*test)[0].asUTF8());
+    ASSERT_STREQ("Test3", (*test)[1].asUTF8());
 }
 
 TEST(Base_Array, Remove_ObjectInTheMiddle_RemovesObjectCorrectly)
@@ -372,6 +372,6 @@ TEST(Base_Array, Remove_ObjectInTheMiddle_RemovesObjectCorrectly)
 
     // -- Then.
     ASSERT_EQ(2, test->length());
-    ASSERT_STREQ("Test", (*test)[0].toUTF8());
-    ASSERT_STREQ("Test3", (*test)[1].toUTF8());
+    ASSERT_STREQ("Test", (*test)[0].asUTF8());
+    ASSERT_STREQ("Test3", (*test)[1].asUTF8());
 }

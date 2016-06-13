@@ -30,6 +30,7 @@
 #include <algorithm>
 #include <vector>
 #include <mutex>
+#include <memory>
 
 namespace NxA {
 
@@ -40,11 +41,14 @@ template <class T> class Array {
 
     std::shared_ptr<ArrayInternal<T>> internal;
 
+    friend class MutableArray<T>;
+
 public:
     #pragma mark Constructors/Destructors
     Array() : internal{ std::make_shared<ArrayInternal<T>>() } { }
     Array(const Array&) = default;
     Array(Array&&) = default;
+    Array(const MutableArray<T>& other) : internal{ std::make_shared<ArrayInternal<T>>(*other.internal) } { }
     Array(MutableArray<T>&& other) : internal{ std::move(other.internal) } { }
     ~Array() = default;
 
@@ -57,7 +61,7 @@ public:
         m.lock();
 
         if (!buffer.get()) {
-            const character *format = "NxA::Array<%s>";
+            const character* format = "NxA::Array<%s>";
             count needed = snprintf(NULL, 0, format, T::staticClassName()) + 1;
             buffer = std::make_unique<character[]>(needed);
             snprintf(buffer.get(), needed, format, T::staticClassName());
@@ -79,8 +83,16 @@ public:
 
     #pragma mark Operators
     Array& operator=(Array&&) = default;
-    Array& operator=(const Array&) = delete;
-    boolean operator==(const Array& other) const
+    Array& operator=(const Array& other) = default;
+    bool operator==(const Array& other) const
+    {
+        if (internal == other.internal) {
+            return true;
+        }
+
+        return *internal == *(other.internal);
+    }
+    bool operator==(const MutableArray<T>& other) const
     {
         if (internal == other.internal) {
             return true;
@@ -132,19 +144,11 @@ public:
         return internal->length();
     }
 
-    const T& firstObject() const
+    T firstObject()
     {
         return internal->firstObject();
     }
-    T& firstObject()
-    {
-        return internal->firstObject();
-    }
-    const T& lastObject() const
-    {
-        return internal->lastObject();
-    }
-    T& lastObject()
+    T lastObject()
     {
         return internal->lastObject();
     }

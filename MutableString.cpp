@@ -29,7 +29,7 @@
 
 using namespace NxA;
 
-NXA_GENERATED_OBJECT_METHODS_DEFINITIONS_FOR(MutableString);
+NXA_GENERATED_MUTABLE_OBJECT_METHODS_DEFINITIONS_FOR(MutableString);
 
 #pragma mark Constructors/Destructors
 
@@ -53,9 +53,16 @@ MutableString MutableString::stringWithFormat(const character* format, ...)
     return { std::move(result) };
 }
 
-MutableString MutableString::stringWithUTF16(Blob other)
+MutableString MutableString::stringWithUTF16(const Blob& other)
 {
     return { Internal::stringWithUTF16(other) };
+}
+
+#pragma mark Operators
+
+bool MutableString::operator==(const character* other) const
+{
+    return internal->operator==(other);
 }
 
 #pragma mark Instance Methods

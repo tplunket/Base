@@ -39,31 +39,57 @@ class String;
 #define NXA_STR_VALUE_FOR(arg...) #arg
 
 #define NXA_GENERATED_INTERNAL_OBJECT_FORWARD_DECLARATION() \
-        private: \
-            struct Internal;
+        protected: \
+            struct Internal; \
+        private:
 
 #define NXA_GENERATED_INTERNAL_OBJECT_FORWARD_DECLARATION_USING(class_name...) \
         private:\
             using Internal = class_name; \
 
-#define NXA_GENERATED_OBJECT_METHODS_DECLARATIONS_FOR(class_name...) \
-        private: \
-            std::shared_ptr<Internal> internal; \
+#define NXA_GENERATED_NAME_AND_HASH_INTERNAL_OBJECT_METHODS_DECLARATIONS_FOR(class_name...) \
+        static const character* staticClassName() \
+        { \
+            return NXA_STR_VALUE_FOR(class_name); \
+        } \
+        static uinteger32 staticClassHash() \
+        { \
+            static uinteger32 result = String::hashFor(class_name::staticClassName()); \
+            return result; \
+        } \
+        virtual uinteger32 classHash() const override \
+        { \
+            return class_name::staticClassHash(); \
+        } \
+        virtual const character* className() const override \
+        { \
+            return class_name::staticClassName(); \
+        }
+
+#define NXA_GENERATED_COMMON_OBJECT_METHODS_DECLARATIONS_WITHOUT_INTERNAL_OBJECT_FOR(class_name...) \
+        protected: \
             class_name(std::shared_ptr<Internal>&&); \
             friend WeakReference<class_name>; \
         public: \
             class_name(class_name&&); \
-            class_name(const class_name&); \
             class_name(class_name&); \
             ~class_name(); \
+            class_name& operator=(class_name&&); \
+            class_name& operator=(const class_name&); \
+            bool operator==(const class_name&) const; \
+            bool operator!=(const class_name& other) const \
+            { \
+                return !this->operator==(other); \
+            } \
             static const character* staticClassName() \
             { \
                 return NXA_STR_VALUE_FOR(class_name); \
             } \
-            static uinteger32 staticClassHash(); \
-            class_name& operator=(class_name&&); \
-            class_name& operator=(const class_name&); \
-            boolean operator==(const class_name&) const; \
+            static uinteger32 staticClassHash() \
+            { \
+                static uinteger32 result = String::hashFor(class_name::staticClassName()); \
+                return result; \
+            } \
             uinteger32 classHash() const \
             { \
                 return class_name::staticClassHash(); \
@@ -75,17 +101,41 @@ class String;
             String description() const; \
         private:
 
-#define NXA_GENERATED_OBJECT_METHODS_DEFINITIONS_FOR(class_name...) \
+#define NXA_GENERATED_UNCOPYABLE_OBJECT_METHODS_DECLARATIONS_WITHOUT_INTERNAL_OBJECT_FOR(class_name...) \
+        public: \
+            class_name(const class_name&) = delete; \
+        NXA_GENERATED_COMMON_OBJECT_METHODS_DECLARATIONS_WITHOUT_INTERNAL_OBJECT_FOR(class_name) \
+
+#define NXA_GENERATED_UNCOPYABLE_OBJECT_METHODS_DECLARATIONS_FOR(class_name...) \
+        protected: \
+            std::shared_ptr<Internal> internal; \
+        public: \
+            class_name(const class_name&) = delete; \
+        NXA_GENERATED_COMMON_OBJECT_METHODS_DECLARATIONS_WITHOUT_INTERNAL_OBJECT_FOR(class_name)
+
+#define NXA_GENERATED_OBJECT_METHODS_DECLARATIONS_WITHOUT_INTERNAL_OBJECT_FOR(class_name...) \
+        public: \
+            class_name(const class_name&); \
+        NXA_GENERATED_COMMON_OBJECT_METHODS_DECLARATIONS_WITHOUT_INTERNAL_OBJECT_FOR(class_name) \
+
+#define NXA_GENERATED_OBJECT_METHODS_DECLARATIONS_FOR(class_name...) \
+        protected: \
+            std::shared_ptr<Internal> internal; \
+        public: \
+            class_name(const class_name&); \
+        NXA_GENERATED_COMMON_OBJECT_METHODS_DECLARATIONS_WITHOUT_INTERNAL_OBJECT_FOR(class_name)
+
+/*uinteger32 class_name::staticClassHash() \
+{ \
+    static uinteger32 result = String::hashFor(class_name::staticClassName()); \
+    return result; \
+} \*/
+
+#define NXA_GENERATED_OBJECT_METHODS_DEFINITIONS_WITH_INTERNAL_STORED_IN_FOR(internal_location, class_name...) \
         class_name::class_name(class_name&&) = default; \
-        class_name::class_name(const class_name& other) : internal{ std::make_shared<Internal>(*other.internal) } { } \
         class_name::class_name(class_name&) = default; \
-        class_name::class_name(std::shared_ptr<Internal>&& other) : internal{ std::move(other) } { } \
+        class_name::class_name(std::shared_ptr<Internal>&& other) : internal_location{ std::move(other) } { } \
         class_name::~class_name() = default; \
-        uinteger32 class_name::staticClassHash() \
-        { \
-            static uinteger32 result = String::hashFor(class_name::staticClassName()); \
-            return result; \
-        } \
         class_name& class_name::operator=(class_name&&) = default; \
         class_name& class_name::operator=(const class_name&) = default; \
         boolean class_name::operator==(const class_name& other) const \
@@ -95,3 +145,25 @@ class String;
             } \
             return *internal == *(other.internal); \
         }
+
+#define NXA_GENERATED_MUTABLE_OBJECT_METHODS_DEFINITIONS_WITH_INTERNAL_STORED_IN_FOR(internal_location, class_name...) \
+        class_name::class_name(const class_name& other) : internal_location{ std::make_shared<Internal>(*other.internal) } { } \
+        NXA_GENERATED_OBJECT_METHODS_DEFINITIONS_WITH_INTERNAL_STORED_IN_FOR(internal_location, class_name)
+
+#define NXA_GENERATED_IMMUTABLE_OBJECT_METHODS_DEFINITIONS_WITH_INTERNAL_STORED_IN_FOR(internal_location, class_name...) \
+        class_name::class_name(const class_name&) = default; \
+        NXA_GENERATED_OBJECT_METHODS_DEFINITIONS_WITH_INTERNAL_STORED_IN_FOR(internal_location, class_name)
+
+#define NXA_GENERATED_UNCOPYABLE_OBJECT_METHODS_DEFINITIONS_WITH_INTERNAL_STORED_IN_FOR(internal_location, class_name...) \
+        NXA_GENERATED_OBJECT_METHODS_DEFINITIONS_WITH_INTERNAL_STORED_IN_FOR(internal_location, class_name)
+
+#define NXA_GENERATED_MUTABLE_OBJECT_METHODS_DEFINITIONS_FOR(class_name...) \
+        class_name::class_name(const class_name& other) : internal{ std::make_shared<Internal>(*other.internal) } { } \
+        NXA_GENERATED_OBJECT_METHODS_DEFINITIONS_WITH_INTERNAL_STORED_IN_FOR(internal, class_name)
+
+#define NXA_GENERATED_IMMUTABLE_OBJECT_METHODS_DEFINITIONS_FOR(class_name...) \
+        class_name::class_name(const class_name&) = default; \
+        NXA_GENERATED_OBJECT_METHODS_DEFINITIONS_WITH_INTERNAL_STORED_IN_FOR(internal, class_name)
+
+#define NXA_GENERATED_UNCOPYABLE_OBJECT_METHODS_DEFINITIONS_FOR(class_name...) \
+        NXA_GENERATED_OBJECT_METHODS_DEFINITIONS_WITH_INTERNAL_STORED_IN_FOR(internal, class_name)

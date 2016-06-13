@@ -35,7 +35,7 @@ using namespace NxA;
 
 #pragma mark Class Methods
 
-String Date::formattedStringWithTimestampAndFormat(timestamp time, const character *format)
+String Date::formattedStringWithTimestampAndFormat(timestamp time, const character* format)
 {
     boost::posix_time::time_facet *facet = new boost::posix_time::time_facet(format);
     if (!facet) {

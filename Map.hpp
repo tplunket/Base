@@ -59,7 +59,7 @@ public:
         m.lock();
 
         if (!buffer.get()) {
-            const character *format = "NxA::Map<%s, %s>";
+            const character* format = "NxA::Map<%s, %s>";
             count needed = snprintf(NULL, 0, format, TypeName<Tkey>::get(), TypeName<Tvalue>::get()) + 1;
             buffer = std::make_unique<character[]>(needed);
             snprintf(buffer.get(), needed, format, TypeName<Tkey>::get(), TypeName<Tvalue>::get());
@@ -72,6 +72,26 @@ public:
 
     #pragma mark Iterators
     using const_iterator = typename MapInternal<const Tkey, Tvalue>::const_iterator;
+
+    #pragma mark Operators
+    Map& operator=(Map&&) = default;
+    Map& operator=(const Map& other) = default;
+    bool operator==(const Map& other) const
+    {
+        if (internal == other.internal) {
+            return true;
+        }
+
+        return *internal == *(other.internal);
+    }
+    bool operator==(const MutableMap<Tkey, Tvalue>& other) const
+    {
+        if (internal == other.internal) {
+            return true;
+        }
+
+        return *internal == *(other.internal);
+    }
 
     #pragma mark Instance Methods
     const_iterator begin() const

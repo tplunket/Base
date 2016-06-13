@@ -94,7 +94,7 @@ TEST(Base_Map, SetValueForKey_ValueFromAPointer_SetsCorrectValue)
     test->setValueForKey(String::stringWith(otherTestString), 0);
 
     // -- Then.
-    ASSERT_STREQ(otherTestString, test->valueForKey(0).toUTF8());
+    ASSERT_STREQ(otherTestString, test->valueForKey(0).asUTF8());
 }
 
 TEST(Base_Map, SetValueForKey_ValueFromAReference_SetsCorrectValue)
@@ -106,7 +106,7 @@ TEST(Base_Map, SetValueForKey_ValueFromAReference_SetsCorrectValue)
     test->setValueForKey(testString, 0);
 
     // -- Then.
-    ASSERT_STREQ(testString->toUTF8(), test->valueForKey(0).toUTF8());
+    ASSERT_STREQ(testString->asUTF8(), test->valueForKey(0).asUTF8());
 }
 
 TEST(Base_Map, SetValueForKey_ValueFromAPointerOverAnExistingValue_SetsCorrectValue)
@@ -120,7 +120,7 @@ TEST(Base_Map, SetValueForKey_ValueFromAPointerOverAnExistingValue_SetsCorrectVa
     test->setValueForKey(String::stringWith(otherTestString), 44);
 
     // -- Then.
-    ASSERT_STREQ(otherTestString, test->valueForKey(44).toUTF8());
+    ASSERT_STREQ(otherTestString, test->valueForKey(44).asUTF8());
 }
 
 TEST(Base_Map, SetValueForKey_ValueFromAReferenceOverAnExistingValue_SetsCorrectValue)
@@ -133,7 +133,7 @@ TEST(Base_Map, SetValueForKey_ValueFromAReferenceOverAnExistingValue_SetsCorrect
     test->setValueForKey(otherString, 44);
 
     // -- Then.
-    ASSERT_STREQ(otherString->toUTF8(), test->valueForKey(44).toUTF8());
+    ASSERT_STREQ(otherString->asUTF8(), test->valueForKey(44).asUTF8());
 }
 
 TEST(Base_Map, ValueForKey_MapWithAGivenValue_ReturnsCorrectValue)
@@ -145,7 +145,7 @@ TEST(Base_Map, ValueForKey_MapWithAGivenValue_ReturnsCorrectValue)
 
     // -- When.
     // -- Then.
-    ASSERT_STREQ(testString->toUTF8(), test->valueForKey(0x2323).toUTF8());
+    ASSERT_STREQ(testString->asUTF8(), test->valueForKey(0x2323).asUTF8());
 }
 
 TEST(Base_Map, ValueForKey_MapWithAnotherValue_ReturnsCorrectValue)
@@ -157,7 +157,7 @@ TEST(Base_Map, ValueForKey_MapWithAnotherValue_ReturnsCorrectValue)
 
     // -- When.
     // -- Then.
-    ASSERT_STREQ(otherString->toUTF8(), test->valueForKey(0x2423).toUTF8());
+    ASSERT_STREQ(otherString->asUTF8(), test->valueForKey(0x2423).asUTF8());
 }
 
 TEST(Base_Map, ValueForKey_LookingForAnUnknownKey_ThrowsException)
@@ -169,7 +169,7 @@ TEST(Base_Map, ValueForKey_LookingForAnUnknownKey_ThrowsException)
 
     // -- When.
     // -- Then.
-    ASSERT_THROW(test->valueForKey(0x23).toUTF8(), std::exception);
+    ASSERT_THROW(test->valueForKey(0x23).asUTF8(), std::exception);
 }
 
 TEST(Base_Map, ValueForKey_ConstMapWithAGivenValue_ReturnsCorrectValue)
@@ -182,7 +182,7 @@ TEST(Base_Map, ValueForKey_ConstMapWithAGivenValue_ReturnsCorrectValue)
 
     // -- When.
     // -- Then.
-    ASSERT_STREQ(testString->toUTF8(), constTest->valueForKey(0x2323).toUTF8());
+    ASSERT_STREQ(testString->asUTF8(), constTest->valueForKey(0x2323).asUTF8());
 }
 
 TEST(Base_Map, ValueForKey_ConstMapWithAnotherValue_ReturnsCorrectValue)
@@ -195,7 +195,7 @@ TEST(Base_Map, ValueForKey_ConstMapWithAnotherValue_ReturnsCorrectValue)
 
     // -- When.
     // -- Then.
-    ASSERT_STREQ(otherString->toUTF8(), constTest->valueForKey(0x2423).toUTF8());
+    ASSERT_STREQ(otherString->asUTF8(), constTest->valueForKey(0x2423).asUTF8());
 }
 
 TEST(Base_Map, ValueForKey_LookingForAnUnknownKeyInConstMap_ThrowsException)
@@ -208,7 +208,7 @@ TEST(Base_Map, ValueForKey_LookingForAnUnknownKeyInConstMap_ThrowsException)
 
     // -- When.
     // -- Then.
-    ASSERT_THROW(constTest->valueForKey(0x23).toUTF8(), std::exception);
+    ASSERT_THROW(constTest->valueForKey(0x23).asUTF8(), std::exception);
 }
 
 TEST(Base_Map, ContainsValueForKey_UnknownKey_ReturnsFalse)

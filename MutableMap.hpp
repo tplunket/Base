@@ -22,7 +22,7 @@
 #pragma once
 
 #include <Base/Types.hpp>
-#include <Base/String.hpp<>
+#include <Base/String.hpp>
 #include <Base/GeneratedObjectCode.hpp>
 #include <Base/Internal/Map.hpp>
 
@@ -45,8 +45,9 @@ template <typename Tkey, typename Tvalue> class MutableMap {
 public:
     #pragma mark Constructors/Destructors
     MutableMap() : internal{ std::make_shared<MapInternal<const Tkey, Tvalue>>() } { }
-    MutableMap(const MutableMap&) = default;
+    MutableMap(const MutableMap& other) : internal{ std::make_shared<Internal>(*other.internal) } { }
     MutableMap(MutableMap&&) = default;
+    MutableMap(const Map<Tkey, Tvalue>& other) : internal{ std::make_shared<Internal>(*other.internal) } { }
     ~MutableMap() = default;
         
     #pragma mark Class Methods
@@ -58,7 +59,7 @@ public:
         m.lock();
 
         if (!buffer.get()) {
-            const character *format = "NxA::Map<%s, %s>";
+            const character* format = "NxA::Map<%s, %s>";
             count needed = snprintf(NULL, 0, format, TypeName<Tkey>::get(), TypeName<Tvalue>::get()) + 1;
             buffer = std::make_unique<character[]>(needed);
             snprintf(buffer.get(), needed, format, TypeName<Tkey>::get(), TypeName<Tvalue>::get());
@@ -69,11 +70,30 @@ public:
         return buffer.get();
     }
 
-    #pragma mark Operators
+    #pragma mark Iterators
     using iterator = typename MapInternal<const Tkey, Tvalue>::iterator;
     using const_iterator = typename MapInternal<const Tkey, Tvalue>::const_iterator;
 
     #pragma mark Operators
+    MutableMap& operator=(MutableMap&&) = default;
+    MutableMap& operator=(const MutableMap& other) = default;
+    bool operator==(const MutableMap& other) const
+    {
+        if (internal == other.internal) {
+            return true;
+        }
+
+        return *internal == *(other.internal);
+    }
+    bool operator==(const Map<Tkey, Tvalue>& other) const
+    {
+        if (internal == other.internal) {
+            return true;
+        }
+
+        return *internal == *(other.internal);
+    }
+
     Tvalue& operator[](Tkey&& key)
     {
         return internal->operator[](std::move(key));

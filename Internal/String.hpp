@@ -86,7 +86,11 @@ struct StringInternal : public Object::Internal, public std::string
         return std::make_shared<StringInternal>(convert.to_bytes(reinterpret_cast<const char16_t*>(characters), reinterpret_cast<const char16_t*>(characters + length)));
     }
 
-    #pragma mark Instance Methods
+    #pragma mark Operators
+    bool operator==(const character* other) const
+    {
+        return this->std::string::compare(other) == 0;
+    }
 
     #pragma mark Instance Methods
     count length() const
@@ -153,7 +157,7 @@ struct StringInternal : public Object::Internal, public std::string
             results.append(String(line));
         }
 
-        return std::move(results);
+        return { std::move(results) };
     }
 
     std::shared_ptr<StringInternal> utfSeek(count skip) const
@@ -259,12 +263,12 @@ struct StringInternal : public Object::Internal, public std::string
         return pos == (this->length() - length);
     }
 
-    count indexOfFirstOccurenceOf(String other) const
+    count indexOfFirstOccurenceOf(const String& other) const
     {
         return this->indexOfFirstOccurenceOf(other.asUTF8());
     }
 
-    count indexOfLastOccurenceOf(String other) const
+    count indexOfLastOccurenceOf(const String& other) const
     {
         return this->indexOfLastOccurenceOf(other.asUTF8());
     }

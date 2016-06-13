@@ -27,8 +27,7 @@
 
 namespace NxA {
 
-template <class T> class WeakReference : protected std::weak_ptr<typename T::Internal> {
-
+template <class T> class WeakReference : private std::weak_ptr<typename T::Internal> {
 public:
     #pragma mark Constructors & Destructors
     WeakReference() = default;
@@ -36,6 +35,12 @@ public:
     WeakReference(WeakReference<T>&&) = default;
     WeakReference(const T& other) : std::weak_ptr<typename T::Internal>{ other.internal } { }
     ~WeakReference() = default;
+
+    #pragma mark Operators
+    void operator=(WeakReference&& other)
+    {
+        this->std::weak_ptr<typename T::Internal>::operator=(std::move(other));
+    }
 
     #pragma mark Instance Methods
     boolean isValid() const

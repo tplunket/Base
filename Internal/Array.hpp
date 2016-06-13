@@ -91,7 +91,14 @@ template <class T> struct ArrayInternal : public Object::Internal, public std::v
     {
         return this->size();
     }
-    void emptyAll()
+    void remove(const T& object)
+    {
+        auto position = this->find(object);
+        if (position != this->cend()) {
+            this->erase(position);
+        }
+    }
+    void removeAll()
     {
         return this->clear();
     }
@@ -100,52 +107,37 @@ template <class T> struct ArrayInternal : public Object::Internal, public std::v
     {
         this->push_back(object);
     }
-    void append(const ArrayInternal<T> other)
+    void append(const ArrayInternal<T>& other)
     {
         this->push_back(other);
     }
 
-    const T& firstObject() const
+    T firstObject() const
     {
         NXA_ASSERT_TRUE(this->size() != 0);
         return this->operator[](0);
     }
-    T& firstObject()
-    {
-        return const_cast<T&>((static_cast<const ArrayInternal<T>*>(this))->firstObject());
-    }
-    const T& lastObject() const
+    T lastObject() const
     {
         count length = this->size();
         NXA_ASSERT_TRUE(length != 0);
         return this->operator[](length - 1);
     }
-    T& lastObject()
-    {
-        return const_cast<T&>((static_cast<const ArrayInternal<T>*>(this))->lastObject());
-    }
     void insertAt(T object, const_iterator pos)
     {
         this->insert(pos, object);
     }
-    boolean contains(const T object) const
+    boolean contains(const T& object) const
     {
         return this->find(object) != this->end();
     }
-    const_iterator find(const T object) const
+    const_iterator find(const T& object) const
     {
         return std::find(this->begin(), this->end(), object);
     }
     void removeObjectAt(const_iterator objectPosition)
     {
         this->erase(objectPosition);
-    }
-    void remove(const T& object)
-    {
-        auto position = this->find(object);
-        if (position != this->cend()) {
-            this->erase(position);
-        }
     }
 
     String description() const

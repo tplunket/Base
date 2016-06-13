@@ -27,7 +27,7 @@
 
 using namespace NxA;
 
-NXA_GENERATED_OBJECT_METHODS_DEFINITIONS_FOR(MutableBlob);
+NXA_GENERATED_MUTABLE_OBJECT_METHODS_DEFINITIONS_FOR(MutableBlob);
 
 #pragma mark Constructors/Destructors
 
@@ -47,17 +47,17 @@ MutableBlob MutableBlob::blobWithMemoryAndSize(const byte* other, count size)
     return { Internal::blobWithMemoryAndSize(other, size) };
 }
 
-MutableBlob MutableBlob::blobWithBase64String(String string)
+MutableBlob MutableBlob::blobWithBase64String(const String& string)
 {
     return { Internal::blobWithBase64String(string) };
 }
 
-MutableBlob MutableBlob::blobWithStringWithTerminator(String string)
+MutableBlob MutableBlob::blobWithStringWithTerminator(const String& string)
 {
     return { Internal::blobWithStringWithTerminator(string) };
 }
 
-MutableBlob MutableBlob::blobWithStringWithoutTerminator(String string)
+MutableBlob MutableBlob::blobWithStringWithoutTerminator(const String& string)
 {
     return { Internal::blobWithStringWithoutTerminator(string) };
 }
@@ -96,7 +96,7 @@ void MutableBlob::fillWithZeros()
     return internal->fillWithZeros();
 }
 
-void MutableBlob::append(Blob other)
+void MutableBlob::append(const Blob& other)
 {
     return internal->append(*other.internal);
 }

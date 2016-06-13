@@ -119,7 +119,7 @@ String File::removePrefixFromPath(const String& prefix, const String& path)
 {
     MutableString fullPrefix(prefix);
 
-    const character *separator;
+    const character* separator;
     if (Platform::Kind::CurrentPlatform == Platform::Kind::Windows) {
         separator = "\\";
     }
@@ -203,7 +203,7 @@ Array<String> File::pathsForFilesInDirectory(const String& path)
         for (boost::filesystem::directory_iterator iterator(boostPath); iterator != end_iterator; ++iterator) {
             auto& pathFound = iterator->path();
             if (boost::filesystem::is_regular_file(pathFound)) {
-                pathsFound.append(std::move(String::stringWithUTF8(pathFound.c_str())));
+                pathsFound.append(String::stringWithUTF8(pathFound.c_str()));
             }
         }
     }

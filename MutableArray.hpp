@@ -45,8 +45,9 @@ template <class T> class MutableArray {
 public:
     #pragma mark Constructors/Destructors
     MutableArray() : internal{ std::make_shared<Internal>() } { }
+    MutableArray(const MutableArray& other) : internal{ std::make_shared<Internal>(*other.internal) } { }
     MutableArray(MutableArray&&) = default;
-    MutableArray(const MutableArray&) = default;
+    MutableArray(const Array<T>& other) : internal{ std::make_shared<Internal>(*other.internal) } { }
     ~MutableArray() = default;
 
     #pragma mark Class Methods
@@ -58,7 +59,7 @@ public:
         m.lock();
 
         if (!buffer.get()) {
-            const character *format = "NxA::MutableArray<%s>";
+            const character* format = "NxA::MutableArray<%s>";
             count needed = snprintf(NULL, 0, format, T::staticClassName()) + 1;
             buffer = std::make_unique<character[]>(needed);
             snprintf(buffer.get(), needed, format, T::staticClassName());
@@ -80,8 +81,16 @@ public:
 
     #pragma mark Operators
     MutableArray& operator=(MutableArray&&) = default;
-    MutableArray& operator=(const MutableArray&) = delete;
-    boolean operator==(const MutableArray& other) const
+    MutableArray& operator=(const MutableArray& other) = default;
+    bool operator==(const MutableArray& other) const
+    {
+        if (internal == other.internal) {
+            return true;
+        }
+
+        return *internal == *(other.internal);
+    }
+    bool operator==(const Array<T>& other) const
     {
         if (internal == other.internal) {
             return true;
@@ -132,36 +141,36 @@ public:
     {
         return internal->append(object);
     }
-    void append(Array<T> object)
+    void append(const Array<T>& object)
     {
         return internal->append(object);
+    }
+    void remove(const T& object)
+    {
+        internal->remove(object);
+    }
+    void removeAll()
+    {
+        internal->removeAll();
     }
     count length() const
     {
         return internal->length();
     }
 
-    const T firstObject() const
-    {
-        return internal->firstObject();
-    }
     T firstObject()
     {
         return internal->firstObject();
-    }
-    const T lastObject() const
-    {
-        return internal->lastObject();
     }
     T lastObject()
     {
         return internal->lastObject();
     }
-    boolean contains(const T object) const
+    boolean contains(const T& object) const
     {
         return internal->contains(object);
     }
-    const_iterator find(const T object) const
+    const_iterator find(const T& object) const
     {
         return internal->find(object);
     }

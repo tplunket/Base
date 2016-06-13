@@ -44,6 +44,7 @@ public:
     String(const character*, count);
     String(MutableString&&);
     explicit String(const std::string&);
+    explicit String(const std::string&&);
 
     // -- Provide a statically-sized character constant, which saves the runtime from computing the length.
     template<count size> explicit String(const character (&chars)[size]) : String{ chars, size - 1 } { }
@@ -63,6 +64,13 @@ public:
     #pragma mark Class Methods
     static uinteger32 hashFor(const character*);
     count lengthOf(const character* str);
+
+    #pragma mark Operators
+    bool operator==(const character*) const;
+    bool operator!=(const character* other) const
+    {
+        return !this->operator==(other);
+    }
 
     #pragma mark Instance Methods
     count length() const;

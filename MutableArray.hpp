@@ -141,9 +141,15 @@ public:
     {
         return internal->append(object);
     }
-    void append(const Array<T>& object)
+    void append(const Array<T>& objects)
     {
-        return internal->append(object);
+        for (auto& object : objects) {
+            internal->append(object);
+        }
+    }
+    void insertAt(T object, const_iterator position)
+    {
+        internal->insertAt(object, position);
     }
     void remove(const T& object)
     {
@@ -173,6 +179,10 @@ public:
     const_iterator find(const T& object) const
     {
         return internal->find(object);
+    }
+    void removeObjectAt(const_iterator objectPosition)
+    {
+        internal->removeObjectAt(objectPosition);
     }
 
     String description() const

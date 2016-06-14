@@ -60,7 +60,6 @@
 namespace NxA {
 
 class String;
-template <class T> class Pointer;
 
 class Exception : public std::runtime_error {
 public:

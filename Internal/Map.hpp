@@ -80,26 +80,40 @@ template <typename Tkey, typename Tvalue> struct MapInternal : public Object::In
         return this->std::map<const Tkey, Tvalue>::cend();
     }
 
-    void erase(const Tkey& key)
-    {
-        this->std::map<const Tkey, Tvalue>::erase(key);
-    }
-
     count length() const
     {
         return this->std::map<const Tkey, Tvalue>::size();
     }
 
-    Tvalue& valueForKey(const Tkey& key) const
+    Tvalue& valueForKey(const Tkey& key)
+    {
+        iterator pos = this->std::map<const Tkey, Tvalue>::find(key);
+        NXA_ASSERT_TRUE(pos != this->cend());
+
+        return pos->second;
+    }
+    const Tvalue& valueForKey(const Tkey& key) const
     {
         const_iterator pos = this->std::map<const Tkey, Tvalue>::find(key);
-        NxA_ASSERT_TRUE(pos != this->cend());
+        NXA_ASSERT_TRUE(pos != this->cend());
 
-        return *pos;
+        return pos->second;
     }
     boolean containsValueForKey(const Tkey& key) const
     {
         return this->std::map<const Tkey, Tvalue>::find(key) != this->end();
+    }
+    void removeAll()
+    {
+        this->erase();
+    }
+    void removeValueForKey(const Tkey& key)
+    {
+        this->erase(key);
+    }
+    void removeValueAt(const_iterator position)
+    {
+        this->erase(position);
     }
 };
 

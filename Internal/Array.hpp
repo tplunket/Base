@@ -111,6 +111,10 @@ template <class T> struct ArrayInternal : public Object::Internal, public std::v
     {
         this->push_back(other);
     }
+    void insertAt(T object, const_iterator pos)
+    {
+        this->insert(pos, object);
+    }
 
     T firstObject() const
     {
@@ -122,10 +126,6 @@ template <class T> struct ArrayInternal : public Object::Internal, public std::v
         count length = this->size();
         NXA_ASSERT_TRUE(length != 0);
         return this->operator[](length - 1);
-    }
-    void insertAt(T object, const_iterator pos)
-    {
-        this->insert(pos, object);
     }
     boolean contains(const T& object) const
     {

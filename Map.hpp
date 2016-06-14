@@ -116,7 +116,11 @@ public:
         return internal->length();
     }
 
-    Tvalue& valueForKey(const Tkey& key) const
+    Tvalue& valueForKey(const Tkey& key)
+    {
+        return internal->valueForKey(key);
+    }
+    const Tvalue& valueForKey(const Tkey& key) const
     {
         return internal->valueForKey(key);
     }

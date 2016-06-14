@@ -128,23 +128,35 @@ public:
     {
         return internal->cend();
     }
-    void erase(const Tkey& key)
-    {
-        return internal->erase();
-    }
 
     count length() const
     {
         return internal->length();
     }
 
-    Tvalue& valueForKey(const Tkey& key) const
+    Tvalue& valueForKey(const Tkey& key)
+    {
+        return internal->valueForKey(key);
+    }
+    const Tvalue& valueForKey(const Tkey& key) const
     {
         return internal->valueForKey(key);
     }
     boolean containsValueForKey(const Tkey& key) const
     {
         return internal->containsValueForKey(key);
+    }
+    void removeValueAt(const_iterator position)
+    {
+        return internal->removeValueAt(position);
+    }
+    void removeValueForKey(const Tkey& key)
+    {
+        return internal->removeValueForKey(key);
+    }
+    void removeAll()
+    {
+        return internal->removeAll();
     }
 };
 

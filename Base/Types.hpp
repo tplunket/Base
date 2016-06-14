@@ -70,6 +70,20 @@ makeOptional(T&& v) {
     return Optional<typename std::decay<T>::type>(std::forward<T>(v));
 }
 
+// -- prevent derived types from being copied
+class NoCopy
+{
+protected:
+    NoCopy() = default;
+    ~NoCopy() = default;
+
+    NoCopy(NoCopy&&) = default;
+    NoCopy& operator=(NoCopy&&) = default;
+
+    NoCopy(NoCopy const&) = delete;
+    NoCopy& operator=(NoCopy const&) = delete;
+};
+
 // -- Template used by default to produce the name of unknown types.
 template <typename T> struct TypeName {
     static const character* get() {

@@ -31,7 +31,8 @@ template <class T> class Pointer : protected std::shared_ptr<T> {
     friend class WeakPointer<T>;
 
 public:
-    #pragma mark Constructors & Destructors
+#pragma mark Constructors & Destructors
+    Pointer() = default;
     Pointer(const std::shared_ptr<T>& other) : std::shared_ptr<T>(other) { }
     Pointer(const Pointer<T>& other) : std::shared_ptr<T>(other) { }
     ~Pointer() = default;
@@ -85,8 +86,15 @@ public:
         return *this;
     }
 
-protected:
-    Pointer() = default;
+
+    template<class ...Args>
+    static Pointer<T> makePointer(Args&& ...args)
+    {
+        return std::make_shared<T>(args...);
+    }
 };
+
+
+
 
 NXA_EXIT_NAMESPACE;

@@ -52,7 +52,7 @@ TEST(Base_String, ClassName_AString_ClassNameIsReturnedCorrectly)
     auto name = test.className();
 
     // -- Then.
-    ASSERT_STREQ("NxA::String", name);
+    ASSERT_STREQ("String", name);
 }
 
 TEST(Base_String, ClassName_TwoStrings_ClassNameIsActuallyTheSamePointer)
@@ -640,7 +640,7 @@ TEST(Base_String, StaticClassHash_AString_ReturnsExpectedValue)
     // -- Given.
     // -- When.
     // -- Then.
-    ASSERT_EQ(String::staticClassHash(), String::hashFor("NxA::String"));
+    ASSERT_EQ(String::staticClassHash(), String::hashFor("String"));
 }
 
 TEST(Base_String, ClassHash_AString_ReturnsExpectedValue)

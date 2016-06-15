@@ -64,7 +64,7 @@ TEST(Base_Array, ClassName_ArrayOfStrings_ClassNameIsReturnedCorrectly)
     auto name = test.className();
 
     // -- Then.
-    ASSERT_STREQ("NxA::Array<NxA::String>", name);
+    ASSERT_STREQ("MutableArray<String>", name);
 }
 
 TEST(Base_Array, ClassName_TwoArraysOfStrings_ClassNameIsActuallyTheSamePointer)

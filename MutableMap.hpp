@@ -59,7 +59,7 @@ public:
         m.lock();
 
         if (!buffer.get()) {
-            const character* format = "NxA::Map<%s, %s>";
+            const character* format = "MutableMap<%s, %s>";
             count needed = snprintf(NULL, 0, format, TypeName<Tkey>::get(), TypeName<Tvalue>::get()) + 1;
             buffer = std::make_unique<character[]>(needed);
             snprintf(buffer.get(), needed, format, TypeName<Tkey>::get(), TypeName<Tvalue>::get());

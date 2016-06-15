@@ -42,7 +42,7 @@ TEST(Base_Map, ClassName_MapOfUInteger32AndUInteger32_ClassNameIsReturnedCorrect
     auto name = test.className();
 
     // -- Then.
-    ASSERT_STREQ("NxA::Map<uinteger32, uinteger32>", name);
+    ASSERT_STREQ("Map<uinteger32, uinteger32>", name);
 }
 
 TEST(Base_Map, ClassName_MapOfUInteger32AndMapOfBytesAndArrayOfStrings_ClassNameIsReturnedCorrectly)
@@ -54,7 +54,7 @@ TEST(Base_Map, ClassName_MapOfUInteger32AndMapOfBytesAndArrayOfStrings_ClassName
     auto name = test.className();
 
     // -- Then.
-    ASSERT_STREQ("NxA::Map<uinteger32, NxA::Map<byte, NxA::Array<NxA::String>>>", name);
+    ASSERT_STREQ("Map<uinteger32, Map<byte, Array<String>>>", name);
 }
 
 TEST(Base_Map, ClassName_TwoMapsOfUInteger32AndMapOfBytesAndArrayOfStrings_ClassNameIsActuallyTheSamePointer)

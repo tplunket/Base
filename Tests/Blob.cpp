@@ -82,7 +82,7 @@ TEST(Base_Blob, ClassName_ABlob_ClassNameIsReturnedCorrectly)
     auto name = test.className();
 
     // -- Then.
-    ASSERT_STREQ("NxA::Blob", name);
+    ASSERT_STREQ("Blob", name);
 }
 
 TEST(Base_Blob, ClassName_TwoBlobs_ClassNameIsActuallyTheSamePointer)

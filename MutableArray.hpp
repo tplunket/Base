@@ -59,7 +59,7 @@ public:
         m.lock();
 
         if (!buffer.get()) {
-            const character* format = "NxA::MutableArray<%s>";
+            const character* format = "MutableArray<%s>";
             count needed = snprintf(NULL, 0, format, T::staticClassName()) + 1;
             buffer = std::make_unique<character[]>(needed);
             snprintf(buffer.get(), needed, format, T::staticClassName());

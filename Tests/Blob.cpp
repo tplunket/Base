@@ -79,7 +79,7 @@ TEST(Base_Blob, ClassName_ABlob_ClassNameIsReturnedCorrectly)
     Blob test;
 
     // -- When.
-    auto name = test->className();
+    auto name = test.className();
 
     // -- Then.
     ASSERT_STREQ("NxA::Blob", name);
@@ -92,8 +92,8 @@ TEST(Base_Blob, ClassName_TwoBlobs_ClassNameIsActuallyTheSamePointer)
     Blob other;
 
     // -- When.
-    auto name = test->className();
-    auto otherName = other->className();
+    auto name = test.className();
+    auto otherName = other.className();
 
     // -- Then.
     ASSERT_EQ(otherName, name);
@@ -106,7 +106,7 @@ TEST(Base_Blob, Blob_CallConstructor_BlobCreatedCorrectly)
     Blob test;
 
     // -- Then.
-    ASSERT_EQ(0, test->size());
+    ASSERT_EQ(0, test.size());
 }
 
 TEST(Base_Blob, BlobWithCapacity_AGivenSize_BlobCreatedCorrectly)
@@ -115,11 +115,11 @@ TEST(Base_Blob, BlobWithCapacity_AGivenSize_BlobCreatedCorrectly)
     constexpr count testSize = 32;
 
     // -- When.
-    auto test = Blob::blobWithCapacity(testSize);
+    auto test = MutableBlob::blobWithCapacity(testSize);
 
     // -- Then.
-    ASSERT_EQ(testSize, test->size());
-    auto data = test->data();
+    ASSERT_EQ(testSize, test.size());
+    auto data = test.data();
     for (integer i = 0; i < testSize; ++i) {
         ASSERT_EQ(0, data[i]);
     }
@@ -132,8 +132,8 @@ TEST(Base_Blob, BlobWithMemoryAndSize_SomeDataInMemory_BlobCreatedCorrectly)
     auto test = Blob::blobWithMemoryAndSize(testData, sizeof(testData));
 
     // -- Then.
-    ASSERT_EQ(sizeof(testData), test->size());
-    ASSERT_EQ(0, ::memcmp(test->data(), testData, sizeof(testData)));
+    ASSERT_EQ(sizeof(testData), test.size());
+    ASSERT_EQ(0, ::memcmp(test.data(), testData, sizeof(testData)));
 }
 
 TEST(Base_Blob, blobWithBase64String_ABase64String_BlobCreatedCorrectly)
@@ -143,8 +143,8 @@ TEST(Base_Blob, blobWithBase64String_ABase64String_BlobCreatedCorrectly)
     auto test = Blob::blobWithBase64String(testBase64String);
 
     // -- Then.
-    ASSERT_EQ(sizeof(testBinarySourceData), test->size());
-    ASSERT_EQ(0, ::memcmp(test->data(), testBinarySourceData, sizeof(testBinarySourceData)));
+    ASSERT_EQ(sizeof(testBinarySourceData), test.size());
+    ASSERT_EQ(0, ::memcmp(test.data(), testBinarySourceData, sizeof(testBinarySourceData)));
 }
 
 TEST(Base_Blob, BlobWith_BlobCreatedFromAnotherBlob_BlobCreatedCorrectly)
@@ -153,11 +153,11 @@ TEST(Base_Blob, BlobWith_BlobCreatedFromAnotherBlob_BlobCreatedCorrectly)
     auto source = Blob::blobWithMemoryAndSize(testData, sizeof(testData));
 
     // -- When.
-    auto test = Blob::blobWith(source);
+    auto test = Blob(source);
 
     // -- Then.
-    ASSERT_EQ(sizeof(testData), test->size());
-    ASSERT_EQ(0, ::memcmp(test->data(), testData, sizeof(testData)));
+    ASSERT_EQ(sizeof(testData), test.size());
+    ASSERT_EQ(0, ::memcmp(test.data(), testData, sizeof(testData)));
 }
 
 TEST(Base_Blob, base64String_hashFor_ReturnsTheCorrectHash)
@@ -167,8 +167,8 @@ TEST(Base_Blob, base64String_hashFor_ReturnsTheCorrectHash)
     auto result = Blob::hashFor(testData, sizeof(testData));
 
     // -- Then.
-    ASSERT_EQ(sizeof(testHash), result->size());
-    ASSERT_EQ(0, ::memcmp(result->data(), testHash, sizeof(testHash)));
+    ASSERT_EQ(sizeof(testHash), result.size());
+    ASSERT_EQ(0, ::memcmp(result.data(), testHash, sizeof(testHash)));
 }
 
 TEST(Base_Blob, base64String_base64StringFor_ReturnsTheCorrectBase64String)
@@ -178,7 +178,7 @@ TEST(Base_Blob, base64String_base64StringFor_ReturnsTheCorrectBase64String)
     auto result = Blob::base64StringFor(testBinarySourceData, sizeof(testBinarySourceData));
 
     // -- Then.
-    ASSERT_EQ(testBase64String->length(), result->length());
+    ASSERT_EQ(testBase64String.length(), result.length());
     ASSERT_EQ(testBase64String, result);
 }
 
@@ -189,8 +189,8 @@ TEST(Base_Blob, OperatorSquareBrackets_BlobWithDataInIt_ReturnsCorrectData)
     auto test = Blob::blobWithMemoryAndSize(testData, sizeof(testData));
 
     // -- Then.
-    ASSERT_EQ(sizeof(testData), test->size());
-    ASSERT_EQ(0, ::memcmp(test->data(), testData, sizeof(testData)));
+    ASSERT_EQ(sizeof(testData), test.size());
+    ASSERT_EQ(0, ::memcmp(test.data(), testData, sizeof(testData)));
 }
 
 TEST(Base_Blob, OperatorSquareBrackets_ConstantBlobWithDataInIt_ReturnsCorrectData)
@@ -200,8 +200,8 @@ TEST(Base_Blob, OperatorSquareBrackets_ConstantBlobWithDataInIt_ReturnsCorrectDa
     auto const test = Blob::blobWithMemoryAndSize(testData, sizeof(testData));
 
     // -- Then.
-    ASSERT_EQ(sizeof(testData), test->size());
-    ASSERT_EQ(0, ::memcmp(test->data(), testData, sizeof(testData)));
+    ASSERT_EQ(sizeof(testData), test.size());
+    ASSERT_EQ(0, ::memcmp(test.data(), testData, sizeof(testData)));
 }
 
 TEST(Base_Blob, OperatorSquareBrackets_OutOfBoundsAccess_ThrowsAnException)
@@ -211,9 +211,9 @@ TEST(Base_Blob, OperatorSquareBrackets_OutOfBoundsAccess_ThrowsAnException)
     auto test = Blob::blobWithMemoryAndSize(testData, sizeof(testData));
 
     // -- Then.
-    ASSERT_THROW((*test)[-2], NxA::AssertionFailed);
-    ASSERT_THROW((*test)[sizeof(testData)], NxA::AssertionFailed);
-    ASSERT_THROW((*test)[sizeof(testData) + 46], NxA::AssertionFailed);
+    ASSERT_THROW(test[-2], NxA::AssertionFailed);
+    ASSERT_THROW(test[sizeof(testData)], NxA::AssertionFailed);
+    ASSERT_THROW(test[sizeof(testData) + 46], NxA::AssertionFailed);
 }
 
 TEST(Base_Blob, OperatorSquareBrackets_OutOfBoundsAccessOnConstantBlob_ThrowsAnException)
@@ -223,9 +223,9 @@ TEST(Base_Blob, OperatorSquareBrackets_OutOfBoundsAccessOnConstantBlob_ThrowsAnE
     auto const test = Blob::blobWithMemoryAndSize(testData, sizeof(testData));
 
     // -- Then.
-    ASSERT_THROW((*test)[-2], NxA::AssertionFailed);
-    ASSERT_THROW((*test)[sizeof(testData)], NxA::AssertionFailed);
-    ASSERT_THROW((*test)[sizeof(testData) + 46], NxA::AssertionFailed);
+    ASSERT_THROW(test[-2], NxA::AssertionFailed);
+    ASSERT_THROW(test[sizeof(testData)], NxA::AssertionFailed);
+    ASSERT_THROW(test[sizeof(testData) + 46], NxA::AssertionFailed);
 }
 
 TEST(Base_Blob, Data_BlobIsEmpty_ThrowsAnException)
@@ -235,7 +235,7 @@ TEST(Base_Blob, Data_BlobIsEmpty_ThrowsAnException)
     Blob test;
 
     // -- Then.
-    ASSERT_THROW(test->data(), NxA::AssertionFailed);
+    ASSERT_THROW(test.data(), NxA::AssertionFailed);
 }
 
 TEST(Base_Blob, Data_ConstantBlobIsEmpty_ThrowsAnException)
@@ -245,7 +245,7 @@ TEST(Base_Blob, Data_ConstantBlobIsEmpty_ThrowsAnException)
     Blob test;
 
     // -- Then.
-    ASSERT_THROW(test->data(), NxA::AssertionFailed);
+    ASSERT_THROW(test.data(), NxA::AssertionFailed);
 }
 
 TEST(Base_Blob, OperatorEqual_TwoEqualBlobs_ReturnsTrue)
@@ -254,7 +254,7 @@ TEST(Base_Blob, OperatorEqual_TwoEqualBlobs_ReturnsTrue)
     auto source = Blob::blobWithMemoryAndSize(testData, sizeof(testData));
 
     // -- When.
-    auto test = Blob::blobWith(source);
+    auto test = Blob(source);
 
     // -- Then.
     ASSERT_TRUE(source == test);
@@ -275,14 +275,14 @@ TEST(Base_Blob, OperatorEqual_TwoUnequalBlobs_ReturnsFalse)
 TEST(Base_Blob, FillWithZeros_ABlobWithContent_FillsTheBlobWithZeros)
 {
     // -- Given.
-    auto test = Blob::blobWithMemoryAndSize(testData, sizeof(testData));
+    auto test = MutableBlob::blobWithMemoryAndSize(testData, sizeof(testData));
 
     // -- When.
-    test->fillWithZeros();
+    test.fillWithZeros();
 
     // -- Then.
-    ASSERT_EQ(sizeof(testData), test->size());
-    auto data = test->data();
+    ASSERT_EQ(sizeof(testData), test.size());
+    auto data = test.data();
     for (integer i = 0; i < sizeof(testData); ++i) {
         ASSERT_EQ(0, data[i]);
     }
@@ -294,11 +294,11 @@ TEST(Base_Blob, Hash_ABlobWithContent_ReturnsTheCorrectHashValue)
     auto test = Blob::blobWithMemoryAndSize(testData, sizeof(testData));
 
     // -- When.
-    auto result = test->hash();
+    auto result = test.hash();
 
     // -- Then.
-    ASSERT_EQ(sizeof(testHash), result->size());
-    ASSERT_EQ(0, ::memcmp(result->data(), testHash, sizeof(testHash)));
+    ASSERT_EQ(sizeof(testHash), result.size());
+    ASSERT_EQ(0, ::memcmp(result.data(), testHash, sizeof(testHash)));
 }
 
 TEST(Base_Blob, base64String_ABlobWithBinaryData_ReturnsTheCorrectBase64String)
@@ -307,80 +307,80 @@ TEST(Base_Blob, base64String_ABlobWithBinaryData_ReturnsTheCorrectBase64String)
     auto test = Blob::blobWithMemoryAndSize(testBinarySourceData, sizeof(testBinarySourceData));
 
     // -- When.
-    auto result = test->base64String();
+    auto result = test.base64String();
 
     // -- Then.
-    ASSERT_EQ(testBase64String->length(), result->length());
+    ASSERT_EQ(testBase64String.length(), result.length());
     ASSERT_EQ(testBase64String, result);
 }
 
 TEST(Base_Blob, Append_AnEmptyBlobAndBlobWithContent_AppendTheContentCorrectly)
 {
     // -- Given.
-    Blob test;
+    MutableBlob test;
     auto test2 = Blob::blobWithMemoryAndSize(testData, sizeof(testData));
 
     // -- When.
-    test->append(test2);
+    test.append(test2);
 
     // -- Then.
-    ASSERT_EQ(sizeof(testData), test->size());
-    ASSERT_EQ(0, ::memcmp(test->data(), testData, sizeof(testData)));
+    ASSERT_EQ(sizeof(testData), test.size());
+    ASSERT_EQ(0, ::memcmp(test.data(), testData, sizeof(testData)));
 }
 
 TEST(Base_Blob, Append_TwoBlobsWithContent_AppendTheContentCorrectly)
 {
     // -- Given.
-    auto test = Blob::blobWithMemoryAndSize(testData, sizeof(testData));
+    auto test = MutableBlob::blobWithMemoryAndSize(testData, sizeof(testData));
     auto test2 = Blob::blobWithMemoryAndSize(testData, sizeof(testData));
 
     // -- When.
-    test->append(test2);
+    test.append(test2);
 
     // -- Then.
-    ASSERT_EQ(2 * sizeof(testData), test->size());
-    ASSERT_EQ(0, ::memcmp(test->data(), testData, sizeof(testData)));
-    ASSERT_EQ(0, ::memcmp(test->data() + sizeof(testData), testData, sizeof(testData)));
+    ASSERT_EQ(2 * sizeof(testData), test.size());
+    ASSERT_EQ(0, ::memcmp(test.data(), testData, sizeof(testData)));
+    ASSERT_EQ(0, ::memcmp(test.data() + sizeof(testData), testData, sizeof(testData)));
 }
 
 TEST(Base_Blob, Append_ABlobWithContentAndEmptyBlob_AppendTheContentCorrectly)
 {
     // -- Given.
-    auto test = Blob::blobWithMemoryAndSize(testData, sizeof(testData));
+    auto test = MutableBlob::blobWithMemoryAndSize(testData, sizeof(testData));
     Blob test2;
 
     // -- When.
-    test->append(test2);
+    test.append(test2);
 
     // -- Then.
-    ASSERT_EQ(sizeof(testData), test->size());
-    ASSERT_EQ(0, ::memcmp(test->data(), testData, sizeof(testData)));
+    ASSERT_EQ(sizeof(testData), test.size());
+    ASSERT_EQ(0, ::memcmp(test.data(), testData, sizeof(testData)));
 }
 
 TEST(Base_Blob, Append_TwoEmptyBlobs_LeavesTheBlobEmpty)
 {
     // -- Given.
-    Blob test;
+    MutableBlob test;
     Blob test2;
 
     // -- When.
-    test->append(test2);
+    test.append(test2);
 
     // -- Then.
-    ASSERT_EQ(0, test->size());
+    ASSERT_EQ(0, test.size());
 }
 
 TEST(Base_Blob, AppendWithStringTermination_AnEmptyBlobAndAString_AppendTheStringCorrectly)
 {
     // -- Given.
-    Blob test;
+    MutableBlob test;
 
     // -- When.
-    test->appendWithStringTermination("Hello");
+    test.appendWithStringTermination("Hello");
 
     // -- Then.
-    ASSERT_EQ(6, test->size());
-    auto data = test->data();
+    ASSERT_EQ(6, test.size());
+    auto data = test.data();
     ASSERT_EQ('H', data[0]);
     ASSERT_EQ('e', data[1]);
     ASSERT_EQ('l', data[2]);
@@ -392,14 +392,14 @@ TEST(Base_Blob, AppendWithStringTermination_AnEmptyBlobAndAString_AppendTheStrin
 TEST(Base_Blob, AppendWithoutStringTermination_AnEmptyBlobAndAString_AppendTheStringCorrectly)
 {
     // -- Given.
-    Blob test;
+    MutableBlob test;
 
     // -- When.
-    test->appendWithoutStringTermination("Hello");
+    test.appendWithoutStringTermination("Hello");
 
     // -- Then.
-    ASSERT_EQ(5, test->size());
-    auto data = test->data();
+    ASSERT_EQ(5, test.size());
+    auto data = test.data();
     ASSERT_EQ('H', data[0]);
     ASSERT_EQ('e', data[1]);
     ASSERT_EQ('l', data[2]);
@@ -410,39 +410,39 @@ TEST(Base_Blob, AppendWithoutStringTermination_AnEmptyBlobAndAString_AppendTheSt
 TEST(Base_Blob, AppendWithStringTermination_AnEmptyBlobAndAnEmptyString_OnlyAppendsAStringTerminatorCharacter)
 {
     // -- Given.
-    Blob test;
+    MutableBlob test;
 
     // -- When.
-    test->appendWithStringTermination("");
+    test.appendWithStringTermination("");
 
     // -- Then.
-    ASSERT_EQ(1, test->size());
-    auto data = test->data();
+    ASSERT_EQ(1, test.size());
+    auto data = test.data();
     ASSERT_EQ(data[0], '\0');
 }
 
 TEST(Base_Blob, AppendWithoutStringTermination_AnEmptyBlobAndAnEmptyString_OnlyAppendsAStringTerminatorCharacter)
 {
     // -- Given.
-    Blob test;
+    MutableBlob test;
 
     // -- When.
-    test->appendWithoutStringTermination("");
+    test.appendWithoutStringTermination("");
 
     // -- Then.
-    ASSERT_EQ(0, test->size());
+    ASSERT_EQ(0, test.size());
 }
 
 TEST(Base_Blob, Append_AnEmptyBlobAndACharacter_AppendsTheCharacter)
 {
     // -- Given.
-    Blob test;
+    MutableBlob test;
 
     // -- When.
-    test->append('G');
+    test.append('G');
 
     // -- Then.
-    ASSERT_EQ(1, test->size());
-    auto data = test->data();
+    ASSERT_EQ(1, test.size());
+    auto data = test.data();
     ASSERT_EQ(data[0], 'G');
 }

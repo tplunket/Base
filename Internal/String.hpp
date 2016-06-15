@@ -169,7 +169,7 @@ struct StringInternal : public Object::Internal, public std::string
         NXA_ASSERT_TRUE(skip >= 0);
 
         if (skip > this->length()) {
-            return { };
+            return { std::make_shared<StringInternal>() };
         }
 
         auto rawPointer = this->c_str();
@@ -187,7 +187,7 @@ struct StringInternal : public Object::Internal, public std::string
         }
 
         if (start >= this->length()) {
-            return { };
+            return { std::make_shared<StringInternal>() };
         }
 
         return { std::make_shared<StringInternal>(this->substr(start, end - start)) };
@@ -206,7 +206,7 @@ struct StringInternal : public Object::Internal, public std::string
         NXA_ASSERT_TRUE(errors == UTF8_ERR_NONE);
 
         if (convertedSize == 0) {
-            return { };
+            return { std::make_shared<StringInternal>() };
         }
 
         return { std::make_shared<StringInternal>(const_cast<const character*>(output), convertedSize) };
@@ -225,7 +225,7 @@ struct StringInternal : public Object::Internal, public std::string
         NXA_ASSERT_TRUE(errors == UTF8_ERR_NONE);
 
         if (convertedSize == 0) {
-            return { };
+            return { std::make_shared<StringInternal>() };
         }
 
         auto tst = StringInternal(output, convertedSize);

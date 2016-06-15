@@ -91,6 +91,10 @@ struct StringInternal : public Object::Internal, public std::string
     {
         return this->std::string::compare(other) == 0;
     }
+    bool operator==(const StringInternal& other) const
+    {
+        return this->std::string::compare(other) == 0;
+    }
 
     #pragma mark Instance Methods
     count length() const

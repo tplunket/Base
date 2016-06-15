@@ -44,7 +44,7 @@ template <typename Tkey, typename Tvalue> class Map {
 
 public:
     #pragma mark Constructors/Destructors
-    Map() : internal{ std::make_shared<MapInternal<Tkey, Tvalue>>() } { }
+    Map() : internal{ std::make_shared<MapInternal<const Tkey, Tvalue>>() } { }
     Map(const Map&) = default;
     Map(Map&&) = default;
     Map(MutableMap<Tkey, Tvalue>&& other) : internal{ std::move(other.internal) } { }
@@ -94,6 +94,11 @@ public:
     }
 
     #pragma mark Instance Methods
+    const character* className()
+    {
+        return Map::staticClassName();
+    }
+
     const_iterator begin() const
     {
         return internal->begin();

@@ -63,11 +63,16 @@ public:
 
     #pragma mark Class Methods
     static uinteger32 hashFor(const character*);
-    count lengthOf(const character* str);
+    static count lengthOf(const character* str);
 
     #pragma mark Operators
     bool operator==(const character*) const;
     bool operator!=(const character* other) const
+    {
+        return !this->operator==(other);
+    }
+    bool operator==(const MutableString& other) const;
+    bool operator!=(const MutableString& other) const
     {
         return !this->operator==(other);
     }

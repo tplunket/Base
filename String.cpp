@@ -142,6 +142,11 @@ bool String::operator==(const character* other) const
     return internal->operator==(other);
 }
 
+bool String::operator==(const MutableString& other) const
+{
+    return internal->operator==(*other.internal);
+}
+
 #pragma mark Instance Methods
 
 String String::description() const

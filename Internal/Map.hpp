@@ -37,7 +37,8 @@ template <typename Tkey, typename Tvalue> struct MapInternal : public Object::In
     #pragma mark Constructors/Destructors
     MapInternal() : std::map<const Tkey, Tvalue>() { }
     MapInternal(const MapInternal& other) : std::map<const Tkey, Tvalue>{ other } { }
-    MapInternal(std::map<const Tkey, Tvalue>&& other) : std::map<const Tkey, Tvalue>{ std::move(other) } { }
+    MapInternal(std::map<const Tkey, Tvalue>&& other) : std::map<const Tkey, Tvalue>{ other } { }
+    MapInternal(const std::map<const Tkey, Tvalue>& other) : std::map<const Tkey, Tvalue>{ std::move(other) } { }
     virtual ~MapInternal() = default;
 
     #pragma mark Iterators

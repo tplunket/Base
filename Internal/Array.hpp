@@ -58,33 +58,33 @@ template <class T> struct ArrayInternal : public Object::Internal, public std::v
     T operator[] (count index) const
     {
         NXA_ASSERT_TRUE(index >= 0 && index < this->length());
-        return this->operator[](index);
+        return this->std::vector<T>::operator[](index);
     }
 
     #pragma mark Instance Methods
     iterator begin() noexcept
     {
-        return this->begin();
+        return this->std::vector<T>::begin();
     }
     const_iterator begin() const noexcept
     {
-        return this->begin();
+        return this->std::vector<T>::begin();
     }
     iterator end() noexcept
     {
-        return this->end();
+        return this->std::vector<T>::end();
     }
     const_iterator end() const noexcept
     {
-        return this->end();
+        return this->std::vector<T>::end();
     }
     const_iterator cbegin() const noexcept
     {
-        return this->cbegin();
+        return this->std::vector<T>::cbegin();
     }
     const_iterator cend() const noexcept
     {
-        return this->cend();
+        return this->std::vector<T>::cend();
     }
 
     count length() const
@@ -119,13 +119,13 @@ template <class T> struct ArrayInternal : public Object::Internal, public std::v
     T firstObject() const
     {
         NXA_ASSERT_TRUE(this->size() != 0);
-        return this->operator[](0);
+        return this->std::vector<T>::operator[](0);
     }
     T lastObject() const
     {
         count length = this->size();
         NXA_ASSERT_TRUE(length != 0);
-        return this->operator[](length - 1);
+        return this->std::vector<T>::operator[](length - 1);
     }
     boolean contains(const T& object) const
     {

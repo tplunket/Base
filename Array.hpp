@@ -62,9 +62,10 @@ public:
 
         if (!buffer.get()) {
             const character* format = "Array<%s>";
-            count needed = snprintf(NULL, 0, format, T::staticClassName()) + 1;
+            const character* valueTypeName = TypeName<T>::get();
+            count needed = snprintf(NULL, 0, format, valueTypeName) + 1;
             buffer = std::make_unique<character[]>(needed);
-            snprintf(buffer.get(), needed, format, T::staticClassName());
+            snprintf(buffer.get(), needed, format, valueTypeName);
         }
 
         m.unlock();

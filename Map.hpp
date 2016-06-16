@@ -49,7 +49,7 @@ public:
     Map(Map&&) = default;
     Map(MutableMap<Tkey, Tvalue>&& other) : internal{ std::move(other.internal) } { }
     ~Map() = default;
-        
+
     #pragma mark Class Methods
     static const character* staticClassName()
     {
@@ -60,9 +60,11 @@ public:
 
         if (!buffer.get()) {
             const character* format = "Map<%s, %s>";
-            count needed = snprintf(NULL, 0, format, TypeName<Tkey>::get(), TypeName<Tvalue>::get()) + 1;
+            const character* keyTypeName = TypeName<Tkey>::get();
+            const character* valueTypeName = TypeName<Tvalue>::get();
+            count needed = snprintf(NULL, 0, format, keyTypeName, valueTypeName) + 1;
             buffer = std::make_unique<character[]>(needed);
-            snprintf(buffer.get(), needed, format, TypeName<Tkey>::get(), TypeName<Tvalue>::get());
+            snprintf(buffer.get(), needed, format, keyTypeName, valueTypeName);
         }
 
         m.unlock();

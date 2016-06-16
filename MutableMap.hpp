@@ -60,9 +60,11 @@ public:
 
         if (!buffer.get()) {
             const character* format = "MutableMap<%s, %s>";
-            count needed = snprintf(NULL, 0, format, TypeName<Tkey>::get(), TypeName<Tvalue>::get()) + 1;
+            const character* keyTypeName = TypeName<Tkey>::get();
+            const character* valueTypeName = TypeName<Tvalue>::get();
+            count needed = snprintf(NULL, 0, format, keyTypeName, valueTypeName) + 1;
             buffer = std::make_unique<character[]>(needed);
-            snprintf(buffer.get(), needed, format, TypeName<Tkey>::get(), TypeName<Tvalue>::get());
+            snprintf(buffer.get(), needed, format, keyTypeName, valueTypeName);
         }
 
         m.unlock();

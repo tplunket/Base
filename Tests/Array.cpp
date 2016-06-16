@@ -67,10 +67,24 @@ TEST(Base_Array, ClassName_ArrayOfStrings_ClassNameIsReturnedCorrectly)
     ASSERT_STREQ("MutableArray<String>", name);
 }
 
-TEST(Base_Array, ClassName_TwoArraysOfStrings_ClassNameIsActuallyTheSamePointer)
+TEST(Base_Array, ClassName_TwoMutableArraysOfStrings_ClassNameIsActuallyTheSamePointer)
 {
     // -- Given.
     MutableArray<String> test;
+    MutableArray<String> other;
+
+    // -- When.
+    auto name = test.className();
+    auto otherName = other.className();
+
+    // -- Then.
+    ASSERT_EQ(otherName, name);
+}
+
+TEST(Base_Array, ClassName_TwoArraysOfStrings_ClassNameIsActuallyTheSamePointer)
+{
+    // -- Given.
+    Array<String> test;
     Array<String> other;
 
     // -- When.

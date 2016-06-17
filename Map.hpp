@@ -26,7 +26,7 @@
 #include <Base/MutableString.hpp>
 #include <Base/MutableMap.hpp>
 #include <Base/GeneratedObjectCode.hpp>
-#include <Base/Internal/Map.hpp>
+#include <Base/Internal/MutableMap.hpp>
 
 #include <map>
 #include <mutex>
@@ -36,15 +36,15 @@ namespace NxA {
 #pragma mark Class
 
 template <typename Tkey, typename Tvalue> class Map {
-    NXA_GENERATED_INTERNAL_OBJECT_FORWARD_DECLARATION_USING(MapInternal<const Tkey, Tvalue>);
+    NXA_GENERATED_INTERNAL_OBJECT_FORWARD_DECLARATION_USING(MutableMapInternal<const Tkey, Tvalue>);
 
-    std::shared_ptr<MapInternal<const Tkey, Tvalue>> internal;
+    std::shared_ptr<MutableMapInternal<const Tkey, Tvalue>> internal;
 
     friend MutableString;
 
 public:
     #pragma mark Constructors/Destructors
-    Map() : internal{ std::make_shared<MapInternal<const Tkey, Tvalue>>() } { }
+    Map() : internal{ std::make_shared<MutableMapInternal<const Tkey, Tvalue>>() } { }
     Map(const Map&) = default;
     Map(Map&&) = default;
     Map(MutableMap<Tkey, Tvalue>&& other) : internal{ std::move(other.internal) } { }
@@ -73,7 +73,7 @@ public:
     }
 
     #pragma mark Iterators
-    using const_iterator = typename MapInternal<const Tkey, Tvalue>::const_iterator;
+    using const_iterator = typename MutableMapInternal<const Tkey, Tvalue>::const_iterator;
 
     #pragma mark Operators
     Map& operator=(Map&&) = default;

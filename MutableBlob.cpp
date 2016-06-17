@@ -21,7 +21,7 @@
 
 #include "Base/MutableBlob.hpp"
 #include "Base/Blob.hpp"
-#include "Base/Internal/Blob.hpp"
+#include "Base/Internal/MutableBlob.hpp"
 #include "Base/String.hpp"
 #include "Base/Assert.hpp"
 

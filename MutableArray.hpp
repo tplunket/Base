@@ -24,7 +24,7 @@
 #include <Base/Types.hpp>
 #include <Base/Assert.hpp>
 #include <Base/Internal/Object.hpp>
-#include <Base/Internal/Array.hpp>
+#include <Base/Internal/MutableArray.hpp>
 
 #include <algorithm>
 #include <vector>
@@ -36,7 +36,7 @@ template <class T> class Array;
 #pragma mark Class
 
 template <class T> class MutableArray {
-    NXA_GENERATED_INTERNAL_OBJECT_FORWARD_DECLARATION_USING(ArrayInternal<T>);
+    NXA_GENERATED_INTERNAL_OBJECT_FORWARD_DECLARATION_USING(MutableArrayInternal<T>);
 
     std::shared_ptr<Internal> internal;
 
@@ -78,8 +78,8 @@ public:
     ~MutableArray() = default;
 
     #pragma mark Iterators
-    using iterator = typename ArrayInternal<T>::iterator;
-    using const_iterator = typename ArrayInternal<T>::const_iterator;
+    using iterator = typename MutableArrayInternal<T>::iterator;
+    using const_iterator = typename MutableArrayInternal<T>::const_iterator;
 
     #pragma mark Operators
     MutableArray& operator=(MutableArray&&) = default;

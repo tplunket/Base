@@ -32,14 +32,14 @@ namespace NxA {
 
 #pragma mark Class
 
-template <typename Tkey, typename Tvalue> struct MapInternal : public Object::Internal, public std::map<const Tkey, Tvalue>
+template <typename Tkey, typename Tvalue> struct MutableMapInternal : public Object::Internal, public std::map<const Tkey, Tvalue>
 {
     #pragma mark Constructors/Destructors
-    MapInternal() : std::map<const Tkey, Tvalue>() { }
-    MapInternal(const MapInternal& other) : std::map<const Tkey, Tvalue>{ other } { }
-    MapInternal(std::map<const Tkey, Tvalue>&& other) : std::map<const Tkey, Tvalue>{ other } { }
-    MapInternal(const std::map<const Tkey, Tvalue>& other) : std::map<const Tkey, Tvalue>{ std::move(other) } { }
-    virtual ~MapInternal() = default;
+    MutableMapInternal() : std::map<const Tkey, Tvalue>() { }
+    MutableMapInternal(const MutableMapInternal& other) : std::map<const Tkey, Tvalue>{ other } { }
+    MutableMapInternal(std::map<const Tkey, Tvalue>&& other) : std::map<const Tkey, Tvalue>{ other } { }
+    MutableMapInternal(const std::map<const Tkey, Tvalue>& other) : std::map<const Tkey, Tvalue>{ std::move(other) } { }
+    virtual ~MutableMapInternal() = default;
 
     #pragma mark Iterators
     using iterator = typename std::map<const Tkey, Tvalue>::iterator;
@@ -95,7 +95,7 @@ template <typename Tkey, typename Tvalue> struct MapInternal : public Object::In
     }
     Tvalue& valueForKey(const Tkey& key)
     {
-        return const_cast<Tvalue&>((static_cast<const MapInternal*>(this))->valueForKey(key));
+        return const_cast<Tvalue&>((static_cast<const MutableMapInternal*>(this))->valueForKey(key));
     }
     boolean containsValueForKey(const Tkey& key) const
     {

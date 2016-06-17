@@ -19,14 +19,14 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include "Base/Internal/Array.hpp"
+#include "Base/Internal/MutableArray.hpp"
 #include "Base/String.hpp"
 
 using namespace NxA;
 
 #pragma mark Utility Methods
     
-template <class T> String descriptionOfObjectsInArrayAtAddress(const ArrayInternal<T>& array)
+template <class T> String descriptionOfObjectsInArrayAtAddress(const MutableArrayInternal<T>& array)
 {
     auto result = String::stringWithFormat("Array at %08p with %ld elements:", &array, array.length());
     for (count index = 0; index < array.length(); ++index) {

@@ -33,22 +33,22 @@ namespace NxA {
 
 #pragma mark Forward Declarations
 
-template <class T> class ArrayInternal;
+template <class T> class MutableArrayInternal;
 
 #pragma mark Utility Methods
 
 // -- This is a utility function to return the description of the content of an array.
-template <class T> String descriptionOfObjectsInArrayAtAddress(const ArrayInternal<T>&);
+template <class T> String descriptionOfObjectsInArrayAtAddress(const MutableArrayInternal<T>&);
 
 #pragma mark Class
 
-template <class T> struct ArrayInternal : public Object::Internal, public std::vector<T>
+template <class T> struct MutableArrayInternal : public Object::Internal, public std::vector<T>
 {
     #pragma mark Constructors/Destructors
-    ArrayInternal() : std::vector<T>() { }
-    ArrayInternal(const ArrayInternal& other) : std::vector<T>{ other } { }
-    ArrayInternal(std::vector<T>&& other) : std::vector<T>{ std::move(other) } { }
-    virtual ~ArrayInternal() = default;
+    MutableArrayInternal() : std::vector<T>() { }
+    MutableArrayInternal(const MutableArrayInternal& other) : std::vector<T>{ other } { }
+    MutableArrayInternal(std::vector<T>&& other) : std::vector<T>{ std::move(other) } { }
+    virtual ~MutableArrayInternal() = default;
 
     #pragma mark Iterators
     using iterator = typename std::vector<T>::iterator;
@@ -62,7 +62,7 @@ template <class T> struct ArrayInternal : public Object::Internal, public std::v
     }
     T& operator[](count index)
     {
-        return const_cast<T&>((static_cast<const ArrayInternal*>(this))->operator[](index));
+        return const_cast<T&>((static_cast<const MutableArrayInternal*>(this))->operator[](index));
     }
 
     #pragma mark Instance Methods
@@ -111,7 +111,7 @@ template <class T> struct ArrayInternal : public Object::Internal, public std::v
     {
         this->emplace_back(object);
     }
-    void append(ArrayInternal<T> other)
+    void append(MutableArrayInternal<T> other)
     {
         for (auto object : other) {
             this->emplace_back(object);
@@ -129,7 +129,7 @@ template <class T> struct ArrayInternal : public Object::Internal, public std::v
     }
     T& firstObject()
     {
-        return const_cast<T&>((static_cast<const ArrayInternal*>(this))->firstObject());
+        return const_cast<T&>((static_cast<const MutableArrayInternal*>(this))->firstObject());
     }
     const  T& lastObject() const
     {
@@ -139,7 +139,7 @@ template <class T> struct ArrayInternal : public Object::Internal, public std::v
     }
     T& lastObject()
     {
-        return const_cast<T&>((static_cast<const ArrayInternal*>(this))->lastObject());
+        return const_cast<T&>((static_cast<const MutableArrayInternal*>(this))->lastObject());
     }
     boolean contains(const T& object) const
     {

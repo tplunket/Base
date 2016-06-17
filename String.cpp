@@ -83,6 +83,8 @@ NXA_GENERATED_IMMUTABLE_OBJECT_METHODS_DEFINITIONS_FOR(String);
 
 #pragma mark Constructors/Destructors
 
+String::String() : internal{ std::make_shared<Internal>() } { }
+
 String::String(const std::string& other) : internal{ std::make_shared<Internal>(other) } { }
 
 String::String(const std::string&& other) : internal{ std::make_shared<Internal>(std::move(other)) } { }

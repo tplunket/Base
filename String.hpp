@@ -40,7 +40,7 @@ class String {
 
 public:
     #pragma mark Constructors/Destructors
-    constexpr String() : internal{} { }
+    String();
     String(const character*, count);
     String(MutableString&&);
     explicit String(const std::string&);

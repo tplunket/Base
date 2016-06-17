@@ -102,7 +102,7 @@ public:
     }
     Tvalue& operator[](const Tkey& key)
     {
-        return internal->operator[](key);
+        return internal->valueForKey(key);
     }
 
     #pragma mark Instance Methods

@@ -78,7 +78,7 @@ TEST(Base_Map, SetValueForKey_IntegerValue_SetsCorrectValue)
     TestMapUInteger32ToUInteger32 test;
 
     // -- When.
-    test[0] = integerValue;
+    test.setValueForKey(integerValue, 0);
 
     // -- Then.
     ASSERT_EQ(integerValue, test.valueForKey(0));
@@ -91,7 +91,7 @@ TEST(Base_Map, SetValueForKey_ValueFromAPointer_SetsCorrectValue)
     TestMapUInteger32ToString test;
 
     // -- When.
-    test[0] = String(otherTestString);
+    test.setValueForKey(String(otherTestString), 0);
 
     // -- Then.
     ASSERT_STREQ(otherTestString, test.valueForKey(0).asUTF8());
@@ -103,7 +103,7 @@ TEST(Base_Map, SetValueForKey_ValueFromAReference_SetsCorrectValue)
     TestMapUInteger32ToString test;
 
     // -- When.
-    test[0] = testString;
+    test.setValueForKey(testString, 0);
 
     // -- Then.
     ASSERT_STREQ(testString.asUTF8(), test.valueForKey(0).asUTF8());
@@ -114,7 +114,7 @@ TEST(Base_Map, SetValueForKey_ValueFromAPointerOverAnExistingValue_SetsCorrectVa
     // -- Given.
     static const character* otherTestString = "testString";
     TestMapUInteger32ToString test;
-    test[44] = String("Initial String");
+    test.setValueForKey(String("Initial String"), 44);
 
     // -- When.
     test[44] = String(otherTestString);
@@ -127,7 +127,7 @@ TEST(Base_Map, SetValueForKey_ValueFromAReferenceOverAnExistingValue_SetsCorrect
 {
     // -- Given.
     TestMapUInteger32ToString test;
-    test[44] = testString;
+    test.setValueForKey(testString, 44);
 
     // -- When.
     test[44] = otherString;
@@ -140,8 +140,8 @@ TEST(Base_Map, ValueForKey_MapWithAGivenValue_ReturnsCorrectValue)
 {
     // -- Given.
     TestMapUInteger32ToString test;
-    test[0x2323] = testString;
-    test[0x2423] = otherString;
+    test.setValueForKey(testString, 0x2323);
+    test.setValueForKey(otherString, 0x2423);
 
     // -- When.
     // -- Then.
@@ -152,8 +152,8 @@ TEST(Base_Map, ValueForKey_MapWithAnotherValue_ReturnsCorrectValue)
 {
     // -- Given.
     TestMapUInteger32ToString test;
-    test[0x2323] = testString;
-    test[0x2423] = otherString;
+    test.setValueForKey(testString, 0x2323);
+    test.setValueForKey(otherString, 0x2423);
 
     // -- When.
     // -- Then.
@@ -164,8 +164,8 @@ TEST(Base_Map, ValueForKey_LookingForAnUnknownKey_ThrowsException)
 {
     // -- Given.
     TestMapUInteger32ToString test;
-    test[0x2323] = testString;
-    test[0x2423] = otherString;
+    test.setValueForKey(testString, 0x2323);
+    test.setValueForKey(otherString, 0x2423);
 
     // -- When.
     // -- Then.
@@ -176,8 +176,8 @@ TEST(Base_Map, ValueForKey_ConstMapWithAGivenValue_ReturnsCorrectValue)
 {
     // -- Given.
     TestMapUInteger32ToString test;
-    test[0x2323] = testString;
-    test[0x2423] = otherString;
+    test.setValueForKey(testString, 0x2323);
+    test.setValueForKey(otherString, 0x2423);
     const TestMapUInteger32ToString constTest = test;
 
     // -- When.
@@ -189,8 +189,8 @@ TEST(Base_Map, ValueForKey_ConstMapWithAnotherValue_ReturnsCorrectValue)
 {
     // -- Given.
     TestMapUInteger32ToString test;
-    test[0x2323] = testString;
-    test[0x2423] = otherString;
+    test.setValueForKey(testString, 0x2323);
+    test.setValueForKey(otherString, 0x2423);
     const TestMapUInteger32ToString constTest = test;
 
     // -- When.
@@ -202,8 +202,8 @@ TEST(Base_Map, ValueForKey_LookingForAnUnknownKeyInConstMap_ThrowsException)
 {
     // -- Given.
     TestMapUInteger32ToString test;
-    test[0x2323] = testString;
-    test[0x2423] = otherString;
+    test.setValueForKey(testString, 0x2323);
+    test.setValueForKey(otherString, 0x2423);
     const TestMapUInteger32ToString constTest = test;
 
     // -- When.
@@ -215,8 +215,8 @@ TEST(Base_Map, ContainsValueForKey_UnknownKey_ReturnsFalse)
 {
     // -- Given.
     TestMapUInteger32ToString test;
-    test[0x2323] = testString;
-    test[0x2423] = otherString;
+    test.setValueForKey(testString, 0x2323);
+    test.setValueForKey(otherString, 0x2423);
 
     // -- When.
     // -- Then.
@@ -227,8 +227,8 @@ TEST(Base_Map, ContainsValueForKey_KnownKey_ReturnsTrue)
 {
     // -- Given.
     TestMapUInteger32ToString test;
-    test[0x2323] = testString;
-    test[0x2423] = otherString;
+    test.setValueForKey(testString, 0x2323);
+    test.setValueForKey(otherString, 0x2423);
 
     // -- When.
     // -- Then.
@@ -239,8 +239,8 @@ TEST(Base_Map, Length_MapWithKeys_ReturnsCorrectValue)
 {
     // -- Given.
     TestMapUInteger32ToString test;
-    test[0x2323] = testString;
-    test[0x2423] = otherString;
+    test.setValueForKey(testString, 0x2323);
+    test.setValueForKey(otherString, 0x2423);
 
     // -- When.
     // -- Then.

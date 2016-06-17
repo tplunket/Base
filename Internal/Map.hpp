@@ -45,17 +45,6 @@ template <typename Tkey, typename Tvalue> struct MapInternal : public Object::In
     using iterator = typename std::map<const Tkey, Tvalue>::iterator;
     using const_iterator = typename std::map<const Tkey, Tvalue>::const_iterator;
 
-    #pragma mark Operators
-    Tvalue& operator[](const Tkey& key)
-    {
-        iterator pos = this->std::map<const Tkey, Tvalue>::find(key);
-        if (pos != this->cend()) {
-            return pos->second;
-        }
-
-        return this->std::map<const Tkey, Tvalue>::insert(std::pair<const Tkey, Tvalue>(key, Tvalue())).first->second;
-    }
-
     #pragma mark Instance Methods
     iterator begin()
     {

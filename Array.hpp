@@ -109,11 +109,11 @@ public:
     {
         return !this->operator==(other);
     }
-    const T& operator[] (count index) const
+    const T& operator[](count index) const
     {
         return internal->operator[](index);
     }
-    T& operator[] (count index)
+    T& operator[](count index)
     {
         return internal->operator[](index);
     }

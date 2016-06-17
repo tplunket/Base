@@ -62,8 +62,7 @@ template <class T> struct ArrayInternal : public Object::Internal, public std::v
     }
     T& operator[](count index)
     {
-        NXA_ASSERT_TRUE(index >= 0 && index < this->length());
-        return this->std::vector<T>::operator[](index);
+        return const_cast<T&>((static_cast<const ArrayInternal*>(this))->operator[](index));
     }
 
     #pragma mark Instance Methods
@@ -130,8 +129,7 @@ template <class T> struct ArrayInternal : public Object::Internal, public std::v
     }
     T& firstObject()
     {
-        NXA_ASSERT_TRUE(this->size() != 0);
-        return this->std::vector<T>::operator[](0);
+        return const_cast<T&>((static_cast<const ArrayInternal*>(this))->firstObject());
     }
     const  T& lastObject() const
     {
@@ -141,9 +139,7 @@ template <class T> struct ArrayInternal : public Object::Internal, public std::v
     }
     T& lastObject()
     {
-        count length = this->size();
-        NXA_ASSERT_TRUE(length != 0);
-        return this->std::vector<T>::operator[](length - 1);
+        return const_cast<T&>((static_cast<const ArrayInternal*>(this))->lastObject());
     }
     boolean contains(const T& object) const
     {

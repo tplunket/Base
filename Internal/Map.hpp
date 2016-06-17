@@ -95,10 +95,7 @@ template <typename Tkey, typename Tvalue> struct MapInternal : public Object::In
     }
     Tvalue& valueForKey(const Tkey& key)
     {
-        iterator pos = this->std::map<const Tkey, Tvalue>::find(key);
-        NXA_ASSERT_TRUE(pos != this->cend());
-
-        return pos->second;
+        return const_cast<Tvalue&>((static_cast<const MapInternal*>(this))->valueForKey(key));
     }
     boolean containsValueForKey(const Tkey& key) const
     {

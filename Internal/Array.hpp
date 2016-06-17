@@ -55,7 +55,12 @@ template <class T> struct ArrayInternal : public Object::Internal, public std::v
     using const_iterator = typename std::vector<T>::const_iterator;
 
     #pragma mark Operators
-    T operator[] (count index) const
+    const T& operator[](count index) const
+    {
+        NXA_ASSERT_TRUE(index >= 0 && index < this->length());
+        return this->std::vector<T>::operator[](index);
+    }
+    T& operator[](count index)
     {
         NXA_ASSERT_TRUE(index >= 0 && index < this->length());
         return this->std::vector<T>::operator[](index);
@@ -105,23 +110,36 @@ template <class T> struct ArrayInternal : public Object::Internal, public std::v
 
     void append(T object)
     {
-        this->push_back(object);
+        this->emplace_back(object);
     }
-    void append(const ArrayInternal<T>& other)
+    void append(ArrayInternal<T> other)
     {
-        this->push_back(other);
+        for (auto object : other) {
+            this->emplace_back(object);
+        }
     }
     void insertAt(T object, const_iterator pos)
     {
-        this->insert(pos, object);
+        this->emplace(pos, object);
     }
 
-    T firstObject() const
+    const T& firstObject() const
     {
         NXA_ASSERT_TRUE(this->size() != 0);
         return this->std::vector<T>::operator[](0);
     }
-    T lastObject() const
+    T& firstObject()
+    {
+        NXA_ASSERT_TRUE(this->size() != 0);
+        return this->std::vector<T>::operator[](0);
+    }
+    const  T& lastObject() const
+    {
+        count length = this->size();
+        NXA_ASSERT_TRUE(length != 0);
+        return this->std::vector<T>::operator[](length - 1);
+    }
+    T& lastObject()
     {
         count length = this->size();
         NXA_ASSERT_TRUE(length != 0);
@@ -132,6 +150,10 @@ template <class T> struct ArrayInternal : public Object::Internal, public std::v
         return this->find(object) != this->end();
     }
     const_iterator find(const T& object) const
+    {
+        return std::find(this->begin(), this->end(), object);
+    }
+    iterator find(const T& object)
     {
         return std::find(this->begin(), this->end(), object);
     }

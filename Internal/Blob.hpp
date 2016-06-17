@@ -70,6 +70,20 @@ struct BlobInternal : public Object::Internal, public std::vector<byte>
     static String base64StringFor(const byte* memory, count size);
 
     #pragma mark Operators
+    bool operator==(const BlobInternal& other) const
+    {
+        if (this->size() != other.size()) {
+            return false;
+        }
+
+        for (integer index = 0; index < this->size(); ++index) {
+            if (this->std::vector<byte>::operator[](index) != other.std::vector<byte>::operator[](index)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
     byte& operator[] (integer index)
     {
         NXA_ASSERT_TRUE(index >= 0 && index < this->size());

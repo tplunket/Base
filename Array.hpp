@@ -93,6 +93,10 @@ public:
 
         return *internal == *(other.internal);
     }
+    bool operator!=(const Array& other) const
+    {
+        return !this->operator==(other);
+    }
     bool operator==(const MutableArray<T>& other) const
     {
         if (internal == other.internal) {
@@ -101,7 +105,15 @@ public:
 
         return *internal == *(other.internal);
     }
-    T operator[] (count index) const
+    bool operator!=(const MutableArray<T>& other) const
+    {
+        return !this->operator==(other);
+    }
+    const T& operator[] (count index) const
+    {
+        return internal->operator[](index);
+    }
+    T& operator[] (count index)
     {
         return internal->operator[](index);
     }
@@ -145,19 +157,31 @@ public:
         return internal->length();
     }
 
-    T firstObject()
+    const T& firstObject() const
     {
         return internal->firstObject();
     }
-    T lastObject()
+    T& firstObject()
+    {
+        return internal->firstObject();
+    }
+    const T& lastObject() const
     {
         return internal->lastObject();
     }
-    boolean contains(const T object) const
+    T& lastObject()
+    {
+        return internal->lastObject();
+    }
+    boolean contains(const T& object) const
     {
         return internal->contains(object);
     }
-    const_iterator find(const T object) const
+    iterator find(const T& object)
+    {
+        return internal->find(object);
+    }
+    const_iterator find(const T& object) const
     {
         return internal->find(object);
     }

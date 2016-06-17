@@ -86,6 +86,10 @@ public:
 
         return *internal == *(other.internal);
     }
+    bool operator!=(const Map& other) const
+    {
+        return !this->operator==(other);
+    }
     bool operator==(const MutableMap<Tkey, Tvalue>& other) const
     {
         if (internal == other.internal) {
@@ -93,6 +97,18 @@ public:
         }
 
         return *internal == *(other.internal);
+    }
+    bool operator!=(const MutableMap<Tkey, Tvalue>& other) const
+    {
+        return !this->operator==(other);
+    }
+    const Tvalue& operator[](const Tkey& key) const
+    {
+        return internal->valueForKey(key);
+    }
+    Tvalue& operator[](const Tkey& key)
+    {
+        return internal->valueForKey(key);
     }
 
     #pragma mark Instance Methods

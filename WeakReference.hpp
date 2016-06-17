@@ -41,6 +41,18 @@ public:
     {
         this->std::weak_ptr<typename T::Internal>::operator=(std::move(other));
     }
+    bool operator==(const WeakReference& other) const
+    {
+        if (!this->expired()) {
+            if (other.expired()) {
+                return false;
+            }
+
+            return this->get() == other.get();
+        }
+
+        return other.expired();
+    }
 
     #pragma mark Instance Methods
     boolean isValid() const

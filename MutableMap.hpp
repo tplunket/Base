@@ -46,6 +46,7 @@ public:
     #pragma mark Constructors/Destructors
     MutableMap() : internal{ std::make_shared<MapInternal<const Tkey, Tvalue>>() } { }
     MutableMap(const MutableMap& other) : internal{ std::make_shared<Internal>(*other.internal) } { }
+    MutableMap(MutableMap& other) : internal{ other.internal } { }
     MutableMap(MutableMap&&) = default;
     MutableMap(const Map<Tkey, Tvalue>& other) : internal{ std::make_shared<Internal>(*other.internal) } { }
     ~MutableMap() = default;
@@ -95,10 +96,9 @@ public:
 
         return *internal == *(other.internal);
     }
-
-    Tvalue& operator[](Tkey&& key)
+    const Tvalue& operator[](const Tkey& key) const
     {
-        return internal->operator[](std::move(key));
+        return internal->valueForKey(key);
     }
     Tvalue& operator[](const Tkey& key)
     {
@@ -136,6 +136,10 @@ public:
         return internal->length();
     }
 
+    void setValueForKey(Tvalue value, const Tkey& key)
+    {
+        internal->setValueForKey(value, key);
+    }
     Tvalue& valueForKey(const Tkey& key)
     {
         return internal->valueForKey(key);

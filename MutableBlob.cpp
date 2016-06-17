@@ -27,7 +27,7 @@
 
 using namespace NxA;
 
-NXA_GENERATED_MUTABLE_OBJECT_METHODS_DEFINITIONS_FOR(MutableBlob);
+NXA_GENERATED_OBJECT_METHODS_DEFINITIONS_FOR(MutableBlob);
 
 #pragma mark Constructors/Destructors
 

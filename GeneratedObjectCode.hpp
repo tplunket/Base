@@ -103,14 +103,14 @@ class String;
 
 #define NXA_GENERATED_UNIQUE_OBJECT_METHODS_DECLARATIONS_WITHOUT_INTERNAL_OBJECT_FOR(class_name...) \
         public: \
-            class_name(const class_name&) = default; \
+            class_name(const class_name&) = delete; \
         NXA_GENERATED_COMMON_OBJECT_METHODS_DECLARATIONS_WITHOUT_INTERNAL_OBJECT_FOR(class_name) \
 
 #define NXA_GENERATED_UNIQUE_OBJECT_METHODS_DECLARATIONS_FOR(class_name...) \
         protected: \
             std::shared_ptr<Internal> internal; \
         public: \
-            class_name(const class_name&) = default; \
+            class_name(const class_name&) = delete; \
         NXA_GENERATED_COMMON_OBJECT_METHODS_DECLARATIONS_WITHOUT_INTERNAL_OBJECT_FOR(class_name)
 
 #define NXA_GENERATED_OBJECT_METHODS_DECLARATIONS_WITHOUT_INTERNAL_OBJECT_FOR(class_name...) \
@@ -125,13 +125,7 @@ class String;
             class_name(const class_name&); \
         NXA_GENERATED_COMMON_OBJECT_METHODS_DECLARATIONS_WITHOUT_INTERNAL_OBJECT_FOR(class_name)
 
-/*uinteger32 class_name::staticClassHash() \
-{ \
-    static uinteger32 result = String::hashFor(class_name::staticClassName()); \
-    return result; \
-} \*/
-
-#define NXA_GENERATED_OBJECT_METHODS_DEFINITIONS_WITH_INTERNAL_STORED_IN_FOR(internal_location, class_name...) \
+#define NXA_GENERATED_COMMON_OBJECT_METHODS_DEFINITIONS_WITH_INTERNAL_STORED_IN_FOR(internal_location, class_name...) \
         class_name::class_name(class_name&&) = default; \
         class_name::class_name(class_name&) = default; \
         class_name::class_name(std::shared_ptr<Internal>&& other) : internal_location{ std::move(other) } { } \
@@ -146,24 +140,46 @@ class String;
             return *internal == *(other.internal); \
         }
 
-#define NXA_GENERATED_MUTABLE_OBJECT_METHODS_DEFINITIONS_WITH_INTERNAL_STORED_IN_FOR(internal_location, class_name...) \
-        class_name::class_name(const class_name& other) : internal_location{ std::make_shared<Internal>(*other.internal) } { } \
-        NXA_GENERATED_OBJECT_METHODS_DEFINITIONS_WITH_INTERNAL_STORED_IN_FOR(internal_location, class_name)
+#define NXA_GENERATED_OBJECT_METHODS_DEFINITIONS_WITH_INTERNAL_STORED_IN_FOR(internal_location, class_name...) \
+        class_name::class_name(const class_name& other) : internal_location{ std::make_shared<Internal>(static_cast<class_name::Internal&>(*other.internal)) } { } \
+        NXA_GENERATED_COMMON_OBJECT_METHODS_DEFINITIONS_WITH_INTERNAL_STORED_IN_FOR(internal_location, class_name)
 
 #define NXA_GENERATED_IMMUTABLE_OBJECT_METHODS_DEFINITIONS_WITH_INTERNAL_STORED_IN_FOR(internal_location, class_name...) \
         class_name::class_name(const class_name&) = default; \
-        NXA_GENERATED_OBJECT_METHODS_DEFINITIONS_WITH_INTERNAL_STORED_IN_FOR(internal_location, class_name)
+        NXA_GENERATED_COMMON_OBJECT_METHODS_DEFINITIONS_WITH_INTERNAL_STORED_IN_FOR(internal_location, class_name)
 
 #define NXA_GENERATED_UNIQUE_OBJECT_METHODS_DEFINITIONS_WITH_INTERNAL_STORED_IN_FOR(internal_location, class_name...) \
-        NXA_GENERATED_OBJECT_METHODS_DEFINITIONS_WITH_INTERNAL_STORED_IN_FOR(internal_location, class_name)
+        NXA_GENERATED_COMMON_OBJECT_METHODS_DEFINITIONS_WITH_INTERNAL_STORED_IN_FOR(internal_location, class_name)
 
-#define NXA_GENERATED_MUTABLE_OBJECT_METHODS_DEFINITIONS_FOR(class_name...) \
+#define NXA_GENERATED_OBJECT_METHODS_DEFINITIONS_FOR(class_name...) \
         class_name::class_name(const class_name& other) : internal{ std::make_shared<Internal>(*other.internal) } { } \
-        NXA_GENERATED_OBJECT_METHODS_DEFINITIONS_WITH_INTERNAL_STORED_IN_FOR(internal, class_name)
+        NXA_GENERATED_COMMON_OBJECT_METHODS_DEFINITIONS_WITH_INTERNAL_STORED_IN_FOR(internal, class_name)
+
+#define NXA_GENERATED_OBJECT_METHODS_DEFINITIONS_WITH_INTERNAL_STORED_IN_FOR_CLASS_WITH_PURE_VIRTUAL_INTERNAL(internal_location, class_name...) \
+        NXA_GENERATED_COMMON_OBJECT_METHODS_DEFINITIONS_WITH_INTERNAL_STORED_IN_FOR(internal_location, class_name)
+
+#define NXA_GENERATED_OBJECT_METHODS_DEFINITIONS_FOR_CLASS_WITH_PURE_VIRTUAL_INTERNAL(class_name...) \
+        class_name::class_name(const class_name& other) : internal{ other.internal->baseInternalSharedPointer() } { } \
+        NXA_GENERATED_COMMON_OBJECT_METHODS_DEFINITIONS_WITH_INTERNAL_STORED_IN_FOR(internal, class_name)
 
 #define NXA_GENERATED_IMMUTABLE_OBJECT_METHODS_DEFINITIONS_FOR(class_name...) \
         class_name::class_name(const class_name&) = default; \
-        NXA_GENERATED_OBJECT_METHODS_DEFINITIONS_WITH_INTERNAL_STORED_IN_FOR(internal, class_name)
+        NXA_GENERATED_COMMON_OBJECT_METHODS_DEFINITIONS_WITH_INTERNAL_STORED_IN_FOR(internal, class_name)
 
 #define NXA_GENERATED_UNIQUE_OBJECT_METHODS_DEFINITIONS_FOR(class_name...) \
-        NXA_GENERATED_OBJECT_METHODS_DEFINITIONS_WITH_INTERNAL_STORED_IN_FOR(internal, class_name)
+        NXA_GENERATED_COMMON_OBJECT_METHODS_DEFINITIONS_WITH_INTERNAL_STORED_IN_FOR(internal, class_name)
+
+#define NXA_GENERATED_INTERNAL_OBJECT_BASE_INTERNAL_SHARED_POINTER_DEFINITION_FOR_BASE_CLASS(class_name...) \
+        virtual std::shared_ptr<class_name> baseInternalSharedPointer() override \
+        { \
+            return std::static_pointer_cast<class_name>(std::make_shared<Internal>(*this)); \
+        }
+
+#define NXA_GENERATED_INTERNAL_OBJECT_BASE_INTERNAL_SHARED_POINTER_PURE_VIRTUAL_DEFINITION() \
+        virtual std::shared_ptr<Internal> baseInternalSharedPointer() = 0;
+
+#define NXA_GENERATED_INTERNAL_OBJECT_BASE_INTERNAL_SHARED_POINTER_DEFINITION_FOR(class_name...) \
+        virtual std::shared_ptr<class_name> baseInternalSharedPointer() \
+        { \
+            return std::static_pointer_cast<class_name>(std::make_shared<Internal>(*this)); \
+        }

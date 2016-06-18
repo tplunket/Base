@@ -84,6 +84,10 @@ void Platform::writeBigEndianUInteger16ValueAt(uinteger16 value, byte* pointer)
 Blob Platform::convertEndiannessOfUInteger16From(const Blob& other)
 {
     MutableBlob copy(other);
+    if (!copy.size()) {
+        return { std::move(copy) };
+    }
+
     auto numberOfSwaps = copy.size() / 2;
 
     integer index = 0;

@@ -127,7 +127,7 @@ There are two types of files: The ones which are confidential and part of our in
         ...
     }
 
-    void myMethod(void)
+    void myMethod()
     {
         ...
     }
@@ -220,7 +220,7 @@ If the code overrides any methods from parent classes, those are placed after th
 ```
     // --- Like this
     auto messages = localLog.messages;
-    for (auto message : message) {
+    for (auto& message : messages) {
         auto text = message.text;
         if (text.length) {
             ...
@@ -237,7 +237,7 @@ If the code overrides any methods from parent classes, those are placed after th
     auto count = localLog.count;
     auto messages = localLog.messages;
 
-    for (auto message : message) {
+    for (auto& message : messages) {
         auto text = message.text;
 
         if (text.length) {
@@ -314,8 +314,7 @@ If the code overrides any methods from parent classes, those are placed after th
 ### Namespaces
 
 * Always at least use the `NxA` namespace.
-* use `NXA_ENTER_NAMESPACE(NxA);` and `NXA_EXIT_NAMESPACE;`
- instead of `namespace { ... }`. These avoid editors like Xcode tying to indent the content of the namespace for no reason.
+* use `namespace NxA {` with no newline after the name.
 * `using namespace ...` should be placed underneath the includes and never in header files.
 
 ### Operators
@@ -413,7 +412,7 @@ If the code overrides any methods from parent classes, those are placed after th
 * **Use comments only to explain context.** When something is non-obvious or might not seem logical at first sight.
 
 ```
-    TagLib::RIFF::WAV::File file(this->filePath->toUTF8(),
+    TagLib::RIFF::WAV::File file(this->filePath->asUTF8(),
                                  true,
                                  TagLib::AudioProperties::ReadStyle::Fast);
     ...
@@ -448,12 +447,10 @@ If the code overrides any methods from parent classes, those are placed after th
 ```
 
 * **Initialize member variables with the member initializer list** and not in the constructor.
-* **Internal classes can give instance variables a default default value** in the class declarationto avoid having to set it in every constructor.
+* **Internal classes can give instance variables a default default value** in the class declaration to avoid having to set it in every constructor.
 
 ```
     struct InternalItem : public InternalObject {
-        NXA_GENERATED_DESTRUCTOR_FOR_CLASS(InternalCrate);
-
         #pragma mark Instance Variables
         integer count = 0;
 

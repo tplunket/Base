@@ -32,28 +32,18 @@ namespace NxA {
 
 #pragma mark Class
 
-template <typename Tkey, typename Tvalue> struct MapInternal : public Object::Internal, public std::map<const Tkey, Tvalue>
+template <typename Tkey, typename Tvalue> struct MutableMapInternal : public Object::Internal, public std::map<const Tkey, Tvalue>
 {
     #pragma mark Constructors/Destructors
-    MapInternal() : std::map<const Tkey, Tvalue>() { }
-    MapInternal(const MapInternal& other) : std::map<const Tkey, Tvalue>{ other } { }
-    MapInternal(std::map<const Tkey, Tvalue>&& other) : std::map<const Tkey, Tvalue>{ other } { }
-    MapInternal(const std::map<const Tkey, Tvalue>& other) : std::map<const Tkey, Tvalue>{ std::move(other) } { }
-    virtual ~MapInternal() = default;
+    MutableMapInternal() : std::map<const Tkey, Tvalue>() { }
+    MutableMapInternal(const MutableMapInternal& other) : std::map<const Tkey, Tvalue>{ other } { }
+    MutableMapInternal(std::map<const Tkey, Tvalue>&& other) : std::map<const Tkey, Tvalue>{ other } { }
+    MutableMapInternal(const std::map<const Tkey, Tvalue>& other) : std::map<const Tkey, Tvalue>{ std::move(other) } { }
+    virtual ~MutableMapInternal() = default;
 
     #pragma mark Iterators
     using iterator = typename std::map<const Tkey, Tvalue>::iterator;
     using const_iterator = typename std::map<const Tkey, Tvalue>::const_iterator;
-
-    #pragma mark Operators
-    Tvalue& operator[](const Tkey& key)
-    {
-        return this->std::map<const Tkey, Tvalue>::operator[](key);
-    }
-    Tvalue& operator[](Tkey&& key)
-    {
-        return this->std::map<const Tkey, Tvalue>::operator[](std::move(key));
-    }
 
     #pragma mark Instance Methods
     iterator begin()
@@ -86,12 +76,15 @@ template <typename Tkey, typename Tvalue> struct MapInternal : public Object::In
         return this->std::map<const Tkey, Tvalue>::size();
     }
 
-    Tvalue& valueForKey(const Tkey& key)
+    void setValueForKey(Tvalue value, const Tkey& key)
     {
-        iterator pos = this->std::map<const Tkey, Tvalue>::find(key);
-        NXA_ASSERT_TRUE(pos != this->cend());
+        iterator position = this->std::map<const Tkey, Tvalue>::find(key);
+        if (position == this->std::map<const Tkey, Tvalue>::end()) {
+            this->std::map<const Tkey, Tvalue>::insert(std::pair<const Tkey, Tvalue>(key, value));
+            return;
+        }
 
-        return pos->second;
+        position->second = value;
     }
     const Tvalue& valueForKey(const Tkey& key) const
     {
@@ -100,9 +93,13 @@ template <typename Tkey, typename Tvalue> struct MapInternal : public Object::In
 
         return pos->second;
     }
+    Tvalue& valueForKey(const Tkey& key)
+    {
+        return const_cast<Tvalue&>((static_cast<const MutableMapInternal*>(this))->valueForKey(key));
+    }
     boolean containsValueForKey(const Tkey& key) const
     {
-        return this->std::map<const Tkey, Tvalue>::find(key) != this->end();
+        return this->std::map<const Tkey, Tvalue>::find(key) != this->std::map<const Tkey, Tvalue>::end();
     }
     void removeAll()
     {

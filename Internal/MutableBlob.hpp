@@ -37,39 +37,53 @@ void MurmurHash3_x64_128(const void*, const int, const uint32_t, void*);
 
 #pragma mark Class
 
-struct BlobInternal : public Object::Internal, public std::vector<byte>
+struct MutableBlobInternal : public Object::Internal, public std::vector<byte>
 {
     #pragma mark Constructors/Destructors
-    BlobInternal() : std::vector<byte>() { }
-    BlobInternal(const std::vector<byte>& other) : std::vector<byte>{ other } { }
-    BlobInternal(std::vector<byte>&& other) : std::vector<byte>{ std::move(other) } { }
-    virtual ~BlobInternal() = default;
+    MutableBlobInternal() : std::vector<byte>() { }
+    MutableBlobInternal(const std::vector<byte>& other) : std::vector<byte>{ other } { }
+    MutableBlobInternal(std::vector<byte>&& other) : std::vector<byte>{ std::move(other) } { }
+    virtual ~MutableBlobInternal() = default;
 
     #pragma mark Factory Methods
-    static std::shared_ptr<BlobInternal> blobWithCapacity(count size)
+    static std::shared_ptr<MutableBlobInternal> blobWithCapacity(count size)
     {
-        return std::make_shared<BlobInternal>(std::vector<byte>(size));
+        return std::make_shared<MutableBlobInternal>(std::vector<byte>(size));
     }
-    static std::shared_ptr<BlobInternal> blobWithMemoryAndSize(const byte* other, count size)
+    static std::shared_ptr<MutableBlobInternal> blobWithMemoryAndSize(const byte* other, count size)
     {
-        return std::make_shared<BlobInternal>(std::vector<byte>(other, other + size));
+        return std::make_shared<MutableBlobInternal>(std::vector<byte>(other, other + size));
     }
-    static std::shared_ptr<BlobInternal> blobWithBase64String(const String&);
-    static std::shared_ptr<BlobInternal> blobWithStringWithTerminator(const String&);
-    static std::shared_ptr<BlobInternal> blobWithStringWithoutTerminator(const String&);
+    static std::shared_ptr<MutableBlobInternal> blobWithBase64String(const String&);
+    static std::shared_ptr<MutableBlobInternal> blobWithStringWithTerminator(const String&);
+    static std::shared_ptr<MutableBlobInternal> blobWithStringWithoutTerminator(const String&);
 
     #pragma mark Class Methods
-    static std::shared_ptr<BlobInternal> hashFor(const byte* memory, count size)
+    static std::shared_ptr<MutableBlobInternal> hashFor(const byte* memory, count size)
     {
         auto result = std::vector<byte>(16);
 
         MurmurHash3_x64_128(memory, static_cast<int>(size), 0x23232323, result.data());
 
-        return std::make_shared<BlobInternal>(std::move(result));
+        return std::make_shared<MutableBlobInternal>(std::move(result));
     }
     static String base64StringFor(const byte* memory, count size);
 
     #pragma mark Operators
+    bool operator==(const MutableBlobInternal& other) const
+    {
+        if (this->size() != other.size()) {
+            return false;
+        }
+
+        for (integer index = 0; index < this->size(); ++index) {
+            if (this->std::vector<byte>::operator[](index) != other.std::vector<byte>::operator[](index)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
     byte& operator[] (integer index)
     {
         NXA_ASSERT_TRUE(index >= 0 && index < this->size());
@@ -93,14 +107,14 @@ struct BlobInternal : public Object::Internal, public std::vector<byte>
         std::memset(this->data(), 0, this->size());
     }
 
-    std::shared_ptr<BlobInternal> hash()
+    std::shared_ptr<MutableBlobInternal> hash()
     {
-        return BlobInternal::hashFor(this->data(), this->size());
+        return MutableBlobInternal::hashFor(this->data(), this->size());
     }
 
     String base64String();
 
-    void append(BlobInternal other)
+    void append(MutableBlobInternal other)
     {
         this->insert(this->end(), other.begin(), other.end());
     }

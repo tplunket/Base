@@ -60,6 +60,11 @@ public:
     static MutableString stringWithUTF16(const Blob&);
 
     #pragma mark Operators
+    bool operator==(const String& other) const;
+    bool operator!=(const String& other) const
+    {
+        return !this->operator==(other);
+    }
     bool operator==(const character*) const;
     bool operator!=(const character* other) const
     {

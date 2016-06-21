@@ -25,7 +25,7 @@
 #include <Base/String.hpp>
 #include <Base/MutableArray.hpp>
 #include <Base/GeneratedObjectCode.hpp>
-#include <Base/Internal/Array.hpp>
+#include <Base/Internal/MutableArray.hpp>
 
 #include <algorithm>
 #include <vector>
@@ -37,18 +37,18 @@ namespace NxA {
 #pragma mark Class
 
 template <class T> class Array {
-    NXA_GENERATED_INTERNAL_OBJECT_FORWARD_DECLARATION_USING(ArrayInternal<T>);
+    NXA_GENERATED_INTERNAL_OBJECT_FORWARD_DECLARATION_USING(MutableArrayInternal<T>);
 
-    std::shared_ptr<ArrayInternal<T>> internal;
+    std::shared_ptr<MutableArrayInternal<T>> internal;
 
     friend class MutableArray<T>;
 
 public:
     #pragma mark Constructors/Destructors
-    Array() : internal{ std::make_shared<ArrayInternal<T>>() } { }
+    Array() : internal{ std::make_shared<MutableArrayInternal<T>>() } { }
     Array(const Array&) = default;
     Array(Array&&) = default;
-    Array(const MutableArray<T>& other) : internal{ std::make_shared<ArrayInternal<T>>(*other.internal) } { }
+    Array(const MutableArray<T>& other) : internal{ std::make_shared<MutableArrayInternal<T>>(*other.internal) } { }
     Array(MutableArray<T>&& other) : internal{ std::move(other.internal) } { }
     ~Array() = default;
 
@@ -79,8 +79,8 @@ public:
     }
 
     #pragma mark Iterators
-    using iterator = typename ArrayInternal<T>::iterator;
-    using const_iterator = typename ArrayInternal<T>::const_iterator;
+    using iterator = typename MutableArrayInternal<T>::iterator;
+    using const_iterator = typename MutableArrayInternal<T>::const_iterator;
 
     #pragma mark Operators
     Array& operator=(Array&&) = default;
@@ -93,6 +93,10 @@ public:
 
         return *internal == *(other.internal);
     }
+    bool operator!=(const Array& other) const
+    {
+        return !this->operator==(other);
+    }
     bool operator==(const MutableArray<T>& other) const
     {
         if (internal == other.internal) {
@@ -101,7 +105,15 @@ public:
 
         return *internal == *(other.internal);
     }
-    T operator[] (count index) const
+    bool operator!=(const MutableArray<T>& other) const
+    {
+        return !this->operator==(other);
+    }
+    const T& operator[](count index) const
+    {
+        return internal->operator[](index);
+    }
+    T& operator[](count index)
     {
         return internal->operator[](index);
     }
@@ -145,19 +157,31 @@ public:
         return internal->length();
     }
 
-    T firstObject()
+    const T& firstObject() const
     {
         return internal->firstObject();
     }
-    T lastObject()
+    T& firstObject()
+    {
+        return internal->firstObject();
+    }
+    const T& lastObject() const
     {
         return internal->lastObject();
     }
-    boolean contains(const T object) const
+    T& lastObject()
+    {
+        return internal->lastObject();
+    }
+    boolean contains(const T& object) const
     {
         return internal->contains(object);
     }
-    const_iterator find(const T object) const
+    iterator find(const T& object)
+    {
+        return internal->find(object);
+    }
+    const_iterator find(const T& object) const
     {
         return internal->find(object);
     }

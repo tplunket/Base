@@ -24,7 +24,7 @@
 #include <Base/Types.hpp>
 #include <Base/Assert.hpp>
 #include <Base/Internal/Object.hpp>
-#include <Base/Internal/Array.hpp>
+#include <Base/Internal/MutableArray.hpp>
 
 #include <algorithm>
 #include <vector>
@@ -36,20 +36,13 @@ template <class T> class Array;
 #pragma mark Class
 
 template <class T> class MutableArray {
-    NXA_GENERATED_INTERNAL_OBJECT_FORWARD_DECLARATION_USING(ArrayInternal<T>);
+    NXA_GENERATED_INTERNAL_OBJECT_FORWARD_DECLARATION_USING(MutableArrayInternal<T>);
 
     std::shared_ptr<Internal> internal;
 
     friend Array<T>;
 
 public:
-    #pragma mark Constructors/Destructors
-    MutableArray() : internal{ std::make_shared<Internal>() } { }
-    MutableArray(const MutableArray& other) : internal{ std::make_shared<Internal>(*other.internal) } { }
-    MutableArray(MutableArray&&) = default;
-    MutableArray(const Array<T>& other) : internal{ std::make_shared<Internal>(*other.internal) } { }
-    ~MutableArray() = default;
-
     #pragma mark Class Methods
     static const character* staticClassName()
     {
@@ -76,9 +69,17 @@ public:
         return result;
     }
 
+    #pragma mark Constructors/Destructors
+    MutableArray() : internal{ std::make_shared<Internal>() } { }
+    MutableArray(const MutableArray& other) : internal{ std::make_shared<Internal>(*other.internal) } { }
+    MutableArray(MutableArray& other) : internal{ other.internal } { }
+    MutableArray(MutableArray&&) = default;
+    MutableArray(const Array<T>& other) : internal{ std::make_shared<Internal>(*other.internal) } { }
+    ~MutableArray() = default;
+
     #pragma mark Iterators
-    using iterator = typename ArrayInternal<T>::iterator;
-    using const_iterator = typename ArrayInternal<T>::const_iterator;
+    using iterator = typename MutableArrayInternal<T>::iterator;
+    using const_iterator = typename MutableArrayInternal<T>::const_iterator;
 
     #pragma mark Operators
     MutableArray& operator=(MutableArray&&) = default;
@@ -91,6 +92,10 @@ public:
 
         return *internal == *(other.internal);
     }
+    bool operator!=(const MutableArray& other) const
+    {
+        return !this->operator==(other);
+    }
     bool operator==(const Array<T>& other) const
     {
         if (internal == other.internal) {
@@ -99,7 +104,15 @@ public:
 
         return *internal == *(other.internal);
     }
-    T operator[] (count index) const
+    bool operator!=(const Array<T>& other) const
+    {
+        return !this->operator==(other);
+    }
+    const T& operator[](count index) const
+    {
+        return internal->operator[](index);
+    }
+    T& operator[](count index)
     {
         return internal->operator[](index);
     }
@@ -142,7 +155,25 @@ public:
     {
         return internal->append(object);
     }
+    void append(MutableArray<T>& objects)
+    {
+        for (auto& object : objects) {
+            internal->append(object);
+        }
+    }
+    void append(const MutableArray<T>& objects)
+    {
+        for (auto& object : objects) {
+            internal->append(object);
+        }
+    }
     void append(const Array<T>& objects)
+    {
+        for (auto& object : objects) {
+            internal->append(object);
+        }
+    }
+    void append(Array<T>& objects)
     {
         for (auto& object : objects) {
             internal->append(object);
@@ -165,17 +196,29 @@ public:
         return internal->length();
     }
 
-    T firstObject()
+    const T& firstObject() const
     {
         return internal->firstObject();
     }
-    T lastObject()
+    T& firstObject()
+    {
+        return internal->firstObject();
+    }
+    const T& lastObject() const
+    {
+        return internal->lastObject();
+    }
+    T& lastObject()
     {
         return internal->lastObject();
     }
     boolean contains(const T& object) const
     {
         return internal->contains(object);
+    }
+    iterator find(const T& object)
+    {
+        return internal->find(object);
     }
     const_iterator find(const T& object) const
     {

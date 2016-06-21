@@ -26,12 +26,12 @@
 
 namespace NxA {
 
-struct BlobInternal;
+struct MutableBlobInternal;
 class MutableBlob;
 class String;
 
 class Blob {
-    NXA_GENERATED_INTERNAL_OBJECT_FORWARD_DECLARATION_USING(BlobInternal);
+    NXA_GENERATED_INTERNAL_OBJECT_FORWARD_DECLARATION_USING(MutableBlobInternal);
     NXA_GENERATED_OBJECT_METHODS_DECLARATIONS_FOR(Blob);
 
     friend MutableBlob;

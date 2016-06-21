@@ -108,6 +108,22 @@ TEST(Base_Array, OperatorSquareBrackets_AccessOnConstantArray_ReturnsCorrectValu
     ASSERT_STREQ("Test", constTest[0].asUTF8());
 }
 
+TEST(Base_Array, OperatorSquareBrackets_AccessOnMutableArrayOfMutable_ReturnsTheArrayAndNotACopy)
+{
+    // -- Given.
+    MutableArray<MutableArray<String>> test;
+    MutableArray<String> test2;
+    test.append(test2);
+    test2.append(String("Test"));
+
+    // -- When.
+    auto result = test[0];
+
+    // -- Then.
+    ASSERT_EQ(1, result.length());
+    ASSERT_STREQ("Test", result.firstObject().asUTF8());
+}
+
 TEST(Base_Array, OperatorSquareBrackets_OutOfBoundsAccess_ThrowsException)
 {
     // -- Given.

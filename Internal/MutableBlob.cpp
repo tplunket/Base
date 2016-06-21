@@ -371,16 +371,16 @@ void MurmurHash3_x64_128 ( const void * key, const int len,
 
 }
 
-#pragma mark - BlobInternal Class
+#pragma mark - MutableBlobInternal Class
 
-#include "Base/Internal/Blob.hpp"
+#include "Base/Internal/MutableBlob.hpp"
 #include "Base/String.hpp"
 
 using namespace NxA;
 
 #pragma mark Class Methods
 
-String BlobInternal::base64StringFor(const byte* memory, count size)
+String MutableBlobInternal::base64StringFor(const byte* memory, count size)
 {
     base64_encodestate encodeState;
     base64_init_encodestate(&encodeState);
@@ -396,7 +396,7 @@ String BlobInternal::base64StringFor(const byte* memory, count size)
 
 #pragma mark Factory Methods
 
-std::shared_ptr<BlobInternal> BlobInternal::blobWithBase64String(const String& string)
+std::shared_ptr<MutableBlobInternal> MutableBlobInternal::blobWithBase64String(const String& string)
 {
     base64_decodestate decodeState;
     base64_init_decodestate(&decodeState);
@@ -406,26 +406,26 @@ std::shared_ptr<BlobInternal> BlobInternal::blobWithBase64String(const String& s
     count codeLength = base64_decode_block(string.asUTF8(), static_cast<int>(string.length()), codeOut, &decodeState);
     NXA_ASSERT_TRUE(codeLength <= sizeof(codeOut));
 
-    return BlobInternal::blobWithMemoryAndSize(reinterpret_cast<byte*>(codeOut), codeLength);
+    return MutableBlobInternal::blobWithMemoryAndSize(reinterpret_cast<byte*>(codeOut), codeLength);
 }
 
-std::shared_ptr<BlobInternal> BlobInternal::blobWithStringWithTerminator(const String& string)
+std::shared_ptr<MutableBlobInternal> MutableBlobInternal::blobWithStringWithTerminator(const String& string)
 {
-    auto newInternal = std::make_shared<BlobInternal>();
+    auto newInternal = std::make_shared<MutableBlobInternal>();
     newInternal->appendWithStringTermination(string.asUTF8());
     return newInternal;
 }
 
-std::shared_ptr<BlobInternal> BlobInternal::blobWithStringWithoutTerminator(const String& string)
+std::shared_ptr<MutableBlobInternal> MutableBlobInternal::blobWithStringWithoutTerminator(const String& string)
 {
-    auto newInternal = std::make_shared<BlobInternal>();
+    auto newInternal = std::make_shared<MutableBlobInternal>();
     newInternal->appendWithoutStringTermination(string.asUTF8());
     return newInternal;
 }
 
 #pragma mark Instance Methods
 
-String BlobInternal::base64String()
+String MutableBlobInternal::base64String()
 {
-    return BlobInternal::base64StringFor(this->data(), this->size());
+    return MutableBlobInternal::base64StringFor(this->data(), this->size());
 }

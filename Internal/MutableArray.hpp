@@ -26,7 +26,7 @@
 
 #include "Base/Assert.hpp"
 #include "Base/Types.hpp"
-#include "Base/String.hpp"
+#include "Base/MutableString.hpp"
 #include "Base/Internal/Object.hpp"
 
 namespace NxA {
@@ -38,7 +38,7 @@ template <class T> class MutableArrayInternal;
 #pragma mark Utility Methods
 
 // -- This is a utility function to return the description of the content of an array.
-template <class T> String descriptionOfObjectsInArrayAtAddress(const MutableArrayInternal<T>&);
+template <class T> String descriptionOfObjectsInArray(const MutableArrayInternal<T>&);
 
 #pragma mark Class
 
@@ -160,7 +160,13 @@ template <class T> struct MutableArrayInternal : public Object::Internal, public
 
     String description() const
     {
-        return descriptionOfObjectsInArray(*this);
+        auto result = MutableString::stringWithFormat("Array at %08p with %ld elements:", this, this->length());
+        for (count index = 0; index < this->length(); ++index) {
+            auto& item = (*this)[index];
+            result.append(String::stringWithFormat("\n  %ld: %s", index, item.description().asUTF8()));
+        }
+
+        return { std::move(result) };
     }
 };
 

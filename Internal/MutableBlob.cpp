@@ -398,6 +398,10 @@ String MutableBlobInternal::base64StringFor(const byte* memory, count size)
 
 std::shared_ptr<MutableBlobInternal> MutableBlobInternal::blobWithBase64String(const String& string)
 {
+    if (!string.length()) {
+        return std::make_shared<MutableBlobInternal>();
+    }
+
     base64_decodestate decodeState;
     base64_init_decodestate(&decodeState);
 

@@ -29,8 +29,6 @@
 
 using namespace NxA;
 
-NXA_GENERATED_OBJECT_METHODS_DEFINITIONS_FOR(MutableString);
-
 #pragma mark Constructors/Destructors
 
 MutableString::MutableString() : internal{ std::make_shared<Internal>() } { }
@@ -40,6 +38,16 @@ MutableString::MutableString(const String& other) : internal{ std::make_shared<I
 MutableString::MutableString(const std::string& other) : internal{ std::make_shared<Internal>(other) } { }
 
 MutableString::MutableString(const character* other, size_t size) : internal{ std::make_shared<Internal>(other, size) } { }
+
+MutableString::MutableString(const MutableString& other) : internal{ std::make_shared<Internal>(*other.internal) } { }
+
+MutableString::MutableString(MutableString&&) = default;
+
+MutableString::MutableString(MutableString&) = default;
+
+MutableString::MutableString(std::shared_ptr<Internal>&& other) : internal{ std::move(other) } { }
+
+MutableString::~MutableString() = default;
 
 #pragma mark Factory Methods
 
@@ -60,6 +68,10 @@ MutableString MutableString::stringWithUTF16(const Blob& other)
 
 #pragma mark Operators
 
+MutableString& MutableString::operator=(MutableString&&) = default;
+
+MutableString& MutableString::operator=(const MutableString&) = default;
+
 bool MutableString::operator==(const String& other) const
 {
     return internal->operator==(*other.internal);
@@ -70,7 +82,30 @@ bool MutableString::operator==(const character* other) const
     return internal->operator==(other);
 }
 
+boolean MutableString::operator==(const MutableString& other) const
+{
+    if (internal == other.internal) {
+        return true;
+    }
+    return *internal == *(other.internal);
+}
+
 #pragma mark Instance Methods
+
+uinteger32 MutableString::classHash() const
+{
+    return MutableString::staticClassHash();
+}
+
+const character* MutableString::className() const
+{
+    return MutableString::staticClassName();
+}
+
+boolean MutableString::classNameIs(const character* className) const
+{
+    return !::strcmp(MutableString::staticClassName(), className);
+}
 
 String MutableString::description() const
 {

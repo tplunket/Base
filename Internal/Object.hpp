@@ -29,6 +29,10 @@ struct Object {
         #pragma mark Constructors/Destructors
         Internal() { }
         virtual ~Internal() = default;
+
+        #pragma mark Instance Methods
+        virtual uinteger32 classHash() const = 0;
+        virtual const character* className() const = 0;
     };
 };
 

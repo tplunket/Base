@@ -79,8 +79,6 @@ inline NxA::uinteger32 SBox(const NxA::byte* key, NxA::count len, NxA::uinteger3
 
 using namespace NxA;
 
-NXA_GENERATED_IMMUTABLE_OBJECT_METHODS_DEFINITIONS_FOR(String);
-
 #pragma mark Constructors/Destructors
 
 String::String() : internal{ std::make_shared<Internal>() } { }
@@ -96,6 +94,16 @@ String::String(MutableString&& other) : internal{ std::move(other.internal) }
     // -- If we're moving this other mutable, it can't be referred to by anyone else.
     NXA_ASSERT_TRUE(internal.use_count() == 1);
 }
+
+String::String(const String&) = default;
+
+String::String(String&&) = default;
+
+String::String(String&) = default;
+
+String::String(std::shared_ptr<Internal>&& other) : internal{ std::move(other) } { }
+
+String::~String() = default;
 
 #pragma mark Factory Methods
 
@@ -137,6 +145,10 @@ count String::lengthOf(const character* str)
 
 #pragma mark Operators
 
+String& String::operator=(String&&) = default;
+
+String& String::operator=(const String&) = default;
+
 bool String::operator==(const character* other) const
 {
     return internal->operator==(other);
@@ -147,7 +159,30 @@ bool String::operator==(const MutableString& other) const
     return internal->operator==(*other.internal);
 }
 
+boolean String::operator==(const String& other) const
+{
+    if (internal == other.internal) {
+        return true;
+    }
+    return *internal == *(other.internal);
+}
+
 #pragma mark Instance Methods
+
+uinteger32 String::classHash() const
+{
+    return String::staticClassHash();
+}
+
+const character* String::className() const
+{
+    return String::staticClassName();
+}
+
+boolean String::classNameIs(const character* className) const
+{
+    return !::strcmp(String::staticClassName(), className);
+}
 
 String String::description() const
 {

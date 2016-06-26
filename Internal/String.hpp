@@ -307,6 +307,18 @@ struct StringInternal : public Object::Internal, public std::string
 
         boost::replace_all(*static_cast<std::string*>(this), occurence, replacement);
     }
+
+    #pragma mark Overriden Object::Internal Instance Methods
+    uinteger32 classHash() const override
+    {
+        NXA_ALOG("Illegal call.");
+        return 0;
+    }
+    const character* className() const override
+    {
+        NXA_ALOG("Illegal call.");
+        return nullptr;
+    }
 };
 
 }

@@ -127,6 +127,10 @@ public:
     {
         return Array::staticClassName();
     }
+    boolean classNameIs(const character* className) const
+    {
+        return !::strcmp(Array::staticClassName(), className);
+    }
     iterator begin() noexcept
     {
         return internal->begin();

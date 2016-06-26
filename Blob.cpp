@@ -27,8 +27,6 @@
 
 using namespace NxA;
 
-NXA_GENERATED_IMMUTABLE_OBJECT_METHODS_DEFINITIONS_FOR(Blob);
-
 #pragma mark mark Factory Methods
 
 Blob Blob::blobWithMemoryAndSize(const byte* other, count size)
@@ -73,7 +71,29 @@ Blob::Blob(MutableBlob&& other) : internal{ std::move(other.internal) }
     NXA_ASSERT_TRUE(internal.use_count() == 1);
 }
 
+Blob::Blob(const Blob&) = default;
+
+Blob::Blob(Blob&&) = default;
+
+Blob::Blob(Blob&) = default;
+
+Blob::Blob(std::shared_ptr<Internal>&& other) : internal{ std::move(other) } { }
+
+Blob::~Blob() = default;
+
 #pragma mark Operators
+
+Blob& Blob::operator=(Blob&&) = default;
+
+Blob& Blob::operator=(const Blob&) = default;
+
+boolean Blob::operator==(const Blob& other) const
+{
+    if (internal == other.internal) {
+        return true;
+    }
+    return *internal == *(other.internal);
+}
 
 const byte& Blob::operator[] (integer index) const
 {
@@ -81,6 +101,20 @@ const byte& Blob::operator[] (integer index) const
 }
 
 #pragma mark Instance Methods
+
+uinteger32 Blob::classHash() const
+{
+    return Blob::staticClassHash();
+}
+const character* Blob::className() const
+{
+    return Blob::staticClassName();
+}
+
+bool Blob::classNameIs(const character* className) const
+{
+    return !::strcmp(Blob::staticClassName(), className);
+}
 
 count Blob::size() const
 {

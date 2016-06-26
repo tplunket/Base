@@ -228,7 +228,6 @@ struct StringInternal : public Object::Internal, public std::string
             return { std::make_shared<StringInternal>() };
         }
 
-        auto tst = StringInternal(output, convertedSize);
         return { std::make_shared<StringInternal>(const_cast<const character*>(output), convertedSize) };
     }
 

@@ -306,7 +306,7 @@ struct StringInternal : public Object::Internal, public std::string
         NXA_ASSERT_NOT_NULL(replacement);
 
         boost::replace_all(*static_cast<std::string*>(this), occurence, replacement);
-     }
+    }
 };
 
 }

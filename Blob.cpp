@@ -71,6 +71,8 @@ Blob::Blob(MutableBlob&& other) : internal{ std::move(other.internal) }
     NXA_ASSERT_TRUE(internal.use_count() == 1);
 }
 
+Blob::Blob(const MutableBlob& other) : internal{ std::make_shared<MutableBlobInternal>(*other.internal) } { }
+
 Blob::Blob(const Blob&) = default;
 
 Blob::Blob(Blob&&) = default;

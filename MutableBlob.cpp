@@ -31,7 +31,7 @@ using namespace NxA;
 
 MutableBlob::MutableBlob() : internal{ std::make_shared<Internal>() } { }
 
-MutableBlob::MutableBlob(Blob other) : internal{ std::make_shared<Internal>(*other.internal) } { }
+MutableBlob::MutableBlob(const Blob &other) : internal{ std::make_shared<Internal>(*other.internal) } { }
 
 MutableBlob::MutableBlob(const MutableBlob& other) : internal{ std::make_shared<Internal>(*other.internal) } { }
 

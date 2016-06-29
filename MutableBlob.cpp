@@ -27,13 +27,21 @@
 
 using namespace NxA;
 
-NXA_GENERATED_OBJECT_METHODS_DEFINITIONS_FOR(MutableBlob);
-
 #pragma mark Constructors/Destructors
 
 MutableBlob::MutableBlob() : internal{ std::make_shared<Internal>() } { }
 
-MutableBlob::MutableBlob(Blob other) : internal{ std::make_shared<Internal>(*other.internal) } { }
+MutableBlob::MutableBlob(const Blob &other) : internal{ std::make_shared<Internal>(*other.internal) } { }
+
+MutableBlob::MutableBlob(const MutableBlob& other) : internal{ std::make_shared<Internal>(*other.internal) } { }
+
+MutableBlob::MutableBlob(MutableBlob&&) = default;
+
+MutableBlob::MutableBlob(MutableBlob&) = default;
+
+MutableBlob::MutableBlob(std::shared_ptr<Internal>&& other) : internal{ std::move(other) } { }
+
+MutableBlob::~MutableBlob() = default;
 
 #pragma mark mark Factory Methods
 
@@ -64,12 +72,38 @@ MutableBlob MutableBlob::blobWithStringWithoutTerminator(const String& string)
 
 #pragma mark Operators
 
+MutableBlob& MutableBlob::operator=(MutableBlob&&) = default;
+
+MutableBlob& MutableBlob::operator=(const MutableBlob&) = default;
+
+boolean MutableBlob::operator==(const MutableBlob& other) const
+{
+    if (internal == other.internal) {
+        return true;
+    }
+    return *internal == *(other.internal);
+}
+
 const byte& MutableBlob::operator[] (integer index) const
 {
     return internal->operator[](index);
 }
 
 #pragma mark Instance Methods
+
+uinteger32 MutableBlob::classHash() const
+{
+    return MutableBlob::staticClassHash();
+}
+const character* MutableBlob::className() const
+{
+    return MutableBlob::staticClassName();
+}
+
+bool MutableBlob::classNameIs(const character* className) const
+{
+    return !::strcmp(MutableBlob::staticClassName(), className);
+}
 
 count MutableBlob::size() const
 {

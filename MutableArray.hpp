@@ -126,6 +126,10 @@ public:
     {
         return MutableArray::staticClassName();
     }
+    boolean classNameIs(const character* className) const
+    {
+        return !::strcmp(MutableArray::staticClassName(), className);
+    }
     iterator begin() noexcept
     {
         return internal->begin();

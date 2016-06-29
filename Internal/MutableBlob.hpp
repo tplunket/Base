@@ -147,6 +147,18 @@ struct MutableBlobInternal : public Object::Internal, public std::vector<byte>
             this->std::vector<byte>::insert(this->end(), padding.begin(), padding.end());
         }
     }
+
+    #pragma mark Overriden Object::Internal Instance Methods
+    uinteger32 classHash() const override
+    {
+        NXA_ALOG("Illegal call.");
+        return 0;
+    }
+    const character* className() const override
+    {
+        NXA_ALOG("Illegal call.");
+        return nullptr;
+    }
 };
 
 }

@@ -47,23 +47,15 @@ class String;
         private:\
             using Internal = class_name; \
 
-#define NXA_GENERATED_NAME_AND_HASH_INTERNAL_OBJECT_METHODS_DECLARATIONS_FOR(class_name...) \
-        static const character* staticClassName() \
-        { \
-            return NXA_STR_VALUE_FOR(class_name); \
-        } \
-        static uinteger32 staticClassHash() \
-        { \
-            static uinteger32 result = String::hashFor(class_name::staticClassName()); \
-            return result; \
-        } \
+#define NXA_GENERATED_INTERNAL_OBJECT_NAME_AND_HASH_METHODS_DECLARATIONS_FOR(class_name...) \
         virtual uinteger32 classHash() const override \
         { \
-            return class_name::staticClassHash(); \
+            static uinteger32 result = String::hashFor(this->className()); \
+            return result; \
         } \
         virtual const character* className() const override \
         { \
-            return class_name::staticClassName(); \
+            return NXA_STR_VALUE_FOR(class_name); \
         }
 
 #define NXA_GENERATED_COMMON_OBJECT_METHODS_DECLARATIONS_WITHOUT_INTERNAL_OBJECT_FOR(class_name...) \
@@ -90,14 +82,9 @@ class String;
                 static uinteger32 result = String::hashFor(class_name::staticClassName()); \
                 return result; \
             } \
-            uinteger32 classHash() const \
-            { \
-                return class_name::staticClassHash(); \
-            } \
-            const character* className() const \
-            { \
-                return class_name::staticClassName(); \
-            } \
+            uinteger32 classHash() const; \
+            const character* className() const; \
+            bool classNameIs(const character* className) const; \
             String description() const; \
         private:
 
@@ -138,6 +125,18 @@ class String;
                 return true; \
             } \
             return *internal == *(other.internal); \
+        } \
+        uinteger32 class_name::classHash() const \
+        { \
+            return internal->classHash(); \
+        } \
+        const character* class_name::className() const \
+        { \
+            return internal->className(); \
+        } \
+        bool class_name::classNameIs(const character* className) const \
+        { \
+            return !::strcmp(internal->className(), className); \
         }
 
 #define NXA_GENERATED_OBJECT_METHODS_DEFINITIONS_WITH_INTERNAL_STORED_IN_FOR(internal_location, class_name...) \

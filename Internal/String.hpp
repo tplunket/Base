@@ -228,7 +228,6 @@ struct StringInternal : public Object::Internal, public std::string
             return { std::make_shared<StringInternal>() };
         }
 
-        auto tst = StringInternal(output, convertedSize);
         return { std::make_shared<StringInternal>(const_cast<const character*>(output), convertedSize) };
     }
 
@@ -307,7 +306,19 @@ struct StringInternal : public Object::Internal, public std::string
         NXA_ASSERT_NOT_NULL(replacement);
 
         boost::replace_all(*static_cast<std::string*>(this), occurence, replacement);
-     }
+    }
+
+    #pragma mark Overriden Object::Internal Instance Methods
+    uinteger32 classHash() const override
+    {
+        NXA_ALOG("Illegal call.");
+        return 0;
+    }
+    const character* className() const override
+    {
+        NXA_ALOG("Illegal call.");
+        return nullptr;
+    }
 };
 
 }

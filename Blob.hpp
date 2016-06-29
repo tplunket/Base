@@ -39,6 +39,7 @@ class Blob {
 public:
     #pragma mark Constructors/Destructors
     Blob();
+    Blob(const MutableBlob&);
     Blob(MutableBlob&&);
 
     #pragma mark Factory Methods

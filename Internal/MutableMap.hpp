@@ -113,6 +113,18 @@ template <typename Tkey, typename Tvalue> struct MutableMapInternal : public Obj
     {
         this->erase(position);
     }
+
+    #pragma mark Overriden Object::Internal Instance Methods
+    uinteger32 classHash() const override
+    {
+        NXA_ALOG("Illegal call.");
+        return 0;
+    }
+    const character* className() const override
+    {
+        NXA_ALOG("Illegal call.");
+        return nullptr;
+    }
 };
 
 }

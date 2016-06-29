@@ -39,7 +39,7 @@ class MutableBlob {
 public:
     #pragma mark Constructors/Destructors
     MutableBlob();
-    MutableBlob(Blob);
+    MutableBlob(const Blob&);
 
     #pragma mark Factory Methods
     static MutableBlob blobWithCapacity(count);

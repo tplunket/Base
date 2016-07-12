@@ -53,9 +53,9 @@ using count = std::size_t;
 
 using timestamp = std::time_t;
 
-using decimal = double;
 using decimal2 = dec::decimal<2>;
 using decimal3 = dec::decimal<3>;
+using decimal = decimal3;
 
 // -- Provide an optional type based on std::experimental::optional. TODO: change to std::optional in C++1y
 template <typename T>

@@ -99,6 +99,7 @@ public:
     boolean hasPostfix(const character*) const;
     boolean contains(const String&) const;
     boolean contains(const character*) const;
+    boolean hasNonPrintableCharacters() const;
 
     count indexOfFirstOccurenceOf(const String&) const;
     count indexOfFirstOccurenceOf(const character*) const;

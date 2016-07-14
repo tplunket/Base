@@ -61,6 +61,7 @@ public:
     }
     static String stringWithUTF16AtAndSize(const byte*, count);
     static String stringWithUTF16(const Blob&);
+    static String stringByFilteringNonPrintableCharactersIn(const String&);
 
     #pragma mark Class Methods
     static uinteger32 hashFor(const character*);
@@ -105,6 +106,7 @@ public:
     boolean hasPostfix(const character*) const;
     boolean contains(const String&) const;
     boolean contains(const character*) const;
+    boolean hasNonPrintableCharacters() const;
 
     count indexOfFirstOccurenceOf(const String&) const;
     count indexOfLastOccurenceOf(const String&) const;

@@ -207,6 +207,11 @@ boolean MutableString::contains(const character* other) const
     return internal->contains(other);
 }
 
+boolean MutableString::hasNonPrintableCharacters() const
+{
+    return internal->hasNonPrintableCharacters();
+}
+
 count MutableString::indexOfFirstOccurenceOf(const String& other) const
 {
     return internal->indexOfFirstOccurenceOf(other);

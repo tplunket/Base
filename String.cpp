@@ -127,6 +127,11 @@ String String::stringWithUTF16(const Blob& other)
     return { Internal::stringWithUTF16(other) };
 }
 
+String String::stringByFilteringNonPrintableCharactersIn(const String& other)
+{
+    return { Internal::stringByFilteringNonPrintableCharactersIn(other) };
+}
+
 #pragma mark Class Methods
 
 uinteger32 String::hashFor(const character* string)
@@ -282,6 +287,11 @@ boolean String::contains(const String& other) const
 boolean String::contains(const character* other) const
 {
     return internal->contains(other);
+}
+
+boolean String::hasNonPrintableCharacters() const
+{
+    return internal->hasNonPrintableCharacters();
 }
 
 count String::indexOfFirstOccurenceOf(const String& other) const

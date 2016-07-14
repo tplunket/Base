@@ -92,6 +92,26 @@ struct StringInternal : public Object::Internal, public std::string
         return StringInternal::stringWithUTF16AtAndSize(other.data(), other.size());
     }
 
+    static std::shared_ptr<StringInternal> stringByFilteringNonPrintableCharactersIn(const String& other)
+    {
+        std::string filtered;
+        filtered.reserve(other.length());
+
+        const character* input = other.asUTF8();
+
+        for (count index = 0; index < other.length(); ++index) {
+            byte value = input[index];
+            if (((value <= 0x1f) && (value != 0x09) && (value != 0x0a) && (value != 0x0d)) || (value == 0x7f)) {
+                continue;
+            }
+
+
+            filtered += value;
+        }
+
+        return { std::make_shared<StringInternal>(std::move(filtered)) };
+    }
+
     #pragma mark Operators
     bool operator==(const character* other) const
     {
@@ -280,6 +300,19 @@ struct StringInternal : public Object::Internal, public std::string
     boolean contains(const character* other) const
     {
         return this->find(other) != std::string::npos;
+    }
+
+    boolean hasNonPrintableCharacters() const
+    {
+        const character* input = this->asUTF8();
+        for (count index = 0; index < this->length(); ++index) {
+            byte value = input[index];
+            if (((value <= 0x1f) && (value != 0x09) && (value != 0x0a) && (value != 0x0d)) || (value == 0x7f)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     count indexOfFirstOccurenceOf(const String& other) const

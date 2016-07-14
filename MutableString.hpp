@@ -86,6 +86,7 @@ public:
 
     void append(const String&);
     void append(const character*);
+    void append(const character);
 
     Array<String> splitBySeparator(char) const;
     MutableString subString(count, count = -1) const;

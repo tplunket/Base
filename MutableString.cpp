@@ -152,6 +152,11 @@ void MutableString::append(const character* other)
     internal->append(other);
 }
 
+void MutableString::append(const character other)
+{
+    internal->append(other);
+}
+
 Array<String> MutableString::splitBySeparator(character separator) const
 {
     return internal->splitBySeparator(separator);

@@ -172,6 +172,11 @@ struct StringInternal : public Object::Internal, public std::string
         this->std::string::append(other);
     }
 
+    void append(const character other)
+    {
+        this->std::string::operator+=(other);
+    }
+
     std::shared_ptr<StringInternal> stringByAppending(const StringInternal& other) const
     {
         return { std::make_shared<StringInternal>(*this + other) };

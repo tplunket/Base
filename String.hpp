@@ -59,6 +59,7 @@ public:
     {
         return { other, length };
     }
+    static String stringWithUTF16AtAndSize(const byte*, count);
     static String stringWithUTF16(const Blob&);
 
     #pragma mark Class Methods

@@ -71,19 +71,25 @@ struct StringInternal : public Object::Internal, public std::string
         return std::make_shared<StringInternal>(buffer);
     }
 
-    static std::shared_ptr<StringInternal> stringWithUTF16(const Blob& other)
+    static std::shared_ptr<StringInternal> stringWithUTF16AtAndSize(const byte* data, count size)
     {
-        Blob local(other);
+        Blob local;
 
         if (Platform::endianOrder == Platform::LitleEndian) {
-            local = Platform::convertEndiannessOfUInteger16From(local);
+            local = Platform::convertEndiannessOfUInteger16From(Blob::blobWithMemoryAndSize(data, size));
+            data = local.data();
         }
 
-        count length = local.size() / 2;
-        const integer16* characters = reinterpret_cast<const integer16*>(local.data());
+        count length = size / 2;
+        const integer16* characters = reinterpret_cast<const integer16*>(data);
 
         std::wstring_convert<std::codecvt_utf8_utf16<char16_t>,char16_t> convert;
         return std::make_shared<StringInternal>(convert.to_bytes(reinterpret_cast<const char16_t*>(characters), reinterpret_cast<const char16_t*>(characters + length)));
+    }
+
+    static std::shared_ptr<StringInternal> stringWithUTF16(const Blob& other)
+    {
+        return StringInternal::stringWithUTF16AtAndSize(other.data(), other.size());
     }
 
     #pragma mark Operators

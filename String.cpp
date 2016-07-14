@@ -117,6 +117,11 @@ String String::stringWithFormat(const character* format, ...)
     return { std::move(result) };
 }
 
+String String::stringWithUTF16AtAndSize(const byte* data, count size)
+{
+    return { Internal::stringWithUTF16AtAndSize(data, size) };
+}
+
 String String::stringWithUTF16(const Blob& other)
 {
     return { Internal::stringWithUTF16(other) };

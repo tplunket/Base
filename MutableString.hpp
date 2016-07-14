@@ -94,13 +94,15 @@ public:
     MutableString upperCaseString() const;
 
     boolean hasPrefix(const String&) const;
-    boolean hasPostfix(const String&) const;
     boolean hasPrefix(const character*) const;
+    boolean hasPostfix(const String&) const;
     boolean hasPostfix(const character*) const;
+    boolean contains(const String&) const;
+    boolean contains(const character*) const;
 
     count indexOfFirstOccurenceOf(const String&) const;
-    count indexOfLastOccurenceOf(const String&) const;
     count indexOfFirstOccurenceOf(const character*) const;
+    count indexOfLastOccurenceOf(const String&) const;
     count indexOfLastOccurenceOf(const character*) const;
 
     void replaceOccurenceOfStringWith(const character*, const character*);

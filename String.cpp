@@ -259,14 +259,14 @@ boolean String::hasPrefix(const String& prefix) const
     return internal->hasPrefix(*prefix.internal);
 }
 
-boolean String::hasPostfix(const String& postfix) const
-{
-    return internal->hasPostfix(*postfix.internal);
-}
-
 boolean String::hasPrefix(const character* prefix) const
 {
     return internal->hasPrefix(prefix);
+}
+
+boolean String::hasPostfix(const String& postfix) const
+{
+    return internal->hasPostfix(*postfix.internal);
 }
 
 boolean String::hasPostfix(const character* postfix) const
@@ -274,7 +274,22 @@ boolean String::hasPostfix(const character* postfix) const
     return internal->hasPostfix(postfix);
 }
 
+boolean String::contains(const String& other) const
+{
+    return internal->contains(*other.internal);
+}
+
+boolean String::contains(const character* other) const
+{
+    return internal->contains(other);
+}
+
 count String::indexOfFirstOccurenceOf(const String& other) const
+{
+    return internal->indexOfFirstOccurenceOf(other);
+}
+
+count String::indexOfFirstOccurenceOf(const character* other) const
 {
     return internal->indexOfFirstOccurenceOf(other);
 }
@@ -282,11 +297,6 @@ count String::indexOfFirstOccurenceOf(const String& other) const
 count String::indexOfLastOccurenceOf(const String& other) const
 {
     return internal->indexOfLastOccurenceOf(other);
-}
-
-count String::indexOfFirstOccurenceOf(const character* other) const
-{
-    return internal->indexOfFirstOccurenceOf(other);
 }
 
 count String::indexOfLastOccurenceOf(const character* other) const

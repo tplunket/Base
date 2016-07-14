@@ -242,6 +242,13 @@ struct StringInternal : public Object::Internal, public std::string
         return this->find(prefix) == 0;
     }
 
+    boolean hasPrefix(const character* prefix) const
+    {
+        NXA_ASSERT_NOT_NULL(prefix);
+
+        return this->find(prefix) == 0;
+    }
+    
     boolean hasPostfix(const StringInternal& postfix) const
     {
         size_t pos = this->find(postfix);
@@ -250,13 +257,6 @@ struct StringInternal : public Object::Internal, public std::string
         }
 
         return pos == (this->length() - postfix.length());
-    }
-
-    boolean hasPrefix(const character* prefix) const
-    {
-        NXA_ASSERT_NOT_NULL(prefix);
-
-        return this->find(prefix) == 0;
     }
 
     boolean hasPostfix(const character* postfix) const
@@ -272,16 +272,21 @@ struct StringInternal : public Object::Internal, public std::string
         return pos == (this->length() - length);
     }
 
+    boolean contains(const StringInternal& other) const
+    {
+        return this->find(other) != std::string::npos;
+    }
+
+    boolean contains(const character* other) const
+    {
+        return this->find(other) != std::string::npos;
+    }
+
     count indexOfFirstOccurenceOf(const String& other) const
     {
         return this->indexOfFirstOccurenceOf(other.asUTF8());
     }
 
-    count indexOfLastOccurenceOf(const String& other) const
-    {
-        return this->indexOfLastOccurenceOf(other.asUTF8());
-    }
-    
     count indexOfFirstOccurenceOf(const character* other) const
     {
         NXA_ASSERT_NOT_NULL(other);
@@ -294,6 +299,11 @@ struct StringInternal : public Object::Internal, public std::string
         return pos;
     }
     
+    count indexOfLastOccurenceOf(const String& other) const
+    {
+        return this->indexOfLastOccurenceOf(other.asUTF8());
+    }
+
     count indexOfLastOccurenceOf(const character*  other) const
     {
         NXA_ASSERT_NOT_NULL(other);

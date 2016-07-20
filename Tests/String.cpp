@@ -300,7 +300,7 @@ TEST(Base_String, Append_AStringToACharacterPointer_ReturnsCorrectValue)
     ASSERT_STREQ("Hello This Is A Test.", test.asUTF8());
 }
 
-TEST(Base_String, SplitBySeperator_StringSeperatedBySpacesSpaces_ReturnsCorrectValue)
+TEST(Base_String, SplitBySeparator_StringSeparatedBySpacesSpaces_ReturnsCorrectValue)
 {
     // -- Given.
     MutableString test("Hello This Is A Test.");

@@ -82,10 +82,53 @@ protected:
     NoCopy& operator=(NoCopy const&) = delete;
 };
 
+// -- Template used to find the description for a type
+template <typename T>
+struct Describe {
+    static const character * describe(const T& item) {
+        return item.description().asUTF8();
+    }
+};
+
+template <typename T>
+struct Describe<std::shared_ptr<T>> {
+    static const character * describe(const std::shared_ptr<T>& item) {
+        if (!item) {
+            return "-empty shared_ptr-";
+        }
+        return Describe<T>::describe(*item);
+    }
+};
+
+template <typename T>
+struct Describe<Optional<T>> {
+    static const character * describe(const Optional<T>& item) {
+        if (!item) {
+            return "-empty optional-";
+        }
+        return Describe<T>::describe(*item);
+    }
+};
+
 // -- Template used by default to produce the name of unknown types.
-template <typename T> struct TypeName {
+template <typename T>
+struct TypeName {
     static const character* get() {
         return T::staticClassName();
+    }
+};
+
+template <typename T>
+struct TypeName<std::shared_ptr<T>> {
+    static const character* get() {
+        return TypeName<T>::get();
+    }
+};
+    
+template <typename T>
+struct TypeName<std::experimental::optional<T>> {
+    static const character* get() {
+        return TypeName<T>::get();
     }
 };
 

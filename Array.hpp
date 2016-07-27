@@ -50,7 +50,7 @@ public:
     Array(Array&&) = default;
     Array(const MutableArray<T>& other) : internal{ std::make_shared<MutableArrayInternal<T>>(*other.internal) } { }
     Array(MutableArray<T>&& other) : internal{ std::move(other.internal) } { }
-    ~Array() = default;
+    ~Array() {}
 
     #pragma mark Class Methods
     static const character* staticClassName()

@@ -299,3 +299,8 @@ bool operator< (const String& first, const String& second)
 }
 
 }
+
+
+template class std::basic_stringstream<char, std::char_traits<char>, std::allocator<char>>;
+template class std::basic_stringbuf<char, std::char_traits<char>, std::allocator<char>>;
+template class std::basic_string<char, std::char_traits<char>, std::allocator<char>>;

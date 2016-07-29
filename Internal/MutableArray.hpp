@@ -48,6 +48,9 @@ template <class T> struct MutableArrayInternal : public Object::Internal, public
     MutableArrayInternal() : std::vector<T>() { }
     MutableArrayInternal(const MutableArrayInternal& other) : std::vector<T>{ other } { }
     MutableArrayInternal(std::vector<T>&& other) : std::vector<T>{ std::move(other) } { }
+    template<class InputIt>
+    MutableArrayInternal(InputIt first, InputIt last) : std::vector<T>{first, last} { }
+
     virtual ~MutableArrayInternal() = default;
 
     #pragma mark Iterators

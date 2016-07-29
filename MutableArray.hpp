@@ -75,6 +75,8 @@ public:
     MutableArray(MutableArray& other) : internal{ other.internal } { }
     MutableArray(MutableArray&&) = default;
     MutableArray(const Array<T>& other) : internal{ std::make_shared<Internal>(*other.internal) } { }
+    template<class InputIt>
+    MutableArray(InputIt first, InputIt last) : internal{ std::make_shared<Internal>(first, last) } { }
     ~MutableArray() = default;
 
     #pragma mark Iterators

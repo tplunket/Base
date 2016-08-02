@@ -107,6 +107,9 @@ public:
     }
     Tvalue& operator[](const Tkey& key)
     {
+        if (!internal->containsValueForKey(key)) {
+            internal->setValueForKey(Tvalue{}, key);
+        }
         return internal->valueForKey(key);
     }
 

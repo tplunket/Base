@@ -138,6 +138,11 @@ struct StringInternal : public Object::Internal, public std::string
         return ::atoi(this->c_str());
     }
 
+    decimal3 decimalValue() const
+    {
+        return decimal3(*this);
+    }
+
     const std::string& asStdString() const
     {
         return *this;

@@ -127,6 +127,11 @@ integer MutableString::integerValue() const
     return internal->integerValue();
 }
 
+decimal3 MutableString::decimalValue() const
+{
+    return internal->decimalValue();
+}
+
 const std::string& MutableString::asStdString() const
 {
     return internal->asStdString();

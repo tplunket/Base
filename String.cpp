@@ -214,6 +214,11 @@ integer String::integerValue() const
     return internal->integerValue();
 }
 
+decimal3 String::decimalValue() const
+{
+    return internal->decimalValue();
+}
+
 const std::string& String::asStdString() const
 {
     return internal->asStdString();

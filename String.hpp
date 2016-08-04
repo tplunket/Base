@@ -87,6 +87,7 @@ public:
     };
     uinteger32 hash() const;
     integer integerValue() const;
+    decimal3 decimalValue() const;
 
     const std::string& asStdString() const;
     const character* asUTF8() const;

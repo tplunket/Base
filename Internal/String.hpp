@@ -75,19 +75,45 @@ struct StringInternal : public Object::Internal, public std::string
         return std::make_shared<StringInternal>(buffer);
     }
 
-    static std::shared_ptr<StringInternal> stringWithUTF16(const Blob& other)
+    static std::shared_ptr<StringInternal> stringWithUTF16AtAndSize(const byte* data, count size)
     {
-        Blob local(other);
+        Blob local;
 
         if (Platform::endianOrder == Platform::LitleEndian) {
-            local = Platform::convertEndiannessOfUInteger16From(local);
+            local = Platform::convertEndiannessOfUInteger16From(Blob::blobWithMemoryAndSize(data, size));
+            data = local.data();
         }
 
-        count length = local.size() / 2;
-        const integer16* characters = reinterpret_cast<const integer16*>(local.data());
+        count length = size / 2;
+        const integer16* characters = reinterpret_cast<const integer16*>(data);
 
         std::wstring_convert<std::codecvt_utf8_utf16<char16_t>,char16_t> convert;
         return std::make_shared<StringInternal>(convert.to_bytes(reinterpret_cast<const char16_t*>(characters), reinterpret_cast<const char16_t*>(characters + length)));
+    }
+
+    static std::shared_ptr<StringInternal> stringWithUTF16(const Blob& other)
+    {
+        return StringInternal::stringWithUTF16AtAndSize(other.data(), other.size());
+    }
+
+    static std::shared_ptr<StringInternal> stringByFilteringNonPrintableCharactersIn(const String& other)
+    {
+        std::string filtered;
+        filtered.reserve(other.length());
+
+        const character* input = other.asUTF8();
+
+        for (count index = 0; index < other.length(); ++index) {
+            byte value = input[index];
+            if (((value <= 0x1f) && (value != 0x09) && (value != 0x0a) && (value != 0x0d)) || (value == 0x7f)) {
+                continue;
+            }
+
+
+            filtered += value;
+        }
+
+        return { std::make_shared<StringInternal>(std::move(filtered)) };
     }
 
     #pragma mark Operators
@@ -114,6 +140,11 @@ struct StringInternal : public Object::Internal, public std::string
     integer integerValue() const
     {
         return ::atoi(this->c_str());
+    }
+
+    decimal3 decimalValue() const
+    {
+        return decimal3(*this);
     }
 
     const std::string& asStdString() const
@@ -148,6 +179,11 @@ struct StringInternal : public Object::Internal, public std::string
     void append(const character* other)
     {
         this->std::string::append(other);
+    }
+
+    void append(const character other)
+    {
+        this->std::string::operator+=(other);
     }
 
     std::shared_ptr<StringInternal> stringByAppending(const StringInternal& other) const
@@ -240,6 +276,13 @@ struct StringInternal : public Object::Internal, public std::string
         return this->find(prefix) == 0;
     }
 
+    boolean hasPrefix(const character* prefix) const
+    {
+        NXA_ASSERT_NOT_NULL(prefix);
+
+        return this->find(prefix) == 0;
+    }
+    
     boolean hasPostfix(const StringInternal& postfix) const
     {
         size_t pos = this->find(postfix);
@@ -248,13 +291,6 @@ struct StringInternal : public Object::Internal, public std::string
         }
 
         return pos == (this->length() - postfix.length());
-    }
-
-    boolean hasPrefix(const character* prefix) const
-    {
-        NXA_ASSERT_NOT_NULL(prefix);
-
-        return this->find(prefix) == 0;
     }
 
     boolean hasPostfix(const character* postfix) const
@@ -270,16 +306,34 @@ struct StringInternal : public Object::Internal, public std::string
         return pos == (this->length() - length);
     }
 
+    boolean contains(const StringInternal& other) const
+    {
+        return this->find(other) != std::string::npos;
+    }
+
+    boolean contains(const character* other) const
+    {
+        return this->find(other) != std::string::npos;
+    }
+
+    boolean hasNonPrintableCharacters() const
+    {
+        const character* input = this->asUTF8();
+        for (count index = 0; index < this->length(); ++index) {
+            byte value = input[index];
+            if (((value <= 0x1f) && (value != 0x09) && (value != 0x0a) && (value != 0x0d)) || (value == 0x7f)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     count indexOfFirstOccurenceOf(const String& other) const
     {
         return this->indexOfFirstOccurenceOf(other.asUTF8());
     }
 
-    count indexOfLastOccurenceOf(const String& other) const
-    {
-        return this->indexOfLastOccurenceOf(other.asUTF8());
-    }
-    
     count indexOfFirstOccurenceOf(const character* other) const
     {
         NXA_ASSERT_NOT_NULL(other);
@@ -292,6 +346,11 @@ struct StringInternal : public Object::Internal, public std::string
         return pos;
     }
     
+    count indexOfLastOccurenceOf(const String& other) const
+    {
+        return this->indexOfLastOccurenceOf(other.asUTF8());
+    }
+
     count indexOfLastOccurenceOf(const character*  other) const
     {
         NXA_ASSERT_NOT_NULL(other);

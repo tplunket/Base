@@ -127,6 +127,11 @@ integer MutableString::integerValue() const
     return internal->integerValue();
 }
 
+decimal3 MutableString::decimalValue() const
+{
+    return internal->decimalValue();
+}
+
 const std::string& MutableString::asStdString() const
 {
     return internal->asStdString();
@@ -148,6 +153,11 @@ void MutableString::append(const String& other)
 }
 
 void MutableString::append(const character* other)
+{
+    internal->append(other);
+}
+
+void MutableString::append(const character other)
 {
     internal->append(other);
 }
@@ -182,14 +192,14 @@ boolean MutableString::hasPrefix(const String& prefix) const
     return internal->hasPrefix(*prefix.internal);
 }
 
-boolean MutableString::hasPostfix(const String& postfix) const
-{
-    return internal->hasPostfix(*postfix.internal);
-}
-
 boolean MutableString::hasPrefix(const character* prefix) const
 {
     return internal->hasPrefix(prefix);
+}
+
+boolean MutableString::hasPostfix(const String& postfix) const
+{
+    return internal->hasPostfix(*postfix.internal);
 }
 
 boolean MutableString::hasPostfix(const character* postfix) const
@@ -197,7 +207,27 @@ boolean MutableString::hasPostfix(const character* postfix) const
     return internal->hasPostfix(postfix);
 }
 
+boolean MutableString::contains(const String& other) const
+{
+    return internal->contains(*other.internal);
+}
+
+boolean MutableString::contains(const character* other) const
+{
+    return internal->contains(other);
+}
+
+boolean MutableString::hasNonPrintableCharacters() const
+{
+    return internal->hasNonPrintableCharacters();
+}
+
 count MutableString::indexOfFirstOccurenceOf(const String& other) const
+{
+    return internal->indexOfFirstOccurenceOf(other);
+}
+
+count MutableString::indexOfFirstOccurenceOf(const character* other) const
 {
     return internal->indexOfFirstOccurenceOf(other);
 }
@@ -205,11 +235,6 @@ count MutableString::indexOfFirstOccurenceOf(const String& other) const
 count MutableString::indexOfLastOccurenceOf(const String& other) const
 {
     return internal->indexOfLastOccurenceOf(other);
-}
-
-count MutableString::indexOfFirstOccurenceOf(const character* other) const
-{
-    return internal->indexOfFirstOccurenceOf(other);
 }
 
 count MutableString::indexOfLastOccurenceOf(const character*  other) const

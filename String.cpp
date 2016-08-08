@@ -117,9 +117,19 @@ String String::stringWithFormat(const character* format, ...)
     return { std::move(result) };
 }
 
+String String::stringWithUTF16AtAndSize(const byte* data, count size)
+{
+    return { Internal::stringWithUTF16AtAndSize(data, size) };
+}
+
 String String::stringWithUTF16(const Blob& other)
 {
     return { Internal::stringWithUTF16(other) };
+}
+
+String String::stringByFilteringNonPrintableCharactersIn(const String& other)
+{
+    return { Internal::stringByFilteringNonPrintableCharactersIn(other) };
 }
 
 #pragma mark Class Methods
@@ -204,6 +214,11 @@ integer String::integerValue() const
     return internal->integerValue();
 }
 
+decimal3 String::decimalValue() const
+{
+    return internal->decimalValue();
+}
+
 const std::string& String::asStdString() const
 {
     return internal->asStdString();
@@ -254,14 +269,14 @@ boolean String::hasPrefix(const String& prefix) const
     return internal->hasPrefix(*prefix.internal);
 }
 
-boolean String::hasPostfix(const String& postfix) const
-{
-    return internal->hasPostfix(*postfix.internal);
-}
-
 boolean String::hasPrefix(const character* prefix) const
 {
     return internal->hasPrefix(prefix);
+}
+
+boolean String::hasPostfix(const String& postfix) const
+{
+    return internal->hasPostfix(*postfix.internal);
 }
 
 boolean String::hasPostfix(const character* postfix) const
@@ -269,7 +284,27 @@ boolean String::hasPostfix(const character* postfix) const
     return internal->hasPostfix(postfix);
 }
 
+boolean String::contains(const String& other) const
+{
+    return internal->contains(*other.internal);
+}
+
+boolean String::contains(const character* other) const
+{
+    return internal->contains(other);
+}
+
+boolean String::hasNonPrintableCharacters() const
+{
+    return internal->hasNonPrintableCharacters();
+}
+
 count String::indexOfFirstOccurenceOf(const String& other) const
+{
+    return internal->indexOfFirstOccurenceOf(other);
+}
+
+count String::indexOfFirstOccurenceOf(const character* other) const
 {
     return internal->indexOfFirstOccurenceOf(other);
 }
@@ -277,11 +312,6 @@ count String::indexOfFirstOccurenceOf(const String& other) const
 count String::indexOfLastOccurenceOf(const String& other) const
 {
     return internal->indexOfLastOccurenceOf(other);
-}
-
-count String::indexOfFirstOccurenceOf(const character* other) const
-{
-    return internal->indexOfFirstOccurenceOf(other);
 }
 
 count String::indexOfLastOccurenceOf(const character* other) const

@@ -59,7 +59,9 @@ public:
     {
         return { other, length };
     }
+    static String stringWithUTF16AtAndSize(const byte*, count);
     static String stringWithUTF16(const Blob&);
+    static String stringByFilteringNonPrintableCharactersIn(const String&);
 
     #pragma mark Class Methods
     static uinteger32 hashFor(const character*);
@@ -85,6 +87,7 @@ public:
     };
     uinteger32 hash() const;
     integer integerValue() const;
+    decimal3 decimalValue() const;
 
     const std::string& asStdString() const;
     const character* asUTF8() const;
@@ -99,9 +102,12 @@ public:
     String upperCaseString() const;
 
     boolean hasPrefix(const String&) const;
-    boolean hasPostfix(const String&) const;
     boolean hasPrefix(const character*) const;
+    boolean hasPostfix(const String&) const;
     boolean hasPostfix(const character*) const;
+    boolean contains(const String&) const;
+    boolean contains(const character*) const;
+    boolean hasNonPrintableCharacters() const;
 
     count indexOfFirstOccurenceOf(const String&) const;
     count indexOfLastOccurenceOf(const String&) const;

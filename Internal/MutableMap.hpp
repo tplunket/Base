@@ -103,7 +103,7 @@ template <typename Tkey, typename Tvalue> struct MutableMapInternal : public Obj
     }
     void removeAll()
     {
-        this->erase();
+        this->clear();
     }
     void removeValueForKey(const Tkey& key)
     {

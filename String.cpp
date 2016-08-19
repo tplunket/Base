@@ -199,6 +199,16 @@ String String::description() const
     return *this;
 }
 
+integer32 String::compare(const char * other) const
+{
+    return internal->compare(other);
+}
+
+integer32 String::compare(const String & other) const
+{
+    return internal->compare(*other.internal);
+}
+
 count String::length() const
 {
     return internal->length();

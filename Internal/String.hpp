@@ -132,6 +132,16 @@ struct StringInternal : public Object::Internal, public std::string
         return this->size();
     }
 
+    integer32 compare(const char * other) const
+    {
+        return this->std::string::compare(other);
+    }
+
+    integer32 compare(const StringInternal & other) const
+    {
+        return this->std::string::compare(static_cast<const std::string&>(other));
+    }
+
     uinteger32 hash() const
     {
         return String::hashFor(this->asUTF8());

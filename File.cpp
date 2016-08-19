@@ -131,7 +131,9 @@ String File::removePrefixFromPath(const String& prefix, const String& path)
         fullPrefix.append(separator);
     }
 
-    NXA_ASSERT_TRUE(path.hasPrefix(fullPrefix.asUTF8()));
+    if (!path.hasPrefix(fullPrefix.asUTF8())) {
+        NXA_ALOG("Path '%s' does not have prefix '%s'.", path.asUTF8(), prefix.asUTF8());
+    }
 
     count lengthToCrop = fullPrefix.length();
     return path.subString(lengthToCrop);

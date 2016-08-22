@@ -101,16 +101,18 @@ public:
 
         return *internal == *(other.internal);
     }
+
     const Tvalue& operator[](const Tkey& key) const
     {
-        return internal->valueForKey(key);
+        return internal->operator[](key);
     }
     Tvalue& operator[](const Tkey& key)
     {
-        if (!internal->containsValueForKey(key)) {
-            internal->setValueForKey(Tvalue{}, key);
-        }
-        return internal->valueForKey(key);
+        return internal->operator[](key);
+    }
+    Tvalue& operator[](Tkey&& key)
+    {
+        return internal->operator[](std::move(key));
     }
 
     #pragma mark Instance Methods

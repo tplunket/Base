@@ -65,7 +65,8 @@ template <class T> struct MutableArrayInternal : public Object::Internal, public
     }
     T& operator[](count index)
     {
-        return const_cast<T&>((static_cast<const MutableArrayInternal*>(this))->operator[](index));
+        NXA_ASSERT_TRUE(index >= 0 && index < this->length());
+        return this->std::vector<T>::operator[](index);
     }
 
     #pragma mark Instance Methods
@@ -132,7 +133,8 @@ template <class T> struct MutableArrayInternal : public Object::Internal, public
     }
     T& firstObject()
     {
-        return const_cast<T&>((static_cast<const MutableArrayInternal*>(this))->firstObject());
+        NXA_ASSERT_TRUE(this->size() != 0);
+        return this->std::vector<T>::operator[](0);
     }
     const  T& lastObject() const
     {
@@ -142,7 +144,9 @@ template <class T> struct MutableArrayInternal : public Object::Internal, public
     }
     T& lastObject()
     {
-        return const_cast<T&>((static_cast<const MutableArrayInternal*>(this))->lastObject());
+        count length = this->size();
+        NXA_ASSERT_TRUE(length != 0);
+        return this->std::vector<T>::operator[](length - 1);
     }
     boolean contains(const T& object) const
     {

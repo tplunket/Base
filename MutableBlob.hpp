@@ -50,19 +50,13 @@ public:
 
     #pragma mark Operators
     const byte& operator[] (integer) const;
-    byte& operator[] (integer index)
-    {
-        return const_cast<byte&>(static_cast<const MutableBlob*>(this)->operator[](index));
-    }
+    byte& operator[] (integer index);
 
     #pragma mark Instance Methods
     count size() const;
 
     const byte* data() const;
-    byte* data()
-    {
-        return const_cast<byte*>(static_cast<const MutableBlob*>(this)->data());
-    }
+    byte* data();
 
     void fillWithZeros();
 

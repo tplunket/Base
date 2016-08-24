@@ -325,7 +325,7 @@ namespace NxA {
 
 bool operator< (const String& first, const String& second)
 {
-    return first.internal < second.internal;
+    return *(first.internal) < *(second.internal);
 }
 
 }

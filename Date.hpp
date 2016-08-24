@@ -34,6 +34,8 @@ class Date {
 public:
     #pragma mark Class Methods
     static String formattedStringWithTimestampAndFormat(timestamp, const character*);
+
+    static timestamp currentDateInSecondsSinceJanuary1st1970();
 };
 
 }

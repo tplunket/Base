@@ -213,6 +213,18 @@ Array<String> File::pathsForFilesInDirectory(const String& path)
     return { std::move(pathsFound) };
 }
 
+String File::TemporaryDirectory()
+{
+    boost::system::error_code error;
+    auto path = boost::filesystem::temp_directory_path(error);
+
+    if (boost::system::errc::success != error.value()) {
+        throw FileError::exceptionWith("Error retrieving temporary path.");
+    }
+
+    return String(path.string());
+}
+
 timestamp File::modificationDateInSecondsSince1970ForFile(const String& path)
 {
     NXA_ASSERT_TRUE(path.length() > 0);

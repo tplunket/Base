@@ -234,6 +234,10 @@ public:
     {
         internal->removeObjectAt(objectPosition);
     }
+    void sort()
+    {
+        internal->sort();
+    }
 
     String description() const
     {

@@ -423,7 +423,9 @@ std::shared_ptr<MutableBlobInternal> MutableBlobInternal::blobWithStringWithTerm
 std::shared_ptr<MutableBlobInternal> MutableBlobInternal::blobWithStringWithoutTerminator(const String& string)
 {
     auto newInternal = std::make_shared<MutableBlobInternal>();
-    newInternal->appendWithoutStringTermination(string.asUTF8());
+    if (string.length()) {
+        newInternal->appendWithoutStringTermination(string.asUTF8());
+    }
     return newInternal;
 }
 
@@ -431,5 +433,10 @@ std::shared_ptr<MutableBlobInternal> MutableBlobInternal::blobWithStringWithoutT
 
 String MutableBlobInternal::base64String()
 {
-    return MutableBlobInternal::base64StringFor(this->data(), this->size());
+    if (this->size()) {
+        return MutableBlobInternal::base64StringFor(this->data(), this->size());
+    }
+    else {
+        return { };
+    }
 }

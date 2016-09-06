@@ -77,6 +77,10 @@ struct StringInternal : public Object::Internal, public std::string
 
     static std::shared_ptr<StringInternal> stringWithUTF16AtAndSize(const byte* data, count size)
     {
+        if (size < 2) {
+            return std::make_shared<StringInternal>();
+        }
+
         Blob local;
 
         if (Platform::endianOrder == Platform::LitleEndian) {

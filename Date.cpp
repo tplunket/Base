@@ -23,6 +23,7 @@
 #include "Base/Date.hpp"
 
 #include <iostream>
+#include <time.h>
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdocumentation"
@@ -48,4 +49,9 @@ String Date::formattedStringWithTimestampAndFormat(timestamp time, const charact
     stream << boost::posix_time::from_time_t(time);
 
     return String::stringWithUTF8(stream.str().c_str());
+}
+
+timestamp Date::currentDateInSecondsSinceJanuary1st1970()
+{
+    return std::time(nullptr);
 }

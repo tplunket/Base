@@ -405,3 +405,45 @@ TEST(Base_Array, Remove_ObjectInTheMiddle_RemovesObjectCorrectly)
     ASSERT_STREQ("Test", test[0].asUTF8());
     ASSERT_STREQ("Test3", test[1].asUTF8());
 }
+
+TEST(Base_Array, Sort_SortedArray_ReturnsUnchangedArray)
+{
+    // -- Given.
+    MutableArray<String> test;
+    auto object1 = String("ATest");
+    auto object2 = String("BTest2");
+    auto object3 = String("CTest3");
+    test.append(object1);
+    test.append(object2);
+    test.append(object3);
+
+    // -- When.
+    test.sort();
+
+    // -- Then.
+    ASSERT_EQ(3, test.length());
+    ASSERT_STREQ("ATest", test[0].asUTF8());
+    ASSERT_STREQ("BTest2", test[1].asUTF8());
+    ASSERT_STREQ("CTest3", test[2].asUTF8());
+}
+
+TEST(Base_Array, Sort_UnsortedArray_ReturnsASortedArray)
+{
+    // -- Given.
+    MutableArray<String> test;
+    auto object1 = String("CTest");
+    auto object2 = String("ATest2");
+    auto object3 = String("BTest3");
+    test.append(object1);
+    test.append(object2);
+    test.append(object3);
+
+    // -- When.
+    test.sort();
+
+    // -- Then.
+    ASSERT_EQ(3, test.length());
+    ASSERT_STREQ("ATest2", test[0].asUTF8());
+    ASSERT_STREQ("BTest3", test[1].asUTF8());
+    ASSERT_STREQ("CTest", test[2].asUTF8());
+}

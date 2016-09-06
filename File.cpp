@@ -131,7 +131,9 @@ String File::removePrefixFromPath(const String& prefix, const String& path)
         fullPrefix.append(separator);
     }
 
-    NXA_ASSERT_TRUE(path.hasPrefix(fullPrefix.asUTF8()));
+    if (!path.hasPrefix(fullPrefix.asUTF8())) {
+        NXA_ALOG("Path '%s' does not have prefix '%s'.", path.asUTF8(), prefix.asUTF8());
+    }
 
     count lengthToCrop = fullPrefix.length();
     return path.subString(lengthToCrop);
@@ -209,6 +211,18 @@ Array<String> File::pathsForFilesInDirectory(const String& path)
     }
 
     return { std::move(pathsFound) };
+}
+
+String File::TemporaryDirectory()
+{
+    boost::system::error_code error;
+    auto path = boost::filesystem::temp_directory_path(error);
+
+    if (boost::system::errc::success != error.value()) {
+        throw FileError::exceptionWith("Error retrieving temporary path.");
+    }
+
+    return String(path.string());
 }
 
 timestamp File::modificationDateInSecondsSince1970ForFile(const String& path)

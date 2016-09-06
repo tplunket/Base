@@ -164,6 +164,10 @@ template <class T> struct MutableArrayInternal : public Object::Internal, public
     {
         this->erase(objectPosition);
     }
+    void sort()
+    {
+        std::sort(this->std::vector<T>::begin(), this->std::vector<T>::end());
+    }
 
     String description() const
     {

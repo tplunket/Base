@@ -54,6 +54,8 @@ public:
     static void createDirectoryAt(const String&);
     static Array<String> pathsForFilesInDirectory(const String&);
 
+    static String TemporaryDirectory();
+    
     static timestamp modificationDateInSecondsSince1970ForFile(const String&);
     static void setModificationDateInSecondsSince1970ForFile(timestamp, const String&);
 };

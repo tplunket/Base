@@ -84,6 +84,14 @@ template <typename Tkey, typename Tvalue> struct MutableMapInternal : public Obj
             result.first->second = value;
         }
     }
+    const NxA::Optional<Tvalue> maybeValueForKey(const Tkey& key) const
+    {
+        const_iterator pos = this->std::map<const Tkey, Tvalue>::find(key);
+        if(pos == this->cend()) {
+            return NxA::nothing;
+        }
+        return {pos->second};
+    }
     const Tvalue& valueForKey(const Tkey& key) const
     {
         const_iterator pos = this->std::map<const Tkey, Tvalue>::find(key);

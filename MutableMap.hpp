@@ -171,6 +171,10 @@ public:
     {
         return internal->valueForKey(key);
     }
+    NxA::Optional<Tvalue> maybeValueForKey(const Tkey& key) const
+    {
+        return internal->maybeValueForKey(key);
+    }
     boolean containsValueForKey(const Tkey& key) const
     {
         return internal->containsValueForKey(key);

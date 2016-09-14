@@ -35,8 +35,9 @@ class LruCache : public std::list<std::pair<K, V>> {
     size_t limit;
 
 public:
-
+#ifdef LUR_TRACK_HITS
     int hits, misses;
+#endif
 
     using key_type = K;
     using value_type = V;
@@ -55,12 +56,16 @@ public:
     {
         auto found = map.find(k);
         if (found == std::end(map)) {
+#ifdef LUR_TRACK_HITS
             misses++;
+#endif
             return std::end(*this);
         }
         auto copy = found->second->second;
         insert(k, copy);
+#ifdef LUR_TRACK_HITS
         hits++;
+#endif
         return std::begin(*this);
     }
 
@@ -70,7 +75,9 @@ public:
         auto found = map.find(k);
         if (found == std::end(map)) {
             list.emplace_front(k, v);
+#ifdef LUR_TRACK_HITS
             misses++;
+#endif
             map.emplace(k, std::begin(list));
             found = map.find(k);
             if (list.size() > limit) {
@@ -80,7 +87,9 @@ public:
         }
         else {
             list.erase(found->second);
+#ifdef LUR_TRACK_HITS
             hits++;
+#endif
             list.emplace_front(k, v);
             found->second = std::begin(list);
         }
@@ -124,8 +133,13 @@ public:
     template<typename ostream>
     friend inline ostream &operator<<(ostream &os, const LruCache &self)
     {
-        os << "LRU (hit-rate: " << double(self.hits) / double(self.hits + self.misses) << ") {" << std::endl;
+        os << "LRU ";
+#if LUR_TRACK_HITS
+        os << "(hit-rate: " << double(self.hits) / double(self.hits + self.misses) << ") ";
+#endif
+        os << "{";
         for (auto const &in : self) {
+            os << std::endl;
             os << "  " << in.first << ":";
             os << in.second << std::endl;
         }

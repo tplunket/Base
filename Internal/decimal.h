@@ -435,6 +435,7 @@ protected:
           }
       }
 
+      if (divisor != 0) {
       int bitCnt1 = bitcnt(abs(value1));
       int bitCnt2 = bitcnt(abs(value2));
 
@@ -457,6 +458,10 @@ protected:
                    /
                    static_cast<cross_float>(divisor)
                );
+      }
+      else {
+          return 0;
+      }
     }
 
     void init(const decimal &src) { m_value = src.m_value; }

@@ -26,7 +26,6 @@
 #include <memory>
 #include <typeinfo>
 #include <experimental/optional>
-
 #include <Base/Internal/decimal.h>
 
 namespace NxA {
@@ -124,9 +123,9 @@ struct TypeName<std::shared_ptr<T>> {
         return TypeName<T>::get();
     }
 };
-    
+
 template <typename T>
-struct TypeName<std::experimental::optional<T>> {
+struct TypeName<Optional<T>> {
     static const character* get() {
         return TypeName<T>::get();
     }

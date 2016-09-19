@@ -34,35 +34,36 @@ public:
     Platform() = delete;
 
     #pragma mark Constants
-    enum class Kind
+    enum class Kind : uinteger32
     {
         OSX                 = 1,
         Windows             = 2,
         Unknown             = 23,
+    };
 
-        CurrentPlatform     =
+    static constexpr Kind CurrentPlatform =
 #ifndef _Windows
 #if defined(_WIN32) || defined(WIN32) || defined(__Win32__) || defined(__WIN32__) || defined(_WINDOWS)
-        Windows
+        Kind::Windows
 #else
 #if defined(__APPLE__) && defined(__MACH__)
-        OSX
+        Kind::OSX
 #else
-        Unknown
+        Kind::Unknown
 #endif
 #endif
 #else
 #if defined(__Win32__) || defined (_WIN32)
-        Windows
+        Kind::Windows
 #else
 #if defined(__APPLE__) && defined(__MACH__)
-        OSX
+        Kind::OSX
 #else
-        Unknown
+        Kind::Unknown
 #endif
 #endif
 #endif
-    };
+    ;
 
     static constexpr uinteger32 LitleEndian   = 1;
     static constexpr uinteger32 BigEndian     = 2;

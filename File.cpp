@@ -99,7 +99,7 @@ String File::joinPaths(const String& first, const String& second)
 {
     MutableString result(first);
 
-    if (Platform::Kind::CurrentPlatform == Platform::Kind::Windows) {
+    if (Platform::CurrentPlatform == Platform::Kind::Windows) {
         if (!result.hasPostfix("\\")) {
             result.append("\\");
         }
@@ -120,7 +120,7 @@ String File::removePrefixFromPath(const String& prefix, const String& path)
     MutableString fullPrefix(prefix);
 
     const character* separator;
-    if (Platform::Kind::CurrentPlatform == Platform::Kind::Windows) {
+    if (Platform::CurrentPlatform == Platform::Kind::Windows) {
         separator = "\\";
     }
     else {

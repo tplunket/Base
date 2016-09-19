@@ -180,6 +180,28 @@ public:
     }
 };
 
+// serato rounding policy - to nearest integer, closer to zero
+class serato_round_policy {
+public:
+    template<class T>
+    static int64 round(T value) {
+        T val1;
+
+        if (value < 0.0)
+            val1 = value - 0.499999;
+        else
+            val1 = value + 0.499999;
+
+        int64 intPart = static_cast<int64>(val1);
+        
+        return intPart;
+    }
+
+    static bool div_rounded(int64 &output, int64 a, int64 b) {
+        return dec::div_rounded(output, a, b);
+    }
+};
+    
 // no-rounding policy (decimal places stripped)
 class null_round_policy {
 public:

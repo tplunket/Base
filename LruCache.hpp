@@ -79,11 +79,11 @@ public:
             misses++;
 #endif
             map.emplace(k, std::begin(list));
-            found = map.find(k);
             if (list.size() > limit) {
                 map.erase(list.back().first);
                 list.pop_back();
             }
+            found = map.find(k);
         }
         else {
             list.erase(found->second);

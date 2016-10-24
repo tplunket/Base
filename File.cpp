@@ -95,7 +95,7 @@ void File::deleteFileAt(const String& path)
     ::remove(path.asUTF8());
 }
 
-String File::joinPaths(const String& first, const String& second)
+String File::joinPaths(const String& first, String second)
 {
     MutableString result(first);
 
@@ -107,6 +107,10 @@ String File::joinPaths(const String& first, const String& second)
     else {
         if (!result.hasPostfix("/")) {
             result.append("/");
+        }
+
+        if (second.hasPrefix("/")) {
+            second = second.subString(1);
         }
     }
 

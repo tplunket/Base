@@ -95,6 +95,16 @@ void File::deleteFileAt(const String& path)
     ::remove(path.asUTF8());
 }
 
+String File::pathSeparator()
+{
+    if (Platform::CurrentPlatform == Platform::Kind::Windows) {
+        return String("\\");
+    }
+    else {
+        return String("/");
+    }
+}
+
 String File::joinPaths(const String& first, String second)
 {
     MutableString result(first);

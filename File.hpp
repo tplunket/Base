@@ -43,6 +43,7 @@ public:
     static void writeBlobToFileAt(const Blob&, const String&);
     static void deleteFileAt(const String&);
 
+    static String pathSeparator();
     static String joinPaths(const String&, String);
     static String removePrefixFromPath(const String&, const String&);
     static String extensionForFilePath(const String&);

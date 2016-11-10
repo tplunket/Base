@@ -28,6 +28,7 @@
 
 #include <algorithm>
 #include <vector>
+#include <utility>
 
 namespace NxA {
 
@@ -161,6 +162,13 @@ public:
     {
         return internal->append(object);
     }
+
+    template<class... ConstructorArguments>
+    void emplaceAppend(ConstructorArguments &&... arguments)
+    {
+        internal->emplaceAppend(std::forward<ConstructorArguments>(arguments)...);
+    }
+
     void append(MutableArray<T>& objects)
     {
         for (auto& object : objects) {

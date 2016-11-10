@@ -121,9 +121,15 @@ template <class T> struct MutableArrayInternal : public Object::Internal, public
             this->emplace_back(object);
         }
     }
+    template <class... ConstructorArguments>
+    void emplaceAppend(ConstructorArguments &&... arguments)
+    {
+        this->emplace_back(std::forward<ConstructorArguments>(arguments)...);
+    }
+
     void insertAt(T object, const_iterator pos)
     {
-        this->emplace(pos, object);
+        this->std::vector<T>::emplace(pos, object);
     }
 
     const T& firstObject() const

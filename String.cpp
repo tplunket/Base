@@ -338,6 +338,11 @@ bool operator< (const String& first, const String& second)
     return *first.internal < *second.internal;
 }
 
+String operator "" _String(const character* str, count length)
+{
+    return NxA::String(str, length);
+}
+
 }
 
 

@@ -158,6 +158,11 @@ public:
         return internal->cend();
     }
 
+    void reserve(count amount)
+    {
+        return internal->reserve(amount);
+    }
+
     void append(T object)
     {
         return internal->append(object);

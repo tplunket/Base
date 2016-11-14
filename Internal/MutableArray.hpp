@@ -99,6 +99,10 @@ template <class T> struct MutableArrayInternal : public Object::Internal, public
     {
         return this->size();
     }
+    void reserve(count amount)
+    {
+        this->std::vector<T>::reserve(amount);
+    }
     void remove(const T& object)
     {
         auto position = this->find(object);

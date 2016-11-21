@@ -71,10 +71,12 @@ There are two types of files: The ones which are confidential and part of our in
 
 ### Naming conventions
 
-* **Variables and methods** use the `lowerCamelCase` convention.
-* **Class names and namespaces** use the `UpperCamelCase`.
+* **Variables and methods** use the `lowerCamelCase` convention unless compatibility with an unwrapped standard library api/protocol is required.
+* **`internal` is a reserved name** and should never be used for variable or method names,
+* **Class names and namespaces** use the `UpperCamelCase`. Any existing wrapped types that do not conform to this convention will be fixed (for example NxA::decimal).
 * **Compiler macros** use the `UPPER_CASE_SNAKE` convention.
-* **Use meaningful, pronounceable and intention revealing names for methods and variables.**Method names should always read like actions and variables like object names (see "Meaningful Names" in [MAR09] page 17). 
+* **constexpr and enum names** should use the `lowerCamelCase` convention.
+* **Use meaningful, pronounceable and intention revealing names for methods and variables.** Method names should always read like actions and variables like object names (see "Meaningful Names" in [MAR09] page 17). This does not apply when providing implementations of unwrapped standard library api/protocols.
 * **Don't use abreviations or single letter names.** Everything should be spelled out.
 * **Methods names should explain the arguments used after them.** C++ unfortunately doesn't support named arguments. This makes code very hard to read when looking at a calling method since arguments after the first one do not have any context. For this, we add the description in the method name itself. This can get pretty hard to read past a certian number of arguments which is why methods should ideally only have up to two arguments (See below in the **Coding Conventions** section).
  
@@ -213,15 +215,26 @@ If the code overrides any methods from parent classes, those are placed after th
     }
 ```
 
-* **Don't declare multiple variables on one line**, even if they have the same type.
+* **Try not to declare multiple refences or raw pointers on one line**, even if they have the same type. C++ makes this visually go against having the `&` or `*` symbols being attached to the type name and not the variable. Regular local variables (i.e. not references or raw pointers) are fine to be defined on one line.
+
+```
+    // --- Like this
+    Some<LargeType<With<Lots>>, Of<args>> a, b;
+    Type& oneReference;
+    Type& anotherReference;
+    
+    // --- NOT like this
+    Type& oneReference, &anotherReference;
+```
+
 * **Keep vertical distance short.** Concepts that are closely related should be kept close together. This takes precendence over line length. While being able to compare files side by side is useful is a few limited cases, we prefer to **NOT** to put a hard limit on line length. A soft limit is set at 120 chracters but again, vertical distance for readability is more important that artificially staying below this limit (see "Vertical Distance" in [MAR09] page 80).
 * **When local variables are used in `if()`, `for()` or `return` statements**, they should be initialized on the line right above those statements, if possible, with no blank line between the two.
 
 ```
     // --- Like this
-    auto messages = localLog.messages;
-    for (auto& message : messages) {
-        auto text = message.text;
+    auto&& messages = localLog.messages;
+    for (auto&& message : messages) {
+        auto&& text = message.text;
         if (text.length) {
             ...
         }
@@ -230,15 +243,15 @@ If the code overrides any methods from parent classes, those are placed after th
     auto count = localLog.count;
     printf("%ld", count);
     
-    auto result = localLog.warningAsString;
+    auto&& result = localLog.warningAsString;
     return result;
     
     // --- NOT like this
     auto count = localLog.count;
-    auto messages = localLog.messages;
+    auto&& messages = localLog.messages;
 
-    for (auto& message : messages) {
-        auto text = message.text;
+    for (auto&& message : messages) {
+        auto&& text = message.text;
 
         if (text.length) {
             ...
@@ -247,7 +260,7 @@ If the code overrides any methods from parent classes, those are placed after th
 
     printf("%ld", count);
 
-    auto result = localLog.warningAsString;
+    auto&& result = localLog.warningAsString;
 
     return result;
 ```
@@ -256,28 +269,28 @@ If the code overrides any methods from parent classes, those are placed after th
 
 ```
     // --- Like this
-    auto formatter = Formatter();
-    for (auto& text : strings) {
-        auto formattedVersion = formatter.format(test);
+    auto&& formatter = Formatter();
+    for (auto&& text : strings) {
+        auto&& formattedVersion = formatter.format(test);
         ...
     }
     
     // --- NOT like this
-    auto formattedVersion = String::emptyString();
-    for (auto& text : strings) {
-        auto formatter = Formatter();
+    auto&& formattedVersion = String::emptyString();
+    for (auto&& text : strings) {
+        auto&& formatter = Formatter();
         
         formattedVersion = formatter.format(test);
         ...
     }
 ```
 
-* **Local variables should be used to store most returned values** from methods so that they can be more easily inspected during debugging and to make the code more readable. One clear exception to this is detailed in the **Modern C++** section below where doing this can prevent the compiler from using the move operator.
+* **Local variables should be used to store returned values** from methods to help document the code. Naming the variable can help the reader understand what intent is and contributes to make the code read like a snetence. To make sure performance is not an issue, make sure to `move` the value once you pass it down to the method. This also clarifies that the local variable is only there for documentation and not re-used anywhere else.
 
 ```
     // --- Like this
-    auto formattedText = String::formatString("Hello");
-    log.addMessage(formattedText);
+    auto&& formattedText = String::formatString("Hello");
+    log.addMessage(std::move(formattedText));
         
     // --- NOT like this
     log.addMessage(String::formatString("Hello"));
@@ -289,7 +302,7 @@ If the code overrides any methods from parent classes, those are placed after th
 
 * **Header files** should always contains a `#pragma once` statement at the top, underneath the file header.
 * **Double quotes** `""` should be used for includes from the same library/module and `<>` for any system external includes.
-* **System/external includes** should be placed above regular/same module includes and a blank line should seperate each type of include
+* **Includes should be placed in order of locality** with same library/module first, other modules/libs second and finally system includes last. A blank line should seperate each type of include. This helps insure that application headers are more likely to include any dependencies/forward declarations they need and not get those dependencies resolved by chance from previous include statements.
 * **Include paths** should be fully qualified including the library's base directory and not relative to the file's directory or without any path.
 * **Each module/library should have a single include file**, named after the module or library and which includes all the relevant include files for that module/library.
 * **Forward declare**, underneath all include statements, when possible instead of including.
@@ -316,38 +329,60 @@ If the code overrides any methods from parent classes, those are placed after th
 * Always at least use the `NxA` namespace.
 * use `namespace NxA {` with no newline after the name.
 * `using namespace ...` should be placed underneath the includes and never in header files.
+* `using namespace ...` should always be used for the `NxA` namespace, can be used for any namespaces children of `NxA` or for `std` and should be avoided for other namespaces. This helps visually seperate code that comes from system or external libraries.
+* `local aliases` are fine inside a method as long as it really is local to that method and the aliases is not repeated all over the file.
+* Code defined inside a namespace scope should not be indented.
+
+```
+    // --- Like this
+    namespace test {
+    
+    class MyClass {
+        ...
+    }
+
+    }
+            
+    // --- NOT like this
+    namespace test {
+    
+        class MyClass {
+            ...
+        }
+
+    }
+```
+
 
 ### Operators
 
-* **Avoid overloading operators** unless the behavior is easy to predict and non obscure. More often than not overloading seems clever but affect readability if the assumption made by the reader on how the operator works is incorrect.
-* **Don't use C++ stream operators** `<<` or `>>` for input/output. This is a highly unreadable and produces a syntax that looks nothing like no other C++ code. This is a good example of why operator overloading should be avoided in a lot of cases.
+* **Avoid overloading operators** unless the the type is a numeric one and the operators are the basic numeric ones. More often than not overloading seems clever but affect readability if the assumption made by the reader on how the operator works is incorrect. Overloading operators when part of implementing unwrapped standard library api/protocols is allowed.
+* **Don't use C++ stream operators** `<<` or `>>` in the code. This is a highly unreadable (right to left) and produces a syntax that looks nothing like no other C++ code. Here too, implementing those operators as part of an implementation of unwrapped standard library api/protocols is allowed. one example of this is implementing a description of the object that can be used by the debugger to display debugging information.
 
 ### Methods
 
 * **Methods should be small**, have 2 arguments at the most, do only one thing and have no hidden side effects.
-* **Pass object arguments by reference** whenever possible.
+* **Pass in-only-arguments by const reference when possible** and the type is never larger than 3 pointers; otherwise pass by value.
+* **Pass out-arguments by non-const ref**.
+* **For movable types always provide a non-const move constructorand move-assignment operator**.
 * **Use const** everywhere it is warranted, both for arguments and methods.
-* **Don't pass external vendor types/classes** as arguments outside of a class or method. Any such types should be encapsulated into our own types.
+* **Avoid passing external vendor types/classes** as arguments outside of a class or method unless obsolutely necessary. Any such types should be wrapped into our own types. Standard library types are ok to use as long as they are not available in a wrapped for in `NxA::Base` (for example use `NxA::Array` instead of `std::vector`). Consider extending `NxA::Base` if it does not have all of the required features from the external library. `boost` or any other externals should be wrapped. Use/exposure of standard concepts/types like `Iterator begin()` for an array type or `std::hash` is allowed as this would require way to much combersome re-implementing in order to provide the same level of conveniance/functionality. 
 
 ### Memory Management & Pointers
 
-* **Do not use raw pointers** or allocate your own memory.
+* **Do not use raw pointers** or allocate your own memory unless absolutely necessary. If you need to do this in order to use legacy code, make sure you use the `NXA_SCOPE_EXIT` macro in order to retain thread safety.
 * **Raw pointers should use and test against `nullptr`** and not NULL or 0 if you do use them for interfacing with third party libraries.
 * **Do not use global data.** This can cause issues with multi-threading and is a good rule even if the code is not multi-threaded. It could be later on.
-* **Do not use new/delete.** Creating new objects should only use a factory method which returns a `Pointer` to the object.
+* **Do not use new/delete.** Creating new objects should only use a factory method which returns a value.
 * **Factory methods should use `make_shared`** to create the new object.
-* **In a factory method, pass the raw pointer as the argument** of a `Pointer` constructor to keep the code exception safe.
-* **Never store, use or keep a raw pointer to anything.** Object is the only class allowed to do this in its private instance variables.
-* **Do not declare anything as having automatic storage.** All objects must be pointed to via a `Pointer` and created via a factory method.
-* **Do not use `NullablePointer` as an argument or a return value.** These are meant to be used only inside a given method or inside an `internal` class and not exposed to the outside. This frees any outside code from having to check for valid pointers returned to them as `Pointer` is never invalid.
-* **Always use `this->`** for accessing instance variables and instance methods. This make it clear that you are accessing a member of the class and not some local method or variable.
+* **Always use `this->`** for accessing instance variables and instance methods whenever possible. This make it clear that you are accessing a member of the class and not some local method or variable.
 * **Use `internal->`** (without `this->` in that case) for accessing the internal class. This makes it easy to distinguish between the two.
 
 ### Miscellaneous
 
 * **Avoid using compiler macros.** 
-* **Always use the types in types.h** instead of built in types.
-* **Always use pre-increment operator instead of the post increment, when possible.** Pre-increment is often [faster](http://blog2.emptycrate.com/content/why-i-faster-i-c) than post-increment.
+* **Always use the types in types.h** instead of built in types. If not available, consider adding the type in `types.h` instead of using the built-in type in our code.
+* **Always use pre-increment operator instead of the post increment, when possible.** Pre-increment is often [faster](http://blog2.emptycrate.com/content/why-i-faster-i-c) than post-increment. This is usually optimized nowadays but it's a good habit to retain if the chronology of the increment does not matter. 
 * **Boolean tests do not test against `true` or `false`** and should just use `!` or nothing.
 
 ```
@@ -393,7 +428,7 @@ If the code overrides any methods from parent classes, those are placed after th
         integer c = 0;
         
         // -- We go thru every item and parse it
-        for (auto& i : list) {
+        for (auto&& i : list) {
             i->parse();
         }
         
@@ -424,29 +459,64 @@ If the code overrides any methods from parent classes, those are placed after th
 
 # Classes
 
-* **All classes** should at least inherit from `NxA:Object`.
-* **There should never be any public constructors for classes.** Use factory methods instead.
-* **There should never be any private or protected members for classes.** This goes in the internal class.
+* **Most classes should be value-type classes** which contain a private internal class (pimpl idiom) using the macros provided in `GeneratedObjectCode.hpp`.
+* **Those value-type classes** can inherit from another class but should not contain any virtual methods. Because objects of those types will be referred to by value throughout the code, the inherited methods would not be correctly called. This also increases the size of the object, due to the virtual table and may prevent the compiler from using them effeciently as values. Internal objects can use virtual methods though and this is how code can be shared/inherited for a given family of objects, the value-type class only forwarding calls to the internal object.
+* **Small data structure which themselves can be values** can be implemented without using the pimpl idiom.
+* **All internal classes** should at least inherit from `NxA::Object::Internal`.
+* **Every type should have well defined policy for their creation, initialization, moving, and copying**. Every type should have a well-defined set of construtors and desctructors (even if they are just deleted).
+* **There should never be any private or protected members for classes.** for value-types with an internal class. This goes in the internal class.
 * **Only declare or use public instance variables in internal classes.**
 * **In non-internal classes those should be accessor methods (getters, setters)** to the instance variables contained in the internal/private class.
 * **A base class destructor should be either public and virtual**, or protected and nonvirtual.
-* **Make your classes orthogonal:** Modifying one system or class should not affect another. This is where encapsulation and interface design are crucial. (see "Orthogonality" in [HUN99] page 34).
-* **Minimize coupling between modules:** Any method of an object  should call only methods belonging to itself, any parameters that were passed in to the method, any objects it created or any durectly help component objects. (see "The Law of Demeter for Functions" in [HUN99] page 140).
-* **Internal classes should always inherit from at least `InternalObject`.**
+* **Make your classes orthogonal:** as much as possible. Modifying one system or class should not affect another. This is where encapsulation and interface design are crucial. (see "Orthogonality" in [HUN99] page 34). This, of course, is contradicted by the use of a common `NxA::Object::Internal` for value type classes but that should be, as much as possible, the only hard reliance every object has on one another, especially when dealing with high level code.
+* **Minimize coupling between modules:** as much as possible. Any method of an objectshould call only methods belonging to itself, any parameters that were passed in to the method, any objects it created or any directly help component objects (see "The Law of Demeter for Functions" in [HUN99] page 140). Generic arguments for calling is allowed.
+
+``` 
+    template <typename T> class MyClass {
+        foo()
+        {
+            return T::something();
+        }
+    };
+```
+
 * **Internal class files** should be placed in a Internal subdirectory of their public class files.
 
 # Modern C++ support
 
-* **Use constexpr or typed enums** for constants.
+* **Use constexpr or typed enums** for constants. Macros should not be used infavour of these tools. 
 * **Use the new iteration form** for `for()` loops instead of using iterators or indexes.
 
 ```
-    for(auto& subTag : subTags) {
+    for(auto&& subTag : subTags) {
         ...
     }
 ```
 
-* **Initialize member variables with the member initializer list** and not in the constructor.
+* **Use universal references for local variables** whenever possible.
+
+```
+    for(auto&& subTag : subTags) {
+        ...
+    }
+```
+
+* **Initialize member variables with the member initializer list** and not in the constructor. Initializer lists are significantly more efficient; reducing object copies and resizing of containers.
+
+```
+    // --- Like this
+    MyClass::MyClass() : firstIndex(0)
+    {
+        ...
+    }
+    
+    // --- NOT like this
+    MyClass::MyClass()
+    {
+         this->firstIndex = 0;
+    }
+```
+
 * **Internal classes can give instance variables a default default value** in the class declaration to avoid having to set it in every constructor.
 
 ```
@@ -458,16 +528,14 @@ If the code overrides any methods from parent classes, those are placed after th
     };
 ```
 
-* **Use Initializer Lists.** Initializer lists are significantly more efficient; reducing object copies and resizing of containers.
-* **Enable move operations.** Move operations allow the compiler to avoid extra copies by moving temporary objects instead of copying them in certain cases. Certain coding choices we make (such as declaring our own destructor or assignment operator or copy constructor) prevents the compiler from generating a move constructor.
-* **Reduce temporary objects** They can prevent the compiler from using a move operator.
-* **Use `auto`.**
+* **Enable move operations.** Move operations allow the compiler to avoid extra copies by moving temporary objects instead of copying them in certain cases. Certain coding choices we make (such as declaring our own destructor or assignment operator or copy constructor) prevents the compiler from generating a move constructor. Make types MoveAssignable and MoveConstructable where possible and reasonable, avoid making types needlessly movable (i.e., where a copy and a move are equivalent). All types that are movable must also be copyable; unless copy semantics interfere with the purpose of the type (i.e., moving RAII instances).
+* **If you use temporary objects** make sure they are casted with `std::move` or `std::forward` correctly otherwise they can prevent the compiler from using a move operator.
+* **Use `auto`.** Be sure to use auto with correct cv qualifiers and also with a mind towards universal references, which are often desired.
 
 # Error Handling
 
 * **Use `nothrow`** to indicate if your method does not throw.
-* **Do not use return values as error codes.** Use exception handling instead.
-* **Give the user helper methods** like `hasArtist()` to let the user make sure another method like `gerArtist()` will succeed or not.
+* **Do not use return values as error codes.** Use exception handling instead. Return values should always return valid results and never be used to detect an error in the method that was called. For example, if a method returns an object as its results, it is fine to use `std::optional` and return either an object or a null value representing “not found” or “missing”. It it NOT fine to return a null value in this case to indicate an error. An exception should be used instead in that case.
 
 # Unit Testing
 

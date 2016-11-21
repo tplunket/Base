@@ -31,12 +31,12 @@ namespace NxA {
 template<typename K, typename V>
 class LruCache : public std::list<std::pair<K, V>> {
     using List = std::list<std::pair<K, V>>;
-    std::map<K, typename List::iterator> map;
-    size_t limit;
+    std::map<K, typename List::iterator> map = {};
+    size_t limit = 0;
 
 public:
 #ifdef LUR_TRACK_HITS
-    int hits, misses;
+    int hits = 0, misses = 0;
 #endif
 
     using key_type = K;

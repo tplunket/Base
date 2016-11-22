@@ -48,6 +48,9 @@ template <class T> struct MutableArrayInternal : public Object::Internal, public
     MutableArrayInternal() : std::vector<T>() { }
     MutableArrayInternal(const MutableArrayInternal& other) : std::vector<T>{ other } { }
     MutableArrayInternal(std::vector<T>&& other) : std::vector<T>{ std::move(other) } { }
+    template<class InputIt>
+    MutableArrayInternal(InputIt first, InputIt last) : std::vector<T>{first, last} { }
+
     virtual ~MutableArrayInternal() = default;
 
     #pragma mark Iterators
@@ -62,7 +65,8 @@ template <class T> struct MutableArrayInternal : public Object::Internal, public
     }
     T& operator[](count index)
     {
-        return const_cast<T&>((static_cast<const MutableArrayInternal*>(this))->operator[](index));
+        NXA_ASSERT_TRUE(index >= 0 && index < this->length());
+        return this->std::vector<T>::operator[](index);
     }
 
     #pragma mark Instance Methods
@@ -95,6 +99,10 @@ template <class T> struct MutableArrayInternal : public Object::Internal, public
     {
         return this->size();
     }
+    void reserve(count amount)
+    {
+        this->std::vector<T>::reserve(amount);
+    }
     void remove(const T& object)
     {
         auto position = this->find(object);
@@ -117,9 +125,15 @@ template <class T> struct MutableArrayInternal : public Object::Internal, public
             this->emplace_back(object);
         }
     }
+    template <class... ConstructorArguments>
+    void emplaceAppend(ConstructorArguments &&... arguments)
+    {
+        this->emplace_back(std::forward<ConstructorArguments>(arguments)...);
+    }
+
     void insertAt(T object, const_iterator pos)
     {
-        this->emplace(pos, object);
+        this->std::vector<T>::emplace(pos, object);
     }
 
     const T& firstObject() const
@@ -129,7 +143,8 @@ template <class T> struct MutableArrayInternal : public Object::Internal, public
     }
     T& firstObject()
     {
-        return const_cast<T&>((static_cast<const MutableArrayInternal*>(this))->firstObject());
+        NXA_ASSERT_TRUE(this->size() != 0);
+        return this->std::vector<T>::operator[](0);
     }
     const  T& lastObject() const
     {
@@ -139,7 +154,9 @@ template <class T> struct MutableArrayInternal : public Object::Internal, public
     }
     T& lastObject()
     {
-        return const_cast<T&>((static_cast<const MutableArrayInternal*>(this))->lastObject());
+        count length = this->size();
+        NXA_ASSERT_TRUE(length != 0);
+        return this->std::vector<T>::operator[](length - 1);
     }
     boolean contains(const T& object) const
     {
@@ -167,7 +184,7 @@ template <class T> struct MutableArrayInternal : public Object::Internal, public
         auto result = MutableString::stringWithFormat("Array at %08p with %ld elements:", this, this->length());
         for (count index = 0; index < this->length(); ++index) {
             auto& item = (*this)[index];
-            result.append(String::stringWithFormat("\n  %ld: %s", index, item.description().asUTF8()));
+            result.append(String::stringWithFormat("\n  %ld: %s", index, Describe<T>::describe(item)));
         }
 
         return { std::move(result) };

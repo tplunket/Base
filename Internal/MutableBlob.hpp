@@ -84,6 +84,11 @@ struct MutableBlobInternal : public Object::Internal, public std::vector<byte>
 
         return true;
     }
+    const byte& operator[] (integer index) const
+    {
+        NXA_ASSERT_TRUE(index >= 0 && index < this->size());
+        return this->std::vector<byte>::operator[](index);
+    }
     byte& operator[] (integer index)
     {
         NXA_ASSERT_TRUE(index >= 0 && index < this->size());
@@ -96,6 +101,11 @@ struct MutableBlobInternal : public Object::Internal, public std::vector<byte>
         return this->std::vector<byte>::size();
     }
 
+    const byte* data() const
+    {
+        NXA_ASSERT_TRUE(this->size() > 0);
+        return this->std::vector<byte>::data();
+    }
     byte* data()
     {
         NXA_ASSERT_TRUE(this->size() > 0);

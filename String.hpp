@@ -86,6 +86,8 @@ public:
         return this->length() == 0;
     };
     uinteger32 hash() const;
+    integer32 compare(const String& other) const;
+    integer32 compare(const char* other) const;
     integer integerValue() const;
     decimal3 decimalValue() const;
 
@@ -117,5 +119,6 @@ public:
 
 #pragma mark Operators
 bool operator< (const String&, const String&);
+String operator "" _String(const character* str, count length);
 
 }

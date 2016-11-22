@@ -78,13 +78,19 @@ template <typename Tkey, typename Tvalue> struct MutableMapInternal : public Obj
 
     void setValueForKey(Tvalue value, const Tkey& key)
     {
-        iterator position = this->std::map<const Tkey, Tvalue>::find(key);
-        if (position == this->std::map<const Tkey, Tvalue>::end()) {
-            this->std::map<const Tkey, Tvalue>::insert(std::pair<const Tkey, Tvalue>(key, value));
-            return;
+        auto pvalue = std::pair<const Tkey, Tvalue>(key, value);
+        auto result = std::map<const Tkey, Tvalue>::insert(pvalue);
+        if (!result.second) {
+            result.first->second = value;
         }
-
-        position->second = value;
+    }
+    const NxA::Optional<Tvalue> maybeValueForKey(const Tkey& key) const
+    {
+        const_iterator pos = this->std::map<const Tkey, Tvalue>::find(key);
+        if(pos == this->cend()) {
+            return NxA::nothing;
+        }
+        return {pos->second};
     }
     const Tvalue& valueForKey(const Tkey& key) const
     {
@@ -95,7 +101,22 @@ template <typename Tkey, typename Tvalue> struct MutableMapInternal : public Obj
     }
     Tvalue& valueForKey(const Tkey& key)
     {
-        return const_cast<Tvalue&>((static_cast<const MutableMapInternal*>(this))->valueForKey(key));
+        iterator pos = this->std::map<const Tkey, Tvalue>::find(key);
+        NXA_ASSERT_TRUE(pos != this->end());
+
+        return pos->second;
+    }
+    Tvalue& operator[](const Tkey& key)
+    {
+        return std::map<const Tkey, Tvalue>::operator[](key);
+    }
+    Tvalue& operator[](Tkey&& key)
+    {
+        return std::map<const Tkey, Tvalue>::operator[](std::move(key));
+    }
+    const Tvalue& operator[](const Tkey& key) const
+    {
+        return valueForKey(key);
     }
     boolean containsValueForKey(const Tkey& key) const
     {
@@ -103,7 +124,7 @@ template <typename Tkey, typename Tvalue> struct MutableMapInternal : public Obj
     }
     void removeAll()
     {
-        this->erase();
+        this->clear();
     }
     void removeValueForKey(const Tkey& key)
     {

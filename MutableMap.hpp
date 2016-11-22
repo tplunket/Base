@@ -103,11 +103,15 @@ public:
     }
     const Tvalue& operator[](const Tkey& key) const
     {
-        return internal->valueForKey(key);
+        return internal->operator[](key);
     }
     Tvalue& operator[](const Tkey& key)
     {
-        return internal->valueForKey(key);
+        return internal->operator[](key);
+    }
+    Tvalue& operator[](Tkey&& key)
+    {
+        return internal->operator[](std::move(key));
     }
 
     #pragma mark Instance Methods
@@ -165,6 +169,10 @@ public:
     const Tvalue& valueForKey(const Tkey& key) const
     {
         return internal->valueForKey(key);
+    }
+    NxA::Optional<Tvalue> maybeValueForKey(const Tkey& key) const
+    {
+        return internal->maybeValueForKey(key);
     }
     boolean containsValueForKey(const Tkey& key) const
     {

@@ -84,6 +84,10 @@ boolean MutableBlob::operator==(const MutableBlob& other) const
     return *internal == *(other.internal);
 }
 
+byte& MutableBlob::operator[] (integer index)
+{
+    return internal->operator[](index);
+}
 const byte& MutableBlob::operator[] (integer index) const
 {
     return internal->operator[](index);
@@ -108,6 +112,11 @@ bool MutableBlob::classNameIs(const character* className) const
 count MutableBlob::size() const
 {
     return internal->size();
+}
+
+byte* MutableBlob::data()
+{
+    return internal->data();
 }
 
 const byte* MutableBlob::data() const

@@ -28,6 +28,7 @@
 
 #include <algorithm>
 #include <vector>
+#include <utility>
 
 namespace NxA {
 
@@ -75,6 +76,8 @@ public:
     MutableArray(MutableArray& other) : internal{ other.internal } { }
     MutableArray(MutableArray&&) = default;
     MutableArray(const Array<T>& other) : internal{ std::make_shared<Internal>(*other.internal) } { }
+    template<class InputIt>
+    MutableArray(InputIt first, InputIt last) : internal{ std::make_shared<Internal>(first, last) } { }
     ~MutableArray() = default;
 
     #pragma mark Iterators
@@ -155,10 +158,22 @@ public:
         return internal->cend();
     }
 
+    void reserve(count amount)
+    {
+        return internal->reserve(amount);
+    }
+
     void append(T object)
     {
         return internal->append(object);
     }
+
+    template<class... ConstructorArguments>
+    void emplaceAppend(ConstructorArguments &&... arguments)
+    {
+        internal->emplaceAppend(std::forward<ConstructorArguments>(arguments)...);
+    }
+
     void append(MutableArray<T>& objects)
     {
         for (auto& object : objects) {

@@ -21,10 +21,11 @@
 
 #pragma once
 
-#include <cstdint>
 #include <ctime>
+#include <cstdint>
 #include <memory>
 #include <typeinfo>
+#include <experimental/optional>
 
 #include <Base/Internal/decimal.h>
 
@@ -56,10 +57,79 @@ using decimal = double;
 using decimal2 = dec::decimal<2>;
 using decimal3 = dec::decimal<3>;
 
+// -- Provide an optional type based on std::experimental::optional.
+// -- TODO: change to std::optional in C++1y
+template <typename T>
+using Optional = std::experimental::optional<T>;
+using NullOptional = std::experimental::nullopt_t;
+constexpr NullOptional nothing{0};
+template <typename T>
+inline constexpr Optional<typename std::decay<T>::type>
+makeOptional(T&& v) {
+    return Optional<typename std::decay<T>::type>(std::forward<T>(v));
+}
+
+// -- prevent derived types from being copied
+class NoCopy
+{
+protected:
+    NoCopy() = default;
+    ~NoCopy() = default;
+
+    NoCopy(NoCopy&&) = default;
+    NoCopy& operator=(NoCopy&&) = default;
+
+    NoCopy(NoCopy const&) = delete;
+    NoCopy& operator=(NoCopy const&) = delete;
+};
+
+// -- Template used to find the description for a type
+template <typename T>
+struct Describe {
+    static const character * describe(const T& item) {
+        return item.description().asUTF8();
+    }
+};
+
+template <typename T>
+struct Describe<std::shared_ptr<T>> {
+    static const character * describe(const std::shared_ptr<T>& item) {
+        if (!item) {
+            return "-empty shared_ptr-";
+        }
+        return Describe<T>::describe(*item);
+    }
+};
+
+template <typename T>
+struct Describe<Optional<T>> {
+    static const character * describe(const Optional<T>& item) {
+        if (!item) {
+            return "-empty optional-";
+        }
+        return Describe<T>::describe(*item);
+    }
+};
+
 // -- Template used by default to produce the name of unknown types.
-template <typename T> struct TypeName {
+template <typename T>
+struct TypeName {
     static const character* get() {
         return T::staticClassName();
+    }
+};
+
+template <typename T>
+struct TypeName<std::shared_ptr<T>> {
+    static const character* get() {
+        return TypeName<T>::get();
+    }
+};
+
+template <typename T>
+struct TypeName<Optional<T>> {
+    static const character* get() {
+        return TypeName<T>::get();
     }
 };
 

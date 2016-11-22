@@ -46,20 +46,28 @@ template <class T> class Array {
 public:
     #pragma mark Constructors/Destructors
     Array() : internal{ std::make_shared<MutableArrayInternal<T>>() } { }
-    Array(const Array&) = default;
-    Array(Array&&) = default;
+    Array(const Array& other) : internal{ other.internal } {}
+    Array(Array&& other) : internal{ std::move(other.internal) } {}
     Array(const MutableArray<T>& other) : internal{ std::make_shared<MutableArrayInternal<T>>(*other.internal) } { }
     Array(MutableArray<T>&& other) : internal{ std::move(other.internal) } { }
-    ~Array() = default;
+    template<class InputIt>
+    Array(InputIt first, InputIt last) : internal{ std::make_shared<MutableArrayInternal<T>>(first, last) } { }
+    ~Array() {}
 
     #pragma mark Class Methods
     static const character* staticClassName()
     {
-        static std::mutex m;
         static std::unique_ptr<character[]> buffer;
+        auto className = buffer.get();
+        if (className) {
+            // This is the fast lock-free path for the common case (unique_ptr engaged)
+            return className;
+        }
 
-        m.lock();
+        static std::mutex m;
+        std::lock_guard<std::mutex> guard(m);
 
+        // -- Now under guard, this is the slow-and-safe path. We have to re-check get() in case we lost a race to the lock.
         if (!buffer.get()) {
             const character* format = "Array<%s>";
             const character* valueTypeName = TypeName<T>::get();
@@ -67,8 +75,6 @@ public:
             buffer = std::make_unique<character[]>(needed);
             snprintf(buffer.get(), needed, format, valueTypeName);
         }
-
-        m.unlock();
 
         return buffer.get();
     }
@@ -83,8 +89,8 @@ public:
     using const_iterator = typename MutableArrayInternal<T>::const_iterator;
 
     #pragma mark Operators
-    Array& operator=(Array&&) = default;
-    Array& operator=(const Array& other) = default;
+    Array& operator=(Array&& other) { internal = std::move(other.internal); return *this; }
+    Array& operator=(const Array& other) { internal = other.internal; return *this; }
     bool operator==(const Array& other) const
     {
         if (internal == other.internal) {

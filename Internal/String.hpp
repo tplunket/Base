@@ -41,6 +41,10 @@
 #include "Base/Platform.hpp"
 #include "Base/Internal/Object.hpp"
 
+extern template class std::basic_stringstream<char, std::char_traits<char>, std::allocator<char>>;
+extern template class std::basic_stringbuf<char, std::char_traits<char>, std::allocator<char>>;
+extern template class std::basic_string<char, std::char_traits<char>, std::allocator<char>>;
+
 namespace NxA {
 
 struct StringInternal : public Object::Internal, public std::string
@@ -130,6 +134,16 @@ struct StringInternal : public Object::Internal, public std::string
     count length() const
     {
         return this->size();
+    }
+
+    integer32 compare(const char * other) const
+    {
+        return this->std::string::compare(other);
+    }
+
+    integer32 compare(const StringInternal & other) const
+    {
+        return this->std::string::compare(static_cast<const std::string&>(other));
     }
 
     uinteger32 hash() const

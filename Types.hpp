@@ -84,14 +84,14 @@ protected:
 // -- Template used to find the description for a type
 template <typename T>
 struct Describe {
-    static const character * describe(const T& item) {
+    static const character * describe(T item) {
         return item.description().asUTF8();
     }
 };
 
 template <typename T>
 struct Describe<std::shared_ptr<T>> {
-    static const character * describe(const std::shared_ptr<T>& item) {
+    static const character * describe(std::shared_ptr<T> item) {
         if (!item) {
             return "-empty shared_ptr-";
         }
@@ -101,7 +101,7 @@ struct Describe<std::shared_ptr<T>> {
 
 template <typename T>
 struct Describe<Optional<T>> {
-    static const character * describe(const Optional<T>& item) {
+    static const character * describe(Optional<T> item) {
         if (!item) {
             return "-empty optional-";
         }

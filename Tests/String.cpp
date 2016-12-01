@@ -107,10 +107,11 @@ TEST(Base_String, Description_StringWithAValue_ReturnsCorrectValue)
 {
     // -- Given.
     String test(utf8String);
+    const DescriberState& state{};
 
     // -- When.
     // -- Then.
-    ASSERT_STREQ(utf8String, test.description().asUTF8());
+    ASSERT_STREQ(utf8String, test.description(state).asUTF8());
 }
 
 TEST(Base_String, OperatorEqual_TwoEqualStrings_ReturnsTrue)

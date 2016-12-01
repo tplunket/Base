@@ -64,6 +64,7 @@ public:
 
         return buffer.get();
     }
+    
     static uinteger32 staticClassHash()
     {
         static uinteger32 result = String::hashFor(MutableArray::staticClassName());
@@ -252,9 +253,9 @@ public:
         internal->sort();
     }
 
-    String description() const
+    String description(const DescriberState& state) const
     {
-        return internal->description();
+        return internal->description(state);
     }
 };
 

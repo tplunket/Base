@@ -61,7 +61,7 @@ public:
     void fillWithZeros();
 
     Blob hash();
-    String base64String();
+    String base64String() const;
 
     void append(const Blob&);
     void appendWithStringTermination(const character*);

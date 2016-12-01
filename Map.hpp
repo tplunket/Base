@@ -71,6 +71,7 @@ public:
 
         return buffer.get();
     }
+
     static uinteger32 staticClassHash()
     {
         static uinteger32 value = String::hashFor(Map::staticClassName());

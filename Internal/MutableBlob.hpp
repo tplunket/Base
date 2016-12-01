@@ -122,7 +122,7 @@ struct MutableBlobInternal : public Object::Internal, public std::vector<byte>
         return MutableBlobInternal::hashFor(this->data(), this->size());
     }
 
-    String base64String();
+    String base64String() const;
 
     void append(MutableBlobInternal other)
     {

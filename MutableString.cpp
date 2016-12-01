@@ -22,7 +22,7 @@
 #include "Base/Types.hpp"
 #include "Base/MutableString.hpp"
 #include "Base/String.hpp"
-#include "Base/Internal/String.hpp"
+#include "Base/Internal/MutableString.hpp"
 #include "Base/Exception.hpp"
 #include "Base/Platform.hpp"
 #include "Base/Assert.hpp"
@@ -37,13 +37,9 @@ MutableString::MutableString(const String& other) : internal{ std::make_shared<I
 
 MutableString::MutableString(const std::string& other) : internal{ std::make_shared<Internal>(other) } { }
 
+MutableString::MutableString(std::string&& other) : internal{ std::make_shared<Internal>(std::move(other)) } { }
+
 MutableString::MutableString(const character* other, size_t size) : internal{ std::make_shared<Internal>(other, size) } { }
-
-MutableString::MutableString(const MutableString& other) : internal{ std::make_shared<Internal>(*other.internal) } { }
-
-MutableString::MutableString(MutableString&&) = default;
-
-MutableString::MutableString(MutableString&) = default;
 
 MutableString::MutableString(std::shared_ptr<Internal>&& other) : internal{ std::move(other) } { }
 
@@ -51,26 +47,18 @@ MutableString::~MutableString() = default;
 
 #pragma mark Factory Methods
 
-MutableString MutableString::stringWithFormat(const character* format, ...)
-{
-    va_list args;
-    va_start(args, format);
-    auto result = Internal::stringWithFormat(format, args);
-    va_end(args);
-
-    return { std::move(result) };
-}
-
 MutableString MutableString::stringWithUTF16(const Blob& other)
 {
     return { Internal::stringWithUTF16(other) };
 }
 
+
+MutableString MutableString::stringWithRepeatedCharacter(count number, character specificChar)
+{
+    return { Internal::stringWithRepeatedCharacter(number, specificChar) };
+}
+
 #pragma mark Operators
-
-MutableString& MutableString::operator=(MutableString&&) = default;
-
-MutableString& MutableString::operator=(const MutableString&) = default;
 
 bool MutableString::operator==(const String& other) const
 {
@@ -107,7 +95,13 @@ boolean MutableString::classNameIs(const character* className) const
     return !::strcmp(MutableString::staticClassName(), className);
 }
 
-String MutableString::description() const
+uinteger32 MutableString::staticClassHash()
+{
+    static uinteger32 result = String::hashFor(MutableString::staticClassName());
+    return result;
+}
+
+String MutableString::description(const DescriberState& state) const
 {
     return String(*internal);
 }

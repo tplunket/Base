@@ -99,6 +99,11 @@ uinteger32 MutableBlob::classHash() const
 {
     return MutableBlob::staticClassHash();
 }
+uinteger32 MutableBlob::staticClassHash()
+{
+    static uinteger32 result = String::hashFor(MutableBlob::staticClassName());
+    return result;
+}
 const character* MutableBlob::className() const
 {
     return MutableBlob::staticClassName();
@@ -129,7 +134,7 @@ Blob MutableBlob::hash()
     return { internal->hash() };
 }
 
-String MutableBlob::base64String()
+String MutableBlob::base64String() const
 {
     return internal->base64String();
 }

@@ -431,7 +431,7 @@ std::shared_ptr<MutableBlobInternal> MutableBlobInternal::blobWithStringWithoutT
 
 #pragma mark Instance Methods
 
-String MutableBlobInternal::base64String()
+String MutableBlobInternal::base64String() const
 {
     if (this->size()) {
         return MutableBlobInternal::base64StringFor(this->data(), this->size());

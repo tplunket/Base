@@ -67,48 +67,6 @@ makeOptional(T&& v) {
     return Optional<typename std::decay<T>::type>(std::forward<T>(v));
 }
 
-// -- prevent derived types from being copied
-class NoCopy
-{
-protected:
-    NoCopy() = default;
-    ~NoCopy() = default;
-
-    NoCopy(NoCopy&&) = default;
-    NoCopy& operator=(NoCopy&&) = default;
-
-    NoCopy(NoCopy const&) = delete;
-    NoCopy& operator=(NoCopy const&) = delete;
-};
-
-// -- Template used to find the description for a type
-template <typename T>
-struct Describe {
-    static const character * describe(T item) {
-        return item.description().asUTF8();
-    }
-};
-
-template <typename T>
-struct Describe<std::shared_ptr<T>> {
-    static const character * describe(std::shared_ptr<T> item) {
-        if (!item) {
-            return "-empty shared_ptr-";
-        }
-        return Describe<T>::describe(*item);
-    }
-};
-
-template <typename T>
-struct Describe<Optional<T>> {
-    static const character * describe(Optional<T> item) {
-        if (!item) {
-            return "-empty optional-";
-        }
-        return Describe<T>::describe(*item);
-    }
-};
-
 // -- Template used by default to produce the name of unknown types.
 template <typename T>
 struct TypeName {

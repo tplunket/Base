@@ -25,6 +25,7 @@
 #include <vector>
 
 #include "Base/Assert.hpp"
+#include "Base/Describe.hpp"
 #include "Base/Types.hpp"
 #include "Base/MutableString.hpp"
 #include "Base/Internal/Object.hpp"
@@ -179,13 +180,18 @@ template <class T> struct MutableArrayInternal : public Object::Internal, public
         std::sort(this->std::vector<T>::begin(), this->std::vector<T>::end());
     }
 
-    String description() const
+    String description(const DescriberState& state) const
     {
-        auto result = MutableString::stringWithFormat("Array at %08p with %ld elements:", this, this->length());
-        for (count index = 0; index < this->length(); ++index) {
-            auto& item = (*this)[index];
-            result.append(String::stringWithFormat("\n  %ld: %s", index, Describe<T>::describe(item)));
+        auto indented = state.increaseIndent();
+        auto result = MutableString::stringWithFormat(indented.indentedLine("<Array length=\"%ld\">"), this->length());
+        auto innerIndent = state.increaseIndent();
+        for (auto && item : *this) {
+            result.append(String::stringWithFormat(innerIndent.indentedLine("<At index=\"%ld\">"), index));
+            result.append(NxA::describe(item, innerIndent));
+            result.append(innerIndent.indentedLine("</At>"));
         }
+
+        result.append(indented.indentedLine("</Array>"));
 
         return { std::move(result) };
     }

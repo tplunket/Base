@@ -23,7 +23,6 @@
 
 #include <Base/Types.hpp>
 #include <Base/String.hpp>
-#include <Base/MutableSet.hpp>
 #include <Base/GeneratedObjectCode.hpp>
 #include <Base/Internal/MutableSet.hpp>
 
@@ -36,21 +35,26 @@ namespace NxA {
 
 #pragma mark Class
 
-    template <class T> class Set {
+    template<typename T>
+    class Set;
+    template<typename T>
+    class Array;
+
+    template <class T> class MutableSet {
         NXA_GENERATED_INTERNAL_OBJECT_FORWARD_DECLARATION_USING(MutableSetInternal<T>);
 
         std::shared_ptr<MutableSetInternal<T>> internal = std::make_shared<MutableSetInternal<T>>();
 
-        friend class MutableSet<T>;
+        friend class Set<T>;
 
     public:
 #pragma mark Constructors/Destructors
-        Set() = default;
-        Set(const Set& other) = default;
-        Set(Set&& other) = default;
-        ~Set() = default;
-        Set(const MutableSet<T>& other) : internal{ std::make_shared<MutableSetInternal<T>>(*other.internal) } { }
-        Set(MutableSet<T>&& other) : internal{ std::move(other.internal) } { }
+        MutableSet() = default;
+        MutableSet(const MutableSet& other) = default;
+        MutableSet(MutableSet&& other) = default;
+        ~MutableSet() = default;
+        MutableSet(const Set<T>& other) : internal{ std::make_shared<MutableSetInternal<T>>(*other.internal) } { }
+        MutableSet(Set<T>&& other) : internal{ std::move(other.internal) } { }
 
 #pragma mark Class Methods
         static const character* staticClassName()
@@ -66,7 +70,7 @@ namespace NxA {
 
             // now under guard, this is the slow-and-safe path. We have to re-check get() in case we lost a race to the lock.
             if (!buffer) {
-                const character* format = "Set<%s>";
+                const character* format = "MutableSet<%s>";
                 const character* valueTypeName = TypeName<T>::get();
                 count needed = snprintf(NULL, 0, format, valueTypeName) + 1;
                 buffer = std::make_unique<character[]>(needed);
@@ -78,18 +82,18 @@ namespace NxA {
 
         static uinteger32 staticClassHash()
         {
-            static uinteger32 result = String::hashFor(Set::staticClassName());
+            static uinteger32 result = String::hashFor(MutableSet::staticClassName());
             return result;
         }
 
 #pragma mark Iterators
+        using iterator = typename MutableSetInternal<T>::iterator;
         using const_iterator = typename MutableSetInternal<T>::const_iterator;
-        using iterator = const_iterator;
 
 #pragma mark Operators
-        Set& operator=(Set&& other) = delete;
-        Set& operator=(const Set& other) = delete;
-        bool operator==(const Set& other) const
+        MutableSet& operator=(MutableSet&& other) = default;
+        MutableSet& operator=(const MutableSet& other) = default;
+        bool operator==(const MutableSet& other) const
         {
             if (internal == other.internal) {
                 return true;
@@ -97,11 +101,11 @@ namespace NxA {
 
             return *internal == *(other.internal);
         }
-        bool operator!=(const Set& other) const
+        bool operator!=(const MutableSet& other) const
         {
             return !this->operator==(other);
         }
-        bool operator==(const MutableSet<T>& other) const
+        bool operator==(const Set<T>& other) const
         {
             if (internal == other.internal) {
                 return true;
@@ -109,26 +113,35 @@ namespace NxA {
 
             return *internal == *(other.internal);
         }
-        bool operator!=(const MutableSet<T>& other) const
+        bool operator!=(const Set<T>& other) const
         {
             return !this->operator==(other);
         }
+
 #pragma mark Instance Methods
         uinteger32 classHash() const
         {
-            return Set::staticClassHash();
+            return MutableSet::staticClassHash();
         }
         const character* className() const
         {
-            return Set::staticClassName();
+            return MutableSet::staticClassName();
         }
         boolean classNameIs(const character* className) const
         {
-            return !::strcmp(Set::staticClassName(), className);
+            return !::strcmp(MutableSet::staticClassName(), className);
+        }
+        iterator begin() noexcept
+        {
+            return internal->begin();
         }
         const_iterator begin() const noexcept
         {
             return internal->begin();
+        }
+        iterator end() noexcept
+        {
+            return internal->end();
         }
         const_iterator end() const noexcept
         {
@@ -148,6 +161,53 @@ namespace NxA {
             return internal->length();
         }
 
+        void removeAll()
+        {
+            return internal->removeAll();
+        }
+
+        void append(T object)
+        {
+            return internal->append(object);
+        }
+
+        template<class... ConstructorArguments>
+        void emplaceAppend(ConstructorArguments &&... arguments)
+        {
+            internal->emplaceAppend(std::forward<ConstructorArguments>(arguments)...);
+        }
+
+        void append(MutableSet<T>& objects)
+        {
+            for (auto& object : objects) {
+                internal->append(object);
+            }
+        }
+        void append(const MutableSet<T>& objects)
+        {
+            for (auto& object : objects) {
+                internal->append(object);
+            }
+        }
+        void append(const Set<T>& objects)
+        {
+            for (auto& object : objects) {
+                internal->append(object);
+            }
+        }
+        void append(Set<T>& objects)
+        {
+            for (auto& object : objects) {
+                internal->append(object);
+            }
+        }
+        void append(Array<T>& objects)
+        {
+            for (auto& object : objects) {
+                internal->append(object);
+            }
+        }
+
         const T& anyObject() const
         {
             return internal->anyObject();
@@ -156,14 +216,18 @@ namespace NxA {
         {
             return internal->contains(object);
         }
+        iterator find(const T& object)
+        {
+            return internal->find(object);
+        }
         const_iterator find(const T& object) const
         {
             return internal->find(object);
         }
-
-        String description(const DescriberState& state) const
+        
+        String description() const
         {
-            return internal->description(state);
+            return internal->description();
         }
     };
     

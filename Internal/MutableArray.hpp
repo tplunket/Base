@@ -187,11 +187,9 @@ template <class T> struct MutableArrayInternal : public Object::Internal, public
             return indented.indentedLine("<Array length=\"0\" />");
         }
         auto result = MutableString::stringWithFormat(indented.indentedLine("<Array length=\"%ld\">"), this->length());
-        auto innerIndent = indented.increaseIndent();
         for (auto && item : *this) {
-            result.append(NxA::describe(item, innerIndent));
+            result.append(NxA::describe(item, indented));
         }
-
         result.append(indented.indentedLine("</Array>"));
 
         return { std::move(result) };

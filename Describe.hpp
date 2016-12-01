@@ -27,7 +27,7 @@ namespace NxA {
 
 class DescriberState
 {
-    int indent_ = 0;
+    int indent_ = -1;
 
     DescriberState(int indent) : indent_{indent} {}
 
@@ -95,11 +95,11 @@ struct Describer<std::shared_ptr<T>>
 {
     static String describeWithState(std::shared_ptr<T> item, const DescriberState& state)
     {
-        auto innerState = state.increaseIndent();
         if (!item) {
+            auto innerState = state.increaseIndent();
             return innerState.indentedLine("<shared_ptr::nullptr />");
         }
-        return Describer<T>::describeWithState(*item, innerState);
+        return Describer<T>::describeWithState(*item, state);
     }
 };
 
@@ -117,11 +117,11 @@ struct Describer<Optional<T>>
 {
     static String describeWithState(Optional<T> item, const DescriberState& state)
     {
-        auto innerState = state.increaseIndent();
         if (!item) {
+            auto innerState = state.increaseIndent();
             return innerState.indentedLine("<Optional::Empty />");
         }
-        return Describer<T>::describeWithState(*item, innerState);
+        return Describer<T>::describeWithState(*item, state);
     }
 };
 

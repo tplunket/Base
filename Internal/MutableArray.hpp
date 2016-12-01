@@ -183,12 +183,13 @@ template <class T> struct MutableArrayInternal : public Object::Internal, public
     String description(const DescriberState& state) const
     {
         auto indented = state.increaseIndent();
+        if (this->length() == 0) {
+            return indented.indentedLine("<Array length=\"0\" />");
+        }
         auto result = MutableString::stringWithFormat(indented.indentedLine("<Array length=\"%ld\">"), this->length());
-        auto innerIndent = state.increaseIndent();
+        auto innerIndent = indented.increaseIndent();
         for (auto && item : *this) {
-            result.append(String::stringWithFormat(innerIndent.indentedLine("<At index=\"%ld\">"), index));
             result.append(NxA::describe(item, innerIndent));
-            result.append(innerIndent.indentedLine("</At>"));
         }
 
         result.append(indented.indentedLine("</Array>"));

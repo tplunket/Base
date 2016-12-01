@@ -50,6 +50,7 @@ public:
     Array(Array&& other) : internal{ std::move(other.internal) } {}
     Array(const MutableArray<T>& other) : internal{ std::make_shared<MutableArrayInternal<T>>(*other.internal) } { }
     Array(MutableArray<T>&& other) : internal{ std::move(other.internal) } { }
+    Array(std::vector<T>&& other) : internal{ std::make_shared<MutableArrayInternal<T>>(std::move(other)) } { }
     template<class InputIt>
     Array(InputIt first, InputIt last) : internal{ std::make_shared<MutableArrayInternal<T>>(first, last) } { }
     ~Array() {}
@@ -58,17 +59,16 @@ public:
     static const character* staticClassName()
     {
         static std::unique_ptr<character[]> buffer;
-        auto className = buffer.get();
-        if (className) {
+        if (buffer) {
             // This is the fast lock-free path for the common case (unique_ptr engaged)
-            return className;
+            return buffer.get();
         }
 
         static std::mutex m;
         std::lock_guard<std::mutex> guard(m);
 
-        // now under guard, this is the slow-and-safe path. We have to re-check get() in case we lost a race to the lock.
-        if (!buffer.get()) {
+        // now under guard, this is the slow-and-safe path. We have to re-check in case we lost a race to the lock.
+        if (!buffer) {
             const character* format = "Array<%s>";
             const character* valueTypeName = TypeName<T>::get();
             count needed = snprintf(NULL, 0, format, valueTypeName) + 1;
@@ -197,9 +197,9 @@ public:
         return internal->find(object);
     }
 
-    String description() const
+    String description(const DescriberState& state) const
     {
-        return internal->description();
+        return internal->description(state);
     }
 };
 

@@ -31,6 +31,7 @@ namespace NxA {
 
 template <class T> class WeakReference;
 class String;
+class DescriberState;
 
 }
 
@@ -77,15 +78,11 @@ class String;
             { \
                 return NXA_STR_VALUE_FOR(class_name); \
             } \
-            static uinteger32 staticClassHash() \
-            { \
-                static uinteger32 result = String::hashFor(class_name::staticClassName()); \
-                return result; \
-            } \
+            static uinteger32 staticClassHash(); \
             uinteger32 classHash() const; \
             const character* className() const; \
             bool classNameIs(const character* className) const; \
-            String description() const; \
+            String description(const DescriberState&) const; \
         private:
 
 #define NXA_GENERATED_UNIQUE_OBJECT_METHODS_DECLARATIONS_WITHOUT_INTERNAL_OBJECT_FOR(class_name...) \

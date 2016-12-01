@@ -23,16 +23,16 @@
 
 #include <Base/Types.hpp>
 #include <Base/GeneratedObjectCode.hpp>
+#include <Base/Internal/MutableString.hpp>
 
 namespace NxA {
 
-struct StringInternal;
 class MutableString;
 class Blob;
 template <class T> class Array;
 
 class String {
-    NXA_GENERATED_INTERNAL_OBJECT_FORWARD_DECLARATION_USING(StringInternal);
+    NXA_GENERATED_INTERNAL_OBJECT_FORWARD_DECLARATION_USING(MutableStringInternal);
     NXA_GENERATED_OBJECT_METHODS_DECLARATIONS_FOR(String);
 
     friend MutableString;
@@ -43,14 +43,24 @@ public:
     String();
     String(const character*, count);
     String(MutableString&&);
+    String(const MutableString&);
     explicit String(const std::string&);
     explicit String(const std::string&&);
 
     // -- Provide a statically-sized character constant, which saves the runtime from computing the length.
-    template<count size> explicit String(const character (&chars)[size]) : String{ chars, size - 1 } { }
+    template<count size> String(const character (&chars)[size]) : String{ chars, size - 1 } { }
 
     #pragma mark Factory Methods
-    static String stringWithFormat(const character*, ...);
+
+
+#pragma mark Factory Methods
+
+    template <typename... FormatArguments>
+    static String stringWithFormat(String format, FormatArguments&&... formatArguments)
+    {
+        return MutableString{Internal::stringWithFormat(256, format.asUTF8(), MutableStringInternal::stringArgumentAsCharacter(formatArguments)...)};
+    }
+
     static String stringWithUTF8(const character* other)
     {
         return { other, strlen(other) };
@@ -59,6 +69,8 @@ public:
     {
         return { other, length };
     }
+
+    static String stringWithRepeatedCharacter(count, character);
     static String stringWithUTF16AtAndSize(const byte*, count);
     static String stringWithUTF16(const Blob&);
     static String stringByFilteringNonPrintableCharactersIn(const String&);

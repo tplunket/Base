@@ -118,6 +118,13 @@ bool Blob::classNameIs(const character* className) const
     return !::strcmp(Blob::staticClassName(), className);
 }
 
+
+uinteger32 Blob::staticClassHash()
+{
+    static uinteger32 result = String::hashFor(Blob::staticClassName());
+    return result;
+}
+
 count Blob::size() const
 {
     return internal->size();
@@ -133,7 +140,12 @@ Blob Blob::hash()
     return { internal->hash() };
 }
 
-String Blob::base64String()
+String Blob::base64String() const
+{
+    return internal->base64String();
+}
+
+String Blob::description(const DescriberState& state) const
 {
     return internal->base64String();
 }

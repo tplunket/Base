@@ -23,20 +23,20 @@
 
 #include <Base/Types.hpp>
 #include <Base/GeneratedObjectCode.hpp>
+#include <Base/Internal/MutableString.hpp>
+#include <Base/String.hpp>
 
 #pragma mark Forward Declarations
 
 namespace NxA {
 
 class Blob;
-class String;
-struct StringInternal;
 template <class T> class Array;
 
 #pragma mark Public Interface
 
 class MutableString {
-    NXA_GENERATED_INTERNAL_OBJECT_FORWARD_DECLARATION_USING(StringInternal);
+    NXA_GENERATED_INTERNAL_OBJECT_FORWARD_DECLARATION_USING(MutableStringInternal);
     NXA_GENERATED_OBJECT_METHODS_DECLARATIONS_FOR(MutableString);
 
     friend String;
@@ -47,17 +47,26 @@ public:
     MutableString(const String&);
     MutableString(const character*, count);
     explicit MutableString(const std::string &);
+    explicit MutableString(std::string &&);
 
     // -- Provide a statically-sized character constant, which saves the runtime from computing the length.
-    template<count size> explicit MutableString(const character (&chars)[size]) : MutableString{ chars, size - 1 } { }
+    template<count size> MutableString(const character (&chars)[size]) : MutableString{ chars, size - 1 } { }
 
     #pragma mark Factory Methods
-    static MutableString stringWithFormat(const character*, ...);
+
+    template <typename... FormatArguments>
+    static MutableString stringWithFormat(String format, FormatArguments&&... formatArguments)
+    {
+        return MutableString{Internal::stringWithFormat(256, format.asUTF8(), MutableStringInternal::stringArgumentAsCharacter(formatArguments)...)};
+    }
+
     static MutableString stringWith(const character* other)
     {
         return { other, strlen(other) };
     }
     static MutableString stringWithUTF16(const Blob&);
+
+    static MutableString stringWithRepeatedCharacter(count, character);
 
     #pragma mark Operators
     bool operator==(const String& other) const;
@@ -88,6 +97,12 @@ public:
     void append(const String&);
     void append(const character*);
     void append(const character);
+    template <typename... FormatArguments>
+    void appendStringWithFormat(String formatString, FormatArguments&&... formatArguments)
+    {
+        auto formatted = MutableStringInternal::stringWithFormat(4096, formatString.asUTF8(), MutableStringInternal::stringArgumentAsCharacter(formatArguments)...);
+        this->append(String{formatted});
+    }
 
     Array<String> splitBySeparator(char) const;
     MutableString subString(count, count = -1) const;

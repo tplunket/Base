@@ -71,7 +71,7 @@ inline NxA::uinteger32 SBox(const NxA::byte* key, NxA::count len, NxA::uinteger3
 }
 
 #include "Base/String.hpp"
-#include "Base/Internal/String.hpp"
+#include "Base/Internal/MutableString.hpp"
 #include "Base/MutableString.hpp"
 #include "Base/Exception.hpp"
 #include "Base/Platform.hpp"
@@ -83,11 +83,19 @@ using namespace NxA;
 
 String::String() : internal{ std::make_shared<Internal>() } { }
 
+String::String(const String& other) = default;
+
+String::String(String&& other) = default;
+
+String::String(String&) = default;
+
 String::String(const std::string& other) : internal{ std::make_shared<Internal>(other) } { }
 
 String::String(const std::string&& other) : internal{ std::make_shared<Internal>(std::move(other)) } { }
 
 String::String(const character* other, size_t size) : internal{ std::make_shared<Internal>(other, size) } { }
+
+String::String(const MutableString& other) : internal{ std::make_shared<Internal>(*std::static_pointer_cast<std::string>(other.internal)) } { }
 
 String::String(MutableString&& other) : internal{ std::move(other.internal) }
 {
@@ -95,27 +103,11 @@ String::String(MutableString&& other) : internal{ std::move(other.internal) }
     NXA_ASSERT_TRUE(internal.use_count() == 1);
 }
 
-String::String(const String&) = default;
-
-String::String(String&&) = default;
-
-String::String(String&) = default;
-
 String::String(std::shared_ptr<Internal>&& other) : internal{ std::move(other) } { }
 
 String::~String() = default;
 
 #pragma mark Factory Methods
-
-String String::stringWithFormat(const character* format, ...)
-{
-    va_list args;
-    va_start(args, format);
-    auto result = Internal::stringWithFormat(format, args);
-    va_end(args);
-
-    return { std::move(result) };
-}
 
 String String::stringWithUTF16AtAndSize(const byte* data, count size)
 {
@@ -125,6 +117,11 @@ String String::stringWithUTF16AtAndSize(const byte* data, count size)
 String String::stringWithUTF16(const Blob& other)
 {
     return { Internal::stringWithUTF16(other) };
+}
+
+String String::stringWithRepeatedCharacter(count number, character specificChar)
+{
+    return { Internal::stringWithRepeatedCharacter(number, specificChar) };
 }
 
 String String::stringByFilteringNonPrintableCharactersIn(const String& other)
@@ -156,8 +153,7 @@ count String::lengthOf(const character* str)
 #pragma mark Operators
 
 String& String::operator=(String&&) = default;
-
-String& String::operator=(const String&) = default;
+String& String::operator=(String const&) = default;
 
 bool String::operator==(const character* other) const
 {
@@ -194,7 +190,13 @@ boolean String::classNameIs(const character* className) const
     return !::strcmp(String::staticClassName(), className);
 }
 
-String String::description() const
+uinteger32 String::staticClassHash()
+{
+    static uinteger32 result = String::hashFor(String::staticClassName());
+    return result;
+}
+
+String String::description(const DescriberState& state) const
 {
     return *this;
 }

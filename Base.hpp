@@ -21,6 +21,7 @@
 
 #pragma once
 
+#include <Base/Describe.hpp>
 #include <Base/Array.hpp>
 #include <Base/Assert.hpp>
 #include <Base/Blob.hpp>

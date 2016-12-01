@@ -120,12 +120,6 @@ namespace NxA {
             NXA_ASSERT_TRUE(anyPos != this->cend());
             return *anyPos;
         }
-        T& firstObject()
-        {
-            auto anyPos = this->begin();
-            NXA_ASSERT_TRUE(anyPos != this->end());
-            return *anyPos;
-        }
         boolean contains(const T& object) const
         {
             return this->std::set<T>::count(object) != 0;
@@ -143,13 +137,15 @@ namespace NxA {
             this->erase(objectPosition);
         }
 
-        String description() const
+        String description(const DescriberState& state) const
         {
-            auto result = MutableString::stringWithFormat("<Set length=\"%ld\">", this->length());
+            auto indented = state.increaseIndent();
+            auto result = MutableString::stringWithFormat(indented.indentedLine("<Set length=\"%ld\">"), this->length());
             for (auto && item : *this) {
-                result.append(String::stringWithFormat("\n  %ld: %s", index, Describe<T>::describe(item)));
+                result.append(NxA::describe(item, indented));
             }
-            result.append("</Set>");
+
+            result.append(indented.indentedLine("</Set>"));
             
             return { std::move(result) };
         }

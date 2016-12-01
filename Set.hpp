@@ -87,8 +87,8 @@ namespace NxA {
         using iterator = const_iterator;
 
 #pragma mark Operators
-        Set& operator=(Set&& other) = delete;
-        Set& operator=(const Set& other) = delete;
+        Set& operator=(Set&& other) = default;
+        Set& operator=(const Set& other) = default;
         bool operator==(const Set& other) const
         {
             if (internal == other.internal) {

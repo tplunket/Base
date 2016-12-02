@@ -333,18 +333,14 @@ count String::indexOfLastOccurenceOf(const character* other) const
 
 namespace NxA {
 
-bool operator<(const String& first, const String& second)
+bool operator< (const String& first, const String& second)
 {
     return *(first.internal) < *(second.internal);
 }
 
-String operator "" _String(const character* other, count length)
+String operator "" _String(const character* str, count length)
 {
-    return NxA::String(other, length);
+    return NxA::String(str, length);
 }
 
 }
-
-template class std::basic_stringstream<char, std::char_traits<char>, std::allocator<char>>;
-template class std::basic_stringbuf<char, std::char_traits<char>, std::allocator<char>>;
-template class std::basic_string<char, std::char_traits<char>, std::allocator<char>>;

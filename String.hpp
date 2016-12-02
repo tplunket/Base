@@ -115,6 +115,12 @@ public:
     count indexOfLastOccurenceOf(const String&) const;
     count indexOfFirstOccurenceOf(const character*) const;
     count indexOfLastOccurenceOf(const character*) const;
+
+    template<typename Char, typename CharTraits>
+    friend inline ::std::basic_ostream<Char, CharTraits> &operator<<(::std::basic_ostream<Char, CharTraits> &os, const String &self)
+    {
+        return (os << self.asStdString());
+    }
 };
 
 #pragma mark Operators

@@ -242,7 +242,7 @@ TEST(Base_Blob, Data_ConstantBlobIsEmpty_ThrowsAnException)
 {
     // -- Given.
     // -- When.
-    Blob test;
+    const Blob test;
 
     // -- Then.
     ASSERT_THROW(test.data(), NxA::AssertionFailed);

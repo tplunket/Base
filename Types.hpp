@@ -26,7 +26,6 @@
 #include <memory>
 #include <typeinfo>
 #include <experimental/optional>
-
 #include <Base/Internal/decimal.h>
 
 namespace NxA {
@@ -53,12 +52,11 @@ using count = std::size_t;
 
 using timestamp = std::time_t;
 
-using decimal = double;
 using decimal2 = dec::decimal<2>;
 using decimal3 = dec::decimal<3>;
+using decimal = decimal3;
 
-// -- Provide an optional type based on std::experimental::optional.
-// -- TODO: change to std::optional in C++1y
+// -- Provide an optional type based on std::experimental::optional. TODO: change to std::optional in C++1y
 template <typename T>
 using Optional = std::experimental::optional<T>;
 using NullOptional = std::experimental::nullopt_t;
@@ -69,17 +67,31 @@ makeOptional(T&& v) {
     return Optional<typename std::decay<T>::type>(std::forward<T>(v));
 }
 
+// -- prevent derived types from being copied
+class NoCopy
+{
+protected:
+    NoCopy() = default;
+    ~NoCopy() = default;
+
+    NoCopy(NoCopy&&) = default;
+    NoCopy& operator=(NoCopy&&) = default;
+
+    NoCopy(NoCopy const&) = delete;
+    NoCopy& operator=(NoCopy const&) = delete;
+};
+
 // -- Template used to find the description for a type
 template <typename T>
 struct Describe {
-    static const character * describe(const T& item) {
+    static const character * describe(T item) {
         return item.description().asUTF8();
     }
 };
 
 template <typename T>
 struct Describe<std::shared_ptr<T>> {
-    static const character * describe(const std::shared_ptr<T>& item) {
+    static const character * describe(std::shared_ptr<T> item) {
         if (!item) {
             return "-empty shared_ptr-";
         }
@@ -89,7 +101,7 @@ struct Describe<std::shared_ptr<T>> {
 
 template <typename T>
 struct Describe<Optional<T>> {
-    static const character * describe(const Optional<T>& item) {
+    static const character * describe(Optional<T> item) {
         if (!item) {
             return "-empty optional-";
         }

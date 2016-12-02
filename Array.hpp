@@ -60,7 +60,7 @@ public:
         static std::unique_ptr<character[]> buffer;
         auto className = buffer.get();
         if (className) {
-            // This is the fast lock-free path for the common case (unique_ptr engaged)
+            // -- This is the fast lock-free path for the common case (unique_ptr engaged)
             return className;
         }
 

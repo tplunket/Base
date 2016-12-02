@@ -101,6 +101,7 @@ public:
 
         return *internal == *(other.internal);
     }
+
     const Tvalue& operator[](const Tkey& key) const
     {
         return internal->operator[](key);

@@ -201,12 +201,12 @@ String String::description(const DescriberState& state) const
     return *this;
 }
 
-integer32 String::compare(const char * other) const
+integer32 String::compare(const char* other) const
 {
     return internal->compare(other);
 }
 
-integer32 String::compare(const String & other) const
+integer32 String::compare(const String& other) const
 {
     return internal->compare(*other.internal);
 }
@@ -337,7 +337,7 @@ namespace NxA {
 
 bool operator< (const String& first, const String& second)
 {
-    return *first.internal < *second.internal;
+    return *(first.internal) < *(second.internal);
 }
 
 String operator "" _String(const character* str, count length)
@@ -346,8 +346,3 @@ String operator "" _String(const character* str, count length)
 }
 
 }
-
-
-template class std::basic_stringstream<char, std::char_traits<char>, std::allocator<char>>;
-template class std::basic_stringbuf<char, std::char_traits<char>, std::allocator<char>>;
-template class std::basic_string<char, std::char_traits<char>, std::allocator<char>>;

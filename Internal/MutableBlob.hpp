@@ -103,12 +103,12 @@ struct MutableBlobInternal : public Object::Internal, public std::vector<byte>
 
     const byte* data() const
     {
-        // Returns pointer to the underlying array serving as element storage. The pointer is such that range [data(); data() + size()) is always a valid range, even if the container is empty (data() is not dereferenceable in that case).
+        NXA_ASSERT_TRUE(this->size() > 0);
         return this->std::vector<byte>::data();
     }
     byte* data()
     {
-        // Returns pointer to the underlying array serving as element storage. The pointer is such that range [data(); data() + size()) is always a valid range, even if the container is empty (data() is not dereferenceable in that case).
+        NXA_ASSERT_TRUE(this->size() > 0);
         return this->std::vector<byte>::data();
     }
 

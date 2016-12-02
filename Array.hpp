@@ -60,14 +60,14 @@ public:
     {
         static std::unique_ptr<character[]> buffer;
         if (buffer) {
-            // This is the fast lock-free path for the common case (unique_ptr engaged)
+            // -- This is the fast lock-free path for the common case (unique_ptr engaged)
             return buffer.get();
         }
 
         static std::mutex m;
         std::lock_guard<std::mutex> guard(m);
 
-        // now under guard, this is the slow-and-safe path. We have to re-check in case we lost a race to the lock.
+        // -- now under guard, this is the slow-and-safe path. We have to re-check in case we lost a race to the lock.
         if (!buffer) {
             const character* format = "Array<%s>";
             const character* valueTypeName = TypeName<T>::get();
@@ -78,7 +78,6 @@ public:
 
         return buffer.get();
     }
-
     static uinteger32 staticClassHash()
     {
         static uinteger32 result = String::hashFor(Array::staticClassName());

@@ -228,15 +228,24 @@ TEST(Base_Blob, OperatorSquareBrackets_OutOfBoundsAccessOnConstantBlob_ThrowsAnE
     ASSERT_THROW(test[sizeof(testData) + 46], NxA::AssertionFailed);
 }
 
-TEST(Base_Blob, Data_BlobIsEmpty)
+TEST(Base_Blob, Data_BlobIsEmpty_ThrowsAnException)
 {
     // -- Given.
     // -- When.
     Blob test;
 
     // -- Then.
-    ASSERT_TRUE(test.size() == 0);
-    ASSERT_TRUE(test.data() + test.size() == test.data());
+    ASSERT_THROW(test.data(), NxA::AssertionFailed);
+}
+
+TEST(Base_Blob, Data_ConstantBlobIsEmpty_ThrowsAnException)
+{
+    // -- Given.
+    // -- When.
+    const Blob test;
+
+    // -- Then.
+    ASSERT_THROW(test.data(), NxA::AssertionFailed);
 }
 
 TEST(Base_Blob, OperatorEqual_TwoEqualBlobs_ReturnsTrue)

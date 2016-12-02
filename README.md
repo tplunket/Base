@@ -1,7 +1,7 @@
 # Base
 A simple, lightweight &amp; cross-platform base library.
 
-This contains basic Object, String, File, Array, Pointer, etc.. Objects all use the pimpl idiom and cannot be created on the stack. All pointer are shared pointers and no direct calls to new or delete are made.
+This contains basic `String`, `File`, `Array`, `Map`, etc.. Objects are value-types that use the pimpl idiom for simple moving/copying. Some types provide both mutable and non-mutable types which share implementations but allow code to keep references to non-mutable objects without any risk of them being mutated elsewhere.
 
 Basic unit test support using GoogleMock is provided. All classes will have 100% coverage eventually :)
 

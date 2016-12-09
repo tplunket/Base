@@ -149,6 +149,72 @@ TEST(Base_Set, OperatorEqual_TwoEqualSets_ReturnTrue)
     ASSERT_TRUE(test == test2);
 }
 
+TEST(Base_Set, EmptyAll_MutableSetWithTwoObject_AssignCopyStillHasElements)
+{
+    // -- Given.
+    MutableSet<String> test1;
+    Set<String> test2;
+    test1.append(String("Test"));
+    test1.append(String("Test2"));
+    test2 = test1;
+
+    // -- When.
+    test1.removeAll();
+
+    // -- Then.
+    ASSERT_EQ(0, test1.length());
+    ASSERT_EQ(2, test2.length());
+}
+
+TEST(Base_Set, EmptyAll_ImmutableSetWithTwoObject_AssignCopyStillHasElements)
+{
+    // -- Given.
+    MutableSet<String> test1;
+    Set<String> test2;
+    test1.append(String("Test"));
+    test1.append(String("Test2"));
+    test2 = test1;
+
+    // -- When.
+    test1.removeAll();
+
+    // -- Then.
+    ASSERT_EQ(0, test1.length());
+    ASSERT_EQ(2, test2.length());
+}
+
+TEST(Base_Set, EmptyAll_MutableSetWithTwoObject_CopyStillHasElements)
+{
+    // -- Given.
+    MutableSet<String> test1;
+    test1.append(String("Test"));
+    test1.append(String("Test2"));
+    Set<String> test2{test1};
+
+    // -- When.
+    test1.removeAll();
+
+    // -- Then.
+    ASSERT_EQ(0, test1.length());
+    ASSERT_EQ(2, test2.length());
+}
+
+TEST(Base_Set, EmptyAll_ImmutableSetWithTwoObject_CopyStillHasElements)
+{
+    // -- Given.
+    MutableSet<String> test1;
+    test1.append(String("Test"));
+    test1.append(String("Test2"));
+    MutableSet<String> test2{test1};
+
+    // -- When.
+    test1.removeAll();
+
+    // -- Then.
+    ASSERT_EQ(0, test1.length());
+    ASSERT_EQ(2, test2.length());
+}
+
 TEST(Base_Set, Length_EmptySet_LengthReturnsZero)
 {
     // -- Given.

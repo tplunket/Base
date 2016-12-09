@@ -28,9 +28,11 @@
 #include <Base/Internal/MutableArray.hpp>
 
 #include <algorithm>
+#include <initializer_list>
 #include <vector>
 #include <mutex>
 #include <memory>
+#include <type_traits>
 
 namespace NxA {
 
@@ -39,20 +41,28 @@ namespace NxA {
 template <class T> class Array {
     NXA_GENERATED_INTERNAL_OBJECT_FORWARD_DECLARATION_USING(MutableArrayInternal<T>);
 
-    std::shared_ptr<MutableArrayInternal<T>> internal;
+    std::shared_ptr<Internal> internal;
 
-    friend class MutableArray<T>;
+    template<typename V>
+    friend class MutableArray;
+
+    template<typename V>
+    friend class MutableArrayInternal;
+
+    template<typename V>
+    friend class Array;
 
 public:
     #pragma mark Constructors/Destructors
-    Array() : internal{ std::make_shared<MutableArrayInternal<T>>() } { }
-    Array(const Array& other) : internal{ other.internal } {}
+    Array() : internal{ std::make_shared<Internal>() } { }
+    Array(const Array& other) : internal{ std::make_shared<Internal>(*other.internal) } {}
     Array(Array&& other) : internal{ std::move(other.internal) } {}
-    Array(const MutableArray<T>& other) : internal{ std::make_shared<MutableArrayInternal<T>>(*other.internal) } { }
+    Array(const MutableArray<T>& other) : internal{ std::make_shared<Internal>(*other.internal) } { }
     Array(MutableArray<T>&& other) : internal{ std::move(other.internal) } { }
-    Array(std::vector<T>&& other) : internal{ std::make_shared<MutableArrayInternal<T>>(std::move(other)) } { }
-    template<class InputIt>
-    Array(InputIt first, InputIt last) : internal{ std::make_shared<MutableArrayInternal<T>>(first, last) } { }
+    Array(std::initializer_list<T> other) : internal{std::make_shared<Internal>(other)} { }
+    Array(std::vector<T>&& other) : internal{ std::make_shared<Internal>(std::move(other)) } { }
+    template<typename V, typename = std::enable_if_t<std::is_convertible<V, T>::value>>
+    Array(const Array<V>& other) : internal{ std::make_shared<Internal>(*other.internal) } { }
     ~Array() {}
 
     #pragma mark Class Methods
@@ -85,12 +95,13 @@ public:
     }
 
     #pragma mark Iterators
-    using iterator = typename MutableArrayInternal<T>::iterator;
-    using const_iterator = typename MutableArrayInternal<T>::const_iterator;
+    using iterator = typename Internal::iterator;
+    using const_iterator = typename Internal::const_iterator;
 
     #pragma mark Operators
     Array& operator=(Array&& other) { internal = std::move(other.internal); return *this; }
-    Array& operator=(const Array& other) { internal = other.internal; return *this; }
+    Array& operator=(const Array& other) { internal = std::make_shared<Internal>(*other.internal); return *this; }
+    Array& operator=(const MutableArray<T>& other) { internal = std::make_shared<Internal>(*other.internal); return *this; }
     bool operator==(const Array& other) const
     {
         if (internal == other.internal) {

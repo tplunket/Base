@@ -74,20 +74,19 @@ public:
     #pragma mark Constructors/Destructors
     MutableArray() : internal{ std::make_shared<Internal>() } { }
     MutableArray(const MutableArray& other) : internal{ std::make_shared<Internal>(*other.internal) } { }
-    MutableArray(MutableArray& other) : internal{ other.internal } { }
+    MutableArray(MutableArray& other) : internal{ std::make_shared<Internal>(*other.internal) } { }
+    MutableArray(std::initializer_list<T> other) : internal{std::make_shared<Internal>(other)} { }
     MutableArray(MutableArray&&) = default;
     MutableArray(const Array<T>& other) : internal{ std::make_shared<Internal>(*other.internal) } { }
-    template<class InputIt>
-    MutableArray(InputIt first, InputIt last) : internal{ std::make_shared<Internal>(first, last) } { }
     ~MutableArray() = default;
 
     #pragma mark Iterators
-    using iterator = typename MutableArrayInternal<T>::iterator;
-    using const_iterator = typename MutableArrayInternal<T>::const_iterator;
+    using iterator = typename Internal::iterator;
+    using const_iterator = typename Internal::const_iterator;
 
     #pragma mark Operators
     MutableArray& operator=(MutableArray&&) = default;
-    MutableArray& operator=(const MutableArray& other) = default;
+    MutableArray& operator=(const MutableArray& other) { internal = std::make_shared<Internal>(*other.internal); return *this; }
     bool operator==(const MutableArray& other) const
     {
         if (internal == other.internal) {

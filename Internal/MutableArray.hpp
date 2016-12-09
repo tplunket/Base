@@ -30,6 +30,8 @@
 #include "Base/MutableString.hpp"
 #include "Base/Internal/Object.hpp"
 
+#include <initializer_list>
+
 namespace NxA {
 
 #pragma mark Forward Declarations
@@ -49,8 +51,9 @@ template <class T> struct MutableArrayInternal : public Object::Internal, public
     MutableArrayInternal() : std::vector<T>() { }
     MutableArrayInternal(const MutableArrayInternal& other) : std::vector<T>{ other } { }
     MutableArrayInternal(std::vector<T>&& other) : std::vector<T>{ std::move(other) } { }
-    template<class InputIt>
-    MutableArrayInternal(InputIt first, InputIt last) : std::vector<T>{first, last} { }
+    MutableArrayInternal(std::initializer_list<T> other) : std::vector<T>{other.begin(), other.end()} { }
+    template<typename V, typename = std::enable_if_t<std::is_convertible<V, T>::value>>
+    MutableArrayInternal(const MutableArrayInternal<V>& other) : std::vector<T>{other.begin(), other.end()} { }
 
     virtual ~MutableArrayInternal() = default;
 

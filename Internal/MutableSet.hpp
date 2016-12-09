@@ -48,7 +48,9 @@ namespace NxA {
         MutableSetInternal() = default;
         MutableSetInternal(const MutableSetInternal& other) = default;
         MutableSetInternal(MutableSetInternal&& other) = default;
+        MutableSetInternal(std::initializer_list<T> other) : std::vector<T>{other.begin(), other.end()} { }
         virtual ~MutableSetInternal() = default;
+        MutableSetInternal& operator=(const MutableSetInternal& other) = default;
 
         MutableSetInternal(std::set<T>&& other) : std::set<T>{ std::move(other) } { }
 

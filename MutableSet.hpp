@@ -43,17 +43,18 @@ namespace NxA {
     template <class T> class MutableSet {
         NXA_GENERATED_INTERNAL_OBJECT_FORWARD_DECLARATION_USING(MutableSetInternal<T>);
 
-        std::shared_ptr<MutableSetInternal<T>> internal = std::make_shared<MutableSetInternal<T>>();
+        std::shared_ptr<Internal> internal = std::make_shared<Internal>();
 
         friend class Set<T>;
 
     public:
 #pragma mark Constructors/Destructors
         MutableSet() = default;
-        MutableSet(const MutableSet& other) = default;
+        MutableSet(const MutableSet& other) : internal{std::make_shared<Internal>(*other.internal)} { }
+        MutableSet(std::initializer_list<T> other) : internal{std::make_shared<Internal>(other)} { }
         MutableSet(MutableSet&& other) = default;
         ~MutableSet() = default;
-        MutableSet(const Set<T>& other) : internal{ std::make_shared<MutableSetInternal<T>>(*other.internal) } { }
+        MutableSet(const Set<T>& other) : internal{ std::make_shared<Internal>(*other.internal) } { }
         MutableSet(Set<T>&& other) : internal{ std::move(other.internal) } { }
 
 #pragma mark Class Methods
@@ -87,12 +88,12 @@ namespace NxA {
         }
 
 #pragma mark Iterators
-        using iterator = typename MutableSetInternal<T>::iterator;
-        using const_iterator = typename MutableSetInternal<T>::const_iterator;
+        using iterator = typename Internal::iterator;
+        using const_iterator = typename Internal::const_iterator;
 
 #pragma mark Operators
         MutableSet& operator=(MutableSet&& other) = default;
-        MutableSet& operator=(const MutableSet& other) = default;
+        MutableSet& operator=(const MutableSet& other) { internal = std::make_shared<Internal>(*other.internal); return *this; }
         bool operator==(const MutableSet& other) const
         {
             if (internal == other.internal) {

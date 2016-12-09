@@ -108,7 +108,7 @@ TEST(Base_Array, OperatorSquareBrackets_AccessOnConstantArray_ReturnsCorrectValu
     ASSERT_STREQ("Test", constTest[0].asUTF8());
 }
 
-TEST(Base_Array, OperatorSquareBrackets_AccessOnMutableArrayOfMutable_ReturnsTheArrayAndNotACopy)
+TEST(Base_Array, OperatorSquareBrackets_AccessOnMutableArrayOfMutable_ReturnsTheArrayACopy)
 {
     // -- Given.
     MutableArray<MutableArray<String>> test;
@@ -120,8 +120,8 @@ TEST(Base_Array, OperatorSquareBrackets_AccessOnMutableArrayOfMutable_ReturnsThe
     auto result = test[0];
 
     // -- Then.
-    ASSERT_EQ(1, result.length());
-    ASSERT_STREQ("Test", result.firstObject().asUTF8());
+    ASSERT_EQ(0, result.length());
+    ASSERT_STREQ("Test", test2.firstObject().asUTF8());
 }
 
 TEST(Base_Array, OperatorSquareBrackets_OutOfBoundsAccess_ThrowsException)
@@ -217,6 +217,72 @@ TEST(Base_Array, Length_EmptyArray_LengthReturnsZero)
 
     // -- Then.
     ASSERT_EQ(0, test.length());
+}
+
+TEST(Base_Array, EmptyAll_MutableArrayWithTwoObject_AssignCopyStillHasElements)
+{
+    // -- Given.
+    MutableArray<String> test1;
+    Array<String> test2;
+    test1.append(String("Test"));
+    test1.append(String("Test2"));
+    test2 = test1;
+
+    // -- When.
+    test1.removeAll();
+
+    // -- Then.
+    ASSERT_EQ(0, test1.length());
+    ASSERT_EQ(2, test2.length());
+}
+
+TEST(Base_Array, EmptyAll_ImmutableArrayWithTwoObject_AssignCopyStillHasElements)
+{
+    // -- Given.
+    MutableArray<String> test1;
+    MutableArray<String> test2;
+    test1.append(String("Test"));
+    test1.append(String("Test2"));
+    test2 = test1;
+
+    // -- When.
+    test1.removeAll();
+
+    // -- Then.
+    ASSERT_EQ(0, test1.length());
+    ASSERT_EQ(2, test2.length());
+}
+
+TEST(Base_Array, EmptyAll_MutableArrayWithTwoObject_CopyStillHasElements)
+{
+    // -- Given.
+    MutableArray<String> test1;
+    test1.append(String("Test"));
+    test1.append(String("Test2"));
+    Array<String> test2{test1};
+
+    // -- When.
+    test1.removeAll();
+
+    // -- Then.
+    ASSERT_EQ(0, test1.length());
+    ASSERT_EQ(2, test2.length());
+}
+
+TEST(Base_Array, EmptyAll_ImmutableArrayWithTwoObject_CopyStillHasElements)
+{
+    // -- Given.
+    MutableArray<String> test1;
+    test1.append(String("Test"));
+    test1.append(String("Test2"));
+    MutableArray<String> test2{test1};
+
+    // -- When.
+    test1.removeAll();
+
+    // -- Then.
+    ASSERT_EQ(0, test1.length());
+    ASSERT_EQ(2, test2.length());
 }
 
 TEST(Base_Array, EmptyAll_ArrayWithTwoObject_RemovesAllObjects)

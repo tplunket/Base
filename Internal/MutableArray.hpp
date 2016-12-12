@@ -211,5 +211,4 @@ template <class T> struct MutableArrayInternal : public Object::Internal, public
     }
 };
 
-
 }

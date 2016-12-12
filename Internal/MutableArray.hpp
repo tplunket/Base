@@ -183,8 +183,8 @@ template <class T> struct MutableArrayInternal : public Object::Internal, public
     {
         auto result = MutableString::stringWithFormat("Array at %08p with %ld elements:", this, this->length());
         for (count index = 0; index < this->length(); ++index) {
-            auto& item = (*this)[index];
-            result.append(String::stringWithFormat("\n  %ld: %s", index, item.description().asUTF8()));
+            result.append(String::stringWithFormat("\n  %ld: ", index));
+            result.append((*this)[index].description());
         }
 
         return { std::move(result) };

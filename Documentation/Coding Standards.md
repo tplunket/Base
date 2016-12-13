@@ -177,40 +177,46 @@ There are two types of files: The ones which are confidential and part of our in
     // --- NOT like this
     return (localLog.count == 3);
 ```
-* **Pragmas are used to seperate code sections** both in the headers and the implementation. In headers the order of declaration is:
+* **Comments are used to seperate code sections** both in the headers and the implementation. In headers the order of declaration is:
 
 ```
     class MyClass : NxA::Object
     {
-        #pragma mark Factory Methods
+        // -- Constructors & Desctructors
+        ...
+        
+        // -- Factory Methods
         ...
 
-        #pragma mark Class Methods
+        // -- Class Methods
         ...
 
-        #pragma mark Operators
+        // -- Operators
         ...
 
-        #pragma mark Instance Methods  
+        // -- Instance Methods  
         ...
     }
 ```
 
-If the code overrides any methods from parent classes, those are placed after their respective pragma section in reverse order of in-heritence.
+If the code overrides any methods from parent classes, those are placed after their respective code section in reverse order of in-heritence.
 
 ```
     class MyClass : NxA::Object
     {
-        #pragma mark Factory Methods
+        // -- Constructors & Desctructors
+        ...
+        
+        // -- Factory Methods
         ...
     
-        #pragma mark Overriden Object Factory Methods
+        // -- Overriden Object Factory Methods
         ...
 
-        #pragma mark Instance Methods  
+        // -- Instance Methods  
         ...
 
-        #pragma mark Overriden Object Instance Methods
+        // -- Overriden Object Instance Methods
         ...
     }
 ```
@@ -296,7 +302,7 @@ If the code overrides any methods from parent classes, those are placed after th
     log.addMessage(String::formatString("Hello"));
 ```
 
-* **Organize code so that it reads top to bottom.** As much as possible, in both the declarations and definitions and within each pragma section described above, the code should be organised so that main methods are found at the top and sub-methods are found underneath them (see "Vertical Ordering" in [MAR09] page 84).
+* **Organize code so that it reads top to bottom.** As much as possible, in both the declarations and definitions and within each code section described above, the code should be organised so that main methods are found at the top and sub-methods are found underneath them (see "Vertical Ordering" in [MAR09] page 84).
 
 ### Includes
 
@@ -522,7 +528,7 @@ If the code overrides any methods from parent classes, those are placed after th
 
 ```
     struct InternalItem : public InternalObject {
-        #pragma mark Instance Variables
+        // -- Instance Variables
         integer count = 0;
 
         ...

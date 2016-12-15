@@ -25,10 +25,9 @@
 #include <Base/String.hpp>
 #include <Base/MutableString.hpp>
 #include <Base/MutableMap.hpp>
-#include <Base/GeneratedObjectCode.hpp>
 #include <Base/Internal/MutableMap.hpp>
+#include <Base/GeneratedObjectCode.hpp>
 
-#include <map>
 #include <mutex>
 
 namespace NxA {

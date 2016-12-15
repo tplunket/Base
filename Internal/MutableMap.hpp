@@ -21,12 +21,11 @@
 
 #pragma once
 
-// -- This should be included after our own includes but some names clash with its contents.
-#include <map>
-
 #include "Base/Types.hpp"
 #include "Base/String.hpp"
 #include "Base/Internal/Object.hpp"
+
+#include <map>
 
 namespace NxA {
 
@@ -84,7 +83,7 @@ template <typename Tkey, typename Tvalue> struct MutableMapInternal : public Obj
             result.first->second = value;
         }
     }
-    const NxA::Optional<Tvalue> maybeValueForKey(const Tkey& key) const
+    const Optional<Tvalue> maybeValueForKey(const Tkey& key) const
     {
         const_iterator pos = this->std::map<const Tkey, Tvalue>::find(key);
         if(pos == this->cend()) {

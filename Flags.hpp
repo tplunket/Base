@@ -22,10 +22,9 @@
 #pragma once
 
 #include <Base/Types.hpp>
+#include <Base/String.hpp>
 
 namespace NxA {
-
-template <typename FlagsEnum> class FlagsBuilder;
 
 template <typename FlagsEnum>
 class Flags
@@ -39,32 +38,41 @@ public:
     #pragma mark Constructors/Destructors
     Flags() : flags(0) { }
     Flags(FlagsEnum value) : flags(1ULL << static_cast<integer>(value)) { }
-    Flags(const FlagsBuilder<FlagsEnum>& other) : flags(other.flags) { }
 
     #pragma mark Instance Methods
-    bool hasAny(FlagsEnum value) const
+    bool has(FlagsEnum value) const
     {
         return this->flags & (1ULL << static_cast<integer>(value));
     }
-    bool hasAny(Flags value) const
-    {
-        return this->flags & value.flags;
-    }
 
-    bool hasAll(FlagsEnum value) const
+    Flags<FlagsEnum> andAlso(FlagsEnum value) const
     {
-        uinteger64 test = (1ULL << static_cast<integer>(value));
-        return (this->flags & test) == test;
+        Flags result(*this);
+        result.flags |= (1ULL << static_cast<integer>(value));
+        return result;
     }
-    bool hasAll(Flags value) const
+    Flags<FlagsEnum> andAlso(const Flags& other) const
     {
-        uinteger64 test = value.flags;
-        return (this->flags & test) == test;
+        Flags result(*this);
+        result.flags |= other.flags;
+        return result;
     }
-
-    void clear()
+    void set(FlagsEnum value)
+    {
+        this->flags |= (1ULL << static_cast<integer>(value));
+    }
+    void clear(FlagsEnum value)
+    {
+        this->flags &= ~(1ULL << static_cast<integer>(value));
+    }
+    void clearAll()
     {
         this->flags = 0;
+    }
+
+    String description() const
+    {
+        return String::stringWithFormat("%d", this->flags);
     }
 
     #pragma mark Operators
@@ -72,32 +80,6 @@ public:
     {
         return this->flags != 0;
     }
-
-    void operator|=(FlagsEnum e)
-    {
-        this->flags |= (1ULL << static_cast<integer>(e));
-    }
-};
-
-template <typename FlagsEnum>
-class FlagsBuilder
-{
-    friend class Flags<FlagsEnum>;
-
-    #pragma mark Instance Variables
-    mutable uinteger64 flags;
-
-public:
-    #pragma mark Constructors/Destructors
-    FlagsBuilder(FlagsEnum value) : flags(1ULL << static_cast<integer>(value)) { }
-    
-    #pragma mark Operators
-    const FlagsBuilder& operator | (FlagsEnum value) const
-    {
-        flags |= (1ULL << static_cast<integer>(value));
-        return *this;
-    }
-
 };
 
 }

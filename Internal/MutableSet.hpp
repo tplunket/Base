@@ -21,13 +21,13 @@
 
 #pragma once
 
-// -- This should be included after our own includes but some names clash with its contents.
-#include <set>
-
 #include "Base/Assert.hpp"
 #include "Base/Types.hpp"
 #include "Base/MutableString.hpp"
 #include "Base/Internal/Object.hpp"
+#include "Base/Describe.hpp"
+
+#include <set>
 
 namespace NxA {
 

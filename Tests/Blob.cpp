@@ -20,6 +20,8 @@
 //
 
 #include "Base/Blob.hpp"
+#include "Base/MutableBlob.hpp"
+#include "Base/String.hpp"
 #include "Base/Test.hpp"
 
 using namespace testing;

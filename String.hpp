@@ -22,8 +22,8 @@
 #pragma once
 
 #include <Base/Types.hpp>
-#include <Base/GeneratedObjectCode.hpp>
 #include <Base/Internal/MutableString.hpp>
+#include <Base/GeneratedObjectCode.hpp>
 
 namespace NxA {
 

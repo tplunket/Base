@@ -21,13 +21,16 @@
 
 #pragma once
 
-// -- This should be included after our own includes but some names clash with its contents.
+#include "Base/Assert.hpp"
+#include "Base/Blob.hpp"
+#include "Base/Platform.hpp"
+#include "Base/Internal/Object.hpp"
+
 #include <string>
 #include <cstdio>
 #include <codecvt>
 #include <sstream>
 #include <vector>
-
 #include <utf8rewind/utf8rewind.h>
 
 #pragma clang diagnostic push
@@ -35,15 +38,9 @@
 #include <boost/algorithm/string/replace.hpp>
 #pragma clang diagnostic pop
 
-#include "Base/Assert.hpp"
-#include "Base/Blob.hpp"
-#include "Base/Platform.hpp"
-#include "Base/Internal/Object.hpp"
-
 extern template class std::basic_stringstream<char, std::char_traits<char>, std::allocator<char>>;
 extern template class std::basic_stringbuf<char, std::char_traits<char>, std::allocator<char>>;
 extern template class std::basic_string<char, std::char_traits<char>, std::allocator<char>>;
-
 
 namespace NxA {
 

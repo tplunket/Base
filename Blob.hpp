@@ -22,13 +22,13 @@
 #pragma once
 
 #include <Base/Types.hpp>
-#include <Base/String.hpp>
 #include <Base/GeneratedObjectCode.hpp>
 
 namespace NxA {
 
 struct MutableBlobInternal;
 class MutableBlob;
+class String;
 
 class Blob {
     NXA_GENERATED_INTERNAL_OBJECT_FORWARD_DECLARATION_USING(MutableBlobInternal);

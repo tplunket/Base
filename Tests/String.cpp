@@ -20,7 +20,10 @@
 //
 
 #include "Base/String.hpp"
+#include "Base/MutableString.hpp"
 #include "Base/Test.hpp"
+#include "Base/Describe.hpp"
+#include "Base/Array.hpp"
 
 using namespace testing;
 using namespace NxA;

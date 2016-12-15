@@ -23,10 +23,9 @@
 
 #include <Base/Types.hpp>
 #include <Base/String.hpp>
-#include <Base/GeneratedObjectCode.hpp>
 #include <Base/Internal/MutableMap.hpp>
+#include <Base/GeneratedObjectCode.hpp>
 
-#include <map>
 #include <mutex>
 
 namespace NxA {
@@ -171,7 +170,7 @@ public:
     {
         return internal->valueForKey(key);
     }
-    NxA::Optional<Tvalue> maybeValueForKey(const Tkey& key) const
+    Optional<Tvalue> maybeValueForKey(const Tkey& key) const
     {
         return internal->maybeValueForKey(key);
     }

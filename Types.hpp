@@ -21,12 +21,13 @@
 
 #pragma once
 
+#include <Base/Internal/decimal.h>
+
 #include <ctime>
 #include <cstdint>
 #include <memory>
 #include <typeinfo>
 #include <experimental/optional>
-#include <Base/Internal/decimal.h>
 
 namespace NxA {
 

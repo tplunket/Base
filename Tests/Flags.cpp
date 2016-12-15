@@ -27,12 +27,6 @@ using namespace NxA;
 
 NXA_CONTAINS_TEST_SUITE_NAMED(Base_Flags_Tests);
 
-template <typename FlagsEnum>
-FlagsBuilder<FlagsEnum> operator | (FlagsEnum first, FlagsEnum second)
-{
-    return FlagsBuilder<FlagsEnum>(first) | second;
-}
-
 enum class TestFlag {
     OneOfThese,
     SomeOthers,
@@ -64,7 +58,8 @@ TEST(Base_Flags, BoolOperator_FlagsWithOneSet_ReturnsTrue)
 TEST(Base_Flags, BoolOperator_FlagsWithManySet_ReturnsTrue)
 {
     // -- Given.
-    Flags<TestFlag> flags(TestFlag::OneOfThese | TestFlag::SomeOthers);
+    Flags<TestFlag> flags(TestFlag::OneOfThese);
+    flags.set(TestFlag::SomeOthers);
 
     // -- When.
     // -- Then.
@@ -74,11 +69,11 @@ TEST(Base_Flags, BoolOperator_FlagsWithManySet_ReturnsTrue)
 TEST(Base_Flags, HasAny_FlagsWithNothingSet_ReturnsFalse)
 {
     // -- Given.
-    Flags<TestFlag> flags   ;
+    Flags<TestFlag> flags;
 
     // -- When.
     // -- Then.
-    ASSERT_FALSE(flags.hasAny(TestFlag::AndEvenMore));
+    ASSERT_FALSE(flags.has(TestFlag::AndEvenMore));
 }
 
 TEST(Base_Flags, HasAny_FlagsWithOneSet_ReturnsTrue)
@@ -88,17 +83,7 @@ TEST(Base_Flags, HasAny_FlagsWithOneSet_ReturnsTrue)
 
     // -- When.
     // -- Then.
-    ASSERT_TRUE(flags.hasAny(TestFlag::AndEvenMore));
-}
-
-TEST(Base_Flags, HasAny_FlagsWithOneSetButTestingMultiple_ReturnsTrue)
-{
-    // -- Given.
-    Flags<TestFlag> flags(TestFlag::AndEvenMore);
-
-    // -- When.
-    // -- Then.
-    ASSERT_TRUE(flags.hasAny(TestFlag::AndEvenMore | TestFlag::SomeOthers));
+    ASSERT_TRUE(flags.has(TestFlag::AndEvenMore));
 }
 
 TEST(Base_Flags, HasAny_FlagsWithAnotherSet_ReturnsFalse)
@@ -108,80 +93,107 @@ TEST(Base_Flags, HasAny_FlagsWithAnotherSet_ReturnsFalse)
 
     // -- When.
     // -- Then.
-    ASSERT_FALSE(flags.hasAny(TestFlag::AndEvenMore));
+    ASSERT_FALSE(flags.has(TestFlag::AndEvenMore));
 }
-
 
 TEST(Base_Flags, HasAny_FlagsWithMultipleSet_ReturnsTrue)
 {
     // -- Given.
-    Flags<TestFlag> flags(TestFlag::AndEvenMore | TestFlag::OneOfThese);
-
-    // -- When.
-    // -- Then.
-    ASSERT_TRUE(flags.hasAny(TestFlag::AndEvenMore));
-}
-
-TEST(Base_Flags, HasAll_FlagsWithNothingSet_ReturnsFalse)
-{
-    // -- Given.
-    Flags<TestFlag> flags;
-
-    // -- When.
-    // -- Then.
-    ASSERT_FALSE(flags.hasAll(TestFlag::AndEvenMore | TestFlag::SomeOthers));
-}
-
-TEST(Base_Flags, HasAll_FlagsWithOneSet_ReturnsFalse)
-{
-    // -- Given.
     Flags<TestFlag> flags(TestFlag::AndEvenMore);
+    flags.set(TestFlag::OneOfThese);
 
     // -- When.
     // -- Then.
-    ASSERT_FALSE(flags.hasAll(TestFlag::AndEvenMore | TestFlag::SomeOthers));
-}
-
-TEST(Base_Flags, HasAll_FlagsWithAnotherSet_ReturnsFalse)
-{
-    // -- Given.
-    Flags<TestFlag> flags(TestFlag::OneOfThese);
-
-    // -- When.
-    // -- Then.
-    ASSERT_FALSE(flags.hasAll(TestFlag::AndEvenMore | TestFlag::SomeOthers));
+    ASSERT_TRUE(flags.has(TestFlag::AndEvenMore));
 }
 
 TEST(Base_Flags, HasAll_FlagsWithMultipleSet_ReturnsTrue)
 {
     // -- Given.
-    Flags<TestFlag> flags(TestFlag::AndEvenMore | TestFlag::SomeOthers);
+    Flags<TestFlag> flags(TestFlag::AndEvenMore);
+    flags.set(TestFlag::SomeOthers);
 
     // -- When.
     // -- Then.
-    ASSERT_TRUE(flags.hasAll(TestFlag::AndEvenMore | TestFlag::SomeOthers));
+    ASSERT_TRUE(flags.has(TestFlag::AndEvenMore));
+    ASSERT_TRUE(flags.has(TestFlag::SomeOthers));
 }
 
-TEST(Base_Flags, Clear_FlagsWithMultipleSet_ReturnsEmptyFlags)
+TEST(Base_Flags, ClearAll_FlagsWithMultipleSet_ReturnsEmptyFlags)
 {
     // -- Given.
-    Flags<TestFlag> flags(TestFlag::AndEvenMore | TestFlag::SomeOthers);
+    Flags<TestFlag> flags(TestFlag::AndEvenMore);
+    flags.set(TestFlag::SomeOthers);
 
     // -- When.
-    flags.clear();
+    flags.clearAll();
 
     // -- Then.
     ASSERT_FALSE(flags);
 }
 
-TEST(Base_Flags, OperatorOr_FlagsWithOneSetOringAnother_ReturnsFlagsWithBothSet)
+TEST(Base_Flags, Set_FlagsWithOneSettingAnother_ReturnsFlagsWithBothSet)
 {
     // -- Given.
     Flags<TestFlag> flags(TestFlag::AndEvenMore);
 
     // -- When.
-    flags |= TestFlag::SomeOthers;
+    flags.set(TestFlag::SomeOthers);
 
     // -- Then.
-    ASSERT_TRUE(flags.hasAll(TestFlag::AndEvenMore | TestFlag::SomeOthers));
+    ASSERT_TRUE(flags.has(TestFlag::AndEvenMore));
+    ASSERT_TRUE(flags.has(TestFlag::SomeOthers));
+}
+
+TEST(Base_Flags, AndAlso_FlagsWithOneAndAlsoAnotherViaEnum_ReturnsFlagsWithBothSet)
+{
+    // -- Given.
+    Flags<TestFlag> flags(TestFlag::AndEvenMore);
+
+    // -- When.
+    auto result = flags.andAlso(TestFlag::SomeOthers);
+
+    // -- Then.
+    ASSERT_TRUE(result.has(TestFlag::AndEvenMore));
+    ASSERT_TRUE(result.has(TestFlag::SomeOthers));
+}
+
+TEST(Base_Flags, AndAlso_FlagsWithOneAndAlsoAnother_ReturnsFlagsWithBothSet)
+{
+    // -- Given.
+    Flags<TestFlag> flags(TestFlag::AndEvenMore);
+    Flags<TestFlag> otherFlags(TestFlag::SomeOthers);
+
+    // -- When.
+    auto result = flags.andAlso(otherFlags);
+
+    // -- Then.
+    ASSERT_TRUE(result.has(TestFlag::AndEvenMore));
+    ASSERT_TRUE(result.has(TestFlag::SomeOthers));
+}
+
+TEST(Base_Flags, Clear_FlagsWithTwoSet_ReturnsFlagsWithOnlyOneSet)
+{
+    // -- Given.
+    auto flags = Flags<TestFlag>(TestFlag::AndEvenMore).andAlso(TestFlag::SomeOthers);
+
+    // -- When.
+    flags.clear(TestFlag::AndEvenMore);
+
+    // -- Then.
+    ASSERT_FALSE(flags.has(TestFlag::AndEvenMore));
+    ASSERT_TRUE(flags.has(TestFlag::SomeOthers));
+}
+
+TEST(Base_Flags, ClearAll_FlagsWithTwoSet_ReturnsFlagsWithNothingSet)
+{
+    // -- Given.
+    auto flags = Flags<TestFlag>(TestFlag::AndEvenMore).andAlso(TestFlag::SomeOthers);
+
+    // -- When.
+    flags.clearAll();
+
+    // -- Then.
+    ASSERT_FALSE(flags.has(TestFlag::AndEvenMore));
+    ASSERT_FALSE(flags.has(TestFlag::SomeOthers));
 }

@@ -26,6 +26,7 @@
 #include "Base/Exception.hpp"
 #include "Base/Platform.hpp"
 #include "Base/Assert.hpp"
+#include "Base/Array.hpp"
 
 using namespace NxA;
 

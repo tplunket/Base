@@ -71,6 +71,7 @@ inline NxA::uinteger32 SBox(const NxA::byte* key, NxA::count len, NxA::uinteger3
 }
 
 #include "Base/String.hpp"
+#include "Base/Array.hpp"
 #include "Base/Internal/MutableString.hpp"
 #include "Base/MutableString.hpp"
 #include "Base/Exception.hpp"

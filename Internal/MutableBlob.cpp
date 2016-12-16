@@ -19,7 +19,7 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#pragma mark Base64 encoder/decoder
+// -- Base64 encoder/decoder
 
 #include <typeinfo>
 
@@ -242,7 +242,7 @@ namespace NxA {
 
 namespace NxA {
 
-#pragma mark Murmur3 Methods
+// -- Murmur3 Methods
 
 //-----------------------------------------------------------------------------
 // MurmurHash3 was written by Austin Appleby, and is placed in the public
@@ -371,14 +371,14 @@ void MurmurHash3_x64_128 ( const void * key, const int len,
 
 }
 
-#pragma mark - MutableBlobInternal Class
+// -- - MutableBlobInternal Class
 
 #include "Base/Internal/MutableBlob.hpp"
 #include "Base/String.hpp"
 
 using namespace NxA;
 
-#pragma mark Class Methods
+// -- Class Methods
 
 String MutableBlobInternal::base64StringFor(const byte* memory, count size)
 {
@@ -394,7 +394,7 @@ String MutableBlobInternal::base64StringFor(const byte* memory, count size)
     return result;
 }
 
-#pragma mark Factory Methods
+// -- Factory Methods
 
 std::shared_ptr<MutableBlobInternal> MutableBlobInternal::blobWithBase64String(const String& string)
 {
@@ -429,7 +429,7 @@ std::shared_ptr<MutableBlobInternal> MutableBlobInternal::blobWithStringWithoutT
     return newInternal;
 }
 
-#pragma mark Instance Methods
+// -- Instance Methods
 
 String MutableBlobInternal::base64String() const
 {

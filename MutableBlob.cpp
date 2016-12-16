@@ -27,7 +27,7 @@
 
 using namespace NxA;
 
-#pragma mark Constructors/Destructors
+// -- Constructors/Destructors
 
 MutableBlob::MutableBlob() : internal{ std::make_shared<Internal>() } { }
 
@@ -43,7 +43,7 @@ MutableBlob::MutableBlob(std::shared_ptr<Internal>&& other) : internal{ std::mov
 
 MutableBlob::~MutableBlob() = default;
 
-#pragma mark mark Factory Methods
+// -- mark Factory Methods
 
 MutableBlob MutableBlob::blobWithCapacity(count size)
 {
@@ -70,7 +70,7 @@ MutableBlob MutableBlob::blobWithStringWithoutTerminator(const String& string)
     return { Internal::blobWithStringWithoutTerminator(string) };
 }
 
-#pragma mark Operators
+// -- Operators
 
 MutableBlob& MutableBlob::operator=(MutableBlob&&) = default;
 
@@ -93,7 +93,7 @@ const byte& MutableBlob::operator[] (integer index) const
     return internal->operator[](index);
 }
 
-#pragma mark Instance Methods
+// -- Instance Methods
 
 uinteger32 MutableBlob::classHash() const
 {

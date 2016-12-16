@@ -37,22 +37,22 @@ class MutableBlob {
     friend Blob;
     
 public:
-    #pragma mark Constructors/Destructors
+    // -- Constructors/Destructors
     MutableBlob();
     MutableBlob(const Blob&);
 
-    #pragma mark Factory Methods
+    // -- Factory Methods
     static MutableBlob blobWithCapacity(count);
     static MutableBlob blobWithMemoryAndSize(const byte*, count);
     static MutableBlob blobWithBase64String(const String&);
     static MutableBlob blobWithStringWithTerminator(const String&);
     static MutableBlob blobWithStringWithoutTerminator(const String&);
 
-    #pragma mark Operators
+    // -- Operators
     const byte& operator[] (integer) const;
     byte& operator[] (integer index);
 
-    #pragma mark Instance Methods
+    // -- Instance Methods
     count size() const;
 
     const byte* data() const;

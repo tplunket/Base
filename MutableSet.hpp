@@ -33,7 +33,7 @@
 
 namespace NxA {
 
-#pragma mark Class
+// -- Class
 
     template<typename T>
     class Set;
@@ -48,7 +48,7 @@ namespace NxA {
         friend class Set<T>;
 
     public:
-#pragma mark Constructors/Destructors
+// -- Constructors/Destructors
         MutableSet() = default;
         MutableSet(const MutableSet& other) : internal{std::make_shared<Internal>(*other.internal)} { }
         MutableSet(std::initializer_list<T> other) : internal{std::make_shared<Internal>(other)} { }
@@ -57,7 +57,7 @@ namespace NxA {
         MutableSet(const Set<T>& other) : internal{ std::make_shared<Internal>(*other.internal) } { }
         MutableSet(Set<T>&& other) : internal{ std::move(other.internal) } { }
 
-#pragma mark Class Methods
+// -- Class Methods
         static const character* staticClassName()
         {
             static std::unique_ptr<character[]> buffer;
@@ -87,11 +87,11 @@ namespace NxA {
             return result;
         }
 
-#pragma mark Iterators
+// -- Iterators
         using iterator = typename Internal::iterator;
         using const_iterator = typename Internal::const_iterator;
 
-#pragma mark Operators
+// -- Operators
         MutableSet& operator=(MutableSet&& other) = default;
         MutableSet& operator=(const MutableSet& other) { internal = std::make_shared<Internal>(*other.internal); return *this; }
         bool operator==(const MutableSet& other) const
@@ -119,7 +119,7 @@ namespace NxA {
             return !this->operator==(other);
         }
 
-#pragma mark Instance Methods
+// -- Instance Methods
         uinteger32 classHash() const
         {
             return MutableSet::staticClassHash();

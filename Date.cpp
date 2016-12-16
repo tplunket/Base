@@ -34,7 +34,7 @@
 
 using namespace NxA;
 
-#pragma mark Class Methods
+// -- Class Methods
 
 String Date::formattedStringWithTimestampAndFormat(timestamp time, const character* format)
 {

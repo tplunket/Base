@@ -27,7 +27,7 @@
 
 using namespace NxA;
 
-#pragma mark Class Methods
+// -- Class Methods
 
 float Platform::bigEndianFloatValueAt(const byte* pointer)
 {

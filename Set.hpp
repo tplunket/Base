@@ -34,7 +34,7 @@
 
 namespace NxA {
 
-#pragma mark Class
+// -- Class
 
     template <class T> class Set {
         NXA_GENERATED_INTERNAL_OBJECT_FORWARD_DECLARATION_USING(MutableSetInternal<T>);
@@ -44,7 +44,7 @@ namespace NxA {
         friend class MutableSet<T>;
 
     public:
-#pragma mark Constructors/Destructors
+// -- Constructors/Destructors
         Set() = default;
         Set(const Set<T>& other) : internal{ std::make_shared<Internal>(*other.internal) } { }
         Set(std::initializer_list<T> other) : internal{std::make_shared<Internal>(other)} { }
@@ -53,7 +53,7 @@ namespace NxA {
         Set(const MutableSet<T>& other) : internal{ std::make_shared<Internal>(*other.internal) } { }
         Set(MutableSet<T>&& other) : internal{ std::move(other.internal) } { }
 
-#pragma mark Class Methods
+// -- Class Methods
         static const character* staticClassName()
         {
             static std::unique_ptr<character[]> buffer;
@@ -83,11 +83,11 @@ namespace NxA {
             return result;
         }
 
-#pragma mark Iterators
+// -- Iterators
         using const_iterator = typename Internal::const_iterator;
         using iterator = const_iterator;
 
-#pragma mark Operators
+// -- Operators
         Set& operator=(const Set& other) { internal = std::make_shared<Internal>(*other.internal); return *this; }
         Set& operator=(const MutableSet<T>& other) { internal = std::make_shared<Internal>(*other.internal); return *this; }
         bool operator==(const Set& other) const
@@ -114,7 +114,7 @@ namespace NxA {
         {
             return !this->operator==(other);
         }
-#pragma mark Instance Methods
+// -- Instance Methods
         uinteger32 classHash() const
         {
             return Set::staticClassHash();

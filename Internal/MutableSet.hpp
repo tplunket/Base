@@ -31,20 +31,20 @@
 
 namespace NxA {
 
-#pragma mark Forward Declarations
+// -- Forward Declarations
 
     template <class T> class MutableSetInternal;
 
-#pragma mark Utility Methods
+// -- Utility Methods
 
     // -- This is a utility function to return the description of the content of an array.
     template <class T> String descriptionOfObjectsInSet(const MutableSetInternal<T>&);
 
-#pragma mark Class
+// -- Class
 
     template <class T> struct MutableSetInternal : public Object::Internal, public std::set<T>
     {
-#pragma mark Constructors/Destructors
+// -- Constructors/Destructors
         MutableSetInternal() = default;
         MutableSetInternal(const MutableSetInternal& other) = default;
         MutableSetInternal(MutableSetInternal&& other) = default;
@@ -54,11 +54,11 @@ namespace NxA {
 
         MutableSetInternal(std::set<T>&& other) : std::set<T>{ std::move(other) } { }
 
-#pragma mark Iterators
+// -- Iterators
         using iterator = typename std::set<T>::iterator;
         using const_iterator = typename std::set<T>::const_iterator;
 
-#pragma mark Instance Methods
+// -- Instance Methods
         iterator begin() noexcept
         {
             return this->std::set<T>::begin();
@@ -152,7 +152,7 @@ namespace NxA {
             return { std::move(result) };
         }
         
-#pragma mark Overriden Object::Internal Instance Methods
+// -- Overriden Object::Internal Instance Methods
         uinteger32 classHash() const override
         {
             NXA_ALOG("Illegal call.");

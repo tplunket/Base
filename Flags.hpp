@@ -30,18 +30,18 @@ template <typename FlagsEnum> class FlagsBuilder;
 template <typename FlagsEnum>
 class Flags
 {
-    #pragma mark Instance Variables
+    // -- Instance Variables
     uinteger64 flags;
 
     static_assert(static_cast<integer>(FlagsEnum::LastFlag) < 64, "E must be an enum class smaller than 64 values with a LastFlag entry larger than any value in the enum");
 
 public:
-    #pragma mark Constructors/Destructors
+    // -- Constructors/Destructors
     Flags() : flags(0) { }
     Flags(FlagsEnum value) : flags(1ULL << static_cast<integer>(value)) { }
     Flags(const FlagsBuilder<FlagsEnum>& other) : flags(other.flags) { }
 
-    #pragma mark Instance Methods
+    // -- Instance Methods
     bool hasAny(FlagsEnum value) const
     {
         return this->flags & (1ULL << static_cast<integer>(value));
@@ -67,7 +67,7 @@ public:
         this->flags = 0;
     }
 
-    #pragma mark Operators
+    // -- Operators
     operator bool() const
     {
         return this->flags != 0;
@@ -84,14 +84,14 @@ class FlagsBuilder
 {
     friend class Flags<FlagsEnum>;
 
-    #pragma mark Instance Variables
+    // -- Instance Variables
     mutable uinteger64 flags;
 
 public:
-    #pragma mark Constructors/Destructors
+    // -- Constructors/Destructors
     FlagsBuilder(FlagsEnum value) : flags(1ULL << static_cast<integer>(value)) { }
     
-    #pragma mark Operators
+    // -- Operators
     const FlagsBuilder& operator | (FlagsEnum value) const
     {
         flags |= (1ULL << static_cast<integer>(value));

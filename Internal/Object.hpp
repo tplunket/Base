@@ -26,11 +26,11 @@ namespace NxA {
 struct Object {
     struct Internal
     {
-        #pragma mark Constructors/Destructors
+        // -- Constructors/Destructors
         Internal() { }
         virtual ~Internal() = default;
 
-        #pragma mark Instance Methods
+        // -- Instance Methods
         virtual uinteger32 classHash() const = 0;
         virtual const character* className() const = 0;
     };

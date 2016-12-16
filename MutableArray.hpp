@@ -34,7 +34,7 @@ namespace NxA {
 
 template <class T> class Array;
 
-#pragma mark Class
+// -- Class
 
 template <class T> class MutableArray {
     NXA_GENERATED_INTERNAL_OBJECT_FORWARD_DECLARATION_USING(MutableArrayInternal<T>);
@@ -44,7 +44,7 @@ template <class T> class MutableArray {
     friend Array<T>;
 
 public:
-    #pragma mark Class Methods
+    // -- Class Methods
     static const character* staticClassName()
     {
         static std::mutex m;
@@ -71,7 +71,7 @@ public:
         return result;
     }
 
-    #pragma mark Constructors/Destructors
+    // -- Constructors/Destructors
     MutableArray() : internal{ std::make_shared<Internal>() } { }
     MutableArray(const MutableArray& other) : internal{ std::make_shared<Internal>(*other.internal) } { }
     MutableArray(MutableArray& other) : internal{ std::make_shared<Internal>(*other.internal) } { }
@@ -80,11 +80,11 @@ public:
     MutableArray(const Array<T>& other) : internal{ std::make_shared<Internal>(*other.internal) } { }
     ~MutableArray() = default;
 
-    #pragma mark Iterators
+    // -- Iterators
     using iterator = typename Internal::iterator;
     using const_iterator = typename Internal::const_iterator;
 
-    #pragma mark Operators
+    // -- Operators
     MutableArray& operator=(MutableArray&&) = default;
     MutableArray& operator=(const MutableArray& other) { internal = std::make_shared<Internal>(*other.internal); return *this; }
     bool operator==(const MutableArray& other) const
@@ -120,7 +120,7 @@ public:
         return internal->operator[](index);
     }
 
-    #pragma mark Instance Methods
+    // -- Instance Methods
     uinteger32 classHash() const
     {
         return MutableArray::staticClassHash();

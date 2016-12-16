@@ -171,7 +171,7 @@ const character* MutableStringInternal::className() const
 }
 
 
-#pragma mark Operators
+// -- Operators
 
 bool MutableStringInternal::operator==(const character* other) const
 {
@@ -182,7 +182,7 @@ bool MutableStringInternal::operator==(const MutableStringInternal& other) const
     return this->std::string::compare(other) == 0;
 }
 
-#pragma mark Instance Methods
+// -- Instance Methods
 count MutableStringInternal::length() const
 {
     return this->size();

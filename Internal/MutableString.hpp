@@ -52,7 +52,7 @@ class MutableString;
 
 struct MutableStringInternal : public Object::Internal, public std::string
 {
-    #pragma mark Constructors/Destructors
+    // -- Constructors/Destructors
     MutableStringInternal() : std::string{ "", 0 } { }
     MutableStringInternal(const std::string& other) : std::string{ other } { }
     MutableStringInternal(std::string&& other) : std::string{ std::move(other) } { }
@@ -94,11 +94,11 @@ struct MutableStringInternal : public Object::Internal, public std::string
     static std::shared_ptr<MutableStringInternal> stringWithUTF16(const Blob& other);
     static std::shared_ptr<MutableStringInternal> stringByFilteringNonPrintableCharactersIn(const String& other);
 
-    #pragma mark Operators
+    // -- Operators
     bool operator==(const character* other) const;
     bool operator==(const MutableStringInternal& other) const;
 
-    #pragma mark Instance Methods
+    // -- Instance Methods
     count length() const;
 
     integer32 compare(const char * other) const;
@@ -156,7 +156,7 @@ struct MutableStringInternal : public Object::Internal, public std::string
     
     void replaceOccurenceOfStringWith(const character* occurence, const character* replacement);
 
-    #pragma mark Overriden Object::Internal Instance Methods
+    // -- Overriden Object::Internal Instance Methods
     uinteger32 classHash() const override;
     const character* className() const override;
 

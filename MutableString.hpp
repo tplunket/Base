@@ -26,14 +26,14 @@
 #include <Base/Internal/MutableString.hpp>
 #include <Base/String.hpp>
 
-#pragma mark Forward Declarations
+// -- Forward Declarations
 
 namespace NxA {
 
 class Blob;
 template <class T> class Array;
 
-#pragma mark Public Interface
+// -- Public Interface
 
 class MutableString {
     NXA_GENERATED_INTERNAL_OBJECT_FORWARD_DECLARATION_USING(MutableStringInternal);
@@ -42,7 +42,7 @@ class MutableString {
     friend String;
     
 public:
-    #pragma mark Constructors/Destructors
+    // -- Constructors/Destructors
     MutableString();
     MutableString(const String&);
     MutableString(const character*, count);
@@ -52,7 +52,7 @@ public:
     // -- Provide a statically-sized character constant, which saves the runtime from computing the length.
     template<count size> MutableString(const character (&chars)[size]) : MutableString{ chars, size - 1 } { }
 
-    #pragma mark Factory Methods
+    // -- Factory Methods
 
     template <typename... FormatArguments>
     static MutableString stringWithFormat(String format, FormatArguments&&... formatArguments)
@@ -68,7 +68,7 @@ public:
 
     static MutableString stringWithRepeatedCharacter(count, character);
 
-    #pragma mark Operators
+    // -- Operators
     bool operator==(const String& other) const;
     bool operator!=(const String& other) const
     {
@@ -80,7 +80,7 @@ public:
         return !this->operator==(other);
     }
 
-    #pragma mark Instance Methods
+    // -- Instance Methods
     count length() const;
     boolean isEmpty() const
     {

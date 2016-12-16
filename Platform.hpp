@@ -30,10 +30,10 @@ class Blob;
 
 class Platform : private Uncopyable {
 public:
-    #pragma mark Constructors & Desctructors
+    // -- Constructors & Desctructors
     Platform() = delete;
 
-    #pragma mark Constants
+    // -- Constants
     enum class Kind : uinteger32
     {
         OSX                 = 1,
@@ -76,7 +76,7 @@ public:
         : ((1 & 0xFFFFFFFF) == Platform::PdpEndian) ? Platform::PdpEndian
         : Platform::UnknownEndian;
 
-    #pragma mark Class Methods
+    // -- Class Methods
     static float bigEndianFloatValueAt(const byte*);
     static uinteger32 bigEndianUInteger32ValueAt(const byte*);
     static uinteger16 bigEndianUInteger16ValueAt(const byte*);

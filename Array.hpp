@@ -36,7 +36,7 @@
 
 namespace NxA {
 
-#pragma mark Class
+// -- Class
 
 template <class T> class Array {
     NXA_GENERATED_INTERNAL_OBJECT_FORWARD_DECLARATION_USING(MutableArrayInternal<T>);
@@ -53,7 +53,7 @@ template <class T> class Array {
     friend class Array;
 
 public:
-    #pragma mark Constructors/Destructors
+    // -- Constructors/Destructors
     Array() : internal{ std::make_shared<Internal>() } { }
     Array(const Array& other) : internal{ std::make_shared<Internal>(*other.internal) } {}
     Array(Array&& other) : internal{ std::move(other.internal) } {}
@@ -65,7 +65,7 @@ public:
     Array(const Array<V>& other) : internal{ std::make_shared<Internal>(*other.internal) } { }
     ~Array() {}
 
-    #pragma mark Class Methods
+    // -- Class Methods
     static const character* staticClassName()
     {
         static std::unique_ptr<character[]> buffer;
@@ -94,11 +94,11 @@ public:
         return result;
     }
 
-    #pragma mark Iterators
+    // -- Iterators
     using iterator = typename Internal::iterator;
     using const_iterator = typename Internal::const_iterator;
 
-    #pragma mark Operators
+    // -- Operators
     Array& operator=(Array&& other) { internal = std::move(other.internal); return *this; }
     Array& operator=(const Array& other) { internal = std::make_shared<Internal>(*other.internal); return *this; }
     Array& operator=(const MutableArray<T>& other) { internal = std::make_shared<Internal>(*other.internal); return *this; }
@@ -135,7 +135,7 @@ public:
         return internal->operator[](index);
     }
 
-    #pragma mark Instance Methods
+    // -- Instance Methods
     uinteger32 classHash() const
     {
         return Array::staticClassHash();

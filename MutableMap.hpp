@@ -33,7 +33,7 @@ namespace NxA {
 
 template <typename Tkey, typename Tvalue> class Map;
 
-#pragma mark Class
+// -- Class
 
 template <typename Tkey, typename Tvalue> class MutableMap {
     NXA_GENERATED_INTERNAL_OBJECT_FORWARD_DECLARATION_USING(MutableMapInternal<const Tkey, Tvalue>);
@@ -43,7 +43,7 @@ template <typename Tkey, typename Tvalue> class MutableMap {
     friend Map<const Tkey, Tvalue>;
 
 public:
-    #pragma mark Constructors/Destructors
+    // -- Constructors/Destructors
     MutableMap() : internal{ std::make_shared<MutableMapInternal<const Tkey, Tvalue>>() } { }
     MutableMap(const MutableMap& other) : internal{ std::make_shared<Internal>(*other.internal) } { }
     MutableMap(MutableMap& other) : internal{ other.internal } { }
@@ -51,7 +51,7 @@ public:
     MutableMap(const Map<Tkey, Tvalue>& other) : internal{ std::make_shared<Internal>(*other.internal) } { }
     ~MutableMap() = default;
         
-    #pragma mark Class Methods
+    // -- Class Methods
     static const character* staticClassName()
     {
         static std::mutex m;
@@ -78,11 +78,11 @@ public:
         return value;
     }
 
-    #pragma mark Iterators
+    // -- Iterators
     using iterator = typename MutableMapInternal<const Tkey, Tvalue>::iterator;
     using const_iterator = typename MutableMapInternal<const Tkey, Tvalue>::const_iterator;
 
-    #pragma mark Operators
+    // -- Operators
     MutableMap& operator=(MutableMap&&) = default;
     MutableMap& operator=(const MutableMap& other) = default;
     bool operator==(const MutableMap& other) const
@@ -115,7 +115,7 @@ public:
         return internal->operator[](std::move(key));
     }
 
-    #pragma mark Instance Methods
+    // -- Instance Methods
     uinteger32 classHash() const
     {
         return MutableMap::staticClassHash();

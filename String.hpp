@@ -39,7 +39,7 @@ class String {
     friend bool operator< (const String&, const String&);
 
 public:
-    #pragma mark Constructors/Destructors
+    // -- Constructors/Destructors
     String();
     String(const character*, count);
     String(MutableString&&);
@@ -50,10 +50,10 @@ public:
     // -- Provide a statically-sized character constant, which saves the runtime from computing the length.
     template<count size> String(const character (&chars)[size]) : String{ chars, size - 1 } { }
 
-    #pragma mark Factory Methods
+    // -- Factory Methods
 
 
-#pragma mark Factory Methods
+// -- Factory Methods
 
     template <typename... FormatArguments>
     static String stringWithFormat(String format, FormatArguments&&... formatArguments)
@@ -75,11 +75,11 @@ public:
     static String stringWithUTF16(const Blob&);
     static String stringByFilteringNonPrintableCharactersIn(const String&);
 
-    #pragma mark Class Methods
+    // -- Class Methods
     static uinteger32 hashFor(const character*);
     static count lengthOf(const character* str);
 
-    #pragma mark Operators
+    // -- Operators
     bool operator==(const character*) const;
     bool operator!=(const character* other) const
     {
@@ -91,7 +91,7 @@ public:
         return !this->operator==(other);
     }
 
-    #pragma mark Instance Methods
+    // -- Instance Methods
     count length() const;
     boolean isEmpty() const
     {
@@ -135,7 +135,7 @@ public:
     }
 };
 
-#pragma mark Operators
+// -- Operators
 bool operator< (const String&, const String&);
 String operator "" _String(const character* str, count length);
 

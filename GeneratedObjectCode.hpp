@@ -25,7 +25,7 @@
 
 #include <memory>
 
-#pragma mark Forward Declarations
+// -- Forward Declarations
 
 namespace NxA {
 
@@ -35,7 +35,7 @@ class DescriberState;
 
 }
 
-#pragma mark Macros
+// -- Macros
 
 #define NXA_STR_VALUE_FOR(arg...) #arg
 

@@ -38,7 +38,7 @@
 
 using namespace NxA;
 
-#pragma mark mark Class Methods
+// -- mark Class Methods
 
 Blob File::readFileAt(const String& path)
 {

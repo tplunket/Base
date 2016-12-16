@@ -25,15 +25,15 @@ namespace NxA {
 
 class Uncopyable {
 public:
-    #pragma mark Constructors & Destructors
+    // -- Constructors & Destructors
     Uncopyable(const Uncopyable&) = delete;
     virtual ~Uncopyable() = default;
 
-    #pragma mark Operators
+    // -- Operators
     Uncopyable& operator=(const Uncopyable&) = delete;
 
 protected:
-    #pragma mark Constructors & Destructors
+    // -- Constructors & Destructors
     Uncopyable() = default;
 };
 

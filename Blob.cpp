@@ -27,7 +27,7 @@
 
 using namespace NxA;
 
-#pragma mark mark Factory Methods
+// -- mark Factory Methods
 
 Blob Blob::blobWithMemoryAndSize(const byte* other, count size)
 {
@@ -49,7 +49,7 @@ Blob Blob::blobWithStringWithoutTerminator(const String& string)
     return { Internal::blobWithStringWithoutTerminator(string) };
 }
 
-#pragma mark Class Methods
+// -- Class Methods
 
 Blob Blob::hashFor(const byte* memory, count size)
 {
@@ -61,7 +61,7 @@ String Blob::base64StringFor(const byte* memory, count size)
     return { Internal::base64StringFor(memory, size) } ;
 }
 
-#pragma mark Constructors/Destructors
+// -- Constructors/Destructors
 
 Blob::Blob() : internal{ std::make_shared<Internal>() } { }
 
@@ -83,7 +83,7 @@ Blob::Blob(std::shared_ptr<Internal>&& other) : internal{ std::move(other) } { }
 
 Blob::~Blob() = default;
 
-#pragma mark Operators
+// -- Operators
 
 Blob& Blob::operator=(Blob&&) = default;
 
@@ -102,7 +102,7 @@ const byte& Blob::operator[] (integer index) const
     return internal->operator[](index);
 }
 
-#pragma mark Instance Methods
+// -- Instance Methods
 
 uinteger32 Blob::classHash() const
 {

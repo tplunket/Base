@@ -29,22 +29,22 @@
 
 namespace NxA {
 
-#pragma mark Class
+// -- Class
 
 template <typename Tkey, typename Tvalue> struct MutableMapInternal : public Object::Internal, public std::map<const Tkey, Tvalue>
 {
-    #pragma mark Constructors/Destructors
+    // -- Constructors/Destructors
     MutableMapInternal() : std::map<const Tkey, Tvalue>() { }
     MutableMapInternal(const MutableMapInternal& other) : std::map<const Tkey, Tvalue>{ other } { }
     MutableMapInternal(std::map<const Tkey, Tvalue>&& other) : std::map<const Tkey, Tvalue>{ other } { }
     MutableMapInternal(const std::map<const Tkey, Tvalue>& other) : std::map<const Tkey, Tvalue>{ std::move(other) } { }
     virtual ~MutableMapInternal() = default;
 
-    #pragma mark Iterators
+    // -- Iterators
     using iterator = typename std::map<const Tkey, Tvalue>::iterator;
     using const_iterator = typename std::map<const Tkey, Tvalue>::const_iterator;
 
-    #pragma mark Instance Methods
+    // -- Instance Methods
     iterator begin()
     {
         return this->std::map<const Tkey, Tvalue>::begin();
@@ -134,7 +134,7 @@ template <typename Tkey, typename Tvalue> struct MutableMapInternal : public Obj
         this->erase(position);
     }
 
-    #pragma mark Overriden Object::Internal Instance Methods
+    // -- Overriden Object::Internal Instance Methods
     uinteger32 classHash() const override
     {
         NXA_ALOG("Illegal call.");

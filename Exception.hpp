@@ -26,7 +26,7 @@
 #include <boost/scope_exit.hpp>
 #include <stdexcept>
 
-#pragma mark Macros
+// -- Macros
 
 #define NXA_EXCEPTION_NAMED_WITH_PARENT(exception_name, parent_class_name) \
         class exception_name : public parent_class_name { \
@@ -55,7 +55,7 @@
         BOOST_SCOPE_EXIT_END \
         _Pragma("clang diagnostic pop") \
 
-#pragma mark Public Interface
+// -- Public Interface
 
 namespace NxA {
 
@@ -63,7 +63,7 @@ class String;
 
 class Exception : public std::runtime_error {
 public:
-    #pragma mark Constructors & Destructors
+    // -- Constructors & Destructors
     Exception() = delete;
     explicit Exception(const character* reason) : std::runtime_error(reason) { }
     virtual ~Exception() { }
@@ -71,7 +71,7 @@ public:
 
 class FatalException : public std::logic_error {
 public:
-    #pragma mark Constructors & Destructors
+    // -- Constructors & Destructors
     FatalException() = delete;
     explicit FatalException(const character* reason) : std::logic_error(reason) { }
     virtual ~FatalException() { }

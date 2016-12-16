@@ -29,14 +29,14 @@ namespace NxA {
 
 template <class T> class WeakReference : private std::weak_ptr<typename T::Internal> {
 public:
-    #pragma mark Constructors & Destructors
+    // -- Constructors & Destructors
     WeakReference() = default;
     WeakReference(const WeakReference<T>& other) : std::weak_ptr<typename T::Internal>{ other } { }
     WeakReference(WeakReference<T>&&) = default;
     WeakReference(const T& other) : std::weak_ptr<typename T::Internal>{ other.internal } { }
     ~WeakReference() = default;
 
-    #pragma mark Operators
+    // -- Operators
     void operator=(WeakReference&& other)
     {
         this->std::weak_ptr<typename T::Internal>::operator=(std::move(other));
@@ -54,7 +54,7 @@ public:
         return other.expired();
     }
 
-    #pragma mark Instance Methods
+    // -- Instance Methods
     boolean isValid() const
     {
         return !this->expired();

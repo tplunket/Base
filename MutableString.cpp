@@ -30,7 +30,7 @@
 
 using namespace NxA;
 
-#pragma mark Constructors/Destructors
+// -- Constructors/Destructors
 
 MutableString::MutableString() : internal{ std::make_shared<Internal>() } { }
 
@@ -46,7 +46,7 @@ MutableString::MutableString(std::shared_ptr<Internal>&& other) : internal{ std:
 
 MutableString::~MutableString() = default;
 
-#pragma mark Factory Methods
+// -- Factory Methods
 
 MutableString MutableString::stringWithUTF16(const Blob& other)
 {
@@ -59,7 +59,7 @@ MutableString MutableString::stringWithRepeatedCharacter(count number, character
     return { Internal::stringWithRepeatedCharacter(number, specificChar) };
 }
 
-#pragma mark Operators
+// -- Operators
 
 bool MutableString::operator==(const String& other) const
 {
@@ -79,7 +79,7 @@ boolean MutableString::operator==(const MutableString& other) const
     return *internal == *(other.internal);
 }
 
-#pragma mark Instance Methods
+// -- Instance Methods
 
 uinteger32 MutableString::classHash() const
 {

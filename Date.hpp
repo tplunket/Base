@@ -32,7 +32,7 @@ class Date {
     NXA_GENERATED_OBJECT_METHODS_DECLARATIONS_FOR(Date);
 
 public:
-    #pragma mark Class Methods
+    // -- Class Methods
     static String formattedStringWithTimestampAndFormat(timestamp, const character*);
 
     static timestamp currentDateInSecondsSinceJanuary1st1970();

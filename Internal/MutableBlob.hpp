@@ -29,22 +29,22 @@
 
 namespace NxA {
 
-#pragma mark Forward Declarations
+// -- Forward Declarations
 
 class String;
 void MurmurHash3_x64_128(const void*, const int, const uint32_t, void*);
 
-#pragma mark Class
+// -- Class
 
 struct MutableBlobInternal : public Object::Internal, public std::vector<byte>
 {
-    #pragma mark Constructors/Destructors
+    // -- Constructors/Destructors
     MutableBlobInternal() : std::vector<byte>() { }
     MutableBlobInternal(const std::vector<byte>& other) : std::vector<byte>{ other } { }
     MutableBlobInternal(std::vector<byte>&& other) : std::vector<byte>{ std::move(other) } { }
     virtual ~MutableBlobInternal() = default;
 
-    #pragma mark Factory Methods
+    // -- Factory Methods
     static std::shared_ptr<MutableBlobInternal> blobWithCapacity(count size)
     {
         return std::make_shared<MutableBlobInternal>(std::vector<byte>(size));
@@ -57,7 +57,7 @@ struct MutableBlobInternal : public Object::Internal, public std::vector<byte>
     static std::shared_ptr<MutableBlobInternal> blobWithStringWithTerminator(const String&);
     static std::shared_ptr<MutableBlobInternal> blobWithStringWithoutTerminator(const String&);
 
-    #pragma mark Class Methods
+    // -- Class Methods
     static std::shared_ptr<MutableBlobInternal> hashFor(const byte* memory, count size)
     {
         auto result = std::vector<byte>(16);
@@ -68,7 +68,7 @@ struct MutableBlobInternal : public Object::Internal, public std::vector<byte>
     }
     static String base64StringFor(const byte* memory, count size);
 
-    #pragma mark Operators
+    // -- Operators
     bool operator==(const MutableBlobInternal& other) const
     {
         if (this->size() != other.size()) {
@@ -94,7 +94,7 @@ struct MutableBlobInternal : public Object::Internal, public std::vector<byte>
         return this->std::vector<byte>::operator[](index);
     }
 
-    #pragma mark Instance Methods
+    // -- Instance Methods
     count size() const
     {
         return this->std::vector<byte>::size();
@@ -157,7 +157,7 @@ struct MutableBlobInternal : public Object::Internal, public std::vector<byte>
         }
     }
 
-    #pragma mark Overriden Object::Internal Instance Methods
+    // -- Overriden Object::Internal Instance Methods
     uinteger32 classHash() const override
     {
         NXA_ALOG("Illegal call.");

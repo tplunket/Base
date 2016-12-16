@@ -35,10 +35,10 @@ NXA_EXCEPTION_NAMED_WITH_PARENT(FileError, Exception);
 
 class File : private Uncopyable {
 public:
-    #pragma mark Constructors & Destructors
+    // -- Constructors & Destructors
     File() = delete;
 
-    #pragma mark Class Methods
+    // -- Class Methods
     static Blob readFileAt(const String&);
     static void writeBlobToFileAt(const Blob&, const String&);
     static void deleteFileAt(const String&);

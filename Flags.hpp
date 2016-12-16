@@ -29,17 +29,17 @@ namespace NxA {
 template <typename FlagsEnum>
 class Flags
 {
-    #pragma mark Instance Variables
+    // -- Instance Variables
     uinteger64 flags;
 
     static_assert(static_cast<integer>(FlagsEnum::LastFlag) < 64, "E must be an enum class smaller than 64 values with a LastFlag entry larger than any value in the enum");
 
 public:
-    #pragma mark Constructors/Destructors
+    // -- Constructors/Destructors
     Flags() : flags(0) { }
     Flags(FlagsEnum value) : flags(1ULL << static_cast<integer>(value)) { }
 
-    #pragma mark Instance Methods
+    // -- Instance Methods
     bool has(FlagsEnum value) const
     {
         return this->flags & (1ULL << static_cast<integer>(value));
@@ -75,7 +75,7 @@ public:
         return String::stringWithFormat("%d", this->flags);
     }
 
-    #pragma mark Operators
+    // -- Operators
     operator bool() const
     {
         return this->flags != 0;

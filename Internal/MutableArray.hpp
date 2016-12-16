@@ -32,20 +32,20 @@
 
 namespace NxA {
 
-#pragma mark Forward Declarations
+// -- Forward Declarations
 
 template <class T> class MutableArrayInternal;
 
-#pragma mark Utility Methods
+// -- Utility Methods
 
 // -- This is a utility function to return the description of the content of an array.
 template <class T> String descriptionOfObjectsInArray(const MutableArrayInternal<T>&);
 
-#pragma mark Class
+// -- Class
 
 template <class T> struct MutableArrayInternal : public Object::Internal, public std::vector<T>
 {
-    #pragma mark Constructors/Destructors
+    // -- Constructors/Destructors
     MutableArrayInternal() : std::vector<T>() { }
     MutableArrayInternal(const MutableArrayInternal& other) : std::vector<T>{ other } { }
     MutableArrayInternal(std::vector<T>&& other) : std::vector<T>{ std::move(other) } { }
@@ -55,11 +55,11 @@ template <class T> struct MutableArrayInternal : public Object::Internal, public
 
     virtual ~MutableArrayInternal() = default;
 
-    #pragma mark Iterators
+    // -- Iterators
     using iterator = typename std::vector<T>::iterator;
     using const_iterator = typename std::vector<T>::const_iterator;
 
-    #pragma mark Operators
+    // -- Operators
     const T& operator[](count index) const
     {
         NXA_ASSERT_TRUE(index >= 0 && index < this->length());
@@ -71,7 +71,7 @@ template <class T> struct MutableArrayInternal : public Object::Internal, public
         return this->std::vector<T>::operator[](index);
     }
 
-    #pragma mark Instance Methods
+    // -- Instance Methods
     iterator begin() noexcept
     {
         return this->std::vector<T>::begin();
@@ -196,7 +196,7 @@ template <class T> struct MutableArrayInternal : public Object::Internal, public
         return { std::move(result) };
     }
 
-    #pragma mark Overriden Object::Internal Instance Methods
+    // -- Overriden Object::Internal Instance Methods
     uinteger32 classHash() const override
     {
         NXA_ALOG("Illegal call.");

@@ -21,7 +21,7 @@
 
 #include "Base/Types.hpp"
 
-#pragma mark SBox Hash Implementation
+// -- SBox Hash Implementation
 
 // SBox Hashing algorithm; source: http://floodyberry.com/noncryptohashzoo/SBox.html
 
@@ -80,7 +80,7 @@ inline NxA::uinteger32 SBox(const NxA::byte* key, NxA::count len, NxA::uinteger3
 
 using namespace NxA;
 
-#pragma mark Constructors/Destructors
+// -- Constructors/Destructors
 
 String::String() : internal{ std::make_shared<Internal>() } { }
 
@@ -108,7 +108,7 @@ String::String(std::shared_ptr<Internal>&& other) : internal{ std::move(other) }
 
 String::~String() = default;
 
-#pragma mark Factory Methods
+// -- Factory Methods
 
 String String::stringWithUTF16AtAndSize(const byte* data, count size)
 {
@@ -130,7 +130,7 @@ String String::stringByFilteringNonPrintableCharactersIn(const String& other)
     return { Internal::stringByFilteringNonPrintableCharactersIn(other) };
 }
 
-#pragma mark Class Methods
+// -- Class Methods
 
 uinteger32 String::hashFor(const character* string)
 {
@@ -151,7 +151,7 @@ count String::lengthOf(const character* str)
     return end - str;
 }
 
-#pragma mark Operators
+// -- Operators
 
 String& String::operator=(String&&) = default;
 String& String::operator=(String const&) = default;
@@ -174,7 +174,7 @@ boolean String::operator==(const String& other) const
     return *internal == *(other.internal);
 }
 
-#pragma mark Instance Methods
+// -- Instance Methods
 
 uinteger32 String::classHash() const
 {
@@ -332,7 +332,7 @@ count String::indexOfLastOccurenceOf(const character* other) const
     return internal->indexOfLastOccurenceOf(other);
 }
 
-#pragma mark Operators
+// -- Operators
 
 namespace NxA {
 

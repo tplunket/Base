@@ -83,6 +83,7 @@ class DescriberState;
             const character* className() const; \
             bool classNameIs(const character* className) const; \
             String description(const DescriberState&) const; \
+            String description() const; \
         private:
 
 #define NXA_GENERATED_UNIQUE_OBJECT_METHODS_DECLARATIONS_WITHOUT_INTERNAL_OBJECT_FOR(class_name...) \
@@ -134,6 +135,11 @@ class DescriberState;
         bool class_name::classNameIs(const character* className) const \
         { \
             return !::strcmp(internal->className(), className); \
+        } \
+        String class_name::description() const \
+        { \
+            DescriberState state; \
+            return this->description(state); \
         }
 
 #define NXA_GENERATED_OBJECT_METHODS_DEFINITIONS_WITH_INTERNAL_STORED_IN_FOR(internal_location, class_name...) \

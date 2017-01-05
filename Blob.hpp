@@ -56,6 +56,11 @@ public:
     const byte& operator[] (integer) const;
 
     // -- Instance Methods
+    boolean isEmpty() const
+    {
+        return (this->size() == 0);
+    }
+
     count size() const;
 
     const byte* data() const;

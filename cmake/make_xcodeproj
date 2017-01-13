@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd `dirname $0`
+
 pushd .. > /dev/null
 SRC_DIR=`pwd`
 popd > /dev/null

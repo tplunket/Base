@@ -1,10 +1,10 @@
 #!/bin/bash
 
-pushd ..
+pushd .. > /dev/null
 SRC_DIR=`pwd`
-popd
+popd > /dev/null
 
 mkdir -p xcode
-pushd xcode
+pushd xcode > /dev/null
 cmake -G Xcode "${SRC_DIR}"
-popd
+popd > /dev/null

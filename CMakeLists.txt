@@ -18,5 +18,7 @@ source_group("Source Files\\Internal" FILES ${INTSRC})
 include_directories(${CMAKE_SOURCE_DIR}/..) # all #includes are <Base/...>
 add_library (Base STATIC ${SRCS} ${HDRS} ${INTSRC})
 target_include_directories(Base PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/..) # all #includes are <Base/...>
+set_property(TARGET Base PROPERTY CXX_STANDARD 14)
+set_property(TARGET Base PROPERTY CXX_STANDARD_REQUIRED ON)
 add_subdirectory (Tests)
 

@@ -170,8 +170,6 @@ struct MutableStringInternal : public Object::Internal, public std::string
     static const character* stringArgumentAsCharacter(String& nxastring);
     static const character* stringArgumentAsCharacter(MutableString& nxastring);
     static const character* stringArgumentAsCharacter(MutableStringInternal& nxastring);
-
-
 };
 
 }

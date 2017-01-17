@@ -33,137 +33,136 @@ namespace NxA {
 
 // -- Forward Declarations
 
-    template <class T> class MutableSetInternal;
+template <class T> class MutableSetInternal;
 
 // -- Utility Methods
 
-    // -- This is a utility function to return the description of the content of an array.
-    template <class T> String descriptionOfObjectsInSet(const MutableSetInternal<T>&);
+// -- This is a utility function to return the description of the content of an array.
+template <class T> String descriptionOfObjectsInSet(const MutableSetInternal<T>&);
 
 // -- Class
 
-    template <class T> struct MutableSetInternal : public Object::Internal, public std::set<T>
+template <class T> struct MutableSetInternal : public Object::Internal, public std::set<T>
+{
+    // -- Constructors/Destructors
+    MutableSetInternal() = default;
+    MutableSetInternal(const MutableSetInternal& other) = default;
+    MutableSetInternal(MutableSetInternal&& other) = default;
+    MutableSetInternal(std::initializer_list<T> other) : std::vector<T>{other.begin(), other.end()} { }
+    virtual ~MutableSetInternal() = default;
+    MutableSetInternal& operator=(const MutableSetInternal& other) = default;
+
+    MutableSetInternal(std::set<T>&& other) : std::set<T>{ std::move(other) } { }
+
+    // -- Iterators
+    using iterator = typename std::set<T>::iterator;
+    using const_iterator = typename std::set<T>::const_iterator;
+
+    // -- Instance Methods
+    iterator begin() noexcept
     {
-// -- Constructors/Destructors
-        MutableSetInternal() = default;
-        MutableSetInternal(const MutableSetInternal& other) = default;
-        MutableSetInternal(MutableSetInternal&& other) = default;
-        MutableSetInternal(std::initializer_list<T> other) : std::vector<T>{other.begin(), other.end()} { }
-        virtual ~MutableSetInternal() = default;
-        MutableSetInternal& operator=(const MutableSetInternal& other) = default;
+        return this->std::set<T>::begin();
+    }
+    const_iterator begin() const noexcept
+    {
+        return this->std::set<T>::begin();
+    }
+    iterator end() noexcept
+    {
+        return this->std::set<T>::end();
+    }
+    const_iterator end() const noexcept
+    {
+        return this->std::set<T>::end();
+    }
+    const_iterator cbegin() const noexcept
+    {
+        return this->std::set<T>::cbegin();
+    }
+    const_iterator cend() const noexcept
+    {
+        return this->std::set<T>::cend();
+    }
 
-        MutableSetInternal(std::set<T>&& other) : std::set<T>{ std::move(other) } { }
+    count length() const
+    {
+        return this->size();
+    }
+    void remove(const T& object)
+    {
+        auto position = this->find(object);
+        if (position != this->cend()) {
+            this->erase(position);
+        }
+    }
+    void removeAll()
+    {
+        return this->clear();
+    }
 
-// -- Iterators
-        using iterator = typename std::set<T>::iterator;
-        using const_iterator = typename std::set<T>::const_iterator;
+    void append(T object)
+    {
+        this->insert(object);
+    }
+    void append(MutableSetInternal<T> other)
+    {
+        for (auto object : other) {
+            this->append(object);
+        }
+    }
+    template <class... ConstructorArguments>
+    void emplaceAppend(ConstructorArguments &&... arguments)
+    {
+        this->emplace(std::forward<ConstructorArguments>(arguments)...);
+    }
 
-// -- Instance Methods
-        iterator begin() noexcept
-        {
-            return this->std::set<T>::begin();
-        }
-        const_iterator begin() const noexcept
-        {
-            return this->std::set<T>::begin();
-        }
-        iterator end() noexcept
-        {
-            return this->std::set<T>::end();
-        }
-        const_iterator end() const noexcept
-        {
-            return this->std::set<T>::end();
-        }
-        const_iterator cbegin() const noexcept
-        {
-            return this->std::set<T>::cbegin();
-        }
-        const_iterator cend() const noexcept
-        {
-            return this->std::set<T>::cend();
-        }
+    const T& anyObject() const
+    {
+        auto anyPos = this->cbegin();
+        NXA_ASSERT_TRUE(anyPos != this->cend());
+        return *anyPos;
+    }
+    boolean contains(const T& object) const
+    {
+        return this->std::set<T>::count(object) != 0;
+    }
+    const_iterator find(const T& object) const
+    {
+        return this->std::set<T>::find(object);
+    }
+    iterator find(const T& object)
+    {
+        return this->std::set<T>::find(object);
+    }
+    void removeObjectAt(const_iterator objectPosition)
+    {
+        this->erase(objectPosition);
+    }
 
-        count length() const
-        {
-            return this->size();
-        }
-        void remove(const T& object)
-        {
-            auto position = this->find(object);
-            if (position != this->cend()) {
-                this->erase(position);
-            }
-        }
-        void removeAll()
-        {
-            return this->clear();
-        }
-
-        void append(T object)
-        {
-            this->insert(object);
-        }
-        void append(MutableSetInternal<T> other)
-        {
-            for (auto object : other) {
-                this->append(object);
-            }
-        }
-        template <class... ConstructorArguments>
-        void emplaceAppend(ConstructorArguments &&... arguments)
-        {
-            this->emplace(std::forward<ConstructorArguments>(arguments)...);
-        }
-
-        const T& anyObject() const
-        {
-            auto anyPos = this->cbegin();
-            NXA_ASSERT_TRUE(anyPos != this->cend());
-            return *anyPos;
-        }
-        boolean contains(const T& object) const
-        {
-            return this->std::set<T>::count(object) != 0;
-        }
-        const_iterator find(const T& object) const
-        {
-            return this->std::set<T>::find(object);
-        }
-        iterator find(const T& object)
-        {
-            return this->std::set<T>::find(object);
-        }
-        void removeObjectAt(const_iterator objectPosition)
-        {
-            this->erase(objectPosition);
+    String description(const DescriberState& state) const
+    {
+        auto indented = state.increaseIndent();
+        auto result = MutableString::stringWithFormat(indented.indentedLine("<Set length=\"%ld\">"), this->length());
+        for (auto && item : *this) {
+            result.append(NxA::describe(item, indented));
         }
 
-        String description(const DescriberState& state) const
-        {
-            auto indented = state.increaseIndent();
-            auto result = MutableString::stringWithFormat(indented.indentedLine("<Set length=\"%ld\">"), this->length());
-            for (auto && item : *this) {
-                result.append(NxA::describe(item, indented));
-            }
+        result.append(indented.indentedLine("</Set>"));
 
-            result.append(indented.indentedLine("</Set>"));
-            
-            return { std::move(result) };
-        }
-        
-// -- Overriden Object::Internal Instance Methods
-        uinteger32 classHash() const override
-        {
-            NXA_ALOG("Illegal call.");
-            return 0;
-        }
-        const character* className() const override
-        {
-            NXA_ALOG("Illegal call.");
-            return nullptr;
-        }
-    };
-    
-    
+        return { std::move(result) };
+    }
+
+    // -- Overriden Object::Internal Instance Methods
+    uinteger32 classHash() const override
+    {
+        NXA_ALOG("Illegal call.");
+        return 0;
+    }
+    const character* className() const override
+    {
+        NXA_ALOG("Illegal call.");
+        return nullptr;
+    }
+};
+
 }

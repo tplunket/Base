@@ -67,7 +67,6 @@ public:
 
     Blob hash();
     String base64String() const;
-
 };
 
 }

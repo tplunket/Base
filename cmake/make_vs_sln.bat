@@ -6,8 +6,8 @@ pushd ..
 set SRC_DIR="%CD%"
 popd
 
-call :Create win32 "Visual Studio 14 2015"
-call :Create win64 "Visual Studio 14 2015 Win64"
+call :Create win32 "Visual Studio 15 2017"
+call :Create win64 "Visual Studio 15 2017 Win64"
 goto :eof
 
 :Create

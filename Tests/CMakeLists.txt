@@ -13,5 +13,7 @@ source_group("Source Files" FILES ${SRCS})
 
 include_directories(${Base_SOURCE_DIR}/..) # all #includes are <Base/...>
 add_executable (BaseTest ${SRCS})
+set_property(TARGET BaseTest PROPERTY CXX_STANDARD 17)
+set_property(TARGET BaseTest PROPERTY CXX_STANDARD_REQUIRED ON)
 target_link_libraries (BaseTest LINK_PUBLIC Base)
 

@@ -29,3 +29,7 @@
 
 # CMake outputs
 cmake/*/
+
+# Visual Studio generated files
+.vs/*
+CMakeSettings.json

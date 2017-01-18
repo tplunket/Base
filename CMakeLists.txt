@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.7) # it may work with older versions but that needs to be tested.
+cmake_minimum_required (VERSION 3.6) # it may work with older versions but that needs to be tested.
 
 project (Base)
 
@@ -16,9 +16,12 @@ source_group("Source Files" FILES ${SRCS} ${HDRS})
 source_group("Source Files\\Internal" FILES ${INTSRC})
 
 include_directories(${CMAKE_SOURCE_DIR}/..) # all #includes are <Base/...>
+
 add_library (Base STATIC ${SRCS} ${HDRS} ${INTSRC})
 target_include_directories(Base PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/..) # all #includes are <Base/...>
-set_property(TARGET Base PROPERTY CXX_STANDARD 14)
+target_compile_options(Base PRIVATE "/std:c++latest")
+set_property(TARGET Base PROPERTY CXX_STANDARD 17)
 set_property(TARGET Base PROPERTY CXX_STANDARD_REQUIRED ON)
+
 add_subdirectory (Tests)
 

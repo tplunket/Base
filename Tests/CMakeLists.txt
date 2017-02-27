@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.7) # it may work with older versions but that needs to be tested.
+cmake_minimum_required (VERSION 3.6) # it may work with older versions but that needs to be tested.
 
 project (BaseTest)
 

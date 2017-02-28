@@ -91,7 +91,7 @@ struct TypeName<Optional<T>> {
 };
 
 // -- Specialization for each type we support.
-#define NXA_STR_VALUE_FOR_TYPE(arg...) #arg
+#define NXA_STR_VALUE_FOR_TYPE(arg) #arg
 
 #define NXA_SPECIALIZE_TYPENAME_FOR_TYPE(name) \
 template <> struct TypeName<name> \

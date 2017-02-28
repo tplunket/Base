@@ -27,7 +27,7 @@
 #include <cstdint>
 #include <memory>
 #include <typeinfo>
-#include <experimental/optional>
+#include <optional>
 
 namespace NxA {
 
@@ -57,11 +57,11 @@ using decimal2 = dec::decimal<2>;
 using decimal3 = dec::decimal<3>;
 using decimal = decimal3;
 
-// -- Provide an optional type based on std::experimental::optional. TODO: change to std::optional in C++1y
+// -- Provide an optional type based on std::optional.
 template <typename T>
-using Optional = std::experimental::optional<T>;
-using NullOptional = std::experimental::nullopt_t;
-constexpr NullOptional nothing{0};
+using Optional = std::optional<T>;
+using NullOptional = std::nullopt_t;
+constexpr NullOptional nothing{std::nullopt};
 template <typename T>
 inline constexpr Optional<typename std::decay<T>::type>
 makeOptional(T&& v) {

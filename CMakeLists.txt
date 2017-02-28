@@ -29,10 +29,16 @@ include_directories (${INCDIRS})
 add_library (Base STATIC ${SRCS} ${HDRS} ${INTSRC})
 target_include_directories (Base PUBLIC ${INCDIRS})
 
-# Required for VS2017 & C++17 (<optional> is unavailable until C++17 in MSVC)
+if (${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+    # Required for VS2017 & C++17 (<optional> is unavailable until C++17 in MSVC)
+    target_compile_options (Base PRIVATE "/std:c++latest")
+    set_property (TARGET Base PROPERTY CXX_STANDARD 17)
+elseif (${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
+    set_property (TARGET Base PROPERTY CXX_STANDARD 14)
+endif (${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+
+# auto_ptr is removed in C++17 so prevent its usage in Boost
 target_compile_definitions (Base PRIVATE BOOST_NO_AUTO_PTR)
-target_compile_options (Base PRIVATE "/std:c++latest")
-set_property (TARGET Base PROPERTY CXX_STANDARD 17)
 set_property (TARGET Base PROPERTY CXX_STANDARD_REQUIRED ON)
 
 # Make the Tests dir included when building

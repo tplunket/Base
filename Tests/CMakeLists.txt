@@ -13,9 +13,14 @@ source_group ("Source Files" FILES ${SRCS})
 include_directories (${Base_SOURCE_DIR}/..) # all #includes are <Base/...>
 add_executable (BaseTest ${SRCS})
 
-# C++17/MSVC2017 requirements
-target_compile_options (BaseTest PRIVATE "/std:c++latest")
-set_property (TARGET BaseTest PROPERTY CXX_STANDARD 17)
+if (${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+    # C++17/MSVC2017 requirements
+    target_compile_options (BaseTest PRIVATE "/std:c++latest")
+    set_property (TARGET BaseTest PROPERTY CXX_STANDARD 17)
+elseif (${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
+    set_property (TARGET BaseTest PROPERTY CXX_STANDARD 14)
+endif (${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+
 set_property (TARGET BaseTest PROPERTY CXX_STANDARD_REQUIRED ON)
 
 # Link to the Base project

@@ -24,6 +24,7 @@
 #include <Base/Types.hpp>
 
 #include <boost/scope_exit.hpp>
+#include <cstdarg>
 #include <stdexcept>
 
 // -- Macros
